@@ -4,6 +4,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.screen.home.search.SearchStayFilterView;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchStayDataBinding;
@@ -29,9 +30,26 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onSuggestClick());
-        viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onCalendarClick());
-        viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onDoSearchClick());
+        viewDataBinding.stayFilterView.setOnFilterListener(new SearchStayFilterView.OnStayFilterListener()
+        {
+            @Override
+            public void onSuggestClick()
+            {
+                getEventListener().onSuggestClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onCalendarClick();
+            }
+
+            @Override
+            public void onSearchClick()
+            {
+                getEventListener().onDoSearchClick();
+            }
+        });
 
         mSearchStayFragment = (SearchStayFragment) getSupportFragmentManager().findFragmentById(R.id.searchStayFragment);
         mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
@@ -91,7 +109,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
             return;
         }
 
-        getViewDataBinding().staySuggestTextView.setText(text);
+        getViewDataBinding().stayFilterView.setSuggestText(text);
     }
 
     @Override
@@ -102,7 +120,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
             return;
         }
 
-        getViewDataBinding().stayCalendarTextView.setText(text);
+        getViewDataBinding().stayFilterView.setCalendarText(text);
     }
 
     @Override
@@ -113,7 +131,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
             return;
         }
 
-        getViewDataBinding().searchStayTextView.setEnabled(enabled);
+        getViewDataBinding().stayFilterView.setSearchEnabled(enabled);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class SearchStayFilterView extends ConstraintLayout implements View.OnCli
 
     private OnStayFilterListener mFilterListener;
 
-    interface OnStayFilterListener
+    public interface OnStayFilterListener
     {
         void onSuggestClick();
 

@@ -16,7 +16,7 @@ public class SearchGourmetFilterView extends ConstraintLayout implements View.On
 
     private OnGourmetFilterListener mFilterListener;
 
-    interface OnGourmetFilterListener
+    public interface OnGourmetFilterListener
     {
         void onSuggestClick();
 

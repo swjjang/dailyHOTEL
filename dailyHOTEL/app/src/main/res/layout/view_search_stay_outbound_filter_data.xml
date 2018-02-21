@@ -5,12 +5,6 @@
     <merge
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/search_box_bottom"
-        android:paddingBottom="15dp"
-        android:paddingLeft="27dp"
-        android:paddingRight="27dp"
-        android:paddingTop="14dp"
         tools:parentTag="android.support.constraint.ConstraintLayout">
 
         <!--<android.support.constraint.ConstraintLayout-->

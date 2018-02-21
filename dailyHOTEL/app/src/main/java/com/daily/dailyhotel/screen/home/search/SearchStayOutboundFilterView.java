@@ -22,7 +22,7 @@ public class SearchStayOutboundFilterView extends ConstraintLayout implements Vi
 
     private OnStayOutboundFilterListener mFilterListener;
 
-    interface OnStayOutboundFilterListener
+    public interface OnStayOutboundFilterListener
     {
         void onSuggestClick();
 
