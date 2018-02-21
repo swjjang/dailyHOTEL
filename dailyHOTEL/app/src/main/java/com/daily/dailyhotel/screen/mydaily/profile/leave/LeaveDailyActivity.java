@@ -15,6 +15,10 @@ import com.twoheart.dailyhotel.R;
  */
 public class LeaveDailyActivity extends BaseActivity<LeaveDailyPresenter>
 {
+    protected static final int REQUEST_CODE_REWARD = 10000;
+    protected static final int REQUEST_CODE_WEB = 10001;
+    protected static final int REQUEST_CODE_LEAVE_REASON = 10002;
+
     public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, LeaveDailyActivity.class);

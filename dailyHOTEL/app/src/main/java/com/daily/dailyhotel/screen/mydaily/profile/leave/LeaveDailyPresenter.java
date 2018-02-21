@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.mydaily.profile.leave;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,10 +10,18 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.LeaveInfo;
+import com.daily.dailyhotel.entity.LeaveReason;
+import com.daily.dailyhotel.parcel.LeaveReasonParcel;
+import com.daily.dailyhotel.parcel.ListDialogItemParcel;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.list.BaseListDialogActivity;
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -28,6 +37,7 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
     private ProfileRemoteImpl mProfileRemoteImpl;
 
     private LeaveInfo mLeaveInfo;
+    private LeaveReason mSelectedReason;
 
     public LeaveDailyPresenter(@NonNull LeaveDailyActivity activity)
     {
@@ -145,6 +155,31 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case LeaveDailyActivity.REQUEST_CODE_LEAVE_REASON:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (data == null)
+                    {
+                        return;
+                    }
+
+                    ListDialogItemParcel selectedParcel = data.getParcelableExtra(BaseListDialogActivity.INTENT_EXTRA_DATA_SELECTED_DATA);
+                    if (selectedParcel != null)
+                    {
+                        LeaveReasonParcel reasonParcel = (LeaveReasonParcel) selectedParcel.getItem();
+                        mSelectedReason = reasonParcel.getLeaveReason();
+                    }
+
+                    getViewInterface().setLeaveReasonText(mSelectedReason == null ? null : mSelectedReason.reason);
+                    getViewInterface().setLeaveButtonEnabled(mSelectedReason != null && getViewInterface().isAgreeChecked());
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -229,13 +264,28 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
             , mLeaveInfo.rewardStickerCount//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mLeaveInfo.rewardStickerCount));
 
-//        getViewInterface().stopCampaignStickerAnimation();
+        //        getViewInterface().stopCampaignStickerAnimation();
     }
 
     @Override
     public void onLeaveReasonClick()
     {
+        if (getActivity() == null || mLeaveInfo == null || lock() == true)
+        {
+            return;
+        }
 
+        ArrayList<ListDialogItemParcel> parcelList = new ArrayList<>();
+        for (LeaveReason leaveReason : mLeaveInfo.leaveReasonList)
+        {
+            parcelList.add(new ListDialogItemParcel(leaveReason.reason, new LeaveReasonParcel(leaveReason)));
+        }
+
+        ListDialogItemParcel selectedParcel = mSelectedReason == null //
+            ? null : new ListDialogItemParcel(mSelectedReason.reason, new LeaveReasonParcel(mSelectedReason));
+
+        Intent intent = BaseListDialogActivity.newInstance(getActivity() , getString(R.string.label_leave_daily_leave_reason_title), selectedParcel, parcelList);
+        startActivityForResult(intent, LeaveDailyActivity.REQUEST_CODE_LEAVE_REASON);
     }
 
     @Override
@@ -247,18 +297,35 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
     @Override
     public void onAgreeCheckedChanged(boolean checked)
     {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
 
+        getViewInterface().setLeaveButtonEnabled(mSelectedReason != null && checked);
     }
 
     @Override
     public void onRewardGuideClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_daily_reward)//
+            , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), LeaveDailyActivity.REQUEST_CODE_WEB);
     }
 
     @Override
     public void onRewardClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        Intent intent = RewardActivity.newInstance(getActivity());
+        startActivityForResult(intent, LeaveDailyActivity.REQUEST_CODE_REWARD);
     }
 }

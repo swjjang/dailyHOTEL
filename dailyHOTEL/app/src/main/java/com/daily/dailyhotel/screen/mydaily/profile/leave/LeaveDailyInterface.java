@@ -14,6 +14,12 @@ public interface LeaveDailyInterface
         void setRewardInfo(String titleText, String optionText, int rewardCount, String descriptionText);
 
         void setRewardLayoutVisible(boolean visible);
+
+        void setLeaveReasonText(String text);
+
+        boolean isAgreeChecked();
+
+        void setLeaveButtonEnabled(boolean enabled);
     }
 
     interface OnEventListener extends OnBaseEventListener

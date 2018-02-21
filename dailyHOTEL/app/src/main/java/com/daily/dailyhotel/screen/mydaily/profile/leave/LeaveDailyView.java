@@ -124,6 +124,28 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
         getViewDataBinding().rewardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void setLeaveReasonText(String text)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().leaveReasonTextView.setText(text);
+    }
+
+    @Override
+    public boolean isAgreeChecked()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return false;
+        }
+
+        return getViewDataBinding().agreementCheckBox.isChecked();
+    }
+
     private void setLeaveReasonVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -154,7 +176,8 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
         getViewDataBinding().leaveAgreementLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    private void setLeaveButtonEnabled(boolean enabled)
+    @Override
+    public void setLeaveButtonEnabled(boolean enabled)
     {
         if (getViewDataBinding() == null)
         {

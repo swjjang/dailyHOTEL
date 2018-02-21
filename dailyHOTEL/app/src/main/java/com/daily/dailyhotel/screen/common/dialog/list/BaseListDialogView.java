@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.dialog.refund;
+package com.daily.dailyhotel.screen.common.dialog.list;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
@@ -6,34 +6,24 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseMultiWindowView;
-import com.daily.dailyhotel.entity.Bank;
-import com.twoheart.dailyhotel.databinding.DialogRefundBankListDataBinding;
+import com.daily.dailyhotel.parcel.ListDialogItemParcel;
+import com.twoheart.dailyhotel.databinding.DialogListDataBinding;
 
 import java.util.List;
 
-public class BankListDialogView extends BaseMultiWindowView<BankListDialogView.OnEventListener, DialogRefundBankListDataBinding> implements BankListDialogInterface
+public class BaseListDialogView extends BaseMultiWindowView<BaseListDialogInterface.OnEventListener, DialogListDataBinding> implements BaseListDialogInterface.ViewInterface
 {
-    BankListAdapter mBankListAdapter;
+    BaseListDialogListAdapter mListAdapter;
 
-    public interface OnEventListener extends OnBaseEventListener
-    {
-        void onNativeButtonClick();
-
-        void onPositiveButtonClick(Bank selectedBank);
-
-        void checkConfigChange();
-    }
-
-    public BankListDialogView(BaseActivity baseActivity, BankListDialogView.OnEventListener listener)
+    public BaseListDialogView(BaseActivity baseActivity, BaseListDialogInterface.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
 
     @Override
-    protected void setContentView(final DialogRefundBankListDataBinding viewDataBinding)
+    protected void setContentView(final DialogListDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -42,9 +32,10 @@ public class BankListDialogView extends BaseMultiWindowView<BankListDialogView.O
 
         viewDataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mBankListAdapter = new BankListAdapter(getContext(), null);
-        mBankListAdapter.setSelectedBank(null);
-        viewDataBinding.recyclerView.setAdapter(mBankListAdapter);
+        mListAdapter = new BaseListDialogListAdapter(getContext(), null);
+        mListAdapter.setSelectedItem(null);
+
+        viewDataBinding.recyclerView.setAdapter(mListAdapter);
 
         viewDataBinding.negativeTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -61,16 +52,16 @@ public class BankListDialogView extends BaseMultiWindowView<BankListDialogView.O
             @Override
             public void onClick(View v)
             {
-                if (getViewDataBinding() == null || mBankListAdapter == null)
+                if (getViewDataBinding() == null || mListAdapter == null)
                 {
                     return;
                 }
 
-                getEventListener().onPositiveButtonClick(mBankListAdapter.getSelectedBank());
+                getEventListener().onPositiveButtonClick(mListAdapter.getSelectedItem());
             }
         });
 
-        mBankListAdapter.setOnItemClickListener(new View.OnClickListener()
+        mListAdapter.setOnItemClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -85,10 +76,16 @@ public class BankListDialogView extends BaseMultiWindowView<BankListDialogView.O
     @Override
     public void setToolbarTitle(String title)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().titleTextView.setText(title);
     }
 
     @Override
-    public void setBankList(Bank selectedBank, List<Bank> bankList)
+    public void setData(ListDialogItemParcel selectedItem, List<ListDialogItemParcel> list)
     {
         if (getViewDataBinding() == null)
         {
@@ -96,16 +93,16 @@ public class BankListDialogView extends BaseMultiWindowView<BankListDialogView.O
             return;
         }
 
-        if (mBankListAdapter == null)
+        if (mListAdapter == null)
         {
-            mBankListAdapter = new BankListAdapter(getContext(), bankList);
-            mBankListAdapter.setSelectedBank(selectedBank);
-            getViewDataBinding().recyclerView.setAdapter(mBankListAdapter);
+            mListAdapter = new BaseListDialogListAdapter(getContext(), list);
+            mListAdapter.setSelectedItem(selectedItem);
+            getViewDataBinding().recyclerView.setAdapter(mListAdapter);
         } else
         {
-            mBankListAdapter.setBankList(bankList);
-            mBankListAdapter.setSelectedBank(selectedBank);
-            mBankListAdapter.notifyDataSetChanged();
+            mListAdapter.setList(list);
+            mListAdapter.setSelectedItem(selectedItem);
+            mListAdapter.notifyDataSetChanged();
         }
     }
 

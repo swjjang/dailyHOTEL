@@ -109,7 +109,7 @@ public class CheckPasswordView extends BaseDialogView<CheckPasswordView.OnEventL
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_DONE:
-                        viewDataBinding.passwordEditText.performClick();
+                        viewDataBinding.confirmView.performClick();
                         return true;
 
                     default:

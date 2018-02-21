@@ -1792,4 +1792,5 @@
     <string name="label_leave_daily_policy_title">탈퇴 전 꼭 확인 하세요!</string>
     <string name="label_leave_daily_agreement">동의합니다.</string>
     <string name="label_leave_daily_do_leave">탈퇴하기</string>
+    <string name="label_leave_daily_leave_reason_title">탈퇴 사유 선택</string>
 </resources>
