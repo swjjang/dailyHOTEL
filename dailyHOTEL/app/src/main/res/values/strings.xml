@@ -416,6 +416,7 @@
     <string name="dialog_message_need_update_gms">Google Play 버전 업데이트 후 이용해주세요.</string>
     <string name="dialog_message_updating_finish_gms">Google Play 업데이트 중입니다. 업데이트 완료 후 다시 이용해주세요.</string>
     <string name="dialog_message_need_enable_gms">Google Play앱이 중지된 상태입니다. 서비스 해제 후 이용해주세요.</string>
+    <string name="dialog_message_check_leave_daily">정말 탈퇴하시겠어요?</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="menu_item_title_home">홈</string>
@@ -1426,6 +1427,7 @@
     <string name="code_home_category_resort">resort</string>
     <string name="code_home_category_guest_house">guest_house</string>
     <string name="code_home_category_nearby">nearby</string>
+    <string name="message_home_closed_sns_session">카카오 계정 연결이 해제되어 해당계정으로 이용하실 수 없습니다.</string>
 
 
     <!-- Gourmet Product List -->
@@ -1792,5 +1794,12 @@
     <string name="message_check_password_error">비밀번호가 일치하지 않습니다.</string>
 
     <!-- Leave Daily -->
-    <string name="label_leave_daily">회원 탈퇴</string>
+    <string name="label_leave_daily">회원탈퇴</string>
+    <string name="label_leave_daily_sticker_title">스티커 현황</string>
+    <string name="label_leave_daily_reason_title">탈퇴 사유</string>
+    <string name="label_leave_daily_reason_message_hint">탈퇴 사유를 선택해주세요.</string>
+    <string name="label_leave_daily_policy_title">탈퇴 전 꼭 확인 하세요!</string>
+    <string name="label_leave_daily_agreement">동의합니다.</string>
+    <string name="label_leave_daily_do_leave">탈퇴하기</string>
+    <string name="label_leave_daily_leave_reason_title">탈퇴 사유 선택</string>
 </resources>

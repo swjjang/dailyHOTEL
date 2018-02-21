@@ -159,8 +159,7 @@ public class CheckPasswordPresenter //
             return;
         }
 
-        //        setRefresh(false);
-        //        screenLock(showProgress);
+        setRefresh(false);
     }
 
     @Override
@@ -198,6 +197,7 @@ public class CheckPasswordPresenter //
                     }
 
                     DailyToast.showToast(getActivity(), R.string.message_check_password_error, DailyToast.LENGTH_SHORT);
+                    unLockAll();
                 }
             }, new Consumer<Throwable>()
             {
@@ -215,6 +215,7 @@ public class CheckPasswordPresenter //
                         }
 
                         DailyToast.showToast(getActivity(), message, DailyToast.LENGTH_SHORT);
+                        unLockAll();
                     } else
                     {
                         onHandleError(throwable);

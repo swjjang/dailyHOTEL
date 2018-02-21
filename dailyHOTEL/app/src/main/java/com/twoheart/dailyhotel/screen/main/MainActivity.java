@@ -30,11 +30,23 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyImageView;
 import com.daily.dailyhotel.entity.Configurations;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
+import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
+import com.facebook.AccessToken;
+import com.facebook.LoginStatusCallback;
+import com.facebook.login.LoginManager;
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.response.model.UserProfile;
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.model.Review;
@@ -46,7 +58,6 @@ import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.HomeFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -63,8 +74,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -531,7 +545,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false, null);
 
-                        startActivityForResult(StayMainActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        startActivityForResult(StayTabActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
                         break;
 
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -1046,7 +1060,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         switch (changeScreen)
         {
             case Constants.CODE_RESULT_ACTIVITY_STAY_LIST:
-                startActivityForResult(StayMainActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                startActivityForResult(StayTabActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
                 break;
 
             case Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -1303,6 +1317,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         @Override
         public void onCheckServerResponse(String title, String message)
         {
+            ExLog.d("sam : title = " + title + " , message = " + message);
+
             mDelayTimeHandler.removeMessages(0);
 
             // 메시지가 있을때 무조건 팝업을 발생한다.
@@ -1314,6 +1330,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         @Override
                         public void accept(Configurations configurations) throws Exception
                         {
+                            ExLog.d("sam : configurations = " + configurations.activeReward);
+
                             unLockUI();
 
                             DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
@@ -1327,6 +1345,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                                         mNetworkController.requestVersion();
                                     } else
                                     {
+                                        ExLog.d("sam : requestVersion  not call");
+
                                         checkAppVersion(currentVersion, forceVersion);
                                     }
 
@@ -1339,6 +1359,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         @Override
                         public void accept(Throwable throwable) throws Exception
                         {
+                            ExLog.d("sam : " + throwable.toString());
+
                             onHandleError(throwable);
                         }
                     }));
@@ -1370,102 +1392,102 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         {
             lockUI(false);
 
+            Observable<Boolean> checkUserLoginObservable;
+
+            final String userType;
+
+            if (DailyHotel.isLogin() == true)
+            {
+                userType = DailyUserPreference.getInstance(MainActivity.this).getType();
+
+                if (DailyTextUtils.isTextEmpty(userType) == false)
+                {
+                    switch (userType)
+                    {
+                        case Constants.KAKAO_USER:
+                            checkUserLoginObservable = checkSessionKakaoUser();
+                            break;
+
+                        case Constants.FACEBOOK_USER:
+                            checkUserLoginObservable = checkSessionFacebookUser();
+                            break;
+
+                        default:
+                            checkUserLoginObservable = Observable.just(true);
+                            break;
+                    }
+                } else
+                {
+                    checkUserLoginObservable = Observable.just(true);
+                }
+            } else
+            {
+                userType = null;
+
+                checkUserLoginObservable = Observable.just(true);
+            }
+
+            addCompositeDisposable(checkUserLoginObservable.subscribeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, Observable<Boolean>>()
+            {
+                @Override
+                public Observable<Boolean> apply(Boolean sessionOpened) throws Exception
+                {
+                    if (sessionOpened == true)
+                    {
+                        return Observable.just(false);
+                    } else
+                    {
+                        return new ConfigLocalImpl(MainActivity.this).clear();
+                    }
+                }
+            }).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean clearUser) throws Exception
+                {
+                    if (clearUser == true)
+                    {
+                        new FacebookRemoteImpl().logOut();
+                        new KakaoRemoteImpl().logOut();
+
+                        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                        {
+                            unLockUI();
+
+                            showSimpleDialog(null//
+                                , getString(R.string.message_home_closed_sns_session)//
+                                , getString(R.string.dialog_btn_text_confirm)//
+                                , null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
+
+                                        startActivity(intent);
+                                    }
+                                });
+                        } else
+                        {
+                            processFinishSplash();
+                        }
+                    } else
+                    {
+                        processFinishSplash();
+                    }
+                }
+            }));
+        }
+
+        private void processFinishSplash()
+        {
             finishSplash();
 
             if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
             {
-                if (mDailyDeepLink.isInternalDeepLink() == true)
-                {
-                    DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, internalDeepLink.getDeepLink());
-
-                    if (internalDeepLink.isHomeView() == true)
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
-                    } else if (internalDeepLink.isBookingDetailView() == true)
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
-                    } else if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
-                    } else
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
-                    }
-                } else
-                {
-                    DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, externalDeepLink.getDeepLink());
-
-                    if (externalDeepLink.isHomeEventDetailView() == true//
-                        || externalDeepLink.isHomeRecommendationPlaceListView() == true//
-                        || externalDeepLink.isHotelListView() == true//
-                        || externalDeepLink.isHotelDetailView() == true//
-                        || externalDeepLink.isHotelSearchResultView() == true//
-                        || externalDeepLink.isGourmetListView() == true//
-                        || externalDeepLink.isGourmetDetailView() == true//
-                        || externalDeepLink.isGourmetSearchResultView() == true//
-                        || externalDeepLink.isRecentlyWatchHotelView() == true//
-                        || externalDeepLink.isRecentlyWatchGourmetView() == true//
-                        || externalDeepLink.isWishListHotelView() == true//
-                        || externalDeepLink.isWishListGourmetView() == true//
-                        || externalDeepLink.isShortcutView() == true//
-                        || externalDeepLink.isStayOutboundSearchResultView() == true//
-                        || externalDeepLink.isCampaignTagListView() == true //
-                        || externalDeepLink.isPlaceDetailView() == true //
-                        || externalDeepLink.isSearchHomeView() == true//
-                        )
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
-
-                    } else if (externalDeepLink.isBookingView() == true //
-                        || externalDeepLink.isBookingDetailView() == true)
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
-                    } else if (externalDeepLink.isMyDailyView() == true //
-                        || externalDeepLink.isBonusView() == true//
-                        || externalDeepLink.isCouponView() == true //
-                        || externalDeepLink.isRegisterCouponView() == true //
-                        || externalDeepLink.isProfileView() == true//
-                        || externalDeepLink.isProfileBirthdayView() == true//
-                        || externalDeepLink.isRewardView() == true//
-                        )
-                    {
-                        if (externalDeepLink.isRewardView() == true)
-                        {
-                            // 리워드 이벤트가 종료되면 리워드 화면에서 에러 처리
-                            mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
-                        } else
-                        {
-                            mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
-                        }
-                    } else if (externalDeepLink.isSingUpView() == true)
-                    {
-                        if (DailyHotel.isLogin() == false)
-                        {
-                            mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
-                        } else
-                        {
-                            mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
-                        }
-                    } else if (externalDeepLink.isEventView() == true//
-                        || externalDeepLink.isEventDetailView() == true//
-                        || externalDeepLink.isInformationView() == true //
-                        || externalDeepLink.isNoticeDetailView() == true//
-                        || externalDeepLink.isFAQView() == true//
-                        || externalDeepLink.isTermsNPolicyView() == true//
-                        )
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true, bundle);
-                    } else
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
-                    }
-
-                    AnalyticsManager.getInstance(MainActivity.this).startApplication();
-                }
+                parseDeepLink(mDailyDeepLink);
 
                 clearDeepLink();
             } else
@@ -1495,6 +1517,108 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
                     AnalyticsManager.getInstance(MainActivity.this).startApplication();
                 }
+            }
+        }
+
+        private void parseDeepLink(DailyDeepLink dailyDeepLink)
+        {
+            if (dailyDeepLink == null)
+            {
+                return;
+            }
+
+            if (dailyDeepLink.isInternalDeepLink() == true)
+            {
+                DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) dailyDeepLink;
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, internalDeepLink.getDeepLink());
+
+                if (internalDeepLink.isHomeView() == true)
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
+                } else if (internalDeepLink.isBookingDetailView() == true)
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
+                } else if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
+                } else
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
+                }
+            } else
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, externalDeepLink.getDeepLink());
+
+                if (externalDeepLink.isHomeEventDetailView() == true//
+                    || externalDeepLink.isHomeRecommendationPlaceListView() == true//
+                    || externalDeepLink.isHotelListView() == true//
+                    || externalDeepLink.isHotelDetailView() == true//
+                    || externalDeepLink.isHotelSearchResultView() == true//
+                    || externalDeepLink.isGourmetListView() == true//
+                    || externalDeepLink.isGourmetDetailView() == true//
+                    || externalDeepLink.isGourmetSearchResultView() == true//
+                    || externalDeepLink.isRecentlyWatchHotelView() == true//
+                    || externalDeepLink.isRecentlyWatchGourmetView() == true//
+                    || externalDeepLink.isWishListHotelView() == true//
+                    || externalDeepLink.isWishListGourmetView() == true//
+                    || externalDeepLink.isShortcutView() == true//
+                    || externalDeepLink.isStayOutboundSearchResultView() == true//
+                    || externalDeepLink.isCampaignTagListView() == true //
+                    || externalDeepLink.isPlaceDetailView() == true //
+                    || externalDeepLink.isSearchHomeView() == true//
+                    )
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
+
+                } else if (externalDeepLink.isBookingView() == true //
+                    || externalDeepLink.isBookingDetailView() == true)
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
+                } else if (externalDeepLink.isMyDailyView() == true //
+                    || externalDeepLink.isBonusView() == true//
+                    || externalDeepLink.isCouponView() == true //
+                    || externalDeepLink.isRegisterCouponView() == true //
+                    || externalDeepLink.isProfileView() == true//
+                    || externalDeepLink.isProfileBirthdayView() == true//
+                    || externalDeepLink.isRewardView() == true//
+                    || externalDeepLink.isLoginView() == true//
+                    )
+                {
+                    if (externalDeepLink.isRewardView() == true)
+                    {
+                        // 리워드 이벤트가 종료되면 리워드 화면에서 에러 처리
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
+                    } else
+                    {
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
+                    }
+                } else if (externalDeepLink.isSingUpView() == true)
+                {
+                    if (DailyHotel.isLogin() == false)
+                    {
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
+                    } else
+                    {
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
+                    }
+                } else if (externalDeepLink.isEventView() == true//
+                    || externalDeepLink.isEventDetailView() == true//
+                    || externalDeepLink.isInformationView() == true //
+                    || externalDeepLink.isNoticeDetailView() == true//
+                    || externalDeepLink.isFAQView() == true//
+                    || externalDeepLink.isTermsNPolicyView() == true//
+                    )
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true, bundle);
+                } else
+                {
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
+                }
+
+                AnalyticsManager.getInstance(MainActivity.this).startApplication();
             }
         }
 
@@ -1694,6 +1818,74 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             }
 
             DailyPreference.getInstance(MainActivity.this).setHappyTalkCategory(categorys);
+        }
+
+        private Observable checkSessionKakaoUser()
+        {
+            return new Observable<Boolean>()
+            {
+                @Override
+                protected void subscribeActual(Observer<? super Boolean> observer)
+                {
+                    UserManagement.requestMe(new MeResponseCallback()
+                    {
+                        @Override
+                        public void onSessionClosed(ErrorResult errorResult)
+                        {
+                            observer.onNext(false);
+                            observer.onComplete();
+                        }
+
+                        @Override
+                        public void onNotSignedUp()
+                        {
+                            observer.onNext(false);
+                            observer.onComplete();
+                        }
+
+                        @Override
+                        public void onSuccess(UserProfile result)
+                        {
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+                    });
+                }
+            };
+        }
+
+        private Observable checkSessionFacebookUser()
+        {
+            return new Observable<Boolean>()
+            {
+                @Override
+                protected void subscribeActual(Observer<? super Boolean> observer)
+                {
+                    LoginManager.getInstance().retrieveLoginStatus(MainActivity.this, new LoginStatusCallback()
+                    {
+                        @Override
+                        public void onCompleted(AccessToken accessToken)
+                        {
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+
+                        @Override
+                        public void onFailure()
+                        {
+                            observer.onNext(false);
+                            observer.onComplete();
+                        }
+
+                        @Override
+                        public void onError(Exception exception)
+                        {
+                            observer.onNext(false);
+                            observer.onComplete();
+                        }
+                    });
+                }
+            };
         }
     };
 }

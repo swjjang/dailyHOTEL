@@ -164,7 +164,11 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                 } else if (externalDeepLink.isRewardView() == true)
                 {
                     mOnEventListener.onRewardClick();
+                } else if (externalDeepLink.isLoginView() == true)
+                {
+                    mOnEventListener.startLogin();
                 }
+
 
                 //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
                 //            {

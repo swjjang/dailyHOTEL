@@ -1114,6 +1114,11 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
+            if (DailyTextUtils.isTextEmpty(address) == true)
+            {
+                address = getString(R.string.label_search_nearby_empty_address);
+            }
+
             mAddress = address;
             mStayCategoryNearByLayout.setToolbarTitle(address);
 
@@ -1351,11 +1356,6 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onCalendarClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
             mOnEventListener.onDateClick();
         }
 

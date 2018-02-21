@@ -1,20 +1,15 @@
 package com.daily.dailyhotel.screen.home.search.stay.outbound.research;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.view.View;
-
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.screen.home.search.SearchStayOutboundFilterView;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchStayOutboundDataBinding;
 
 import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 
 public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboundInterface.OnEventListener, ActivityResearchStayOutboundDataBinding> implements ResearchStayOutboundInterface.ViewInterface
@@ -37,10 +32,32 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.stayOutboundSuggestTextView.setOnClickListener(v -> getEventListener().onSuggestClick());
-        viewDataBinding.stayOutboundCalendarTextView.setOnClickListener(v -> getEventListener().onCalendarClick());
-        viewDataBinding.peopleBackgroundView.setOnClickListener(v -> getEventListener().onPeopleClick());
-        viewDataBinding.searchStayOutboundTextView.setOnClickListener(v -> getEventListener().onDoSearchClick());
+        viewDataBinding.stayOutboundFilterView.setOnFilterListener(new SearchStayOutboundFilterView.OnStayOutboundFilterListener()
+        {
+            @Override
+            public void onSuggestClick()
+            {
+                getEventListener().onSuggestClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onCalendarClick();
+            }
+
+            @Override
+            public void onPeopleClick()
+            {
+                getEventListener().onPeopleClick();
+            }
+
+            @Override
+            public void onSearchClick()
+            {
+                getEventListener().onDoSearchClick();
+            }
+        });
 
         mSearchStayOutboundFragment = (SearchStayOutboundFragment) getSupportFragmentManager().findFragmentById(R.id.searchStayFragment);
         mSearchStayOutboundFragment.setOnFragmentEventListener(new SearchStayOutboundFragment.OnEventListener()
@@ -100,7 +117,7 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
             return;
         }
 
-        getViewDataBinding().stayOutboundSuggestTextView.setText(text);
+        getViewDataBinding().stayOutboundFilterView.setSuggestText(text);
     }
 
     @Override
@@ -111,7 +128,7 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
             return;
         }
 
-        getViewDataBinding().stayOutboundCalendarTextView.setText(text);
+        getViewDataBinding().stayOutboundFilterView.setCalendarText(text);
     }
 
     @Override
@@ -122,7 +139,7 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
             return;
         }
 
-        getViewDataBinding().peopleTextView.setText(text);
+        getViewDataBinding().stayOutboundFilterView.setPeopleText(text);
     }
 
     @Override
@@ -133,7 +150,7 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
             return;
         }
 
-        getViewDataBinding().searchStayOutboundTextView.setEnabled(enabled);
+        getViewDataBinding().stayOutboundFilterView.setSearchEnabled(enabled);
     }
 
     @Override
@@ -155,52 +172,6 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
             return null;
         }
 
-        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.ALPHA, 1.0f, 0.5f, 1.0f);
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.ALPHA, 1.0f, 0.5f, 1.0f);
-        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
-        ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
-        ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
-        ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(200);
-        animatorSet.playTogether(objectAnimator1, objectAnimator2, objectAnimator3, objectAnimator4, objectAnimator5, objectAnimator6);
-
-        return new Completable()
-        {
-            @Override
-            protected void subscribeActual(CompletableObserver s)
-            {
-                animatorSet.addListener(new Animator.AnimatorListener()
-                {
-                    @Override
-                    public void onAnimationStart(Animator animation)
-                    {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation)
-                    {
-                        animatorSet.removeAllListeners();
-
-                        s.onComplete();
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation)
-                    {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation)
-                    {
-
-                    }
-                });
-
-                animatorSet.start();
-            }
-        };
+        return getViewDataBinding().stayOutboundFilterView.getSuggestTextViewAnimation();
     }
 }

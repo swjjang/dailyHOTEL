@@ -4,6 +4,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.screen.home.search.SearchGourmetFilterView;
 import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchGourmetDataBinding;
@@ -29,9 +30,26 @@ public class ResearchGourmetView extends BaseDialogView<ResearchGourmetInterface
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.gourmetSuggestTextView.setOnClickListener(v -> getEventListener().onSuggestClick());
-        viewDataBinding.gourmetCalendarTextView.setOnClickListener(v -> getEventListener().onCalendarClick());
-        viewDataBinding.searchGourmetTextView.setOnClickListener(v -> getEventListener().onDoSearchClick());
+        viewDataBinding.gourmetFilterView.setOnFilterListener(new SearchGourmetFilterView.OnGourmetFilterListener()
+        {
+            @Override
+            public void onSuggestClick()
+            {
+                getEventListener().onSuggestClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onCalendarClick();
+            }
+
+            @Override
+            public void onSearchClick()
+            {
+                getEventListener().onDoSearchClick();
+            }
+        });
 
         mSearchGourmetFragment = (SearchGourmetFragment) getSupportFragmentManager().findFragmentById(R.id.searchGourmetFragment);
         mSearchGourmetFragment.setOnFragmentEventListener(new SearchGourmetFragment.OnEventListener()
@@ -91,7 +109,7 @@ public class ResearchGourmetView extends BaseDialogView<ResearchGourmetInterface
             return;
         }
 
-        getViewDataBinding().gourmetSuggestTextView.setText(text);
+        getViewDataBinding().gourmetFilterView.setSuggestText(text);
     }
 
     @Override
@@ -102,7 +120,7 @@ public class ResearchGourmetView extends BaseDialogView<ResearchGourmetInterface
             return;
         }
 
-        getViewDataBinding().gourmetCalendarTextView.setText(text);
+        getViewDataBinding().gourmetFilterView.setCalendarText(text);
     }
 
     @Override
@@ -113,7 +131,7 @@ public class ResearchGourmetView extends BaseDialogView<ResearchGourmetInterface
             return;
         }
 
-        getViewDataBinding().searchGourmetTextView.setEnabled(enabled);
+        getViewDataBinding().gourmetFilterView.setSearchEnabled(enabled);
     }
 
     @Override

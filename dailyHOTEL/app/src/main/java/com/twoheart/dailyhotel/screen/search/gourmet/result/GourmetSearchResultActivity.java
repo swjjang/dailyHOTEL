@@ -1074,6 +1074,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
+            if (DailyTextUtils.isTextEmpty(address) == true)
+            {
+                address = getString(R.string.label_search_nearby_empty_address);
+            }
+
             mAddress = address;
             mPlaceSearchResultLayout.setToolbarTitle(address);
 
