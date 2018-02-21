@@ -1,15 +1,12 @@
 package com.daily.dailyhotel.screen.home.search;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.support.design.widget.AppBarLayout;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
-import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
@@ -22,7 +19,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchDataBinding;
 
 import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function3;
 
@@ -48,10 +44,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         initToolbar(viewDataBinding);
+        initAppBarLayout(viewDataBinding);
         initStayLayout(viewDataBinding);
         initStayOutboundLayout(viewDataBinding);
         initGourmetLayout(viewDataBinding);
-        initAppBarLayout(viewDataBinding);
         initViewPageLayout(viewDataBinding);
     }
 
@@ -73,9 +69,26 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         viewDataBinding.staySearchTextView.setOnClickListener(v -> getEventListener().onStayClick());
-        viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onStaySuggestClick());
-        viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onStayCalendarClick());
-        viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onStayDoSearchClick());
+        viewDataBinding.stayFilterView.setOnFilterListener(new SearchStayFilterView.OnStayFilterListener()
+        {
+            @Override
+            public void onSuggestClick()
+            {
+                getEventListener().onStaySuggestClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onStayCalendarClick();
+            }
+
+            @Override
+            public void onSearchClick()
+            {
+                getEventListener().onStayDoSearchClick();
+            }
+        });
     }
 
     private void initStayOutboundLayout(ActivitySearchDataBinding viewDataBinding)
@@ -86,10 +99,32 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         viewDataBinding.stayOutboundSearchTextView.setOnClickListener(v -> getEventListener().onStayOutboundClick());
-        viewDataBinding.stayOutboundSuggestTextView.setOnClickListener(v -> getEventListener().onStayOutboundSuggestClick());
-        viewDataBinding.stayOutboundCalendarTextView.setOnClickListener(v -> getEventListener().onStayOutboundCalendarClick());
-        viewDataBinding.peopleBackgroundView.setOnClickListener(v -> getEventListener().onStayOutboundPeopleClick());
-        viewDataBinding.searchStayOutboundTextView.setOnClickListener(v -> getEventListener().onStayOutboundDoSearchClick());
+        viewDataBinding.stayOutboundFilterView.setOnFilterListener(new SearchStayOutboundFilterView.OnStayOutboundFilterListener()
+        {
+            @Override
+            public void onSuggestClick()
+            {
+                getEventListener().onStayOutboundSuggestClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onStayOutboundCalendarClick();
+            }
+
+            @Override
+            public void onPeopleClick()
+            {
+                getEventListener().onStayOutboundPeopleClick();
+            }
+
+            @Override
+            public void onSearchClick()
+            {
+                getEventListener().onStayOutboundDoSearchClick();
+            }
+        });
     }
 
     private void initGourmetLayout(ActivitySearchDataBinding viewDataBinding)
@@ -100,9 +135,26 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         viewDataBinding.gourmetSearchTextView.setOnClickListener(v -> getEventListener().onGourmetClick());
-        viewDataBinding.gourmetSuggestTextView.setOnClickListener(v -> getEventListener().onGourmetSuggestClick());
-        viewDataBinding.gourmetCalendarTextView.setOnClickListener(v -> getEventListener().onGourmetCalendarClick());
-        viewDataBinding.searchGourmetTextView.setOnClickListener(v -> getEventListener().onGourmetDoSearchClick());
+        viewDataBinding.gourmetFilterView.setOnFilterListener(new SearchGourmetFilterView.OnGourmetFilterListener()
+        {
+            @Override
+            public void onSuggestClick()
+            {
+                getEventListener().onGourmetSuggestClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onGourmetCalendarClick();
+            }
+
+            @Override
+            public void onSearchClick()
+            {
+                getEventListener().onGourmetDoSearchClick();
+            }
+        });
     }
 
     private void initAppBarLayout(ActivitySearchDataBinding viewDataBinding)
@@ -282,10 +334,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().staySearchTextView.setAlpha(alpha);
-        getViewDataBinding().stayLayout.getLayoutParams().width = layoutWidth;
-        getViewDataBinding().stayLayout.setPadding(paddingWidth, getViewDataBinding().stayLayout.getPaddingTop()//
-            , paddingWidth, getViewDataBinding().stayLayout.getPaddingBottom());
+        setLayoutValueForAnimation(getViewDataBinding().staySearchTextView, alpha//
+            , getViewDataBinding().stayFilterView, layoutWidth, paddingWidth);
     }
 
     private void setStayOutboundLayoutValueForAnimation(float alpha, int layoutWidth, int paddingWidth)
@@ -295,10 +345,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().stayOutboundSearchTextView.setAlpha(alpha);
-        getViewDataBinding().stayOutboundLayout.getLayoutParams().width = layoutWidth;
-        getViewDataBinding().stayOutboundLayout.setPadding(paddingWidth, getViewDataBinding().stayOutboundLayout.getPaddingTop()//
-            , paddingWidth, getViewDataBinding().stayOutboundLayout.getPaddingBottom());
+        setLayoutValueForAnimation(getViewDataBinding().stayOutboundSearchTextView, alpha//
+            , getViewDataBinding().stayOutboundFilterView, layoutWidth, paddingWidth);
     }
 
     private void setGourmetLayoutValueForAnimation(float alpha, int layoutWidth, int paddingWidth)
@@ -308,10 +356,20 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().gourmetSearchTextView.setAlpha(alpha);
-        getViewDataBinding().gourmetLayout.getLayoutParams().width = layoutWidth;
-        getViewDataBinding().gourmetLayout.setPadding(paddingWidth, getViewDataBinding().gourmetLayout.getPaddingTop()//
-            , paddingWidth, getViewDataBinding().gourmetLayout.getPaddingBottom());
+        setLayoutValueForAnimation(getViewDataBinding().gourmetSearchTextView, alpha//
+            , getViewDataBinding().gourmetFilterView, layoutWidth, paddingWidth);
+    }
+
+    private void setLayoutValueForAnimation(View alphaView, float alpha, View widthView, int layoutWidth, int paddingWidth)
+    {
+        if (alphaView == null || widthView == null)
+        {
+            return;
+        }
+
+        alphaView.setAlpha(alpha);
+        widthView.getLayoutParams().width = layoutWidth;
+        widthView.setPadding(paddingWidth, widthView.getPaddingTop(), paddingWidth, widthView.getPaddingBottom());
     }
 
     void setBoxShadowViewValueForAnimation(int width, int height)
@@ -321,9 +379,15 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().searchBoxShadowView.getLayoutParams().width = width;
-        getViewDataBinding().searchBoxShadowView.getLayoutParams().height = height;
-        getViewDataBinding().searchBoxShadowView.requestLayout();
+        ViewGroup.LayoutParams layoutParams = getViewDataBinding().searchBoxShadowView.getLayoutParams();
+
+        if (layoutParams != null)
+        {
+            layoutParams.width = width;
+            layoutParams.height = height;
+
+            getViewDataBinding().searchBoxShadowView.requestLayout();
+        }
     }
 
     @Override
@@ -377,7 +441,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().staySuggestTextView.setText(text);
+        getViewDataBinding().stayFilterView.setSuggestText(text);
     }
 
     @Override
@@ -388,7 +452,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().stayCalendarTextView.setText(text);
+        getViewDataBinding().stayFilterView.setCalendarText(text);
     }
 
     @Override
@@ -399,7 +463,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().searchStayTextView.setEnabled(enabled);
+        getViewDataBinding().stayFilterView.setSearchEnabled(enabled);
     }
 
     @Override
@@ -442,7 +506,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().stayOutboundSuggestTextView.setText(text);
+        getViewDataBinding().stayOutboundFilterView.setSuggestText(text);
     }
 
     @Override
@@ -453,7 +517,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().stayOutboundCalendarTextView.setText(text);
+        getViewDataBinding().stayOutboundFilterView.setCalendarText(text);
     }
 
     @Override
@@ -464,7 +528,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().peopleTextView.setText(text);
+        getViewDataBinding().stayOutboundFilterView.setPeopleText(text);
     }
 
     @Override
@@ -475,7 +539,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().searchStayOutboundTextView.setEnabled(enabled);
+        getViewDataBinding().stayOutboundFilterView.setSearchEnabled(enabled);
     }
 
     @Override
@@ -486,53 +550,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return null;
         }
 
-        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.ALPHA, 1.0f, 0.5f, 1.0f);
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.ALPHA, 1.0f, 0.5f, 1.0f);
-        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
-        ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
-        ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
-        ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(200);
-        animatorSet.playTogether(objectAnimator1, objectAnimator2, objectAnimator3, objectAnimator4, objectAnimator5, objectAnimator6);
-
-        return new Completable()
-        {
-            @Override
-            protected void subscribeActual(CompletableObserver observer)
-            {
-                animatorSet.addListener(new Animator.AnimatorListener()
-                {
-                    @Override
-                    public void onAnimationStart(Animator animation)
-                    {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation)
-                    {
-                        animatorSet.removeAllListeners();
-
-                        observer.onComplete();
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation)
-                    {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation)
-                    {
-
-                    }
-                });
-
-                animatorSet.start();
-            }
-        };
+        return getViewDataBinding().stayOutboundFilterView.getSuggestTextViewAnimation();
     }
 
     @Override
@@ -575,7 +593,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().gourmetSuggestTextView.setText(text);
+        getViewDataBinding().gourmetFilterView.setSuggestText(text);
     }
 
     @Override
@@ -586,7 +604,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().gourmetCalendarTextView.setText(text);
+        getViewDataBinding().gourmetFilterView.setCalendarText(text);
     }
 
     @Override
@@ -597,21 +615,14 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().searchGourmetTextView.setEnabled(enabled);
+        getViewDataBinding().gourmetFilterView.setSearchEnabled(enabled);
     }
 
     @Override
-    public Observable getCompleteCreatedFragment()
+    public Observable<Boolean> getCompleteCreatedFragment()
     {
         return Observable.zip(mSearchStayFragment.getCompleteCreatedObservable(), mSearchStayOutboundFragment.getCompleteCreatedObservable()//
-            , mSearchGourmetFragment.getCompleteCreatedObservable(), new Function3<Object, Object, Object, Boolean>()
-            {
-                @Override
-                public Boolean apply(Object o, Object o2, Object o3) throws Exception
-                {
-                    return true;
-                }
-            });
+            , mSearchGourmetFragment.getCompleteCreatedObservable(), (o, o2, o3) -> true);
     }
 
     private void setStaySelected(boolean selected)
@@ -621,17 +632,15 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().stayLayout.setVisibility(selected ? View.VISIBLE : View.GONE);
+        getViewDataBinding().stayFilterView.setVisibility(selected ? View.VISIBLE : View.GONE);
         getViewDataBinding().staySearchTextView.setSelected(selected);
 
         if (selected == true)
         {
             mSearchStayFragment.onSelected();
-            getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
         } else
         {
             mSearchStayFragment.onUnselected();
-            getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
         }
     }
 
@@ -642,17 +651,15 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().stayOutboundLayout.setVisibility(selected ? View.VISIBLE : View.GONE);
+        getViewDataBinding().stayOutboundFilterView.setVisibility(selected ? View.VISIBLE : View.GONE);
         getViewDataBinding().stayOutboundSearchTextView.setSelected(selected);
 
         if (selected == true)
         {
             mSearchStayOutboundFragment.onSelected();
-            getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
         } else
         {
             mSearchStayOutboundFragment.onUnselected();
-            getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
         }
     }
 
@@ -663,17 +670,15 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().gourmetLayout.setVisibility(selected ? View.VISIBLE : View.GONE);
+        getViewDataBinding().gourmetFilterView.setVisibility(selected ? View.VISIBLE : View.GONE);
         getViewDataBinding().gourmetSearchTextView.setSelected(selected);
 
         if (selected == true)
         {
             mSearchGourmetFragment.onSelected();
-            getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
         } else
         {
             mSearchGourmetFragment.onUnselected();
-            getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
         }
     }
 }
