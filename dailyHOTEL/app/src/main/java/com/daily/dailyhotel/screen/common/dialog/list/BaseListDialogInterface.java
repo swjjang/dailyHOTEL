@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.common.dialog.list;
 
+import android.app.Activity;
+
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BaseMultiWindowViewInterface;
@@ -27,5 +29,6 @@ public interface BaseListDialogInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity, String screenName);
     }
 }

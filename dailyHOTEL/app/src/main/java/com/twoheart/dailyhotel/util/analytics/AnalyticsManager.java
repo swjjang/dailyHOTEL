@@ -756,6 +756,11 @@ public class AnalyticsManager
 
         // REWARD
         public static final String DAILY_REWARD_DETAIL = "daily_reward_detail";
+
+        // 회원 탈퇴
+        public static final String MEMBER_LEAVE_STEP_1 = "member_leave_step_1";
+        public static final String MEMBER_LEAVE_STEP_2 = "member_leave_step_2";
+        public static final String MEMBER_LEAVE_STEP_3 = "member_leave_step_3";
     }
 
     public static class Action
@@ -1257,6 +1262,8 @@ public class AnalyticsManager
         public static final String DEVICE_INFO = "device_info";
 
         public static final String TRUE_AWARDS = "true_awards";
+
+        public static final String MEMBER_LEAVE = "member_leave";
     }
 
     public static class Label

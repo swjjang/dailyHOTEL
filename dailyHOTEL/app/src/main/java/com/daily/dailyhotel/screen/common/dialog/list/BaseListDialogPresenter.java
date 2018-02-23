@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.view.Surface;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.base.BaseMultiWindowPresenter;
 import com.daily.dailyhotel.parcel.ListDialogItemParcel;
@@ -29,6 +30,7 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
     private String mTitleText;
     private ListDialogItemParcel mSelectedItem;
     private ArrayList<ListDialogItemParcel> mList;
+    private String mAnalyticsScreenName;
 
     public BaseListDialogPresenter(@NonNull BaseListDialogActivity activity)
     {
@@ -78,6 +80,8 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
 
         mSelectedItem = intent.getParcelableExtra(BaseListDialogActivity.INTENT_EXTRA_DATA_SELECTED_DATA);
 
+        mAnalyticsScreenName = intent.getStringExtra(BaseListDialogActivity.INTENT_EXTRA_DATA_ANALYTICS_SCREEN);
+
         return true;
     }
 
@@ -102,6 +106,14 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        try
+        {
+            mAnalytics.onScreen(getActivity(), mAnalyticsScreenName);
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 
@@ -162,7 +174,7 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
         }
 
         setRefresh(false);
-//        screenLock(showProgress);
+        //        screenLock(showProgress);
     }
 
     @Override

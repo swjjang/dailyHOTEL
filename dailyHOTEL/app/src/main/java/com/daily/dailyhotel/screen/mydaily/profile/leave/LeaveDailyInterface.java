@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.mydaily.profile.leave;
 
+import android.app.Activity;
+
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
@@ -37,5 +39,12 @@ public interface LeaveDailyInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
+        void onEventLeaveReasonSelected(Activity activity, String reason);
+
+        void onEventLeaveButtonClick(Activity activity);
+
+        void onEventCheckLeaveDialogButtonClick(Activity activity, boolean yes);
     }
 }
