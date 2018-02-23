@@ -494,7 +494,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
                 try
                 {
-                    UserManagement.requestLogout(new LogoutResponseCallback()
+                    UserManagement.getInstance().requestLogout(new LogoutResponseCallback()
                     {
                         @Override
                         public void onCompleteLogout()

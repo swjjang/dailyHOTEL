@@ -657,7 +657,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             lockUI();
 
-            UserManagement.requestMe(new MeResponseCallback()
+            UserManagement.getInstance().requestMe(new MeResponseCallback()
             {
                 @Override
                 public void onSuccess(UserProfile result)
@@ -1027,7 +1027,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         try
                         {
-                            UserManagement.requestLogout(new LogoutResponseCallback()
+                            UserManagement.getInstance().requestLogout(new LogoutResponseCallback()
                             {
                                 @Override
                                 public void onCompleteLogout()

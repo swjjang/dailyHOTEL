@@ -23,7 +23,7 @@ public class KakaoRemoteImpl implements SnsInterface
     {
         try
         {
-            UserManagement.requestLogout(null);
+            UserManagement.getInstance().requestLogout(null);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
