@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.LeaveInfo;
 import com.daily.dailyhotel.entity.LeaveReason;
@@ -25,6 +26,7 @@ import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -112,6 +114,14 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
         {
             onRefresh(true);
         }
+
+        try
+        {
+            mAnalytics.onScreen(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
     }
 
     @Override
@@ -181,6 +191,14 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
 
                     getViewInterface().setLeaveReasonText(mSelectedReason == null ? null : mSelectedReason.reason);
                     getViewInterface().setLeaveButtonEnabled(mSelectedReason != null && getViewInterface().isAgreeChecked());
+
+                    try
+                    {
+                        mAnalytics.onEventLeaveReasonSelected(getActivity(), mSelectedReason.reason);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
                 }
                 break;
             }
@@ -289,7 +307,8 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
         ListDialogItemParcel selectedParcel = mSelectedReason == null //
             ? null : new ListDialogItemParcel(mSelectedReason.reason, new LeaveReasonParcel(mSelectedReason));
 
-        Intent intent = BaseListDialogActivity.newInstance(getActivity(), getString(R.string.label_leave_daily_leave_reason_title), selectedParcel, parcelList);
+        Intent intent = BaseListDialogActivity.newInstance(getActivity(), getString(R.string.label_leave_daily_leave_reason_title) //
+            , selectedParcel, parcelList, AnalyticsManager.Screen.MEMBER_LEAVE_STEP_2);
         startActivityForResult(intent, LeaveDailyActivity.REQUEST_CODE_LEAVE_REASON);
     }
 
@@ -317,8 +336,35 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
 
                             Util.restartApp(getActivity());
                         })), throwable -> onHandleError(throwable)));
+
+                    try
+                    {
+                        mAnalytics.onEventCheckLeaveDialogButtonClick(getActivity(), true);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
                 }
-            }, null, dialogInterface -> unLockAll(), null, true);
+            }, null, dialogInterface ->
+            {
+                unLockAll();
+
+                try
+                {
+                    mAnalytics.onEventCheckLeaveDialogButtonClick(getActivity(), false);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.getMessage());
+                }
+            }, null, true);
+
+        try
+        {
+            mAnalytics.onEventLeaveButtonClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
     }
 
     @Override

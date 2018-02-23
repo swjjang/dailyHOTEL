@@ -20,15 +20,18 @@ public class BaseListDialogActivity extends BaseMultiWindowActivity<BaseListDial
 {
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
     protected static final String INTENT_EXTRA_DATA_LIST = "list";
+    protected static final String INTENT_EXTRA_DATA_ANALYTICS_SCREEN = "screen";
+
     public static final String INTENT_EXTRA_DATA_SELECTED_DATA = "selected";
 
     public static Intent newInstance(Context context, String titleText //
-        , ListDialogItemParcel selectedItem, ArrayList<ListDialogItemParcel> parcelList)
+        , ListDialogItemParcel selectedItem, ArrayList<ListDialogItemParcel> parcelList, String analyticsScreenName)
     {
         Intent intent = new Intent(context, BaseListDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, titleText);
         intent.putExtra(INTENT_EXTRA_DATA_SELECTED_DATA, selectedItem);
         intent.putParcelableArrayListExtra(INTENT_EXTRA_DATA_LIST, parcelList);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS_SCREEN, analyticsScreenName);
         return intent;
     }
 
