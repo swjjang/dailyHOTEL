@@ -145,12 +145,22 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     @Override
     public void onSelected()
     {
+        if (getActivity() == null)
+        {
+            return;
+        }
+
         onRefresh();
     }
 
     @Override
     public void onUnselected()
     {
+        if (getActivity() == null)
+        {
+            return;
+        }
+
     }
 
     @Override

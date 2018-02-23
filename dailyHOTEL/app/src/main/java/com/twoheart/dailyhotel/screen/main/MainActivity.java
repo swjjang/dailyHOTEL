@@ -1830,7 +1830,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 @Override
                 protected void subscribeActual(Observer<? super Boolean> observer)
                 {
-                    UserManagement.requestMe(new MeResponseCallback()
+                    UserManagement.getInstance().requestMe(new MeResponseCallback()
                     {
                         @Override
                         public void onSessionClosed(ErrorResult errorResult)

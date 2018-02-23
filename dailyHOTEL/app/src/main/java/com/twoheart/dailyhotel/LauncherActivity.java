@@ -124,7 +124,7 @@ public class LauncherActivity extends Activity
 
         try
         {
-            UserManagement.requestLogout(null);
+            UserManagement.getInstance().requestLogout(null);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
