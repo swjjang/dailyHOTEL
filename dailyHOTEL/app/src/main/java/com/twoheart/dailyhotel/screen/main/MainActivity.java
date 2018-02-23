@@ -1603,20 +1603,16 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                                     @Override
                                     public void onDismiss(DialogInterface dialog)
                                     {
-                                        Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
+                                        mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
 
-                                        startActivity(intent);
+                                        processFinishSplash();
                                     }
                                 });
                         } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                         {
-                            Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
+                            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
 
-                            startActivity(intent);
+                            processFinishSplash();
                         } else
                         {
                             processFinishSplash();
