@@ -33,7 +33,7 @@ public class StayAreaFragmentView extends BaseFragmentDialogView<StayAreaFragmen
         }
 
         viewDataBinding.expandableListView.setTabletDevice(isTabletDevice());
-        viewDataBinding.expandableListView.setTabLayoutVisible(false);
+        viewDataBinding.expandableListView.removeTabLayout();
         viewDataBinding.expandableListView.setOnAreaExpandableListener(new StayAreaExpandableListView.OnStayAreaExpandableListener()
         {
             @Override

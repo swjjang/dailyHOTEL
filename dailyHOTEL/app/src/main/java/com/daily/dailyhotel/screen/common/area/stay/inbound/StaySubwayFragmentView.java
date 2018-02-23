@@ -34,7 +34,6 @@ public class StaySubwayFragmentView extends BaseFragmentDialogView<StaySubwayFra
         }
 
         viewDataBinding.expandableListView.setTabletDevice(isTabletDevice());
-        viewDataBinding.expandableListView.setTabLayoutVisible(true);
         viewDataBinding.expandableListView.setOnAreaExpandableListener(new StayAreaExpandableListView.OnStayAreaExpandableListener()
         {
             @Override

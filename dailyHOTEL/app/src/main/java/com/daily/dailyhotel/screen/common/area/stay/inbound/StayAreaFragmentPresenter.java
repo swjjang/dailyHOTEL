@@ -89,6 +89,15 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
                 getViewInterface().setAreaList(areaGroupList);
             }
         });
+
+        mStayAreaViewModel.mPreviousArea.observe(activity, new Observer<StayRegion>()
+        {
+            @Override
+            public void onChanged(@Nullable StayRegion stayRegion)
+            {
+
+            }
+        });
     }
 
     @Override

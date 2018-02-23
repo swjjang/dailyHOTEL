@@ -36,6 +36,7 @@ import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -465,7 +466,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             String checkInDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
             String checkOutDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
 
-            startActivityForResult(StayAreaListActivity.newInstance(getActivity()//
+            startActivityForResult(StayAreaTabActivity.newInstance(getActivity()//
                 , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL//
                 , mStayViewModel.selectedCategory.getValue().code), StayTabActivity.REQUEST_CODE_REGION);
 

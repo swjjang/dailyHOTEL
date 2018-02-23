@@ -39,13 +39,10 @@ import org.json.JSONObject;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -150,6 +147,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(mDailyCategoryType.getNameResId()));
     }
 
     @Override
@@ -222,18 +220,26 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().map(new Function<Boolean, ObservableSource<Boolean>>()
+
+        addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
-            public ObservableSource<Boolean> apply(Boolean aBoolean) throws Exception
+            public void accept(Boolean result) throws Exception
             {
-                return Observable.zip(mStayRemoteImpl.getRegionList(mDailyCategoryType), mStayRemoteImpl.getSubwayList(mDailyCategoryType), new BiFunction<List<StayAreaGroup>, List<StayAreaGroup>, Boolean>()
+                addCompositeDisposable(Observable.zip(mStayRemoteImpl.getRegionList(mDailyCategoryType), mStayRemoteImpl.getSubwayList(mDailyCategoryType), new BiFunction<List<StayAreaGroup>, List<StayAreaGroup>, StayRegion>()
                 {
                     @Override
-                    public Boolean apply(List<StayAreaGroup> areaGroupList, List<StayAreaGroup> areaGroupList2) throws Exception
+                    public StayRegion apply(List<StayAreaGroup> areaGroupList, List<StayAreaGroup> areaGroupList2) throws Exception
                     {
-                        mStayAreaViewModel.areaList.setValue(areaGroupList);
-                        mStayAreaViewModel.subwayList.setValue(areaGroupList);
+                        getActivity().runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mStayAreaViewModel.areaList.setValue(areaGroupList);
+                                mStayAreaViewModel.subwayList.setValue(areaGroupList2);
+                            }
+                        });
 
                         Pair<String, String> namePair = getDistrictNTownNameByCategory(mDailyCategoryType);
                         StayRegion stayRegion = null;
@@ -254,24 +260,27 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                             stayRegion = new StayRegion(stayAreaGroup, new StayArea(stayAreaGroup));
                         }
 
+                        return stayRegion;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayRegion>()
+                {
+                    @Override
+                    public void accept(StayRegion stayRegion) throws Exception
+                    {
                         mStayAreaViewModel.mPreviousArea.setValue(stayRegion);
 
-                        return true;
+                        getViewInterface().setTabVisible(true);
+
+                        unLockAll();
                     }
-                });
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ObservableSource<Boolean>>()
-        {
-            @Override
-            public void accept(ObservableSource<Boolean> booleanObservableSource) throws Exception
-            {
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                onHandleErrorAndFinish(throwable);
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleErrorAndFinish(throwable);
+                    }
+                }));
             }
         }));
     }
@@ -329,11 +338,14 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             }
         }
 
-        for (StayArea area : stayAreaGroup.getAreaList())
+        if (stayAreaGroup != null && stayAreaGroup.getAreaCount() > 0)
         {
-            if (areaName.equalsIgnoreCase(area.name) == true)
+            for (StayArea area : stayAreaGroup.getAreaList())
             {
-                return new StayRegion(stayAreaGroup, area);
+                if (areaName.equalsIgnoreCase(area.name) == true)
+                {
+                    return new StayRegion(stayAreaGroup, area);
+                }
             }
         }
 
@@ -487,6 +499,18 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
             }
         });
+    }
+
+    @Override
+    public void onAreaTabClick()
+    {
+
+    }
+
+    @Override
+    public void onSubwayTabClick()
+    {
+
     }
 
     @Override

@@ -34,7 +34,7 @@
                 android:layout_height="40dp"
                 app:tabIndicatorHeight="2dp"
                 app:tabMinWidth="0dp"
-                app:tabMode="scrollable"
+                app:tabMode="fixed"
                 app:tabPadding="0dp"
                 app:tabSelectedTextColor="@color/default_text_cb70038"
                 app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"

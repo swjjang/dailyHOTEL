@@ -16,10 +16,16 @@ public interface StayAreaTabInterface
     interface ViewInterface extends BaseDialogViewInterface
     {
         Observable<Boolean> getCompleteCreatedFragment();
+
+        void setTabVisible(boolean visible);
     }
 
     interface OnEventListener extends OnBaseEventListener
     {
+        void onAreaTabClick();
+
+        void onSubwayTabClick();
+
         void onAroundSearchClick();
 
         void onAreaClick(StayArea areaGroup, StayArea area);

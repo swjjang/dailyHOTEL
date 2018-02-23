@@ -39,6 +39,7 @@ import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
@@ -2374,7 +2375,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
                 String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-                startActivityForResult(StayAreaListActivity.newInstance(mBaseActivity//
+                startActivityForResult(StayAreaTabActivity.newInstance(mBaseActivity//
                     , checkInDateTime, checkOutDateTime, categoryType, categoryType.getCodeString(mBaseActivity)), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
                 String label = "";

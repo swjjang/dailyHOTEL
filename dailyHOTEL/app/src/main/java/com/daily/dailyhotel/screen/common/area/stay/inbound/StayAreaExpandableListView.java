@@ -113,8 +113,6 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
             }
         });
 
-        mLayoutAreaSubwayTabDataBinding.getRoot().setVisibility(View.GONE);
-
         mLayoutRegionListLocationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_region_list_location_data, this, false);
         addHeaderView(mLayoutRegionListLocationDataBinding.getRoot());
         mLayoutRegionListLocationDataBinding.getRoot().setOnClickListener(new OnClickListener()
@@ -183,14 +181,14 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
         mAreaExpandableListener = listener;
     }
 
-    public void setTabLayoutVisible(boolean visible)
+    public void removeTabLayout()
     {
         if (mLayoutAreaSubwayTabDataBinding == null)
         {
             return;
         }
 
-        mLayoutAreaSubwayTabDataBinding.getRoot().setVisibility(visible ? VISIBLE : GONE);
+        removeHeaderView(mLayoutAreaSubwayTabDataBinding.getRoot());
     }
 
     public void setTab(List<Area> areaList)

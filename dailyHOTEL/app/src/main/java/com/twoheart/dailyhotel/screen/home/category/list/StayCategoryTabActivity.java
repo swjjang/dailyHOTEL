@@ -28,6 +28,7 @@ import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -629,7 +630,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             String checkInDateTime = mStayCategoryCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
             String checkOutDateTime = mStayCategoryCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-            startActivityForResult(StayAreaListActivity.newInstance(this//
+            startActivityForResult(StayAreaTabActivity.newInstance(this//
                 , checkInDateTime, checkOutDateTime, mDailyCategoryType, mStayCategoryCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             //            switch (mViewType)
