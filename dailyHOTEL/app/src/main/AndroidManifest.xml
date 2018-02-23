@@ -601,7 +601,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity"
+            android:name="com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -403,6 +404,35 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                     return areaGroupList;
                 });
         }
+    }
+
+    @Override
+    public Observable<List<StayAreaGroup>> getSubwayList(DailyCategoryType categoryType)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
+            : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
+
+        return mDailyMobileService.getStaySubwayList(Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                List<StayAreaGroup> areaGroupList;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        areaGroupList = baseDto.data.getAreaGroupList();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return areaGroupList;
+            });
     }
 
     private String makeListQueryParams(Map<String, Object> queryMap, String abTestType)

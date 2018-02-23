@@ -9,7 +9,7 @@ import com.daily.dailyhotel.entity.StayAreaGroup;
 
 import java.util.List;
 
-import io.reactivex.Completable;
+import io.reactivex.Observable;
 
 /**
  * Created by sheldon
@@ -25,9 +25,9 @@ public interface StayAreaFragmentInterface
 
         void setLocationTermVisible(boolean visible);
 
-        Completable collapseGroupWithAnimation(int groupPosition, boolean animation);
+        Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation);
 
-        Completable expandGroupWithAnimation(int groupPosition, boolean animation);
+        Observable<Boolean> expandGroupWithAnimation(int groupPosition, boolean animation);
 
         void setSelectedAreaGroup(int groupPosition);
     }
@@ -38,7 +38,7 @@ public interface StayAreaFragmentInterface
 
         void onAreaGroupClick(int groupPosition);
 
-        void onAreaClick(int groupPosition, StayArea stayTown);
+        void onAreaClick(int groupPosition, StayArea area);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

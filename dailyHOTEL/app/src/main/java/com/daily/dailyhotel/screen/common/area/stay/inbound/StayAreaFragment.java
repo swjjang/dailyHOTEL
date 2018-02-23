@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
+import com.daily.dailyhotel.entity.StayArea;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
  * Created by sheldon
@@ -14,6 +16,9 @@ public class StayAreaFragment extends BasePagerFragment<StayAreaFragmentPresente
 {
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
+        void onAroundSearchClick();
+
+        void onAreaClick(StayArea areaGroup, StayArea area);
     }
 
     @NonNull

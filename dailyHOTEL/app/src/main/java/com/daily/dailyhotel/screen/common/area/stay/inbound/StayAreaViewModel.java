@@ -7,6 +7,8 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 
 import java.util.List;
@@ -19,7 +21,8 @@ public class StayAreaViewModel extends ViewModel
 {
     MutableLiveData<List<StayAreaGroup>> areaList = new MutableLiveData<>();
     MutableLiveData<List<StayAreaGroup>> subwayList = new MutableLiveData<>();
-    MutableLiveData<CommonDateTimeData> commonDateTime = new MutableLiveData<>();
+    MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
+    MutableLiveData<StayRegion> mPreviousArea = new MutableLiveData<>();
 
     static class StayAreaViewModelFactory implements ViewModelProvider.Factory
     {
