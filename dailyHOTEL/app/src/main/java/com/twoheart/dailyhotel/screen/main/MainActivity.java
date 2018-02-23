@@ -1604,7 +1604,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                                     public void onDismiss(DialogInterface dialog)
                                     {
                                         Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
 
                                         startActivity(intent);
@@ -1613,7 +1613,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                         {
                             Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
 
                             startActivity(intent);
