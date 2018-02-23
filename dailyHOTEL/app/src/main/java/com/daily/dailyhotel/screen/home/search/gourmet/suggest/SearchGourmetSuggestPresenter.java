@@ -367,8 +367,7 @@ public class SearchGourmetSuggestPresenter //
                     }
 
                     // 최근 검색어
-                    mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getGourmetRecentSearches());
-                    List<Keyword> keywordList = mDailyRecentSearches.getList();
+                    List<Keyword> keywordList = getDailyRecentSearches().getList();
 
                     List<GourmetSuggest> recentlySuggestList = getRecentlySuggestList(keywordList, gourmetList);
                     setRecentlySuggestList(recentlySuggestList);
@@ -662,6 +661,16 @@ public class SearchGourmetSuggestPresenter //
         startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
+    private DailyRecentSearches getDailyRecentSearches()
+    {
+        if (mDailyRecentSearches == null)
+        {
+            mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getGourmetRecentSearches());
+        }
+
+        return mDailyRecentSearches;
+    }
+
     private Keyword getKeyword(GourmetSuggest gourmetSuggest)
     {
         if (getActivity() == null || gourmetSuggest == null)
@@ -692,8 +701,8 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-        mDailyRecentSearches.addString(keyword);
-        DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
+        getDailyRecentSearches().addString(keyword);
+        DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(getDailyRecentSearches().toString());
     }
 
     void startFinishAction(GourmetSuggest gourmetSuggest, String keyword, String analyticsClickType)
@@ -763,8 +772,8 @@ public class SearchGourmetSuggestPresenter //
                 return;
             }
 
-            mDailyRecentSearches.remove(keyword);
-            DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
+            getDailyRecentSearches().remove(keyword);
+            DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(getDailyRecentSearches().toString());
 
             unLockAll();
 

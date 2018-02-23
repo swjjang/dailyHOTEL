@@ -411,8 +411,7 @@ public class SearchStaySuggestPresenter //
                     }
 
                     // 최근 검색어
-                    mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getHotelRecentSearches());
-                    List<Keyword> keywordList = mDailyRecentSearches.getList();
+                    List<Keyword> keywordList = getDailyRecentSearches().getList();
 
                     List<StaySuggest> recentlySuggestList = getRecentlySuggestList(keywordList, stayList);
                     setRecentlySuggestList(recentlySuggestList);
@@ -886,6 +885,16 @@ public class SearchStaySuggestPresenter //
         startFinishAction(staySuggest, mKeyword, null);
     }
 
+    private DailyRecentSearches getDailyRecentSearches()
+    {
+        if (mDailyRecentSearches == null)
+        {
+            mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getHotelRecentSearches());
+        }
+
+        return mDailyRecentSearches;
+    }
+
     private Keyword getKeyword(StaySuggest staySuggest)
     {
         if (getActivity() == null || staySuggest == null)
@@ -916,8 +925,8 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        mDailyRecentSearches.addString(keyword);
-        DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
+        getDailyRecentSearches().addString(keyword);
+        DailyPreference.getInstance(getActivity()).setHotelRecentSearches(getDailyRecentSearches().toString());
     }
 
     void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
@@ -1007,8 +1016,8 @@ public class SearchStaySuggestPresenter //
                 return;
             }
 
-            mDailyRecentSearches.remove(keyword);
-            DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
+            getDailyRecentSearches().remove(keyword);
+            DailyPreference.getInstance(getActivity()).setHotelRecentSearches(getDailyRecentSearches().toString());
 
             unLockAll();
 
