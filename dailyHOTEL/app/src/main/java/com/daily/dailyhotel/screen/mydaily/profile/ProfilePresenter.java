@@ -67,6 +67,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
         void setExceedBonus(Activity activity, boolean isExceedBonus);
 
         void onEventPrivacyValidMonth(Activity activity, int month);
+
+        void onEventMemberLeaveClick(Activity activity);
     }
 
     public ProfilePresenter(@NonNull ProfileActivity activity)
@@ -275,7 +277,6 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    //                    DailyToast.showToast(getActivity(), "회원탈퇴 화면 바로 호출", DailyToast.LENGTH_SHORT);
                     Intent intent = LeaveDailyActivity.newInstance(getActivity());
                     startActivity(intent);
                 }
@@ -579,9 +580,16 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             startActivityForResult(intent, ProfileActivity.REQUEST_CODE_CHECK_PASSWORD);
         } else
         {
-            //            DailyToast.showToast(getActivity(), "회원탈퇴 화면 바로 호출", DailyToast.LENGTH_SHORT);
             Intent intent = LeaveDailyActivity.newInstance(getActivity());
             startActivity(intent);
+        }
+
+        try
+        {
+            mAnalytics.onEventMemberLeaveClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 }
