@@ -291,7 +291,6 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         }
 
         startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), mAggregationId));
-
         finish();
     }
 
