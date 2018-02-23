@@ -26,6 +26,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
 {
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onConfirmClick();
     }
 
     public StayOutboundThankYouView(BaseActivity baseActivity, StayOutboundThankYouView.OnEventListener listener)
@@ -206,7 +207,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
         switch (v.getId())
         {
             case R.id.confirmView:
-                getEventListener().onBackClick();
+                getEventListener().onConfirmClick();
                 break;
         }
     }

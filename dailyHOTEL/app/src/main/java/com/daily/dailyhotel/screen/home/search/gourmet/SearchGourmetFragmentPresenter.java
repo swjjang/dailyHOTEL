@@ -141,12 +141,23 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     @Override
     public void onSelected()
     {
+        if (getActivity() == null)
+        {
+            return;
+        }
+
         onRefresh();
     }
 
     @Override
     public void onUnselected()
     {
+        if (getActivity() == null)
+        {
+            return;
+        }
+
+
     }
 
     @Override

@@ -97,7 +97,7 @@ public class LauncherActivity extends Activity
                     AnalyticsManager.getInstance(this).recordDeepLink(externalDeepLink);
 
                     newIntent.setData(uri);
-                    newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 }
 
                 dailyDeepLink.clear();
@@ -124,7 +124,7 @@ public class LauncherActivity extends Activity
 
         try
         {
-            UserManagement.requestLogout(null);
+            UserManagement.getInstance().requestLogout(null);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

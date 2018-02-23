@@ -140,12 +140,24 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     @Override
     public void onSelected()
     {
+        if (getActivity() == null)
+        {
+            return;
+        }
+
+
         onRefresh();
     }
 
     @Override
     public void onUnselected()
     {
+        if (getActivity() == null)
+        {
+            return;
+        }
+
+
     }
 
     @Override

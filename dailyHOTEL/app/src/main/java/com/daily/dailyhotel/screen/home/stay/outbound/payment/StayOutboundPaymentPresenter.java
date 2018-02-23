@@ -2134,7 +2134,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             if (hasDepositSticker() == true)
             {
-                String text = getString(R.string.message_payment_dont_reward_sticker_used_bonus_payment_phone);
+                String text = getString(R.string.message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone);
 
                 SpannableString spannableString = new SpannableString(text);
 
