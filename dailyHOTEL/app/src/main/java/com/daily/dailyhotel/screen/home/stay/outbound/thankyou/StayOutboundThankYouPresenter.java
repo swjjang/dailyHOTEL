@@ -282,6 +282,19 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onConfirmClick()
+    {
+        if (isLock() == true)
+        {
+            return;
+        }
+
+        startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), mAggregationId));
+
+        finish();
+    }
+
     private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
     {
         if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
