@@ -888,7 +888,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onBackClick()
     {
-        finish();
+        getActivity().onBackPressed();
     }
 
     @Override
@@ -1453,7 +1453,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+        setResultData(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+        finish();
 
         mAnalytics.onEventStayClick(getActivity());
     }
@@ -1466,7 +1467,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+        setResultData(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+        finish();
 
         mAnalytics.onEventGourmetClick(getActivity());
     }
@@ -1488,7 +1490,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mAnalytics.onEventPopularAreaClick(getActivity(), stayOutboundSuggest.name);
     }
 
-    private void finish(int resultCode)
+    private void setResultData(int resultCode)
     {
         Intent intent = new Intent();
         intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mStayOutboundSuggest));
@@ -1498,7 +1500,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST, mPeople.getChildAgeList());
 
         setResult(resultCode, intent);
-        onBackClick();
     }
 
     void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)

@@ -202,6 +202,22 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
         });
 
+        mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_NEXT)
+                {
+                    mPasswordEditText.requestFocus();
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
         EmailCompleteAdapter emailCompleteAdapter;
 
         if (Constants.DEBUG == true)

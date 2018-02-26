@@ -516,6 +516,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
         {
             mPlaceSearchResultLayout.setToolbarTitleImageResourc(R.drawable.search_ic_01_date);
+        } else
+        {
+            mPlaceSearchResultLayout.setToolbarTitleImageResourc(R.drawable.search_ic_01_search);
         }
 
         StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
