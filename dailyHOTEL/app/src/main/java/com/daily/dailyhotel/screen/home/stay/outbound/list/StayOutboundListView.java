@@ -1137,6 +1137,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         RadiusArrayAdapter radiusArrayAdapter = new RadiusArrayAdapter(getContext(), R.layout.list_row_search_result_spinner, strings);
         radiusArrayAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
 
+        viewDataBinding.toolbarView.setTitleImageResource(R.drawable.search_ic_01_search);
         viewDataBinding.toolbarView.setRadiusSpinnerAdapter(radiusArrayAdapter);
         viewDataBinding.toolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
         {
