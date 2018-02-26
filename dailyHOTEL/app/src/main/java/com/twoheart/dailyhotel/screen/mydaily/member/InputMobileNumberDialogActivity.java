@@ -50,6 +50,8 @@ public class InputMobileNumberDialogActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.hold, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -86,6 +88,14 @@ public class InputMobileNumberDialogActivity extends BaseActivity
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.hold);
     }
 
     @Override

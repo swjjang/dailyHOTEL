@@ -29,6 +29,8 @@ public class KakaoManager extends BaseAnalyticsManager
 
     public KakaoManager(Context context)
     {
+        mContext = context;
+
         KakaoAdTracker.getInstance().init(context, "306637043627835071");
     }
 

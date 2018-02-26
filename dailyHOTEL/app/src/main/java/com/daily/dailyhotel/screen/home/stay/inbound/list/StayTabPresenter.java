@@ -379,24 +379,21 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 return mStayRemoteImpl.getRegionList(DailyCategoryType.STAY_ALL);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayAreaGroup>>()
+        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayAreaGroup>, ObservableSource<Boolean>>()
         {
             @Override
-            public void accept(List<StayAreaGroup> areaGroupList) throws Exception
+            public ObservableSource<Boolean> apply(List<StayAreaGroup> areaGroupList) throws Exception
             {
                 if (mHasDeepLink == true)
                 {
-
+                    return Observable.just(false);
                 } else
                 {
-                    if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true//
-                        && processDeepLinkByRegionList(areaGroupList, mStayViewModel.commonDateTime.getValue(), mDailyDeepLink) == true)
+                    if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true && processDeepLinkByRegionList(areaGroupList, mStayViewModel.commonDateTime.getValue(), mDailyDeepLink) == true)
                     {
-
+                        return Observable.just(true);
                     } else
                     {
-                        notifyDateTextChanged();
-
                         if (mStayViewModel.stayRegion.getValue() == null)
                         {
                             mStayViewModel.stayRegion.setValue(searchRegion(areaGroupList, getDistrictNTownNameByCategory(DailyCategoryType.STAY_ALL)));
@@ -407,11 +404,31 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                             mStayViewModel.stayRegion.setValue(new StayRegion(areaGroupList.get(0), new StayArea(areaGroupList.get(0))));
                         }
 
-                        notifyRegionTextChanged();
-                        notifyCategoryChanged();
+                        return Observable.just(true);
                     }
                 }
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> apply(Boolean notifyDataChanged) throws Exception
+            {
+                if (notifyDataChanged == true)
+                {
+                    notifyDateTextChanged();
+                    notifyRegionTextChanged();
 
+                    return getViewInterface().getCategoryTabLayout(mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
+                } else
+                {
+                    return Observable.just(false);
+                }
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean result) throws Exception
+            {
                 unLockAll();
             }
         }, new Consumer<Throwable>()
@@ -762,15 +779,15 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         getViewInterface().setToolbarRegionText(mStayViewModel.stayRegion.getValue().getAreaName());
     }
 
-    void notifyCategoryChanged()
-    {
-        if (mStayViewModel == null || mStayViewModel.stayRegion.getValue() == null || mStayViewModel.selectedCategory.getValue() == null)
-        {
-            return;
-        }
-
-        getViewInterface().setCategoryTabLayout(mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
-    }
+    //    void notifyCategoryChanged()
+    //    {
+    //        if (mStayViewModel == null || mStayViewModel.stayRegion.getValue() == null || mStayViewModel.selectedCategory.getValue() == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        getViewInterface().setCategoryTabLayout(mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
+    //    }
 
     StayRegion searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
     {
@@ -1128,10 +1145,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
                 setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-
-                notifyDateTextChanged();
-                notifyRegionTextChanged();
-                notifyCategoryChanged();
+                return true;
             } else
             {
 
@@ -1139,13 +1153,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+
             return false;
         } finally
         {
             dailyDeepLink.clear();
         }
 
-        return true;
+        return false;
     }
 
     boolean moveDeepLinkDetail(DailyDeepLink dailyDeepLink)

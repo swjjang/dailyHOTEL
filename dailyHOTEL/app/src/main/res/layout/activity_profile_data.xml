@@ -290,6 +290,11 @@
                     </RadioGroup>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/leaveDailyTextView"
                     android:layout_width="wrap_content"

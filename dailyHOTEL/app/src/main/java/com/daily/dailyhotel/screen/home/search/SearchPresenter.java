@@ -565,6 +565,16 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 {
                     try
                     {
+                        GourmetSuggestParcel suggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (suggestParcel != null)
+                        {
+                            mSearchModel.gourmetViewModel.suggest.setValue(suggestParcel.getSuggest());
+                        }
+
+                        String visitDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
+
+                        mSearchModel.gourmetViewModel.bookDateTime.setValue(new GourmetBookDateTime(visitDateTime));
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
