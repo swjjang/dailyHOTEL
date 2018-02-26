@@ -620,10 +620,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             return;
         }
 
-        //        startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
-        //            StayCategoryTabActivity.this, mDailyCategoryType, mStayCategoryCuration.getStayBookingDay()) //
-        //            , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
-
         try
         {
             String checkInDateTime = mStayCategoryCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
@@ -631,17 +627,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
             startActivityForResult(StayAreaListActivity.newInstance(this//
                 , checkInDateTime, checkOutDateTime, mDailyCategoryType, mStayCategoryCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-            //            switch (mViewType)
-            //            {
-            //                case LIST:
-            //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
-            //                    break;
-            //
-            //                case MAP:
-            //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
-            //                    break;
-            //            }
         } catch (Exception e)
         {
             Crashlytics.logException(e);

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener, ActivityStayTabDataBinding> //
-    implements StayTabInterface.ViewInterface, StayListFragment.OnEventListener
+    implements StayTabInterface.ViewInterface
 {
     private BaseFragmentPagerAdapter<StayListFragment> mFragmentPagerAdapter;
 
@@ -92,12 +92,13 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
             return;
         }
 
-        getViewDataBinding().viewPager.setAdapter(null);
-
         if (mFragmentPagerAdapter != null)
         {
             mFragmentPagerAdapter.removeAll();
         }
+
+        getViewDataBinding().viewPager.setAdapter(null);
+        getViewDataBinding().viewPager.removeAllViews();
 
         getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(null);
 
@@ -138,7 +139,6 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
 
         mFragmentPagerAdapter = createFragmentPagerAdapter(getSupportFragmentManager(), categoryList);
 
-        getViewDataBinding().viewPager.removeAllViews();
         getViewDataBinding().viewPager.setOffscreenPageLimit(size);
 
         Class reflectionClass = ViewPager.class;
@@ -351,45 +351,6 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         return mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onBackPressed();
     }
 
-    @Override
-    public void onRegionClick()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getEventListener().onRegionClick();
-    }
-
-    @Override
-    public void onCalendarClick()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getEventListener().onCalendarClick();
-    }
-
-    @Override
-    public void onFilterClick()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getEventListener().onFilterClick();
-    }
-
-    @Override
-    public void setCategoryVisible(boolean visible)
-    {
-        setCategoryTabLayoutVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -456,7 +417,47 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
             bundle.putString("code", category.code);
 
             stayListFragment.setArguments(bundle);
-            stayListFragment.setOnFragmentEventListener(this);
+            stayListFragment.setOnFragmentEventListener(new StayListFragment.OnEventListener()
+            {
+                @Override
+                public void onRegionClick()
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onRegionClick();
+                }
+
+                @Override
+                public void onCalendarClick()
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onCalendarClick();
+                }
+
+                @Override
+                public void onFilterClick()
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onFilterClick();
+                }
+
+                @Override
+                public void setCategoryVisible(boolean visible)
+                {
+                    setCategoryTabLayoutVisibility(visible ? View.VISIBLE : View.GONE);
+                }
+            });
 
             fragmentList.add(stayListFragment);
         }

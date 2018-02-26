@@ -589,6 +589,11 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             Intent intent = SearchActivity.newInstance(GourmetMainActivity.this, ServiceType.GOURMET, mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT));
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
