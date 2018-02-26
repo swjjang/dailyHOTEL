@@ -39,7 +39,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/titleBackgroundView"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/search_ic_01_date"/>
+            app:srcCompat="@drawable/search_ic_01_search"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
