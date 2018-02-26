@@ -42,7 +42,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/messageLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="63dp"
+                    android:layout_height="64dp"
                     android:background="@color/default_background_cfff9ef">
 
                     <com.daily.base.widget.DailyTextView
@@ -51,6 +51,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:textColor="@color/default_text_ce9a230"
+                        android:lineSpacingExtra="-3dp"
                         android:textSize="14dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -238,7 +239,7 @@
                             android:id="@+id/agreementCheckBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="17dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_marginRight="7dp"
                             android:gravity="center"
                             android:text="@string/label_leave_daily_agreement"
