@@ -10,6 +10,8 @@ import com.daily.dailyhotel.entity.Category;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public interface StayTabInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
@@ -18,7 +20,7 @@ public interface StayTabInterface
 
         void setToolbarRegionText(String text);
 
-        void setCategoryTabLayout(List<Category> categoryList, Category selectedCategory);
+        Observable<Boolean> getCategoryTabLayout(List<Category> categoryList, Category selectedCategory);
 
         void setOptionFilterSelected(boolean selected);
 
