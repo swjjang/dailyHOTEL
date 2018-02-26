@@ -202,7 +202,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
         });
 
-        mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
