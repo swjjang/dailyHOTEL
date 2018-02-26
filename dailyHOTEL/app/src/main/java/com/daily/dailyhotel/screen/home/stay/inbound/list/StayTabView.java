@@ -1,9 +1,11 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,10 @@ import com.twoheart.dailyhotel.databinding.ActivityStayTabDataBinding;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 
 public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener, ActivityStayTabDataBinding> //
     implements StayTabInterface.ViewInterface
@@ -85,11 +91,11 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
     }
 
     @Override
-    public void setCategoryTabLayout(List<Category> categoryList, Category selectedCategory)
+    public Observable<Boolean> getCategoryTabLayout(List<Category> categoryList, Category selectedCategory)
     {
         if (getViewDataBinding() == null)
         {
-            return;
+            return Observable.just(false);
         }
 
         if (mFragmentPagerAdapter != null)
@@ -102,24 +108,138 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
 
         getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(null);
 
+        final List<Category> categoryTabList = new ArrayList<>();
+
         // 카테고리가 2보다 작으면 전체 하나만 보여주기 때문에 카테고리 탭을 안보이도록 한다.
         if (categoryList == null || categoryList.size() <= 2)
         {
-            categoryList = new ArrayList();
-            categoryList.add(Category.ALL);
+            categoryTabList.add(Category.ALL);
+        } else
+        {
+            categoryTabList.addAll(categoryList);
         }
 
-        int size = categoryList.size();
+        int size = categoryTabList.size();
 
         setCategoryTabLayoutVisibility(size == 1 ? View.GONE : View.VISIBLE);
+        makeCategoryTab(categoryTabList);
+        TabLayout.Tab selectedTab = getCategoryTab(selectedCategory);
 
+        return createFragmentPagerAdapter(getSupportFragmentManager(), categoryList).map(new Function<BaseFragmentPagerAdapter, Boolean>()
+        {
+            @Override
+            public Boolean apply(BaseFragmentPagerAdapter baseFragmentPagerAdapter) throws Exception
+            {
+                mFragmentPagerAdapter = baseFragmentPagerAdapter;
+
+                getViewDataBinding().viewPager.setOffscreenPageLimit(size);
+
+                Class reflectionClass = ViewPager.class;
+
+                try
+                {
+                    Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
+                    mCurItem.setAccessible(true);
+                    mCurItem.setInt(getViewDataBinding().viewPager, selectedTab.getPosition());
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                getViewDataBinding().viewPager.setAdapter(mFragmentPagerAdapter);
+                getViewDataBinding().viewPager.clearOnPageChangeListeners();
+                getViewDataBinding().viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(getViewDataBinding().categoryTabLayout));
+                getViewDataBinding().viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+                {
+                    boolean isScrolling = false;
+                    int prevPosition = -1;
+
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+                    {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position)
+                    {
+                        if (prevPosition != position)
+                        {
+                            if (isScrolling == true)
+                            {
+                                isScrolling = false;
+
+                                getEventListener().onCategoryFlicking(getViewDataBinding().categoryTabLayout.getTabAt(position).getText().toString());
+                            } else
+                            {
+                                getEventListener().onCategoryClick(getViewDataBinding().categoryTabLayout.getTabAt(position).getText().toString());
+                            }
+                        } else
+                        {
+                            isScrolling = false;
+                        }
+
+                        prevPosition = position;
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state)
+                    {
+                        switch (state)
+                        {
+                            case ViewPager.SCROLL_STATE_DRAGGING:
+                                isScrolling = true;
+                                break;
+
+                            case ViewPager.SCROLL_STATE_IDLE:
+                                break;
+                        }
+                    }
+                });
+
+                if (selectedTab != null)
+                {
+                    selectedTab.select();
+
+                    getEventListener().onCategoryTabSelected(selectedTab);
+                }
+
+                getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+                {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab)
+                    {
+                        getEventListener().onCategoryTabSelected(tab);
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab)
+                    {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab)
+                    {
+                        getEventListener().onCategoryTabReselected(tab);
+                    }
+                });
+
+                FontManager.apply(getViewDataBinding().categoryTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+
+                return true;
+            }
+        });
+    }
+
+    private void makeCategoryTab(@NonNull List<Category> categoryList)
+    {
         Category category;
         TabLayout.Tab tab;
-        TabLayout.Tab selectedTab = null;
 
         getViewDataBinding().categoryTabLayout.removeAllTabs();
 
-        int position = 0;
+        int size = categoryList.size();
 
         for (int i = 0; i < size; i++)
         {
@@ -129,110 +249,32 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
             tab.setText(category.name);
             tab.setTag(category);
             getViewDataBinding().categoryTabLayout.addTab(tab);
+        }
+    }
 
-            if (selectedCategory != null && category.code.equalsIgnoreCase(selectedCategory.code) == true)
+    private TabLayout.Tab getCategoryTab(Category searchCategory)
+    {
+        if (searchCategory == null)
+        {
+            return null;
+        }
+
+        int count = getViewDataBinding().categoryTabLayout.getTabCount();
+        Category category;
+        TabLayout.Tab tab;
+
+        for (int i = 0; i < count; i++)
+        {
+            tab = getViewDataBinding().categoryTabLayout.getTabAt(i);
+            category = (Category) tab.getTag();
+
+            if (category.code.equalsIgnoreCase(searchCategory.code) == true)
             {
-                position = i;
-                selectedTab = tab;
+                return tab;
             }
         }
 
-        mFragmentPagerAdapter = createFragmentPagerAdapter(getSupportFragmentManager(), categoryList);
-
-        getViewDataBinding().viewPager.setOffscreenPageLimit(size);
-
-        Class reflectionClass = ViewPager.class;
-
-        try
-        {
-            Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
-            mCurItem.setAccessible(true);
-            mCurItem.setInt(getViewDataBinding().viewPager, position);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        getViewDataBinding().viewPager.setAdapter(mFragmentPagerAdapter);
-        getViewDataBinding().viewPager.clearOnPageChangeListeners();
-        getViewDataBinding().viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(getViewDataBinding().categoryTabLayout));
-        getViewDataBinding().viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            boolean isScrolling = false;
-            int prevPosition = -1;
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-                if (prevPosition != position)
-                {
-                    if (isScrolling == true)
-                    {
-                        isScrolling = false;
-
-                        getEventListener().onCategoryFlicking(getViewDataBinding().categoryTabLayout.getTabAt(position).getText().toString());
-                    } else
-                    {
-                        getEventListener().onCategoryClick(getViewDataBinding().categoryTabLayout.getTabAt(position).getText().toString());
-                    }
-                } else
-                {
-                    isScrolling = false;
-                }
-
-                prevPosition = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-                switch (state)
-                {
-                    case ViewPager.SCROLL_STATE_DRAGGING:
-                        isScrolling = true;
-                        break;
-
-                    case ViewPager.SCROLL_STATE_IDLE:
-                        break;
-                }
-            }
-        });
-
-        if (selectedTab != null)
-        {
-            selectedTab.select();
-
-            getEventListener().onCategoryTabSelected(selectedTab);
-        }
-
-        getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
-        {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab)
-            {
-                getEventListener().onCategoryTabSelected(tab);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab)
-            {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab)
-            {
-                getEventListener().onCategoryTabReselected(tab);
-            }
-        });
-
-        FontManager.apply(getViewDataBinding().categoryTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+        return null;
     }
 
     @Override
@@ -397,7 +439,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         }
     }
 
-    private BaseFragmentPagerAdapter createFragmentPagerAdapter(FragmentManager fragmentManager, List<? extends Category> categoryList)
+    private Observable<BaseFragmentPagerAdapter> createFragmentPagerAdapter(FragmentManager fragmentManager, List<? extends Category> categoryList)
     {
         if (fragmentManager == null || categoryList == null || categoryList.size() == 0)
         {
@@ -407,6 +449,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         BaseFragmentPagerAdapter fragmentPagerAdapter = new BaseFragmentPagerAdapter(fragmentManager);
 
         List<StayListFragment> fragmentList = new ArrayList<>();
+        List<Observable<Boolean>> fragmentListObservable = new ArrayList<>();
 
         for (Category category : categoryList)
         {
@@ -460,10 +503,18 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
             });
 
             fragmentList.add(stayListFragment);
+            fragmentListObservable.add(stayListFragment.getCompleteCreatedObservable());
         }
 
         fragmentPagerAdapter.setFragmentList(fragmentList);
 
-        return fragmentPagerAdapter;
+        return Observable.zip(fragmentListObservable, new Function<Object[], BaseFragmentPagerAdapter>()
+        {
+            @Override
+            public BaseFragmentPagerAdapter apply(Object[] objects) throws Exception
+            {
+                return fragmentPagerAdapter;
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 }
