@@ -129,7 +129,7 @@ public class BaseListDialogView extends BaseMultiWindowView<BaseListDialogInterf
             layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT;
         } else
         {
-            layoutParams.height = ScreenUtils.getScreenHeight(getContext()) * 56 / 100;
+            layoutParams.height = ScreenUtils.dpToPx(getContext(), 452);
         }
 
         getViewDataBinding().getRoot().setLayoutParams(layoutParams);
