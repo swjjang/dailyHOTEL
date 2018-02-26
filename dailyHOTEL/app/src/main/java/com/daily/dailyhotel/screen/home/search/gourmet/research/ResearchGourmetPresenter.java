@@ -23,6 +23,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.twoheart.dailyhotel.R;
@@ -45,7 +46,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
 {
     private ResearchGourmetInterface.AnalyticsInterface mAnalytics;
 
-    SearchViewModel.SearchGourmetViewModel mSearchModel;
+    SearchGourmetViewModel mSearchModel;
 
     CommonDateTime mCommonDateTime;
 
@@ -357,7 +358,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             return;
         }
 
-        mSearchModel = ViewModelProviders.of(activity, new SearchViewModel.SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchViewModel.SearchGourmetViewModel.class);
+        mSearchModel = ViewModelProviders.of(activity, new SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetViewModel.class);
 
         // Gourmet
         mSearchModel.suggest.observe(activity, new Observer<GourmetSuggest>()

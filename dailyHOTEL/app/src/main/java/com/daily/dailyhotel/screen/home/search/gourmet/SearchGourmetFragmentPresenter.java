@@ -19,6 +19,7 @@ import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -42,7 +43,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     RecentlyLocalImpl mRecentlyLocalImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
-    SearchViewModel.SearchGourmetViewModel mSearchModel;
+    SearchGourmetViewModel mSearchModel;
 
     boolean mHasPopularTag;
 
@@ -265,7 +266,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
             return;
         }
 
-        mSearchModel = ViewModelProviders.of(activity).get(SearchViewModel.SearchGourmetViewModel.class);
+        mSearchModel = ViewModelProviders.of(activity).get(SearchGourmetViewModel.class);
     }
 
     void onRecentlyRefresh()

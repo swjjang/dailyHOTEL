@@ -22,6 +22,7 @@ import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
+import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -46,7 +47,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 {
     private ResearchStayInterface.AnalyticsInterface mAnalytics;
 
-    SearchViewModel.SearchStayViewModel mSearchModel;
+    SearchStayViewModel mSearchModel;
 
     CommonDateTime mCommonDateTime;
 
@@ -360,7 +361,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             return;
         }
 
-        mSearchModel = ViewModelProviders.of(activity, new SearchViewModel.SearchStayViewModel.SearchStayViewModelFactory()).get(SearchViewModel.SearchStayViewModel.class);
+        mSearchModel = ViewModelProviders.of(activity, new SearchStayViewModel.SearchStayViewModelFactory()).get(SearchStayViewModel.class);
 
         // Stay
         mSearchModel.suggest.observe(activity, new Observer<StaySuggest>()
