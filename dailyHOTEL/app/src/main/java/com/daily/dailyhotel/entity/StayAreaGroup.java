@@ -2,8 +2,10 @@ package com.daily.dailyhotel.entity;
 
 import java.util.List;
 
-public class StayAreaGroup extends StayArea
+public class StayAreaGroup extends Area implements AreaCategoryInterface
 {
+    private List<Category> mCategoryList;
+
     private List<StayArea> mAreaList;
 
     public List<StayArea> getAreaList()
@@ -19,5 +21,23 @@ public class StayAreaGroup extends StayArea
     public void setAreaList(List<StayArea> areaList)
     {
         mAreaList = areaList;
+    }
+
+    @Override
+    public List<Category> getCategoryList()
+    {
+        return mCategoryList;
+    }
+
+    @Override
+    public void setCategoryList(List<Category> categoryList)
+    {
+        mCategoryList = categoryList;
+    }
+
+    @Override
+    public int getCategoryCount()
+    {
+        return mCategoryList == null ? 0 : mCategoryList.size();
     }
 }

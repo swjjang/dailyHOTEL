@@ -686,7 +686,9 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     }
                 } else
                 {
-                    return new StayRegion(areaGroup, new StayArea(areaGroup));
+                    StayArea stayArea = new StayArea(areaGroup);
+                    stayArea.setCategoryList(areaGroup.getCategoryList());
+                    return new StayRegion(areaGroup, stayArea);
                 }
             }
         }
@@ -716,7 +718,9 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     }
                 } else
                 {
-                    return new StayRegion(areaGroup, new StayArea(areaGroup));
+                    StayArea stayArea = new StayArea(areaGroup);
+                    stayArea.setCategoryList(areaGroup.getCategoryList());
+                    return new StayRegion(areaGroup, stayArea);
                 }
             }
         }
@@ -984,7 +988,9 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                             if (region == null)
                             {
-                                region = new StayRegion(areaGroupList.get(0), new StayArea(areaGroupList.get(0)));
+                                StayArea stayArea = new StayArea(areaGroupList.get(0));
+                                stayArea.setCategoryList(areaGroupList.get(0).getCategoryList());
+                                region = new StayRegion(areaGroupList.get(0), stayArea);
                             }
 
                             mStayCategoryCuration.setRegion(region);

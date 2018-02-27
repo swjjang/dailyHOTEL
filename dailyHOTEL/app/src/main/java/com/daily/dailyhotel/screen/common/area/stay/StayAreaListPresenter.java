@@ -320,7 +320,9 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                     // 기존에 저장된 지역이 없는 경우 첫번째 지역으로 한다.
                     areaGroup = areaGroupList.get(0);
 
-                    mStayRegion = new StayRegion(areaGroup, new StayArea(areaGroup));
+                    StayArea stayArea = new StayArea(areaGroup);
+                    stayArea.setCategoryList(areaGroup.getCategoryList());
+                    mStayRegion = new StayRegion(areaGroup, stayArea);
 
                     mAreaGroupPosition = 0;
                 }
@@ -372,7 +374,9 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         // 하위 지역이 없으면 선택
         if (mAreaGroupList.get(groupPosition).getAreaCount() == 0)
         {
-            onAreaClick(groupPosition, new StayArea(mAreaGroupList.get(groupPosition)));
+            StayArea stayArea = new StayArea(mAreaGroupList.get(groupPosition));
+            stayArea.setCategoryList(mAreaGroupList.get(groupPosition).getCategoryList());
+            onAreaClick(groupPosition, stayArea);
 
             unLockAll();
         } else
@@ -631,7 +635,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         return observable;
     }
 
-    void setResult(int resultCode, DailyCategoryType categoryType, StayArea areaGroup, StayArea area)
+    void setResult(int resultCode, DailyCategoryType categoryType, StayAreaGroup areaGroup, StayArea area)
     {
         if (categoryType == null)
         {
@@ -701,7 +705,9 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new StayRegion(areaGroup, new StayArea(areaGroup));
+            StayArea stayArea = new StayArea(areaGroup);
+            stayArea.setCategoryList(areaGroup.getCategoryList());
+            return new StayRegion(areaGroup, stayArea);
         } else
         {
             for (StayArea area : areaGroup.getAreaList())

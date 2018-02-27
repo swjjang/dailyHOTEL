@@ -6,6 +6,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
@@ -28,7 +29,7 @@ public interface StayAreaTabInterface
 
         void onAroundSearchClick();
 
-        void onAreaClick(StayArea areaGroup, StayArea area);
+        void onAreaClick(StayAreaGroup areaGroup, StayArea area);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

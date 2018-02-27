@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
@@ -18,7 +19,7 @@ public class StayAreaFragment extends BasePagerFragment<StayAreaFragmentPresente
     {
         void onAroundSearchClick();
 
-        void onAreaClick(StayArea areaGroup, StayArea area);
+        void onAreaClick(StayAreaGroup areaGroup, StayArea area);
     }
 
     @NonNull

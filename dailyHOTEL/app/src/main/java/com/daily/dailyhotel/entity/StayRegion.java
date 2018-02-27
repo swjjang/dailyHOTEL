@@ -2,17 +2,17 @@ package com.daily.dailyhotel.entity;
 
 public class StayRegion
 {
-    private Area mAreaGroup;
+    private StayAreaGroup mAreaGroup;
 
     private StayArea mArea;
 
-    public StayRegion(Area areaGroup, StayArea area)
+    public StayRegion(StayAreaGroup areaGroup, StayArea area)
     {
         mAreaGroup = areaGroup;
         mArea = area;
     }
 
-    public Area getAreaGroup()
+    public StayAreaGroup getAreaGroup()
     {
         return mAreaGroup;
     }
@@ -22,7 +22,7 @@ public class StayRegion
         return mArea;
     }
 
-    public void setAreaGroup(Area area)
+    public void setAreaGroup(StayAreaGroup area)
     {
         mAreaGroup = area;
     }

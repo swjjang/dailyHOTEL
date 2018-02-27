@@ -401,7 +401,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                         if (mStayViewModel.stayRegion.getValue() == null)
                         {
-                            mStayViewModel.stayRegion.setValue(new StayRegion(areaGroupList.get(0), new StayArea(areaGroupList.get(0))));
+                            StayArea stayArea = new StayArea(areaGroupList.get(0));
+                            stayArea.setCategoryList(areaGroupList.get(0).getCategoryList());
+                            mStayViewModel.stayRegion.setValue(new StayRegion(areaGroupList.get(0), stayArea));
                         }
 
                         return Observable.just(true);
@@ -811,7 +813,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     }
                 } else
                 {
-                    return new StayRegion(areaGroup, new StayArea(areaGroup));
+                    StayArea stayArea = new StayArea(areaGroup);
+                    stayArea.setCategoryList(areaGroup.getCategoryList());
+                    return new StayRegion(areaGroup, stayArea);
                 }
             }
         }
@@ -841,7 +845,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     }
                 } else
                 {
-                    return new StayRegion(areaGroup, new StayArea(areaGroup));
+                    StayArea stayArea = new StayArea(areaGroup);
+                    stayArea.setCategoryList(areaGroup.getCategoryList());
+                    return new StayRegion(areaGroup, stayArea);
                 }
             }
         }

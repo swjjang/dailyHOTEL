@@ -201,7 +201,9 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         // 하위 지역이 없으면 선택
         if (mStayAreaViewModel.areaList.getValue().get(groupPosition).getAreaCount() == 0)
         {
-            onAreaClick(groupPosition, new StayArea(mStayAreaViewModel.areaList.getValue().get(groupPosition)));
+            StayArea stayArea = new StayArea(mStayAreaViewModel.areaList.getValue().get(groupPosition));
+            stayArea.setCategoryList(mStayAreaViewModel.areaList.getValue().get(groupPosition).getCategoryList());
+            onAreaClick(groupPosition, stayArea);
 
             unLockAll();
         } else

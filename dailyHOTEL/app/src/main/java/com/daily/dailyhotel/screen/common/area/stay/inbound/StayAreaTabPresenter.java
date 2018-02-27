@@ -257,7 +257,9 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                         if (stayRegion == null)
                         {
                             StayAreaGroup stayAreaGroup = areaGroupList.get(0);
-                            stayRegion = new StayRegion(stayAreaGroup, new StayArea(stayAreaGroup));
+                            StayArea stayArea = new StayArea(stayAreaGroup);
+                            stayArea.setCategoryList(stayAreaGroup.getCategoryList());
+                            stayRegion = new StayRegion(stayAreaGroup, stayArea);
                         }
 
                         return stayRegion;
@@ -554,7 +556,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     }
 
     @Override
-    public void onAreaClick(StayArea areaGroup, StayArea area)
+    public void onAreaClick(StayAreaGroup areaGroup, StayArea area)
     {
         if (areaGroup == null || area == null)
         {
@@ -637,7 +639,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         return areaName.equalsIgnoreCase(stayRegion.getAreaGroupName());
     }
 
-    void setResult(int resultCode, DailyCategoryType categoryType, StayArea areaGroup, StayArea area)
+    void setResult(int resultCode, DailyCategoryType categoryType, StayAreaGroup areaGroup, StayArea area)
     {
         if (categoryType == null)
         {
