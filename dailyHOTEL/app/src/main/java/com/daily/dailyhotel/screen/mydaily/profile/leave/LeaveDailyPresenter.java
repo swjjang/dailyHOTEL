@@ -347,8 +347,6 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
                 }
             }, null, dialogInterface ->
             {
-                unLockAll();
-
                 try
                 {
                     mAnalytics.onEventCheckLeaveDialogButtonClick(getActivity(), false);
@@ -356,7 +354,7 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
                 {
                     ExLog.d(e.getMessage());
                 }
-            }, null, true);
+            }, dialogInterface -> unLockAll(), true);
 
         try
         {
