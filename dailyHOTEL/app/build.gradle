@@ -272,7 +272,7 @@ dependencies {
     implementation 'com.jaredrummler:android-processes:1.0.9'
 
     // 카카오 광고 SDK
-    implementation 'com.kakao.ad:tracker:0.2.4@aar'
+    implementation 'com.kakao.ad:tracker:0.2.5@aar'
 
     //
 //    debugCompile 'com.facebook.stetho:stetho:1.4.1'
