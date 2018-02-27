@@ -130,7 +130,7 @@ public class GourmetDetailAnalyticsParam implements Parcelable
         mShowOriginalPriceYn = in.readString();
         entryPosition = in.readInt();
         totalListCount = in.readInt();
-        isDailyChoice = in.readInt() == 1 ? true : false;
+        isDailyChoice = in.readInt() == 1;
         mProvince = in.readParcelable(Province.class.getClassLoader());
     }
 

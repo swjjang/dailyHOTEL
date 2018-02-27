@@ -733,7 +733,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                             stayList.addAll(baseDto.data.items);
 
                             onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList, baseDto.data.stickers//
-                                , baseDto.data.configurations != null ? baseDto.data.configurations.activeReward : false);
+                                , baseDto.data.configurations != null && baseDto.data.configurations.activeReward);
                             break;
 
                         // 인트라넷에서 숨김처리가 된경우

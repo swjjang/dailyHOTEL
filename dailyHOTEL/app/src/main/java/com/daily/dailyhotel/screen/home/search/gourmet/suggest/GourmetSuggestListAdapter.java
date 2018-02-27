@@ -27,7 +27,7 @@ import java.util.List;
 public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
-    private View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnClickListener;
 
     private String mKeyword;
     private List<ObjectItem> mSuggestList;

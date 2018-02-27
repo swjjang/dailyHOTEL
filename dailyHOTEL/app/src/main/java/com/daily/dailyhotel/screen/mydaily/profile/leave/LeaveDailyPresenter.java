@@ -39,12 +39,12 @@ import io.reactivex.functions.Consumer;
  */
 public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivity, LeaveDailyInterface.ViewInterface> implements LeaveDailyInterface.OnEventListener
 {
-    private LeaveDailyInterface.AnalyticsInterface mAnalytics;
+    LeaveDailyInterface.AnalyticsInterface mAnalytics;
 
-    private ProfileRemoteImpl mProfileRemoteImpl;
+    ProfileRemoteImpl mProfileRemoteImpl;
 
     private LeaveInfo mLeaveInfo;
-    private LeaveReason mSelectedReason;
+    LeaveReason mSelectedReason;
 
     public LeaveDailyPresenter(@NonNull LeaveDailyActivity activity)
     {
@@ -249,12 +249,12 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
         getActivity().onBackPressed();
     }
 
-    private void setLeaveInfo(LeaveInfo leaveInfo)
+    void setLeaveInfo(LeaveInfo leaveInfo)
     {
         mLeaveInfo = leaveInfo;
     }
 
-    private void notifyDataSetChanged()
+    void notifyDataSetChanged()
     {
         if (mLeaveInfo == null)
         {
@@ -308,7 +308,7 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
             ? null : new ListDialogItemParcel(mSelectedReason.reason, new LeaveReasonParcel(mSelectedReason));
 
         Intent intent = BaseListDialogActivity.newInstance(getActivity(), getString(R.string.label_leave_daily_leave_reason_title) //
-            , selectedParcel, parcelList, AnalyticsManager.Screen.MEMBER_LEAVE_STEP_2);
+            , selectedParcel, parcelList, AnalyticsManager.Screen.MEMBER_LEAVE_STEP_3);
         startActivityForResult(intent, LeaveDailyActivity.REQUEST_CODE_LEAVE_REASON);
     }
 
@@ -347,8 +347,6 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
                 }
             }, null, dialogInterface ->
             {
-                unLockAll();
-
                 try
                 {
                     mAnalytics.onEventCheckLeaveDialogButtonClick(getActivity(), false);
@@ -356,7 +354,7 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
                 {
                     ExLog.d(e.getMessage());
                 }
-            }, null, true);
+            }, dialogInterface -> unLockAll(), true);
 
         try
         {

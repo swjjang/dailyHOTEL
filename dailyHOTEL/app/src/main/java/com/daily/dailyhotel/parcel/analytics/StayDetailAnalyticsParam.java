@@ -128,7 +128,7 @@ public class StayDetailAnalyticsParam implements Parcelable
         mShowOriginalPriceYn = in.readString();
         entryPosition = in.readInt();
         totalListCount = in.readInt();
-        isDailyChoice = in.readInt() == 1 ? true : false;
+        isDailyChoice = in.readInt() == 1;
 
         StayRegionParcel stayRegionParcel = in.readParcelable(StayRegionParcel.class.getClassLoader());
 

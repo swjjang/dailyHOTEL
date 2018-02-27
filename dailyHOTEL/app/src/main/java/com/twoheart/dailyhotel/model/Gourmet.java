@@ -291,7 +291,7 @@ public class Gourmet extends Place
             category = gourmetWishDetails != null ? gourmetWishDetails.category : "";
             subCategory = gourmetWishDetails != null ? gourmetWishDetails.subCategory : "";
             satisfaction = gourmetWishItem.rating;
-            truevr = gourmetWishDetails != null ? gourmetWishDetails.truevr : false;
+            truevr = gourmetWishDetails != null && gourmetWishDetails.truevr;
 
             Sticker sticker = gourmetWishDetails != null ? gourmetWishDetails.sticker : null;
             if (sticker != null)

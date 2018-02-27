@@ -71,7 +71,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
 
     public ArrayList<PlaceViewItem> getList()
     {
-        return mList != null ? mList : null;
+        return mList;
     }
 
     public void setData(ArrayList<PlaceViewItem> list)

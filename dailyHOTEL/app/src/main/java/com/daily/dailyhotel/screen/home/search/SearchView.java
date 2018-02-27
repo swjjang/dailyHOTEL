@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.databinding.ActivitySearchDataBinding;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.functions.Function3;
 
 public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, ActivitySearchDataBinding>//
     implements SearchInterface.ViewInterface
