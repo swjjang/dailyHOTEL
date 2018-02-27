@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.LeaveInfo;
 import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.twoheart.dailyhotel.R;
@@ -89,8 +91,21 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
             @Override
             public void onClick(View view)
             {
-                if (getEventListener() == null || isLeaveButtonEnabled() == false)
+                if (getEventListener() == null)
                 {
+                    return;
+                }
+
+                if (isLeaveButtonEnabled() == false)
+                {
+                    String reasonText = getViewDataBinding().leaveReasonTextView.getText().toString();
+                    if (DailyTextUtils.isTextEmpty(reasonText))
+                    {
+                        DailyToast.showToast(getContext(), R.string.message_leave_daily_reason_unselected, Toast.LENGTH_SHORT);
+                    } else if (isAgreeChecked() == false)
+                    {
+                        DailyToast.showToast(getContext(), R.string.message_leave_daily_agreement_unchecked, Toast.LENGTH_SHORT);
+                    }
                     return;
                 }
 
@@ -184,7 +199,16 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
             return;
         }
 
-        getViewDataBinding().doLeaveView.setEnabled(enabled);
+        getViewDataBinding().doLeaveView.setTag(enabled);
+
+        if (enabled == false)
+        {
+            getViewDataBinding().doLeaveView.setBackgroundResource(R.drawable.shape_button_disable);
+            getViewDataBinding().doLeaveView.setTextColor(getColor(R.color.default_text_cc5c5c5));
+        } else {
+            getViewDataBinding().doLeaveView.setBackgroundResource(R.drawable.selector_button_default_background);
+            getViewDataBinding().doLeaveView.setTextColor(getColorStateList(R.drawable.selector_button_default_text_color));
+        }
     }
 
     private boolean isLeaveButtonEnabled()
@@ -194,7 +218,8 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
             return false;
         }
 
-        return getViewDataBinding().doLeaveView.isEnabled();
+        boolean enabled = (boolean) getViewDataBinding().doLeaveView.getTag();
+        return enabled;
     }
 
     private void setLeavePolicyList(List<String> policyList)
