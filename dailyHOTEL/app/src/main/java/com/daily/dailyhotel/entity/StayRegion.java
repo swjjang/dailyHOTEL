@@ -2,32 +2,32 @@ package com.daily.dailyhotel.entity;
 
 public class StayRegion
 {
-    private StayAreaGroup mAreaGroup;
+    private Area mAreaGroup;
 
-    private StayArea mArea;
+    private Area mArea;
 
-    public StayRegion(StayAreaGroup areaGroup, StayArea area)
+    public StayRegion(Area areaGroup, Area area)
     {
         mAreaGroup = areaGroup;
         mArea = area;
     }
 
-    public StayAreaGroup getAreaGroup()
+    public Area getAreaGroup()
     {
         return mAreaGroup;
     }
 
-    public StayArea getArea()
+    public Area getArea()
     {
         return mArea;
     }
 
-    public void setAreaGroup(StayAreaGroup area)
+    public void setAreaGroup(Area area)
     {
         mAreaGroup = area;
     }
 
-    public void setArea(StayArea area)
+    public void setArea(Area area)
     {
         mArea = area;
     }

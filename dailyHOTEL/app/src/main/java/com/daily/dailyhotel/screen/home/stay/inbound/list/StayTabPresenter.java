@@ -379,48 +379,59 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 return mStayRemoteImpl.getRegionList(DailyCategoryType.STAY_ALL);
             }
-        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayAreaGroup>, ObservableSource<Boolean>>()
+        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayAreaGroup>, ObservableSource<Pair<Boolean, List<Category>>>>()
         {
             @Override
-            public ObservableSource<Boolean> apply(List<StayAreaGroup> areaGroupList) throws Exception
+            public ObservableSource<Pair<Boolean, List<Category>>> apply(List<StayAreaGroup> areaGroupList) throws Exception
             {
                 if (mHasDeepLink == true)
                 {
-                    return Observable.just(false);
+                    return Observable.just(new Pair(false, null));
                 } else
                 {
-                    if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true && processDeepLinkByRegionList(areaGroupList, mStayViewModel.commonDateTime.getValue(), mDailyDeepLink) == true)
+                    if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
                     {
-                        return Observable.just(true);
+                        List<Category> categoryList = processDeepLinkByRegionList(areaGroupList, mStayViewModel.commonDateTime.getValue(), mDailyDeepLink);
+
+                        if (categoryList == null)
+                        {
+                            Pair<StayRegion, List<Category>> pair = searchDefaultRegion(areaGroupList);
+                            mStayViewModel.stayRegion.setValue(pair.first);
+
+                            return Observable.just(new Pair(true, pair.second));
+                        } else
+                        {
+                            return Observable.just(new Pair(true, categoryList));
+                        }
                     } else
                     {
                         if (mStayViewModel.stayRegion.getValue() == null)
                         {
-                            mStayViewModel.stayRegion.setValue(searchRegion(areaGroupList, getDistrictNTownNameByCategory(DailyCategoryType.STAY_ALL)));
-                        }
+                            Pair<StayRegion, List<Category>> pair = searchDefaultRegion(areaGroupList);
+                            mStayViewModel.stayRegion.setValue(pair.first);
 
-                        if (mStayViewModel.stayRegion.getValue() == null)
+                            return Observable.just(new Pair(true, pair.second));
+                        } else
                         {
-                            StayArea stayArea = new StayArea(areaGroupList.get(0));
-                            stayArea.setCategoryList(areaGroupList.get(0).getCategoryList());
-                            mStayViewModel.stayRegion.setValue(new StayRegion(areaGroupList.get(0), stayArea));
+                            return Observable.just(new Pair(true, searchRegionCategory(mStayViewModel.stayRegion.getValue(), areaGroupList)));
                         }
-
-                        return Observable.just(true);
                     }
                 }
             }
-        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Boolean>>()
+        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Pair<Boolean, List<Category>>, ObservableSource<Boolean>>()
         {
             @Override
-            public ObservableSource<Boolean> apply(Boolean notifyDataChanged) throws Exception
+            public ObservableSource<Boolean> apply(Pair<Boolean, List<Category>> pair) throws Exception
             {
+                boolean notifyDataChanged = pair.first;
+                List<Category> categoryList = pair.second;
+
                 if (notifyDataChanged == true)
                 {
                     notifyDateTextChanged();
                     notifyRegionTextChanged();
 
-                    return getViewInterface().getCategoryTabLayout(mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
+                    return getViewInterface().getCategoryTabLayout(categoryList, mStayViewModel.selectedCategory.getValue());
                 } else
                 {
                     return Observable.just(false);
@@ -441,6 +452,35 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 onHandleError(throwable);
             }
         }));
+    }
+
+    private Pair<StayRegion, List<Category>> searchDefaultRegion(List<StayAreaGroup> areaGroupList)
+    {
+        if (areaGroupList == null || areaGroupList.size() == 0)
+        {
+            return null;
+        }
+
+        Pair<StayRegion, List<Category>> pair = searchRegion(areaGroupList, getDistrictNTownNameByCategory(DailyCategoryType.STAY_ALL));
+
+        if (pair == null)
+        {
+            pair = new Pair(new StayRegion(areaGroupList.get(0), areaGroupList.get(0)), areaGroupList.get(0).getCategoryList());
+        }
+
+        return pair;
+    }
+
+    private List<Category> searchRegionCategory(StayRegion stayRegion, List<StayAreaGroup> areaGroupList)
+    {
+        if (stayRegion == null || areaGroupList == null || areaGroupList.size() == 0)
+        {
+            return null;
+        }
+
+        Pair<StayRegion, List<Category>> pair = searchRegion(areaGroupList, new Pair(stayRegion.getAreaGroupName(), stayRegion.getAreaName()));
+
+        return pair == null ? null : pair.second;
     }
 
     @Override
@@ -791,7 +831,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     //        getViewInterface().setCategoryTabLayout(mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
     //    }
 
-    StayRegion searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
+    Pair<StayRegion, List<Category>> searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
     {
         if (areaGroupList == null || namePair == null)
         {
@@ -808,14 +848,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         if (area.name.equalsIgnoreCase(namePair.second) == true)
                         {
-                            return new StayRegion(areaGroup, area);
+                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
                         }
                     }
                 } else
                 {
-                    StayArea stayArea = new StayArea(areaGroup);
-                    stayArea.setCategoryList(areaGroup.getCategoryList());
-                    return new StayRegion(areaGroup, stayArea);
+                    return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
                 }
             }
         }
@@ -823,7 +861,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    StayRegion searchRegion(List<StayAreaGroup> areaGroupList, int areaGroupIndex, int areaIndex)
+    Pair<StayRegion, List<Category>> searchRegion(List<StayAreaGroup> areaGroupList, int areaGroupIndex, int areaIndex)
     {
         if (areaGroupList == null || areaGroupIndex < 0)
         {
@@ -840,14 +878,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         if (area.index == areaIndex)
                         {
-                            return new StayRegion(areaGroup, area);
+                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
                         }
                     }
                 } else
                 {
-                    StayArea stayArea = new StayArea(areaGroup);
-                    stayArea.setCategoryList(areaGroup.getCategoryList());
-                    return new StayRegion(areaGroup, stayArea);
+                    return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
                 }
             }
         }
@@ -1058,11 +1094,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return false;
     }
 
-    boolean processDeepLinkByRegionList(List<StayAreaGroup> stayDistrictList, CommonDateTime commonDateTime, DailyDeepLink dailyDeepLink)
+    List<Category> processDeepLinkByRegionList(List<StayAreaGroup> stayDistrictList, CommonDateTime commonDateTime, DailyDeepLink dailyDeepLink)
     {
         if (dailyDeepLink == null)
         {
-            return false;
+            return null;
         }
 
         if (dailyDeepLink.isExternalDeepLink() == true)
@@ -1081,14 +1117,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         }
 
-        return false;
+        return null;
     }
 
-    boolean moveDeepLinkStayList(List<StayAreaGroup> stayDistrictList, CommonDateTime commonDateTime, DailyDeepLink dailyDeepLink)
+    List<Category> moveDeepLinkStayList(List<StayAreaGroup> stayDistrictList, CommonDateTime commonDateTime, DailyDeepLink dailyDeepLink)
     {
         if (commonDateTime == null && dailyDeepLink == null)
         {
-            return false;
+            return null;
         }
 
         try
@@ -1126,20 +1162,28 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 boolean isOverseas = externalDeepLink.getIsOverseas();
 
                 // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-                StayRegion region = searchRegion(stayDistrictList, provinceIndex, areaIndex);
+                Pair<StayRegion, List<Category>> pair = searchRegion(stayDistrictList, provinceIndex, areaIndex);
 
-                if (region == null)
+                if (pair == null)
                 {
-                    return false;
+                    return null;
                 }
 
-                mStayViewModel.stayRegion.setValue(region);
+                StayRegion stayRegion = pair.first;
+                List<Category> categoryList = pair.second;
+
+                if (stayRegion == null)
+                {
+                    return null;
+                }
+
+                mStayViewModel.stayRegion.setValue(stayRegion);
                 notifyRegionTextChanged();
 
                 // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
-                if (DailyTextUtils.isTextEmpty(categoryCode) == false && region.getArea() != null && region.getArea().getCategoryCount() > 0)
+                if (DailyTextUtils.isTextEmpty(categoryCode) == false && stayRegion.getArea() != null && categoryList != null && categoryList.size() > 0)
                 {
-                    for (Category category : region.getArea().getCategoryList())
+                    for (Category category : categoryList)
                     {
                         if (category.code.equalsIgnoreCase(categoryCode) == true)
                         {
@@ -1151,7 +1195,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
                 setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-                return true;
+
+                return categoryList;
             } else
             {
 
@@ -1160,13 +1205,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             ExLog.e(e.toString());
 
-            return false;
+            return null;
         } finally
         {
             dailyDeepLink.clear();
         }
 
-        return false;
+        return null;
     }
 
     boolean moveDeepLinkDetail(DailyDeepLink dailyDeepLink)

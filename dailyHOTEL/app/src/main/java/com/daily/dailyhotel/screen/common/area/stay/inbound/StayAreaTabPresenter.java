@@ -257,9 +257,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                         if (stayRegion == null)
                         {
                             StayAreaGroup stayAreaGroup = areaGroupList.get(0);
-                            StayArea stayArea = new StayArea(stayAreaGroup);
-                            stayArea.setCategoryList(stayAreaGroup.getCategoryList());
-                            stayRegion = new StayRegion(stayAreaGroup, stayArea);
+                            stayRegion = new StayRegion(stayAreaGroup, stayAreaGroup);
                         }
 
                         return stayRegion;

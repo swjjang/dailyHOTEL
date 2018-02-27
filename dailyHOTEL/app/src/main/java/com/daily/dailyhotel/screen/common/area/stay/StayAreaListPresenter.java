@@ -320,9 +320,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                     // 기존에 저장된 지역이 없는 경우 첫번째 지역으로 한다.
                     areaGroup = areaGroupList.get(0);
 
-                    StayArea stayArea = new StayArea(areaGroup);
-                    stayArea.setCategoryList(areaGroup.getCategoryList());
-                    mStayRegion = new StayRegion(areaGroup, stayArea);
+                    mStayRegion = new StayRegion(areaGroup, areaGroup);
 
                     mAreaGroupPosition = 0;
                 }
@@ -705,9 +703,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
 
         if (areaGroup.getAreaCount() == 0)
         {
-            StayArea stayArea = new StayArea(areaGroup);
-            stayArea.setCategoryList(areaGroup.getCategoryList());
-            return new StayRegion(areaGroup, stayArea);
+            return new StayRegion(areaGroup, areaGroup);
         } else
         {
             for (StayArea area : areaGroup.getAreaList())

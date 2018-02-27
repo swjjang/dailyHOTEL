@@ -493,7 +493,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                StayArea area = region.getArea();
+                com.daily.dailyhotel.entity.Area area = region.getArea();
                 params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
@@ -686,9 +686,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     }
                 } else
                 {
-                    StayArea stayArea = new StayArea(areaGroup);
-                    stayArea.setCategoryList(areaGroup.getCategoryList());
-                    return new StayRegion(areaGroup, stayArea);
+                    return new StayRegion(areaGroup, areaGroup);
                 }
             }
         }
@@ -718,9 +716,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     }
                 } else
                 {
-                    StayArea stayArea = new StayArea(areaGroup);
-                    stayArea.setCategoryList(areaGroup.getCategoryList());
-                    return new StayRegion(areaGroup, stayArea);
+                    return new StayRegion(areaGroup, areaGroup);
                 }
             }
         }
@@ -988,9 +984,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                             if (region == null)
                             {
-                                StayArea stayArea = new StayArea(areaGroupList.get(0));
-                                stayArea.setCategoryList(areaGroupList.get(0).getCategoryList());
-                                region = new StayRegion(areaGroupList.get(0), stayArea);
+                                region = new StayRegion(areaGroupList.get(0), areaGroupList.get(0));
                             }
 
                             mStayCategoryCuration.setRegion(region);

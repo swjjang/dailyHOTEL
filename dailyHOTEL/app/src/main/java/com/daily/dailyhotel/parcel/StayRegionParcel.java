@@ -4,13 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.dailyhotel.entity.Category;
-import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayRegion;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StayRegionParcel implements Parcelable
 {
@@ -39,8 +34,8 @@ public class StayRegionParcel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        StayAreaGroup areaGroup = mRegion.getAreaGroup();
-        StayArea area = mRegion.getArea();
+        Area areaGroup = mRegion.getAreaGroup();
+        Area area = mRegion.getArea();
 
         if (areaGroup == null)
         {
@@ -51,8 +46,6 @@ public class StayRegionParcel implements Parcelable
         {
             dest.writeInt(areaGroup.index);
             dest.writeString(areaGroup.name);
-
-            writeCategoryToParcel(dest, areaGroup.getCategoryList());
         }
 
         if (area == null)
@@ -64,31 +57,12 @@ public class StayRegionParcel implements Parcelable
         {
             dest.writeInt(area.index);
             dest.writeString(area.name);
-
-            writeCategoryToParcel(dest, area.getCategoryList());
-        }
-    }
-
-    private void writeCategoryToParcel(Parcel dest, List<Category> categoryList)
-    {
-        if (categoryList != null && categoryList.size() > 0)
-        {
-            dest.writeInt(categoryList.size());
-
-            for (Category category : categoryList)
-            {
-                dest.writeString(category.code);
-                dest.writeString(category.name);
-            }
-        } else
-        {
-            dest.writeInt(0);
         }
     }
 
     private void readFromParcel(Parcel in)
     {
-        StayAreaGroup areaGroup;
+        Area areaGroup;
 
         int areaGroupIndex = in.readInt();
         String areaGroupName = in.readString();
@@ -98,13 +72,12 @@ public class StayRegionParcel implements Parcelable
             areaGroup = null;
         } else
         {
-            areaGroup = new StayAreaGroup();
+            areaGroup = new Area();
             areaGroup.index = areaGroupIndex;
             areaGroup.name = areaGroupName;
-            areaGroup.setCategoryList(readCategoryFromParcel(in));
         }
 
-        StayArea area;
+        Area area;
 
         int areaIndex = in.readInt();
         String areaName = in.readString();
@@ -114,32 +87,12 @@ public class StayRegionParcel implements Parcelable
             area = null;
         } else
         {
-            area = new StayArea();
+            area = new Area();
             area.index = areaIndex;
             area.name = areaName;
-            area.setCategoryList(readCategoryFromParcel(in));
         }
 
         mRegion = new StayRegion(areaGroup, area);
-    }
-
-    private List<Category> readCategoryFromParcel(Parcel in)
-    {
-        int categorySize = in.readInt();
-
-        if (categorySize > 0)
-        {
-            List<Category> categoryList = new ArrayList<>();
-
-            for (int i = 0; i < categorySize; i++)
-            {
-                categoryList.add(new Category(in.readString(), in.readString()));
-            }
-
-            return categoryList;
-        }
-
-        return null;
     }
 
     @Override

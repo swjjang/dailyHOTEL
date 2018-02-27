@@ -76,7 +76,7 @@ public class StayParams extends PlaceParams
             {
                 provinceIdx = areaGroup.index;
 
-                StayArea area = stayRegion.getArea();
+                com.daily.dailyhotel.entity.Area area = stayRegion.getArea();
 
                 if (area != null && area.index != StayArea.ALL)
                 {
