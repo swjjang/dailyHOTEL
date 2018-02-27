@@ -21,7 +21,6 @@ import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchStayOutboundViewModel;
-import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 

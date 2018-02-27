@@ -19,7 +19,6 @@ import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListAdapter;
-import com.daily.dailyhotel.screen.common.area.stay.inbound.StaySubwayTabView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutAreaSubwayTabDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListLocationDataBinding;

@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.model.DailyCategoryType;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public interface StayInterface

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 
 import java.util.List;
 

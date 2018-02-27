@@ -7,7 +7,6 @@ import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
  * Created by sheldon

@@ -18,7 +18,6 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;

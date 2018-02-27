@@ -22,7 +22,6 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.SearchStayOutboundViewModel;
-import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;

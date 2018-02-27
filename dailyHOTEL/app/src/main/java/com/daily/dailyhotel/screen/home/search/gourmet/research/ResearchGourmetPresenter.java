@@ -24,7 +24,6 @@ import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
-import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;

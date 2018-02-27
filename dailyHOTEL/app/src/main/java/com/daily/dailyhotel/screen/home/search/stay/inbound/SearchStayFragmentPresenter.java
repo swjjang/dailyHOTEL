@@ -20,7 +20,6 @@ import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
-import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 

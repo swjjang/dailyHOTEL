@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;

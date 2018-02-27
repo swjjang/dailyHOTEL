@@ -2,15 +2,10 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
 import android.app.Activity;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,6 +37,7 @@ import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivi
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -86,59 +82,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         MAP,
     }
 
-    StayViewModel mStayViewModel;
+    StayTabViewModel mStayViewModel;
     DailyDeepLink mDailyDeepLink;
     boolean mHasDeepLink;
-
-    class StayViewModel extends ViewModel
-    {
-        MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
-        MutableLiveData<StayBookDateTime> stayBookDateTime = new MutableLiveData<>();
-        MutableLiveData<StayFilter> stayFilter = new MutableLiveData<>();
-        MutableLiveData<StayRegion> stayRegion = new MutableLiveData<>();
-        MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
-        MutableLiveData<Location> location = new MutableLiveData<>();
-        MutableLiveData<ViewType> viewType = new MutableLiveData<>();
-    }
-
-    class StayViewModelFactory implements ViewModelProvider.Factory
-    {
-        private Context mContext;
-
-        public StayViewModelFactory(Context context)
-        {
-            mContext = context;
-        }
-
-        @NonNull
-        @Override
-        public StayViewModel create(@NonNull Class modelClass)
-        {
-            StayViewModel stayViewModel = new StayViewModel();
-
-            stayViewModel.stayFilter.setValue(new StayFilter().resetFilter());
-            stayViewModel.viewType.setValue(ViewType.LIST);
-
-            if (mContext == null)
-            {
-                stayViewModel.selectedCategory.setValue(Category.ALL);
-            } else
-            {
-                String oldCategoryCode = DailyPreference.getInstance(mContext).getStayCategoryCode();
-                String oldCategoryName = DailyPreference.getInstance(mContext).getStayCategoryName();
-
-                if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
-                {
-                    stayViewModel.selectedCategory.setValue(new Category(oldCategoryCode, oldCategoryName));
-                } else
-                {
-                    stayViewModel.selectedCategory.setValue(Category.ALL);
-                }
-            }
-
-            return stayViewModel;
-        }
-    }
 
     public StayTabPresenter(@NonNull StayTabActivity activity)
     {
@@ -189,29 +135,61 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onNewIntent(Intent intent)
     {
-        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        if (DailyIntentUtils.hasDeepLink(intent) == false)
         {
             return;
         }
 
         try
         {
-            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
-
-            if (mDailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
-
-                if (externalDeepLink.isHotelDetailView() == true && moveDeepLinkDetail(externalDeepLink) == true)
-                {
-                    setRefresh(false);
-                    unLockAll();
-                }
-            }
+            mDailyDeepLink = DailyIntentUtils.getDeepLink(intent);
+            parseDeepLink(mDailyDeepLink);
         } catch (Exception e)
         {
-            mDailyDeepLink = null;
+            ExLog.e(e.toString());
+
+            clearDeepLink();
         }
+    }
+
+    private void parseDeepLink(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
+        {
+            throw new NullPointerException("dailyDeepLink == null || dailyDeepLink.isValidateLink() == false");
+        }
+
+        if (dailyDeepLink.isInternalDeepLink() == true)
+        {
+
+        } else if (dailyDeepLink.isExternalDeepLink() == true)
+        {
+            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+            if (externalDeepLink.isHotelDetailView() == true)
+            {
+                parseDetailViewDeepLink(externalDeepLink);
+
+                setRefresh(false);
+                unLockAll();
+            }
+        } else
+        {
+            throw new RuntimeException("Invalid DeepLink : " + dailyDeepLink.getDeepLink());
+        }
+    }
+
+    private void clearDeepLink()
+    {
+        if (mDailyDeepLink == null)
+        {
+            return;
+        }
+
+        mHasDeepLink = false;
+
+        mDailyDeepLink.clear();
+        mDailyDeepLink = null;
     }
 
     @Override
@@ -241,6 +219,16 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             onRefresh(true);
         }
 
+        if (isShowPreviewGuide() == true)
+        {
+            getViewInterface().showPreviewGuide();
+        }
+    }
+
+    private boolean isShowPreviewGuide()
+    {
+        final int SHOW_COUNT = 2;
+
         if (Util.supportPreview(getActivity()) == true)
         {
             // View 타입이 리스트일때만
@@ -248,17 +236,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             {
                 int count = DailyPreference.getInstance(getActivity()).getCountPreviewGuide() + 1;
 
-                if (count == 2)
-                {
-                    getViewInterface().showPreviewGuide();
-                } else if (count > 2)
-                {
-                    return;
-                }
-
                 DailyPreference.getInstance(getActivity()).setCountPreviewGuide(count);
+
+                return count == SHOW_COUNT;
             }
         }
+
+        return false;
     }
 
     @Override
@@ -662,7 +646,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        mStayViewModel = ViewModelProviders.of(activity, new StayViewModelFactory(getActivity())).get(StayViewModel.class);
+        mStayViewModel = ViewModelProviders.of(activity, new StayTabViewModel.StayTabViewModelFactory(getActivity())).get(StayTabViewModel.class);
 
         mStayViewModel.viewType.observe(activity, new Observer<ViewType>()
         {
@@ -820,16 +804,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         getViewInterface().setToolbarRegionText(mStayViewModel.stayRegion.getValue().getAreaName());
     }
-
-    //    void notifyCategoryChanged()
-    //    {
-    //        if (mStayViewModel == null || mStayViewModel.stayRegion.getValue() == null || mStayViewModel.selectedCategory.getValue() == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        getViewInterface().setCategoryTabLayout(mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
-    //    }
 
     Pair<StayRegion, List<Category>> searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
     {
@@ -1214,36 +1188,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    boolean moveDeepLinkDetail(DailyDeepLink dailyDeepLink)
+    void parseDetailViewDeepLink(DailyExternalDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null)
-        {
-            return false;
-        }
+        Intent intent = StayDetailActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink());
+        startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);
 
-        try
-        {
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                Intent intent = StayDetailActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink());
-                startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-                mHasDeepLink = true;
-            } else
-            {
-
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return false;
-        } finally
-        {
-            dailyDeepLink.clear();
-        }
-
-        return true;
+        mHasDeepLink = true;
     }
 }

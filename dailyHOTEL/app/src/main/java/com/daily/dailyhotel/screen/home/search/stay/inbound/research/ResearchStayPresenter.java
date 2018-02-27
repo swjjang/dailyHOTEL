@@ -23,7 +23,6 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
-import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.R;

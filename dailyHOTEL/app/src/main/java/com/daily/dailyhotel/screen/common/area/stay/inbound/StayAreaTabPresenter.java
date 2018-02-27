@@ -220,7 +220,6 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         setRefresh(false);
         screenLock(showProgress);
 
-
         addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
