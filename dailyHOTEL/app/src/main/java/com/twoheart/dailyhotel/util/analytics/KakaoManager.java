@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.Locale;
 import java.util.Map;
 
@@ -55,14 +56,33 @@ public class KakaoManager extends BaseAnalyticsManager
             case AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND:
                 ViewContent event = new ViewContent();
                 event.content_id = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+                event.tag = getScreenName(screenName);
 
                 KakaoAdTracker.getInstance().sendEvent(event);
 
                 if (DEBUG == true)
                 {
-                    ExLog.d(TAG + " : " + event.getEventCode());
+                    ExLog.d(TAG + " : " + event.getEventCode() + ", content_id : " + event.content_id + ", " + event.tag);
                 }
                 break;
+        }
+    }
+
+    private String getScreenName(String screenName)
+    {
+        switch (screenName)
+        {
+            case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                return AnalyticsManager.ValueType.STAY;
+
+            case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
+                return AnalyticsManager.ValueType.GOURMET;
+
+            case AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND:
+                return AnalyticsManager.ValueType.OUTBOUND;
+
+            default:
+                return null;
         }
     }
 
@@ -172,12 +192,13 @@ public class KakaoManager extends BaseAnalyticsManager
     void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         CompleteRegistration event = new CompleteRegistration();
+        event.tag = userType;
 
         KakaoAdTracker.getInstance().sendEvent(event);
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + " : " + event.getEventCode());
+            ExLog.d(TAG + " : " + event.getEventCode() + ", " + event.tag);
         }
     }
 
@@ -185,12 +206,13 @@ public class KakaoManager extends BaseAnalyticsManager
     void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen)
     {
         CompleteRegistration event = new CompleteRegistration();
+        event.tag = userType;
 
         KakaoAdTracker.getInstance().sendEvent(event);
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + " : " + event.getEventCode());
+            ExLog.d(TAG + " : " + event.getEventCode() + ", " + event.tag);
         }
     }
 
@@ -198,10 +220,14 @@ public class KakaoManager extends BaseAnalyticsManager
     void purchaseCompleteHotel(String aggregationId, Map<String, String> params)
     {
         Purchase event = new Purchase();
+        event.tag = AnalyticsManager.ValueType.STAY;
+        event.currency = Currency.getInstance(Locale.KOREA);
+        event.total_price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        event.total_quantity = 1;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-        product.price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        product.price = event.total_price;
         product.quantity = 1;
 
         event.setProducts(new ArrayList(Arrays.asList(product)));
@@ -218,10 +244,14 @@ public class KakaoManager extends BaseAnalyticsManager
     void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
         Purchase event = new Purchase();
+        event.tag = AnalyticsManager.ValueType.OUTBOUND;
+        event.currency = Currency.getInstance(Locale.KOREA);
+        event.total_price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        event.total_quantity = 1;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-        product.price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        product.price = event.total_price;
         product.quantity = 1;
 
         event.setProducts(new ArrayList(Arrays.asList(product)));
@@ -238,10 +268,14 @@ public class KakaoManager extends BaseAnalyticsManager
     void purchaseCompleteGourmet(String aggregationId, Map<String, String> params)
     {
         Purchase event = new Purchase();
+        event.tag = AnalyticsManager.ValueType.GOURMET;
+        event.currency = Currency.getInstance(Locale.KOREA);
+        event.total_price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        event.total_quantity = 1;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-        product.price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        product.price = event.total_price;
         product.quantity = 1;
 
         event.setProducts(new ArrayList(Arrays.asList(product)));

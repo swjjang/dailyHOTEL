@@ -104,11 +104,8 @@
 -keep class bo.app.** { *; }
 -keep class com.appboy.** { *; }
 
-#Tune
--keep public class com.tune.** { public *; }
--keep public class com.google.android.gms.ads.identifier.** { *; }
--keep public class com.google.android.gms.gcm.** { *; }
--keep public class com.google.android.gms.common.** { *; }
+#kakao
+-keep public class com.kakao.** { *; }
 
 #Adjust
 -keep class com.adjust.sdk.plugin.MacAddressUtil {

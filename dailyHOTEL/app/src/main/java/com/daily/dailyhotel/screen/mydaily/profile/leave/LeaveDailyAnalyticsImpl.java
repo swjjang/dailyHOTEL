@@ -15,7 +15,7 @@ public class LeaveDailyAnalyticsImpl implements LeaveDailyInterface.AnalyticsInt
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.MEMBER_LEAVE_STEP_3, null);
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.MEMBER_LEAVE_STEP_2, null);
     }
 
     @Override
