@@ -9,10 +9,10 @@ import com.daily.dailyhotel.domain.SuggestInterface;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
-import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 
@@ -115,7 +115,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                             {
                                 if (stayKeyword.index > 0)
                                 {
-                                    stayKeyword.icon = PlaceSearchLayout.HOTEL_ICON;
+                                    stayKeyword.icon = Keyword.HOTEL_ICON;
                                 }
 
                                 pair.second.add(stayKeyword);
@@ -156,7 +156,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                             {
                                 if (gourmetKeyword.index > 0)
                                 {
-                                    gourmetKeyword.icon = PlaceSearchLayout.GOURMET_ICON;
+                                    gourmetKeyword.icon = Keyword.GOURMET_ICON;
                                 }
 
                                 pair.second.add(gourmetKeyword);
