@@ -1794,4 +1794,6 @@
     <string name="label_leave_daily_agreement">동의합니다.</string>
     <string name="label_leave_daily_do_leave">탈퇴하기</string>
     <string name="label_leave_daily_leave_reason_title">탈퇴 사유 선택</string>
+    <string name="message_leave_daily_reason_unselected">탈퇴 사유를 선택해주세요.</string>
+    <string name="message_leave_daily_agreement_unchecked">탈퇴 안내 사항에 동의해주세요.</string>
 </resources>
