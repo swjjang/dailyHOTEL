@@ -17,7 +17,7 @@ public class ListDialogItemParcel<T extends Parcelable> implements Parcelable
         this.mItem = item;
     }
 
-    public <T> T getItem()
+    public T getItem()
     {
         return (T) mItem;
     }

@@ -32,7 +32,7 @@ import io.reactivex.functions.Function;
 public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener, ActivityStayTabDataBinding> //
     implements StayTabInterface.ViewInterface
 {
-    private BaseFragmentPagerAdapter<StayListFragment> mFragmentPagerAdapter;
+    BaseFragmentPagerAdapter<StayListFragment> mFragmentPagerAdapter;
 
     public StayTabView(BaseActivity baseActivity, StayTabInterface.OnEventListener listener)
     {

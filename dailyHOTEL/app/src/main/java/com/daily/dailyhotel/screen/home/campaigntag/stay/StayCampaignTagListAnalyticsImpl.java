@@ -48,7 +48,7 @@ public class StayCampaignTagListAnalyticsImpl implements StayCampaignTagListPres
         String action = listCount == 0 ? AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND : AnalyticsManager.Action.TAG_SEARCH;
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
-            , action + "_stay", tagIndex, null);
+            , action + "_stay", tagIndex, params);
     }
 
     @Override

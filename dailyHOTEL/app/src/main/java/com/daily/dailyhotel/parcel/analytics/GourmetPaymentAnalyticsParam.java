@@ -91,10 +91,10 @@ public class GourmetPaymentAnalyticsParam implements Parcelable
         rankingPosition = in.readInt();
         totalListCount = in.readInt();
         ratingValue = in.readInt();
-        benefit = in.readInt() == 1 ? true : false;
+        benefit = in.readInt() == 1;
         totalPrice = in.readInt();
         address = in.readString();
-        dailyChoice = in.readInt() == 1 ? true : false;
+        dailyChoice = in.readInt() == 1;
         province = in.readParcelable(Province.class.getClassLoader());
         addressAreaName = in.readString();
         categorySub = in.readString();

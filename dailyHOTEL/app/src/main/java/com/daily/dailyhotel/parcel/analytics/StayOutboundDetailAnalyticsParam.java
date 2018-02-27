@@ -43,7 +43,7 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
     void readFromParcel(Parcel in)
     {
         index = in.readInt();
-        benefit = in.readInt() == 1 ? true : false;
+        benefit = in.readInt() == 1;
         grade = in.readString();
         rankingPosition = in.readInt();
         rating = in.readString();
@@ -51,7 +51,7 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
         name = in.readString();
         nightlyRate = in.readInt();
         nightlyBaseRate = in.readInt();
-        dailyChoice = in.readInt() == 1 ? true : false;
+        dailyChoice = in.readInt() == 1;
     }
 
     @Override

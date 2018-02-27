@@ -289,7 +289,7 @@ public class AnalyticsParam implements Parcelable
         showOriginalPriceYn = in.readString();
         entryPosition = in.readInt();
         totalListCount = in.readInt();
-        isDailyChoice = in.readInt() == 1 ? true : false;
+        isDailyChoice = in.readInt() == 1;
         gradeCode = in.readString();
         gradeName = in.readString();
     }

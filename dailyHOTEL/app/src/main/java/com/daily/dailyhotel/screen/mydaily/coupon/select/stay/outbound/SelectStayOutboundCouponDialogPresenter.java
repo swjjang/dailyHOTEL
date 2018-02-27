@@ -194,8 +194,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
 
         addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(mStayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
-            , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT)
-            , mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+            , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT), mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {
             @Override
             public void accept(Coupons coupons) throws Exception

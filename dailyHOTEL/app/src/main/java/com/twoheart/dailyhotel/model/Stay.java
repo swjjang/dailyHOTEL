@@ -78,13 +78,13 @@ public class Stay extends Place
         dBenefitText = in.readString();
         categoryCode = in.readString();
         //        sday = in.readString();
-        isLocalPlus = in.readInt() == 1 ? true : false;
+        isLocalPlus = in.readInt() == 1;
         displayText = in.readString();
         roomIndex = in.readInt();
         regionName = in.readString();
         sday = in.readString();
-        isOverseas = in.readInt() == 1 ? true : false;
-        provideRewardSticker = in.readInt() == 1 ? true : false;
+        isOverseas = in.readInt() == 1;
+        provideRewardSticker = in.readInt() == 1;
     }
 
     public Grade getGrade()
@@ -235,7 +235,7 @@ public class Stay extends Place
             districtName = stayWishItem.regionName;
             categoryCode = stayWishDetails != null ? stayWishDetails.category : "";
             satisfaction = stayWishItem.rating;
-            truevr = stayWishDetails != null ? stayWishDetails.isTrueVR : false;
+            truevr = stayWishDetails != null && stayWishDetails.isTrueVR;
 
             try
             {

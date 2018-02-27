@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     public CallbackManager mCallbackManager;
     ScrollView mScrollView;
     private DailyAutoCompleteEditText mEmailEditText;
-    private DailyEditText mPasswordEditText;
+    DailyEditText mPasswordEditText;
     TextView mLoginView, mFindPasswordView;
     View mEmailView, mPasswordView, mSnsLoginLayout;
     com.facebook.login.widget.LoginButton mFacebookLoginView;
