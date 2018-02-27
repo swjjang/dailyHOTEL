@@ -308,7 +308,7 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
             ? null : new ListDialogItemParcel(mSelectedReason.reason, new LeaveReasonParcel(mSelectedReason));
 
         Intent intent = BaseListDialogActivity.newInstance(getActivity(), getString(R.string.label_leave_daily_leave_reason_title) //
-            , selectedParcel, parcelList, AnalyticsManager.Screen.MEMBER_LEAVE_STEP_2);
+            , selectedParcel, parcelList, AnalyticsManager.Screen.MEMBER_LEAVE_STEP_3);
         startActivityForResult(intent, LeaveDailyActivity.REQUEST_CODE_LEAVE_REASON);
     }
 
