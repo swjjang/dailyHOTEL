@@ -627,7 +627,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         finish();
     }
 
-    private void showEmptyLayout()
+    void showEmptyLayout()
     {
         if (mPlaceSearchResultLayout == null)
         {

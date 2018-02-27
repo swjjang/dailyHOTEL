@@ -127,7 +127,7 @@ public class DailyCarouselLayout extends ConstraintLayout
             return false;
         }
 
-        return mAdapter.getData() == null ? false : mAdapter.getData().size() > 0;
+        return mAdapter.getData() != null && mAdapter.getData().size() > 0;
     }
 
     public ArrayList<CarouselListItem> getData()

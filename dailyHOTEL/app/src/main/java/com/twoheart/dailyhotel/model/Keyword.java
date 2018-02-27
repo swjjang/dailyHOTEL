@@ -10,11 +10,9 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class Keyword implements Parcelable
 {
-    // 추후 없어질 예정임
     public static final int DEFAULT_ICON = 0;
     public static final int HOTEL_ICON = 1;
     public static final int GOURMET_ICON = 2;
-    public static final int TAG_ICON = 3;
 
     @JsonField(name = "displayText")
     public String name;

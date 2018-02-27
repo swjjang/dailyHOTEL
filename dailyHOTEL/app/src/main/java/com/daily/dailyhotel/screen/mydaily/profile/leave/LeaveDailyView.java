@@ -171,7 +171,7 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
         getViewDataBinding().leaveReasonLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    private boolean isLeaveReasonVisible()
+    boolean isLeaveReasonVisible()
     {
         if (getViewDataBinding() == null)
         {
@@ -211,7 +211,7 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
         }
     }
 
-    private boolean isLeaveButtonEnabled()
+    boolean isLeaveButtonEnabled()
     {
         if (getViewDataBinding() == null)
         {

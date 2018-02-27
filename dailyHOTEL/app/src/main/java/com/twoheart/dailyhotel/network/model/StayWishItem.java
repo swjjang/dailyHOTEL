@@ -36,7 +36,7 @@ public class StayWishItem extends PlaceWishItem<StayWishDetails>
         stay.districtName = regionName;
         stay.categoryCode = stayWishDetails != null ? stayWishDetails.category : "";
         stay.satisfaction = rating;
-        stay.trueVR = stayWishDetails != null ? stayWishDetails.isTrueVR : false;
+        stay.trueVR = stayWishDetails != null && stayWishDetails.isTrueVR;
         stay.imageUrl = url + imageUrl;
         stay.reviewCount = reviewCount;
         stay.newStay = newItem;

@@ -29,7 +29,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
     }
 
     private Context mContext;
-    private OnPopularSuggestListener mListener;
+    OnPopularSuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 

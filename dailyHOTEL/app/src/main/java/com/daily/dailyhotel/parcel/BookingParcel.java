@@ -62,7 +62,7 @@ public class BookingParcel implements Parcelable
         mBooking.comment = in.readString();
         mBooking.remainingDays = in.readInt();
         mBooking.tid = in.readString();
-        mBooking.readyForRefund = in.readInt() == 1 ? true : false;
+        mBooking.readyForRefund = in.readInt() == 1;
     }
 
     @Override

@@ -60,7 +60,7 @@ public class DailyBookingProductView extends LinearLayout
 
     public void addInformation(String title, int count, int persons, int price)
     {
-        boolean isTopLineVisible = mItemCount == 0 ? false : true;
+        boolean isTopLineVisible = mItemCount != 0;
 
         mItemCount++;
 

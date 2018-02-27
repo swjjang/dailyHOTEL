@@ -248,7 +248,7 @@ public class GourmetCart
 
     public boolean equalsDay(String visitDay) throws Exception
     {
-        return mGourmetBookDateTime != null ? DailyCalendar.compareDateDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), visitDay) == 0 : false;
+        return mGourmetBookDateTime != null && DailyCalendar.compareDateDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), visitDay) == 0;
     }
 
     public GourmetBookDateTime getGourmetBookDateTime()

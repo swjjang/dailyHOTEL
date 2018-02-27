@@ -120,9 +120,9 @@ public class StayBookingDetailParcel implements Parcelable
         mStayBookingDetail.transactionType = in.readString();
         mStayBookingDetail.reviewStatusType = in.readString();
         mStayBookingDetail.refundType = in.readString();
-        mStayBookingDetail.overseas = in.readInt() == 1 ? true : false;
-        mStayBookingDetail.readyForRefund = in.readInt() == 1 ? true : false;
-        mStayBookingDetail.waitingForBooking = in.readInt() == 1 ? true : false;
+        mStayBookingDetail.overseas = in.readInt() == 1;
+        mStayBookingDetail.readyForRefund = in.readInt() == 1;
+        mStayBookingDetail.waitingForBooking = in.readInt() == 1;
         mStayBookingDetail.cancelDateTime = in.readString();
         mStayBookingDetail.rewardStickerCount = in.readInt();
     }

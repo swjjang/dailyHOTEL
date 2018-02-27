@@ -100,15 +100,15 @@ public class StayPaymentAnalyticsParam implements Parcelable
 
     void readFromParcel(Parcel in)
     {
-        nrd = in.readInt() == 1 ? true : false;
+        nrd = in.readInt() == 1;
         showOriginalPrice = in.readString();
         rankingPosition = in.readInt();
         totalListCount = in.readInt();
         ratingValue = in.readInt();
-        benefit = in.readInt() == 1 ? true : false;
+        benefit = in.readInt() == 1;
         averageDiscount = in.readInt();
         address = in.readString();
-        dailyChoice = in.readInt() == 1 ? true : false;
+        dailyChoice = in.readInt() == 1;
 
         StayRegionParcel stayRegionParcel = in.readParcelable(StayRegionParcel.class.getClassLoader());
 
@@ -127,7 +127,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
             grade = Stay.Grade.etc;
         }
 
-        provideRewardSticker = in.readInt() == 1 ? true : false;
+        provideRewardSticker = in.readInt() == 1;
     }
 
     @Override

@@ -78,7 +78,7 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
         });
     }
 
-    private GoogleAddress getGoogleAddress(List<GoogleAddressData> googleAddressDataList)
+    GoogleAddress getGoogleAddress(List<GoogleAddressData> googleAddressDataList)
     {
         if (googleAddressDataList == null || googleAddressDataList.size() == 0)
         {

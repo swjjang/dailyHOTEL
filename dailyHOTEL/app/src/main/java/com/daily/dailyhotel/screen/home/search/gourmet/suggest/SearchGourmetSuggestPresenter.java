@@ -661,7 +661,7 @@ public class SearchGourmetSuggestPresenter //
         startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
-    private DailyRecentSearches getDailyRecentSearches()
+    DailyRecentSearches getDailyRecentSearches()
     {
         if (mDailyRecentSearches == null)
         {
