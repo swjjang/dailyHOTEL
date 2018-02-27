@@ -134,8 +134,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private int mStatus = STATUS_NONE;
 
     private boolean mIsUsedMultiTransition;
-    private boolean mIsDeepLink;
-    private boolean mCheckChangedPrice;
+    boolean mIsDeepLink;
+    boolean mCheckChangedPrice;
     private boolean mSoldOutFromList;
     private int mGradientType;
     private List<Integer> mSoldOutDateList;
@@ -1895,7 +1895,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     //        }
     //    }
 
-    private int checkChangedPrice(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice, boolean compareListPrice)
+    int checkChangedPrice(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice, boolean compareListPrice)
     {
         if (gourmetDetail == null)
         {
@@ -2269,7 +2269,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
     }
 
-    private void startPayment(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
+    void startPayment(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
     {
         if (gourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {

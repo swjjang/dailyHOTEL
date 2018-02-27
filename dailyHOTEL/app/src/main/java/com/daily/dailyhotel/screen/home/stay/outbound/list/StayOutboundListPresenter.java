@@ -1672,7 +1672,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     return objectItemList;
                 }
 
-                boolean isDefaultSortType = mStayOutboundFilters == null ? true : mStayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION;
+                boolean isDefaultSortType = mStayOutboundFilters == null || mStayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION;
                 boolean hasDailyChoice = stayOutboundList.get(0).dailyChoice == true;
                 if (isDefaultSortType == true && hasDailyChoice == true)
                 {

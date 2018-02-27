@@ -44,7 +44,7 @@ public class GourmetCampaignTagListAnalyticsImpl implements GourmetCampaignTagLi
         String action = listCount == 0 ? AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND : AnalyticsManager.Action.TAG_SEARCH;
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
-            , action + "_gourmet", tagIndex, null);
+            , action + "_gourmet", tagIndex, params);
     }
 
     @Override

@@ -200,7 +200,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     @Override
     public boolean hasCampaignTag()
     {
-        return mTagFlexboxLayout == null ? false : mTagFlexboxLayout.getChildCount() > 0;
+        return mTagFlexboxLayout != null && mTagFlexboxLayout.getChildCount() > 0;
     }
 
     /**

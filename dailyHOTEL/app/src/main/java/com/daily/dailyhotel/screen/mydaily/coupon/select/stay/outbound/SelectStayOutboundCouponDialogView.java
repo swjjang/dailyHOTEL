@@ -27,7 +27,7 @@ import java.util.List;
 
 public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectStayOutboundCouponDialogInterface.OnEventListener, ActivitySelectCouponDialogDataBinding> implements SelectStayOutboundCouponDialogInterface.ViewInterface
 {
-    private SelectStayOutboundCouponDialogAdapter mSelectStayOutboundCouponDialogAdapter;
+    SelectStayOutboundCouponDialogAdapter mSelectStayOutboundCouponDialogAdapter;
 
     public SelectStayOutboundCouponDialogView(BaseActivity baseActivity, SelectStayOutboundCouponDialogInterface.OnEventListener listener)
     {

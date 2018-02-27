@@ -34,12 +34,12 @@ public class StayOutboundPaymentAnalyticsParam implements Parcelable
 
     void readFromParcel(Parcel in)
     {
-        nrd = in.readInt() == 1 ? true : false;
-        showOriginalPrice = in.readInt() == 1 ? true : false;
+        nrd = in.readInt() == 1;
+        showOriginalPrice = in.readInt() == 1;
         grade = in.readString();
         rankingPosition = in.readInt();
         rating = in.readString();
-        provideRewardSticker = in.readInt() == 1 ? true : false;
+        provideRewardSticker = in.readInt() == 1;
     }
 
     @Override

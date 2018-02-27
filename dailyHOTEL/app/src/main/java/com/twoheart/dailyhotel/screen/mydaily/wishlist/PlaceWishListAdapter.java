@@ -57,7 +57,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
 
     public List<PlaceViewItem> getList()
     {
-        return mList != null ? mList : null;
+        return mList;
     }
 
     public void setData(List<PlaceViewItem> list)
