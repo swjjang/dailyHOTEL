@@ -1033,7 +1033,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             @Override
                             public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
                             {
-                                Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                                Intent intent = ReviewActivity.newInstance(getActivity(), review, booking.reviewStatusType);
                                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
                             }
                         }, new Consumer<Throwable>()
@@ -1065,7 +1065,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             @Override
                             public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
                             {
-                                Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                                Intent intent = ReviewActivity.newInstance(getActivity(), review, booking.reviewStatusType);
                                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
                             }
                         }, new Consumer<Throwable>()
@@ -1097,7 +1097,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             @Override
                             public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
                             {
-                                Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                                Intent intent = ReviewActivity.newInstance(getActivity(), review, booking.reviewStatusType);
                                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND);
                             }
                         }, new Consumer<Throwable>()

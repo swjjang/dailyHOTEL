@@ -112,6 +112,7 @@ public class BookingData
         booking.availableReview = REVIEW_MODIFIABLE.equalsIgnoreCase(reviewStatusType) == true //
             || REVIEW_ADDABLE.equalsIgnoreCase(reviewStatusType) == true;
         booking.waitingForBooking = waitingForBooking;
+        booking.reviewStatusType = reviewStatusType;
 
         return booking;
     }

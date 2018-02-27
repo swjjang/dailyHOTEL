@@ -29,6 +29,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
@@ -57,12 +58,14 @@ public class ReviewActivity extends BaseActivity
 {
     private static final int REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT = 100;
     private static final String INTENT_EXTRA_DATA_REVIEW = "review";
+    private static final String INTENT_EXTRA_DATA_REVIEW_STATUS_TYPE = "reviewStatusType";
 
     private static final int REQUEST_NEXT_FOCUS = 1;
 
     Review mReview;
     private Dialog mDialog;
     String mReviewGrade;
+    private String mReviewStatusType;
 
     DailyEmoticonImageView[] mDailyEmoticonImageView;
     ReviewLayout mReviewLayout;
@@ -83,7 +86,7 @@ public class ReviewActivity extends BaseActivity
         }
     };
 
-    public static Intent newInstance(Context context, Review review) throws IllegalArgumentException
+    public static Intent newInstance(Context context, Review review, String reviewStatusType) throws IllegalArgumentException
     {
         if (context == null || review == null)
         {
@@ -93,6 +96,7 @@ public class ReviewActivity extends BaseActivity
         Intent intent = new Intent(context, ReviewActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_REVIEW, review);
+        intent.putExtra(INTENT_EXTRA_DATA_REVIEW_STATUS_TYPE, reviewStatusType);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         return intent;
@@ -112,9 +116,17 @@ public class ReviewActivity extends BaseActivity
         }
 
         mReview = intent.getParcelableExtra(INTENT_EXTRA_DATA_REVIEW);
+        mReviewStatusType = intent.getStringExtra(INTENT_EXTRA_DATA_REVIEW_STATUS_TYPE);
         mReviewNetworkController = new ReviewNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        showReviewDialog();
+        if (PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(mReviewStatusType))
+        {
+            showReviewDetail();
+            mReviewLayout.showReviewDetailAnimation();
+        } else
+        {
+            showReviewDialog();
+        }
     }
 
     @Override

@@ -829,7 +829,7 @@ public class StayOutboundBookingDetailPresenter //
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
                     {
-                        Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                        Intent intent = ReviewActivity.newInstance(getActivity(), review, reviewStatus);
                         startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_REVIEW);
                     }
                 }, new Consumer<Throwable>()
