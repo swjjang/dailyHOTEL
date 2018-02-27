@@ -134,4 +134,15 @@ public class BaseListDialogView extends BaseMultiWindowView<BaseListDialogInterf
 
         getViewDataBinding().getRoot().setLayoutParams(layoutParams);
     }
+
+    @Override
+    public void setRootViewVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().getRoot().setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
 }

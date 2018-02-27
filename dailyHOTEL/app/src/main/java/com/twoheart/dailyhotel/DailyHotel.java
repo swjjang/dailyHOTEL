@@ -283,7 +283,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 return;
             }
 
-            // 스테이
             if (activity instanceof StayTabActivity//
                 || activity instanceof StayPaymentActivity//
                 || activity instanceof StayThankYouActivity//
@@ -317,7 +316,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 return;
             }
 
-            // 스테이
             if (activity instanceof StayTabActivity//
                 || activity instanceof StayPaymentActivity//
                 || activity instanceof StayThankYouActivity//
