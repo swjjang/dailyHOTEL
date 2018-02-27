@@ -39,12 +39,12 @@ import io.reactivex.functions.Consumer;
  */
 public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivity, LeaveDailyInterface.ViewInterface> implements LeaveDailyInterface.OnEventListener
 {
-    private LeaveDailyInterface.AnalyticsInterface mAnalytics;
+    LeaveDailyInterface.AnalyticsInterface mAnalytics;
 
-    private ProfileRemoteImpl mProfileRemoteImpl;
+    ProfileRemoteImpl mProfileRemoteImpl;
 
     private LeaveInfo mLeaveInfo;
-    private LeaveReason mSelectedReason;
+    LeaveReason mSelectedReason;
 
     public LeaveDailyPresenter(@NonNull LeaveDailyActivity activity)
     {
@@ -249,12 +249,12 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
         getActivity().onBackPressed();
     }
 
-    private void setLeaveInfo(LeaveInfo leaveInfo)
+    void setLeaveInfo(LeaveInfo leaveInfo)
     {
         mLeaveInfo = leaveInfo;
     }
 
-    private void notifyDataSetChanged()
+    void notifyDataSetChanged()
     {
         if (mLeaveInfo == null)
         {

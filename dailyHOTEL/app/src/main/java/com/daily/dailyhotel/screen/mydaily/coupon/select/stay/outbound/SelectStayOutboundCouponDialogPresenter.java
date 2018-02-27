@@ -18,7 +18,6 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -195,8 +194,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
 
         addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(mStayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
-            , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT)
-            , mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+            , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT), mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {
             @Override
             public void accept(Coupons coupons) throws Exception

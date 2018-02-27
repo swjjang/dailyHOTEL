@@ -51,7 +51,7 @@ public class RefundPolicyParcel implements Parcelable
     {
         mRefundPolicy = new RefundPolicy();
         mRefundPolicy.comment = in.readString();
-        mRefundPolicy.refundManual = in.readInt() == 1 ? true : false;
+        mRefundPolicy.refundManual = in.readInt() == 1;
         mRefundPolicy.refundPolicy = in.readString();
         mRefundPolicy.message = in.readString();
     }

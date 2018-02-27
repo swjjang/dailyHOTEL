@@ -885,7 +885,7 @@ public class SearchStaySuggestPresenter //
         startFinishAction(staySuggest, mKeyword, null);
     }
 
-    private DailyRecentSearches getDailyRecentSearches()
+    DailyRecentSearches getDailyRecentSearches()
     {
         if (mDailyRecentSearches == null)
         {

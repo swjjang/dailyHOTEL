@@ -203,7 +203,7 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
             return false;
         }
 
-        return mDataBinding.contentLayout.getData() == null ? false : mDataBinding.contentLayout.getData().size() > 0;
+        return mDataBinding.contentLayout.getData() != null && mDataBinding.contentLayout.getData().size() > 0;
     }
 
     public ArrayList<CarouselListItem> getData()

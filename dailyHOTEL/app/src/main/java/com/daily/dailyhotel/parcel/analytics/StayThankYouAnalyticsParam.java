@@ -30,7 +30,7 @@ public class StayThankYouAnalyticsParam implements Parcelable
     void readFromParcel(Parcel in)
     {
         params = in.readHashMap(HashMap.class.getClassLoader());
-        provideRewardSticker = in.readInt() == 1 ? true : false;
+        provideRewardSticker = in.readInt() == 1;
     }
 
     @Override

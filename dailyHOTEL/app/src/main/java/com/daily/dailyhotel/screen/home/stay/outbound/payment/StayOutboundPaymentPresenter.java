@@ -108,7 +108,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private String mStayName, mRoomType, mVendorType, mImageUrl;
     private String mRateCode, mRateKey, mRoomTypeCode;
     StayOutboundPayment mStayOutboundPayment;
-    private Card mSelectedCard;
+    Card mSelectedCard;
     private OverseasGuest mGuest;
     Coupon mSelectedCoupon;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;

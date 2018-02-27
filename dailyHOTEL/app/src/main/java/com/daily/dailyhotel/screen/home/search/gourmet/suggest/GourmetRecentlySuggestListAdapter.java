@@ -35,7 +35,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
     }
 
     private Context mContext;
-    private OnRecentlySuggestListener mListener;
+    OnRecentlySuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 

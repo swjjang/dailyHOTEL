@@ -37,11 +37,11 @@ public class StayOutboundThankYouAnalyticsParam implements Parcelable
     void readFromParcel(Parcel in)
     {
         paymentType = DailyBookingPaymentTypeView.PaymentType.valueOf(in.readString());
-        registerEasyCard = in.readInt() == 1 ? true : false;
-        fullBonus = in.readInt() == 1 ? true : false;
-        usedBonus = in.readInt() == 1 ? true : false;
+        registerEasyCard = in.readInt() == 1;
+        fullBonus = in.readInt() == 1;
+        usedBonus = in.readInt() == 1;
         stayIndex = in.readInt();
-        provideRewardSticker = in.readInt() == 1 ? true : false;
+        provideRewardSticker = in.readInt() == 1;
     }
 
     @Override

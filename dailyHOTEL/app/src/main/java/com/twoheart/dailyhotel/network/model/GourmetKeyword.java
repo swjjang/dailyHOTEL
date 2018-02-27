@@ -59,7 +59,7 @@ public class GourmetKeyword extends Keyword
         index = in.readInt();
         availableTickets = in.readInt();
         price = in.readInt();
-        isExpired = in.readInt() == 1 ? true : false;
+        isExpired = in.readInt() == 1;
         minimumOrderQuantity = in.readInt();
     }
 
