@@ -55,14 +55,33 @@ public class KakaoManager extends BaseAnalyticsManager
             case AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND:
                 ViewContent event = new ViewContent();
                 event.content_id = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+                event.tag = getScreenName(screenName);
 
                 KakaoAdTracker.getInstance().sendEvent(event);
 
                 if (DEBUG == true)
                 {
-                    ExLog.d(TAG + " : " + event.getEventCode());
+                    ExLog.d(TAG + " : " + event.getEventCode() + ", content_id : " + event.content_id + ", " + event.tag);
                 }
                 break;
+        }
+    }
+
+    private String getScreenName(String screenName)
+    {
+        switch (screenName)
+        {
+            case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                return AnalyticsManager.ValueType.STAY;
+
+            case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
+                return AnalyticsManager.ValueType.GOURMET;
+
+            case AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND:
+                return AnalyticsManager.ValueType.OUTBOUND;
+
+            default:
+                return null;
         }
     }
 
@@ -172,12 +191,13 @@ public class KakaoManager extends BaseAnalyticsManager
     void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         CompleteRegistration event = new CompleteRegistration();
+        event.tag = userType;
 
         KakaoAdTracker.getInstance().sendEvent(event);
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + " : " + event.getEventCode());
+            ExLog.d(TAG + " : " + event.getEventCode() + ", " + event.tag);
         }
     }
 
@@ -185,12 +205,13 @@ public class KakaoManager extends BaseAnalyticsManager
     void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen)
     {
         CompleteRegistration event = new CompleteRegistration();
+        event.tag = userType;
 
         KakaoAdTracker.getInstance().sendEvent(event);
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + " : " + event.getEventCode());
+            ExLog.d(TAG + " : " + event.getEventCode() + ", " + event.tag);
         }
     }
 
@@ -198,6 +219,7 @@ public class KakaoManager extends BaseAnalyticsManager
     void purchaseCompleteHotel(String aggregationId, Map<String, String> params)
     {
         Purchase event = new Purchase();
+        event.tag = AnalyticsManager.ValueType.STAY;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
@@ -218,6 +240,7 @@ public class KakaoManager extends BaseAnalyticsManager
     void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
         Purchase event = new Purchase();
+        event.tag = AnalyticsManager.ValueType.OUTBOUND;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
@@ -238,6 +261,7 @@ public class KakaoManager extends BaseAnalyticsManager
     void purchaseCompleteGourmet(String aggregationId, Map<String, String> params)
     {
         Purchase event = new Purchase();
+        event.tag = AnalyticsManager.ValueType.GOURMET;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
