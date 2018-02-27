@@ -90,7 +90,6 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -1057,7 +1056,7 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<CouponsData>> getStayCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                @Query("hotelIndex") int stayIndex, @Query("roomIdx") int roomIndex, //
+                                                                @Query("hotelIdx") int stayIndex, @Query("roomIdx") int roomIndex, //
                                                                 @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
