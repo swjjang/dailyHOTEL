@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.Locale;
 import java.util.Map;
 
@@ -220,10 +221,13 @@ public class KakaoManager extends BaseAnalyticsManager
     {
         Purchase event = new Purchase();
         event.tag = AnalyticsManager.ValueType.STAY;
+        event.currency = Currency.getInstance(Locale.KOREA);
+        event.total_price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        event.total_quantity = 1;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-        product.price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        product.price = event.total_price;
         product.quantity = 1;
 
         event.setProducts(new ArrayList(Arrays.asList(product)));
@@ -241,10 +245,13 @@ public class KakaoManager extends BaseAnalyticsManager
     {
         Purchase event = new Purchase();
         event.tag = AnalyticsManager.ValueType.OUTBOUND;
+        event.currency = Currency.getInstance(Locale.KOREA);
+        event.total_price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        event.total_quantity = 1;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-        product.price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        product.price = event.total_price;
         product.quantity = 1;
 
         event.setProducts(new ArrayList(Arrays.asList(product)));
@@ -262,10 +269,13 @@ public class KakaoManager extends BaseAnalyticsManager
     {
         Purchase event = new Purchase();
         event.tag = AnalyticsManager.ValueType.GOURMET;
+        event.currency = Currency.getInstance(Locale.KOREA);
+        event.total_price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        event.total_quantity = 1;
 
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-        product.price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+        product.price = event.total_price;
         product.quantity = 1;
 
         event.setProducts(new ArrayList(Arrays.asList(product)));
