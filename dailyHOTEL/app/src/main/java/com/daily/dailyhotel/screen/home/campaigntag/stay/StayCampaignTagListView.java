@@ -66,6 +66,7 @@ public class StayCampaignTagListView //
             return;
         }
 
+        viewDataBinding.toolbarView.setTitleImageResource(R.drawable.search_ic_01_date);
         viewDataBinding.toolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
         {
             @Override
