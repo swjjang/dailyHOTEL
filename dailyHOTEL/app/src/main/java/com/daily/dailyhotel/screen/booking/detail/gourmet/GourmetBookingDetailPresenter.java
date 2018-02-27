@@ -1285,7 +1285,8 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             return;
         }
 
-        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true //
+            || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
         {
             addCompositeDisposable(mReviewRemoteImpl.getGourmetReview(mReservationIndex) //
                 .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()

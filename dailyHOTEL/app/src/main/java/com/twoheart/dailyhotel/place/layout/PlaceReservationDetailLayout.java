@@ -458,7 +458,8 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
         mInputReviewView.setTag(reviewStatus);
 
-        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true //
+            || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
         {
             mInputReviewVerticalLine.setVisibility(View.VISIBLE);
             mInputReviewView.setVisibility(View.VISIBLE);

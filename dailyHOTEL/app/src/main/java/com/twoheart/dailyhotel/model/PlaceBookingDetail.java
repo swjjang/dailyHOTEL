@@ -16,6 +16,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     public class ReviewStatusType
     {
         public static final String ADDABLE = "ADDABLE"; // 리뷰가능기간, 리뷰없음
+        public static final String MODIFIABLE = "MODIFIABLE"; // 리뷰가능기간, 만족도만 선택 된 상태
         public static final String COMPLETE = "COMPLETE"; // 리뷰있음
         public static final String NONE = "NONE"; // (리뷰불가능기간, 리뷰없음) or (마이그레이션 데이터)
     }

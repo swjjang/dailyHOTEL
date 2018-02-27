@@ -574,7 +574,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         getViewDataBinding().inputReviewView.setTag(reviewStatusType);
 
-        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatusType) == true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatusType) == true //
+            || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatusType) == true)
         {
             getViewDataBinding().inputReviewVerticalLine.setVisibility(View.VISIBLE);
             getViewDataBinding().inputReviewView.setVisibility(View.VISIBLE);
