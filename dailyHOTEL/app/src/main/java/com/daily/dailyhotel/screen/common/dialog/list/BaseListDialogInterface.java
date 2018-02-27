@@ -16,6 +16,8 @@ public interface BaseListDialogInterface
         void setData(ListDialogItemParcel selectedItem, List<ListDialogItemParcel> list);
 
         void onConfigurationChange(int orientation, boolean isInMultiWindowMode);
+
+        void setRootViewVisible(boolean visible);
     }
 
     interface OnEventListener extends OnBaseEventListener

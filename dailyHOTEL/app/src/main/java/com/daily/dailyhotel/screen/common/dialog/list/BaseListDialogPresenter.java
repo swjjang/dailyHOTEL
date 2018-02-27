@@ -144,6 +144,7 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
     @Override
     public boolean onBackPressed()
     {
+        getViewInterface().setRootViewVisible(false);
         return super.onBackPressed();
     }
 
@@ -227,6 +228,7 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
     public void onNativeButtonClick()
     {
         setResult(Activity.RESULT_CANCELED);
+        getViewInterface().setRootViewVisible(false);
         finish();
     }
 
@@ -239,6 +241,7 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
         intent.putExtra(BaseListDialogActivity.INTENT_EXTRA_DATA_SELECTED_DATA, selectedItem);
 
         setResult(Activity.RESULT_OK, intent);
+        getViewInterface().setRootViewVisible(false);
         finish();
     }
 

@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
@@ -14,14 +13,14 @@ import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
-import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -37,7 +36,6 @@ import com.twoheart.dailyhotel.network.RetrofitHttpClient;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -285,8 +283,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 return;
             }
 
-            // 스테이
-            if (activity instanceof StayMainActivity//
+            if (activity instanceof StayTabActivity//
                 || activity instanceof StayPaymentActivity//
                 || activity instanceof StayThankYouActivity//
                 || activity instanceof StayCategoryTabActivity//
@@ -298,10 +295,9 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 || activity instanceof GourmetThankYouActivity)
             {
                 mAppResearch.onResume("고메", -1);
-            } else if (activity instanceof StayOutboundSearchActivity//
-                || activity instanceof SearchStayOutboundSuggestActivity//
-                || activity instanceof StayOutboundListActivity//
-                || activity instanceof StayOutboundPaymentActivity)
+            } else if (activity instanceof StayOutboundListActivity//
+                || activity instanceof StayOutboundPaymentActivity//
+                || activity instanceof StayOutboundThankYouActivity)
             {
                 mAppResearch.onResume("outbound_스테이", -1);
             } else
@@ -320,8 +316,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 return;
             }
 
-            // 스테이
-            if (activity instanceof StayMainActivity//
+            if (activity instanceof StayTabActivity//
                 || activity instanceof StayPaymentActivity//
                 || activity instanceof StayThankYouActivity//
                 || activity instanceof StayCategoryTabActivity//
@@ -333,6 +328,11 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 || activity instanceof GourmetThankYouActivity)
             {
                 mAppResearch.onPause("고메", -1);
+            } else if (activity instanceof StayOutboundListActivity//
+                || activity instanceof StayOutboundPaymentActivity//
+                || activity instanceof StayOutboundThankYouActivity)
+            {
+                mAppResearch.onPause("outbound_스테이", -1);
             } else
             {
                 mAppResearch.onPause("etc", -1);
