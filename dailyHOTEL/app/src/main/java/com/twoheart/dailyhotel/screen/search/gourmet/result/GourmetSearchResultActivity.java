@@ -1610,16 +1610,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-            try
-            {
-                if (viewType == ViewType.LIST)
-                {
-                    recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.getMessage());
-            }
         }
 
         @Override

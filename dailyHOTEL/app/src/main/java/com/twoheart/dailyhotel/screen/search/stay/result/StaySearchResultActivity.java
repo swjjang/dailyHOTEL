@@ -705,12 +705,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
-            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(StaySearchResultActivity.this, screen + "_stay", null, params);
-
             if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
             {
                 AnalyticsManager.getInstance(StaySearchResultActivity.this) //
                     .recordScreen(StaySearchResultActivity.this, AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY, null, params);
+            } else
+            {
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(StaySearchResultActivity.this, screen + "_stay", null, params);
             }
         } catch (Exception e)
         {
@@ -1697,16 +1698,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onRecordAnalytics(ViewType viewType)
         {
-            try
-            {
-                if (viewType == ViewType.LIST)
-                {
-                    recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.getMessage());
-            }
         }
 
         @Override
