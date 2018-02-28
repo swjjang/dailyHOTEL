@@ -84,7 +84,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
     StayRemoteImpl mStayRemoteImpl;
 
-    StayTabPresenter.StayViewModel mStayViewModel;
+    StayTabViewModel mStayViewModel;
     Observer mViewTypeObserver;
     Observer mStayBookDateTimeObserver;
     Observer mStayRegionObserver;
@@ -940,7 +940,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         setViewType(StayTabPresenter.ViewType.NONE);
 
-        mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
+        mStayViewModel = ViewModelProviders.of(activity).get(StayTabViewModel.class);
 
         mViewTypeObserver = new Observer<StayTabPresenter.ViewType>()
         {

@@ -13,7 +13,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,6 +20,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayRegion;
@@ -66,8 +66,6 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -638,55 +636,34 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
     }
 
-    Pair<String, String> getDistrictNTownNameByCategory(DailyCategoryType dailyCategoryType)
+    PreferenceRegion getPreferenceRegion(DailyCategoryType dailyCategoryType)
     {
-        if (dailyCategoryType == null)
-        {
-            return null;
-        }
-
-        JSONObject jsonObject = DailyPreference.getInstance(this).getDailyRegion(dailyCategoryType);
-
-        if (jsonObject == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return new Pair<>(jsonObject.getString(Constants.JSON_KEY_PROVINCE_NAME), jsonObject.getString(Constants.JSON_KEY_AREA_NAME));
-
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return null;
+        return DailyPreference.getInstance(this).getDailyRegion(dailyCategoryType);
     }
 
-    StayRegion searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
+    StayRegion searchRegion(List<StayAreaGroup> areaGroupList, PreferenceRegion preferenceRegion)
     {
-        if (areaGroupList == null || namePair == null)
+        if (areaGroupList == null || preferenceRegion == null)
         {
             return null;
         }
 
         for (StayAreaGroup areaGroup : areaGroupList)
         {
-            if (areaGroup.name.equalsIgnoreCase(namePair.first) == true)
+            if (areaGroup.name.equalsIgnoreCase(preferenceRegion.areaGroupName) == true)
             {
-                if (areaGroup.getAreaCount() > 0)
+                if (areaGroup.getAreaCount() == 0)
+                {
+                    return new StayRegion(areaGroup, areaGroup);
+                } else
                 {
                     for (StayArea area : areaGroup.getAreaList())
                     {
-                        if (area.name.equalsIgnoreCase(namePair.second) == true)
+                        if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                         {
                             return new StayRegion(areaGroup, area);
                         }
                     }
-                } else
-                {
-                    return new StayRegion(areaGroup, areaGroup);
                 }
             }
         }
@@ -964,7 +941,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(mStayCategoryCuration.getStayBookingDay());
 
-                addCompositeDisposable(mStayRemoteImpl.getRegionList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayAreaGroup>>()
+                addCompositeDisposable(mStayRemoteImpl.getAreaList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayAreaGroup>>()
                 {
                     @Override
                     public void accept(List<StayAreaGroup> areaGroupList) throws Exception
@@ -979,7 +956,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                             if (region == null)
                             {
-                                region = searchRegion(areaGroupList, getDistrictNTownNameByCategory(mDailyCategoryType));
+                                region = searchRegion(areaGroupList, getPreferenceRegion(mDailyCategoryType));
                             }
 
                             if (region == null)

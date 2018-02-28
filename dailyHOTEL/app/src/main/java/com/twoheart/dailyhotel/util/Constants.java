@@ -383,9 +383,4 @@ public interface Constants
 
     // 리스트 페이지 사이즈
     int PAGENATION_LIST_SIZE = 200;
-
-    // Setting region JSONObject Key - not preference
-    String JSON_KEY_PROVINCE_NAME = "region";
-    String JSON_KEY_AREA_NAME = "area";
-    String JSON_KEY_IS_OVER_SEAS = "isOverSeas";
 }

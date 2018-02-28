@@ -6,9 +6,9 @@ public class StaySubwayAreaGroup extends Area
 {
     public int upperAreaIndex;
 
-    private List<StayArea> mAreaList;
+    private List<Area> mAreaList;
 
-    public List<StayArea> getAreaList()
+    public List<Area> getAreaList()
     {
         return mAreaList;
     }
@@ -18,7 +18,7 @@ public class StaySubwayAreaGroup extends Area
         return mAreaList == null ? 0 : mAreaList.size();
     }
 
-    public void setAreaList(List<StayArea> areaList)
+    public void setAreaList(List<Area> areaList)
     {
         mAreaList = areaList;
     }

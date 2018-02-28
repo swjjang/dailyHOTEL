@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
+import com.daily.dailyhotel.entity.Category;
+
+import java.util.List;
 
 /**
  * Created by sheldon
@@ -21,6 +24,8 @@ public class StayListFragment extends BasePagerFragment<StayListFragmentPresente
         void onFilterClick();
 
         void setCategoryVisible(boolean visible);
+
+        void setCategory(List<Category> categoryList);
     }
 
     @NonNull

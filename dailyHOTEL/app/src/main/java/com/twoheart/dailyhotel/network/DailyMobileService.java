@@ -26,7 +26,7 @@ import com.daily.dailyhotel.repository.remote.model.OldRefundData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.RefundPolicyData;
-import com.daily.dailyhotel.repository.remote.model.RegionData;
+import com.daily.dailyhotel.repository.remote.model.StayAreasData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.RewardCardHistoryDetailData;
@@ -54,6 +54,7 @@ import com.daily.dailyhotel.repository.remote.model.StayReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayRegionData;
 import com.daily.dailyhotel.repository.remote.model.StaysData;
+import com.daily.dailyhotel.repository.remote.model.SubwayAreasData;
 import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
@@ -759,15 +760,15 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<RegionData>> getStayRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<StayAreasData>> getStayAreaList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<RegionData>> getStaySubwayList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseListDto<SubwayAreasData>> getStaySubwayAreaList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayRegionData>> getStayCategoryRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<StayRegionData>> getStayCategoryAreaList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // WishRemoteImpl

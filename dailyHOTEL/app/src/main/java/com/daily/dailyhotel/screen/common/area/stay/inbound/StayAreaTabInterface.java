@@ -19,6 +19,8 @@ public interface StayAreaTabInterface
         Observable<Boolean> getCompleteCreatedFragment();
 
         void setTabVisible(boolean visible);
+
+        void setSubwayAreaTabSelection();
     }
 
     interface OnEventListener extends OnBaseEventListener

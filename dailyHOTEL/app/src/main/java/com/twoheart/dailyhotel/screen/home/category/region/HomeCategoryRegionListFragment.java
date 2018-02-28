@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -131,15 +132,8 @@ public class HomeCategoryRegionListFragment extends BaseFragment
             return null;
         }
 
-        JSONObject saveRegionJsonObject = DailyPreference.getInstance(mBaseActivity).getDailyRegion(categoryType);
-        if (saveRegionJsonObject == null)
-        {
-            return regionViewItemList.get(0).getProvince();
-        }
-
-        String oldProvinceName = Util.getDailyProvinceString(saveRegionJsonObject);
-
-        if (DailyTextUtils.isTextEmpty(oldProvinceName) == true)
+        PreferenceRegion preferenceRegion = DailyPreference.getInstance(mBaseActivity).getDailyRegion(categoryType);
+        if (preferenceRegion == null || DailyTextUtils.isTextEmpty(preferenceRegion.areaGroupName) == true)
         {
             return regionViewItemList.get(0).getProvince();
         }
@@ -149,7 +143,7 @@ public class HomeCategoryRegionListFragment extends BaseFragment
             Province province = regionViewItem.getProvince();
 
             // 저장된 대지역과 리스트의 대지역이 같으면 리턴
-            if (oldProvinceName.equalsIgnoreCase(province.name) == true)
+            if (preferenceRegion.areaGroupName.equalsIgnoreCase(province.name) == true)
             {
                 return province;
             }

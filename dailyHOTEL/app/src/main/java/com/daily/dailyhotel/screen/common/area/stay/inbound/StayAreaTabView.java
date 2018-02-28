@@ -1,12 +1,14 @@
 package com.daily.dailyhotel.screen.common.area.stay.inbound;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BasePagerFragment;
@@ -14,6 +16,8 @@ import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayAreaListDataBinding;
+
+import java.lang.reflect.Field;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -189,5 +193,35 @@ public class StayAreaTabView extends BaseDialogView<StayAreaTabInterface.OnEvent
         }
 
         getViewDataBinding().categoryLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSubwayAreaTabSelection()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        final int SUBWAY_AREA_TAB_POSITION = 1;
+
+        TabLayout.Tab selectedTab = getViewDataBinding().categoryTabLayout.getTabAt(SUBWAY_AREA_TAB_POSITION);
+
+        Class reflectionClass = ViewPager.class;
+
+        try
+        {
+            Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
+            mCurItem.setAccessible(true);
+            mCurItem.setInt(getViewDataBinding().viewPager, SUBWAY_AREA_TAB_POSITION);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        if (selectedTab != null)
+        {
+            selectedTab.select();
+        }
     }
 }

@@ -16,18 +16,15 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 15..
  */
 @JsonObject
-public class RegionData
+public class StayAreasData
 {
-    @JsonField(name = "imgUrl")
-    public String imgUrl;
-
     @JsonField(name = "regionProvince")
     public List<ProvinceData> regionProvince;
 
     @JsonField(name = "regionArea")
     public List<AreaData> regionArea;
 
-    public RegionData()
+    public StayAreasData()
     {
     }
 

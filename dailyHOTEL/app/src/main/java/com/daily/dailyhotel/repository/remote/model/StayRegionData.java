@@ -14,9 +14,6 @@ import java.util.List;
 @JsonObject
 public class StayRegionData
 {
-    @JsonField(name = "imgUrl")
-    public String imgUrl;
-
     @JsonField(name = "provinceList")
     public List<ProvinceData> provinceList;
 

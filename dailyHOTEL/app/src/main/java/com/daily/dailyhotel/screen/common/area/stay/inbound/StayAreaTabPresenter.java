@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -20,10 +20,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -32,17 +35,17 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.util.Constants;
 
-import org.json.JSONObject;
-
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -220,68 +223,68 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>>>()
         {
             @Override
-            public void accept(Boolean result) throws Exception
+            public ObservableSource<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> apply(Boolean result) throws Exception
             {
-                addCompositeDisposable(Observable.zip(mStayRemoteImpl.getRegionList(mDailyCategoryType), mStayRemoteImpl.getSubwayList(mDailyCategoryType), new BiFunction<List<StayAreaGroup>, List<StayAreaGroup>, StayRegion>()
-                {
-                    @Override
-                    public StayRegion apply(List<StayAreaGroup> areaGroupList, List<StayAreaGroup> areaGroupList2) throws Exception
-                    {
-                        getActivity().runOnUiThread(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                mStayAreaViewModel.areaList.setValue(areaGroupList);
-                                mStayAreaViewModel.subwayList.setValue(areaGroupList2);
-                            }
-                        });
+                return mStayRemoteImpl.getRegionList(mDailyCategoryType);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>>()
+        {
+            @Override
+            public void accept(Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>> pair) throws Exception
+            {
+                mStayAreaViewModel.areaList.setValue(pair.first);
+                mStayAreaViewModel.subwayMap.setValue(pair.second);
 
-                        Pair<String, String> namePair = getDistrictNTownNameByCategory(mDailyCategoryType);
-                        StayRegion stayRegion = null;
+                getViewInterface().setTabVisible(pair.first != null && pair.first.size() > 0 && pair.second != null && pair.second.size() > 0);
 
-                        if (namePair != null)
-                        {
-                            stayRegion = getArea(areaGroupList, namePair.second);
+                mStayAreaViewModel.mPreviousArea.setValue(searchRegion(mDailyCategoryType, pair));
 
-                            if (stayRegion == null)
-                            {
-                                stayRegion = getArea(areaGroupList2, namePair.second);
-                            }
-                        }
-
-                        if (stayRegion == null)
-                        {
-                            StayAreaGroup stayAreaGroup = areaGroupList.get(0);
-                            stayRegion = new StayRegion(stayAreaGroup, stayAreaGroup);
-                        }
-
-                        return stayRegion;
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayRegion>()
-                {
-                    @Override
-                    public void accept(StayRegion stayRegion) throws Exception
-                    {
-                        mStayAreaViewModel.mPreviousArea.setValue(stayRegion);
-
-                        getViewInterface().setTabVisible(true);
-
-                        unLockAll();
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        onHandleErrorAndFinish(throwable);
-                    }
-                }));
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleErrorAndFinish(throwable);
             }
         }));
+    }
+
+    private StayRegion searchRegion(DailyCategoryType categoryType, Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>> pair)
+    {
+        StayRegion stayRegion = null;
+        PreferenceRegion preferenceRegion = getPreferenceRegion(categoryType);
+
+        if (preferenceRegion != null)
+        {
+            switch (preferenceRegion.areaType)
+            {
+                case AREA:
+                    stayRegion = searchArea(pair.first, preferenceRegion);
+                    break;
+
+                case SUBWAY_AREA:
+                    stayRegion = searchSubwayArea(pair.second, preferenceRegion);
+
+                    if (stayRegion != null)
+                    {
+                        getViewInterface().setSubwayAreaTabSelection();
+                    }
+                    break;
+            }
+        }
+
+        if (stayRegion == null)
+        {
+            StayAreaGroup stayAreaGroup = pair.first.get(0);
+            stayRegion = new StayRegion(stayAreaGroup, stayAreaGroup);
+        }
+
+        return stayRegion;
     }
 
     /**
@@ -291,35 +294,14 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
      * @param dailyCategoryType
      * @return
      */
-    Pair<String, String> getDistrictNTownNameByCategory(DailyCategoryType dailyCategoryType)
+    PreferenceRegion getPreferenceRegion(DailyCategoryType dailyCategoryType)
     {
-        if (dailyCategoryType == null)
-        {
-            return null;
-        }
-
-        JSONObject jsonObject = DailyPreference.getInstance(getActivity()).getDailyRegion(dailyCategoryType);
-
-        if (jsonObject == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return new Pair<>(jsonObject.getString(Constants.JSON_KEY_PROVINCE_NAME), jsonObject.getString(Constants.JSON_KEY_AREA_NAME));
-
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return null;
+        return DailyPreference.getInstance(getActivity()).getDailyRegion(dailyCategoryType);
     }
 
-    StayRegion getArea(List<StayAreaGroup> areaGroupList, String areaName)
+    StayRegion searchArea(List<StayAreaGroup> areaGroupList, PreferenceRegion preferenceRegion)
     {
-        if (areaGroupList == null || DailyTextUtils.isTextEmpty(areaName) == true)
+        if (areaGroupList == null || areaGroupList.size() == 0 || preferenceRegion == null)
         {
             return null;
         }
@@ -330,20 +312,60 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         for (int i = 0; i < size; i++)
         {
-            if (areaGroupList.get(i).name.equalsIgnoreCase(areaName) == true)
+            if (areaGroupList.get(i).name.equalsIgnoreCase(preferenceRegion.areaGroupName) == true)
             {
                 stayAreaGroup = areaGroupList.get(i);
                 break;
             }
         }
 
-        if (stayAreaGroup != null && stayAreaGroup.getAreaCount() > 0)
+        if (stayAreaGroup != null)
         {
-            for (StayArea area : stayAreaGroup.getAreaList())
+            if (stayAreaGroup.getAreaCount() == 0)
             {
-                if (areaName.equalsIgnoreCase(area.name) == true)
+                return new StayRegion(stayAreaGroup, stayAreaGroup);
+            } else
+            {
+                for (StayArea area : stayAreaGroup.getAreaList())
                 {
-                    return new StayRegion(stayAreaGroup, area);
+                    if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
+                    {
+                        return new StayRegion(stayAreaGroup, area);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    StayRegion searchSubwayArea(LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayAreaMap, PreferenceRegion preferenceRegion)
+    {
+        if (subwayAreaMap == null || subwayAreaMap.size() == 0 || preferenceRegion == null)
+        {
+            return null;
+        }
+
+        Iterator<Area> iterator = subwayAreaMap.keySet().iterator();
+
+        while (iterator.hasNext() == true)
+        {
+            Area region = iterator.next();
+
+            if (region.name.equalsIgnoreCase(preferenceRegion.regionName) == true)
+            {
+                for (StaySubwayAreaGroup subwayAreaGroup : subwayAreaMap.get(region))
+                {
+                    if (subwayAreaGroup.name.equalsIgnoreCase(preferenceRegion.areaGroupName) == true)
+                    {
+                        for (Area area : subwayAreaGroup.getAreaList())
+                        {
+                            if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
+                            {
+                                return new StayRegion(subwayAreaGroup, area);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -638,6 +660,26 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
     void setResult(int resultCode, DailyCategoryType categoryType, StayAreaGroup areaGroup, StayArea area)
     {
+        if (categoryType != null && areaGroup != null && area != null)
+        {
+            setPreferenceArea(categoryType, areaGroup.name, area.name);
+        }
+
+        setResult(resultCode, categoryType, areaGroup, area, new StayRegion(areaGroup, area));
+    }
+
+    void setResult(int resultCode, DailyCategoryType categoryType, Area regionArea, StaySubwayAreaGroup areaGroup, Area area)
+    {
+        if (categoryType != null && regionArea != null && areaGroup != null && area != null)
+        {
+            setPreferenceSubwayArea(categoryType, regionArea.name, areaGroup.name, area.name);
+        }
+
+        setResult(resultCode, categoryType, areaGroup, area, new StayRegion(areaGroup, area));
+    }
+
+    void setResult(int resultCode, DailyCategoryType categoryType, Area areaGroup, Area area, StayRegion stayRegion)
+    {
         if (categoryType == null)
         {
             return;
@@ -645,11 +687,9 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         Intent intent = new Intent();
 
-        if (areaGroup != null && area != null)
+        if (stayRegion != null)
         {
-            setCategoryRegion(categoryType, areaGroup.name, area.name);
-
-            intent.putExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_REGION, new StayRegionParcel(new StayRegion(areaGroup, area)));
+            intent.putExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_REGION, new StayRegionParcel(stayRegion));
         }
 
         intent.putExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_STAY_CATEGORY, categoryType.name());
@@ -677,26 +717,34 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         setResult(resultCode, intent);
     }
 
-    private void setCategoryRegion(DailyCategoryType dailyCategoryType, String districtName, String townName)
+    private void setPreferenceArea(DailyCategoryType dailyCategoryType, String areaGroupName, String areaName)
     {
         if (dailyCategoryType == null)
         {
             return;
         }
 
-        JSONObject jsonObject;
-        try
+        PreferenceRegion preferenceRegion = new PreferenceRegion(PreferenceRegion.AreaType.AREA);
+        preferenceRegion.regionName = preferenceRegion.areaGroupName = areaGroupName;
+        preferenceRegion.areaName = areaName;
+        preferenceRegion.overseas = false;
+
+        DailyPreference.getInstance(getActivity()).setDailyRegion(dailyCategoryType, preferenceRegion);
+    }
+
+    private void setPreferenceSubwayArea(DailyCategoryType dailyCategoryType, String regionName, String areaGroupName, String areaName)
+    {
+        if (dailyCategoryType == null)
         {
-            jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, DailyTextUtils.isTextEmpty(districtName) ? "" : districtName);
-            jsonObject.put(Constants.JSON_KEY_AREA_NAME, DailyTextUtils.isTextEmpty(townName) ? "" : townName);
-            jsonObject.put(Constants.JSON_KEY_IS_OVER_SEAS, false);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            jsonObject = null;
+            return;
         }
 
-        DailyPreference.getInstance(getActivity()).setDailyRegion(dailyCategoryType, jsonObject);
+        PreferenceRegion preferenceRegion = new PreferenceRegion(PreferenceRegion.AreaType.SUBWAY_AREA);
+        preferenceRegion.regionName = regionName;
+        preferenceRegion.areaGroupName = areaGroupName;
+        preferenceRegion.areaName = areaName;
+        preferenceRegion.overseas = false;
+
+        DailyPreference.getInstance(getActivity()).setDailyRegion(dailyCategoryType, preferenceRegion);
     }
 }
