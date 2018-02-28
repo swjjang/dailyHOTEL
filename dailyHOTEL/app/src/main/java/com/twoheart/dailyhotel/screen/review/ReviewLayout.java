@@ -28,7 +28,6 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -207,7 +206,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Da
         }
     }
 
-    public void setPlaceInformation(String placeName, String period, String reviewGrade)
+    public void setPlaceInformation(String placeName, String period)
     {
         if (mPlaceNameTextView == null || mPeriodTextView == null)
         {
@@ -216,25 +215,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Da
 
         mPlaceNameTextView.setText(placeName);
         mPeriodTextView.setText(period);
-
-        if (DailyTextUtils.isTextEmpty(reviewGrade) == false)
-        {
-            switch (reviewGrade)
-            {
-                case Review.GRADE_GOOD:
-                    mThankyouTextView.setText(R.string.message_review_toast_satisfied);
-                    break;
-
-                case Review.GRADE_BAD:
-                    mThankyouTextView.setText(R.string.message_review_toast_dissatisfied);
-                    break;
-
-                default:
-                    mThankyouTextView.setVisibility(View.INVISIBLE);
-                    break;
-            }
-        }
-
+        mThankyouTextView.setText(R.string.label_review_thank_you);
         mToolbarTitle.setText(placeName);
         mToolbarSubTitle.setText(period);
     }

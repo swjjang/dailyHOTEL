@@ -105,7 +105,7 @@ public class ReviewPickQuestion extends ReviewQuestion
     @Override
     public JSONObject toReviewAnswerJSONObject(int value) throws JSONException
     {
-        if (mAnswerValueList == null || mAnswerValueList.size() < value)
+        if (mAnswerValueList == null || mAnswerValueList.size() < value || value < 0)
         {
             return null;
         }

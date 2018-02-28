@@ -1124,7 +1124,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
         if (DailyTextUtils.isTextEmpty(endDate) == false)
         {
-            sqlBuilder.append(" AND ").append(TempReviewList.END_DATE).append("=\"").append(serviceType).append("\"");
+            sqlBuilder.append(" AND ").append(TempReviewList.END_DATE).append("=\"").append(endDate).append("\"");
         }
 
         if (DailyTextUtils.isTextEmpty(serviceType) == false)
