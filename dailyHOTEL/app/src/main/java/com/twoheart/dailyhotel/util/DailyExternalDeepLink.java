@@ -137,6 +137,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V19_CATEGORY_KEY = "ck"; // 해외 호텔 검색에서 사용되는 키값
 
     private static final String PARAM_V22_WEEK = "week";
+    private static final String PARAM_V24_STATION_INDEX = "si";
 
 
     // Version
@@ -249,6 +250,15 @@ public class DailyExternalDeepLink extends DailyDeepLink
         return value;
     }
 
+    private boolean hasParam(String paramName)
+    {
+        if (DailyTextUtils.isTextEmpty(paramName) == true)
+        {
+            return false;
+        }
+
+        return mParamsMap.containsKey(paramName);
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 24
@@ -257,6 +267,16 @@ public class DailyExternalDeepLink extends DailyDeepLink
     public boolean isLoginView()
     {
         return equalsView(23, LOGIN_V24);
+    }
+
+    public int getStationIndex()
+    {
+        return getIntValue(24, PARAM_V24_STATION_INDEX);
+    }
+
+    public boolean hasStationIndexParam()
+    {
+        return hasParam(PARAM_V24_STATION_INDEX);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -336,36 +356,9 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 14
     ///////////////////////////////////////////////////////////////////////////////////
 
-    //    public boolean isStampView()
-    //    {
-    //        return equalsView(14, STAMP_V14);
-    //    }
-
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 13
     ///////////////////////////////////////////////////////////////////////////////////
-
-    //    public int getProductIndex()
-    //    {
-    //        int index = 0;
-    //
-    //        if (mVersionCode >= 9)
-    //        {
-    //            String value = mParamsMap.get(PARAM_V13_PRODUCT_INDEX);
-    //
-    //            if (DailyTextUtils.isTextEmpty(value) == false)
-    //            {
-    //                try
-    //                {
-    //                    index = Integer.parseInt(value);
-    //                } catch (NumberFormatException e)
-    //                {
-    //                }
-    //            }
-    //        }
-    //
-    //        return index;
-    //    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 12
@@ -404,37 +397,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 10
     ///////////////////////////////////////////////////////////////////////////////////
 
-    //    public String getStartDate()
-    //    {
-    //        String value;
-    //
-    //        if (mVersionCode >= 10)
-    //        {
-    //            value = mParams.get(PARAM_V10_START_DATE);
-    //        } else
-    //        {
-    //            value = null;
-    //        }
-    //
-    //        return value;
-    //    }
-    //
-    //    public String getEndDate()
-    //    {
-    //        String value;
-    //
-    //        if (mVersionCode >= 10)
-    //        {
-    //            value = mParams.get(PARAM_V10_END_DATE);
-    //        } else
-    //        {
-    //            value = null;
-    //        }
-    //
-    //        return value;
-    //    }
-
-
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 9
     ///////////////////////////////////////////////////////////////////////////////////
@@ -448,26 +410,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     {
         return equalsView(9, WISHLIST_GOURMET_V9);
     }
-
-    public int getOpenTicketIndex()
-    {
-        return getIntValue(9, PARAM_V9_OPEN_TICKET_INDEX);
-    }
-
-    //    public String getQueryType()
-    //    {
-    //        String value;
-    //
-    //        if (mVersionCode >= 9)
-    //        {
-    //            value = mParamsMap.get(PARAM_V9_QUERY_TYPE);
-    //        } else
-    //        {
-    //            value = null;
-    //        }
-    //
-    //        return value;
-    //    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 8
@@ -546,20 +488,10 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 6
     ///////////////////////////////////////////////////////////////////////////////////
 
-    //    public boolean isHotelSearchView()
-    //    {
-    //        return equalsView(6, HOTEL_V6_SEARCH);
-    //    }
-
     public boolean isHotelSearchResultView()
     {
         return equalsView(6, HOTEL_V6_SEARCH_RESULT);
     }
-
-    //    public boolean isGourmetSearchView()
-    //    {
-    //        return equalsView(6, GOURMET_V6_SEARCH);
-    //    }
 
     public boolean isGourmetSearchResultView()
     {
@@ -569,24 +501,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     public String getSearchWord()
     {
         return getStringValue(6, PARAM_V6_WORD);
-    }
-
-    public SearchType getSearchLocationType()
-    {
-        SearchType type = SearchType.NONE;
-
-        if (mVersionCode >= 6)
-        {
-            String lat = mParamsMap.get(PARAM_V6_LATITUDE);
-            String lng = mParamsMap.get(PARAM_V6_LONGITUDE);
-
-            if (DailyTextUtils.isTextEmpty(lat, lng) == false)
-            {
-                type = SearchType.LOCATION;
-            }
-        }
-
-        return type;
     }
 
     public LatLng getLatLng()
@@ -740,14 +654,14 @@ public class DailyExternalDeepLink extends DailyDeepLink
         return getStringValue(3, PARAM_V3_URL);
     }
 
-    public String getProvinceIndex()
+    public int getProvinceIndex()
     {
-        return getStringValue(3, PARAM_V3_PROVINCE_INDEX);
+        return getIntValue(3, PARAM_V3_PROVINCE_INDEX);
     }
 
-    public String getAreaIndex()
+    public int getAreaIndex()
     {
-        return getStringValue(3, PARAM_V3_AREA_INDEX);
+        return getIntValue(3, PARAM_V3_AREA_INDEX);
     }
 
     public boolean getIsOverseas()

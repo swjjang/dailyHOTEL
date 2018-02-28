@@ -35,7 +35,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
     //    private static final String VIEW_STAMP = "stamp"; // 스탬프.
     private static final String VIEW_HOME = "home"; // 홈.
-    private static final String VIEW_STAY_OUTBOUND_SEARCH_SUGGEST = "soss"; // stay outbound 검색어 입력 화면
 
     public DailyInternalDeepLink(Uri uri)
     {
@@ -108,11 +107,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
     public boolean isHomeView()
     {
         return VIEW_HOME.equalsIgnoreCase(getView());
-    }
-
-    public boolean isStayOutboundSearchSuggestView()
-    {
-        return VIEW_STAY_OUTBOUND_SEARCH_SUGGEST.equalsIgnoreCase(getView());
     }
 
     public String getPlaceType()
@@ -275,17 +269,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
         stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_HOME);
-
-        return getIntent(context, Uri.parse(stringBuilder.toString()));
-    }
-
-    public static Intent getStayOutboundSearchSuggestScreenLink(Context context, String keyword)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("dailyhotel://");
-        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_STAY_OUTBOUND_SEARCH_SUGGEST);
-        stringBuilder.append("&" + PARAM_KEYWORD + "=" + URLEncoder.encode(keyword));
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }

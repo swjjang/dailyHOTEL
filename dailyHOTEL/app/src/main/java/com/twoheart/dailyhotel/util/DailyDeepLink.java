@@ -53,19 +53,9 @@ public abstract class DailyDeepLink
 
     public abstract void setDeepLink(Uri uri);
 
-    /**
-     * 꼭 setDeepLink 후에 호출해야한다
-     *
-     * @return
-     */
-    public boolean isValidateLink()
-    {
-        return mDeepLinkUri != null;
-    }
-
     public String getDeepLink()
     {
-        return mDeepLinkUri.toString();
+        return mDeepLinkUri == null ? null : mDeepLinkUri.toString();
     }
 
     public void clear()

@@ -112,6 +112,9 @@ public class ReviewActivity extends BaseActivity
         }
 
         mReview = intent.getParcelableExtra(INTENT_EXTRA_DATA_REVIEW);
+
+
+
         mReviewNetworkController = new ReviewNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         showReviewDialog();
