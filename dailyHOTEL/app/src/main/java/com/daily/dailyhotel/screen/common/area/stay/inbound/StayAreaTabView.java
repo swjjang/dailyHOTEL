@@ -12,8 +12,10 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BasePagerFragment;
+import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayAreaListDataBinding;
 
@@ -169,9 +171,9 @@ public class StayAreaTabView extends BaseDialogView<StayAreaTabInterface.OnEvent
                 }
 
                 @Override
-                public void onAreaClick(StayAreaGroup areaGroup, StayArea area)
+                public void onSubwayAreaClick(StaySubwayAreaGroup areaGroup, Area area)
                 {
-                    getEventListener().onAreaClick(areaGroup, area);
+                    getEventListener().onSubwayAreaClick(areaGroup, area);
                 }
             });
         }

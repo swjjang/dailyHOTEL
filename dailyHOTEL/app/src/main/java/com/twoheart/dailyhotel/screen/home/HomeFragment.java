@@ -486,7 +486,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void moveDeepLink(DailyDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
+        if (dailyDeepLink == null)
         {
             return;
         }
@@ -646,17 +646,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
 
-            if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
-            {
-                try
-                {
-                    Intent intent = SearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
-                    startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                }
-            }
         }
 
         dailyDeepLink.clear();

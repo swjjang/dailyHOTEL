@@ -7,6 +7,7 @@ import com.daily.base.BaseFragmentDialogView;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.twoheart.dailyhotel.databinding.FragmentStaySubwayListDataBinding;
 
 import java.util.List;
@@ -49,28 +50,28 @@ public class StaySubwayFragmentView extends BaseFragmentDialogView<StaySubwayFra
             }
 
             @Override
-            public void onAreaClick(int groupPosition, StayArea stayArea)
+            public void onAreaClick(int groupPosition, Area area)
             {
-                getEventListener().onAreaClick(groupPosition, stayArea);
+//                getEventListener().onAreaClick(position, (Area) view.getTag());
             }
 
             @Override
             public void onTabChanged(View view, int position)
             {
-                getEventListener().onSubwayAreaClick(position, (Area) view.getTag());
+                getEventListener().onTabChanged(position, view.getTag());
             }
         });
     }
 
     @Override
-    public void setAreaList(List<StayAreaGroup> areaList)
+    public void setAreaGroup(List<StaySubwayAreaGroup> areaGroup)
     {
-        if (getViewDataBinding() == null || areaList == null || areaList.size() == 0)
+        if (getViewDataBinding() == null || areaGroup == null || areaGroup.size() == 0)
         {
             return;
         }
 
-        getViewDataBinding().expandableListView.setAreaList(areaList);
+        getViewDataBinding().expandableListView.setAreaList(areaGroup);
     }
 
     @Override

@@ -2,15 +2,11 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -20,8 +16,6 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onDateTime(TodayDateTime todayDateTime);
-
-        void onRegionList(List<Province> provinceList, List<Area> areaList);
     }
 
     public PlaceMainNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)

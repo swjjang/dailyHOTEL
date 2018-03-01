@@ -17,8 +17,10 @@ import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.twoheart.dailyhotel.R;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -80,12 +82,12 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
 
         mStayAreaViewModel = ViewModelProviders.of(activity).get(StayAreaViewModel.class);
 
-        mStayAreaViewModel.subwayList.observe(activity, new Observer<List<StayAreaGroup>>()
+        mStayAreaViewModel.subwayMap.observe(activity, new Observer<LinkedHashMap<Area, List<StaySubwayAreaGroup>>>()
         {
             @Override
-            public void onChanged(@Nullable List<StayAreaGroup> areaGroupList)
+            public void onChanged(@Nullable LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaListLinkedHashMap)
             {
-                getViewInterface().setAreaList(areaGroupList);
+
             }
         });
     }
@@ -201,9 +203,6 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         // 하위 지역이 없으면 선택
         if (mStayAreaViewModel.areaList.getValue().get(groupPosition).getAreaCount() == 0)
         {
-            StayArea stayArea = new StayArea(mStayAreaViewModel.areaList.getValue().get(groupPosition));
-            stayArea.setCategoryList(mStayAreaViewModel.areaList.getValue().get(groupPosition).getCategoryList());
-            onAreaClick(groupPosition, stayArea);
 
             unLockAll();
         } else
@@ -258,6 +257,18 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         }
     }
 
+    @Override
+    public void onAreaClick(StaySubwayAreaGroup areaGroup, Area area)
+    {
+        getFragment().getFragmentEventListener().onSubwayAreaClick(areaGroup, area);
+    }
+
+    @Override
+    public void onTabChanged(int position, Object tag)
+    {
+        getViewInterface().setAreaGroup(mStayAreaViewModel.subwayMap.getValue().get(tag));
+    }
+
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)
     {
         Observable<Boolean> observable = getViewInterface().collapseGroupWithAnimation(groupPosition, animation);
@@ -280,32 +291,5 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         }
 
         return observable;
-    }
-
-    @Override
-    public void onAreaClick(int groupPosition, StayArea area)
-    {
-        if (groupPosition < 0 || area == null)
-        {
-            return;
-        }
-
-        StayAreaGroup areaGroup = mStayAreaViewModel.areaList.getValue().get(groupPosition);
-
-        if (areaGroup == null)
-        {
-            return;
-        }
-
-        final String areaGroupName = areaGroup.name;
-        final String areaName = area.name;
-
-        getFragment().getFragmentEventListener().onAreaClick(areaGroup, area);
-    }
-
-    @Override
-    public void onSubwayAreaClick(int position, Area area)
-    {
-
     }
 }

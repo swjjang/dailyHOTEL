@@ -7,6 +7,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface StaySubwayFragmentInterface
 {
     interface ViewInterface extends BaseFragmentDialogViewInterface
     {
-        void setAreaList(List<StayAreaGroup> areaList);
+        void setAreaGroup(List<StaySubwayAreaGroup> areaList);
 
         void setLocationText(String locationText);
 
@@ -39,9 +40,9 @@ public interface StaySubwayFragmentInterface
 
         void onAreaGroupClick(int groupPosition);
 
-        void onAreaClick(int groupPosition, StayArea are);
+        void onAreaClick(StaySubwayAreaGroup areaGroup, Area area);
 
-        void onSubwayAreaClick(int position, Area area);
+        void onTabChanged(int position, Object tag);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

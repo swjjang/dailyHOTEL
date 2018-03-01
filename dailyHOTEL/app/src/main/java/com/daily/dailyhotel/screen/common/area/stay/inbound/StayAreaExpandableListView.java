@@ -16,8 +16,8 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaGroup;
 import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListAdapter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutAreaSubwayTabDataBinding;
@@ -45,7 +45,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
 
         void onAreaGroupClick(int groupPosition);
 
-        void onAreaClick(int groupPosition, StayArea stayArea);
+        void onAreaClick(int groupPosition, Area area);
 
         void onTabChanged(View view, int position);
     }
@@ -154,7 +154,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
             {
                 Object tag = view.getTag();
 
-                if (tag == null || tag instanceof StayArea == false)
+                if (tag == null || tag instanceof Area == false)
                 {
                     return;
                 }
@@ -213,14 +213,14 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
         mStayAreaListAdapter.setTablet(tablet);
     }
 
-    public void setAreaList(List<StayAreaGroup> areaList)
+    public void setAreaList(List<? extends AreaGroup> areaList)
     {
         if (areaList == null || areaList.size() == 0)
         {
             return;
         }
 
-        mStayAreaListAdapter.setData(areaList);
+        mStayAreaListAdapter.setAreaGroup(areaList);
         setAdapter(mStayAreaListAdapter);
     }
 
@@ -251,9 +251,9 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
             return null;
         }
 
-        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
+        AreaGroup areaGroup = mStayAreaListAdapter.getAreaGroup(groupPosition);
 
-        if (stayDistrict == null)
+        if (areaGroup == null)
         {
             return null;
         }
@@ -317,9 +317,9 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
             return null;
         }
 
-        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
+        AreaGroup areaGroup = mStayAreaListAdapter.getAreaGroup(groupPosition);
 
-        if (stayDistrict == null)
+        if (areaGroup == null)
         {
             return null;
         }

@@ -134,7 +134,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     {
         super.onStart();
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             if (mDailyDeepLink.isExternalDeepLink() == true)
             {

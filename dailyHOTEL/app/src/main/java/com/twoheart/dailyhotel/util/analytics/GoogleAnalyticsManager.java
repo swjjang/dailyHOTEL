@@ -502,12 +502,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     @Override
     void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
-        {
-            return;
-        }
-
-        if (dailyDeepLink.isExternalDeepLink() == false)
+        if (dailyDeepLink == null || dailyDeepLink.isExternalDeepLink() == false)
         {
             return;
         }

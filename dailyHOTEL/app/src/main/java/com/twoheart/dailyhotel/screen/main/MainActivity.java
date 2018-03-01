@@ -263,7 +263,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     {
         finishSplash();
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             parseDeepLink(mDailyDeepLink);
 
@@ -317,9 +317,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             } else if (internalDeepLink.isBookingDetailView() == true)
             {
                 mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
-            } else if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
-            {
-                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
             } else
             {
                 mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);

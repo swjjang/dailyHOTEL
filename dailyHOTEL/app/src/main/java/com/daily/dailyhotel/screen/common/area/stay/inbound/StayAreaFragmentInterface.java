@@ -19,7 +19,7 @@ public interface StayAreaFragmentInterface
 {
     interface ViewInterface extends BaseFragmentDialogViewInterface
     {
-        void setAreaList(List<StayAreaGroup> areaList);
+        void setAreaGroup(List<StayAreaGroup> areaList);
 
         void setLocationText(String locationText);
 

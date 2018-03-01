@@ -423,12 +423,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         mStayViewModel.stayRegion.setValue(regionCategoryPair.first);
 
-                        if (needSetPreferenceArea == true)
-                        {
-                            // 지하철은 다르게 저장
-                            setPreferenceArea(regionCategoryPair.first.getAreaGroupName(), regionCategoryPair.first.getAreaName());
-                        }
-
                         return Observable.just(new Pair(true, regionCategoryPair.second));
                     }
                 }
@@ -490,7 +484,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     }
                 } else
                 {
-                    return parseAreaDeepLinkStayList(areaGroupList, mStayViewModel.commonDateTime.getValue(), externalDeepLink);;
+                    return parseAreaDeepLinkStayList(areaGroupList, mStayViewModel.commonDateTime.getValue(), externalDeepLink);
                 }
             }
         }
@@ -549,7 +543,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
         } else
         {
-            StayArea area = areaGroup.getAreaList().get(0);
+            StayArea area = (StayArea)areaGroup.getAreaList().get(0);
 
             return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
         }
@@ -582,11 +576,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 return new Pair(new StayRegion(stayAreaGroup, stayAreaGroup), stayAreaGroup.getCategoryList());
             } else
             {
-                for (StayArea area : stayAreaGroup.getAreaList())
+                for (Area area : stayAreaGroup.getAreaList())
                 {
                     if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                     {
-                        return new Pair(new StayRegion(stayAreaGroup, area), area.getCategoryList());
+                        return new Pair(new StayRegion(stayAreaGroup, area), ((StayArea)area).getCategoryList());
                     }
                 }
             }
@@ -989,11 +983,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
                 } else
                 {
-                    for (StayArea area : areaGroup.getAreaList())
+                    for (Area area : areaGroup.getAreaList())
                     {
                         if (area.name.equalsIgnoreCase(namePair.second) == true)
                         {
-                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
+                            return new Pair(new StayRegion(areaGroup, area), ((StayArea)area).getCategoryList());
                         }
                     }
                 }
@@ -1227,7 +1221,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         if (area.index == areaIndex)
                         {
-                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
+                            return new Pair(new StayRegion(areaGroup, area), ((StayArea)area).getCategoryList());
                         }
                     }
                 } else

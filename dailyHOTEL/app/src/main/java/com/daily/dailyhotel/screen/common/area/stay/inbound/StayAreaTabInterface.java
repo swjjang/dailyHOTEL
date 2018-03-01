@@ -5,9 +5,11 @@ import android.app.Activity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 import io.reactivex.Observable;
@@ -32,6 +34,8 @@ public interface StayAreaTabInterface
         void onAroundSearchClick();
 
         void onAreaClick(StayAreaGroup areaGroup, StayArea area);
+
+        void onSubwayAreaClick(StaySubwayAreaGroup areaGroup, Area area);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

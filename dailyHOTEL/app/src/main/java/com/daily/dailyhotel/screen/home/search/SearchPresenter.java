@@ -146,9 +146,9 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     private void parseDeepLink(DailyDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
+        if (dailyDeepLink == null)
         {
-            throw new NullPointerException("dailyDeepLink == null || dailyDeepLink.isValidateLink() == false");
+            throw new NullPointerException("dailyDeepLink == null");
         }
 
         if (dailyDeepLink.isInternalDeepLink() == true)

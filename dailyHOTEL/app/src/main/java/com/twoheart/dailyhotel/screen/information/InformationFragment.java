@@ -79,7 +79,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
         updateNewIcon();
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             if (mDailyDeepLink.isExternalDeepLink() == true)
             {

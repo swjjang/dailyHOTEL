@@ -731,11 +731,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             return false;
         }
 
-        if (dailyDeepLink.isValidateLink() == false)
-        {
-            return false;
-        }
-
         try
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
@@ -758,11 +753,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     boolean processDeepLinkAfterCommonDateTime(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
     {
         if (dailyDeepLink == null || commonDateTime == null)
-        {
-            return false;
-        }
-
-        if (dailyDeepLink.isValidateLink() == false)
         {
             return false;
         }
@@ -843,11 +833,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             return false;
         }
 
-        if (dailyDeepLink.isValidateLink() == false)
-        {
-            return false;
-        }
-
         try
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
@@ -870,13 +855,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             } else if (dailyDeepLink.isInternalDeepLink() == true)
             {
                 DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) dailyDeepLink;
-                if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
-                {
-                    String keyword = internalDeepLink.getKeyword();
-                    Intent intent = SearchStayOutboundSuggestActivity.newInstance(getActivity(), keyword);
-                    startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
-                    return true;
-                }
             }
         } catch (Exception e)
         {

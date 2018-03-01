@@ -14,12 +14,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class GourmetMainNetworkController extends PlaceMainNetworkController
 {
+    public interface OnNetworkControllerListener extends PlaceMainNetworkController.OnNetworkControllerListener
+    {
+        void onRegionList(List<Province> provinceList, List<Area> areaList);
+    }
+
     public GourmetMainNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);

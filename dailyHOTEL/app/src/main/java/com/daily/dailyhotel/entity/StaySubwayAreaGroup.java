@@ -1,25 +1,16 @@
 package com.daily.dailyhotel.entity;
 
-import java.util.List;
-
-public class StaySubwayAreaGroup extends Area
+public class StaySubwayAreaGroup extends AreaGroup<Area>
 {
-    public int upperAreaIndex;
+    private Area mRegion;
 
-    private List<Area> mAreaList;
-
-    public List<Area> getAreaList()
+    public StaySubwayAreaGroup(Area region)
     {
-        return mAreaList;
+        mRegion = region;
     }
 
-    public int getAreaCount()
+    public Area getRegion()
     {
-        return mAreaList == null ? 0 : mAreaList.size();
-    }
-
-    public void setAreaList(List<Area> areaList)
-    {
-        mAreaList = areaList;
+        return mRegion;
     }
 }

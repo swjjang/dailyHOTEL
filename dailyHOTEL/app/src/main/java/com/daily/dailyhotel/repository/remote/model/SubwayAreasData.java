@@ -36,7 +36,7 @@ public class SubwayAreasData
 
         for (LineData lineData : lineList)
         {
-            subwayAreaGroupList.add(lineData.getStaySubwayAreaGroup());
+            subwayAreaGroupList.add(lineData.getStaySubwayAreaGroup(area));
         }
 
         return new Pair(area, subwayAreaGroupList);
@@ -54,9 +54,9 @@ public class SubwayAreasData
         @JsonField(name = "stations")
         public List<StationData> stationList;
 
-        StaySubwayAreaGroup getStaySubwayAreaGroup()
+        StaySubwayAreaGroup getStaySubwayAreaGroup(Area region)
         {
-            StaySubwayAreaGroup subwayAreaGroup = new StaySubwayAreaGroup();
+            StaySubwayAreaGroup subwayAreaGroup = new StaySubwayAreaGroup(region);
             subwayAreaGroup.index = index;
             subwayAreaGroup.name = name;
 

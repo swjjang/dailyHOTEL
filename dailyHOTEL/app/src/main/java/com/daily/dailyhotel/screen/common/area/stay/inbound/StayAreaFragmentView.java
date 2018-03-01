@@ -4,6 +4,7 @@ package com.daily.dailyhotel.screen.common.area.stay.inbound;
 import android.view.View;
 
 import com.daily.base.BaseFragmentDialogView;
+import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.twoheart.dailyhotel.databinding.FragmentStayAreaListDataBinding;
@@ -49,9 +50,9 @@ public class StayAreaFragmentView extends BaseFragmentDialogView<StayAreaFragmen
             }
 
             @Override
-            public void onAreaClick(int groupPosition, StayArea stayArea)
+            public void onAreaClick(int groupPosition, Area area)
             {
-                getEventListener().onAreaClick(groupPosition, stayArea);
+                getEventListener().onAreaClick(groupPosition, (StayArea)area);
             }
 
             @Override
@@ -63,7 +64,7 @@ public class StayAreaFragmentView extends BaseFragmentDialogView<StayAreaFragmen
     }
 
     @Override
-    public void setAreaList(List<StayAreaGroup> areaList)
+    public void setAreaGroup(List<StayAreaGroup> areaList)
     {
         if (getViewDataBinding() == null || areaList == null || areaList.size() == 0)
         {

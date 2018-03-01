@@ -85,7 +85,7 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             @Override
             public void onChanged(@Nullable List<StayAreaGroup> areaGroupList)
             {
-                getViewInterface().setAreaList(areaGroupList);
+                getViewInterface().setAreaGroup(areaGroupList);
             }
         });
 

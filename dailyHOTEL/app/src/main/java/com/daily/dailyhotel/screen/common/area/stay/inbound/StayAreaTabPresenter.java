@@ -326,7 +326,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 return new StayRegion(stayAreaGroup, stayAreaGroup);
             } else
             {
-                for (StayArea area : stayAreaGroup.getAreaList())
+                for (Area area : stayAreaGroup.getAreaList())
                 {
                     if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                     {
@@ -646,6 +646,12 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         }
 
         mAnalytics.onEventTownClick(getActivity(), areaGroupName, areaName);
+    }
+
+    @Override
+    public void onSubwayAreaClick(StaySubwayAreaGroup areaGroup, Area area)
+    {
+
     }
 
     private boolean equalsAreaGroupName(StayRegion stayRegion, String areaName)

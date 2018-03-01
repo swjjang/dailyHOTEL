@@ -722,7 +722,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     };
 
-    private PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
+    private GourmetMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetMainNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onDateTime(TodayDateTime todayDateTime)
@@ -761,8 +761,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     }
                 }
 
-                if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
-                    && processDeepLinkByDateTime(GourmetMainActivity.this, mTodayDateTime, mDailyDeepLink) == true)
+                if (mDailyDeepLink != null && processDeepLinkByDateTime(GourmetMainActivity.this, mTodayDateTime, mDailyDeepLink) == true)
                 {
                     // 딥링크 이동
                 } else
@@ -824,8 +823,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             mGourmetCuration.setProvince(selectedProvince);
 
-            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true//
-                && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList, mTodayDateTime, mDailyDeepLink) == true)
+            if (mDailyDeepLink != null && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList, mTodayDateTime, mDailyDeepLink) == true)
             {
 
             } else
@@ -1373,7 +1371,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, //
                                          List<Province> provinceList, List<Area> areaList)
     {
-        if (provinceIndex < 0 && areaIndex < 0)
+        if (provinceIndex <= 0 && areaIndex <= 0)
         {
             return null;
         }
@@ -1382,7 +1380,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         try
         {
-            if (areaIndex == -1)
+            if (areaIndex <= 0)
             {
                 // 전체 지역으로 이동
                 for (Province province : provinceList)
@@ -1440,24 +1438,8 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
-                int provinceIndex;
-                int areaIndex;
-
-                try
-                {
-                    provinceIndex = Integer.parseInt(externalDeepLink.getProvinceIndex());
-                } catch (Exception e)
-                {
-                    provinceIndex = -1;
-                }
-
-                try
-                {
-                    areaIndex = Integer.parseInt(externalDeepLink.getAreaIndex());
-                } catch (Exception e)
-                {
-                    areaIndex = -1;
-                }
+                int provinceIndex =externalDeepLink.getProvinceIndex();
+                int areaIndex = externalDeepLink.getAreaIndex();
 
                 // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
                 Province selectedProvince = searchDeeLinkRegion(provinceIndex, areaIndex, provinceList, areaList);
