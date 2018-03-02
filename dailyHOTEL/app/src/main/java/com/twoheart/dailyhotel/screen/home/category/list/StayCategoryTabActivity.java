@@ -20,7 +20,6 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
@@ -31,6 +30,7 @@ import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -56,7 +56,6 @@ import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.home.category.filter.StayCategoryCurationActivity;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -273,18 +272,24 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            StayBookingDay stayBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-
-            if (stayBookingDay == null)
+            try
             {
-                return;
+                String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(checkInDateTime);
+                stayBookingDay.setCheckOutDay(checkOutDateTime);
+
+                mStayCategoryCuration.setStayBookingDay(stayBookingDay);
+
+                ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
+
+                refreshCurrentFragment(true);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
             }
-
-            mStayCategoryCuration.setStayBookingDay(stayBookingDay);
-
-            ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
-
-            refreshCurrentFragment(true);
         }
     }
 
@@ -387,16 +392,33 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(this, todayDateTime, mStayCategoryCuration.getStayBookingDay() //
-            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT, callByScreen, true, true);
+        final int DAYS_OF_MAX_COUNT = 60;
+        final int NIGHTS_OF_MAX_COUNT = 60;
 
-        if (intent == null)
+        try
         {
-            Util.restartApp(this);
-            return;
-        }
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTime(DailyCalendar.convertDate(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
 
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
+
+            Intent intent = StayCalendarActivity.newInstance(this//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, callByScreen, true//
+                , 0, true);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
 
         //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
         //            , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);

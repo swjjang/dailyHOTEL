@@ -15,6 +15,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
@@ -26,6 +27,7 @@ import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
@@ -33,8 +35,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -262,25 +263,11 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 {
                     try
                     {
-                        String checkInDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
-                        if (DailyTextUtils.isTextEmpty(checkInDate) == true)
-                        {
-                            return;
-                        }
+                        String checkInDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
-                        StayBookDateTime stayBookDateTime = new StayBookDateTime();
-                        stayBookDateTime.setCheckInDateTime(checkInDate);
-
-                        if (data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
-                        {
-                            String checkOutDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE);
-                            stayBookDateTime.setCheckOutDateTime(checkOutDate);
-                        } else
-                        {
-                            stayBookDateTime.setCheckOutDateTime(checkInDate, 1);
-                        }
-
-                        mStayBookDateTime = stayBookDateTime;
+                        mStayBookDateTime.setCheckInDateTime(checkInDate);
+                        mStayBookDateTime.setCheckOutDateTime(checkOutDate);
                     } catch (Exception e)
                     {
                         ExLog.e(e.getMessage());
@@ -657,16 +644,38 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     @Override
     public void onCalendarClick()
     {
-        TodayDateTime todayDateTime = new TodayDateTime(mCommonDateTime.openDateTime //
-            , mCommonDateTime.closeDateTime, mCommonDateTime.currentDateTime //
-            , mCommonDateTime.dailyDateTime);
+        if (lock() == true)
+        {
+            return;
+        }
 
-        Intent intent = StayCalendarActivity.newInstance(getActivity(), todayDateTime //
-            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            , AnalyticsManager.ValueType.SEARCH, true, true);
-        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+        final int DAYS_OF_MAX_COUNT = 60;
+        final int NIGHTS_OF_MAX_COUNT = 60;
+
+        try
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTime(DailyCalendar.convertDate(mCommonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
+
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true//
+                , ScreenUtils.dpToPx(getActivity(), 44), true);
+
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLockAll();
+        }
     }
 
     @Override

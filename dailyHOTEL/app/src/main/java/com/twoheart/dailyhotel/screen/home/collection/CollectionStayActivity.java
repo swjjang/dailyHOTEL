@@ -15,6 +15,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
@@ -31,7 +32,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -427,20 +428,26 @@ public class CollectionStayActivity extends CollectionBaseActivity
     {
         if (resultCode == RESULT_OK)
         {
-            StayBookingDay stayBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-
-            if (stayBookingDay == null)
+            try
             {
-                return;
+                String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(checkInDateTime);
+                stayBookingDay.setCheckOutDay(checkOutDateTime);
+
+                mPlaceBookingDay = stayBookingDay;
+
+                mCollectionBaseLayout.setCalendarText(getCalendarDate(stayBookingDay));
+
+                lockUI();
+
+                requestRecommendationPlaceList(stayBookingDay);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
             }
-
-            mPlaceBookingDay = stayBookingDay;
-
-            mCollectionBaseLayout.setCalendarText(getCalendarDate(stayBookingDay));
-
-            lockUI();
-
-            requestRecommendationPlaceList(stayBookingDay);
         }
     }
 
@@ -452,10 +459,33 @@ public class CollectionStayActivity extends CollectionBaseActivity
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, todayDateTime //
-            , (StayBookingDay) placeBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            , AnalyticsManager.ValueType.SEARCH, true, true);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+        final int DAYS_OF_MAX_COUNT = 60;
+        final int NIGHTS_OF_MAX_COUNT = 60;
+
+        try
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTime(DailyCalendar.convertDate(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
+
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
+
+            Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true//
+                , 0, true);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
