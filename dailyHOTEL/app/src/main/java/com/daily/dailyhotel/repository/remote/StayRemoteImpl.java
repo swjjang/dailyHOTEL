@@ -415,7 +415,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     public Observable<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> getSubwayAreaList(DailyCategoryType categoryType)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v6/hotels/subway"//
-            : "";
+            : "NTkkMjQkODkkMTgkNzMkMSQzMSQzOCQzMCQ3NCQyMyQ1MiQ0OCQ5JDEwMCQ4MSQ=$NP0RCOUIyZN0JEMjNDRjKVEMYDgwBQzYS3HN0Y2MTMVERkJFQPzJCQFjY0NTlBNzMzMzNUGOUFGQTgHyNCDVhEMjAzQjA1MTNBQg=SS=$";
 
         return mDailyMobileService.getStaySubwayAreaList(Crypto.getUrlDecoderEx(API))//
             .subscribeOn(Schedulers.io()).map(baseListDto ->
