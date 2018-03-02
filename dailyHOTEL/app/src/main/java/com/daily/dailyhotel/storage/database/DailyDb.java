@@ -47,6 +47,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     public static final String T_STAY_OB_RECENTLY_SUGGEST = "stay_ob_recently_suggest";
     public static final String T_TEMP_REVIEW = "temp_review";
 
+    // added database version 1
     private static final String CREATE_T_RECENTLY = "CREATE TABLE IF NOT EXISTS " + T_RECENTLY + " (" //
         + RecentlyList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + RecentlyList.PLACE_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
@@ -56,7 +57,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + RecentlyList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
 
-    // insert ver 2
+    // added database version 3
     private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
         + StayObRecentlySuggestList._ID + " INTEGER  PRIMARY KEY NOT NULL, " //
         + StayObRecentlySuggestList.NAME + " TEXT NULL, " //
@@ -68,8 +69,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayObRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
-        + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");"; // added database version 3
+        + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
 
+    // added database version 4
     private static final String CREATE_T_TEMP_REVIEW = "CREATE TABLE IF NOT EXISTS " + T_TEMP_REVIEW + " (" //
         + TempReviewList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + TempReviewList.RESERVATION_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
@@ -78,7 +80,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + TempReviewList.END_DATE + " TEXT NULL, " //
         + TempReviewList.SCORE_QUESTION + " TEXT NULL, " //
         + TempReviewList.PICK_QUESTION + " TEXT NULL, " //
-        + TempReviewList.COMMENT + " TEXT NULL " + ");"; // added database version 4
+        + TempReviewList.COMMENT + " TEXT NULL " + ");";
 
     public DailyDb(Context context)
     {
@@ -92,7 +94,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         ExLog.v("version : " + db.getVersion());
 
-        createDbObjects(db);
+        upGradeAllDb(db);
     }
 
     @Override
@@ -113,28 +115,41 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             return;
         }
 
-        if (oldVersion == 3) // 이때는 리뷰 임시 저장만 추가 됨 - 기존 검색어 및 최근 본 업장을 날리지 않음 - 곧 또 날릴예정이라
+        if (oldVersion <= 3)
         {
-            createDbObjects(db);
-        } else
+            upGradeTempRevieweDb(db);
+        }
+
+        if (oldVersion <= 2)
         {
-            dropAllDbObjects(db);
-            createDbObjects(db);
+            upGradeRecentlySuggestDb(db);
+            upGradeRecentlyPlaceDb(db);
         }
     }
 
-    private void createDbObjects(SQLiteDatabase db)
+    private void upGradeAllDb(SQLiteDatabase db)
     {
-        db.execSQL(CREATE_T_RECENTLY);
-        db.execSQL(CREATE_T_STAY_OB_RECENTLY_SUGGEST);
-        db.execSQL(CREATE_T_TEMP_REVIEW);
+        upGradeRecentlyPlaceDb(db);
+        upGradeRecentlySuggestDb(db);
+        upGradeTempRevieweDb(db);
     }
 
-    private void dropAllDbObjects(SQLiteDatabase db)
+    private void upGradeRecentlyPlaceDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_RECENTLY);
+        db.execSQL(CREATE_T_RECENTLY);
+    }
+
+    private void upGradeRecentlySuggestDb(SQLiteDatabase db)
+    {
         db.execSQL("drop table if exists " + T_STAY_OB_RECENTLY_SUGGEST);
+        db.execSQL(CREATE_T_STAY_OB_RECENTLY_SUGGEST);
+    }
+
+    private void upGradeTempRevieweDb(SQLiteDatabase db)
+    {
         db.execSQL("drop table if exists " + T_TEMP_REVIEW);
+        db.execSQL(CREATE_T_TEMP_REVIEW);
     }
 
     private SQLiteDatabase getDb()
