@@ -114,7 +114,7 @@
                             app:layout_constraintTop_toTopOf="parent"/>
 
                         <LinearLayout
-                            android:layout_width="100dp"
+                            android:layout_width="102dp"
                             android:layout_height="0dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
@@ -124,13 +124,12 @@
                                 android:id="@+id/orderCountMinusView"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                android:src="@drawable/selector_payment_minus_button"/>
+                                app:srcCompat="@drawable/selector_amount_minus_button"/>
 
                             <com.daily.base.widget.DailyTextView
                                 android:id="@+id/orderCountTextView"
-                                android:layout_width="50dp"
+                                android:layout_width="52dp"
                                 android:layout_height="25dp"
-                                android:background="@drawable/payment_ic_amount_bg"
                                 android:gravity="center"
                                 android:textColor="@color/default_text_c323232"
                                 android:textSize="13dp"/>
@@ -139,7 +138,7 @@
                                 android:id="@+id/orderCountPlusView"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                android:src="@drawable/selector_payment_plus_button"/>
+                                app:srcCompat="@drawable/selector_amount_plus_button"/>
                         </LinearLayout>
                     </android.support.constraint.ConstraintLayout>
 
