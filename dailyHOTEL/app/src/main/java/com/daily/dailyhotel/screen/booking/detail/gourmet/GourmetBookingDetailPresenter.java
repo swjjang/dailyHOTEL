@@ -1285,7 +1285,8 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             return;
         }
 
-        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true //
+            || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
         {
             addCompositeDisposable(mReviewRemoteImpl.getGourmetReview(mReservationIndex) //
                 .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
@@ -1300,7 +1301,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
                     {
-                        Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                        Intent intent = ReviewActivity.newInstance(getActivity(), review, reviewStatus);
                         startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_REVIEW);
                     }
                 }, new Consumer<Throwable>()

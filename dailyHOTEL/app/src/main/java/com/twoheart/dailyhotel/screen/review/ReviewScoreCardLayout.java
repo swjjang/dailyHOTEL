@@ -116,6 +116,8 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
         resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
         mResultTextView.setLayoutParams(resultLayoutParams);
+
+        setTempReviewValue(reviewScoreQuestion);
     }
 
     public void setOnScoreClickListener(OnScoreClickListener listener)
@@ -316,6 +318,49 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
     public Object getReviewValue()
     {
         return mReviewScore;
+    }
+
+    private void setTempReviewValue(ReviewScoreQuestion reviewScoreQuestion)
+    {
+        if (reviewScoreQuestion.selectedScore < 1 || reviewScoreQuestion.selectedScore > 5)
+        {
+            return;
+        }
+
+        DailyEmoticonImageView selectedEmoticonView = mDailyEmoticonImageView[reviewScoreQuestion.selectedScore -1];
+        if (selectedEmoticonView == null || mSelectedEmoticonView != null && mSelectedEmoticonView.getId() == selectedEmoticonView.getId())
+        {
+            return;
+        }
+
+        ValueAnimator scaleDownAnimator, scaleUpAnimator;
+
+        if (mSelectedEmoticonView != null)
+        {
+            ValueAnimator valueAnimator = (ValueAnimator) mSelectedEmoticonView.getTag();
+            if (valueAnimator != null && valueAnimator.isRunning() == true)
+            {
+                valueAnimator.cancel();
+            }
+
+            scaleDownAnimator = getScaleDownAnimator(mSelectedEmoticonView);
+            mSelectedEmoticonView.setTag(scaleDownAnimator);
+            scaleDownAnimator.start();
+        }
+
+        checkedReviewEmoticon(selectedEmoticonView);
+
+        mSelectedEmoticonView = selectedEmoticonView;
+
+        ValueAnimator valueAnimator = (ValueAnimator) selectedEmoticonView.getTag();
+        if (valueAnimator != null && valueAnimator.isRunning() == true)
+        {
+            valueAnimator.cancel();
+        }
+
+        scaleUpAnimator = getScaleUpAnimator(selectedEmoticonView);
+        selectedEmoticonView.setTag(scaleUpAnimator);
+        scaleUpAnimator.start();
     }
 
     private void checkedReviewEmoticon(View emoticonView)

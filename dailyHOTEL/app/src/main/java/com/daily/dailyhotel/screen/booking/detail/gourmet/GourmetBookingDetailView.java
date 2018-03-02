@@ -573,7 +573,8 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
 
         getViewDataBinding().inputReviewView.setTag(reviewStatus);
 
-        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true //
+            || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
         {
             getViewDataBinding().inputReviewVerticalLine.setVisibility(View.VISIBLE);
             getViewDataBinding().inputReviewView.setVisibility(View.VISIBLE);

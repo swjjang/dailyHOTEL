@@ -48,6 +48,7 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -1388,21 +1389,21 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         @Override
         public void onReviewGourmet(Review review)
         {
-            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review, PlaceBookingDetail.ReviewStatusType.ADDABLE);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
         }
 
         @Override
         public void onReviewStay(Review review)
         {
-            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review, PlaceBookingDetail.ReviewStatusType.ADDABLE);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 
         @Override
         public void onReviewStayOutbound(Review review)
         {
-            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review, PlaceBookingDetail.ReviewStatusType.ADDABLE);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND);
         }
 

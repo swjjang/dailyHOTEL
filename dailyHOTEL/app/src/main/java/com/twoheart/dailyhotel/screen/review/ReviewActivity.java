@@ -28,8 +28,13 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.TempReviewLocalImpl;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.model.ReviewAnswerValue;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
@@ -50,6 +55,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -57,16 +65,19 @@ public class ReviewActivity extends BaseActivity
 {
     private static final int REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT = 100;
     private static final String INTENT_EXTRA_DATA_REVIEW = "review";
+    private static final String INTENT_EXTRA_DATA_REVIEW_STATUS_TYPE = "reviewStatusType";
 
     private static final int REQUEST_NEXT_FOCUS = 1;
 
     Review mReview;
     private Dialog mDialog;
     String mReviewGrade;
+    private String mReviewStatusType;
 
     DailyEmoticonImageView[] mDailyEmoticonImageView;
     ReviewLayout mReviewLayout;
     ReviewNetworkController mReviewNetworkController;
+    private TempReviewLocalImpl mTempReviewLocalImpl;
 
     Handler mHandler = new Handler()
     {
@@ -83,7 +94,7 @@ public class ReviewActivity extends BaseActivity
         }
     };
 
-    public static Intent newInstance(Context context, Review review) throws IllegalArgumentException
+    public static Intent newInstance(Context context, Review review, String reviewStatusType) throws IllegalArgumentException
     {
         if (context == null || review == null)
         {
@@ -93,6 +104,7 @@ public class ReviewActivity extends BaseActivity
         Intent intent = new Intent(context, ReviewActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_REVIEW, review);
+        intent.putExtra(INTENT_EXTRA_DATA_REVIEW_STATUS_TYPE, reviewStatusType);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         return intent;
@@ -111,13 +123,55 @@ public class ReviewActivity extends BaseActivity
             return;
         }
 
-        mReview = intent.getParcelableExtra(INTENT_EXTRA_DATA_REVIEW);
-
-
-
+        mReviewStatusType = intent.getStringExtra(INTENT_EXTRA_DATA_REVIEW_STATUS_TYPE);
         mReviewNetworkController = new ReviewNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mTempReviewLocalImpl = new TempReviewLocalImpl(this);
 
-        showReviewDialog();
+        if (PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(mReviewStatusType))
+        {
+            ReviewItem reviewItem = mReview.getReviewItem();
+
+            addCompositeDisposable(mTempReviewLocalImpl.getTempReview(mReview.reserveIdx //
+                , reviewItem.getServiceType(), reviewItem.useStartDate, reviewItem.useEndDate) //
+                .map(new Function<ArrayList<String>, Boolean>()
+                {
+                    @Override
+                    public Boolean apply(ArrayList<String> list) throws Exception
+                    {
+                        if (list.size() == 0)
+                        {
+                            return true;
+                        }
+
+                        JSONArray scoreJsonArray = new JSONArray(list.get(0));
+                        JSONArray pickJsonArray = new JSONArray(list.get(1));
+                        String comment = list.get(2);
+
+                       setTempReview(scoreJsonArray, pickJsonArray, comment);
+
+                        return true;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+                        showReviewDetail();
+                        mReviewLayout.showReviewDetailAnimation();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        showReviewDetail();
+                        mReviewLayout.showReviewDetailAnimation();
+                    }
+                }));
+        } else
+        {
+            showReviewDialog();
+        }
     }
 
     @Override
@@ -184,6 +238,7 @@ public class ReviewActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
+        // 리뷰 상세 입력 화면에서 백키나 툴바 닫기 버튼 클릭시
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
@@ -217,15 +272,20 @@ public class ReviewActivity extends BaseActivity
         }
 
         showSimpleDialog(getString(R.string.message_review_dialog_cancel_review_title)//
-            , getString(R.string.message_review_dialog_cancel_review_description), getString(R.string.dialog_btn_text_yes)//
-            , getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            , getString(R.string.message_review_dialog_cancel_review_description), getString(R.string.dialog_btn_text_cancel_input_review)//
+            , getString(R.string.dialog_btn_text_temp_save), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
                     lockUI(false);
 
-                    DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review_detail, Toast.LENGTH_SHORT);
+                    int messageResId = PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(mReviewStatusType) //
+                        ? R.string.message_review_toast_canceled_review_detail_2 //
+                        : R.string.message_review_toast_canceled_review_detail;
+                    DailyToast.showToast(ReviewActivity.this, messageResId, Toast.LENGTH_SHORT);
+
+                    deleteTempReview(mReview);
 
                     if (mReviewLayout != null)
                     {
@@ -272,6 +332,20 @@ public class ReviewActivity extends BaseActivity
                 public void onClick(View v)
                 {
                     releaseUiComponent();
+
+                    saveTempReview();
+
+                    if (mReviewLayout != null)
+                    {
+                        mHandler.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mReviewLayout.hideReviewDetailAnimation();
+                            }
+                        }, 1000);
+                    }
 
                     try
                     {
@@ -364,7 +438,7 @@ public class ReviewActivity extends BaseActivity
                         , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
                         , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
 
-                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate), mReviewGrade);
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -378,7 +452,7 @@ public class ReviewActivity extends BaseActivity
                 {
                     String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
 
-                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate), mReviewGrade);
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -393,7 +467,7 @@ public class ReviewActivity extends BaseActivity
                         , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
                         , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
 
-                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate), mReviewGrade);
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -401,7 +475,7 @@ public class ReviewActivity extends BaseActivity
                 break;
         }
 
-        mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().serviceType, mReview.getReviewItem().getImageMap());
+        mReviewLayout.setPlaceImageUrl(this, reviewItem.serviceType, reviewItem.getImageMap());
 
         int position = 0;
 
@@ -411,7 +485,7 @@ public class ReviewActivity extends BaseActivity
         {
             for (ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
             {
-                View view = mReviewLayout.getReviewScoreView(this, position++, reviewScoreQuestion);
+                View view = mReviewLayout.getReviewScoreView(position++, reviewScoreQuestion);
 
                 mReviewLayout.addScrollLayout(view);
             }
@@ -423,7 +497,7 @@ public class ReviewActivity extends BaseActivity
         {
             for (ReviewPickQuestion reviewPickQuestion : reviewPickQuestionList)
             {
-                View view = mReviewLayout.getReviewPickView(this, position++, reviewPickQuestion);
+                View view = mReviewLayout.getReviewPickView(position++, reviewPickQuestion);
 
                 mReviewLayout.addScrollLayout(view);
             }
@@ -431,7 +505,7 @@ public class ReviewActivity extends BaseActivity
 
         if (mReview.requiredCommentReview == true)
         {
-            View view = mReviewLayout.getReviewCommentView(this, position++, reviewItem.serviceType);
+            View view = mReviewLayout.getReviewCommentView(position++, reviewItem.serviceType, mReview.selectedComment);
             mReviewLayout.addScrollLayout(view);
         }
 
@@ -868,6 +942,192 @@ public class ReviewActivity extends BaseActivity
         }
     }
 
+    private void setTempReview(JSONArray scoreJsonArray, JSONArray pickJsonArray, String comment) throws JSONException
+    {
+        Map<String, Integer> scoreMap = new HashMap<>();
+        Map<String, String> pickMap = new HashMap<>();
+
+        int scoreSize = scoreJsonArray == null ? 0 : scoreJsonArray.length();
+        for (int i = 0; i < scoreSize; i++)
+        {
+            JSONObject jsonObject = scoreJsonArray.getJSONObject(i);
+            scoreMap.put(jsonObject.getString("type"), jsonObject.getInt("score"));
+        }
+
+        int pickSize = pickJsonArray == null ? 0 : pickJsonArray.length();
+        for (int i = 0; i < pickSize; i++)
+        {
+            JSONObject jsonObject = pickJsonArray.getJSONObject(i);
+            pickMap.put(jsonObject.getString("type"), jsonObject.getString("value"));
+        }
+
+        ArrayList<ReviewPickQuestion> pickQuestionList = mReview.getReviewPickQuestionList();
+        for (ReviewPickQuestion pickQuestion : pickQuestionList)
+        {
+            if (pickMap.containsKey(pickQuestion.answerCode)) {
+                String value = pickMap.get(pickQuestion.answerCode);
+
+                ArrayList<ReviewAnswerValue> answerValueList = pickQuestion.getAnswerValueList();
+                for (ReviewAnswerValue reviewAnswerValue : answerValueList)
+                {
+                    if (value.equalsIgnoreCase(reviewAnswerValue.code)) {
+                        pickQuestion.selectedAnswerCode = value;
+                        break;
+                    }
+                }
+            }
+        }
+
+        mReview.setReviewPickQuestionList(pickQuestionList);
+
+        ArrayList<ReviewScoreQuestion> scoreQuestionList = mReview.getReviewScoreQuestionList();
+        for (ReviewScoreQuestion scoreQuestion : scoreQuestionList)
+        {
+            if (scoreMap.containsKey(scoreQuestion.answerCode))
+            {
+                int score = scoreMap.get(scoreQuestion.answerCode);
+                scoreQuestion.selectedScore = score;
+            }
+        }
+
+        mReview.setReviewScoreQuestionList(scoreQuestionList);
+
+        mReview.selectedComment = comment;
+    }
+
+    private void saveTempReview()
+    {
+        JSONArray scoreReviewJSONArray = null, pickReviewJSONArray = null;
+        String comment = null;
+        int position = 0;
+
+        // Score
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionList = mReview.getReviewScoreQuestionList();
+
+        if (reviewScoreQuestionList != null)
+        {
+            scoreReviewJSONArray = new JSONArray();
+
+            for (ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
+            {
+                try
+                {
+                    Object value = mReviewLayout.getReviewValue(position++);
+
+                    if (value == null || value instanceof Integer == false)
+                    {
+                        continue;
+                    }
+
+                    JSONObject jsonObject = reviewScoreQuestion.toReviewAnswerJSONObject((int) value);
+
+                    if (jsonObject != null)
+                    {
+                        scoreReviewJSONArray.put(jsonObject);
+                    }
+                } catch (JSONException e)
+                {
+                    ExLog.e(e.toString());
+                }
+            }
+        }
+
+        // Pick
+        ArrayList<ReviewPickQuestion> reviewPickQuestionList = mReview.getReviewPickQuestionList();
+
+        if (reviewPickQuestionList != null)
+        {
+            pickReviewJSONArray = new JSONArray();
+
+            for (ReviewPickQuestion reviewPickQuestion : reviewPickQuestionList)
+            {
+                try
+                {
+                    Object value = mReviewLayout.getReviewValue(position++);
+
+                    if (value == null || value instanceof Integer == false)
+                    {
+                        continue;
+                    }
+
+                    JSONObject jsonObject = reviewPickQuestion.toReviewAnswerJSONObject((int) value - 1);
+
+                    if (jsonObject != null)
+                    {
+                        pickReviewJSONArray.put(jsonObject);
+                    }
+                } catch (JSONException e)
+                {
+                    ExLog.e(e.toString());
+                }
+            }
+        }
+
+        // Comment
+        Object value = mReviewLayout.getReviewValue(position++);
+
+        if (value != null && value instanceof String == true)
+        {
+            comment = (String) value;
+        }
+
+        try
+        {
+            String score = scoreReviewJSONArray == null ? " null" : scoreReviewJSONArray.toString(2);
+            String pick = pickReviewJSONArray == null ? "null" : pickReviewJSONArray.toString(2);
+
+            ExLog.d("sam : score : " + score + "\n , pick : " + pick + "\n , comment : " + comment);
+
+            final ReviewItem reviewItem = mReview.getReviewItem();
+
+            if (reviewItem == null)
+            {
+                throw new NullPointerException("reviewItem == null");
+            }
+
+            DailyDb dailyDb = DailyDbHelper.getInstance().open(ReviewActivity.this);
+            dailyDb.addTempReview(mReview.reserveIdx, reviewItem.getServiceType() //
+                , reviewItem.useStartDate, reviewItem.useEndDate, score, pick, comment);
+
+            DailyDbHelper.getInstance().close();
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteTempReview(Review review)
+    {
+        if (review == null)
+        {
+            return;
+        }
+
+        ReviewItem reviewItem = review.getReviewItem();
+        if (reviewItem == null)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mTempReviewLocalImpl.deleteTempReview(review.reserveIdx //
+            , reviewItem.getServiceType(), reviewItem.useStartDate) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onReportError(throwable);
+                }
+            }));
+    }
+
     private ReviewLayout.OnEventListener mOnEventListener = new ReviewLayout.OnEventListener()
     {
         private void sendMessageDelayed(int position)
@@ -1096,6 +1356,7 @@ public class ReviewActivity extends BaseActivity
 
             if (Review.GRADE_NONE.equalsIgnoreCase(grade) == true)
             {
+                // 만족도 리뷰 입력이 취소 되었을때 종료시
                 DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
                 finish();
             } else

@@ -67,7 +67,8 @@ public class BookingData
     {
         final String PAYMENT_COMPLETED = "10";
         final String PAYMENT_WAITING = "20";
-        final String REVIEW_ABLE = "ADDABLE";
+        final String REVIEW_MODIFIABLE = "MODIFIABLE";
+        final String REVIEW_ADDABLE = "ADDABLE";
 
         Booking booking = new Booking();
         booking.placeName = name;
@@ -108,8 +109,10 @@ public class BookingData
         booking.comment = comment;
         booking.tid = tid;
         booking.placeIndex = placeIndex;
-        booking.availableReview = REVIEW_ABLE.equalsIgnoreCase(reviewStatusType) == true;
+        booking.availableReview = REVIEW_MODIFIABLE.equalsIgnoreCase(reviewStatusType) == true //
+            || REVIEW_ADDABLE.equalsIgnoreCase(reviewStatusType) == true;
         booking.waitingForBooking = waitingForBooking;
+        booking.reviewStatusType = reviewStatusType;
 
         return booking;
     }

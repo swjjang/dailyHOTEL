@@ -16,6 +16,8 @@ public class ReviewPickQuestion extends ReviewQuestion
 {
     private ArrayList<ReviewAnswerValue> mAnswerValueList;
 
+    public String selectedAnswerCode;
+
     public ReviewPickQuestion()
     {
         super();
@@ -72,6 +74,7 @@ public class ReviewPickQuestion extends ReviewQuestion
         super.writeToParcel(dest, flags);
 
         dest.writeList(mAnswerValueList);
+        dest.writeString(selectedAnswerCode);
     }
 
     protected void readFromParcel(Parcel in)
@@ -79,6 +82,7 @@ public class ReviewPickQuestion extends ReviewQuestion
         super.readFromParcel(in);
 
         mAnswerValueList = in.readArrayList(ReviewAnswerValue.class.getClassLoader());
+        selectedAnswerCode = in.readString();
     }
 
     @Override
@@ -105,7 +109,7 @@ public class ReviewPickQuestion extends ReviewQuestion
     @Override
     public JSONObject toReviewAnswerJSONObject(int value) throws JSONException
     {
-        if (mAnswerValueList == null || mAnswerValueList.size() < value)
+        if (mAnswerValueList == null || mAnswerValueList.size() < value || value < 0)
         {
             return null;
         }

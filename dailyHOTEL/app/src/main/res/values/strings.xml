@@ -376,6 +376,8 @@
     <string name="dialog_btn_text_continue">계속 진행</string>
     <string name="dialog_btn_do_continue">계속 하기</string>
     <string name="dialog_btn_login_for_benefit">로그인하고 혜택받기</string>
+    <string name="dialog_btn_text_temp_save">임시 저장</string>
+    <string name="dialog_btn_text_cancel_input_review">리뷰 입력 취소</string>
     <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소할까요?</string>
     <string name="dialog_msg_delete_register_creditcard">등록하신 결제카드를 삭제할까요?</string>
     <string name="dialog_msg_session_expired">세션이 만료되어 다시 시작합니다.</string>
@@ -1345,6 +1347,7 @@
     <string name="label_review_score3">좋았어요.</string>
     <string name="label_review_score4">최고였어요.</string>
     <string name="label_review">후기</string>
+    <string name="label_review_thank_you">솔직한 트루 리뷰로 방문 경험을 공유해주세요.</string>
 
     <string name="message_review_title">\'%1$s\' 어떠셨어요?</string>
     <string name="message_review_date">%1$s 이용</string>
@@ -1358,12 +1361,11 @@
     <string name="message_review_dialog_cancel_review_title">리뷰 입력을 취소하시겠어요?</string>
     <string name="message_review_dialog_cancel_review_description">리뷰를 입력하시면 다른 고객님들의 선택에\n큰 도움이 됩니다.</string>
     <string name="message_review_toast_canceled_review_detail">리뷰 입력이 취소되었습니다.\n(만족 여부는 저장됩니다.)</string>
+    <string name="message_review_toast_canceled_review_detail_2">리뷰 입력이 취소되었습니다.</string>
     <string name="message_review_toast_canceled_review">리뷰 입력이 취소되었습니다.\n예약내역 메뉴를 통해\n원하실 때 입력해주세요!</string>
     <string name="message_review_answer_question">%1$d개의 질문에 대답해주세요!</string>
     <string name="message_review_remain_n_count">이제 %1$d개 남았어요!</string>
     <string name="message_review_send_feedback">이제 여기를 눌러 의견을 보내주세요.</string>
-    <string name="message_review_toast_satisfied">만족하셨다니 기쁘네요!\n이제 상세한 경험을 공유해주세요.</string>
-    <string name="message_review_toast_dissatisfied">솔직한 의견 감사합니다!\n이제 상세한 경험을 공유해주세요.</string>
 
     <!-- Review Write -->
     <string name="label_write_review_comment_complete">완료</string>

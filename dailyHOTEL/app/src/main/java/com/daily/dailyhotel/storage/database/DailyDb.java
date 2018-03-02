@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyColumns;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
@@ -17,6 +18,7 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.StayObRecentlySuggestList;
+import com.daily.dailyhotel.repository.local.model.TempReviewList;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Constants;
@@ -30,7 +32,7 @@ import java.util.Calendar;
 
 public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final int MAX_RECENT_PLACE_COUNT = 30;
 
@@ -43,7 +45,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
     public static final String T_RECENTLY = "recently";
     public static final String T_STAY_OB_RECENTLY_SUGGEST = "stay_ob_recently_suggest";
+    public static final String T_TEMP_REVIEW = "temp_review";
 
+    // added database version 1
     private static final String CREATE_T_RECENTLY = "CREATE TABLE IF NOT EXISTS " + T_RECENTLY + " (" //
         + RecentlyList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + RecentlyList.PLACE_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
@@ -53,7 +57,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + RecentlyList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
 
-    // insert ver 2
+    // added database version 3
     private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
         + StayObRecentlySuggestList._ID + " INTEGER  PRIMARY KEY NOT NULL, " //
         + StayObRecentlySuggestList.NAME + " TEXT NULL, " //
@@ -65,7 +69,18 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayObRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
-        + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");"; // added database version 3
+        + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
+
+    // added database version 4
+    private static final String CREATE_T_TEMP_REVIEW = "CREATE TABLE IF NOT EXISTS " + T_TEMP_REVIEW + " (" //
+        + TempReviewList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
+        + TempReviewList.RESERVATION_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
+        + TempReviewList.SERVICE_TYPE + " TEXT NOT NULL, " //
+        + TempReviewList.START_DATE + " TEXT NULL, " //
+        + TempReviewList.END_DATE + " TEXT NULL, " //
+        + TempReviewList.SCORE_QUESTION + " TEXT NULL, " //
+        + TempReviewList.PICK_QUESTION + " TEXT NULL, " //
+        + TempReviewList.COMMENT + " TEXT NULL " + ");";
 
     public DailyDb(Context context)
     {
@@ -79,7 +94,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         ExLog.v("version : " + db.getVersion());
 
-        createDbObjects(db);
+        upGradeAllDb(db);
     }
 
     @Override
@@ -95,33 +110,46 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         ExLog.v("Upgrading database from version " + oldVersion + " to " + newVersion);
 
-        if (oldVersion < DATABASE_VERSION)
+        if (oldVersion >= DATABASE_VERSION)
         {
-            dropAllDbObjects(db);
-            createDbObjects(db);
+            return;
         }
 
-        //        if (oldVersion == 2)
-        //        {
-        //            db.beginTransaction();
-        //            db.execSQL("drop table if exists " + T_RECENTLY);
-        //            db.execSQL("ALTER TABLE " + CREATE_T_STAY_OB_RECENTLY_SUGGEST + " ADD COLUMN " + StayObRecentlySuggestList.KEYWORD + " TEXT NULL");
-        //            db.setTransactionSuccessful();
-        //        } else {
-        //            createDbObjects(db);
-        //        }
+        if (oldVersion <= 3)
+        {
+            upGradeTempRevieweDb(db);
+        }
+
+        if (oldVersion <= 2)
+        {
+            upGradeRecentlySuggestDb(db);
+            upGradeRecentlyPlaceDb(db);
+        }
     }
 
-    private void createDbObjects(SQLiteDatabase db)
+    private void upGradeAllDb(SQLiteDatabase db)
     {
+        upGradeRecentlyPlaceDb(db);
+        upGradeRecentlySuggestDb(db);
+        upGradeTempRevieweDb(db);
+    }
+
+    private void upGradeRecentlyPlaceDb(SQLiteDatabase db)
+    {
+        db.execSQL("drop table if exists " + T_RECENTLY);
         db.execSQL(CREATE_T_RECENTLY);
+    }
+
+    private void upGradeRecentlySuggestDb(SQLiteDatabase db)
+    {
+        db.execSQL("drop table if exists " + T_STAY_OB_RECENTLY_SUGGEST);
         db.execSQL(CREATE_T_STAY_OB_RECENTLY_SUGGEST);
     }
 
-    private void dropAllDbObjects(SQLiteDatabase db)
+    private void upGradeTempRevieweDb(SQLiteDatabase db)
     {
-        db.execSQL("drop table if exists " + T_RECENTLY);
-        db.execSQL("drop table if exists " + T_STAY_OB_RECENTLY_SUGGEST);
+        db.execSQL("drop table if exists " + T_TEMP_REVIEW);
+        db.execSQL(CREATE_T_TEMP_REVIEW);
     }
 
     private SQLiteDatabase getDb()
@@ -167,6 +195,13 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         SQLiteDatabase db = getDb();
         if (db != null)
         {
+            if (contentValues.containsKey(keyId) == false)
+            {
+                insert(table, contentValues);
+                ExLog.d("INSERT : ");
+                return;
+            }
+
             int rowId = db.update(table, contentValues, keyId + "=?", new String[]{String.valueOf(contentValues.get(keyId))});
             if (rowId > 0)
             {
@@ -1032,6 +1067,175 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         }
 
         mContext.getContentResolver().notifyChange(StayObRecentlySuggestList.NOTIFICATION_URI, null);
+    }
+
+    public long getTempReviewId(int reservationIndex, String serviceType, String startDate, String endDate)
+    {
+        if (reservationIndex <= 0 || DailyTextUtils.isTextEmpty(startDate))
+        {
+            return -1;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return -1;
+        }
+
+        long id = -1;
+        Cursor cursor = null;
+
+        try
+        {
+            cursor = getTempReview(reservationIndex, serviceType, startDate, endDate);
+            if (cursor != null)
+            {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(TempReviewList._ID);
+                id = cursor.getLong(columnIndex);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            id = -1;
+        } finally
+        {
+            try
+            {
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+        }
+
+        return id;
+    }
+
+    public Cursor getTempReview(int reservationIndex, String serviceType, String startDate, String endDate)
+    {
+        if (reservationIndex <= 0 || DailyTextUtils.isTextEmpty(startDate))
+        {
+            return null;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_TEMP_REVIEW);
+        sqlBuilder.append(" WHERE ");
+
+        sqlBuilder.append(TempReviewList.RESERVATION_INDEX).append("=").append(reservationIndex).append("");
+        sqlBuilder.append(" AND ").append(TempReviewList.START_DATE).append("=\"").append(startDate).append("\"");
+
+        if (DailyTextUtils.isTextEmpty(endDate) == false)
+        {
+            sqlBuilder.append(" AND ").append(TempReviewList.END_DATE).append("=\"").append(endDate).append("\"");
+        }
+
+        if (DailyTextUtils.isTextEmpty(serviceType) == false)
+        {
+            sqlBuilder.append(" AND ").append(TempReviewList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
+        }
+
+        sqlBuilder.append(" ORDER BY ").append(TempReviewList.START_DATE).append(" DESC");
+        sqlBuilder.append(" limit ").append(1);
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
+    public void addTempReview(int reservationIndex, String serviceType //
+        , String startDate, String endDate, String scoreQuestion, String pickQuestion, String comment)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            long oldId = getTempReviewId(reservationIndex, serviceType, startDate, endDate);
+
+            ContentValues contentValues = new ContentValues();
+            if (oldId > 0)
+            {
+                contentValues.put(TempReviewList._ID, oldId);
+            }
+
+            contentValues.put(TempReviewList.RESERVATION_INDEX, reservationIndex);
+            contentValues.put(TempReviewList.SERVICE_TYPE, serviceType);
+            contentValues.put(TempReviewList.START_DATE, startDate);
+            contentValues.put(TempReviewList.END_DATE, endDate);
+            contentValues.put(TempReviewList.SCORE_QUESTION, scoreQuestion);
+            contentValues.put(TempReviewList.PICK_QUESTION, pickQuestion);
+            contentValues.put(TempReviewList.COMMENT, comment);
+
+            db.beginTransaction();
+
+            insertOrUpdate(T_TEMP_REVIEW, TempReviewList._ID, contentValues);
+
+            db.setTransactionSuccessful();
+
+        } catch (Exception e)
+        {
+            ExLog.w("add fail : " + e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (IllegalStateException e)
+            {
+                // ignore
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(TempReviewList.NOTIFICATION_URI, null);
+    }
+
+    public void deleteTempReview(int reservationIndex, String serviceType, String startDate)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_TEMP_REVIEW, TempReviewList.RESERVATION_INDEX + " = " + reservationIndex //
+                + " AND " + TempReviewList.SERVICE_TYPE + " = '" + serviceType + "'" //
+                + " AND " + TempReviewList.START_DATE + " = '" + startDate + "'", null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(TempReviewList.NOTIFICATION_URI, null);
     }
 
     //    public void exportDatabase(String databaseName)

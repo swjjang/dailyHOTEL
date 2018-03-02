@@ -813,7 +813,8 @@ public class StayOutboundBookingDetailPresenter //
             return;
         }
 
-        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true
+            || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
         {
             addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(mBookingIndex) //
                 .subscribeOn(io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
@@ -828,7 +829,7 @@ public class StayOutboundBookingDetailPresenter //
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
                     {
-                        Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                        Intent intent = ReviewActivity.newInstance(getActivity(), review, reviewStatus);
                         startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_REVIEW);
                     }
                 }, new Consumer<Throwable>()
