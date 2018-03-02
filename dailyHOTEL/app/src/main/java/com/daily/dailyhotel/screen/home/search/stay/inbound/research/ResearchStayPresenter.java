@@ -301,9 +301,10 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             StayBookDateTime stayBookDateTime = mSearchModel.bookDateTime.getValue();
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true//
+                , AnalyticsManager.ValueType.SEARCH, true//
                 , ScreenUtils.dpToPx(getActivity(), 44), true);
 
             startActivityForResult(intent, ResearchStayActivity.REQUEST_CODE_CALENDAR);

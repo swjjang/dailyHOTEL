@@ -879,9 +879,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, callByScreen, true//
+                , callByScreen, true//
                 , 0, true);
 
             startActivityForResult(intent, StayTabActivity.REQUEST_CODE_CALENDAR);

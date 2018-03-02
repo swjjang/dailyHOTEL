@@ -15,7 +15,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class StayCalendarView extends BaseCalendarView<StayCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayCalendarViewInterface
+public class StayCalendarView<T1 extends StayCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseCalendarView<T1, T2> implements StayCalendarViewInterface
 {
     private StayCalendarAdapter mCalendarAdapter;
 
@@ -26,7 +26,7 @@ public class StayCalendarView extends BaseCalendarView<StayCalendarView.OnEventL
         void onConfirmClick();
     }
 
-    public StayCalendarView(BaseActivity baseActivity, StayCalendarView.OnEventListener listener)
+    public StayCalendarView(BaseActivity baseActivity, T1 listener)
     {
         super(baseActivity, listener);
     }

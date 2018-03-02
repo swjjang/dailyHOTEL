@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends StayCalendarViewInterface> extends BaseCalendarPresenter<T1, T2> implements StayCalendarView.OnEventListener
+public class StayDetailCalendarPresenter extends StayCalendarPresenter<StayDetailyCalendarActivity, StayCalendarViewInterface> implements StayCalendarView.OnEventListener
 {
     private StayCalendarPresenterAnalyticsInterface mAnalytics;
 
@@ -60,20 +60,20 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
         void onConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime);
     }
 
-    public StayCalendarPresenter(@NonNull T1 activity)
+    public StayDetailCalendarPresenter(@NonNull StayDetailyCalendarActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected T2 createInstanceViewInterface()
+    protected StayCalendarViewInterface createInstanceViewInterface()
     {
-        return (T2) new StayCalendarView(getActivity(), this);
+        return new StayCalendarView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(T1 activity)
+    public void constructorInitialize(StayDetailyCalendarActivity activity)
     {
         super.constructorInitialize(activity);
 

@@ -476,9 +476,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
             StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
 
             Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true//
+                , AnalyticsManager.ValueType.SEARCH, true//
                 , 0, true);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);

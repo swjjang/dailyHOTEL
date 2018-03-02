@@ -409,9 +409,10 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
 
             Intent intent = StayCalendarActivity.newInstance(this//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, callByScreen, true//
+                , callByScreen, true//
                 , 0, true);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);

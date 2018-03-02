@@ -5,15 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseActivity;
+import java.util.ArrayList;
 
-public class StayCalendarActivity<T1 extends StayCalendarPresenter> extends BaseActivity<T1>
+public class StayDetailyCalendarActivity extends StayCalendarActivity<StayDetailCalendarPresenter>
 {
     public static final String INTENT_EXTRA_DATA_CHECKIN_DATETIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_START_DATETIME = "startDateTime";
     static final String INTENT_EXTRA_DATA_END_DATETIME = "endDateTime";
     static final String INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT = "nightsOfMaxCount";
+    static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
+    static final String INTENT_EXTRA_DATA_SOLDOUT_DAYS = "soldOutDays";
     static final String INTENT_EXTRA_DATA_CALLBYSCREEN = "callByScreen";
     static final String INTENT_EXTRA_DATA_IS_SELECTED = "isSelected";
     static final String INTENT_EXTRA_DATA_MARGIN_TOP = "marginTop";
@@ -21,7 +23,7 @@ public class StayCalendarActivity<T1 extends StayCalendarPresenter> extends Base
 
     public static Intent newInstance(Context context//
         , String startDateTime, String endDateTime, int nightsOfMaxCount//
-        , String checkInDateTime, String checkOutDateTime//
+        , String checkInDateTime, String checkOutDateTime, int stayIndex, ArrayList<Integer> soldOutDays//
         , String callByScreen, boolean isSelected, int marginTop, boolean isAnimation)
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
@@ -30,6 +32,8 @@ public class StayCalendarActivity<T1 extends StayCalendarPresenter> extends Base
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, nightsOfMaxCount);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_DATETIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_DATETIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
+        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_DAYS, soldOutDays);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
         intent.putExtra(INTENT_EXTRA_DATA_IS_SELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_MARGIN_TOP, marginTop);
@@ -46,8 +50,8 @@ public class StayCalendarActivity<T1 extends StayCalendarPresenter> extends Base
 
     @NonNull
     @Override
-    protected T1 createInstancePresenter()
+    protected StayDetailCalendarPresenter createInstancePresenter()
     {
-        return (T1) new StayCalendarPresenter(this);
+        return new StayDetailCalendarPresenter(this);
     }
 }

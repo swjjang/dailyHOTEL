@@ -260,6 +260,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dayDataBinding.dayTextView.setText(null);
             dayDataBinding.dayLayout.setTag(null);
             dayDataBinding.dayLayout.setEnabled(false);
+            dayDataBinding.dayTextView.setStrikeFlag(false);
             dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
         } else
         {
@@ -268,6 +269,15 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
                 dayDataBinding.dayLayout.setTag(null);
                 dayDataBinding.dayLayout.setEnabled(false);
+                dayDataBinding.dayTextView.setStrikeFlag(false);
+                dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
+                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
+            } else if (day.soldOut == true)
+            {
+                dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
+                dayDataBinding.dayLayout.setTag(null);
+                dayDataBinding.dayLayout.setEnabled(false);
+                dayDataBinding.dayTextView.setStrikeFlag(true);
                 dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
                 dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
             } else
@@ -315,6 +325,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
 
                     dayDataBinding.dayLayout.setEnabled(day.lastDay ? mLastDayEnabled : true);
+                    dayDataBinding.dayTextView.setStrikeFlag(false);
 
                     if (yyyyMMdd > mCheckInDay && yyyyMMdd < mCheckOutDay)
                     {

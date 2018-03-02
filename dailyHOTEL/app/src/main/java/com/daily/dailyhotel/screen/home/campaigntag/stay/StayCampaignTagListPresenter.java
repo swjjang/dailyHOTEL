@@ -664,9 +664,10 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true//
+                , AnalyticsManager.ValueType.SEARCH, true//
                 , ScreenUtils.dpToPx(getActivity(), 44), true);
 
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
