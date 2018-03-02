@@ -27,6 +27,7 @@ import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySubwayArea;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
@@ -52,7 +53,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -394,32 +394,34 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     List<StayAreaGroup> areaGroupList = pair.first;
                     LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap = pair.second;
-                    Pair<StayRegion, List<Category>> regionCategoryPair;
-                    boolean needSetPreferenceArea;
+                    Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> areaTypeRgionCategoryPair;
+                    boolean needSetPreferenceRegion;
 
                     if (mDailyDeepLink != null)
                     {
-                        needSetPreferenceArea = false;
-                        regionCategoryPair = processRegionCategoryDeepLink(mDailyDeepLink, areaGroupList, areaGroupMap);
+                        needSetPreferenceRegion = false;
+                        areaTypeRgionCategoryPair = processRegionCategoryDeepLink(mDailyDeepLink, areaGroupList, areaGroupMap);
                     } else
                     {
-                        needSetPreferenceArea = true;
-                        regionCategoryPair = processRegionCategoryByPreferenceRegion(getPreferenceRegion(DailyCategoryType.STAY_ALL), areaGroupList, areaGroupMap);
+                        needSetPreferenceRegion = true;
+                        areaTypeRgionCategoryPair = processRegionCategoryByPreferenceRegion(getPreferenceRegion(DailyCategoryType.STAY_ALL), areaGroupList, areaGroupMap);
                     }
 
-                    if (regionCategoryPair == null)
+                    if (areaTypeRgionCategoryPair == null)
                     {
-                        regionCategoryPair = getDefaultRegion(areaGroupList);
+                        areaTypeRgionCategoryPair = new Pair(PreferenceRegion.AreaType.AREA, getDefaultRegion(areaGroupList));
                     }
 
-                    mStayViewModel.stayRegion.setValue(regionCategoryPair.first);
+                    StayRegion stayRegion = areaTypeRgionCategoryPair.second.first;
 
-                    if (needSetPreferenceArea == true)
+                    mStayViewModel.stayRegion.setValue(stayRegion);
+
+                    if (needSetPreferenceRegion == true)
                     {
-                        setPreferenceArea(regionCategoryPair.first.getAreaGroupName(), regionCategoryPair.first.getAreaName());
+                        setPreferenceRegion(areaTypeRgionCategoryPair.first, stayRegion);
                     }
 
-                    return Observable.just(new Pair(true, regionCategoryPair.second));
+                    return Observable.just(new Pair(true, areaTypeRgionCategoryPair.second));
                 }
             }
         }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Pair<Boolean, List<Category>>, ObservableSource<Boolean>>()
@@ -458,7 +460,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         }));
     }
 
-    private Pair<StayRegion, List<Category>> processRegionCategoryDeepLink(@NonNull DailyDeepLink deepLink, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
+    private Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> processRegionCategoryDeepLink(@NonNull DailyDeepLink deepLink, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
     {
         if (deepLink.isExternalDeepLink() == true)
         {
@@ -468,18 +470,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             {
                 if (externalDeepLink.hasStationIndexParam() == true)
                 {
-                    StayRegion stayRegion = parseSubwayAreaDeepLinkStayList(areaGroupMap, mStayViewModel.commonDateTime.getValue(), externalDeepLink);
-
-                    if (stayRegion == null)
-                    {
-                        return getDefaultRegion(areaGroupList);
-                    } else
-                    {
-                        return new Pair(stayRegion, Arrays.asList(Category.ALL));
-                    }
+                    return new Pair(PreferenceRegion.AreaType.SUBWAY_AREA, parseSubwayAreaDeepLinkStayList(areaGroupMap, mStayViewModel.commonDateTime.getValue(), externalDeepLink));
                 } else
                 {
-                    return parseAreaDeepLinkStayList(areaGroupList, mStayViewModel.commonDateTime.getValue(), externalDeepLink);
+                    return new Pair(PreferenceRegion.AreaType.AREA, parseAreaDeepLinkStayList(areaGroupList, mStayViewModel.commonDateTime.getValue(), externalDeepLink));
                 }
             }
         }
@@ -487,24 +481,45 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    private Pair<StayRegion, List<Category>> processRegionCategoryByPreferenceRegion(PreferenceRegion preferenceRegion, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
+    private Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> processRegionCategoryByPreferenceRegion(PreferenceRegion preferenceRegion, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
     {
         if (preferenceRegion == null)
         {
-            return getDefaultRegion(areaGroupList);
+            return new Pair(PreferenceRegion.AreaType.AREA, getDefaultRegion(areaGroupList));
         } else
         {
             switch (preferenceRegion.areaType)
             {
                 case AREA:
-                    return getRegionCategoryByPreferenceRegion(areaGroupList, preferenceRegion);
+                    return new Pair(PreferenceRegion.AreaType.AREA, getRegionCategoryByPreferenceRegion(areaGroupList, preferenceRegion));
 
                 case SUBWAY_AREA:
-                    return new Pair(getRegionByPreferenceRegion(areaGroupMap, preferenceRegion), Arrays.asList(Category.ALL));
+                    return new Pair(PreferenceRegion.AreaType.SUBWAY_AREA, getRegionCategoryByPreferenceRegion(areaGroupMap, preferenceRegion));
 
                 default:
                     return null;
             }
+        }
+    }
+
+    private void setPreferenceRegion(PreferenceRegion.AreaType areaType, StayRegion stayRegion)
+    {
+        if (areaType == null || stayRegion == null)
+        {
+            return;
+        }
+
+        if (areaType == PreferenceRegion.AreaType.SUBWAY_AREA)
+        {
+            Area areaGroup = stayRegion.getAreaGroup();
+
+            if (areaGroup instanceof StaySubwayAreaGroup)
+            {
+                setPreferenceSubwayArea(((StaySubwayAreaGroup) areaGroup).getRegion().name, stayRegion.getAreaGroupName(), stayRegion.getAreaName());
+            }
+        } else
+        {
+            setPreferenceArea(stayRegion.getAreaGroupName(), stayRegion.getAreaName());
         }
     }
 
@@ -584,7 +599,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    StayRegion getRegionByPreferenceRegion(@NonNull LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayAreaMap, @NonNull PreferenceRegion preferenceRegion)
+    Pair<StayRegion, List<Category>> getRegionCategoryByPreferenceRegion(@NonNull LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayAreaMap, @NonNull PreferenceRegion preferenceRegion)
     {
         Iterator<Area> iterator = subwayAreaMap.keySet().iterator();
 
@@ -598,9 +613,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     if (subwayAreaGroup.name.equalsIgnoreCase(preferenceRegion.areaGroupName) == true)
                     {
-                        Area subwayArea = null;
+                        StaySubwayArea subwayArea = null;
 
-                        for (Area area : subwayAreaGroup.getAreaList())
+                        for (StaySubwayArea area : subwayAreaGroup.getAreaList())
                         {
                             if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                             {
@@ -611,11 +626,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                         if (subwayArea == null)
                         {
-                            return new StayRegion(subwayAreaGroup, subwayAreaGroup.getAreaList().get(0));
-                        } else
-                        {
-                            return new StayRegion(subwayAreaGroup, subwayArea);
+                            subwayArea = subwayAreaGroup.getAreaList().get(0);
                         }
+
+                        return new Pair(new StayRegion(subwayAreaGroup, subwayArea), subwayArea.getCategoryList());
                     }
                 }
             }
@@ -1150,7 +1164,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Pair<StayRegion, List<Category>> parseAreaDeepLinkStayList(List<StayAreaGroup> stayDistrictList, CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)
+    Pair<StayRegion, List<Category>> parseAreaDeepLinkStayList(List<StayAreaGroup> areaGroupList, CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)
     {
         if (commonDateTime == null && externalDeepLink == null)
         {
@@ -1169,7 +1183,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             int areaIndex = externalDeepLink.getAreaIndex();
 
             // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-            Pair<StayRegion, List<Category>> pair = searchRegion(stayDistrictList, provinceIndex, areaIndex);
+            Pair<StayRegion, List<Category>> pair = searchRegionCategory(areaGroupList, provinceIndex, areaIndex);
 
             if (pair == null)
             {
@@ -1199,7 +1213,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    private Pair<StayRegion, List<Category>> searchRegion(List<StayAreaGroup> areaGroupList, int areaGroupIndex, int areaIndex)
+    private Pair<StayRegion, List<Category>> searchRegionCategory(List<StayAreaGroup> areaGroupList, int areaGroupIndex, int areaIndex)
     {
         if (areaGroupList == null || areaGroupIndex <= 0)
         {
@@ -1229,7 +1243,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    StayRegion parseSubwayAreaDeepLinkStayList(LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap, CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)
+    private Pair<StayRegion, List<Category>> parseSubwayAreaDeepLinkStayList(LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap, CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)
     {
         if (commonDateTime == null && externalDeepLink == null)
         {
@@ -1247,7 +1261,15 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             int stationIndex = externalDeepLink.getStationIndex();
 
             // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-            StayRegion stayRegion = searchRegion(areaGroupMap, stationIndex);
+            Pair<StayRegion, List<Category>> pair = searchRegionCategory(areaGroupMap, stationIndex);
+
+            if (pair == null)
+            {
+                return null;
+            }
+
+            StayRegion stayRegion = pair.first;
+            List<Category> categoryList = pair.second;
 
             if (stayRegion == null)
             {
@@ -1257,7 +1279,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
-            return stayRegion;
+            return pair;
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1269,7 +1291,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    private StayRegion searchRegion(LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap, int stationIndex)
+    private Pair<StayRegion, List<Category>> searchRegionCategory(LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap, int stationIndex)
     {
         if (areaGroupMap == null || stationIndex <= 0)
         {
@@ -1284,11 +1306,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             for (StaySubwayAreaGroup areaGroupList : areaGroupMap.get(region))
             {
-                for (Area area : areaGroupList.getAreaList())
+                for (StaySubwayArea area : areaGroupList.getAreaList())
                 {
                     if (area.index == stationIndex)
                     {
-                        return new StayRegion(areaGroupList, area);
+                        return new Pair(new StayRegion(areaGroupList, area), area.getCategoryList());
                     }
                 }
             }
