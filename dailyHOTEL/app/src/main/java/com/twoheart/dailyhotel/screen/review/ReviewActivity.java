@@ -123,6 +123,7 @@ public class ReviewActivity extends BaseActivity
             return;
         }
 
+        mReview = intent.getParcelableExtra(INTENT_EXTRA_DATA_REVIEW);
         mReviewStatusType = intent.getStringExtra(INTENT_EXTRA_DATA_REVIEW_STATUS_TYPE);
         mReviewNetworkController = new ReviewNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
         mTempReviewLocalImpl = new TempReviewLocalImpl(this);
