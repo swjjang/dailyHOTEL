@@ -739,7 +739,75 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     @Override
     public void onSubwayAreaClick(StaySubwayAreaGroup areaGroup, Area area)
     {
+        if (areaGroup == null || area == null)
+        {
+            finish();
+            return;
+        }
 
+        final String areaGroupName = areaGroup.name;
+        final String areaName = area.name;
+
+        // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
+        if (equalsAreaGroupName(mStayAreaViewModel.mPreviousArea.getValue(), areaGroupName) == true)
+        {
+            setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType.getValue(), areaGroup.getRegion(), areaGroup, area);
+            finish();
+        } else
+        {
+            String message = mStayAreaViewModel.bookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)") + "-" + mStayAreaViewModel.bookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)") + "\n" + getString(R.string.message_region_search_date);
+            final String previousAreaGroupName, previousAreaName;
+
+            if (mStayAreaViewModel.mPreviousArea.getValue() != null)
+            {
+                previousAreaGroupName = mStayAreaViewModel.mPreviousArea.getValue().getAreaGroupName();
+                previousAreaName = mStayAreaViewModel.mPreviousArea.getValue().getAreaName();
+            } else
+            {
+                previousAreaGroupName = null;
+                previousAreaName = null;
+            }
+
+            getViewInterface().showSimpleDialog(getString(R.string.label_visit_date), message, getString(R.string.dialog_btn_text_yes), getString(R.string.label_region_change_date), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mAnalytics.onEventChangedAreaGroupClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayAreaViewModel.bookDateTime.getValue());
+
+                    setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType.getValue(), areaGroup.getRegion(), areaGroup, area);
+                    finish();
+                }
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mAnalytics.onEventChangedAreaGroupClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayAreaViewModel.bookDateTime.getValue());
+                    mAnalytics.onEventChangedDateClick(getActivity());
+
+                    // 날짜 선택 화면으로 이동한다.
+                    setResult(BaseActivity.RESULT_CODE_START_CALENDAR, mStayAreaViewModel.categoryType.getValue(), areaGroup.getRegion(), areaGroup, area);
+                    finish();
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    unLockAll();
+                }
+            }, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    unLockAll();
+                }
+            }, true);
+        }
+
+        mAnalytics.onEventAreaClick(getActivity(), areaGroupName, areaName);
     }
 
     private boolean equalsAreaGroupName(StayRegion stayRegion, String areaName)
