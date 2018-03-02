@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 public class ReviewScoreQuestion extends ReviewQuestion
 {
+    public int selectedScore;
+
     public ReviewScoreQuestion()
     {
 
@@ -37,11 +39,13 @@ public class ReviewScoreQuestion extends ReviewQuestion
     public void writeToParcel(Parcel dest, int flags)
     {
         super.writeToParcel(dest, flags);
+        dest.writeInt(selectedScore);
     }
 
     protected void readFromParcel(Parcel in)
     {
         super.readFromParcel(in);
+        selectedScore = in.readInt();
     }
 
     @Override

@@ -34,6 +34,7 @@ import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.model.ReviewAnswerValue;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
@@ -56,6 +57,7 @@ import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -128,47 +130,98 @@ public class ReviewActivity extends BaseActivity
 
         if (PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(mReviewStatusType))
         {
-//            ////////////////////////////////////////////////////////////////////////////////////////////
-//            // TODO : 저장된 리뷰 있는지 확인 하고 가져와서 적용하는 부분
-//            addCompositeDisposable(mTempReviewLocalImpl.getTempReview(mReview.reserveIdx //
-//                , reviewItem.getServiceType(), reviewItem.useStartDate, reviewItem.useEndDate) //
-//                .map(new Function<ArrayList<String>, Boolean>()
-//                {
-//                    @Override
-//                    public Boolean apply(ArrayList<String> list) throws Exception
-//                    {
-//                        if (list.size() == 0)
-//                        {
-//                            return true;
-//                        }
-//
-//                        JSONArray scoreJSONArray = new JSONArray(list.get(0));
-//                        JSONArray pickJSONArray = new JSONArray(list.get(1));
-//                        String comment = list.get(2);
-//
-//                        return true;
-//                    }
-//                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-//                {
-//                    @Override
-//                    public void accept(Boolean aBoolean) throws Exception
-//                    {
-//
-//                    }
-//                }, new Consumer<Throwable>()
-//                {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception
-//                    {
-//
-//                    }
-//                }));
-//
-//            ////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // TODO : 저장된 리뷰 있는지 확인 하고 가져와서 적용하는 부분
+            ReviewItem reviewItem = mReview.getReviewItem();
+
+            addCompositeDisposable(mTempReviewLocalImpl.getTempReview(mReview.reserveIdx //
+                , reviewItem.getServiceType(), reviewItem.useStartDate, reviewItem.useEndDate) //
+                .map(new Function<ArrayList<String>, Boolean>()
+                {
+                    @Override
+                    public Boolean apply(ArrayList<String> list) throws Exception
+                    {
+                        if (list.size() == 0)
+                        {
+                            return true;
+                        }
+
+                        JSONArray scoreJSONArray = new JSONArray(list.get(0));
+                        JSONArray pickJSONArray = new JSONArray(list.get(1));
+                        String comment = list.get(2);
 
 
-            showReviewDetail();
-            mReviewLayout.showReviewDetailAnimation();
+                        Map<String, Integer> scoreMap = new HashMap<>();
+                        Map<String, String> pickMap = new HashMap<>();
+
+                        int scoreSize = scoreJSONArray.length();
+                        for (int i = 0; i < scoreSize; i++)
+                        {
+                            JSONObject jsonObject = scoreJSONArray.getJSONObject(i);
+                            scoreMap.put(jsonObject.getString("type"), jsonObject.getInt("score"));
+                        }
+
+                        int pickSize = pickJSONArray.length();
+                        for (int i = 0; i < pickSize; i++)
+                        {
+                            JSONObject jsonObject = pickJSONArray.getJSONObject(i);
+                            pickMap.put(jsonObject.getString("type"), jsonObject.getString("value"));
+                        }
+
+                        ArrayList<ReviewPickQuestion> pickQuestionList = mReview.getReviewPickQuestionList();
+                        for (ReviewPickQuestion pickQuestion : pickQuestionList)
+                        {
+                            if (pickMap.containsKey(pickQuestion.answerCode)) {
+                                String value = pickMap.get(pickQuestion.answerCode);
+
+                                ArrayList<ReviewAnswerValue> answerValueList = pickQuestion.getAnswerValueList();
+                                for (ReviewAnswerValue reviewAnswerValue : answerValueList)
+                                {
+                                    if (value.equalsIgnoreCase(reviewAnswerValue.code)) {
+                                        pickQuestion.selectedAnswerCode = value;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        mReview.setReviewPickQuestionList(pickQuestionList);
+
+                        ArrayList<ReviewScoreQuestion> scoreQuestionList = mReview.getReviewScoreQuestionList();
+                        for (ReviewScoreQuestion scoreQuestion : scoreQuestionList)
+                        {
+                            if (scoreMap.containsKey(scoreQuestion.answerCode))
+                            {
+                                int score = scoreMap.get(scoreQuestion.answerCode);
+                                scoreQuestion.selectedScore = score;
+                            }
+                        }
+
+                        mReview.setReviewScoreQuestionList(scoreQuestionList);
+
+                        mReview.selectedComment = comment;
+
+                        return true;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+                        showReviewDetail();
+                        mReviewLayout.showReviewDetailAnimation();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        showReviewDetail();
+                        mReviewLayout.showReviewDetailAnimation();
+                    }
+                }));
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
         } else
         {
             showReviewDialog();
@@ -1060,7 +1113,7 @@ public class ReviewActivity extends BaseActivity
 
         addCompositeDisposable(mTempReviewLocalImpl.deleteTempReview(review.reserveIdx //
             , reviewItem.getServiceType(), reviewItem.useStartDate) //
-        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception

@@ -29,6 +29,9 @@ public class Review implements Parcelable
     private ArrayList<ReviewPickQuestion> mReviewPickQuestionList;
     private ArrayList<ReviewScoreQuestion> mReviewScoreQuestionList;
 
+    // 임시 저장 또는 화면에 작성 된 comment;
+    public String selectedComment;
+
     public Review()
     {
 
@@ -134,6 +137,7 @@ public class Review implements Parcelable
         mReviewPickQuestionList = null;
         mReviewScoreQuestionList = null;
         requiredCommentReview = false;
+        selectedComment = null;
     }
 
     @Override
@@ -145,6 +149,7 @@ public class Review implements Parcelable
         dest.writeList(mReviewPickQuestionList);
         dest.writeList(mReviewScoreQuestionList);
         dest.writeInt(requiredCommentReview == true ? 1 : 0);
+        dest.writeString(selectedComment);
     }
 
     protected void readFromParcel(Parcel in)
@@ -155,6 +160,7 @@ public class Review implements Parcelable
         mReviewPickQuestionList = in.readArrayList(ReviewPickQuestion.class.getClassLoader());
         mReviewScoreQuestionList = in.readArrayList(ReviewScoreQuestion.class.getClassLoader());
         requiredCommentReview = in.readInt() == 1;
+        selectedComment = in.readString();
     }
 
     @Override
