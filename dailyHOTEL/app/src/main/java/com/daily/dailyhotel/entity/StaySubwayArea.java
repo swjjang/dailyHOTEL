@@ -2,13 +2,11 @@ package com.daily.dailyhotel.entity;
 
 import java.util.List;
 
-public class StayArea extends Area implements AreaCategoryInterface
+public class StaySubwayArea extends Area implements AreaCategoryInterface
 {
-    public static final int ALL = -1;
-
     private List<Category> mCategoryList;
 
-    public StayArea(int index, String name)
+    public StaySubwayArea(int index, String name)
     {
         this.index = index;
         this.name = name;

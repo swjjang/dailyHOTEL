@@ -373,7 +373,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         // 하위 지역이 없으면 선택
         if (mAreaGroupList.get(groupPosition).getAreaCount() == 0)
         {
-            StayArea stayArea = new StayArea(mAreaGroupList.get(groupPosition));
+            StayArea stayArea = new StayArea(StayArea.ALL, mAreaGroupList.get(groupPosition).name);
             stayArea.setCategoryList(mAreaGroupList.get(groupPosition).getCategoryList());
             onAreaClick(groupPosition, stayArea);
 
@@ -707,7 +707,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
             return new StayRegion(areaGroup, areaGroup);
         } else
         {
-            for (Area area : areaGroup.getAreaList())
+            for (StayArea area : areaGroup.getAreaList())
             {
                 if (area.name.equalsIgnoreCase(areaName) == true)
                 {

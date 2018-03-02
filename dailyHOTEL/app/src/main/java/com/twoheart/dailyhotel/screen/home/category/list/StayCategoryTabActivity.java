@@ -656,7 +656,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     return new StayRegion(areaGroup, areaGroup);
                 } else
                 {
-                    for (Area area : areaGroup.getAreaList())
+                    for (StayArea area : areaGroup.getAreaList())
                     {
                         if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                         {
@@ -683,7 +683,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             {
                 if (areaIndex >= 0 && areaGroup.getAreaCount() > 0)
                 {
-                    for (Area area : areaGroup.getAreaList())
+                    for (StayArea area : areaGroup.getAreaList())
                     {
                         if (area.index == areaIndex)
                         {

@@ -240,7 +240,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
                 getViewInterface().setTabVisible(pair.first != null && pair.first.size() > 0 && pair.second != null && pair.second.size() > 0);
 
-                mStayAreaViewModel.mPreviousArea.setValue(searchRegion(mDailyCategoryType, pair));
+                mStayAreaViewModel.mPreviousArea.setValue(searchRegion(mDailyCategoryType, pair.first, pair.second));
 
                 unLockAll();
             }
@@ -254,7 +254,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         }));
     }
 
-    private StayRegion searchRegion(DailyCategoryType categoryType, Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>> pair)
+    private StayRegion searchRegion(DailyCategoryType categoryType, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
     {
         StayRegion stayRegion = null;
         PreferenceRegion preferenceRegion = getPreferenceRegion(categoryType);
@@ -264,11 +264,11 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             switch (preferenceRegion.areaType)
             {
                 case AREA:
-                    stayRegion = searchArea(pair.first, preferenceRegion);
+                    stayRegion = getRegionByPreferenceRegion(areaGroupList, preferenceRegion);
                     break;
 
                 case SUBWAY_AREA:
-                    stayRegion = searchSubwayArea(pair.second, preferenceRegion);
+                    stayRegion = getRegionByPreferenceRegion(areaGroupMap, preferenceRegion);
 
                     if (stayRegion != null)
                     {
@@ -280,7 +280,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         if (stayRegion == null)
         {
-            StayAreaGroup stayAreaGroup = pair.first.get(0);
+            StayAreaGroup stayAreaGroup = areaGroupList.get(0);
             stayRegion = new StayRegion(stayAreaGroup, stayAreaGroup);
         }
 
@@ -299,7 +299,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         return DailyPreference.getInstance(getActivity()).getDailyRegion(dailyCategoryType);
     }
 
-    StayRegion searchArea(List<StayAreaGroup> areaGroupList, PreferenceRegion preferenceRegion)
+    StayRegion getRegionByPreferenceRegion(List<StayAreaGroup> areaGroupList, PreferenceRegion preferenceRegion)
     {
         if (areaGroupList == null || areaGroupList.size() == 0 || preferenceRegion == null)
         {
@@ -339,7 +339,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         return null;
     }
 
-    StayRegion searchSubwayArea(LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayAreaMap, PreferenceRegion preferenceRegion)
+    StayRegion getRegionByPreferenceRegion(LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayAreaMap, PreferenceRegion preferenceRegion)
     {
         if (subwayAreaMap == null || subwayAreaMap.size() == 0 || preferenceRegion == null)
         {
@@ -371,6 +371,21 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         }
 
         return null;
+    }
+
+    StayRegion getDefaultRegion(@NonNull List<StayAreaGroup> areaGroupList)
+    {
+        StayAreaGroup areaGroup = areaGroupList.get(0);
+
+        if (areaGroup.getAreaCount() == 0)
+        {
+            return new StayRegion(areaGroup, areaGroup);
+        } else
+        {
+            StayArea area = areaGroup.getAreaList().get(0);
+
+            return new StayRegion(areaGroup, area);
+        }
     }
 
     @Override
@@ -525,13 +540,27 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     @Override
     public void onAreaTabClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().setAreaTabSelection();
+
+        unLockAll();
     }
 
     @Override
     public void onSubwayTabClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().setSubwayAreaTabSelection();
+
+        unLockAll();
     }
 
     @Override

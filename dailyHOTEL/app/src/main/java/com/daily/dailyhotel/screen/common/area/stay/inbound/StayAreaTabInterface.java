@@ -22,6 +22,8 @@ public interface StayAreaTabInterface
 
         void setTabVisible(boolean visible);
 
+        void setAreaTabSelection();
+
         void setSubwayAreaTabSelection();
     }
 

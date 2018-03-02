@@ -410,21 +410,16 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     if (regionCategoryPair == null)
                     {
                         regionCategoryPair = getDefaultRegion(areaGroupList);
-
-                        mStayViewModel.stayRegion.setValue(regionCategoryPair.first);
-
-                        if (needSetPreferenceArea == true)
-                        {
-                            setPreferenceArea(regionCategoryPair.first.getAreaGroupName(), regionCategoryPair.first.getAreaName());
-                        }
-
-                        return Observable.just(new Pair(true, regionCategoryPair.second));
-                    } else
-                    {
-                        mStayViewModel.stayRegion.setValue(regionCategoryPair.first);
-
-                        return Observable.just(new Pair(true, regionCategoryPair.second));
                     }
+
+                    mStayViewModel.stayRegion.setValue(regionCategoryPair.first);
+
+                    if (needSetPreferenceArea == true)
+                    {
+                        setPreferenceArea(regionCategoryPair.first.getAreaGroupName(), regionCategoryPair.first.getAreaName());
+                    }
+
+                    return Observable.just(new Pair(true, regionCategoryPair.second));
                 }
             }
         }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Pair<Boolean, List<Category>>, ObservableSource<Boolean>>()
@@ -543,7 +538,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
         } else
         {
-            StayArea area = (StayArea)areaGroup.getAreaList().get(0);
+            StayArea area = areaGroup.getAreaList().get(0);
 
             return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
         }
@@ -580,7 +575,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                     {
-                        return new Pair(new StayRegion(stayAreaGroup, area), ((StayArea)area).getCategoryList());
+                        return new Pair(new StayRegion(stayAreaGroup, area), ((StayArea) area).getCategoryList());
                     }
                 }
             }
@@ -983,11 +978,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
                 } else
                 {
-                    for (Area area : areaGroup.getAreaList())
+                    for (StayArea area : areaGroup.getAreaList())
                     {
                         if (area.name.equalsIgnoreCase(namePair.second) == true)
                         {
-                            return new Pair(new StayRegion(areaGroup, area), ((StayArea)area).getCategoryList());
+                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
                         }
                     }
                 }
@@ -1221,7 +1216,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         if (area.index == areaIndex)
                         {
-                            return new Pair(new StayRegion(areaGroup, area), ((StayArea)area).getCategoryList());
+                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
                         }
                     }
                 } else
