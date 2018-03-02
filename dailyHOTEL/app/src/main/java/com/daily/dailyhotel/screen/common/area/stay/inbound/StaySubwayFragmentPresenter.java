@@ -15,8 +15,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Area;
-import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.twoheart.dailyhotel.R;
 
@@ -52,7 +50,6 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
     {
         Bundle bundle = getFragment().getArguments();
 
-
         return getViewInterface().getContentView(inflater, R.layout.fragment_stay_subway_list_data, container);
     }
 
@@ -71,6 +68,20 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         initViewModel(activity);
 
         setRefresh(false);
+
+        switch (mStayAreaViewModel.categoryType.getValue())
+        {
+            case STAY_HOTEL:
+            case STAY_BOUTIQUE:
+            case STAY_PENSION:
+            case STAY_RESORT:
+                getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mStayAreaViewModel.categoryType.getValue().getNameResId())));
+                break;
+
+            default:
+                getViewInterface().setLocationText(getString(R.string.label_region_around_stay));
+                break;
+        }
     }
 
     private void initViewModel(BaseActivity activity)
@@ -88,6 +99,15 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
             public void onChanged(@Nullable LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaListLinkedHashMap)
             {
 
+            }
+        });
+
+        mStayAreaViewModel.isAgreeTermsOfLocation.observe(activity, new Observer<Boolean>()
+        {
+            @Override
+            public void onChanged(@Nullable Boolean isAgree)
+            {
+                getViewInterface().setLocationTermVisible(isAgree);
             }
         });
     }

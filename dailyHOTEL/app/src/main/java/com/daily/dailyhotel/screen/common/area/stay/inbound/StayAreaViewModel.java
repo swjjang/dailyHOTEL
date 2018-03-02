@@ -11,6 +11,7 @@ import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ public class StayAreaViewModel extends ViewModel
     MutableLiveData<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> subwayMap = new MutableLiveData<>();
     MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
     MutableLiveData<StayRegion> mPreviousArea = new MutableLiveData<>();
+    MutableLiveData<Boolean> isAgreeTermsOfLocation = new MutableLiveData<>();
+    MutableLiveData<DailyCategoryType> categoryType = new MutableLiveData<>();
 
     static class StayAreaViewModelFactory implements ViewModelProvider.Factory
     {

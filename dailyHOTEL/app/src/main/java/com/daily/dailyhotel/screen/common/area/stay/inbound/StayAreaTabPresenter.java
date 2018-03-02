@@ -29,12 +29,15 @@ import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -59,7 +62,6 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
     StayAreaViewModel mStayAreaViewModel;
     String mCategoryCode;
-    DailyCategoryType mDailyCategoryType;
     StayRegion mSavedStayRegion; // 기존에 저장된 정보
 
     DailyLocationExFactory mDailyLocationExFactory;
@@ -120,11 +122,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             String checkInDateTime = intent.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
             String checkOutDateTime = intent.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
-            StayBookDateTime stayBookDateTime = new StayBookDateTime();
-            stayBookDateTime.setCheckInDateTime(checkInDateTime);
-            stayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-
-            mStayAreaViewModel.bookDateTime.setValue(stayBookDateTime);
+            mStayAreaViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -133,10 +131,13 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         }
 
         // 카테고리로 넘어오는 경우
-        mDailyCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+        DailyCategoryType categoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+        mStayAreaViewModel.categoryType.setValue(categoryType == null ? DailyCategoryType.STAY_ALL : categoryType);
 
         // 이름으로 넘어오는 경우
         mCategoryCode = intent.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_CATEGORY_CODE);
+
+        mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation() == false);
 
         return true;
     }
@@ -150,7 +151,19 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setToolbarTitle(getString(mDailyCategoryType.getNameResId()));
+        switch (mStayAreaViewModel.categoryType.getValue())
+        {
+            case STAY_HOTEL:
+            case STAY_BOUTIQUE:
+            case STAY_PENSION:
+            case STAY_RESORT:
+                getViewInterface().setToolbarTitle(getString(R.string.label_select_area_daily_category_format, getString(mStayAreaViewModel.categoryType.getValue().getNameResId())));
+                break;
+
+            default:
+                getViewInterface().setToolbarTitle(getString(R.string.label_selectarea_stay_area));
+                break;
+        }
     }
 
     @Override
@@ -161,6 +174,14 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        if (mStayAreaViewModel.categoryType.getValue() == DailyCategoryType.STAY_ALL)
+        {
+            mAnalytics.onScreen(getActivity(), mCategoryCode);
+        } else
+        {
+            mAnalytics.onScreen(getActivity(), getString(mStayAreaViewModel.categoryType.getValue().getCodeResId()));
         }
     }
 
@@ -191,6 +212,8 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     @Override
     public boolean onBackPressed()
     {
+        mAnalytics.onEventClosedClick(getActivity(), getString(mStayAreaViewModel.categoryType.getValue().getCodeResId()));
+
         return super.onBackPressed();
     }
 
@@ -210,6 +233,27 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case StayAreaTabActivity.REQUEST_CODE_PERMISSION_MANAGER:
+                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(false);
+
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onAroundSearchClick();
+                }
+                break;
+
+            case StayAreaTabActivity.REQUEST_CODE_SEARCH:
+                break;
+
+            case StayAreaTabActivity.REQUEST_CODE_SETTING_LOCATION:
+                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(false);
+
+                onAroundSearchClick();
+                break;
+        }
     }
 
     @Override
@@ -228,7 +272,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             @Override
             public ObservableSource<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> apply(Boolean result) throws Exception
             {
-                return mStayRemoteImpl.getRegionList(mDailyCategoryType);
+                return mStayRemoteImpl.getRegionList(mStayAreaViewModel.categoryType.getValue());
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>>()
         {
@@ -240,7 +284,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
                 getViewInterface().setTabVisible(pair.first != null && pair.first.size() > 0 && pair.second != null && pair.second.size() > 0);
 
-                mStayAreaViewModel.mPreviousArea.setValue(searchRegion(mDailyCategoryType, pair.first, pair.second));
+                mStayAreaViewModel.mPreviousArea.setValue(getRegionByPreferenceRegion(mStayAreaViewModel.categoryType.getValue(), pair.first, pair.second));
 
                 unLockAll();
             }
@@ -254,7 +298,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         }));
     }
 
-    private StayRegion searchRegion(DailyCategoryType categoryType, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
+    private StayRegion getRegionByPreferenceRegion(DailyCategoryType categoryType, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
     {
         StayRegion stayRegion = null;
         PreferenceRegion preferenceRegion = getPreferenceRegion(categoryType);
@@ -280,8 +324,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         if (stayRegion == null)
         {
-            StayAreaGroup stayAreaGroup = areaGroupList.get(0);
-            stayRegion = new StayRegion(stayAreaGroup, stayAreaGroup);
+            stayRegion = getDefaultRegion(areaGroupList);
         }
 
         return stayRegion;
@@ -294,12 +337,12 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
      * @param dailyCategoryType
      * @return
      */
-    PreferenceRegion getPreferenceRegion(DailyCategoryType dailyCategoryType)
+    private PreferenceRegion getPreferenceRegion(DailyCategoryType dailyCategoryType)
     {
         return DailyPreference.getInstance(getActivity()).getDailyRegion(dailyCategoryType);
     }
 
-    StayRegion getRegionByPreferenceRegion(List<StayAreaGroup> areaGroupList, PreferenceRegion preferenceRegion)
+    private StayRegion getRegionByPreferenceRegion(List<StayAreaGroup> areaGroupList, PreferenceRegion preferenceRegion)
     {
         if (areaGroupList == null || areaGroupList.size() == 0 || preferenceRegion == null)
         {
@@ -339,7 +382,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         return null;
     }
 
-    StayRegion getRegionByPreferenceRegion(LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayAreaMap, PreferenceRegion preferenceRegion)
+    private StayRegion getRegionByPreferenceRegion(LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayAreaMap, PreferenceRegion preferenceRegion)
     {
         if (subwayAreaMap == null || subwayAreaMap.size() == 0 || preferenceRegion == null)
         {
@@ -373,7 +416,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         return null;
     }
 
-    StayRegion getDefaultRegion(@NonNull List<StayAreaGroup> areaGroupList)
+    private StayRegion getDefaultRegion(@NonNull List<StayAreaGroup> areaGroupList)
     {
         StayAreaGroup areaGroup = areaGroupList.get(0);
 
@@ -538,6 +581,22 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     }
 
     @Override
+    public void onSearchClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = SearchActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+            , mStayAreaViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayAreaViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+        startActivityForResult(intent, StayAreaTabActivity.REQUEST_CODE_SEARCH);
+
+        mAnalytics.onEventSearchClick(getActivity(), mStayAreaViewModel.categoryType.getValue());
+    }
+
+    @Override
     public void onAreaTabClick()
     {
         if (lock() == true)
@@ -584,7 +643,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 {
                     unLockAll();
 
-                    setResult(BaseActivity.RESULT_CODE_START_AROUND_SEARCH, mDailyCategoryType, null, null);
+                    setResult(BaseActivity.RESULT_CODE_START_AROUND_SEARCH, mStayAreaViewModel.categoryType.getValue(), null, null);
                     finish();
                 }
             }, new Consumer<Throwable>()
@@ -600,7 +659,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             unLockAll();
         }
 
-        mAnalytics.onEventAroundSearchClick(getActivity(), mDailyCategoryType);
+        mAnalytics.onEventAroundSearchClick(getActivity(), mStayAreaViewModel.categoryType.getValue());
     }
 
     @Override
@@ -618,7 +677,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
         if (equalsAreaGroupName(mStayAreaViewModel.mPreviousArea.getValue(), areaGroupName) == true)
         {
-            setResult(Activity.RESULT_OK, mDailyCategoryType, areaGroup, area);
+            setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType.getValue(), areaGroup, area);
             finish();
         } else
         {
@@ -640,9 +699,9 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 @Override
                 public void onClick(View v)
                 {
-                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayAreaViewModel.bookDateTime.getValue());
+                    mAnalytics.onEventChangedAreaGroupClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayAreaViewModel.bookDateTime.getValue());
 
-                    setResult(Activity.RESULT_OK, mDailyCategoryType, areaGroup, area);
+                    setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType.getValue(), areaGroup, area);
                     finish();
                 }
             }, new View.OnClickListener()
@@ -650,11 +709,11 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 @Override
                 public void onClick(View v)
                 {
-                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayAreaViewModel.bookDateTime.getValue());
+                    mAnalytics.onEventChangedAreaGroupClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayAreaViewModel.bookDateTime.getValue());
                     mAnalytics.onEventChangedDateClick(getActivity());
 
                     // 날짜 선택 화면으로 이동한다.
-                    setResult(BaseActivity.RESULT_CODE_START_CALENDAR, mDailyCategoryType, areaGroup, area);
+                    setResult(BaseActivity.RESULT_CODE_START_CALENDAR, mStayAreaViewModel.categoryType.getValue(), areaGroup, area);
                     finish();
                 }
             }, new DialogInterface.OnCancelListener()
@@ -674,7 +733,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             }, true);
         }
 
-        mAnalytics.onEventTownClick(getActivity(), areaGroupName, areaName);
+        mAnalytics.onEventAreaClick(getActivity(), areaGroupName, areaName);
     }
 
     @Override

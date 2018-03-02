@@ -16,6 +16,7 @@ import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayAreaListDataBinding;
 
@@ -68,6 +69,7 @@ public class StayAreaTabView extends BaseDialogView<StayAreaTabInterface.OnEvent
 
         viewDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x);
         viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SEARCH, null, v -> getEventListener().onSearchClick());
     }
 
     private void initTabLayout(ActivityStayAreaListDataBinding viewDataBinding)

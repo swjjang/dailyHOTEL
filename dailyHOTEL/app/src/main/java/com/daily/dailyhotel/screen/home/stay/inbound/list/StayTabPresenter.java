@@ -976,37 +976,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         getViewInterface().setToolbarRegionText(mStayViewModel.stayRegion.getValue().getAreaName());
     }
 
-    Pair<StayRegion, List<Category>> searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
-    {
-        if (areaGroupList == null || namePair == null)
-        {
-            return null;
-        }
-
-        for (StayAreaGroup areaGroup : areaGroupList)
-        {
-            if (areaGroup.name.equalsIgnoreCase(namePair.first) == true)
-            {
-                if (areaGroup.getAreaCount() == 0)
-                {
-                    return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
-                } else
-                {
-                    for (StayArea area : areaGroup.getAreaList())
-                    {
-                        if (area.name.equalsIgnoreCase(namePair.second) == true)
-                        {
-                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
-                        }
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-
     private void onCalendarActivityResult(int resultCode, Intent data)
     {
         switch (resultCode)

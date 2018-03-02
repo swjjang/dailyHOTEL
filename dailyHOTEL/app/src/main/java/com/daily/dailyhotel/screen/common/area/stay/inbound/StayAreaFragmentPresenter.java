@@ -16,7 +16,6 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
-import com.daily.dailyhotel.entity.StayRegion;
 import com.twoheart.dailyhotel.R;
 
 import java.util.List;
@@ -69,6 +68,20 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
         initViewModel(activity);
 
         setRefresh(false);
+
+        switch (mStayAreaViewModel.categoryType.getValue())
+        {
+            case STAY_HOTEL:
+            case STAY_BOUTIQUE:
+            case STAY_PENSION:
+            case STAY_RESORT:
+                getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mStayAreaViewModel.categoryType.getValue().getNameResId())));
+                break;
+
+            default:
+                getViewInterface().setLocationText(getString(R.string.label_region_around_stay));
+                break;
+        }
     }
 
     private void initViewModel(BaseActivity activity)
@@ -89,12 +102,12 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             }
         });
 
-        mStayAreaViewModel.mPreviousArea.observe(activity, new Observer<StayRegion>()
+        mStayAreaViewModel.isAgreeTermsOfLocation.observe(activity, new Observer<Boolean>()
         {
             @Override
-            public void onChanged(@Nullable StayRegion stayRegion)
+            public void onChanged(@Nullable Boolean isAgree)
             {
-
+                getViewInterface().setLocationTermVisible(isAgree);
             }
         });
     }

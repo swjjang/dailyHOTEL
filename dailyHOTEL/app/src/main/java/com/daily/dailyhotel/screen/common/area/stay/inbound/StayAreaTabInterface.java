@@ -29,6 +29,8 @@ public interface StayAreaTabInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
+        void onSearchClick();
+
         void onAreaTabClick();
 
         void onSubwayTabClick();
@@ -46,12 +48,12 @@ public interface StayAreaTabInterface
 
         void onEventSearchClick(Activity activity, DailyCategoryType dailyCategoryType);
 
-        void onEventChangedDistrictClick(Activity activity, String previousDistrictName, String previousTownName//
+        void onEventChangedAreaGroupClick(Activity activity, String previousDistrictName, String previousTownName//
             , String changedDistrictName, String changedTownName, StayBookDateTime stayBookDateTime);
 
         void onEventChangedDateClick(Activity activity);
 
-        void onEventTownClick(Activity activity, String districtName, String townName);
+        void onEventAreaClick(Activity activity, String districtName, String townName);
 
         void onEventClosedClick(Activity activity, String stayCategory);
 
