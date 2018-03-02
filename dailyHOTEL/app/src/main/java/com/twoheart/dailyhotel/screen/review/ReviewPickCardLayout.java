@@ -124,6 +124,12 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
             if (DailyTextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
             {
+                if (DailyTextUtils.isTextEmpty(reviewPickQuestion.selectedAnswerCode) == false //
+                    && reviewPickQuestion.selectedAnswerCode.equalsIgnoreCase(reviewAnswerValue.code))
+                {
+                    setTempReviewValue(pickItemView);
+                }
+
                 pickItemView.setOnClickListener(this);
             }
 
@@ -213,5 +219,35 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
     public Object getReviewValue()
     {
         return mReviewPosition;
+    }
+
+    private void setTempReviewValue(View view)
+    {
+        if (mSelectedView != null && view != null && mSelectedView == view)
+        {
+            return;
+        }
+
+        if (mSelectedView != null)
+        {
+            DailyTextView gridItemTitleTextView = mSelectedView.findViewById(R.id.titleTextView);
+
+            gridItemTitleTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+
+            mSelectedView.setSelected(false);
+        }
+
+        setEnabled(true);
+        view.setSelected(true);
+        mSelectedView = view;
+
+        DailyTextView titleTextView = findViewById(R.id.titleTextView);
+        titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_circular_check, 0);
+
+        DailyTextView gridItemTitleTextView = view.findViewById(R.id.titleTextView);
+
+        gridItemTitleTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+
+        mReviewPosition = view.getId() - mGridLayout.getId();
     }
 }

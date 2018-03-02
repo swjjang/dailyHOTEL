@@ -130,8 +130,6 @@ public class ReviewActivity extends BaseActivity
 
         if (PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(mReviewStatusType))
         {
-            ////////////////////////////////////////////////////////////////////////////////////////////
-            // TODO : 저장된 리뷰 있는지 확인 하고 가져와서 적용하는 부분
             ReviewItem reviewItem = mReview.getReviewItem();
 
             addCompositeDisposable(mTempReviewLocalImpl.getTempReview(mReview.reserveIdx //
@@ -146,60 +144,11 @@ public class ReviewActivity extends BaseActivity
                             return true;
                         }
 
-                        JSONArray scoreJSONArray = new JSONArray(list.get(0));
-                        JSONArray pickJSONArray = new JSONArray(list.get(1));
+                        JSONArray scoreJsonArray = new JSONArray(list.get(0));
+                        JSONArray pickJsonArray = new JSONArray(list.get(1));
                         String comment = list.get(2);
 
-
-                        Map<String, Integer> scoreMap = new HashMap<>();
-                        Map<String, String> pickMap = new HashMap<>();
-
-                        int scoreSize = scoreJSONArray.length();
-                        for (int i = 0; i < scoreSize; i++)
-                        {
-                            JSONObject jsonObject = scoreJSONArray.getJSONObject(i);
-                            scoreMap.put(jsonObject.getString("type"), jsonObject.getInt("score"));
-                        }
-
-                        int pickSize = pickJSONArray.length();
-                        for (int i = 0; i < pickSize; i++)
-                        {
-                            JSONObject jsonObject = pickJSONArray.getJSONObject(i);
-                            pickMap.put(jsonObject.getString("type"), jsonObject.getString("value"));
-                        }
-
-                        ArrayList<ReviewPickQuestion> pickQuestionList = mReview.getReviewPickQuestionList();
-                        for (ReviewPickQuestion pickQuestion : pickQuestionList)
-                        {
-                            if (pickMap.containsKey(pickQuestion.answerCode)) {
-                                String value = pickMap.get(pickQuestion.answerCode);
-
-                                ArrayList<ReviewAnswerValue> answerValueList = pickQuestion.getAnswerValueList();
-                                for (ReviewAnswerValue reviewAnswerValue : answerValueList)
-                                {
-                                    if (value.equalsIgnoreCase(reviewAnswerValue.code)) {
-                                        pickQuestion.selectedAnswerCode = value;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        mReview.setReviewPickQuestionList(pickQuestionList);
-
-                        ArrayList<ReviewScoreQuestion> scoreQuestionList = mReview.getReviewScoreQuestionList();
-                        for (ReviewScoreQuestion scoreQuestion : scoreQuestionList)
-                        {
-                            if (scoreMap.containsKey(scoreQuestion.answerCode))
-                            {
-                                int score = scoreMap.get(scoreQuestion.answerCode);
-                                scoreQuestion.selectedScore = score;
-                            }
-                        }
-
-                        mReview.setReviewScoreQuestionList(scoreQuestionList);
-
-                        mReview.selectedComment = comment;
+                       setTempReview(scoreJsonArray, pickJsonArray, comment);
 
                         return true;
                     }
@@ -220,8 +169,6 @@ public class ReviewActivity extends BaseActivity
                         mReviewLayout.showReviewDetailAnimation();
                     }
                 }));
-
-            ////////////////////////////////////////////////////////////////////////////////////////////
         } else
         {
             showReviewDialog();
@@ -539,7 +486,7 @@ public class ReviewActivity extends BaseActivity
         {
             for (ReviewScoreQuestion reviewScoreQuestion : reviewScoreQuestionList)
             {
-                View view = mReviewLayout.getReviewScoreView(this, position++, reviewScoreQuestion);
+                View view = mReviewLayout.getReviewScoreView(position++, reviewScoreQuestion);
 
                 mReviewLayout.addScrollLayout(view);
             }
@@ -551,7 +498,7 @@ public class ReviewActivity extends BaseActivity
         {
             for (ReviewPickQuestion reviewPickQuestion : reviewPickQuestionList)
             {
-                View view = mReviewLayout.getReviewPickView(this, position++, reviewPickQuestion);
+                View view = mReviewLayout.getReviewPickView(position++, reviewPickQuestion);
 
                 mReviewLayout.addScrollLayout(view);
             }
@@ -559,7 +506,7 @@ public class ReviewActivity extends BaseActivity
 
         if (mReview.requiredCommentReview == true)
         {
-            View view = mReviewLayout.getReviewCommentView(this, position++, reviewItem.serviceType);
+            View view = mReviewLayout.getReviewCommentView(position++, reviewItem.serviceType, mReview.selectedComment);
             mReviewLayout.addScrollLayout(view);
         }
 
@@ -994,6 +941,59 @@ public class ReviewActivity extends BaseActivity
         {
             ExLog.d(e.toString());
         }
+    }
+
+    private void setTempReview(JSONArray scoreJsonArray, JSONArray pickJsonArray, String comment) throws JSONException
+    {
+        Map<String, Integer> scoreMap = new HashMap<>();
+        Map<String, String> pickMap = new HashMap<>();
+
+        int scoreSize = scoreJsonArray == null ? 0 : scoreJsonArray.length();
+        for (int i = 0; i < scoreSize; i++)
+        {
+            JSONObject jsonObject = scoreJsonArray.getJSONObject(i);
+            scoreMap.put(jsonObject.getString("type"), jsonObject.getInt("score"));
+        }
+
+        int pickSize = pickJsonArray == null ? 0 : pickJsonArray.length();
+        for (int i = 0; i < pickSize; i++)
+        {
+            JSONObject jsonObject = pickJsonArray.getJSONObject(i);
+            pickMap.put(jsonObject.getString("type"), jsonObject.getString("value"));
+        }
+
+        ArrayList<ReviewPickQuestion> pickQuestionList = mReview.getReviewPickQuestionList();
+        for (ReviewPickQuestion pickQuestion : pickQuestionList)
+        {
+            if (pickMap.containsKey(pickQuestion.answerCode)) {
+                String value = pickMap.get(pickQuestion.answerCode);
+
+                ArrayList<ReviewAnswerValue> answerValueList = pickQuestion.getAnswerValueList();
+                for (ReviewAnswerValue reviewAnswerValue : answerValueList)
+                {
+                    if (value.equalsIgnoreCase(reviewAnswerValue.code)) {
+                        pickQuestion.selectedAnswerCode = value;
+                        break;
+                    }
+                }
+            }
+        }
+
+        mReview.setReviewPickQuestionList(pickQuestionList);
+
+        ArrayList<ReviewScoreQuestion> scoreQuestionList = mReview.getReviewScoreQuestionList();
+        for (ReviewScoreQuestion scoreQuestion : scoreQuestionList)
+        {
+            if (scoreMap.containsKey(scoreQuestion.answerCode))
+            {
+                int score = scoreMap.get(scoreQuestion.answerCode);
+                scoreQuestion.selectedScore = score;
+            }
+        }
+
+        mReview.setReviewScoreQuestionList(scoreQuestionList);
+
+        mReview.selectedComment = comment;
     }
 
     private void saveTempReview()

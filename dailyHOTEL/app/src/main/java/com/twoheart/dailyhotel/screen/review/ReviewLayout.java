@@ -296,7 +296,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Da
         }
     }
 
-    public View getReviewScoreView(Context context, int position, ReviewScoreQuestion reviewScoreQuestion)
+    public View getReviewScoreView(int position, ReviewScoreQuestion reviewScoreQuestion)
     {
         ReviewScoreCardLayout reviewScoreCardLayout = new ReviewScoreCardLayout(mContext, position, reviewScoreQuestion);
         reviewScoreCardLayout.setOnScoreClickListener(new com.twoheart.dailyhotel.screen.review.ReviewScoreCardLayout.OnScoreClickListener()
@@ -310,7 +310,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Da
         return reviewScoreCardLayout;
     }
 
-    public View getReviewPickView(Context context, int position, ReviewPickQuestion reviewPickQuestion)
+    public View getReviewPickView(int position, ReviewPickQuestion reviewPickQuestion)
     {
         ReviewPickCardLayout reviewPickCardLayout = new ReviewPickCardLayout(mContext, position, reviewPickQuestion);
         reviewPickCardLayout.setOnPickClickListener(new ReviewPickCardLayout.OnPickClickListener()
@@ -325,7 +325,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Da
         return reviewPickCardLayout;
     }
 
-    public View getReviewCommentView(Context context, int position, Constants.ServiceType serviceType)
+    public View getReviewCommentView(int position, Constants.ServiceType serviceType, String comment)
     {
         ReviewCommentCardLayout reviewCommentCardLayout = new ReviewCommentCardLayout(mContext, position, serviceType);
         reviewCommentCardLayout.setOnCommentClickListener(new ReviewCommentCardLayout.OnCommentClickListener()
@@ -337,6 +337,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Da
             }
         });
 
+        reviewCommentCardLayout.setReviewCommentView(comment);
         return reviewCommentCardLayout;
     }
 
