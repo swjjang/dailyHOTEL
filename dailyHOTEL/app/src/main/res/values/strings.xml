@@ -1433,6 +1433,7 @@
 
     <!-- Gourmet Product List -->
     <string name="label_gourmet_detail_view_more">%1$d개 상품 모두 보기</string>
+    <string name="label_gourmet_detail_view_product_detail">메뉴 상세보기</string>
 
     <!-- Gourmet Product Detail -->
     <string name="label_gourmet_product_detail_reservation">예약하기</string>
