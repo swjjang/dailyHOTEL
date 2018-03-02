@@ -460,7 +460,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         }
 
         final int DAYS_OF_MAX_COUNT = 60;
-        final int NIGHTS_OF_MAX_COUNT = 60;
+        final int NIGHTS_OF_MAX_COUNT = 59;
 
         try
         {

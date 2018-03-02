@@ -422,7 +422,7 @@ public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOut
 
                     unLock();
 
-                    onDayClick(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT), calendar.get(Calendar.YEAR) * 10000 + calendar.get(Calendar.MONTH) * 100 + calendar.get(Calendar.DAY_OF_MONTH));
+                    onDayClick(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT), calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH));
                 } else
                 {
                     getViewInterface().notifyCalendarDataSetChanged();

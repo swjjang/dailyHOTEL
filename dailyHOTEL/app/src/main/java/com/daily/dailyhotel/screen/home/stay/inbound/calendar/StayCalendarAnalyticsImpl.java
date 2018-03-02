@@ -13,6 +13,15 @@ import java.util.Map;
 
 public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCalendarPresenterAnalyticsInterface
 {
+    private String mEnterCheckInDateTime, mEnterCheckOutDateTime;
+
+    @Override
+    public void setCheckInOutDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        mEnterCheckInDateTime = checkInDateTime;
+        mEnterCheckOutDateTime = checkOutDateTime;
+    }
+
     @Override
     public void onScreen(Activity activity)
     {
@@ -37,7 +46,7 @@ public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCale
     }
 
     @Override
-    public void onConfirmClick(Activity activity, String callByScreen, boolean changedDate, String checkInDateTime, String checkOutDateTime)
+    public void onConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime)
     {
         if (activity == null || DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
@@ -46,6 +55,8 @@ public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCale
 
         try
         {
+            boolean changedDate = checkInDateTime.equalsIgnoreCase(mEnterCheckInDateTime) && checkOutDateTime.equalsIgnoreCase(mEnterCheckOutDateTime);
+
             String checkInDate = DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
             String checkOutDate = DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
             int nights = DailyCalendar.compareDateDay(checkInDateTime, checkOutDateTime);
