@@ -1738,7 +1738,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         if (gourmetMenu.persons > 0)
         {
             viewDataBinding.personsTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.personsTextView.setText(getString(R.string.label_persons, gourmetMenu.persons));
+            viewDataBinding.personsTextView.setText("/" + getString(R.string.label_persons, gourmetMenu.persons));
         } else
         {
             viewDataBinding.personsTextView.setVisibility(View.GONE);
