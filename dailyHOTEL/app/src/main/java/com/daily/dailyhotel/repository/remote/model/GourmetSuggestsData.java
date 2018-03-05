@@ -1,8 +1,13 @@
 package com.daily.dailyhotel.repository.remote.model;
 
+import android.content.Context;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.twoheart.dailyhotel.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,30 +16,11 @@ import java.util.List;
 @JsonObject
 public class GourmetSuggestsData
 {
-//    @JsonField(name = "station")
-//    public List<StationData> stationList;
-
     @JsonField(name = "gourmet")
     public List<GourmetData> gourmetList;
 
     @JsonField(name = "region")
-    public List<RegionData> regionList;
-
-//    @JsonObject
-//    static class StationData
-//    {
-//        @JsonField(name = "idx")
-//        public int index;
-//
-//        @JsonField(name = "region")
-//        public String region;
-//
-//        @JsonField(name = "line")
-//        public String line;
-//
-//        @JsonField(name = "name")
-//        public String name;
-//    }
+    public List<ProvinceData> provinceList;
 
     @JsonObject
     static class GourmetData
@@ -57,18 +43,22 @@ public class GourmetSuggestsData
         @JsonField(name = "minimumOrderQuantity")
         public int minimumOrderQuantity;
 
-        @JsonField(name = "region")
-        public RegionData region;
-    }
-
-    @JsonObject
-    static class RegionData
-    {
         @JsonField(name = "province")
-        public List<ProvinceData> provinceList;
+        public ProvinceData provinceData;
 
-        @JsonField(name = "area")
-        public List<AreaData> areaList;
+        public GourmetSuggestV2.Gourmet getGourmet()
+        {
+            GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
+            gourmet.index = index;
+            gourmet.name = name;
+            gourmet.discount = discount;
+            gourmet.availableTickets = availableTickets;
+            gourmet.isExpired = isExpired;
+            gourmet.minimumOrderQuantity = minimumOrderQuantity;
+            gourmet.province = provinceData == null ? null : provinceData.getProvince();
+
+            return gourmet;
+        }
     }
 
     @JsonObject
@@ -78,7 +68,20 @@ public class GourmetSuggestsData
         public int index;
 
         @JsonField(name = "name")
-        public int name;
+        public String name;
+
+        @JsonField(name = "area")
+        public AreaData area;
+
+        public GourmetSuggestV2.Province getProvince()
+        {
+            GourmetSuggestV2.Province province = new GourmetSuggestV2.Province();
+            province.index = index;
+            province.name = name;
+            province.area = area == null ? null : area.getArea();
+
+            return province;
+        }
     }
 
     @JsonObject
@@ -88,9 +91,51 @@ public class GourmetSuggestsData
         public int index;
 
         @JsonField(name = "name")
-        public int name;
+        public String name;
 
-        @JsonField(name = "province")
-        public ProvinceData province;
+        public GourmetSuggestV2.Area getArea()
+        {
+            GourmetSuggestV2.Area area = new GourmetSuggestV2.Area();
+            area.index = index;
+            area.name = name;
+
+            return area;
+        }
+    }
+
+    public List<GourmetSuggestV2> getSuggestList(Context context)
+    {
+        List<GourmetSuggestV2> list = new ArrayList<>();
+
+        if (context == null)
+        {
+            return list;
+        }
+
+        if (gourmetList != null && gourmetList.size() > 0)
+        {
+            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, new GourmetSuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_gourmet))));
+
+            for (GourmetData gourmetData : gourmetList)
+            {
+                GourmetSuggestV2.Gourmet gourmet = gourmetData.getGourmet();
+
+                list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, gourmet));
+            }
+        }
+
+        if (provinceList != null && provinceList.size() > 0)
+        {
+            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, new GourmetSuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_region))));
+
+            for (ProvinceData provinceData : provinceList)
+            {
+                GourmetSuggestV2.Province province = provinceData.getProvince();
+
+                list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, province));
+            }
+        }
+
+        return list;
     }
 }

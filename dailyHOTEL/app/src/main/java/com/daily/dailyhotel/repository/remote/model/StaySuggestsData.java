@@ -1,8 +1,13 @@
 package com.daily.dailyhotel.repository.remote.model;
 
+import android.content.Context;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.twoheart.dailyhotel.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +23,7 @@ public class StaySuggestsData
     public List<StayData> stayList;
 
     @JsonField(name = "region")
-    public List<RegionData> regionList;
+    public List<ProvinceData> provinceList;
 
     @JsonObject
     static class StationData
@@ -34,6 +39,17 @@ public class StaySuggestsData
 
         @JsonField(name = "name")
         public String name;
+
+        public StaySuggestV2.Station getStation()
+        {
+            StaySuggestV2.Station station = new StaySuggestV2.Station();
+            station.index = index;
+            station.region = region;
+            station.line = line;
+            station.name = name;
+
+            return station;
+        }
     }
 
     @JsonObject
@@ -51,18 +67,20 @@ public class StaySuggestsData
         @JsonField(name = "availableRooms")
         public int availableRooms;
 
-        @JsonField(name = "region")
-        public RegionData region;
-    }
-
-    @JsonObject
-    static class RegionData
-    {
         @JsonField(name = "province")
-        public List<ProvinceData> provinceList;
+        public ProvinceData province;
 
-        @JsonField(name = "area")
-        public List<AreaData> areaList;
+        public StaySuggestV2.Stay getStay()
+        {
+            StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
+            stay.index = index;
+            stay.name = name;
+            stay.discountAvg = discountAvg;
+            stay.availableRooms = availableRooms;
+            stay.province = province == null ? null : province.getProvince();
+
+            return stay;
+        }
     }
 
     @JsonObject
@@ -72,7 +90,20 @@ public class StaySuggestsData
         public int index;
 
         @JsonField(name = "name")
-        public int name;
+        public String name;
+
+        @JsonField(name = "area")
+        public AreaData area;
+
+        public StaySuggestV2.Province getProvince()
+        {
+            StaySuggestV2.Province province = new StaySuggestV2.Province();
+            province.index = index;
+            province.name = name;
+            province.area = area == null ? null : area.getArea();
+
+            return province;
+        }
     }
 
     @JsonObject
@@ -82,9 +113,64 @@ public class StaySuggestsData
         public int index;
 
         @JsonField(name = "name")
-        public int name;
+        public String name;
 
-        @JsonField(name = "province")
-        public ProvinceData province;
+        public StaySuggestV2.Area getArea()
+        {
+            StaySuggestV2.Area area = new StaySuggestV2.Area();
+            area.index = index;
+            area.name = name;
+
+            return area;
+        }
     }
+
+    public List<StaySuggestV2> getSuggestList(Context context)
+    {
+        List<StaySuggestV2> list = new ArrayList<>();
+
+        if (context == null)
+        {
+            return list;
+        }
+
+        if (stayList != null && stayList.size() > 0)
+        {
+            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_stay))));
+
+            for (StayData stayData : stayList)
+            {
+                StaySuggestV2.Stay stay = stayData.getStay();
+
+                list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, stay));
+            }
+        }
+
+        if (provinceList != null && provinceList.size() > 0)
+        {
+            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_region))));
+
+            for (ProvinceData provinceData : provinceList)
+            {
+                StaySuggestV2.Province province = provinceData.getProvince();
+
+                list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, province));
+            }
+        }
+
+        if (stationList != null && stationList.size() > 0)
+        {
+            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_station))));
+
+            for (StationData stationData : stationList)
+            {
+                StaySuggestV2.Station station = stationData.getStation();
+
+                list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, station));
+            }
+        }
+
+        return list;
+    }
+
 }

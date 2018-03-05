@@ -1131,6 +1131,7 @@
     <string name="label_search_suggest_type_stay">스테이</string>
     <string name="label_search_suggest_type_gourmet">레스토랑</string>
     <string name="label_search_suggest_type_region">도시/지역</string>
+    <string name="label_search_suggest_type_station">역</string>
     <string name="label_search_suggest_recently_search">최근검색어</string>
     <string name="label_search_suggest_direct_search_format">\‘%1$s\’ 검색하기</string>
     <string name="label_search_suggest_delete_all">기록 전체 삭제</string>
