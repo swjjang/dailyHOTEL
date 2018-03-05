@@ -541,110 +541,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
 
             case StayOutboundListActivity.REQUEST_CODE_PEOPLE:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
-                    {
-                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-
-                        setPeople(numberOfAdults, childAgeList);
-                        notifyToolbarChanged();
-
-                        if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
-                        {
-                            Observable observable = searchMyLocation(null);
-
-                            if (observable != null)
-                            {
-                                screenLock(true);
-
-                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-
-                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        onRefreshAll(false);
-                                    }
-                                }, new Consumer<Throwable>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                                    }
-                                }));
-                            }
-                        } else
-                        {
-                            onRefreshAll(true);
-                        }
-                    }
-                }
+                onPeopleActivityResult(resultCode, data);
                 break;
-            }
 
             case StayOutboundListActivity.REQUEST_CODE_FILTER:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT) == true//
-                        && data.hasExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING) == true)
-                    {
-                        StayOutboundFilters.SortType sortType = StayOutboundFilters.SortType.valueOf(data.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT));
-                        int rating = data.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
-
-                        setFilter(sortType, rating);
-                        notifyFilterChanged();
-
-                        if (sortType != null && sortType == StayOutboundFilters.SortType.DISTANCE)
-                        {
-                            Observable observable = searchMyLocation(null);
-
-                            if (observable != null)
-                            {
-                                screenLock(true);
-
-                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-
-                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
-                                        notifyFilterChanged();
-
-                                        onRefreshAll(false);
-                                    }
-                                }, new Consumer<Throwable>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                                    }
-                                }));
-                            }
-                        } else
-                        {
-                            onRefreshAll(true);
-                        }
-                    }
-                }
+                onFilterActivityResult(resultCode, data);
                 break;
-            }
 
             case StayOutboundListActivity.REQUEST_CODE_PERMISSION_MANAGER:
             {
@@ -796,40 +698,98 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                     if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
                     {
-                        Observable observable = searchMyLocation(null);
-
-                        if (observable != null)
-                        {
-                            screenLock(true);
-
-                            setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-
-                            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
-                            {
-                                @Override
-                                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                                {
-                                    unLockAll();
-
-                                    onRefreshAll(false);
-                                }
-                            }, new Consumer<Throwable>()
-                            {
-                                @Override
-                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                                {
-                                    unLockAll();
-
-                                    setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                                }
-                            }));
-                        }
+                        refreshAllSortTypeDistance();
                     } else
                     {
                         onRefreshAll(true);
                     }
                 }
                 break;
+        }
+    }
+
+    private void onPeopleActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    int numberOfAdults = intent.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                    ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                    setPeople(numberOfAdults, childAgeList);
+                    notifyToolbarChanged();
+
+                    if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+                    {
+                        refreshAllSortTypeDistance();
+                    } else
+                    {
+                        onRefreshAll(true);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void onFilterActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    StayOutboundFilters.SortType sortType = StayOutboundFilters.SortType.valueOf(intent.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT));
+                    int rating = intent.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
+
+                    setFilter(sortType, rating);
+                    notifyFilterChanged();
+
+                    if (sortType != null && sortType == StayOutboundFilters.SortType.DISTANCE)
+                    {
+                        refreshAllSortTypeDistance();
+                    } else
+                    {
+                        onRefreshAll(true);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void refreshAllSortTypeDistance()
+    {
+        Observable observable = searchMyLocation(null);
+
+        if (observable != null)
+        {
+            screenLock(true);
+
+            setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
+
+            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                {
+                    unLockAll();
+
+                    setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
+                    notifyFilterChanged();
+
+                    onRefreshAll(false);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
+                }
+            }));
         }
     }
 

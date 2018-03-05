@@ -514,20 +514,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_PEOPLE:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
-                    {
-                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-
-                        setPeople(numberOfAdults, childAgeList);
-                        setRefresh(true);
-                    }
-                }
+                onPeopleActivityResult(resultCode, data);
                 break;
-            }
 
             case StayOutboundDetailActivity.REQUEST_CODE_HAPPYTALK:
                 break;
@@ -633,6 +621,25 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     }
 
                     setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                    getViewInterface().updateBookDateTime(mStayBookDateTime);
+                    setRefresh(true);
+                }
+                break;
+        }
+    }
+
+    private void onPeopleActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    int numberOfAdults = intent.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                    ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                    setPeople(numberOfAdults, childAgeList);
+                    getViewInterface().updatePeople(mPeople);
                     setRefresh(true);
                 }
                 break;
