@@ -21,9 +21,9 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.search.SearchStayOutboundViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
@@ -215,28 +215,52 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
         switch (requestCode)
         {
             case ResearchStayOutboundActivity.REQUEST_CODE_SUGGEST:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                onSuggestActivityResult(resultCode, data);
+                break;
+
+            case ResearchStayOutboundActivity.REQUEST_CODE_CALENDAR:
+                onCalendarActivityResult(resultCode, data);
+                break;
+
+            case ResearchStayOutboundActivity.REQUEST_CODE_PEOPLE:
+                onPeopleActivityResult(resultCode, data);
+                break;
+        }
+    }
+
+    private void onSuggestActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
                 {
                     try
                     {
-                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        StayOutboundSuggestParcel suggestParcel = intent.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchModel.suggest.setValue(suggestParcel.getSuggest());
-                        mSearchModel.inputString = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-                        mSearchModel.clickType = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+                        mSearchModel.inputString = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        mSearchModel.clickType = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
                     }
                 }
                 break;
+        }
+    }
 
-            case ResearchStayOutboundActivity.REQUEST_CODE_CALENDAR:
-                if (resultCode == Activity.RESULT_OK && data != null)
+    private void onCalendarActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
                 {
                     try
                     {
-                        String checkInDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                        String checkInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
                         mSearchModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
                     } catch (Exception e)
@@ -245,15 +269,20 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
                     }
                 }
                 break;
+        }
+    }
 
-            case ResearchStayOutboundActivity.REQUEST_CODE_PEOPLE:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
+    private void onPeopleActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
                 {
                     try
                     {
-                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+                        int numberOfAdults = intent.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = intent.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         setPeople(numberOfAdults, arrayList);
                     } catch (Exception e)
@@ -262,7 +291,6 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
                     }
                 }
                 break;
-            }
         }
     }
 
@@ -316,11 +344,11 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-            startActivityForResult(StayOutboundCalendarActivity.newInstance(getActivity()//
+            startActivityForResult(StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT//
                 , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH//
-                , true, ScreenUtils.dpToPx(getActivity(), 41), true)//
+                , AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true)//
                 , ResearchStayOutboundActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
         {

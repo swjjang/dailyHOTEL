@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
+package com.daily.dailyhotel.screen.common.calendar.stay;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;

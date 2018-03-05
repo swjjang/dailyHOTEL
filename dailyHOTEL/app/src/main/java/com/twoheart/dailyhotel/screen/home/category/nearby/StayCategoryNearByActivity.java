@@ -22,7 +22,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
-import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
+package com.daily.dailyhotel.screen.common.calendar.stay;
 
 import android.content.Context;
 import android.content.Intent;

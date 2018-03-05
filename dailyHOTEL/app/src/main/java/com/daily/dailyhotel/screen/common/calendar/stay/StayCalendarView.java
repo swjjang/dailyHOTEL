@@ -1,7 +1,9 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
+package com.daily.dailyhotel.screen.common.calendar.stay;
 
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,9 +17,9 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class StayOutboundCalendarView extends BaseCalendarView<StayOutboundCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayOutboundCalendarViewInterface
+public class StayCalendarView extends BaseCalendarView<StayCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayCalendarViewInterface
 {
-    private StayOutboundCalendarAdapter mCalendarAdapter;
+    private StayCalendarAdapter mCalendarAdapter;
 
     public interface OnEventListener extends BaseCalendarView.OnEventListener
     {
@@ -26,7 +28,7 @@ public class StayOutboundCalendarView extends BaseCalendarView<StayOutboundCalen
         void onConfirmClick();
     }
 
-    public StayOutboundCalendarView(BaseActivity baseActivity, StayOutboundCalendarView.OnEventListener listener)
+    public StayCalendarView(BaseActivity baseActivity, StayCalendarView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -78,7 +80,7 @@ public class StayOutboundCalendarView extends BaseCalendarView<StayOutboundCalen
 
         if (mCalendarAdapter == null)
         {
-            mCalendarAdapter = new StayOutboundCalendarAdapter(getContext(), calendarList);
+            mCalendarAdapter = new StayCalendarAdapter(getContext(), calendarList);
             mCalendarAdapter.setOnClickListener(view -> getEventListener().onDayClick((BaseCalendarPresenter.Day) view.getTag()));
 
 
@@ -149,6 +151,17 @@ public class StayOutboundCalendarView extends BaseCalendarView<StayOutboundCalen
         }
 
         mCalendarAdapter.setCheckOutDay(checkOutDay);
+    }
+
+    @Override
+    public void setAvailableCheckOutDays(@Nullable SparseIntArray availableCheckOutDays)
+    {
+        if (getViewDataBinding() == null || mCalendarAdapter == null)
+        {
+            return;
+        }
+
+        mCalendarAdapter.setAvailableCheckOutDays(availableCheckOutDays);
     }
 
     @Override

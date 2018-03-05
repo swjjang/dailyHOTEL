@@ -44,12 +44,12 @@ import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -288,7 +288,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     {
                         Crashlytics.log(mDailyDeepLink.getDeepLink());
                         Crashlytics.logException(throwable);
-                        
+
                         onHandleError(throwable);
                     }
                 }));
@@ -510,26 +510,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         switch (requestCode)
         {
             case StayOutboundDetailActivity.REQUEST_CODE_CALENDAR:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
-                        && data.hasExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
-                    {
-                        String checkInDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
-
-                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-                        {
-                            return;
-                        }
-
-                        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        setRefresh(true);
-                    }
-                }
+                onCalendarActivityResult(resultCode, data);
                 break;
-            }
 
             case StayOutboundDetailActivity.REQUEST_CODE_PEOPLE:
             {
@@ -630,6 +612,28 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
 
                     mAnalytics.onEventWishClick(getActivity(), mStayOutboundDetail.index, isWish);
+                }
+                break;
+        }
+    }
+
+    private void onCalendarActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    String checkInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                    String checkOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                    if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                    {
+                        return;
+                    }
+
+                    setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                    setRefresh(true);
                 }
                 break;
         }
@@ -922,10 +926,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-            Intent intent = StayOutboundCalendarActivity.newInstance(getActivity()//
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.STAY, true, 0, true);
+                , AnalyticsManager.ValueType.STAY, true, 0, true);
 
             startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
@@ -1565,28 +1570,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             mStayBookDateTime.setCheckInDateTime(checkInDateTime);
             mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    void setStayBookDateTime(String checkInDateTime, int checkInPlusDay, int nights)
-    {
-        if (DailyTextUtils.isTextEmpty(checkInDateTime) == true)
-        {
-            return;
-        }
-
-        if (mStayBookDateTime == null)
-        {
-            mStayBookDateTime = new StayBookDateTime();
-        }
-
-        try
-        {
-            mStayBookDateTime.setCheckInDateTime(checkInDateTime, checkInPlusDay);
-            mStayBookDateTime.setCheckOutDateTime(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

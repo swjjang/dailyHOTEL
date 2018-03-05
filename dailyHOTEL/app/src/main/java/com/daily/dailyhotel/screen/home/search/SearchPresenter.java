@@ -31,15 +31,14 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -460,8 +459,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 {
                     try
                     {
-                        String checkInDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
                         mSearchModel.stayOutboundViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
                     } catch (Exception e)
@@ -888,10 +887,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT);
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-            startActivityForResult(StayOutboundCalendarActivity.newInstance(getActivity()//
+            startActivityForResult(StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
                 , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR);
+                , AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
