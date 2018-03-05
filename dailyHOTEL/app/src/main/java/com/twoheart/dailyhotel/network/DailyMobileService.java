@@ -20,6 +20,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetMultiBookingDetailDat
 import com.daily.dailyhotel.repository.remote.model.GourmetOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
+import com.daily.dailyhotel.repository.remote.model.GourmetSuggestsData;
 import com.daily.dailyhotel.repository.remote.model.LeaveInfoData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.OldRefundData;
@@ -53,6 +54,7 @@ import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayRegionData;
+import com.daily.dailyhotel.repository.remote.model.StaySuggestsData;
 import com.daily.dailyhotel.repository.remote.model.StaysData;
 import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
@@ -1036,6 +1038,19 @@ public interface DailyMobileService
     Observable<BaseListDto<GourmetKeyword>> getSuggestsByGourmet(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                                  @Query("reservationDate") String date, //
                                                                  @Query("term") String term);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StaySuggestsData>> getSuggestsByStayInboundV2(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                   @Query("dateCheckIn") String date, //
+                                                                   @Query("stays") int stays, //
+                                                                   @Query("term") String term);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<GourmetSuggestsData>> getSuggestsByGourmetV2(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                  @Query("reservationDate") String date, //
+                                                                  @Query("term") String term);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // CouponRemoteImpl
