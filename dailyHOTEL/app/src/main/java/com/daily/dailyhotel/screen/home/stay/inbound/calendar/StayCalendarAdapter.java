@@ -1,9 +1,11 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int mCheckInDay;
     private int mCheckOutDay;
     private boolean mLastDayEnabled;
+    private SparseIntArray mAvailableCheckOutDays;
 
     View.OnClickListener mOnClickListener;
 
@@ -135,6 +138,11 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setLastDayEnabled(boolean enabled)
     {
         mLastDayEnabled = enabled;
+    }
+
+    public void setAvailableCheckOutDays(SparseIntArray availableCheckOutDays)
+    {
+        mAvailableCheckOutDays = availableCheckOutDays;
     }
 
     @Override
@@ -266,83 +274,160 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         {
             if (day.sideDay == true)
             {
-                dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
-                dayDataBinding.dayLayout.setTag(null);
-                dayDataBinding.dayLayout.setEnabled(false);
-                dayDataBinding.dayTextView.setStrikeFlag(false);
-                dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
-                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
-            } else if (day.soldOut == true)
-            {
-                dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
-                dayDataBinding.dayLayout.setTag(null);
-                dayDataBinding.dayLayout.setEnabled(false);
-                dayDataBinding.dayTextView.setStrikeFlag(true);
-                dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
-                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
+                setSideDayView(dayDataBinding, day);
             } else
             {
                 // yyyyMMdd
-                int yyyyMMdd = day.year * 10000 + day.month * 100 + day.dayOfMonth;
+                int yyyyMMdd = day.getYYYYMMDD();
 
                 if (mCheckInDay == yyyyMMdd)
                 {
-                    dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
-                    dayDataBinding.checkTextView.setText(R.string.act_booking_chkin);
-                    dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_in);
-                    dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+                    setCheckInDayView(dayDataBinding, day);
                 } else if (mCheckOutDay == yyyyMMdd)
                 {
-                    dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
-                    dayDataBinding.checkTextView.setText(R.string.act_booking_chkout);
-                    dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_out);
-                    dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+                    setCheckOutDayView(dayDataBinding, day);
                 } else
                 {
-                    dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
-                    dayDataBinding.dayLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.selector_calendar_day_background));
-
-                    if (day.holiday == true)
+                    if (day.soldOut == true)
                     {
-                        dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        switch (dayOfWeek)
+                        if (yyyyMMdd > mCheckInDay && mCheckOutDay == 0 && mAvailableCheckOutDays != null && mAvailableCheckOutDays.get(yyyyMMdd) > 0)
                         {
-                            // 일요일
-                            case Calendar.SUNDAY:
-                                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                                break;
-
-                            case Calendar.SATURDAY:
-                                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
-                                break;
-
-                            default:
-                                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
-                                break;
+                            setDefaultDayView(dayDataBinding, day, dayOfWeek);
+                        } else
+                        {
+                            setSoldOutDayView(dayDataBinding, day);
                         }
-                    }
-
-                    dayDataBinding.dayLayout.setEnabled(day.lastDay ? mLastDayEnabled : true);
-                    dayDataBinding.dayTextView.setStrikeFlag(false);
-
-                    if (yyyyMMdd > mCheckInDay && yyyyMMdd < mCheckOutDay)
-                    {
-                        dayDataBinding.dayLayout.setActivated(true);
-                        dayDataBinding.dayLayout.setSelected(true); // 배경색 변경
                     } else
                     {
-                        dayDataBinding.dayLayout.setActivated(false);
-                        dayDataBinding.dayLayout.setSelected(false); // 배경색 변경
+                        setDefaultDayView(dayDataBinding, day, dayOfWeek);
                     }
                 }
             }
 
-            dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
-            dayDataBinding.dayLayout.setTag(day);
-
             dayDataBinding.dayLayout.setOnClickListener(mOnClickListener);
+        }
+    }
+
+    private void setSideDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
+    {
+        if (dayDataBinding == null)
+        {
+            return;
+        }
+
+        dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
+        dayDataBinding.dayLayout.setTag(null);
+        dayDataBinding.dayLayout.setEnabled(false);
+        dayDataBinding.dayTextView.setStrikeFlag(false);
+        dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
+        dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
+
+        dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
+        dayDataBinding.dayLayout.setTag(day);
+    }
+
+    private void setSoldOutDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
+    {
+        if (dayDataBinding == null)
+        {
+            return;
+        }
+
+        dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
+        dayDataBinding.dayLayout.setTag(null);
+        dayDataBinding.dayLayout.setEnabled(false);
+        dayDataBinding.dayTextView.setStrikeFlag(true);
+        dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
+        dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
+
+        dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
+        dayDataBinding.dayLayout.setTag(day);
+    }
+
+    private void setCheckInDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
+    {
+        if (dayDataBinding == null)
+        {
+            return;
+        }
+
+        dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
+        dayDataBinding.checkTextView.setText(R.string.act_booking_chkin);
+        dayDataBinding.dayLayout.setEnabled(true);
+        dayDataBinding.dayTextView.setStrikeFlag(false);
+        dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_in);
+        dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+
+        dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
+        dayDataBinding.dayLayout.setTag(day);
+    }
+
+    private void setCheckOutDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
+    {
+        if (dayDataBinding == null)
+        {
+            return;
+        }
+
+        dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
+        dayDataBinding.checkTextView.setText(R.string.act_booking_chkout);
+        dayDataBinding.dayLayout.setEnabled(true);
+        dayDataBinding.dayTextView.setStrikeFlag(false);
+        dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_out);
+        dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+
+        dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
+        dayDataBinding.dayLayout.setTag(day);
+    }
+
+    private void setDefaultDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day, int dayOfWeek)
+    {
+        if (dayDataBinding == null || day == null)
+        {
+            return;
+        }
+
+        dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
+        dayDataBinding.dayLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.selector_calendar_day_background));
+        dayDataBinding.dayTextView.setTextColor(day.holiday ? getDayOfHolidayColor() : getDayOfWeekColor(dayOfWeek));
+        dayDataBinding.dayLayout.setEnabled(day.lastDay ? mLastDayEnabled : true);
+        dayDataBinding.dayTextView.setStrikeFlag(false);
+
+        // yyyyMMdd
+        int yyyyMMdd = day.getYYYYMMDD();
+
+        if (yyyyMMdd > mCheckInDay && yyyyMMdd < mCheckOutDay)
+        {
+            dayDataBinding.dayLayout.setActivated(true);
+            dayDataBinding.dayLayout.setSelected(true); // 배경색 변경
+        } else
+        {
+            dayDataBinding.dayLayout.setActivated(false);
+            dayDataBinding.dayLayout.setSelected(false); // 배경색 변경
+        }
+
+        dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
+        dayDataBinding.dayLayout.setTag(day);
+    }
+
+    private ColorStateList getDayOfHolidayColor()
+    {
+        return mContext.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor);
+    }
+
+    private ColorStateList getDayOfWeekColor(int dayOfWeek)
+    {
+        switch (dayOfWeek)
+        {
+            // 일요일
+            case Calendar.SUNDAY:
+                return mContext.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor);
+
+            case Calendar.SATURDAY:
+                return mContext.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor);
+
+            default:
+                return mContext.getResources().getColorStateList(R.color.selector_calendar_default_text_color);
         }
     }
 

@@ -1364,37 +1364,36 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
             });
         }
 
-        Calendar calendar = DailyCalendar.getInstance();
-
         try
         {
-            DailyCalendar.setCalendarDateString(calendar, currentDateTime);
+            Calendar calendar = DailyCalendar.getInstance(currentDateTime, DailyCalendar.ISO_8601_FORMAT);
+
+            int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
+
+            if (DailyTextUtils.isTextEmpty(frontPhone2) == false && (time >= 900 && time <= 2000))
+            {
+                dataBinding.contactUs03TextView.setText(R.string.label_hotel_reservation_phone);
+                dataBinding.contactUs03TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
+
+                dataBinding.contactUs03Layout.setVisibility(View.VISIBLE);
+                dataBinding.contactUs03Layout.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        hideSimpleDialog();
+
+                        getEventListener().onFrontReservationCallClick(frontPhone2);
+                    }
+                });
+            } else
+            {
+                dataBinding.contactUs03Layout.setVisibility(View.GONE);
+            }
+
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-        }
-
-        int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
-
-        if (DailyTextUtils.isTextEmpty(frontPhone2) == false && (time >= 900 && time <= 2000))
-        {
-            dataBinding.contactUs03TextView.setText(R.string.label_hotel_reservation_phone);
-            dataBinding.contactUs03TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
-
-            dataBinding.contactUs03Layout.setVisibility(View.VISIBLE);
-            dataBinding.contactUs03Layout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    hideSimpleDialog();
-
-                    getEventListener().onFrontReservationCallClick(frontPhone2);
-                }
-            });
-        } else
-        {
-            dataBinding.contactUs03Layout.setVisibility(View.GONE);
         }
 
         dataBinding.kakaoDailyView.setOnClickListener(new View.OnClickListener()

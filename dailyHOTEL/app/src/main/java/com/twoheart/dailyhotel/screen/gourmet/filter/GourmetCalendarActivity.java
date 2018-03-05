@@ -263,13 +263,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 view.setSelected(true);
 
-                Calendar calendar = DailyCalendar.getInstance();
-
                 try
                 {
-                    DailyCalendar.setCalendarDateString(calendar, day.dateTime);
-                    String visitDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
-
+                    String visitDate = DailyCalendar.convertDateFormatString(day.dateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
                     setToolbarText(visitDate);
 
                     mConfirmTextView.setEnabled(true);
@@ -371,11 +367,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        Calendar calendar = DailyCalendar.getInstance();
+        final String DATE_FORMAT = "yyyyMMdd";
 
         try
         {
-            int visitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
+            int visitDay = Integer.parseInt(gourmetBookingDay.getVisitDay(DATE_FORMAT));
 
             for (View dayView : mDayViewList)
             {
@@ -386,9 +382,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 Day day = (Day) dayView.getTag();
 
-                DailyCalendar.setCalendarDateString(calendar, day.dateTime);
-
-                int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+                int calendarDay = Integer.parseInt(DailyCalendar.convertDateFormatString(day.dateTime, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT));
 
                 if (calendarDay == visitDay)
                 {

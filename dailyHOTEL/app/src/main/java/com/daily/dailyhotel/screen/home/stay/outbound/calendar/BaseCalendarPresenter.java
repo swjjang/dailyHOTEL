@@ -41,31 +41,28 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
     {
         List<ObjectItem> calendarList = new ArrayList<>();
 
-        Calendar startCalendar = DailyCalendar.getInstance();
-        Calendar endCalendar = DailyCalendar.getInstance();
-
         try
         {
-            startCalendar.setTime(DailyCalendar.convertStringToDate(startDateTime));
-            endCalendar.setTime(DailyCalendar.convertStringToDate(endDateTime));
+            Calendar startCalendar = DailyCalendar.getInstance(startDateTime, DailyCalendar.ISO_8601_FORMAT);
+            Calendar endCalendar = DailyCalendar.getInstance(endDateTime, DailyCalendar.ISO_8601_FORMAT);
+
+            int maxMonth = getMonthInterval(startCalendar, endCalendar);
+
+            Calendar calendar = (Calendar) startCalendar.clone();
+
+            for (int i = 0; i <= maxMonth; i++)
+            {
+                calendarList.add(new ObjectItem(ObjectItem.TYPE_MONTH_VIEW, new Month(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)));
+                calendarList.addAll(getMonthCalendar(calendar, startCalendar, endCalendar, holidaySparseIntArray));
+
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                calendar.add(Calendar.MONTH, 1);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
 
             return null;
-        }
-
-        int maxMonth = getMonthInterval(startCalendar, endCalendar);
-
-        Calendar calendar = (Calendar) startCalendar.clone();
-
-        for (int i = 0; i <= maxMonth; i++)
-        {
-            calendarList.add(new ObjectItem(ObjectItem.TYPE_MONTH_VIEW, new Month(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)));
-            calendarList.addAll(getMonthCalendar(calendar, startCalendar, endCalendar, holidaySparseIntArray));
-
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.MONTH, 1);
         }
 
         return calendarList;

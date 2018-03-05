@@ -416,8 +416,7 @@ public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOut
 
                 if (mNightsOfMaxCount == 1)
                 {
-                    Calendar calendar = DailyCalendar.getInstance();
-                    calendar.setTime(DailyCalendar.convertDate(dayDateTime, DailyCalendar.ISO_8601_FORMAT));
+                    Calendar calendar = DailyCalendar.getInstance(dayDateTime, DailyCalendar.ISO_8601_FORMAT);
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
 
                     unLock();

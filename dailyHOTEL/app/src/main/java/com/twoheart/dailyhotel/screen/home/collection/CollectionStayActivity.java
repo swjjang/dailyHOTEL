@@ -460,7 +460,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
         }
 
         final int DAYS_OF_MAX_COUNT = 60;
-        final int NIGHTS_OF_MAX_COUNT = 59;
 
         try
         {
@@ -476,7 +475,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
             StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
 
             Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
+                , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.ValueType.SEARCH, true//

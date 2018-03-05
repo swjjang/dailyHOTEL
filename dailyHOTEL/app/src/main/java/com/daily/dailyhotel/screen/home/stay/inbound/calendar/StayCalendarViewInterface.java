@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
+import android.util.SparseIntArray;
+
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.ObjectItem;
 
@@ -20,6 +22,8 @@ public interface StayCalendarViewInterface extends BaseDialogViewInterface
     void setCheckInDay(int checkInDay);
 
     void setCheckOutDay(int checkOutDay);
+
+    void setAvailableCheckOutDays(SparseIntArray availableCheckOutDays);
 
     void setLastDayEnabled(boolean enabled);
 

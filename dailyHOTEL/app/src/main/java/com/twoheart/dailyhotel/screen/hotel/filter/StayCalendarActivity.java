@@ -30,9 +30,6 @@ import java.util.Map;
 
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
-    public static final int DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT = 60;
-    public static final int DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT = 180;
-
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
 

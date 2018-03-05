@@ -2,15 +2,18 @@ package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.SparseIntArray;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -23,7 +26,6 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -33,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends StayCalendarViewInterface> extends BaseCalendarPresenter<T1, T2> implements StayCalendarView.OnEventListener
+public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarActivity, StayCalendarViewInterface> implements StayCalendarView.OnEventListener
 {
     private StayCalendarPresenterAnalyticsInterface mAnalytics;
 
@@ -49,6 +51,10 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
     private int mMarginTop;
     boolean mIsAnimation;
 
+    private CalendarImpl mCalendarImpl;
+    private int mStayIndex;
+    private SparseIntArray mSoldOutDays;
+
     public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
     {
         void setCheckInOutDateTime(String checkInDateTime, String checkOutDateTime);
@@ -60,20 +66,20 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
         void onConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime);
     }
 
-    public StayCalendarPresenter(@NonNull T1 activity)
+    public StayCalendarPresenter(@NonNull StayCalendarActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected T2 createInstanceViewInterface()
+    protected StayCalendarViewInterface createInstanceViewInterface()
     {
-        return (T2) new StayCalendarView(getActivity(), this);
+        return new StayCalendarView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(T1 activity)
+    public void constructorInitialize(StayCalendarActivity activity)
     {
         super.constructorInitialize(activity);
 
@@ -82,6 +88,8 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
         getViewInterface().setVisibility(false);
 
         setAnalytics(new StayCalendarAnalyticsImpl());
+
+        mCalendarImpl = new CalendarImpl(activity);
 
         setRefresh(true);
     }
@@ -116,6 +124,19 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
             mMarginTop = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_MARGIN_TOP, 0);
             mIsAnimation = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
 
+            int[] soldOutDays = intent.getIntArrayExtra(StayCalendarActivity.INTENT_EXTRA_DATA_SOLD_OUT_DAYS);
+
+            if (soldOutDays != null)
+            {
+                mSoldOutDays = new SparseIntArray();
+
+                for (int day : soldOutDays)
+                {
+                    mSoldOutDays.put(day, day);
+                }
+            }
+
+            mStayIndex = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -151,7 +172,7 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
             @Override
             public List<ObjectItem> apply(String calendarHolidays) throws Exception
             {
-                List<ObjectItem> calendarList = makeCalendar(mStartDateTime, mEndDateTime, getHolidayArray(calendarHolidays));
+                List<ObjectItem> calendarList = makeCalendar(mStartDateTime, mEndDateTime, getHolidayArray(calendarHolidays), mSoldOutDays);
 
                 calendarList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
 
@@ -172,36 +193,35 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
                     {
                         screenLock(false);
 
-                        return observable;
+                        return observable.map(new Function<Boolean, Boolean>()
+                        {
+                            @Override
+                            public Boolean apply(Boolean aBoolean) throws Exception
+                            {
+                                return mIsSelected;
+                            }
+                        });
                     }
                 } else
                 {
                     getViewInterface().setVisibility(true);
                 }
 
-                return new Observable<Boolean>()
-                {
-                    @Override
-                    protected void subscribeActual(Observer<? super Boolean> observer)
-                    {
-                        observer.onNext(true);
-                        observer.onComplete();
-                    }
-                };
+                return Observable.just(mIsSelected);
             }
         }).subscribe(new Consumer<Boolean>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull Boolean isSelectedDays) throws Exception
             {
                 unLockAll();
 
-                if (mIsSelected == true)
+                if (isSelectedDays == true)
                 {
                     String checkInDateTime = mCheckInDateTime;
-                    int checkInDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
-
                     String checkOutDateTime = mCheckOutDateTime;
+
+                    int checkInDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
                     int checkOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
 
                     int year = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy"));
@@ -323,40 +343,19 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
     @Override
     public void onDayClick(Day day)
     {
-        if (day == null)
+        if (day == null || lock() == true)
         {
             return;
         }
 
-        if (lock() == true)
-        {
-            return;
-        }
-
-        try
-        {
-            String dayDateTime = day.getDateTime();
-            int yyyyMMdd = day.year * 10000 + day.month * 100 + day.dayOfMonth;
-
-            onDayClick(dayDateTime, yyyyMMdd);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        } finally
-        {
-            unLock();
-        }
+        onDayClick(day.getDateTime(), day.getYYYYMMDD());
+        unLock();
     }
 
     @Override
     public void onConfirmClick()
     {
-        if (DailyTextUtils.isTextEmpty(mCheckInDateTime, mCheckOutDateTime) == true)
-        {
-            return;
-        }
-
-        if (lock() == true)
+        if (DailyTextUtils.isTextEmpty(mCheckInDateTime, mCheckOutDateTime) == true || lock() == true)
         {
             return;
         }
@@ -384,6 +383,7 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
 
         getViewInterface().setCheckInDay(0);
         getViewInterface().setCheckOutDay(0);
+        getViewInterface().setAvailableCheckOutDays(null);
 
         getViewInterface().notifyCalendarDataSetChanged();
     }
@@ -397,22 +397,20 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
 
         try
         {
-            // 이미 체크인 체크아웃이 선택되어있으면 초기화
-            if (DailyTextUtils.isTextEmpty(mCheckInDateTime, mCheckOutDateTime) == false)
+            if (selectedCheckInCheckOutDateTime() == true)
             {
-                // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
-                if (DailyCalendar.compareDateDay(mEndDateTime, dayDateTime) == 0)
+                if (isValidCheckInDateTime(dayDateTime, yyyyMMdd) == true)
+                {
+                    reset();
+                } else
                 {
                     DailyToast.showToast(getActivity(), getString(R.string.label_message_dont_check_date), DailyToast.LENGTH_SHORT);
                     return;
-                } else
-                {
-                    reset();
                 }
             }
 
             // 기존의 날짜 보다 전날짜를 선택하면 초기화.
-            if (DailyTextUtils.isTextEmpty(mCheckInDateTime) == false)
+            if (selectedCheckInDateTime() == true)
             {
                 int compareDay = DailyCalendar.compareDateDay(mCheckInDateTime, dayDateTime);
                 if (compareDay > 0)
@@ -424,17 +422,42 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
                 }
             }
 
-            if (DailyTextUtils.isTextEmpty(mCheckInDateTime) == true)
+            if (selectedCheckInDateTime() == false)
             {
                 processCheckInDateTime(dayDateTime, yyyyMMdd);
+
+                if (mNightsOfMaxCount > 1)
+                {
+                    setAvailableCheckOutDays(mCheckInDateTime, DailyCalendar.compareDateDay(mEndDateTime, mStartDateTime) + 1);
+                }
             } else
             {
+                clearCompositeDisposable();
+
                 processCheckOutDateTime(mCheckInDateTime, dayDateTime, yyyyMMdd);
+
+                getViewInterface().setAvailableCheckOutDays(null);
             }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
+    }
+
+    private boolean selectedCheckInCheckOutDateTime()
+    {
+        return DailyTextUtils.isTextEmpty(mCheckInDateTime, mCheckOutDateTime) == false;
+    }
+
+    private boolean selectedCheckInDateTime()
+    {
+        return DailyTextUtils.isTextEmpty(mCheckInDateTime) == false;
+    }
+
+    private boolean isValidCheckInDateTime(String checkInDateTime, int yyyyMMdd) throws ParseException
+    {
+        return (DailyCalendar.compareDateDay(mEndDateTime, checkInDateTime) > 0//
+            && (mSoldOutDays == null || mSoldOutDays.get(yyyyMMdd) == 0));
     }
 
     private void processCheckInDateTime(String checkInDateTime, int yyyyMMdd) throws ParseException
@@ -451,8 +474,7 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
 
         if (mNightsOfMaxCount == 1)
         {
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(DailyCalendar.convertDate(checkInDateTime, DailyCalendar.ISO_8601_FORMAT));
+            Calendar calendar = DailyCalendar.getInstance(checkInDateTime, DailyCalendar.ISO_8601_FORMAT);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
 
             unLock();
@@ -492,5 +514,65 @@ public class StayCalendarPresenter<T1 extends StayCalendarActivity, T2 extends S
         getViewInterface().setConfirmText(getString(R.string.label_calendar_stay_search_selected_date, nights));
 
         getViewInterface().notifyCalendarDataSetChanged();
+    }
+
+    private void setAvailableCheckOutDays(String checkInDateTime, int dayOfMaxCount) throws ParseException
+    {
+        if (checkInDateTime == null || dayOfMaxCount == 0)
+        {
+            return;
+        }
+
+        String checkInDay = DailyCalendar.convertDateFormatString(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+
+        addCompositeDisposable(mCalendarImpl.getStayAvailableCheckOutDates(mStayIndex, dayOfMaxCount, checkInDay)//
+            .map(new Function<List<String>, SparseIntArray>()
+            {
+                @Override
+                public SparseIntArray apply(@NonNull List<String> availableDayList) throws Exception
+                {
+                    SparseIntArray availableDays = new SparseIntArray();
+
+                    for (String stringDay : availableDayList)
+                    {
+                        int yyyyMMdd = Integer.parseInt(stringDay.replaceAll("-", ""));
+                        availableDays.put(yyyyMMdd, yyyyMMdd);
+                    }
+
+                    return availableDays;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<SparseIntArray>()
+            {
+                @Override
+                public void accept(@NonNull SparseIntArray availableDays) throws Exception
+                {
+                    if (availableDays.size() == 0)
+                    {
+                        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                            , getString(R.string.label_changing_date), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    reset();
+                                }
+                            });
+                    } else
+                    {
+                        getViewInterface().setAvailableCheckOutDays(availableDays);
+
+                        getViewInterface().notifyCalendarDataSetChanged();
+                    }
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+
+                }
+            }));
     }
 }

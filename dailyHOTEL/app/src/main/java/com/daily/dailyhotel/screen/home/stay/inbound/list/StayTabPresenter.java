@@ -865,21 +865,16 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     private void startCalendar(String callByScreen)
     {
         final int DAYS_OF_MAX_COUNT = 60;
-        final int NIGHTS_OF_MAX_COUNT = 59;
 
         try
         {
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(DailyCalendar.convertDate(mStayViewModel.commonDateTime.getValue().dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
-
+            Calendar calendar = DailyCalendar.getInstance(mStayViewModel.commonDateTime.getValue().dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
             String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
             calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
-
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
+                , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , callByScreen, true//

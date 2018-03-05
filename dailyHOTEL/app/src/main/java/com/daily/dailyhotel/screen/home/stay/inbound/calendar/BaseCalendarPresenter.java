@@ -37,17 +37,28 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
 
     }
 
-    public List<ObjectItem> makeCalendar(String startDateTime, String endDateTime, SparseIntArray holidaySparseIntArray)
+    public List<ObjectItem> makeCalendar(String startDateTime, String endDateTime//
+        , SparseIntArray holidaySparseIntArray, SparseIntArray soldOutDaySparseIntArray)
     {
         List<ObjectItem> calendarList = new ArrayList<>();
 
-        Calendar startCalendar = DailyCalendar.getInstance();
-        Calendar endCalendar = DailyCalendar.getInstance();
-
         try
         {
-            startCalendar.setTime(DailyCalendar.convertStringToDate(startDateTime));
-            endCalendar.setTime(DailyCalendar.convertStringToDate(endDateTime));
+            Calendar startCalendar = DailyCalendar.getInstance(startDateTime, DailyCalendar.ISO_8601_FORMAT);
+            Calendar endCalendar = DailyCalendar.getInstance(endDateTime, DailyCalendar.ISO_8601_FORMAT);
+
+            int maxMonth = getMonthInterval(startCalendar, endCalendar);
+
+            Calendar calendar = (Calendar) startCalendar.clone();
+
+            for (int i = 0; i <= maxMonth; i++)
+            {
+                calendarList.add(new ObjectItem(ObjectItem.TYPE_MONTH_VIEW, new Month(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)));
+                calendarList.addAll(getMonthCalendar(calendar, startCalendar, endCalendar, holidaySparseIntArray, soldOutDaySparseIntArray));
+
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                calendar.add(Calendar.MONTH, 1);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -55,23 +66,11 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
             return null;
         }
 
-        int maxMonth = getMonthInterval(startCalendar, endCalendar);
-
-        Calendar calendar = (Calendar) startCalendar.clone();
-
-        for (int i = 0; i <= maxMonth; i++)
-        {
-            calendarList.add(new ObjectItem(ObjectItem.TYPE_MONTH_VIEW, new Month(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1)));
-            calendarList.addAll(getMonthCalendar(calendar, startCalendar, endCalendar, holidaySparseIntArray));
-
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.MONTH, 1);
-        }
-
         return calendarList;
     }
 
-    private List<ObjectItem> getMonthCalendar(final Calendar monthCalendar, final Calendar startCalendar, final Calendar endCalendar, SparseIntArray holidaySparseIntArray)
+    private List<ObjectItem> getMonthCalendar(final Calendar monthCalendar, final Calendar startCalendar//
+        , final Calendar endCalendar, SparseIntArray holidaySparseIntArray, SparseIntArray soldOutDaySparseIntArray)
     {
         int currentMonth = monthCalendar.get(Calendar.MONTH);
         int currentYear = monthCalendar.get(Calendar.YEAR);
@@ -126,7 +125,6 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
 
         daysOfMonthCount = underDayCount + overDayCount + endDay - startDay + 1;
 
-        final boolean hasHolidays = holidaySparseIntArray != null && holidaySparseIntArray.size() > 0;
         Calendar calendar = (Calendar) monthCalendar.clone();
         calendar.set(Calendar.DAY_OF_MONTH, startDay);
         calendar.add(Calendar.DAY_OF_MONTH, -underDayCount);
@@ -143,27 +141,14 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
                     continue;
                 }
 
-                days[j] = new Day();
-                days[j].year = calendar.get(Calendar.YEAR);
-                days[j].month = calendar.get(Calendar.MONTH) + 1;
-                days[j].dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                days[j] = getDay(calendar);
 
-                if (hasHolidays == true)
-                {
-                    days[j].holiday = holidaySparseIntArray.get(days[j].year * 10000 + days[j].month * 100 + days[j].dayOfMonth, -1) != -1;
-                }
+                int yyyyMMdd = days[j].getYYYYMMDD();
 
-                days[j].soldOut = false;
-
-                if (i < underDayCount || i >= daysOfMonthCount - overDayCount)
-                {
-                    days[j].sideDay = true;
-                }
-
-                if (lastCalendar == true && i == daysOfMonthCount - overDayCount - 1)
-                {
-                    days[j].lastDay = true;
-                }
+                days[j].holiday = holidaySparseIntArray != null && holidaySparseIntArray.get(yyyyMMdd, -1) != -1;
+                days[j].soldOut = soldOutDaySparseIntArray != null && soldOutDaySparseIntArray.get(yyyyMMdd, -1) != -1;
+                days[j].sideDay = i < underDayCount || i >= daysOfMonthCount - overDayCount;
+                days[j].lastDay = lastCalendar == true && i == daysOfMonthCount - overDayCount - 1;
 
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
                 i++;
@@ -173,6 +158,16 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         }
 
         return weeksOfMonthList;
+    }
+
+    private Day getDay(Calendar calendar)
+    {
+        Day day = new Day();
+        day.year = calendar.get(Calendar.YEAR);
+        day.month = calendar.get(Calendar.MONTH) + 1;
+        day.dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return day;
     }
 
     private int getMonthInterval(Calendar startCalendar, Calendar endCalendar)
@@ -231,6 +226,11 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         public String getDateTime()
         {
             return String.format(Locale.KOREA, "%4d-%02d-%02dT12:00:00+09:00", year, month, dayOfMonth);
+        }
+
+        public int getYYYYMMDD()
+        {
+            return year * 10000 + month * 100 + dayOfMonth;
         }
     }
 

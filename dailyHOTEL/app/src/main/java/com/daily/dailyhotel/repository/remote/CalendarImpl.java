@@ -110,6 +110,13 @@ public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
             }).observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     *
+     * @param placeIndex
+     * @param dateRange : 오늘로 부터 몇일까지 볼지
+     * @param checkInDate
+     * @return
+     */
     @Override
     public Observable<List<String>> getStayAvailableCheckOutDates(int placeIndex, int dateRange, String checkInDate)
     {
@@ -143,6 +150,6 @@ public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
 
                     return availableDateList;
                 }
-            }).observeOn(AndroidSchedulers.mainThread());
+            });
     }
 }

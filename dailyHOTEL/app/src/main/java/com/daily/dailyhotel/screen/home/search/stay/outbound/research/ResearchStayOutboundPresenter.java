@@ -310,14 +310,10 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
 
         try
         {
-            Calendar startCalendar = DailyCalendar.getInstance();
-            startCalendar.setTime(DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+            Calendar startCalendar = DailyCalendar.getInstance(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT);
             startCalendar.add(Calendar.DAY_OF_MONTH, -1);
-
             String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
             startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
-
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             startActivityForResult(StayOutboundCalendarActivity.newInstance(getActivity()//

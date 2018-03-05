@@ -393,7 +393,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
 
         final int DAYS_OF_MAX_COUNT = 60;
-        final int NIGHTS_OF_MAX_COUNT = 59;
 
         try
         {
@@ -409,7 +408,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
 
             Intent intent = StayCalendarActivity.newInstance(this//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
+                , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                 , callByScreen, true//

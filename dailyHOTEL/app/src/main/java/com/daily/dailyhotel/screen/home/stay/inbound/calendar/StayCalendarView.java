@@ -1,7 +1,9 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,7 +17,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class StayCalendarView<T1 extends StayCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseCalendarView<T1, T2> implements StayCalendarViewInterface
+public class StayCalendarView extends BaseCalendarView<StayCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayCalendarViewInterface
 {
     private StayCalendarAdapter mCalendarAdapter;
 
@@ -26,7 +28,7 @@ public class StayCalendarView<T1 extends StayCalendarView.OnEventListener, T2 ex
         void onConfirmClick();
     }
 
-    public StayCalendarView(BaseActivity baseActivity, T1 listener)
+    public StayCalendarView(BaseActivity baseActivity, StayCalendarView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -149,6 +151,17 @@ public class StayCalendarView<T1 extends StayCalendarView.OnEventListener, T2 ex
         }
 
         mCalendarAdapter.setCheckOutDay(checkOutDay);
+    }
+
+    @Override
+    public void setAvailableCheckOutDays(@Nullable SparseIntArray availableCheckOutDays)
+    {
+        if (getViewDataBinding() == null || mCalendarAdapter == null)
+        {
+            return;
+        }
+
+        mCalendarAdapter.setAvailableCheckOutDays(availableCheckOutDays);
     }
 
     @Override

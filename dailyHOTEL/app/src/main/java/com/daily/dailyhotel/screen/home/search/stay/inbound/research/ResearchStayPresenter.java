@@ -285,23 +285,18 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         }
 
         final int DAYS_OF_MAX_COUNT = 60;
-        final int NIGHTS_OF_MAX_COUNT = 59;
 
         try
         {
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(DailyCalendar.convertDate(mCommonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
-
+            Calendar calendar = DailyCalendar.getInstance(mCommonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
             String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
             calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
-
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             StayBookDateTime stayBookDateTime = mSearchModel.bookDateTime.getValue();
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
+                , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.ValueType.SEARCH, true//

@@ -181,25 +181,12 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     {
         lockUI();
 
-        //        int index = mDayViewList.indexOf(checkInDayView);
-        //        if (index != -1)
-        //        {
-        //            for (int i = 0; i < index; i++)
-        //            {
-        //                updateAvailableDayView(mDayViewList.get(i), false);
-        //            }
-        //        }
-
-        Calendar calendar = DailyCalendar.getInstance();
-
         String checkInDate = null;
 
         try
         {
             Day checkInDay = (Day) checkInDayView.getTag();
-            DailyCalendar.setCalendarDateString(calendar, checkInDay.dateTime);
-
-            checkInDate = DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd");
+            checkInDate = DailyCalendar.convertDateFormatString(checkInDay.dateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
         } catch (Exception e)
         {
             ExLog.e(e.toString());

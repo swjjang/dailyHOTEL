@@ -772,23 +772,18 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         final int DAYS_OF_MAX_COUNT = 60;
-        final int NIGHTS_OF_MAX_COUNT = 59;
 
         try
         {
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(DailyCalendar.convertDate(mSearchModel.commonDateTime.getValue().dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
-
+            Calendar calendar = DailyCalendar.getInstance(mSearchModel.commonDateTime.getValue().dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
             String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
             calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
-
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.bookDateTime.getValue();
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
-                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
+                , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.ValueType.SEARCH, true//
@@ -882,25 +877,21 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        final int DAYS_OF_MAXCOUNT = 365;
-        final int NIGHTS_OF_MAXCOUNT = 28;
+        final int DAYS_OF_MAX_COUNT = 365;
+        final int NIGHTS_OF_MAX_COUNT = 28;
 
         try
         {
-            Calendar startCalendar = DailyCalendar.getInstance();
-            startCalendar.setTime(DailyCalendar.convertDate(mSearchModel.commonDateTime.getValue().currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+            Calendar startCalendar = DailyCalendar.getInstance(mSearchModel.commonDateTime.getValue().currentDateTime, DailyCalendar.ISO_8601_FORMAT);
             startCalendar.add(Calendar.DAY_OF_MONTH, -1);
-
             String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
-            startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
-
+            startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT);
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
             startActivityForResult(StayOutboundCalendarActivity.newInstance(getActivity()//
                 , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR);
+                , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

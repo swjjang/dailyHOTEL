@@ -859,7 +859,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             final int DAYS_OF_MAX_COUNT = 60;
-            final int NIGHTS_OF_MAX_COUNT = 59;
 
             try
             {
@@ -875,7 +874,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
 
                 Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this//
-                    , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
+                    , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                     , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                     , AnalyticsManager.ValueType.SEARCH_RESULT, true//
