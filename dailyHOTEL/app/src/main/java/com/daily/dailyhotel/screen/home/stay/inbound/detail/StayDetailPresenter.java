@@ -527,26 +527,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         switch (requestCode)
         {
             case StayDetailActivity.REQUEST_CODE_CALENDAR:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE) == true//
-                        && data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
-                    {
-                        String checkInDateTime = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE);
-                        String checkOutDateTime = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE);
-
-                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-                        {
-                            return;
-                        }
-
-                        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        setRefresh(true);
-                    }
-                }
+                onCalendarActivityResult(resultCode, data);
                 break;
-            }
 
             case StayDetailActivity.REQUEST_CODE_HAPPYTALK:
                 break;
@@ -608,15 +590,34 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
-
-            //            case StayDetailActivity.REQUEST_CODE_CHOOSER:
-            //            {
-            ////                ExLog.d("sam : " + (data == null ? "data is null" : data.toString()));
-            //                break;
-            //            }
-
         }
     }
+
+    private void onCalendarActivityResult(int resultCode, Intent data)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+            {
+                if (data != null && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
+                    && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                {
+                    String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                    String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                    if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                    {
+                        return;
+                    }
+
+                    setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                    setRefresh(true);
+                }
+                break;
+            }
+        }
+    }
+
 
     @Override
     protected synchronized void onRefresh(boolean showProgress)
