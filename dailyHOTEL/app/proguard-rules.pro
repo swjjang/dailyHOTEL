@@ -108,26 +108,32 @@
 -keep public class com.kakao.** { *; }
 
 #Adjust
--keep class com.adjust.sdk.plugin.MacAddressUtil {
-    java.lang.String getMacAddress(android.content.Context);
-}
--keep class com.adjust.sdk.plugin.AndroidIdUtil {
-    java.lang.String getAndroidId(android.content.Context);
-}
+-keep public class com.adjust.sdk.** { *; }
 -keep class com.google.android.gms.common.ConnectionResult {
     int SUCCESS;
 }
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
-    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo (android.content.Context);
+    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
 }
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
-    java.lang.String getId ();
+    java.lang.String getId();
     boolean isLimitAdTrackingEnabled();
 }
-
--keepclassmembers class ** {
-    public void onEvent(**);
+-keep class dalvik.system.VMRuntime {
+    java.lang.String getRuntime();
 }
+-keep class android.os.Build {
+    java.lang.String[] SUPPORTED_ABIS;
+    java.lang.String CPU_ABI;
+}
+-keep class android.content.res.Configuration {
+    android.os.LocaleList getLocales();
+    java.util.Locale locale;
+}
+-keep class android.os.LocaledList {
+    java.util.Locale get(int);
+}
+-keep public class com.android.installreferrer.** { *; }
 
 #Retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
