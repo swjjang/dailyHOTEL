@@ -51,13 +51,13 @@ public class StaySuggestV2
         public int index;
         public String region;
         public String line;
-//        public String name;
+        //        public String name;
     }
 
     public static class Stay extends SuggestItem
     {
         public int index;
-//        public String name;
+        //        public String name;
         public int discountAvg;
         public int availableRooms;
         public Province province;
@@ -66,19 +66,24 @@ public class StaySuggestV2
     public static class Province extends SuggestItem
     {
         public int index;
-//        public String name;
+        //        public String name;
         public Area area;
     }
 
     public static class Area extends SuggestItem
     {
         public int index;
-//        public int name;
+        //        public int name;
     }
 
     public static class Direct extends SuggestItem
     {
-//        public String name;
+        //        public String name;
+
+        public Direct(String name)
+        {
+            super(name);
+        }
     }
 
     public static class Location extends SuggestItem
@@ -86,6 +91,16 @@ public class StaySuggestV2
         public double latitude;
         public double longitude;
         public String addess;
-//        public String name;
+        //        public String name;
+    }
+
+    // 서버에서 받은 타입이 아님, 리스트 노출용 섹션
+    public static class Section extends SuggestItem
+    {
+        //        public String name;
+        public Section(String title)
+        {
+            super(title);
+        }
     }
 }

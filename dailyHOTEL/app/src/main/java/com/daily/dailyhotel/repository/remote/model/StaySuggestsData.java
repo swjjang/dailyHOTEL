@@ -148,7 +148,7 @@ public class StaySuggestsData
 
         if (provinceList != null && provinceList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_region))));
+            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
 
             for (ProvinceData provinceData : provinceList)
             {
@@ -160,7 +160,7 @@ public class StaySuggestsData
 
         if (stationList != null && stationList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_station))));
+            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_station))));
 
             for (StationData stationData : stationList)
             {

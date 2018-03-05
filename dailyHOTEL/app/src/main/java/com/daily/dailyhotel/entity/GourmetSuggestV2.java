@@ -72,6 +72,11 @@ public class GourmetSuggestV2
     public static class Direct extends SuggestItem
     {
         //        public String name;
+
+        public Direct(String name)
+        {
+            super(name);
+        }
     }
 
     public static class Location extends SuggestItem
@@ -80,5 +85,15 @@ public class GourmetSuggestV2
         public double longitude;
         public String addess;
         //        public String name;
+    }
+
+    // 서버에서 받은 타입이 아님, 리스트 노출용 섹션
+    public static class Section extends SuggestItem
+    {
+        //        public String name;
+        public Section(String title)
+        {
+            super(title);
+        }
     }
 }

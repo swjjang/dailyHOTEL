@@ -10,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -24,6 +23,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
@@ -36,7 +36,6 @@ import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
@@ -82,7 +81,7 @@ public class SearchGourmetSuggestPresenter //
     private GourmetBookDateTime mGourmetBookDateTime;
     private List<GourmetSuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<GourmetSuggest> mRecentlySuggestList;
-    private List<GourmetSuggest> mSuggestList;
+    private List<GourmetSuggestV2> mSuggestList;
     GourmetSuggest mLocationSuggest;
     String mKeyword;
 
@@ -449,7 +448,7 @@ public class SearchGourmetSuggestPresenter //
         mRecentlySuggestList = recentlySuggestList;
     }
 
-    void setSuggestList(List<GourmetSuggest> suggestList)
+    void setSuggestList(List<GourmetSuggestV2> suggestList)
     {
         mSuggestList = suggestList;
     }
@@ -537,51 +536,96 @@ public class SearchGourmetSuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
-                .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
+            //            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
+            //                .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
+            //                {
+            //                    @Override
+            //                    public List<GourmetSuggest> apply(Pair<String, ArrayList<GourmetKeyword>> stringArrayListPair) throws Exception
+            //                    {
+            //                        ArrayList<GourmetKeyword> keywordList = stringArrayListPair.second;
+            //                        ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
+            //
+            //                        if (keywordList == null || keywordList.size() == 0)
+            //                        {
+            //                            return gourmetSuggestList;
+            //                        }
+            //
+            //                        String oldCategoryKey = null;
+            //
+            //                        for (GourmetKeyword gourmetKeyword : keywordList)
+            //                        {
+            //                            GourmetSuggest gourmetSuggest = new GourmetSuggest(gourmetKeyword);
+            //
+            //                            if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(gourmetSuggest.categoryKey) == false)
+            //                            {
+            //                                int resId;
+            //                                if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
+            //                                {
+            //                                    resId = R.string.label_search_suggest_type_gourmet;
+            //                                    oldCategoryKey = gourmetSuggest.categoryKey;
+            //                                } else
+            //                                {
+            //                                    resId = R.string.label_search_suggest_type_region;
+            //                                    oldCategoryKey = GourmetSuggest.CATEGORY_REGION;
+            //                                }
+            //
+            //                                gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
+            //                            }
+            //
+            //                            gourmetSuggestList.add(gourmetSuggest);
+            //                        }
+            //
+            //                        return gourmetSuggestList;
+            //                    }
+            //                }).subscribe(new Consumer<List<GourmetSuggest>>()
+            //                {
+            //                    @Override
+            //                    public void accept(List<GourmetSuggest> gourmetSuggestList) throws Exception
+            //                    {
+            //                        setSuggestList(gourmetSuggestList);
+            //                        notifyDataSetChanged();
+            //
+            //                        getViewInterface().setProgressBarVisible(false);
+            //                        unLockAll();
+            //
+            //                        try
+            //                        {
+            //                            boolean hasGourmetSuggestList = gourmetSuggestList != null && gourmetSuggestList.size() > 0;
+            //                            mAnalytics.onSearchSuggestList(getActivity(), keyword, hasGourmetSuggestList);
+            //                        } catch (Exception e)
+            //                        {
+            //                            ExLog.d(e.getMessage());
+            //                        }
+            //                    }
+            //                }, new Consumer<Throwable>()
+            //                {
+            //                    @Override
+            //                    public void accept(Throwable throwable) throws Exception
+            //                    {
+            //                        setSuggestList(null);
+            //                        notifyDataSetChanged();
+            //
+            //                        getViewInterface().setProgressBarVisible(false);
+            //                        unLockAll();
+            //
+            //                        try
+            //                        {
+            //                            mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
+            //                        } catch (Exception e)
+            //                        {
+            //                            ExLog.d(e.getMessage());
+            //                        }
+            //                    }
+            //                });
+            //
+            //            addCompositeDisposable(mSuggestDisposable);
+
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByGourmetV2(visitDate, keyword) //
+                .delaySubscription(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()) //
+                .subscribe(new Consumer<List<GourmetSuggestV2>>()
                 {
                     @Override
-                    public List<GourmetSuggest> apply(Pair<String, ArrayList<GourmetKeyword>> stringArrayListPair) throws Exception
-                    {
-                        ArrayList<GourmetKeyword> keywordList = stringArrayListPair.second;
-                        ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
-
-                        if (keywordList == null || keywordList.size() == 0)
-                        {
-                            return gourmetSuggestList;
-                        }
-
-                        String oldCategoryKey = null;
-
-                        for (GourmetKeyword gourmetKeyword : keywordList)
-                        {
-                            GourmetSuggest gourmetSuggest = new GourmetSuggest(gourmetKeyword);
-
-                            if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(gourmetSuggest.categoryKey) == false)
-                            {
-                                int resId;
-                                if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
-                                {
-                                    resId = R.string.label_search_suggest_type_gourmet;
-                                    oldCategoryKey = gourmetSuggest.categoryKey;
-                                } else
-                                {
-                                    resId = R.string.label_search_suggest_type_region;
-                                    oldCategoryKey = GourmetSuggest.CATEGORY_REGION;
-                                }
-
-                                gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
-                            }
-
-                            gourmetSuggestList.add(gourmetSuggest);
-                        }
-
-                        return gourmetSuggestList;
-                    }
-                }).subscribe(new Consumer<List<GourmetSuggest>>()
-                {
-                    @Override
-                    public void accept(List<GourmetSuggest> gourmetSuggestList) throws Exception
+                    public void accept(List<GourmetSuggestV2> gourmetSuggestList) throws Exception
                     {
                         setSuggestList(gourmetSuggestList);
                         notifyDataSetChanged();
@@ -618,13 +662,11 @@ public class SearchGourmetSuggestPresenter //
                         }
                     }
                 });
-
-            addCompositeDisposable(mSuggestDisposable);
         }
     }
 
     @Override
-    public void onSuggestClick(GourmetSuggest gourmetSuggest)
+    public void onSuggestClick(GourmetSuggestV2 gourmetSuggest)
     {
         if (gourmetSuggest == null)
         {
@@ -636,10 +678,12 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-        addRecentSearches(gourmetSuggest);
+//        addRecentSearches(gourmetSuggest);
 
-        getViewInterface().setSuggest(gourmetSuggest.displayName);
-        startFinishAction(gourmetSuggest, mKeyword, null);
+//        getViewInterface().setSuggest(gourmetSuggest.displayName);
+//        startFinishAction(gourmetSuggest, mKeyword, null);
+
+        // TODO : 최근 검색 어 저장 및 Edit 영역에 글자 표시 , 검색 홈으로 데이터 전송 필요
     }
 
     @Override

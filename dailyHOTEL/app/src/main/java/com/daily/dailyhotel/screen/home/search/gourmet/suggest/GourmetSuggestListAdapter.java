@@ -11,7 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
@@ -155,9 +156,11 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(DirectViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        GourmetSuggestV2 gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
+
+        GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) gourmetSuggest.suggestItem;
 
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
@@ -166,12 +169,12 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(direct.name) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, gourmetSuggest.displayName);
+            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, direct.name);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
@@ -200,9 +203,10 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggestV2.Section section = (GourmetSuggestV2.Section) gourmetSuggest.suggestItem;
 
-        if (DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(section.name) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
         } else
@@ -210,30 +214,84 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
         }
 
-        holder.dataBinding.titleTextView.setText(gourmetSuggest.displayName);
+        holder.dataBinding.titleTextView.setText(section.name);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        GourmetSuggestV2 gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 
-        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) == true)
+        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
+        if (suggestItem == null)
+        {
+            holder.itemView.getRootView().setVisibility(View.GONE);
+            ExLog.e("suggestItem is null - check GourmetSuggestV2");
+            return;
+        }
+
+        String title = null;
+        String description = null;
+        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
+        {
+            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
+            title = gourmet.name;
+            description = gourmet.province == null ? null : gourmet.province.name;
+
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
+
+            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+
+            if (gourmet.availableTickets == 0 || gourmet.availableTickets < gourmet.minimumOrderQuantity || gourmet.isExpired == true)
+            {
+                holder.dataBinding.priceTextView.setText(R.string.label_soldout);
+            } else
+            {
+                holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmet.discount, false));
+            }
+        } else if (suggestItem instanceof GourmetSuggestV2.Province)
+        {
+            GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
+
+            if (province.area == null)
+            {
+                title = province.name + " " + mContext.getString(R.string.label_all);
+                description = null;
+            } else
+            {
+                title = province.area.name;
+                description = province.name;
+            }
+
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+
+            holder.dataBinding.priceTextView.setVisibility(View.GONE);
+        } else
+        {
+            title = suggestItem.name;
+            description = null;
+
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+
+            holder.dataBinding.priceTextView.setVisibility(View.GONE);
+        }
+
+        if (DailyTextUtils.isTextEmpty(title))
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(gourmetSuggest.displayName);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
             {
                 String keywordUpperCase = mKeyword.toUpperCase();
-                String displayNameUpperCase = DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) ? "" : gourmetSuggest.displayName.toUpperCase();
+                String displayNameUpperCase = DailyTextUtils.isTextEmpty(title) ? "" : title.toUpperCase();
 
                 int fromIndex = 0;
                 do
@@ -256,47 +314,8 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
             holder.dataBinding.titleTextView.setText(spannableStringBuilder);
         }
 
-        switch (gourmetSuggest.categoryKey)
-        {
-            case GourmetSuggest.CATEGORY_GOURMET:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
-
-                if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
-                {
-                    holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                } else
-                {
-                    holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-
-                    if (gourmetSuggest.availableTickets == 0 || gourmetSuggest.availableTickets < gourmetSuggest.minimumOrderQuantity || gourmetSuggest.isExpired == true)
-                    {
-                        holder.dataBinding.priceTextView.setText(R.string.label_soldout);
-                    } else
-                    {
-                        holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmetSuggest.discountPrice, false));
-                    }
-                }
-
-                break;
-
-            case GourmetSuggest.CATEGORY_LOCATION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                break;
-
-            case GourmetSuggest.CATEGORY_REGION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                break;
-
-            default:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                break;
-        }
+        holder.dataBinding.descriptionTextView.setText(description);
+        holder.dataBinding.descriptionTextView.setVisibility(DailyTextUtils.isTextEmpty(description) ? View.GONE : View.VISIBLE);
     }
 
     class DirectViewHolder extends RecyclerView.ViewHolder
