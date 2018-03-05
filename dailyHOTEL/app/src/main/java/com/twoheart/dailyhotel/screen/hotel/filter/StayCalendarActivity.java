@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@Deprecated
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";

@@ -476,18 +476,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.hotel.filter.StayCalendarActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity
-            android:name=".screen.hotel.filter.StayDetailCalendarActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity
             android:name=".screen.search.stay.result.StaySearchResultActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"

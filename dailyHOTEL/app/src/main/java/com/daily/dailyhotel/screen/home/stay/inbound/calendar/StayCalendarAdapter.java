@@ -278,7 +278,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else
             {
                 // yyyyMMdd
-                int yyyyMMdd = day.getYYYYMMDD();
+                int yyyyMMdd = day.toyyyyMMdd();
 
                 if (mCheckInDay == yyyyMMdd)
                 {
@@ -394,7 +394,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dayDataBinding.dayTextView.setStrikeFlag(false);
 
         // yyyyMMdd
-        int yyyyMMdd = day.getYYYYMMDD();
+        int yyyyMMdd = day.toyyyyMMdd();
 
         if (yyyyMMdd > mCheckInDay && yyyyMMdd < mCheckOutDay)
         {

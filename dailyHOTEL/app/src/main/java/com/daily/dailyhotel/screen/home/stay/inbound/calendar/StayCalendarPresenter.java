@@ -242,6 +242,32 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         }));
     }
 
+    private SparseIntArray getHolidayArray(String calendarHolidays)
+    {
+        if (DailyTextUtils.isTextEmpty(calendarHolidays) == true)
+        {
+            return null;
+        }
+
+        String[] holidaysSplit = calendarHolidays.split("\\,");
+        int length = holidaysSplit.length;
+        SparseIntArray holidaySparseIntArray = new SparseIntArray(length);
+
+        for (String holidaySplit : holidaysSplit)
+        {
+            try
+            {
+                int holiday = Integer.parseInt(holidaySplit);
+                holidaySparseIntArray.put(holiday, holiday);
+            } catch (NumberFormatException e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+
+        return holidaySparseIntArray;
+    }
+
     @Override
     public void onStart()
     {
@@ -348,7 +374,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
             return;
         }
 
-        onDayClick(day.getDateTime(), day.getYYYYMMDD());
+        onDayClick(day.getDateTime(), day.toyyyyMMdd());
         unLock();
     }
 

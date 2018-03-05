@@ -6,7 +6,6 @@ import android.util.SparseIntArray;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.ObjectItem;
@@ -82,46 +81,23 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
 
         List<ObjectItem> weeksOfMonthList = new ArrayList<>();
 
-        // 시작 달이 같은 경우 뒷날짜로 week의 시작일이 있는지 체크한다.
-        if (currentMonth == startCalendar.get((Calendar.MONTH)) && currentYear == startCalendar.get(Calendar.YEAR))
+        // 시작 달이 같은 경우 뒷날짜로 week 의 시작일이 있는지 체크한다.
+        if (equalsMonth(startCalendar, currentYear, currentMonth) == true)
         {
             firstCalendar = true;
-
-            if (startCalendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY)
-            {
-                underDayCount = startCalendar.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY;
-            }
+            underDayCount = getInFirstWeekOfMonthHasInPreviousMonthDayCount(startCalendar);
         }
 
         // 종료 달이 같은 경우 앞날짜로 week의 마지막 일이 있는지 체크한다.
-        if (currentMonth == endCalendar.get((Calendar.MONTH)) && currentYear == endCalendar.get(Calendar.YEAR))
+        if (equalsMonth(endCalendar, currentYear, currentMonth) == true)
         {
             lastCalendar = true;
-
-            if (endCalendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY)
-            {
-                overDayCount = Calendar.SATURDAY - endCalendar.get(Calendar.DAY_OF_WEEK);
-            }
+            overDayCount = getInLastWeekOfMonthHasInNextMonthDayCount(endCalendar);
         }
 
         int daysOfMonthCount; // 한달의 일 개수
-        int startDay, endDay;
-
-        if (firstCalendar == true)
-        {
-            startDay = startCalendar.get(Calendar.DAY_OF_MONTH);
-        } else
-        {
-            startDay = monthCalendar.get(Calendar.DAY_OF_MONTH);
-        }
-
-        if (lastCalendar == true)
-        {
-            endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
-        } else
-        {
-            endDay = monthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        }
+        int startDay = firstCalendar ? startCalendar.get(Calendar.DAY_OF_MONTH) : monthCalendar.get(Calendar.DAY_OF_MONTH);
+        int endDay = lastCalendar ? endCalendar.get(Calendar.DAY_OF_MONTH) : monthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         daysOfMonthCount = underDayCount + overDayCount + endDay - startDay + 1;
 
@@ -143,7 +119,7 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
 
                 days[j] = getDay(calendar);
 
-                int yyyyMMdd = days[j].getYYYYMMDD();
+                int yyyyMMdd = days[j].toyyyyMMdd();
 
                 days[j].holiday = holidaySparseIntArray != null && holidaySparseIntArray.get(yyyyMMdd, -1) != -1;
                 days[j].soldOut = soldOutDaySparseIntArray != null && soldOutDaySparseIntArray.get(yyyyMMdd, -1) != -1;
@@ -160,7 +136,22 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         return weeksOfMonthList;
     }
 
-    private Day getDay(Calendar calendar)
+    private boolean equalsMonth(@NonNull Calendar calendar, int year, int month)
+    {
+        return month == calendar.get((Calendar.MONTH)) && year == calendar.get(Calendar.YEAR);
+    }
+
+    private int getInFirstWeekOfMonthHasInPreviousMonthDayCount(@NonNull Calendar calendar)
+    {
+        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ? 0 : calendar.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY;
+    }
+
+    private int getInLastWeekOfMonthHasInNextMonthDayCount(@NonNull Calendar calendar)
+    {
+        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ? 0 : Calendar.SATURDAY - calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    private Day getDay(@NonNull Calendar calendar)
     {
         Day day = new Day();
         day.year = calendar.get(Calendar.YEAR);
@@ -170,7 +161,7 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         return day;
     }
 
-    private int getMonthInterval(Calendar startCalendar, Calendar endCalendar)
+    private int getMonthInterval(@NonNull Calendar startCalendar, @NonNull Calendar endCalendar)
     {
         int startYear = startCalendar.get(Calendar.YEAR);
         int startMonth = startCalendar.get(Calendar.MONTH);
@@ -185,32 +176,6 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         {
             return endMonth - startMonth;
         }
-    }
-
-    protected SparseIntArray getHolidayArray(String calendarHolidays)
-    {
-        if (DailyTextUtils.isTextEmpty(calendarHolidays) == true)
-        {
-            return null;
-        }
-
-        String[] holidaysSplit = calendarHolidays.split("\\,");
-        int length = holidaysSplit.length;
-        SparseIntArray holidaySparseIntArray = new SparseIntArray(length);
-
-        for (String holidaySplit : holidaysSplit)
-        {
-            try
-            {
-                int holiday = Integer.parseInt(holidaySplit);
-                holidaySparseIntArray.put(holiday, holiday);
-            } catch (NumberFormatException e)
-            {
-                ExLog.e(e.toString());
-            }
-        }
-
-        return holidaySparseIntArray;
     }
 
     protected static class Day
@@ -228,7 +193,7 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
             return String.format(Locale.KOREA, "%4d-%02d-%02dT12:00:00+09:00", year, month, dayOfMonth);
         }
 
-        public int getYYYYMMDD()
+        public int toyyyyMMdd()
         {
             return year * 10000 + month * 100 + dayOfMonth;
         }
