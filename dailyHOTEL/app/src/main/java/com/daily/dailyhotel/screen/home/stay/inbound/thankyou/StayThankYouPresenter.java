@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -60,7 +61,8 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function4;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 
 /**
  * Created by sheldon
@@ -386,14 +388,13 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         });
 
         addCompositeDisposable(Observable.zip(getViewInterface().getReceiptAnimation() //
-            , mCommonRemoteImpl.getCommonDateTime(), mRewardRemoteImpl.getRewardStickerCount(), recommendObservable //
-            , new Function4<Boolean, CommonDateTime, RewardInformation, List<Gourmet>, ArrayList<CarouselListItem>>()
+            , mCommonRemoteImpl.getCommonDateTime(), mRewardRemoteImpl.getRewardStickerCount()//
+            , new Function3<Boolean, CommonDateTime, RewardInformation, Boolean>()
             {
                 @Override
-                public ArrayList<CarouselListItem> apply(@io.reactivex.annotations.NonNull Boolean animationComplete //
+                public Boolean apply(@io.reactivex.annotations.NonNull Boolean animationComplete //
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
-                    , @io.reactivex.annotations.NonNull RewardInformation rewardInformation //
-                    , @io.reactivex.annotations.NonNull List<Gourmet> gourmetList) throws Exception
+                    , @io.reactivex.annotations.NonNull RewardInformation rewardInformation) throws Exception
                 {
                     mCommonDateTime = commonDateTime;
 
@@ -401,9 +402,29 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
                     setRewardInformation(rewardInformation);
 
-                    return convertCarouselListItemList(gourmetList);
+                    return DailyCalendar.compareDateDay(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), commonDateTime.dailyDateTime) < GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
+            }).flatMap(new Function<Boolean, ObservableSource<List<Gourmet>>>()
+        {
+            @Override
+            public ObservableSource<List<Gourmet>> apply(Boolean showRecommendGourmet) throws Exception
+            {
+                if (showRecommendGourmet == true)
+                {
+                    return recommendObservable;
+                } else
+                {
+                    return Observable.just(new ArrayList<Gourmet>());
+                }
+            }
+        }).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
+        {
+            @Override
+            public ArrayList<CarouselListItem> apply(List<Gourmet> gourmetList) throws Exception
+            {
+                return convertCarouselListItemList(gourmetList);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
         {
             @Override
             public void accept(ArrayList<CarouselListItem> carouselListItemList) throws Exception
