@@ -13,5 +13,5 @@ public class StayObRecentlySuggestList implements StayObRecentlySuggestColumns
 {
     private static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".dailycontentprovider";
 
-    public static final Uri NOTIFICATION_URI = Uri.parse("content://" + AUTHORITY + "/suggest");
+    public static final Uri NOTIFICATION_URI = Uri.parse("content://" + AUTHORITY + "/suggest/stay_ob");
 }
