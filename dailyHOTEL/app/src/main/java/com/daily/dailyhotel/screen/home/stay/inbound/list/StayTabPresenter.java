@@ -510,11 +510,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         if (areaType == PreferenceRegion.AreaType.SUBWAY_AREA)
         {
             Area areaGroup = stayRegion.getAreaGroup();
-
-            if (areaGroup instanceof StaySubwayAreaGroup)
-            {
-                setPreferenceSubwayArea(((StaySubwayAreaGroup) areaGroup).getRegion().name, stayRegion.getAreaGroupName(), stayRegion.getAreaName());
-            }
+            setPreferenceSubwayArea(((StaySubwayAreaGroup) areaGroup).getRegion().name, stayRegion.getAreaGroupName(), stayRegion.getAreaName());
         } else
         {
             setPreferenceArea(stayRegion.getAreaGroupName(), stayRegion.getAreaName());

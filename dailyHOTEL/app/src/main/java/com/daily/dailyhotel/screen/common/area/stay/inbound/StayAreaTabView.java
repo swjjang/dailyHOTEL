@@ -209,6 +209,7 @@ public class StayAreaTabView extends BaseDialogView<StayAreaTabInterface.OnEvent
 
         final int AREA_TAB_POSITION = 0;
 
+        getViewDataBinding().categoryTabLayout.getTabAt(AREA_TAB_POSITION).select();
         getViewDataBinding().viewPager.setCurrentItem(AREA_TAB_POSITION);
     }
 
@@ -222,6 +223,18 @@ public class StayAreaTabView extends BaseDialogView<StayAreaTabInterface.OnEvent
 
         final int SUBWAY_AREA_TAB_POSITION = 1;
 
+        getViewDataBinding().categoryTabLayout.getTabAt(SUBWAY_AREA_TAB_POSITION).select();
         getViewDataBinding().viewPager.setCurrentItem(SUBWAY_AREA_TAB_POSITION);
+    }
+
+    @Override
+    public void setTabSelect(int position)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().categoryTabLayout.getTabAt(position).select();
     }
 }

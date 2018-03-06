@@ -25,6 +25,8 @@ public interface StayAreaTabInterface
         void setAreaTabSelection();
 
         void setSubwayAreaTabSelection();
+
+        void setTabSelect(int position);
     }
 
     interface OnEventListener extends OnBaseEventListener

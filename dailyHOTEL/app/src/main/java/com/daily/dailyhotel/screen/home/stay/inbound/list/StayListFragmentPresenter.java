@@ -1137,18 +1137,34 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         if (mStayViewModel.stayRegion.getValue() != null)
         {
-            // provinceIdx
-            Area areaGroup = mStayViewModel.stayRegion.getValue().getAreaGroup();
-            if (areaGroup != null)
+            switch (mStayViewModel.stayRegion.getValue().getAreaType())
             {
-                queryMap.put("provinceIdx", mStayViewModel.stayRegion.getValue().getAreaGroup().index);
-            }
+                case AREA:
+                {
+                    Area areaGroup = mStayViewModel.stayRegion.getValue().getAreaGroup();
+                    if (areaGroup != null)
+                    {
+                        queryMap.put("provinceIdx", areaGroup.index);
+                    }
 
-            Area area = mStayViewModel.stayRegion.getValue().getArea();
-            if (area != null && area.index != StayArea.ALL)
-            {
-                // areaIdx
-                queryMap.put("areaIdx", mStayViewModel.stayRegion.getValue().getArea().index);
+                    Area area = mStayViewModel.stayRegion.getValue().getArea();
+                    if (area != null && area.index != StayArea.ALL)
+                    {
+                        queryMap.put("areaIdx", area.index);
+                    }
+                    break;
+                }
+
+                case SUBWAY_AREA:
+                {
+                    Area area = mStayViewModel.stayRegion.getValue().getArea();
+
+                    if (area != null)
+                    {
+                        queryMap.put("subwayIdx", area.index);
+                    }
+                    break;
+                }
             }
         }
 

@@ -316,7 +316,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
                     if (stayRegion != null)
                     {
-                        getViewInterface().setSubwayAreaTabSelection();
+                        getViewInterface().setTabSelect(1);
                     }
                     break;
             }

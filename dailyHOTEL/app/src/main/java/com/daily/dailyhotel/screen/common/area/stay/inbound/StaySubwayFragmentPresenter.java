@@ -133,7 +133,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
 
                     if (region != null)
                     {
-                        List<StaySubwayAreaGroup> subwayAreaGroupList = mStayAreaViewModel.subwayMap.getValue().get(region);
+                        List<StaySubwayAreaGroup> subwayAreaGroupList = mStayAreaViewModel.subwayMap.getValue().get(region.first);
                         int groupPosition = getAreaGroupPosition(subwayAreaGroupList, subwayAreaGroup);
 
                         if (groupPosition >= 0)
@@ -205,9 +205,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
 
         for (int i = 0; i < size; i++)
         {
-            StaySubwayAreaGroup subwayAreaGroup = areaGroupList.get(i);
-
-            if (subwayAreaGroup.name.equalsIgnoreCase(areaGroup.name) == true)
+            if (areaGroupList.get(i).name.equalsIgnoreCase(areaGroup.name) == true)
             {
                 return i;
             }

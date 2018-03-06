@@ -114,6 +114,8 @@ public class SubwayAreasData
                 categoryList.add(Category.ALL);
             }
 
+            area.setCategoryList(categoryList);
+
             return area;
         }
     }
