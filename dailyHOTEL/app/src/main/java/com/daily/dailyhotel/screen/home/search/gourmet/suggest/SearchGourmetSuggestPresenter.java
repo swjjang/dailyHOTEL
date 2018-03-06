@@ -79,7 +79,7 @@ public class SearchGourmetSuggestPresenter //
 
     DailyRecentSearches mDailyRecentSearches;
     private GourmetBookDateTime mGourmetBookDateTime;
-    private List<GourmetSuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
+    private List<GourmetSuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<GourmetSuggest> mRecentlySuggestList;
     private List<GourmetSuggestV2> mSuggestList;
     GourmetSuggest mLocationSuggest;
@@ -136,8 +136,8 @@ public class SearchGourmetSuggestPresenter //
             , null);
         mLocationSuggest.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
 
-        List<GourmetSuggest> popularList = new ArrayList<>();
-        popularList.add(new GourmetSuggest(0, "", getString(R.string.label_search_suggest_recently_empty_description_type_gourmet)));
+        List<GourmetSuggestV2> popularList = new ArrayList<>();
+        popularList.add(new GourmetSuggestV2(0, new GourmetSuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
 
@@ -407,7 +407,7 @@ public class SearchGourmetSuggestPresenter //
         }));
     }
 
-    private void setPopularAreaList(List<GourmetSuggest> popularAreaList)
+    private void setPopularAreaList(List<GourmetSuggestV2> popularAreaList)
     {
         mPopularAreaList = popularAreaList;
     }

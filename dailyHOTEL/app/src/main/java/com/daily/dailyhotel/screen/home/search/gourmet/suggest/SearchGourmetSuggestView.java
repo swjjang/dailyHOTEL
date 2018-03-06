@@ -368,7 +368,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList)
+    public void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggestV2> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -399,7 +399,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
+            for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
             {
                 objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmetSuggest));
             }

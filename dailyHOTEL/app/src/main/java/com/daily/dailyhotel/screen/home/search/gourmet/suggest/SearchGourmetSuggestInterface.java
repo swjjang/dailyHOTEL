@@ -20,7 +20,7 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void setRecentlySuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
-    void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
+    void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggestV2> gourmetSuggestList);
 
     int getRecentlySuggestAllEntryCount();
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
@@ -196,11 +197,13 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        GourmetSuggestV2 gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 
-        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.displayName);
+        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
+
+        holder.dataBinding.descriptionTextView.setText(suggestItem.name);
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder
