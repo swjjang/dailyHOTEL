@@ -70,17 +70,35 @@ public class StayParams extends PlaceParams
 
         if (stayRegion != null)
         {
-            com.daily.dailyhotel.entity.Area areaGroup = stayRegion.getAreaGroup();
-
-            if (areaGroup != null)
+            switch (stayRegion.getAreaType())
             {
-                provinceIdx = areaGroup.index;
-
-                com.daily.dailyhotel.entity.Area area = stayRegion.getArea();
-
-                if (area != null && area.index != StayArea.ALL)
+                case AREA:
                 {
-                    areaIdx = area.index;
+                    com.daily.dailyhotel.entity.Area areaGroup = stayRegion.getAreaGroup();
+
+                    if (areaGroup != null)
+                    {
+                        provinceIdx = areaGroup.index;
+
+                        com.daily.dailyhotel.entity.Area area = stayRegion.getArea();
+
+                        if (area != null && area.index != StayArea.ALL)
+                        {
+                            areaIdx = area.index;
+                        }
+                    }
+                    break;
+                }
+
+                case SUBWAY_AREA:
+                {
+                    com.daily.dailyhotel.entity.Area area = stayRegion.getArea();
+
+                    if (area != null)
+                    {
+                        subwayIndex = area.index;
+                    }
+                    break;
                 }
             }
         }
@@ -196,11 +214,20 @@ public class StayParams extends PlaceParams
 
         hashMap.put("dateCheckIn", dateCheckIn);
         hashMap.put("stays", stays);
-        hashMap.put("provinceIdx", provinceIdx);
+
+        if (provinceIdx != 0)
+        {
+            hashMap.put("provinceIdx", provinceIdx);
+        }
 
         if (areaIdx != 0)
         {
             hashMap.put("areaIdx", areaIdx);
+        }
+
+        if (subwayIndex != 0)
+        {
+            hashMap.put("subwayIdx", subwayIndex);
         }
 
         if (persons != 0)

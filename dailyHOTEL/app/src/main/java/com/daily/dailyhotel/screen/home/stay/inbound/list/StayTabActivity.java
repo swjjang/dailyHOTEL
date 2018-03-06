@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
  * Created by sheldon
@@ -28,9 +29,40 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
     static final int REQUEST_CODE_WISH_DIALOG = 10009;
     static final int REQUEST_CODE_CALL = 10010;
 
+    static final String INTENT_EXTRA_DATA_CATEGORY_CODE = "categoryCode";
+
+    public static Intent newInstance(Context context, DailyCategoryType categoryType)
+    {
+        Intent intent = new Intent(context, StayTabActivity.class);
+
+        if (categoryType != null)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_CODE, categoryType.name());
+        }
+
+        return intent;
+    }
+
     public static Intent newInstance(Context context, String deepLink)
     {
         Intent intent = new Intent(context, StayTabActivity.class);
+
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
+    {
+        Intent intent = new Intent(context, StayTabActivity.class);
+
+        if (categoryType != null)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_CODE, categoryType.name());
+        }
 
         if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {

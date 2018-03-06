@@ -521,18 +521,35 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         if (mStayRegion != null)
         {
-            // provinceIdx
-            Area areaGroup = mStayRegion.getAreaGroup();
-            if (areaGroup != null)
+            switch (mStayRegion.getAreaType())
             {
-                queryMap.put("provinceIdx", mStayRegion.getAreaGroup().index);
-            }
+                case AREA:
+                {
+                    // provinceIdx
+                    Area areaGroup = mStayRegion.getAreaGroup();
+                    if (areaGroup != null)
+                    {
+                        queryMap.put("provinceIdx", areaGroup.index);
+                    }
 
-            Area area = mStayRegion.getArea();
-            if (area != null && area.index != StayArea.ALL)
-            {
-                // areaIdx
-                queryMap.put("areaIdx", mStayRegion.getArea().index);
+                    Area area = mStayRegion.getArea();
+                    if (area != null && area.index != StayArea.ALL)
+                    {
+                        // areaIdx
+                        queryMap.put("areaIdx", area.index);
+                    }
+                    break;
+                }
+
+                case SUBWAY_AREA:
+                {
+                    Area area = mStayRegion.getArea();
+                    if (area != null)
+                    {
+                        queryMap.put("subwayIdx", area.index);
+                    }
+                    break;
+                }
             }
         }
 

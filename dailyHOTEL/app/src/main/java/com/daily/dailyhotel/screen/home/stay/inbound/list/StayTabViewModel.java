@@ -15,6 +15,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
  * Created by sheldon
@@ -29,6 +30,7 @@ public class StayTabViewModel extends ViewModel
     MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
     MutableLiveData<Location> location = new MutableLiveData<>();
     MutableLiveData<StayTabPresenter.ViewType> viewType = new MutableLiveData<>();
+    DailyCategoryType categoryType;
 
     static class StayTabViewModelFactory implements ViewModelProvider.Factory
     {
@@ -64,6 +66,8 @@ public class StayTabViewModel extends ViewModel
                     stayTabViewModel.selectedCategory.setValue(Category.ALL);
                 }
             }
+
+            stayTabViewModel.categoryType = DailyCategoryType.STAY_ALL;
 
             return stayTabViewModel;
         }

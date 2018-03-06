@@ -308,7 +308,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
     }
 
     @Override
-    public void setCategoryTab(int position)
+    public void setCategoryTabSelect(int position)
     {
         if (getViewDataBinding() == null)
         {
@@ -497,6 +497,11 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
                 @Override
                 public void setCategoryVisible(boolean visible)
                 {
+                    if (categoryList.size() <= 2)
+                    {
+                        return;
+                    }
+
                     setCategoryTabLayoutVisibility(visible ? View.VISIBLE : View.GONE);
                 }
 

@@ -66,7 +66,6 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
-import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
@@ -400,7 +399,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         try
                         {
-                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, dailyCategoryType, null);
+                            Intent intent = StayTabActivity.newInstance(mBaseActivity, dailyCategoryType);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {
@@ -606,7 +605,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     {
                         try
                         {
-                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, dailyCategoryType, dailyDeepLink.getDeepLink());
+                            Intent intent = StayTabActivity.newInstance(mBaseActivity, dailyCategoryType, dailyDeepLink.getDeepLink());
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {

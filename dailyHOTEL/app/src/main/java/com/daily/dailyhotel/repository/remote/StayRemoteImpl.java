@@ -83,6 +83,48 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
+    public Observable<Stays> getList(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{categoryAsPath}/sales"//
+            : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
+
+        String baseUrl;
+
+        if (Constants.DEBUG == true)
+        {
+            baseUrl = DailyPreference.getInstance(mContext).getBaseUrl();
+        } else
+        {
+            baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
+        }
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{categoryAsPath}", categoryType.getCodeString(mContext));
+
+        return mDailyMobileService.getStayList(baseUrl + Crypto.getUrlDecoderEx(API, urlParams) + makeListQueryParams(queryMap, abTestType)) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                Stays stays;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        stays = baseDto.data.getStays();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return stays;
+            });
+    }
+
+    @Override
     public Observable<StayFilterCount> getListCountByFilter(Map<String, Object> queryMap, String abTestType)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
@@ -417,7 +459,17 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         final String API = Constants.UNENCRYPTED_URL ? "api/v6/hotels/subway"//
             : "NTkkMjQkODkkMTgkNzMkMSQzMSQzOCQzMCQ3NCQyMyQ1MiQ0OCQ5JDEwMCQ4MSQ=$NP0RCOUIyZN0JEMjNDRjKVEMYDgwBQzYS3HN0Y2MTMVERkJFQPzJCQFjY0NTlBNzMzMzNUGOUFGQTgHyNCDVhEMjAzQjA1MTNBQg=SS=$";
 
-        return mDailyMobileService.getStaySubwayAreaList(Crypto.getUrlDecoderEx(API))//
+        String category;
+
+        if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
+        {
+            category = null;
+        } else
+        {
+            category = categoryType.getCodeString(mContext);
+        }
+
+        return mDailyMobileService.getStaySubwayAreaList(Crypto.getUrlDecoderEx(API), category)//
             .subscribeOn(Schedulers.io()).map(baseListDto ->
             {
                 LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayHashMap = new LinkedHashMap<>();
