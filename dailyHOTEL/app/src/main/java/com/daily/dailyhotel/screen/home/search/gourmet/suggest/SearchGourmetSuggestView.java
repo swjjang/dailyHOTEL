@@ -43,9 +43,9 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         void onSuggestClick(GourmetSuggestV2 gourmetSuggest);
 
-        void onRecentlySuggestClick(GourmetSuggest gourmetSuggest);
+        void onRecentlySuggestClick(GourmetSuggestV2 gourmetSuggest);
 
-        void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest);
+        void onDeleteRecentlySuggest(int position, GourmetSuggestV2 gourmetSuggest);
 
         void onVoiceSearchClick();
 
@@ -307,7 +307,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggest> gourmetSuggestList)
+    public void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -319,13 +319,13 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
             mRecentlySuggestListAdapter = new GourmetRecentlySuggestListAdapter(getContext(), new GourmetRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
-                public void onItemClick(int position, GourmetSuggest gourmetSuggest)
+                public void onItemClick(int position, GourmetSuggestV2 gourmetSuggest)
                 {
                     getEventListener().onRecentlySuggestClick(gourmetSuggest);
                 }
 
                 @Override
-                public void onDeleteClick(int position, GourmetSuggest gourmetSuggest)
+                public void onDeleteClick(int position, GourmetSuggestV2 gourmetSuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, gourmetSuggest);
                 }
@@ -349,9 +349,9 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
+            for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
             {
-                if (DailyTextUtils.isTextEmpty(gourmetSuggest.categoryKey))
+                if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Section)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else

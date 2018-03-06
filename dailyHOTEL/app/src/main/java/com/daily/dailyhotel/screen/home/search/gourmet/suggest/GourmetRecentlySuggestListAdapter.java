@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
@@ -28,9 +28,9 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 {
     public interface OnRecentlySuggestListener
     {
-        void onItemClick(int position, GourmetSuggest gourmetSuggest);
+        void onItemClick(int position, GourmetSuggestV2 gourmetSuggest);
 
-        void onDeleteClick(int position, GourmetSuggest gourmetSuggest);
+        void onDeleteClick(int position, GourmetSuggestV2 gourmetSuggest);
 
         void onNearbyClick(GourmetSuggestV2 gourmetSuggest);
     }
@@ -193,7 +193,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         return mSuggestList.get(position);
     }
 
-    public GourmetSuggest removeItem(int position)
+    public GourmetSuggestV2 removeItem(int position)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
@@ -206,7 +206,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         }
 
         ObjectItem removeItem = mSuggestList.remove(position);
-        GourmetSuggest gourmetSuggest = removeItem.getItem();
+        GourmetSuggestV2 gourmetSuggest = removeItem.getItem();
 
         if (gourmetSuggest != null)
         {
@@ -238,7 +238,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         for (int i = 0; i < mSuggestList.size(); i++)
         {
             ObjectItem item = mSuggestList.get(i);
-            GourmetSuggest gourmetSuggest = item.getItem();
+            GourmetSuggestV2 gourmetSuggest = item.getItem();
 
             if (gourmetSuggest == null || gourmetSuggest.menuType != menuType)
             {
@@ -326,9 +326,10 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggestV2.Section section = (GourmetSuggestV2.Section) gourmetSuggest.suggestItem;
 
-        if (DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(section.name) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
         } else
@@ -336,7 +337,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
         }
 
-        holder.dataBinding.titleTextView.setText(gourmetSuggest.displayName);
+        holder.dataBinding.titleTextView.setText(section.name);
     }
 
     private void onBindViewHolder(FooterViewHolder holder)
@@ -347,7 +348,15 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
+
+        if (suggestItem == null)
+        {
+            holder.itemView.getRootView().setVisibility(View.GONE);
+            ExLog.e("suggestItem is null - check GourmetSuggestV2");
+            return;
+        }
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -364,9 +373,6 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
             }
         });
 
-        holder.dataBinding.titleTextView.setText(gourmetSuggest.displayName);
-
-        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.priceTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.VISIBLE);
@@ -385,24 +391,50 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
             }
         });
 
-        switch (gourmetSuggest.categoryKey)
+        String title = null;
+        String description = null;
+        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
         {
-            case GourmetSuggest.CATEGORY_GOURMET:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
-                break;
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
 
-            case GourmetSuggest.CATEGORY_LOCATION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
-                break;
+            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
+            title = gourmet.name;
+            description = gourmet.province == null ? null : gourmet.province.name;
+        } else if (suggestItem instanceof GourmetSuggestV2.Location)
+        {
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
 
-            case GourmetSuggest.CATEGORY_REGION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-                break;
+            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) suggestItem;
 
-            default:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
-                break;
+            title = mContext.getString(R.string.label_search_suggest_type_location_item_format, location.name);
+            description = null;
+        } else if (suggestItem instanceof GourmetSuggestV2.Province)
+        {
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+
+            GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
+
+            if (province.area == null)
+            {
+                title = province.name + " " + mContext.getString(R.string.label_all);
+                description = null;
+            } else
+            {
+                title = province.area.name;
+                description = province.name;
+            }
+        } else
+        {
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+
+            title = suggestItem.name;
+            description = null;
         }
+
+        holder.dataBinding.titleTextView.setText(title);
+
+        holder.dataBinding.descriptionTextView.setText(description);
+        holder.dataBinding.descriptionTextView.setVisibility(DailyTextUtils.isTextEmpty(description) ? View.GONE : View.VISIBLE);
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder

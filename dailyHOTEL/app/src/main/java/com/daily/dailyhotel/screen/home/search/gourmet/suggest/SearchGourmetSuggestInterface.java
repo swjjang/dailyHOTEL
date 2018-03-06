@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.search.gourmet.suggest;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggest> gourmetSuggestList);
+    void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList);
 
     void setPopularAreaSuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList);
 
