@@ -20,6 +20,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -647,7 +648,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         {
             setCategoryRegion(categoryType, areaGroup.name, area.name);
 
-            intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION, new StayRegionParcel(new StayRegion(areaGroup, area)));
+            intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION, new StayRegionParcel(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area)));
         }
 
         intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY, categoryType.name());
@@ -704,14 +705,14 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new StayRegion(areaGroup, areaGroup);
+            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup);
         } else
         {
             for (StayArea area : areaGroup.getAreaList())
             {
                 if (area.name.equalsIgnoreCase(areaName) == true)
                 {
-                    return new StayRegion(areaGroup, area);
+                    return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area);
                 }
             }
         }

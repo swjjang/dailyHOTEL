@@ -2,14 +2,22 @@ package com.daily.dailyhotel.entity;
 
 public class StayRegion
 {
+    private PreferenceRegion.AreaType mAreaType;
+
     private Area mAreaGroup;
 
     private Area mArea;
 
-    public StayRegion(Area areaGroup, Area area)
+    public StayRegion(PreferenceRegion.AreaType areaType, Area areaGroup, Area area)
     {
+        mAreaType = areaType;
         mAreaGroup = areaGroup;
         mArea = area;
+    }
+
+    public PreferenceRegion.AreaType getAreaType()
+    {
+        return mAreaType;
     }
 
     public Area getAreaGroup()

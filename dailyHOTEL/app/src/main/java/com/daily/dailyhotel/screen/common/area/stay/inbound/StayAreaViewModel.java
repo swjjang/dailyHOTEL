@@ -25,7 +25,7 @@ public class StayAreaViewModel extends ViewModel
     MutableLiveData<List<StayAreaGroup>> areaList = new MutableLiveData<>();
     MutableLiveData<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> subwayMap = new MutableLiveData<>();
     MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
-    MutableLiveData<StayRegion> mPreviousArea = new MutableLiveData<>();
+    MutableLiveData<StayRegion> previousArea = new MutableLiveData<>();
     MutableLiveData<Boolean> isAgreeTermsOfLocation = new MutableLiveData<>();
     MutableLiveData<DailyCategoryType> categoryType = new MutableLiveData<>();
 

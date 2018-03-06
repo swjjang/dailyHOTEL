@@ -17,8 +17,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.AreaGroup;
-import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.screen.common.area.stay.StayAreaListAdapter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutAreaSubwayTabDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListLocationDataBinding;
@@ -28,6 +26,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
@@ -36,7 +35,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
     private LayoutAreaSubwayTabDataBinding mLayoutAreaSubwayTabDataBinding;
 
-    private StayAreaListAdapter mStayAreaListAdapter;
+    private StayAreaExpandableListAdapter mStayAreaListAdapter;
     private OnStayAreaExpandableListener mAreaExpandableListener;
 
     public interface OnStayAreaExpandableListener
@@ -146,7 +145,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
 
     private void initListAdapter(Context context)
     {
-        mStayAreaListAdapter = new StayAreaListAdapter(context);
+        mStayAreaListAdapter = new StayAreaExpandableListAdapter(context);
         mStayAreaListAdapter.setOnChildClickListener(new View.OnClickListener()
         {
             @Override
@@ -159,7 +158,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
                     return;
                 }
 
-                StayArea stayArea = (StayArea) tag;
+                Area area = (Area) tag;
                 Integer groupPosition = (Integer) view.getTag(view.getId());
 
                 if (groupPosition == null)
@@ -169,7 +168,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
 
                 if (mAreaExpandableListener != null)
                 {
-                    mAreaExpandableListener.onAreaClick(groupPosition, stayArea);
+                    mAreaExpandableListener.onAreaClick(groupPosition, area);
                 }
             }
         });
@@ -197,10 +196,22 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
             return;
         }
 
+        mLayoutAreaSubwayTabDataBinding.subwayTabView.clearTab();
+
         for (Area area : areaList)
         {
             mLayoutAreaSubwayTabDataBinding.subwayTabView.addTab(area.name, area);
         }
+    }
+
+    public void setTabSelected(int position)
+    {
+        if(position < 0)
+        {
+            return;
+        }
+
+        mLayoutAreaSubwayTabDataBinding.subwayTabView.setSelection(position);
     }
 
     public void setTabletDevice(boolean tablet)
@@ -278,6 +289,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
                 {
                     collapseGroup(groupPosition);
 
+                    observer.onNext(true);
                     observer.onComplete();
                 }
             }
@@ -348,6 +360,9 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
                         ExLog.e(e.toString());
 
                         expandGroup(groupPosition);
+
+                        observer.onNext(true);
+                        observer.onComplete();
                     }
 
                     // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
@@ -398,24 +413,24 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
 
                 return true;
             }
-        });
+        }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    public void setSelectedAreaGroup(int groupPosition)
+    public void setAreaGroupSelected(int position)
     {
-        if (mStayAreaListAdapter == null)
+        if (mStayAreaListAdapter == null || position < 0)
         {
             return;
         }
 
-        setSelection(groupPosition);
+        setSelection(position);
 
-        if (mStayAreaListAdapter.getChildren(groupPosition) != null)
+        if (mStayAreaListAdapter.getChildren(position) != null)
         {
-            expandGroup(groupPosition);
+            expandGroup(position);
         }
 
-        mStayAreaListAdapter.setSelectedGroupPosition(groupPosition);
+        mStayAreaListAdapter.setSelectedGroupPosition(position);
     }
 
 

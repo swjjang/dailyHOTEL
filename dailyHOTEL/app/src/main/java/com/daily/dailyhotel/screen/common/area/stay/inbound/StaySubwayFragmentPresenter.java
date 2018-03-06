@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,13 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.PreferenceRegion;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.twoheart.dailyhotel.R;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +44,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
 
     StayAreaViewModel mStayAreaViewModel;
     int mAreaGroupPosition = -1;
+    Area mCurrentRegion;
 
     public StaySubwayFragmentPresenter(@NonNull StaySubwayFragment fragment)
     {
@@ -96,9 +102,53 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         mStayAreaViewModel.subwayMap.observe(activity, new Observer<LinkedHashMap<Area, List<StaySubwayAreaGroup>>>()
         {
             @Override
-            public void onChanged(@Nullable LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaListLinkedHashMap)
+            public void onChanged(@Nullable LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
             {
+                List<Area> tabList = new ArrayList<>();
+                Iterator<Area> iterator = areaGroupMap.keySet().iterator();
 
+                while (iterator.hasNext() == true)
+                {
+                    tabList.add(iterator.next());
+                }
+
+                getViewInterface().setTab(tabList);
+                getViewInterface().setTabSelected(0);
+
+                mCurrentRegion = tabList.get(0);
+
+                getViewInterface().setAreaGroup(areaGroupMap.get(tabList.get(0)));
+            }
+        });
+
+        mStayAreaViewModel.previousArea.observe(activity, new Observer<StayRegion>()
+        {
+            @Override
+            public void onChanged(@Nullable StayRegion stayRegion)
+            {
+                if (stayRegion.getAreaType() == PreferenceRegion.AreaType.SUBWAY_AREA)
+                {
+                    StaySubwayAreaGroup subwayAreaGroup = (StaySubwayAreaGroup) stayRegion.getAreaGroup();
+                    Pair<Area, Integer> region = getRegion(mStayAreaViewModel.subwayMap.getValue(), subwayAreaGroup);
+
+                    if (region != null)
+                    {
+                        List<StaySubwayAreaGroup> subwayAreaGroupList = mStayAreaViewModel.subwayMap.getValue().get(region);
+                        int groupPosition = getAreaGroupPosition(subwayAreaGroupList, subwayAreaGroup);
+
+                        if (groupPosition >= 0)
+                        {
+                            mCurrentRegion = region.first;
+                            mAreaGroupPosition = groupPosition;
+
+                            getViewInterface().setTabSelected(region.second);
+                            getViewInterface().setAreaGroup(subwayAreaGroupList);
+                            getViewInterface().setAreaGroupSelected(groupPosition);
+                        }
+                    }
+                }
+
+                mStayAreaViewModel.previousArea.removeObserver(this);
             }
         });
 
@@ -110,6 +160,60 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                 getViewInterface().setLocationTermVisible(isAgree);
             }
         });
+    }
+
+    Pair<Area, Integer> getRegion(LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap, StaySubwayAreaGroup areaGroup)
+    {
+        if (areaGroupMap == null || areaGroup == null)
+        {
+            return null;
+        }
+
+        Area areaGroupRegion = areaGroup.getRegion();
+
+        if (areaGroupRegion == null)
+        {
+            return null;
+        }
+
+        Iterator<Area> iterator = areaGroupMap.keySet().iterator();
+        int tabPosition = 0;
+
+        while (iterator.hasNext() == true)
+        {
+            Area region = iterator.next();
+
+            if (region.name.equalsIgnoreCase(areaGroupRegion.name) == true)
+            {
+                return new Pair(region, tabPosition);
+            }
+
+            tabPosition++;
+        }
+
+        return null;
+    }
+
+    int getAreaGroupPosition(List<StaySubwayAreaGroup> areaGroupList, StaySubwayAreaGroup areaGroup)
+    {
+        if (areaGroupList == null || areaGroup == null)
+        {
+            return -1;
+        }
+
+        int size = areaGroupList.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            StaySubwayAreaGroup subwayAreaGroup = areaGroupList.get(i);
+
+            if (subwayAreaGroup.name.equalsIgnoreCase(areaGroup.name) == true)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override
@@ -215,78 +319,84 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
     @Override
     public void onAreaGroupClick(int groupPosition)
     {
-        if (mStayAreaViewModel.areaList == null || mStayAreaViewModel.areaList.getValue().size() == 0 || groupPosition < 0 || lock() == true)
+        if (mStayAreaViewModel.subwayMap == null || groupPosition < 0 || lock() == true)
         {
             return;
         }
 
-        // 하위 지역이 없으면 선택
-        if (mStayAreaViewModel.areaList.getValue().get(groupPosition).getAreaCount() == 0)
+        if (mAreaGroupPosition == groupPosition)
         {
+            addCompositeDisposable(collapseGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    mAreaGroupPosition = -1;
 
-            unLockAll();
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
         } else
         {
-            // 하위 지역이 있으면 애니메이션
-            if (mAreaGroupPosition == groupPosition)
+            addCompositeDisposable(collapseGroupWithAnimation(mAreaGroupPosition, false).subscribeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Boolean>>()
             {
-                addCompositeDisposable(collapseGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                @Override
+                public ObservableSource<Boolean> apply(Boolean aBoolean) throws Exception
                 {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception
-                    {
-                        mAreaGroupPosition = -1;
-
-                        unLockAll();
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        unLockAll();
-                    }
-                }));
-            } else
+                    return expandGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread());
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).delaySubscription(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<Boolean>()
             {
-                addCompositeDisposable(collapseGroupWithAnimation(mAreaGroupPosition, false).subscribeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Boolean>>()
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
                 {
-                    @Override
-                    public ObservableSource<Boolean> apply(Boolean aBoolean) throws Exception
-                    {
-                        return expandGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread());
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).delaySubscription(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<Boolean>()
-                {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception
-                    {
-                        mAreaGroupPosition = groupPosition;
+                    mAreaGroupPosition = groupPosition;
 
-                        unLockAll();
-                    }
-                }, new Consumer<Throwable>()
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
                 {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        unLockAll();
-                    }
-                }));
-            }
+                    unLockAll();
+                }
+            }));
         }
     }
 
     @Override
-    public void onAreaClick(StaySubwayAreaGroup areaGroup, Area area)
+    public void onAreaClick(int groupPosition, Area area)
     {
-        getFragment().getFragmentEventListener().onSubwayAreaClick(areaGroup, area);
+        getFragment().getFragmentEventListener().onSubwayAreaClick(getAreaGroup(groupPosition), area);
+    }
+
+    private StaySubwayAreaGroup getAreaGroup(int position)
+    {
+        return mStayAreaViewModel.subwayMap.getValue().get(mCurrentRegion).get(position);
     }
 
     @Override
     public void onTabChanged(int position, Object tag)
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        mCurrentRegion = (Area) tag;
+
+        getViewInterface().setTabSelected(position);
         getViewInterface().setAreaGroup(mStayAreaViewModel.subwayMap.getValue().get(tag));
+
+        unLockAll();
     }
 
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)

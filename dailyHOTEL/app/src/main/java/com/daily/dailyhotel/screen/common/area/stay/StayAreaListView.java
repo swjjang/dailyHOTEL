@@ -16,6 +16,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaExpandableListAdapter;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayAreaListDataBinding;
@@ -28,7 +29,7 @@ import io.reactivex.Observer;
 
 public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventListener, ActivityStayAreaListDataBinding> implements StayAreaListInterface
 {
-    StayAreaListAdapter mStayAreaListAdapter;
+    StayAreaExpandableListAdapter mStayAreaListAdapter;
 
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
 

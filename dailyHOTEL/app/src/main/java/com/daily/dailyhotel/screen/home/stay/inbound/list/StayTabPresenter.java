@@ -391,34 +391,35 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     List<StayAreaGroup> areaGroupList = pair.first;
                     LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap = pair.second;
-                    Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> areaTypeRgionCategoryPair;
+                    Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> areaTypeRegionCategoryPair;
                     boolean needSetPreferenceRegion;
 
                     if (mDailyDeepLink != null)
                     {
                         needSetPreferenceRegion = false;
-                        areaTypeRgionCategoryPair = processRegionCategoryDeepLink(mDailyDeepLink, areaGroupList, areaGroupMap);
+                        areaTypeRegionCategoryPair = processRegionCategoryDeepLink(mDailyDeepLink, areaGroupList, areaGroupMap);
                     } else
                     {
                         needSetPreferenceRegion = true;
-                        areaTypeRgionCategoryPair = processRegionCategoryByPreferenceRegion(getPreferenceRegion(DailyCategoryType.STAY_ALL), areaGroupList, areaGroupMap);
+                        areaTypeRegionCategoryPair = processRegionCategoryByPreferenceRegion(getPreferenceRegion(DailyCategoryType.STAY_ALL), areaGroupList, areaGroupMap);
                     }
 
-                    if (areaTypeRgionCategoryPair == null)
+                    if (areaTypeRegionCategoryPair == null)
                     {
-                        areaTypeRgionCategoryPair = new Pair(PreferenceRegion.AreaType.AREA, getDefaultRegion(areaGroupList));
+                        areaTypeRegionCategoryPair = new Pair(PreferenceRegion.AreaType.AREA, getDefaultRegion(areaGroupList));
                     }
 
-                    StayRegion stayRegion = areaTypeRgionCategoryPair.second.first;
+                    Pair<StayRegion, List<Category>> regionCategoryPair = areaTypeRegionCategoryPair.second;
+                    StayRegion stayRegion = regionCategoryPair.first;
 
                     mStayViewModel.stayRegion.setValue(stayRegion);
 
                     if (needSetPreferenceRegion == true)
                     {
-                        setPreferenceRegion(areaTypeRgionCategoryPair.first, stayRegion);
+                        setPreferenceRegion(areaTypeRegionCategoryPair.first, stayRegion);
                     }
 
-                    return Observable.just(new Pair(true, areaTypeRgionCategoryPair.second));
+                    return Observable.just(new Pair(true, regionCategoryPair.second));
                 }
             }
         }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Pair<Boolean, List<Category>>, ObservableSource<Boolean>>()
@@ -547,12 +548,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
+            return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup), areaGroup.getCategoryList());
         } else
         {
             StayArea area = areaGroup.getAreaList().get(0);
 
-            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
+            return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area), area.getCategoryList());
         }
     }
 
@@ -580,14 +581,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             if (stayAreaGroup.getAreaCount() == 0)
             {
-                return new Pair(new StayRegion(stayAreaGroup, stayAreaGroup), stayAreaGroup.getCategoryList());
+                return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, stayAreaGroup), stayAreaGroup.getCategoryList());
             } else
             {
                 for (Area area : stayAreaGroup.getAreaList())
                 {
                     if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                     {
-                        return new Pair(new StayRegion(stayAreaGroup, area), ((StayArea) area).getCategoryList());
+                        return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, area), ((StayArea) area).getCategoryList());
                     }
                 }
             }
@@ -626,7 +627,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                             subwayArea = subwayAreaGroup.getAreaList().get(0);
                         }
 
-                        return new Pair(new StayRegion(subwayAreaGroup, subwayArea), subwayArea.getCategoryList());
+                        return new Pair(new StayRegion(PreferenceRegion.AreaType.SUBWAY_AREA, subwayAreaGroup, subwayArea), subwayArea.getCategoryList());
                     }
                 }
             }
@@ -1195,12 +1196,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         if (area.index == areaIndex)
                         {
-                            return new Pair(new StayRegion(areaGroup, area), area.getCategoryList());
+                            return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area), area.getCategoryList());
                         }
                     }
                 } else
                 {
-                    return new Pair(new StayRegion(areaGroup, areaGroup), areaGroup.getCategoryList());
+                    return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup), areaGroup.getCategoryList());
                 }
             }
         }
@@ -1275,7 +1276,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     if (area.index == stationIndex)
                     {
-                        return new Pair(new StayRegion(areaGroupList, area), area.getCategoryList());
+                        return new Pair(new StayRegion(PreferenceRegion.AreaType.SUBWAY_AREA, areaGroupList, area), area.getCategoryList());
                     }
                 }
             }

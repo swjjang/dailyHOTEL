@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayRegion;
 
 public class StayRegionParcel implements Parcelable
@@ -37,6 +38,8 @@ public class StayRegionParcel implements Parcelable
         Area areaGroup = mRegion.getAreaGroup();
         Area area = mRegion.getArea();
 
+        dest.writeString(mRegion.getAreaType().name());
+
         if (areaGroup == null)
         {
             dest.writeInt(0);
@@ -63,6 +66,8 @@ public class StayRegionParcel implements Parcelable
     private void readFromParcel(Parcel in)
     {
         Area areaGroup;
+
+        PreferenceRegion.AreaType areaType = PreferenceRegion.AreaType.valueOf(in.readString());
 
         int areaGroupIndex = in.readInt();
         String areaGroupName = in.readString();
@@ -92,7 +97,7 @@ public class StayRegionParcel implements Parcelable
             area.name = areaName;
         }
 
-        mRegion = new StayRegion(areaGroup, area);
+        mRegion = new StayRegion(areaType, areaGroup, area);
     }
 
     @Override

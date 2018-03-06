@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.area.stay;
+package com.daily.dailyhotel.screen.common.area.stay.inbound;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView.AnimatedEx
 import java.util.ArrayList;
 import java.util.List;
 
-public class StayAreaListAdapter extends AnimatedExpandableListAdapter
+public class StayAreaExpandableListAdapter extends AnimatedExpandableListAdapter
 {
     private Context mContext;
     private List<AreaGroup> mAreaGroupList;
@@ -27,7 +27,7 @@ public class StayAreaListAdapter extends AnimatedExpandableListAdapter
     private boolean mTablet;
     private int mSelectedGroupPosition;
 
-    public StayAreaListAdapter(Context context)
+    public StayAreaExpandableListAdapter(Context context)
     {
         mContext = context;
         mAreaGroupList = new ArrayList<>();

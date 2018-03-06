@@ -121,11 +121,11 @@ public class StayAreaFragmentView extends BaseFragmentDialogView<StayAreaFragmen
     @Override
     public void setSelectedAreaGroup(int groupPosition)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || groupPosition < 0)
         {
             return;
         }
 
-        getViewDataBinding().expandableListView.setSelectedAreaGroup(groupPosition);
+        getViewDataBinding().expandableListView.setAreaGroupSelected(groupPosition);
     }
 }

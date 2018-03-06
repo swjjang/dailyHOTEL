@@ -5,8 +5,6 @@ import android.view.View;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.dailyhotel.entity.Area;
-import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.twoheart.dailyhotel.databinding.FragmentStaySubwayListDataBinding;
 
@@ -52,7 +50,7 @@ public class StaySubwayFragmentView extends BaseFragmentDialogView<StaySubwayFra
             @Override
             public void onAreaClick(int groupPosition, Area area)
             {
-//                getEventListener().onAreaClick(position, (Area) view.getTag());
+                getEventListener().onAreaClick(groupPosition , area);
             }
 
             @Override
@@ -61,6 +59,17 @@ public class StaySubwayFragmentView extends BaseFragmentDialogView<StaySubwayFra
                 getEventListener().onTabChanged(position, view.getTag());
             }
         });
+    }
+
+    @Override
+    public void setTab(List<Area> tabList)
+    {
+        if (getViewDataBinding() == null || tabList == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().expandableListView.setTab(tabList);
     }
 
     @Override
@@ -119,13 +128,24 @@ public class StaySubwayFragmentView extends BaseFragmentDialogView<StaySubwayFra
     }
 
     @Override
-    public void setSelectedAreaGroup(int groupPosition)
+    public void setTabSelected(int position)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || position < 0)
         {
             return;
         }
 
-        getViewDataBinding().expandableListView.setSelectedAreaGroup(groupPosition);
+        getViewDataBinding().expandableListView.setTabSelected(position);
+    }
+
+    @Override
+    public void setAreaGroupSelected(int position)
+    {
+        if (getViewDataBinding() == null || position < 0)
+        {
+            return;
+        }
+
+        getViewDataBinding().expandableListView.setAreaGroupSelected(position);
     }
 }

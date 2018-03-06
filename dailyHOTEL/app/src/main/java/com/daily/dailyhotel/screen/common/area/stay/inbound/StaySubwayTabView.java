@@ -57,7 +57,7 @@ public class StaySubwayTabView extends LinearLayout implements View.OnClickListe
 
     private void initLayout(Context context)
     {
-        setWeightSum(1.0f);
+        setOrientation(HORIZONTAL);
     }
 
     public void addTab(String text, Object tag)
@@ -68,14 +68,29 @@ public class StaySubwayTabView extends LinearLayout implements View.OnClickListe
         }
 
         View tabView = newTabView(getContext(), text);
-        tabView.setTag(true);
+        tabView.setTag(tag);
         tabView.setOnClickListener(this);
 
         addView(tabView);
     }
 
+    public void clearTab()
+    {
+        if (getChildCount() == 0)
+        {
+            return;
+        }
+
+        removeAllViews();
+    }
+
     public void setSelection(int position)
     {
+        if (position < 0)
+        {
+            return;
+        }
+
         int childCount = getChildCount();
 
         if (position >= childCount)

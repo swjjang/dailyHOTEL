@@ -284,7 +284,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
                 getViewInterface().setTabVisible(pair.first != null && pair.first.size() > 0 && pair.second != null && pair.second.size() > 0);
 
-                mStayAreaViewModel.mPreviousArea.setValue(getRegionByPreferenceRegion(mStayAreaViewModel.categoryType.getValue(), pair.first, pair.second));
+                mStayAreaViewModel.previousArea.setValue(getRegionByPreferenceRegion(mStayAreaViewModel.categoryType.getValue(), pair.first, pair.second));
 
                 unLockAll();
             }
@@ -366,14 +366,14 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         {
             if (stayAreaGroup.getAreaCount() == 0)
             {
-                return new StayRegion(stayAreaGroup, stayAreaGroup);
+                return new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, stayAreaGroup);
             } else
             {
                 for (Area area : stayAreaGroup.getAreaList())
                 {
                     if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                     {
-                        return new StayRegion(stayAreaGroup, area);
+                        return new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, area);
                     }
                 }
             }
@@ -405,7 +405,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                         {
                             if (area.name.equalsIgnoreCase(preferenceRegion.areaName) == true)
                             {
-                                return new StayRegion(subwayAreaGroup, area);
+                                return new StayRegion(PreferenceRegion.AreaType.SUBWAY_AREA, subwayAreaGroup, area);
                             }
                         }
                     }
@@ -422,12 +422,12 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new StayRegion(areaGroup, areaGroup);
+            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup);
         } else
         {
             StayArea area = areaGroup.getAreaList().get(0);
 
-            return new StayRegion(areaGroup, area);
+            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area);
         }
     }
 
@@ -675,7 +675,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         final String areaName = area.name;
 
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
-        if (equalsAreaGroupName(mStayAreaViewModel.mPreviousArea.getValue(), areaGroupName) == true)
+        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroupName) == true)
         {
             setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType.getValue(), areaGroup, area);
             finish();
@@ -684,10 +684,10 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             String message = mStayAreaViewModel.bookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)") + "-" + mStayAreaViewModel.bookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)") + "\n" + getString(R.string.message_region_search_date);
             final String previousAreaGroupName, previousAreaName;
 
-            if (mStayAreaViewModel.mPreviousArea.getValue() != null)
+            if (mStayAreaViewModel.previousArea.getValue() != null)
             {
-                previousAreaGroupName = mStayAreaViewModel.mPreviousArea.getValue().getAreaGroupName();
-                previousAreaName = mStayAreaViewModel.mPreviousArea.getValue().getAreaName();
+                previousAreaGroupName = mStayAreaViewModel.previousArea.getValue().getAreaGroupName();
+                previousAreaName = mStayAreaViewModel.previousArea.getValue().getAreaName();
             } else
             {
                 previousAreaGroupName = null;
@@ -749,7 +749,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         final String areaName = area.name;
 
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
-        if (equalsAreaGroupName(mStayAreaViewModel.mPreviousArea.getValue(), areaGroupName) == true)
+        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroupName) == true)
         {
             setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType.getValue(), areaGroup.getRegion(), areaGroup, area);
             finish();
@@ -758,10 +758,10 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             String message = mStayAreaViewModel.bookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)") + "-" + mStayAreaViewModel.bookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)") + "\n" + getString(R.string.message_region_search_date);
             final String previousAreaGroupName, previousAreaName;
 
-            if (mStayAreaViewModel.mPreviousArea.getValue() != null)
+            if (mStayAreaViewModel.previousArea.getValue() != null)
             {
-                previousAreaGroupName = mStayAreaViewModel.mPreviousArea.getValue().getAreaGroupName();
-                previousAreaName = mStayAreaViewModel.mPreviousArea.getValue().getAreaName();
+                previousAreaGroupName = mStayAreaViewModel.previousArea.getValue().getAreaGroupName();
+                previousAreaName = mStayAreaViewModel.previousArea.getValue().getAreaName();
             } else
             {
                 previousAreaGroupName = null;
@@ -827,7 +827,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             setPreferenceArea(categoryType, areaGroup.name, area.name);
         }
 
-        setResult(resultCode, categoryType, areaGroup, area, new StayRegion(areaGroup, area));
+        setResult(resultCode, categoryType, areaGroup, area, new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area));
     }
 
     void setResult(int resultCode, DailyCategoryType categoryType, Area regionArea, StaySubwayAreaGroup areaGroup, Area area)
@@ -837,7 +837,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             setPreferenceSubwayArea(categoryType, regionArea.name, areaGroup.name, area.name);
         }
 
-        setResult(resultCode, categoryType, areaGroup, area, new StayRegion(areaGroup, area));
+        setResult(resultCode, categoryType, areaGroup, area, new StayRegion(PreferenceRegion.AreaType.SUBWAY_AREA, areaGroup, area));
     }
 
     void setResult(int resultCode, DailyCategoryType categoryType, Area areaGroup, Area area, StayRegion stayRegion)

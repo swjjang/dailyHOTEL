@@ -13,9 +13,12 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.twoheart.dailyhotel.R;
 
 import java.util.List;
@@ -48,7 +51,6 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         Bundle bundle = getFragment().getArguments();
-
 
         return getViewInterface().getContentView(inflater, R.layout.fragment_stay_area_list_data, container);
     }
@@ -102,6 +104,26 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             }
         });
 
+        mStayAreaViewModel.previousArea.observe(activity, new Observer<StayRegion>()
+        {
+            @Override
+            public void onChanged(@Nullable StayRegion stayRegion)
+            {
+                if (stayRegion.getAreaType() == PreferenceRegion.AreaType.AREA)
+                {
+                    int groupPosition = getAreaGroupPosition(mStayAreaViewModel.areaList.getValue(), (StayAreaGroup) stayRegion.getAreaGroup());
+
+                    if (groupPosition >= 0)
+                    {
+                        mAreaGroupPosition = groupPosition;
+                        getViewInterface().setSelectedAreaGroup(groupPosition);
+                    }
+                }
+
+                mStayAreaViewModel.previousArea.removeObserver(this);
+            }
+        });
+
         mStayAreaViewModel.isAgreeTermsOfLocation.observe(activity, new Observer<Boolean>()
         {
             @Override
@@ -110,6 +132,26 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
                 getViewInterface().setLocationTermVisible(isAgree);
             }
         });
+    }
+
+    int getAreaGroupPosition(List<StayAreaGroup> areaGroupList, StayAreaGroup areaGroup)
+    {
+        if (areaGroupList == null || areaGroup == null)
+        {
+            return -1;
+        }
+
+        int size = areaGroupList.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            if (areaGroupList.get(i).name.equalsIgnoreCase(areaGroup.name) == true)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override
@@ -230,7 +272,6 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             unLockAll();
         } else
         {
-            // 하위 지역이 있으면 애니메이션
             if (mAreaGroupPosition == groupPosition)
             {
                 addCompositeDisposable(collapseGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -248,6 +289,8 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
                     public void accept(Throwable throwable) throws Exception
                     {
                         unLockAll();
+
+                        ExLog.e(throwable.toString());
                     }
                 }));
             } else
@@ -257,7 +300,7 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
                     @Override
                     public ObservableSource<Boolean> apply(Boolean aBoolean) throws Exception
                     {
-                        return expandGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread());
+                        return expandGroupWithAnimation(groupPosition, true);
                     }
                 }).observeOn(AndroidSchedulers.mainThread()).delaySubscription(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<Boolean>()
                 {
@@ -274,6 +317,8 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
                     public void accept(Throwable throwable) throws Exception
                     {
                         unLockAll();
+
+                        ExLog.e(throwable.toString());
                     }
                 }));
             }

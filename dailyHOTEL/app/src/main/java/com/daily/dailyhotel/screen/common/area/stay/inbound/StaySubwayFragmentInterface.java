@@ -21,26 +21,30 @@ public interface StaySubwayFragmentInterface
 {
     interface ViewInterface extends BaseFragmentDialogViewInterface
     {
+        void setTab(List<Area> tabList);
+
         void setAreaGroup(List<StaySubwayAreaGroup> areaList);
 
         void setLocationText(String locationText);
 
         void setLocationTermVisible(boolean visible);
 
-        Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation);
+        Observable<Boolean> collapseGroupWithAnimation(int position, boolean animation);
 
-        Observable<Boolean> expandGroupWithAnimation(int groupPosition, boolean animation);
+        Observable<Boolean> expandGroupWithAnimation(int position, boolean animation);
 
-        void setSelectedAreaGroup(int groupPosition);
+        void setTabSelected(int position);
+
+        void setAreaGroupSelected(int position);
     }
 
     interface OnEventListener extends OnBaseEventListener
     {
         void onAroundSearchClick();
 
-        void onAreaGroupClick(int groupPosition);
+        void onAreaGroupClick(int position);
 
-        void onAreaClick(StaySubwayAreaGroup areaGroup, Area area);
+        void onAreaClick(int groupPosition, Area area);
 
         void onTabChanged(int position, Object tag);
     }

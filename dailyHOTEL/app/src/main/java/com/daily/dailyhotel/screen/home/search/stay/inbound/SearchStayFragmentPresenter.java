@@ -181,7 +181,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true || isRefresh() == false)
+        if (getActivity() == null || getActivity().isFinishing() == true || isRefresh() == false)
         {
             setRefresh(false);
             return;
