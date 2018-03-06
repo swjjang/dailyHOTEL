@@ -77,7 +77,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     SearchViewModel mSearchModel;
 
-    Constants.ServiceType mEnterServiceType; // 시작시에 받고 삭제한다.
+    Constants.ServiceType mEnterServiceType = Constants.ServiceType.HOTEL;
 
     DailyDeepLink mDailyDeepLink;
 
@@ -172,6 +172,27 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
             {
                 mEnterServiceType = Constants.ServiceType.OB_STAY;
+            } else if (externalDeepLink.isPlaceDetailView() == true)
+            {
+                String placeType = externalDeepLink.getPlaceType();
+                if (placeType != null)
+                {
+                    switch (placeType)
+                    {
+                        case DailyDeepLink.STAY_OUTBOUND:
+                            mEnterServiceType = Constants.ServiceType.OB_STAY;
+                            break;
+
+                        default:
+                            mDailyDeepLink.clear();
+                            mDailyDeepLink = null;
+                            break;
+                    }
+                }
+            } else
+            {
+                mDailyDeepLink.clear();
+                mDailyDeepLink = null;
             }
         } else
         {
@@ -682,6 +703,32 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                     } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
                     {
                         moveDeepLinkStayOutboundSearchResult(mSearchModel.commonDateTime.getValue(), externalDeepLink);
+                    } else if (externalDeepLink.isPlaceDetailView() == true)
+                    {
+                        String placeType = externalDeepLink.getPlaceType();
+                        if (placeType != null)
+                        {
+                            switch (placeType)
+                            {
+                                case DailyDeepLink.STAY_OUTBOUND:
+
+                                    startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
+                                        , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_DETAIL);
+
+                                    mDailyDeepLink.clear();
+                                    mDailyDeepLink = null;
+                                    break;
+
+                                default:
+                                    mDailyDeepLink.clear();
+                                    mDailyDeepLink = null;
+                                    break;
+                            }
+                        }
+                    } else
+                    {
+                        mDailyDeepLink.clear();
+                        mDailyDeepLink = null;
                     }
                 }
             }
