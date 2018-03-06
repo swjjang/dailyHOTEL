@@ -78,7 +78,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     SearchViewModel mSearchModel;
 
-    Constants.ServiceType mEnterServiceType; // 시작시에 받고 삭제한다.
+    Constants.ServiceType mEnterServiceType = Constants.ServiceType.HOTEL;
 
     DailyDeepLink mDailyDeepLink;
 
