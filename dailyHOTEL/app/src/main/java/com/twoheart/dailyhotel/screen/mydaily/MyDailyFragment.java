@@ -110,7 +110,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
         AnalyticsManager.getInstance(context).recordScreen(getActivity(), AnalyticsManager.Screen.MYDAILY, null);
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             if (mDailyDeepLink.isExternalDeepLink() == true)
             {

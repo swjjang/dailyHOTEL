@@ -124,7 +124,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             return false;
         }
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             if (mDailyDeepLink.isExternalDeepLink() == true)
             {

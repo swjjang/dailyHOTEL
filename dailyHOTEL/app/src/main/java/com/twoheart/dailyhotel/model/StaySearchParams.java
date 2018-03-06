@@ -113,6 +113,11 @@ public class StaySearchParams extends StayParams
             hashMap.put("areaIdx", areaIdx);
         }
 
+        if (subwayIndex != 0)
+        {
+            hashMap.put("subwayIdx", subwayIndex);
+        }
+
         if (persons != 0)
         {
             hashMap.put("persons", persons);

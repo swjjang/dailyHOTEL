@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.hotel.filter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -16,7 +15,6 @@ import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -30,11 +28,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@Deprecated
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
-    public static final int DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT = 60;
-    public static final int DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT = 180;
-
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
 
@@ -46,43 +42,43 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
     private boolean mIsSingleDay;
 
-    /**
-     * @param context
-     * @param todayDateTime
-     * @param stayBookingDay
-     * @param screen
-     * @param isSelected
-     * @param isAnimation
-     * @return
-     */
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
-        , StayBookingDay stayBookingDay, int dayOfMaxCount, String screen, boolean isSelected, boolean isAnimation)
-    {
-        Intent intent = new Intent(context, StayCalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
-        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
-        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, String checkInDate //
-        , String checkOutDate, int dayOfMaxCount, String screen, boolean isSelected, boolean isAnimation)
-    {
-        Intent intent = new Intent(context, StayCalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
-        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
-        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
-        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
-
-        return intent;
-    }
+    //    /**
+    //     * @param context
+    //     * @param todayDateTime
+    //     * @param stayBookingDay
+    //     * @param screen
+    //     * @param isSelected
+    //     * @param isAnimation
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+    //        , StayBookingDay stayBookingDay, int dayOfMaxCount, String screen, boolean isSelected, boolean isAnimation)
+    //    {
+    //        Intent intent = new Intent(context, StayCalendarActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+    //        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, String checkInDate //
+    //        , String checkOutDate, int dayOfMaxCount, String screen, boolean isSelected, boolean isAnimation)
+    //    {
+    //        Intent intent = new Intent(context, StayCalendarActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+    //        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

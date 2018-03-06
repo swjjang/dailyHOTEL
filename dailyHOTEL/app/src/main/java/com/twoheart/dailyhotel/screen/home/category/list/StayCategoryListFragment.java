@@ -24,6 +24,7 @@ import retrofit2.Response;
  * Created by android_sam on 2017. 5. 15..
  */
 
+@Deprecated
 public class StayCategoryListFragment extends StayListFragment
 {
     private boolean mIsShowLocalPlus;

@@ -14,9 +14,6 @@ import java.util.List;
 @JsonObject
 public class StayRegionData
 {
-    @JsonField(name = "imgUrl")
-    public String imgUrl;
-
     @JsonField(name = "provinceList")
     public List<ProvinceData> provinceList;
 
@@ -54,7 +51,9 @@ public class StayRegionData
                     // 개수가 0보다 크면 전체 지역을 넣는다.
                     if (areaList.size() > 0)
                     {
-                        areaList.add(0, new StayArea(stayAreaGroup));
+                        StayArea stayArea = new StayArea(StayArea.ALL, stayAreaGroup.name);
+                        stayArea.setCategoryList(stayAreaGroup.getCategoryList());
+                        areaList.add(0, stayArea);
                     }
 
                     stayAreaGroup.setAreaList(areaList);
@@ -122,12 +121,7 @@ public class StayRegionData
 
         public StayArea getArea()
         {
-            StayArea stayArea = new StayArea();
-
-            stayArea.index = index;
-            stayArea.name = name;
-
-            return stayArea;
+            return new StayArea(index, name);
         }
     }
 }

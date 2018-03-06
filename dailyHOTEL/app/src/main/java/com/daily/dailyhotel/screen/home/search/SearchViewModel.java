@@ -7,12 +7,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
-import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.util.Constants;
 
 /**
@@ -44,76 +38,13 @@ public class SearchViewModel extends ViewModel
         }
     }
 
-    public static class SearchStayViewModel extends ViewModel
+    public void setStayBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
     {
-        public MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
-        public MutableLiveData<StaySuggest> suggest = new MutableLiveData<>();
-        public String inputString;
-
-        public static class SearchStayViewModelFactory implements ViewModelProvider.Factory
+        if (stayViewModel == null)
         {
-            public SearchStayViewModelFactory()
-            {
-            }
-
-            @NonNull
-            @Override
-            public SearchStayViewModel create(@NonNull Class modelClass)
-            {
-                SearchStayViewModel viewModel = new SearchStayViewModel();
-
-                return viewModel;
-            }
+            return;
         }
-    }
 
-    public static class SearchStayOutboundViewModel extends ViewModel
-    {
-        public MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
-        public MutableLiveData<StayOutboundSuggest> suggest = new MutableLiveData<>();
-        public MutableLiveData<People> people = new MutableLiveData<>();
-        public String inputString;
-        public String clickType;
-
-        public static class SearchStayOutboundViewModelFactory implements ViewModelProvider.Factory
-        {
-            public SearchStayOutboundViewModelFactory()
-            {
-            }
-
-            @NonNull
-            @Override
-            public SearchStayOutboundViewModel create(@NonNull Class modelClass)
-            {
-                SearchStayOutboundViewModel viewModel = new SearchStayOutboundViewModel();
-
-                return viewModel;
-            }
-        }
-    }
-
-    public static class SearchGourmetViewModel extends ViewModel
-    {
-        public MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
-        public MutableLiveData<GourmetSuggest> suggest = new MutableLiveData<>();
-        public String inputString;
-
-        public static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
-        {
-            public SearchGourmetViewModelFactory()
-            {
-            }
-
-            @NonNull
-            @Override
-            public SearchGourmetViewModel create(@NonNull Class modelClass)
-            {
-                SearchGourmetViewModel viewModel = new SearchGourmetViewModel();
-
-                return viewModel;
-            }
-        }
+        stayViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
     }
 }
-
-

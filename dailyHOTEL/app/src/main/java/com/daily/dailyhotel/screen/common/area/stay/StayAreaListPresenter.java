@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -34,8 +35,6 @@ import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-
-import org.json.JSONObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -288,55 +287,55 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayRemoteImpl.getRegionList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayAreaGroup>>()
-        {
-            @Override
-            public void accept(List<StayAreaGroup> areaGroupList) throws Exception
-            {
-                mAreaGroupList = areaGroupList;
-
-                getViewInterface().setAreaList(areaGroupList);
-
-                Pair<String, String> namePair = getDistrictNTownNameByCategory(mDailyCategoryType);
-
-                if (namePair != null)
-                {
-                    mAreaGroupPosition = getAreaGroupPosition(areaGroupList, namePair.first);
-                } else
-                {
-                    mAreaGroupPosition = -1;
-                }
-
-                StayAreaGroup areaGroup;
-
-                // 기존에 저장된 지역이 있는 경우
-                if (mAreaGroupPosition >= 0)
-                {
-                    areaGroup = areaGroupList.get(mAreaGroupPosition);
-
-                    mStayRegion = getRegion(areaGroup, namePair.second);
-                } else
-                {
-                    // 기존에 저장된 지역이 없는 경우 첫번째 지역으로 한다.
-                    areaGroup = areaGroupList.get(0);
-
-                    mStayRegion = new StayRegion(areaGroup, new StayArea(areaGroup));
-
-                    mAreaGroupPosition = 0;
-                }
-
-                getViewInterface().setSelectedAreaGroup(mAreaGroupPosition);
-
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                onHandleErrorAndFinish(throwable);
-            }
-        }));
+        //        addCompositeDisposable(mStayRemoteImpl.getRegionList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayAreaGroup>>()
+        //        {
+        //            @Override
+        //            public void accept(List<StayAreaGroup> areaGroupList) throws Exception
+        //            {
+        //                mAreaGroupList = areaGroupList;
+        //
+        //                getViewInterface().setAreaList(areaGroupList);
+        //
+        //                Pair<String, String> namePair = getDistrictNTownNameByCategory(mDailyCategoryType);
+        //
+        //                if (namePair != null)
+        //                {
+        //                    mAreaGroupPosition = getAreaGroupPosition(areaGroupList, namePair.first);
+        //                } else
+        //                {
+        //                    mAreaGroupPosition = -1;
+        //                }
+        //
+        //                StayAreaGroup areaGroup;
+        //
+        //                // 기존에 저장된 지역이 있는 경우
+        //                if (mAreaGroupPosition >= 0)
+        //                {
+        //                    areaGroup = areaGroupList.get(mAreaGroupPosition);
+        //
+        //                    mStayRegion = getRegion(areaGroup, namePair.second);
+        //                } else
+        //                {
+        //                    // 기존에 저장된 지역이 없는 경우 첫번째 지역으로 한다.
+        //                    areaGroup = areaGroupList.get(0);
+        //
+        //                    mStayRegion = new StayRegion(areaGroup, areaGroup);
+        //
+        //                    mAreaGroupPosition = 0;
+        //                }
+        //
+        //                getViewInterface().setSelectedAreaGroup(mAreaGroupPosition);
+        //
+        //                unLockAll();
+        //            }
+        //        }, new Consumer<Throwable>()
+        //        {
+        //            @Override
+        //            public void accept(Throwable throwable) throws Exception
+        //            {
+        //                onHandleErrorAndFinish(throwable);
+        //            }
+        //        }));
     }
 
     @Override
@@ -372,7 +371,9 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         // 하위 지역이 없으면 선택
         if (mAreaGroupList.get(groupPosition).getAreaCount() == 0)
         {
-            onAreaClick(groupPosition, new StayArea(mAreaGroupList.get(groupPosition)));
+            StayArea stayArea = new StayArea(StayArea.ALL, mAreaGroupList.get(groupPosition).name);
+            stayArea.setCategoryList(mAreaGroupList.get(groupPosition).getCategoryList());
+            onAreaClick(groupPosition, stayArea);
 
             unLockAll();
         } else
@@ -560,51 +561,51 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
      */
     Pair<String, String> getDistrictNTownNameByCategory(DailyCategoryType dailyCategoryType)
     {
-        if (dailyCategoryType == null)
-        {
-            return null;
-        }
-
-        JSONObject jsonObject = DailyPreference.getInstance(getActivity()).getDailyRegion(dailyCategoryType);
-
-        if (jsonObject == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return new Pair<>(jsonObject.getString(Constants.JSON_KEY_PROVINCE_NAME), jsonObject.getString(Constants.JSON_KEY_AREA_NAME));
-
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        //        if (dailyCategoryType == null)
+        //        {
+        //            return null;
+        //        }
+        //
+        //        JSONObject jsonObject = DailyPreference.getInstance(getActivity()).getDailyRegion(dailyCategoryType);
+        //
+        //        if (jsonObject == null)
+        //        {
+        //            return null;
+        //        }
+        //
+        //        try
+        //        {
+        //            return new Pair<>(jsonObject.getString(Constants.JSON_KEY_PROVINCE_NAME), jsonObject.getString(Constants.JSON_KEY_AREA_NAME));
+        //
+        //        } catch (Exception e)
+        //        {
+        //            ExLog.d(e.toString());
+        //        }
 
         return null;
     }
 
     private void setCategoryRegion(DailyCategoryType dailyCategoryType, String districtName, String townName)
     {
-        if (dailyCategoryType == null)
-        {
-            return;
-        }
-
-        JSONObject jsonObject;
-        try
-        {
-            jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, DailyTextUtils.isTextEmpty(districtName) ? "" : districtName);
-            jsonObject.put(Constants.JSON_KEY_AREA_NAME, DailyTextUtils.isTextEmpty(townName) ? "" : townName);
-            jsonObject.put(Constants.JSON_KEY_IS_OVER_SEAS, false);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            jsonObject = null;
-        }
-
-        DailyPreference.getInstance(getActivity()).setDailyRegion(dailyCategoryType, jsonObject);
+        //        if (dailyCategoryType == null)
+        //        {
+        //            return;
+        //        }
+        //
+        //        JSONObject jsonObject;
+        //        try
+        //        {
+        //            jsonObject = new JSONObject();
+        //            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, DailyTextUtils.isTextEmpty(districtName) ? "" : districtName);
+        //            jsonObject.put(Constants.JSON_KEY_AREA_NAME, DailyTextUtils.isTextEmpty(townName) ? "" : townName);
+        //            jsonObject.put(Constants.JSON_KEY_IS_OVER_SEAS, false);
+        //        } catch (Exception e)
+        //        {
+        //            ExLog.e(e.toString());
+        //            jsonObject = null;
+        //        }
+        //
+        //        DailyPreference.getInstance(getActivity()).setDailyRegion(dailyCategoryType, jsonObject);
     }
 
     private Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)
@@ -631,7 +632,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         return observable;
     }
 
-    void setResult(int resultCode, DailyCategoryType categoryType, StayArea areaGroup, StayArea area)
+    void setResult(int resultCode, DailyCategoryType categoryType, StayAreaGroup areaGroup, StayArea area)
     {
         if (categoryType == null)
         {
@@ -644,7 +645,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         {
             setCategoryRegion(categoryType, areaGroup.name, area.name);
 
-            intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION, new StayRegionParcel(new StayRegion(areaGroup, area)));
+            intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION, new StayRegionParcel(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area)));
         }
 
         intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY, categoryType.name());
@@ -701,14 +702,14 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new StayRegion(areaGroup, new StayArea(areaGroup));
+            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, new StayArea(StayArea.ALL, areaGroup.name));
         } else
         {
             for (StayArea area : areaGroup.getAreaList())
             {
                 if (area.name.equalsIgnoreCase(areaName) == true)
                 {
-                    return new StayRegion(areaGroup, area);
+                    return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area);
                 }
             }
         }

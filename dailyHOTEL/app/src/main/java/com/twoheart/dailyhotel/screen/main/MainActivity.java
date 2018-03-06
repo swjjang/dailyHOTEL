@@ -48,6 +48,7 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -264,7 +265,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     {
         finishSplash();
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             parseDeepLink(mDailyDeepLink);
 
@@ -318,9 +319,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             } else if (internalDeepLink.isBookingDetailView() == true)
             {
                 mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
-            } else if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
-            {
-                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
             } else
             {
                 mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
@@ -686,7 +684,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false, null);
 
-                        startActivityForResult(StayTabActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL), Constants.CODE_REQUEST_ACTIVITY_STAY);
                         break;
 
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -1201,7 +1199,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         switch (changeScreen)
         {
             case Constants.CODE_RESULT_ACTIVITY_STAY_LIST:
-                startActivityForResult(StayTabActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL), Constants.CODE_REQUEST_ACTIVITY_STAY);
                 break;
 
             case Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST:

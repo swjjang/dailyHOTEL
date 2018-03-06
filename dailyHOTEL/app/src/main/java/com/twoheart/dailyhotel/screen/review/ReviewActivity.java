@@ -148,7 +148,7 @@ public class ReviewActivity extends BaseActivity
                         JSONArray pickJsonArray = new JSONArray(list.get(1));
                         String comment = list.get(2);
 
-                       setTempReview(scoreJsonArray, pickJsonArray, comment);
+                        setTempReview(scoreJsonArray, pickJsonArray, comment);
 
                         return true;
                     }
@@ -965,13 +965,15 @@ public class ReviewActivity extends BaseActivity
         ArrayList<ReviewPickQuestion> pickQuestionList = mReview.getReviewPickQuestionList();
         for (ReviewPickQuestion pickQuestion : pickQuestionList)
         {
-            if (pickMap.containsKey(pickQuestion.answerCode)) {
+            if (pickMap.containsKey(pickQuestion.answerCode))
+            {
                 String value = pickMap.get(pickQuestion.answerCode);
 
                 ArrayList<ReviewAnswerValue> answerValueList = pickQuestion.getAnswerValueList();
                 for (ReviewAnswerValue reviewAnswerValue : answerValueList)
                 {
-                    if (value.equalsIgnoreCase(reviewAnswerValue.code)) {
+                    if (value.equalsIgnoreCase(reviewAnswerValue.code))
+                    {
                         pickQuestion.selectedAnswerCode = value;
                         break;
                     }

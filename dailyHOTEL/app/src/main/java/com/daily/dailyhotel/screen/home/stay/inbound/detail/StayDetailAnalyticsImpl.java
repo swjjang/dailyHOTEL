@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail;
 
 import android.app.Activity;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -17,6 +18,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAnalyticsInterface
 {
     private StayDetailAnalyticsParam mAnalyticsParam;
@@ -28,74 +34,88 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList)
+    public Disposable onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList)
     {
         if (activity == null || stayDetail == null)
         {
-            return;
+            return null;
         }
 
-        try
+        // Completable.create를 사용하면 내부적으로 예외 처리를 받을수 있으나 결국 내부 소스에서 try ~ catch로 구현되어있어서
+        // 그냥 try ~ catch를 둘러싸는 것과 같은 내용이여서 예외 처리만 추가 함.
+        return new Completable()
         {
-            Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
-            params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(activity)); // 14
-            params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetail.benefit) ? "no" : "yes"); // 3
+            @Override
+            protected void subscribeActual(CompletableObserver observer)
+            {
+                try
+                {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
+                    params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(activity)); // 14
+                    params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetail.benefit) ? "no" : "yes"); // 3
 
-            if (stayDetail.getRoomList() == null || stayDetail.getRoomList().size() == 0)
-            {
-                params.put(AnalyticsManager.KeyType.PRICE, "0");
-            } else
-            {
-                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayDetail.getRoomList().get(0).discountAverage));
+                    if (stayDetail.getRoomList() == null || stayDetail.getRoomList().size() == 0)
+                    {
+                        params.put(AnalyticsManager.KeyType.PRICE, "0");
+                    } else
+                    {
+                        params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayDetail.getRoomList().get(0).discountAverage));
+                    }
+
+                    int nights = stayBookDateTime.getNights();
+
+                    params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+                    params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index)); // 15
+
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")); // 1
+                    params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")); // 2
+
+                    params.put(AnalyticsManager.KeyType.ADDRESS, stayDetail.address);
+
+                    if (DailyTextUtils.isTextEmpty(stayDetail.category) == true) //
+                    {
+                        params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
+                    } else
+                    {
+                        params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
+                    }
+
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+                    params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+                    params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
+
+                    params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
+                    params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+
+                    String listIndex = mAnalyticsParam.entryPosition == -1 //
+                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
+
+                    params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+
+                    String placeCount = mAnalyticsParam.totalListCount == -1 //
+                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.totalListCount);
+
+                    params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
+
+                    params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
+                    params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
+                    params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
+                    params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+                    params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.overseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OVERSEAS);
+
+                    AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null, params);
+
+                    observer.onComplete();
+                } catch (Exception e)
+                {
+                    Crashlytics.log(EXCEPTION_TAG);
+                    Crashlytics.logException(e);
+
+                    ExLog.e(EXCEPTION_TAG + " : " + e.toString());
+                }
             }
-
-            int nights = stayBookDateTime.getNights();
-
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index)); // 15
-
-            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")); // 1
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")); // 2
-
-            params.put(AnalyticsManager.KeyType.ADDRESS, stayDetail.address);
-
-            if (DailyTextUtils.isTextEmpty(stayDetail.category) == true) //
-            {
-                params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
-            } else
-            {
-                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
-            }
-
-            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
-            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
-
-            params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
-            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
-
-            String listIndex = mAnalyticsParam.entryPosition == -1 //
-                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
-
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
-
-            String placeCount = mAnalyticsParam.totalListCount == -1 //
-                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.totalListCount);
-
-            params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
-
-            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.overseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OVERSEAS);
-
-            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null, params);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        }.subscribeOn(Schedulers.io()).subscribe();
     }
 
     @Override

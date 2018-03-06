@@ -205,7 +205,8 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
         {
             getViewDataBinding().doLeaveView.setBackgroundResource(R.drawable.shape_button_disable);
             getViewDataBinding().doLeaveView.setTextColor(getColor(R.color.default_text_cc5c5c5));
-        } else {
+        } else
+        {
             getViewDataBinding().doLeaveView.setBackgroundResource(R.drawable.selector_button_default_background);
             getViewDataBinding().doLeaveView.setTextColor(getColorStateList(R.drawable.selector_button_default_text_color));
         }

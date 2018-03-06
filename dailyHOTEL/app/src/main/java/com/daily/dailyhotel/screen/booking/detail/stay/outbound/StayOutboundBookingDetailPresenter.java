@@ -813,8 +813,7 @@ public class StayOutboundBookingDetailPresenter //
             return;
         }
 
-        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true
-            || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
         {
             addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(mBookingIndex) //
                 .subscribeOn(io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()

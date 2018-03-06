@@ -45,6 +45,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -84,7 +85,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
     StayRemoteImpl mStayRemoteImpl;
 
-    StayTabPresenter.StayViewModel mStayViewModel;
+    StayTabViewModel mStayViewModel;
     Observer mViewTypeObserver;
     Observer mStayBookDateTimeObserver;
     Observer mStayRegionObserver;
@@ -421,7 +422,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             return;
         }
 
-        if (mStayViewModel.selectedCategory.getValue() == null//
+        if (mStayViewModel.categoryType == null//
+            || mStayViewModel.selectedCategory.getValue() == null//
             || mStayViewModel.stayFilter.getValue() == null//
             || mStayViewModel.viewType.getValue() == null//
             || mStayViewModel.stayRegion.getValue() == null//
@@ -439,7 +441,17 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
+        Observable<Stays> observable;
+
+        if (mStayViewModel.categoryType == DailyCategoryType.STAY_ALL)
+        {
+            observable = mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType());
+        } else
+        {
+            observable = mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType());
+        }
+
+        addCompositeDisposable(observable.map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
@@ -467,7 +479,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
                     getFragment().getFragmentEventListener().setCategoryVisible(notDefaultFilter == false);
 
-                    mAnalytics.onScreen(getActivity(), null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
@@ -493,7 +505,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                         , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
                         , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
 
-                    mAnalytics.onScreen(getActivity(), mViewType, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, mViewType, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 }
 
                 mMoreRefreshing = false;
@@ -661,7 +673,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
-        mAnalytics.onStayClick(getActivity(), mViewType, stay);
+        mAnalytics.onStayClick(getActivity(), mStayViewModel.categoryType, mViewType, stay);
     }
 
     @Override
@@ -733,7 +745,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                     unLockAll();
 
-                    mAnalytics.onScreen(getActivity(), null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
@@ -745,7 +757,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                     getViewInterface().setMapList(stays.getStayList(), true, true, false);
 
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.viewType.getValue(), mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue(), mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 }
             }
         }, new Consumer<Throwable>()
@@ -803,7 +815,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             }
         }));
 
-        mAnalytics.onMarkerClick(getActivity(), stay.name);
+        mAnalytics.onMarkerClick(getActivity(), mStayViewModel.categoryType, stay.name);
     }
 
     @Override
@@ -928,7 +940,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
 
-        mAnalytics.onWishClick(getActivity(), !currentWish);
+        mAnalytics.onWishClick(getActivity(), mStayViewModel.categoryType, !currentWish);
     }
 
     private void initViewModel(BaseActivity activity)
@@ -940,7 +952,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         setViewType(StayTabPresenter.ViewType.NONE);
 
-        mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
+        mStayViewModel = ViewModelProviders.of(activity).get(StayTabViewModel.class);
 
         mViewTypeObserver = new Observer<StayTabPresenter.ViewType>()
         {
@@ -1137,18 +1149,34 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         if (mStayViewModel.stayRegion.getValue() != null)
         {
-            // provinceIdx
-            Area areaGroup = mStayViewModel.stayRegion.getValue().getAreaGroup();
-            if (areaGroup != null)
+            switch (mStayViewModel.stayRegion.getValue().getAreaType())
             {
-                queryMap.put("provinceIdx", mStayViewModel.stayRegion.getValue().getAreaGroup().index);
-            }
+                case AREA:
+                {
+                    Area areaGroup = mStayViewModel.stayRegion.getValue().getAreaGroup();
+                    if (areaGroup != null)
+                    {
+                        queryMap.put("provinceIdx", areaGroup.index);
+                    }
 
-            Area area = mStayViewModel.stayRegion.getValue().getArea();
-            if (area != null && area.index != StayArea.ALL)
-            {
-                // areaIdx
-                queryMap.put("areaIdx", mStayViewModel.stayRegion.getValue().getArea().index);
+                    Area area = mStayViewModel.stayRegion.getValue().getArea();
+                    if (area != null && area.index != StayArea.ALL)
+                    {
+                        queryMap.put("areaIdx", area.index);
+                    }
+                    break;
+                }
+
+                case SUBWAY_AREA:
+                {
+                    Area area = mStayViewModel.stayRegion.getValue().getArea();
+
+                    if (area != null)
+                    {
+                        queryMap.put("subwayIdx", area.index);
+                    }
+                    break;
+                }
             }
         }
 

@@ -19,7 +19,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.daily.base.widget.DailyTextView
+        <com.twoheart.dailyhotel.widget.DailyDayStrikeTextView
             android:id="@+id/dayTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

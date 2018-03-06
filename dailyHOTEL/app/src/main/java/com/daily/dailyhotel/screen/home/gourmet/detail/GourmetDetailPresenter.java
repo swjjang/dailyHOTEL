@@ -1207,12 +1207,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         switch (mStatus)
         {
             case STATUS_SELECT_MENU:
-                getViewInterface().scrollTopMenu();
-
-                if (mGourmetDetail != null)
-                {
-                    mAnalytics.onEventScrollTopMenuClick(getActivity(), mGourmetDetail.name);
-                }
+                getViewInterface().performFirstMenuClick();
                 break;
 
             case STATUS_BOOKING:
@@ -1632,7 +1627,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);
 
-        // 선택된 방이 없으면 처음 방으로 한다.
         if (mGourmetDetail.getGourmetMenuList() == null || mGourmetDetail.getGourmetMenuList().size() == 0)
         {
             setStatus(STATUS_SOLD_OUT);

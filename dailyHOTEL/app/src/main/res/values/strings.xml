@@ -114,6 +114,8 @@
     <string name="label_download_coupon_price">%1$s 할인쿠폰 다운받기</string>
     <string name="label_event">EVENT</string>
     <string name="label_delete">삭제</string>
+    <string name="label_area_list">지역명</string>
+    <string name="label_subway_list">지하철역</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -895,6 +897,13 @@
     <string name="label_region_around_stay">내 주변 스테이 보기</string>
     <string name="message_region_search_date">방문하실 날짜가 맞나요?</string>
 
+    <string name="label_area_subway">지하철역</string>
+    <string name="label_area_capital_area">수도권</string>
+    <string name="label_area_busan">부산</string>
+    <string name="label_area_daegu">대구</string>
+    <string name="label_area_gwangju">광주</string>
+    <string name="label_area_daejeon">대전</string>
+
     <!-- Main Tab -->
     <string name="label_selecteday">선택 날짜</string>
 
@@ -1426,6 +1435,7 @@
 
     <!-- Gourmet Product List -->
     <string name="label_gourmet_detail_view_more">%1$d개 상품 모두 보기</string>
+    <string name="label_gourmet_detail_view_product_detail">메뉴 상세보기</string>
 
     <!-- Gourmet Product Detail -->
     <string name="label_gourmet_product_detail_reservation">예약하기</string>

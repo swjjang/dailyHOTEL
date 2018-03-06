@@ -35,69 +35,6 @@ public class StayCategoryParams extends StayParams
         return category.code;
     }
 
-    //    @Override
-    //    public void setPlaceParams(PlaceCuration placeCuration)
-    //    {
-    //        if (placeCuration == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        StayCategoryCuration stayCategoryCuration = (StayCategoryCuration) placeCuration;
-    //
-    //        clear();
-    //
-    //        StayBookingDay stayBookingDay = stayCategoryCuration.getStayBookingDay();
-    //
-    //        if (stayBookingDay != null)
-    //        {
-    //            dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
-    //
-    //            try
-    //            {
-    //                stays = stayBookingDay.getNights();
-    //            } catch (Exception e)
-    //            {
-    //                ExLog.e(e.toString());
-    //            }
-    //        }
-    //
-    //        Province province = stayCategoryCuration.getProvince();
-    //
-    //        if (province != null)
-    //        {
-    //            provinceIdx = province.getProvinceIndex();
-    //
-    //            if (province instanceof Area)
-    //            {
-    //                areaIdx = ((Area) province).index;
-    //            }
-    //        }
-    //
-    //        category = stayCategoryCuration.getCategory();
-    //
-    //        StayCurationOption stayCurationOption = (StayCurationOption) stayCategoryCuration.getCurationOption();
-    //
-    //        if (stayCurationOption != null)
-    //        {
-    //            persons = stayCurationOption.person;
-    //
-    //            mBedTypeList = toParamListByBedTypes(stayCurationOption.flagBedTypeFilters);
-    //            mLuxuryList = toParamListByAmenities(stayCurationOption.flagAmenitiesFilters);
-    //            mRoomLuxuryList = toParamListByRoomAmenities(stayCurationOption.flagRoomAmenitiesFilters);
-    //        }
-    //
-    //        mSort = stayCurationOption.getSortType();
-    //        setSortType(mSort);
-    //
-    //        Location location = stayCategoryCuration.getLocation();
-    //        if (location != null)
-    //        {
-    //            latitude = location.getLatitude();
-    //            longitude = location.getLongitude();
-    //        }
-    //    }
-
     @Override
     public Map<String, Object> toParamsMap()
     {
@@ -105,11 +42,20 @@ public class StayCategoryParams extends StayParams
 
         hashMap.put("dateCheckIn", dateCheckIn);
         hashMap.put("stays", stays);
-        hashMap.put("provinceIdx", provinceIdx);
+
+        if (provinceIdx != 0)
+        {
+            hashMap.put("provinceIdx", provinceIdx);
+        }
 
         if (areaIdx != 0)
         {
             hashMap.put("areaIdx", areaIdx);
+        }
+
+        if (subwayIndex != 0)
+        {
+            hashMap.put("subwayIdx", subwayIndex);
         }
 
         if (persons != 0)

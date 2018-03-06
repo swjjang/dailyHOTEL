@@ -22,6 +22,7 @@ import retrofit2.Response;
  * Created by android_sam on 2017. 5. 15..
  */
 
+@Deprecated
 public class StayCategoryListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener

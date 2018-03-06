@@ -191,9 +191,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 }
 
                 // 겹치지 않은 경우
-                if (nestedScrollView.getScrollY() == 0//
-                    || nestedScrollView.getScrollY() + TOOLBAR_HEIGHT > getViewDataBinding().menuLayout.getBottom()//
-                    || scrollY + nestedScrollView.getHeight() < getViewDataBinding().dateInformationView.getTop())
+                if (scrollY + nestedScrollView.getHeight() >= getViewDataBinding().mapViewDataBinding.getRoot().getBottom())
                 {
                     showBottomLayout(true);
                 } else
@@ -225,6 +223,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 getEventListener().onHideWishTooltipClick();
             }
         });
+
+        hideBottomLayout(false);
     }
 
     @Override
@@ -483,7 +483,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
 
-                getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_ticket);
+                getViewDataBinding().bookingTextView.setText(R.string.label_gourmet_detail_view_product_detail);
                 break;
 
             case GourmetDetailPresenter.STATUS_BOOKING:
@@ -1054,6 +1054,17 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 break;
             }
         }
+    }
+
+    @Override
+    public void performFirstMenuClick()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().menuLayout.getChildCount() == 0)
+        {
+            return;
+        }
+
+        getViewDataBinding().menuLayout.getChildAt(0).performClick();
     }
 
     @Override
@@ -1727,7 +1738,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         if (gourmetMenu.persons > 0)
         {
             viewDataBinding.personsTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.personsTextView.setText(getString(R.string.label_persons, gourmetMenu.persons));
+            viewDataBinding.personsTextView.setText("/" + getString(R.string.label_persons, gourmetMenu.persons));
         } else
         {
             viewDataBinding.personsTextView.setVisibility(View.GONE);

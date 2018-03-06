@@ -1,13 +1,11 @@
 package com.twoheart.dailyhotel.screen.hotel.filter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -15,12 +13,10 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,43 +30,44 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StayDetailCalendarActivity extends StayCalendarActivity
 {
     private int mHotelIndex;
 
     private CalendarImpl mPlaceDetailCalendarImpl;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
-        , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
-        , boolean isAnimation, boolean isSingleDay)
-    {
-        Intent intent = new Intent(context, StayDetailCalendarActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
-        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
-        intent.putExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, isSingleDay);
-        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
-        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, CommonDateTime commonDateTime, String checkInDateTime, String checkOutDateTime //
-        , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
-        , boolean isAnimation, boolean isSingleDay) throws Exception
-    {
-        TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
-
-        StayBookingDay stayBookingDay = new StayBookingDay();
-        stayBookingDay.setCheckInDay(checkInDateTime);
-        stayBookingDay.setCheckOutDay(checkOutDateTime);
-
-        return newInstance(context, todayDateTime, stayBookingDay, dayOfMaxCount, hotelIndex//
-            , screen, soldOutList, isSelected, isAnimation, isSingleDay);
-    }
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
+    //        , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
+    //        , boolean isAnimation, boolean isSingleDay)
+    //    {
+    //        Intent intent = new Intent(context, StayDetailCalendarActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, isSingleDay);
+    //        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
+    //        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, CommonDateTime commonDateTime, String checkInDateTime, String checkOutDateTime //
+    //        , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
+    //        , boolean isAnimation, boolean isSingleDay) throws Exception
+    //    {
+    //        TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
+    //
+    //        StayBookingDay stayBookingDay = new StayBookingDay();
+    //        stayBookingDay.setCheckInDay(checkInDateTime);
+    //        stayBookingDay.setCheckOutDay(checkOutDateTime);
+    //
+    //        return newInstance(context, todayDateTime, stayBookingDay, dayOfMaxCount, hotelIndex//
+    //            , screen, soldOutList, isSelected, isAnimation, isSingleDay);
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -181,25 +178,12 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     {
         lockUI();
 
-        //        int index = mDayViewList.indexOf(checkInDayView);
-        //        if (index != -1)
-        //        {
-        //            for (int i = 0; i < index; i++)
-        //            {
-        //                updateAvailableDayView(mDayViewList.get(i), false);
-        //            }
-        //        }
-
-        Calendar calendar = DailyCalendar.getInstance();
-
         String checkInDate = null;
 
         try
         {
             Day checkInDay = (Day) checkInDayView.getTag();
-            DailyCalendar.setCalendarDateString(calendar, checkInDay.dateTime);
-
-            checkInDate = DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd");
+            checkInDate = DailyCalendar.convertDateFormatString(checkInDay.dateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
         } catch (Exception e)
         {
             ExLog.e(e.toString());

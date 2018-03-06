@@ -7,6 +7,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.Category;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface StayTabInterface
 
         void setViewType(StayTabPresenter.ViewType viewType);
 
-        void setCategoryTab(int position);
+        void setCategoryTabSelect(int position);
 
         void onSelectedCategory();
 
@@ -64,22 +65,22 @@ public interface StayTabInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onBackClick(Activity activity);
+        void onBackClick(Activity activity, DailyCategoryType categoryType);
 
-        void onRegionChanged(Activity activity, String areaName);
+        void onRegionChanged(Activity activity, DailyCategoryType categoryType, String areaName);
 
-        void onCalendarClick(Activity activity);
+        void onCalendarClick(Activity activity, DailyCategoryType categoryType);
 
-        void onViewTypeClick(Activity activity, StayTabPresenter.ViewType viewType);
+        void onViewTypeClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType);
 
-        void onRegionClick(Activity activity, StayTabPresenter.ViewType viewType);
+        void onRegionClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType);
 
-        void onSearchClick(Activity activity, StayTabPresenter.ViewType viewType);
+        void onSearchClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType);
 
-        void onFilterClick(Activity activity, StayTabPresenter.ViewType viewType);
+        void onFilterClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType);
 
-        void onCategoryFlicking(Activity activity, String categoryName);
+        void onCategoryFlicking(Activity activity, DailyCategoryType categoryType, String categoryName);
 
-        void onCategoryClick(Activity activity, String categoryName);
+        void onCategoryClick(Activity activity, DailyCategoryType categoryType, String categoryName);
     }
 }

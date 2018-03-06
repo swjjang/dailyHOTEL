@@ -41,10 +41,10 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.research.ResearchStayOutboundActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.filter.StayOutboundFilterActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -537,167 +537,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
 
             case StayOutboundListActivity.REQUEST_CODE_CALENDAR:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
-                        && data.hasExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
-                    {
-                        String checkInDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
-
-                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-                        {
-                            return;
-                        }
-
-                        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        notifyToolbarChanged();
-
-                        if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
-                        {
-                            Observable observable = searchMyLocation(null);
-
-                            if (observable != null)
-                            {
-                                screenLock(true);
-
-                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-
-                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        onRefreshAll(false);
-                                    }
-                                }, new Consumer<Throwable>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                                    }
-                                }));
-                            }
-                        } else
-                        {
-                            onRefreshAll(true);
-                        }
-                    }
-                }
+                onCalendarActivityResult(resultCode, data);
                 break;
-            }
 
             case StayOutboundListActivity.REQUEST_CODE_PEOPLE:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
-                    {
-                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-
-                        setPeople(numberOfAdults, childAgeList);
-                        notifyToolbarChanged();
-
-                        if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
-                        {
-                            Observable observable = searchMyLocation(null);
-
-                            if (observable != null)
-                            {
-                                screenLock(true);
-
-                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-
-                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        onRefreshAll(false);
-                                    }
-                                }, new Consumer<Throwable>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                                    }
-                                }));
-                            }
-                        } else
-                        {
-                            onRefreshAll(true);
-                        }
-                    }
-                }
+                onPeopleActivityResult(resultCode, data);
                 break;
-            }
 
             case StayOutboundListActivity.REQUEST_CODE_FILTER:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT) == true//
-                        && data.hasExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING) == true)
-                    {
-                        StayOutboundFilters.SortType sortType = StayOutboundFilters.SortType.valueOf(data.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT));
-                        int rating = data.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
-
-                        setFilter(sortType, rating);
-                        notifyFilterChanged();
-
-                        if (sortType != null && sortType == StayOutboundFilters.SortType.DISTANCE)
-                        {
-                            Observable observable = searchMyLocation(null);
-
-                            if (observable != null)
-                            {
-                                screenLock(true);
-
-                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-
-                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
-                                        notifyFilterChanged();
-
-                                        onRefreshAll(false);
-                                    }
-                                }, new Consumer<Throwable>()
-                                {
-                                    @Override
-                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                                    {
-                                        unLockAll();
-
-                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                                    }
-                                }));
-                            }
-                        } else
-                        {
-                            onRefreshAll(true);
-                        }
-                    }
-                }
+                onFilterActivityResult(resultCode, data);
                 break;
-            }
 
             case StayOutboundListActivity.REQUEST_CODE_PERMISSION_MANAGER:
             {
@@ -829,6 +678,121 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
+    private void onCalendarActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    String checkInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                    String checkOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                    if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                    {
+                        return;
+                    }
+
+                    setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                    notifyToolbarChanged();
+
+                    if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+                    {
+                        refreshAllSortTypeDistance();
+                    } else
+                    {
+                        onRefreshAll(true);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void onPeopleActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    int numberOfAdults = intent.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                    ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                    setPeople(numberOfAdults, childAgeList);
+                    notifyToolbarChanged();
+
+                    if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+                    {
+                        refreshAllSortTypeDistance();
+                    } else
+                    {
+                        onRefreshAll(true);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void onFilterActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    StayOutboundFilters.SortType sortType = StayOutboundFilters.SortType.valueOf(intent.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT));
+                    int rating = intent.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
+
+                    setFilter(sortType, rating);
+                    notifyFilterChanged();
+
+                    if (sortType != null && sortType == StayOutboundFilters.SortType.DISTANCE)
+                    {
+                        refreshAllSortTypeDistance();
+                    } else
+                    {
+                        onRefreshAll(true);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void refreshAllSortTypeDistance()
+    {
+        Observable observable = searchMyLocation(null);
+
+        if (observable != null)
+        {
+            screenLock(true);
+
+            setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
+
+            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                {
+                    unLockAll();
+
+                    setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
+                    notifyFilterChanged();
+
+                    onRefreshAll(false);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
+                }
+            }));
+        }
+    }
+
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
@@ -909,20 +873,17 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         try
         {
-            Calendar startCalendar = DailyCalendar.getInstance();
-            startCalendar.setTime(DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+            Calendar startCalendar = DailyCalendar.getInstance(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT);
             startCalendar.add(Calendar.DAY_OF_MONTH, -1);
-
             String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
             startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
-
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-            Intent intent = StayOutboundCalendarActivity.newInstance(getActivity()//
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.STAY, true, 0, true);
+                , AnalyticsManager.ValueType.STAY, true, 0, true);
 
             startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_CALENDAR);
 

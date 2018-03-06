@@ -135,7 +135,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         super.onStart();
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             if (mDailyDeepLink.isExternalDeepLink() == true)
             {

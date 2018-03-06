@@ -4,13 +4,17 @@ import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
@@ -20,9 +24,10 @@ import java.util.Map;
 public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.AnalyticsInterface
 {
     @Override
-    public void onScreen(Activity activity, StayTabPresenter.ViewType viewType, StayBookDateTime stayBookDateTime, String categoryCode, StayFilter stayFilter, StayRegion stayRegion)
+    public void onScreen(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType//
+        , StayBookDateTime stayBookDateTime, String categoryCode, StayFilter stayFilter, StayRegion stayRegion)
     {
-        if (activity == null || stayBookDateTime == null || categoryCode == null || stayFilter == null || stayRegion == null)
+        if (activity == null || stayBookDateTime == null || categoryType == null || categoryCode == null || stayFilter == null || stayRegion == null)
         {
             return;
         }
@@ -33,23 +38,23 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
             return;
         }
 
-        String screen;
+        String screen = getScreenName(categoryType, viewType);
+
+        Map<String, String> params = new HashMap<>();
 
         switch (viewType)
         {
             case LIST:
-                screen = AnalyticsManager.Screen.DAILYHOTEL_LIST;
+                params.put(AnalyticsManager.KeyType.VIEW_TYPE, AnalyticsManager.ValueType.LIST);
                 break;
 
             case MAP:
-                screen = AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP;
+                params.put(AnalyticsManager.KeyType.VIEW_TYPE, AnalyticsManager.ValueType.MAP);
                 break;
 
             default:
                 return;
         }
-
-        Map<String, String> params = new HashMap<>();
 
         try
         {
@@ -68,6 +73,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.CATEGORY, categoryCode);
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(activity).isBenefitAlarm() ? "on" : "off");
 
             // Filter
             StringBuffer stringBuffer = new StringBuffer();
@@ -84,12 +90,18 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
             stringBuffer.append(getFilterRoomAmenityString(stayFilter.flagRoomAmenitiesFilters));
 
             params.put(AnalyticsManager.KeyType.FILTER, stringBuffer.toString());
-
             params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-            params.put(AnalyticsManager.KeyType.PROVINCE, stayRegion.getAreaGroupName());
 
-            StayArea area = stayRegion.getArea();
-            params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+            if (stayRegion.getAreaType() == PreferenceRegion.AreaType.AREA)
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, stayRegion.getAreaGroupName());
+
+                Area area = stayRegion.getArea();
+                params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+            } else
+            {
+
+            }
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, screen, null, params);
         } catch (Exception e)
@@ -98,8 +110,44 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
         }
     }
 
+    private String getScreenName(DailyCategoryType categoryType, StayTabPresenter.ViewType viewType)
+    {
+        if (categoryType == null)
+        {
+            return null;
+        }
+
+        switch (categoryType)
+        {
+            case STAY_ALL:
+                switch (viewType)
+                {
+                    case LIST:
+                        return AnalyticsManager.Screen.DAILYHOTEL_LIST;
+
+                    case MAP:
+                        return AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP;
+                }
+                break;
+
+            case STAY_HOTEL:
+                return AnalyticsManager.Screen.STAY_LIST_SHORTCUT_HOTEL;
+
+            case STAY_BOUTIQUE:
+                return AnalyticsManager.Screen.STAY_LIST_SHORTCUT_BOUTIQUE;
+
+            case STAY_PENSION:
+                return AnalyticsManager.Screen.STAY_LIST_SHORTCUT_PENSION;
+
+            case STAY_RESORT:
+                return AnalyticsManager.Screen.STAY_LIST_SHORTCUT_RESORT;
+        }
+
+        return null;
+    }
+
     @Override
-    public void onStayClick(Activity activity, StayTabPresenter.ViewType viewType, Stay stay)
+    public void onStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay)
     {
         if (activity == null || viewType == null || stay == null)
         {
@@ -162,7 +210,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
     }
 
     @Override
-    public void onWishClick(Activity activity, boolean wish)
+    public void onWishClick(Activity activity, DailyCategoryType categoryType, boolean wish)
     {
         if (activity == null)
         {
@@ -175,7 +223,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
     }
 
     @Override
-    public void onMarkerClick(Activity activity, String stayName)
+    public void onMarkerClick(Activity activity, DailyCategoryType categoryType, String stayName)
     {
         if (activity == null)
         {

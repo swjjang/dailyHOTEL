@@ -2,19 +2,23 @@ package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.StayInterface;
+import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayFilterCount;
+import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
+import com.daily.dailyhotel.repository.remote.model.SubwayAreasData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
@@ -24,10 +28,12 @@ import com.twoheart.dailyhotel.util.Crypto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
@@ -77,10 +83,10 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<StayFilterCount> getListCountByFilter(Map<String, Object> queryMap, String abTestType)
+    public Observable<Stays> getList(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
-            : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{categoryAsPath}/sales"//
+            : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
 
         String baseUrl;
 
@@ -92,16 +98,19 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
         }
 
-        return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API) + makeListQueryParams(queryMap, abTestType)) //
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{categoryAsPath}", categoryType.getCodeString(mContext));
+
+        return mDailyMobileService.getStayList(baseUrl + Crypto.getUrlDecoderEx(API, urlParams) + makeListQueryParams(queryMap, abTestType)) //
             .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                StayFilterCount stayFilterCount;
+                Stays stays;
 
                 if (baseDto != null)
                 {
                     if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        stayFilterCount = baseDto.data.getFilterCount();
+                        stays = baseDto.data.getStays();
                     } else
                     {
                         throw new BaseException(baseDto.msgCode, baseDto.msg);
@@ -111,8 +120,91 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                     throw new BaseException(-1, null);
                 }
 
-                return stayFilterCount;
+                return stays;
             });
+    }
+
+    @Override
+    public Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
+    {
+        final String API;
+
+        if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
+        {
+            API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
+                : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
+
+            String baseUrl;
+
+            if (Constants.DEBUG == true)
+            {
+                baseUrl = DailyPreference.getInstance(mContext).getBaseUrl();
+            } else
+            {
+                baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
+            }
+
+            return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API) + makeListQueryParams(queryMap, abTestType)) //
+                .subscribeOn(Schedulers.io()).map(baseDto ->
+                {
+                    StayFilterCount stayFilterCount;
+
+                    if (baseDto != null)
+                    {
+                        if (baseDto.msgCode == 100 && baseDto.data != null)
+                        {
+                            stayFilterCount = baseDto.data.getFilterCount();
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayFilterCount;
+                });
+        } else
+        {
+            API = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{categoryAsPath}/sales"//
+                : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
+
+            String baseUrl;
+
+            if (Constants.DEBUG == true)
+            {
+                baseUrl = DailyPreference.getInstance(mContext).getBaseUrl();
+            } else
+            {
+                baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
+            }
+
+            Map<String, String> urlParams = new HashMap<>();
+            urlParams.put("{categoryAsPath}", categoryType.getCodeString(mContext));
+
+            return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API, urlParams) + makeListQueryParams(queryMap, abTestType)) //
+                .subscribeOn(Schedulers.io()).map(baseDto ->
+                {
+                    StayFilterCount stayFilterCount;
+
+                    if (baseDto != null)
+                    {
+                        if (baseDto.msgCode == 100 && baseDto.data != null)
+                        {
+                            stayFilterCount = baseDto.data.getFilterCount();
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayFilterCount;
+                });
+        }
     }
 
     @Override
@@ -343,7 +435,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<List<StayAreaGroup>> getRegionList(DailyCategoryType categoryType)
+    public Observable<List<StayAreaGroup>> getAreaList(DailyCategoryType categoryType)
     {
         final String API;
 
@@ -352,7 +444,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
                 : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
 
-            return mDailyMobileService.getStayRegionList(Crypto.getUrlDecoderEx(API))//
+            return mDailyMobileService.getStayAreaList(Crypto.getUrlDecoderEx(API))//
                 .subscribeOn(Schedulers.io()).map(baseDto ->
                 {
                     List<StayAreaGroup> areaGroupList;
@@ -381,7 +473,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             Map<String, String> urlParams = new HashMap<>();
             urlParams.put("{category}", categoryType.getCodeString(mContext));
 
-            return mDailyMobileService.getStayCategoryRegionList(Crypto.getUrlDecoderEx(API, urlParams))//
+            return mDailyMobileService.getStayCategoryAreaList(Crypto.getUrlDecoderEx(API, urlParams))//
                 .subscribeOn(Schedulers.io()).map(baseDto ->
                 {
                     List<StayAreaGroup> areaGroupList;
@@ -403,6 +495,63 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                     return areaGroupList;
                 });
         }
+    }
+
+    @Override
+    public Observable<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> getSubwayAreaList(DailyCategoryType categoryType)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v6/hotels/subway"//
+            : "NTkkMjQkODkkMTgkNzMkMSQzMSQzOCQzMCQ3NCQyMyQ1MiQ0OCQ5JDEwMCQ4MSQ=$NP0RCOUIyZN0JEMjNDRjKVEMYDgwBQzYS3HN0Y2MTMVERkJFQPzJCQFjY0NTlBNzMzMzNUGOUFGQTgHyNCDVhEMjAzQjA1MTNBQg=SS=$";
+
+        String category;
+
+        if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
+        {
+            category = null;
+        } else
+        {
+            category = categoryType.getCodeString(mContext);
+        }
+
+        return mDailyMobileService.getStaySubwayAreaList(Crypto.getUrlDecoderEx(API), category)//
+            .subscribeOn(Schedulers.io()).map(baseListDto ->
+            {
+                LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayHashMap = new LinkedHashMap<>();
+
+                if (baseListDto != null)
+                {
+                    if (baseListDto.msgCode == 100 && baseListDto.data != null)
+                    {
+                        for (SubwayAreasData subwayAreasData : baseListDto.data)
+                        {
+                            Pair<Area, List<StaySubwayAreaGroup>> pair = subwayAreasData.getAreaGroup();
+
+                            subwayHashMap.put(pair.first, pair.second);
+                        }
+                    } else
+                    {
+                        throw new BaseException(baseListDto.msgCode, baseListDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return subwayHashMap;
+            });
+    }
+
+    @Override
+    public Observable<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> getRegionList(DailyCategoryType categoryType)
+    {
+        return Observable.zip(getAreaList(categoryType), getSubwayAreaList(categoryType), new BiFunction<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>, Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>>()
+        {
+            @Override
+            public Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>> apply(List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaListLinkedHashMap) throws Exception
+            {
+                return new Pair(areaGroupList, areaListLinkedHashMap);
+            }
+        });
     }
 
     private String makeListQueryParams(Map<String, Object> queryMap, String abTestType)

@@ -14,6 +14,7 @@ import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 import java.util.List;
 
@@ -99,12 +100,12 @@ public interface StayListFragmentInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, StayTabPresenter.ViewType viewType, StayBookDateTime stayBookDateTime, String categoryCode, StayFilter stayFilter, StayRegion stayRegion);
+        void onScreen(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, StayBookDateTime stayBookDateTime, String categoryCode, StayFilter stayFilter, StayRegion stayRegion);
 
-        void onStayClick(Activity activity, StayTabPresenter.ViewType viewType, Stay stay);
+        void onStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay);
 
-        void onWishClick(Activity activity, boolean wish);
+        void onWishClick(Activity activity, DailyCategoryType categoryType, boolean wish);
 
-        void onMarkerClick(Activity activity, String name);
+        void onMarkerClick(Activity activity, DailyCategoryType categoryType, String name);
     }
 }

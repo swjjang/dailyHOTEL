@@ -15,6 +15,7 @@ public abstract class PlaceParams implements Parcelable
 {
     protected int provinceIdx;
     protected int areaIdx;
+    protected int subwayIndex;
     protected int persons;
     protected double longitude;
     protected double latitude;
@@ -74,6 +75,7 @@ public abstract class PlaceParams implements Parcelable
     {
         provinceIdx = 0;
         areaIdx = 0;
+        subwayIndex = 0;
         persons = 0;
         longitude = 0.0d;
         latitude = 0.0d;
@@ -88,6 +90,7 @@ public abstract class PlaceParams implements Parcelable
     {
         provinceIdx = in.readInt();
         areaIdx = in.readInt();
+        subwayIndex = in.readInt();
         persons = in.readInt();
         longitude = in.readDouble();
         latitude = in.readDouble();
@@ -103,6 +106,7 @@ public abstract class PlaceParams implements Parcelable
     {
         dest.writeInt(provinceIdx);
         dest.writeInt(areaIdx);
+        dest.writeInt(subwayIndex);
         dest.writeInt(persons);
         dest.writeDouble(longitude);
         dest.writeDouble(latitude);

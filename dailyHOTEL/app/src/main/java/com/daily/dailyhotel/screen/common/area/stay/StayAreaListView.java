@@ -7,34 +7,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaExpandableListAdapter;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayAreaListDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListLocationDataBinding;
-import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView;
 
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
 
 public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventListener, ActivityStayAreaListDataBinding> implements StayAreaListInterface
 {
-    StayAreaListAdapter mStayAreaListAdapter;
+    StayAreaExpandableListAdapter mStayAreaListAdapter;
 
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
 
@@ -62,18 +57,18 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             return;
         }
 
-        initToolbar(viewDataBinding);
-        initHeaderNFooterLayout(viewDataBinding.expandableListView);
-
-        viewDataBinding.expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener()
-        {
-            @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id)
-            {
-                getEventListener().onAreaGroupClick(groupPosition);
-                return true;
-            }
-        });
+        //        initToolbar(viewDataBinding);
+        //        initHeaderNFooterLayout(viewDataBinding.expandableListView);
+        //
+        //        viewDataBinding.expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener()
+        //        {
+        //            @Override
+        //            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id)
+        //            {
+        //                getEventListener().onAreaGroupClick(groupPosition);
+        //                return true;
+        //            }
+        //        });
     }
 
     @Override
@@ -90,48 +85,48 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
     @Override
     public void setAreaList(List<StayAreaGroup> areaList)
     {
-        if (getViewDataBinding() == null || areaList == null || areaList.size() == 0)
-        {
-            return;
-        }
-
-        if (mStayAreaListAdapter == null)
-        {
-            mStayAreaListAdapter = new StayAreaListAdapter(getContext());
-
-            mStayAreaListAdapter.setTablet(isTabletDevice());
-            mStayAreaListAdapter.setOnChildClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    Object tag = view.getTag();
-
-                    if (tag == null)
-                    {
-                        return;
-                    }
-
-                    if (tag instanceof StayArea == false)
-                    {
-                        return;
-                    }
-
-                    StayArea stayTown = (StayArea) tag;
-                    Integer groupPosition = (Integer) view.getTag(view.getId());
-
-                    if (groupPosition == null)
-                    {
-                        return;
-                    }
-
-                    getEventListener().onAreaClick(groupPosition, stayTown);
-                }
-            });
-        }
-
-        mStayAreaListAdapter.setData(areaList);
-        getViewDataBinding().expandableListView.setAdapter(mStayAreaListAdapter);
+        //        if (getViewDataBinding() == null || areaList == null || areaList.size() == 0)
+        //        {
+        //            return;
+        //        }
+        //
+        //        if (mStayAreaListAdapter == null)
+        //        {
+        //            mStayAreaListAdapter = new StayAreaListAdapter(getContext());
+        //
+        //            mStayAreaListAdapter.setTablet(isTabletDevice());
+        //            mStayAreaListAdapter.setOnChildClickListener(new View.OnClickListener()
+        //            {
+        //                @Override
+        //                public void onClick(View view)
+        //                {
+        //                    Object tag = view.getTag();
+        //
+        //                    if (tag == null)
+        //                    {
+        //                        return;
+        //                    }
+        //
+        //                    if (tag instanceof StayArea == false)
+        //                    {
+        //                        return;
+        //                    }
+        //
+        //                    StayArea stayTown = (StayArea) tag;
+        //                    Integer groupPosition = (Integer) view.getTag(view.getId());
+        //
+        //                    if (groupPosition == null)
+        //                    {
+        //                        return;
+        //                    }
+        //
+        //                    getEventListener().onAreaClick(groupPosition, stayTown);
+        //                }
+        //            });
+        //        }
+        //
+        //        mStayAreaListAdapter.setData(areaList);
+        //        getViewDataBinding().expandableListView.setAdapter(mStayAreaListAdapter);
     }
 
     @Override
@@ -159,182 +154,186 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
     @Override
     public Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)
     {
-        if (getViewDataBinding() == null || groupPosition < 0)
-        {
-            return null;
-        }
+        return null;
 
-        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
-
-        if (stayDistrict == null)
-        {
-            return null;
-        }
-
-        Observable<Boolean> observable = new Observable<Boolean>()
-        {
-            @Override
-            protected void subscribeActual(Observer<? super Boolean> observer)
-            {
-                if (animation == true)
-                {
-                    getViewDataBinding().expandableListView.collapseGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
-                    {
-                        @Override
-                        public void onAnimationEnd()
-                        {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        }
-                    });
-                } else
-                {
-                    getViewDataBinding().expandableListView.collapseGroup(groupPosition);
-
-                    observer.onNext(true);
-                    observer.onComplete();
-                }
-            }
-        };
-
-        Observable<Boolean> collapseObservable = collapseArrowAnimation(getGroupView(groupPosition), animation);
-
-        if (collapseObservable == null)
-        {
-            return observable.map(new Function<Boolean, Boolean>()
-            {
-                @Override
-                public Boolean apply(Boolean aBoolean) throws Exception
-                {
-                    mStayAreaListAdapter.setSelectedGroupPosition(-1);
-                    return true;
-                }
-            });
-        } else
-        {
-            return Observable.zip(observable, collapseObservable, new BiFunction<Boolean, Boolean, Boolean>()
-            {
-                @Override
-                public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
-                {
-                    mStayAreaListAdapter.setSelectedGroupPosition(-1);
-                    return true;
-                }
-            });
-        }
+        //        if (getViewDataBinding() == null || groupPosition < 0)
+        //        {
+        //            return null;
+        //        }
+        //
+        //        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
+        //
+        //        if (stayDistrict == null)
+        //        {
+        //            return null;
+        //        }
+        //
+        //        Observable<Boolean> observable = new Observable<Boolean>()
+        //        {
+        //            @Override
+        //            protected void subscribeActual(Observer<? super Boolean> observer)
+        //            {
+        //                if (animation == true)
+        //                {
+        //                    getViewDataBinding().expandableListView.collapseGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+        //                    {
+        //                        @Override
+        //                        public void onAnimationEnd()
+        //                        {
+        //                            observer.onNext(true);
+        //                            observer.onComplete();
+        //                        }
+        //                    });
+        //                } else
+        //                {
+        //                    getViewDataBinding().expandableListView.collapseGroup(groupPosition);
+        //
+        //                    observer.onNext(true);
+        //                    observer.onComplete();
+        //                }
+        //            }
+        //        };
+        //
+        //        Observable<Boolean> collapseObservable = collapseArrowAnimation(getGroupView(groupPosition), animation);
+        //
+        //        if (collapseObservable == null)
+        //        {
+        //            return observable.map(new Function<Boolean, Boolean>()
+        //            {
+        //                @Override
+        //                public Boolean apply(Boolean aBoolean) throws Exception
+        //                {
+        //                    mStayAreaListAdapter.setSelectedGroupPosition(-1);
+        //                    return true;
+        //                }
+        //            });
+        //        } else
+        //        {
+        //            return Observable.zip(observable, collapseObservable, new BiFunction<Boolean, Boolean, Boolean>()
+        //            {
+        //                @Override
+        //                public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
+        //                {
+        //                    mStayAreaListAdapter.setSelectedGroupPosition(-1);
+        //                    return true;
+        //                }
+        //            });
+        //        }
     }
 
     @Override
     public Observable<Boolean> expandGroupWithAnimation(int groupPosition, boolean animation)
     {
-        if (getViewDataBinding() == null || groupPosition < 0)
-        {
-            return null;
-        }
+        return null;
 
-        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
-
-        if (stayDistrict == null)
-        {
-            return null;
-        }
-
-        Observable<Boolean> observable = new Observable<Boolean>()
-        {
-            @Override
-            protected void subscribeActual(Observer<? super Boolean> observer)
-            {
-                if (animation == true)
-                {
-                    try
-                    {
-                        getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
-                        {
-                            @Override
-                            public void onAnimationEnd()
-                            {
-                                observer.onNext(true);
-                                observer.onComplete();
-                            }
-                        });
-                    } catch (Exception e)
-                    {
-                        Crashlytics.logException(e);
-                        ExLog.e(e.toString());
-
-                        getViewDataBinding().expandableListView.expandGroup(groupPosition);
-                    }
-
-                    // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
-                    if (groupPosition == mStayAreaListAdapter.getGroupCount() - 1)
-                    {
-                        getViewDataBinding().expandableListView.setOnScrollListener(new AbsListView.OnScrollListener()
-                        {
-                            @Override
-                            public void onScrollStateChanged(AbsListView absListView, int scrollState)
-                            {
-                                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
-                                {
-                                    observer.onNext(true);
-                                    observer.onComplete();
-                                }
-                            }
-
-                            @Override
-                            public void onScroll(AbsListView absListView, int i, int i1, int i2)
-                            {
-
-                            }
-                        });
-                    }
-                } else
-                {
-                    getViewDataBinding().expandableListView.expandGroup(groupPosition);
-
-                    observer.onNext(true);
-                    observer.onComplete();
-                }
-            }
-        };
-
-        Observable<Boolean> arrowObservable = expandArrowAnimation(getGroupView(groupPosition));
-
-        if (arrowObservable == null)
-        {
-            arrowObservable = Observable.just(true);
-        }
-
-        return Observable.zip(observable, arrowObservable, new BiFunction<Boolean, Boolean, Boolean>()
-        {
-            @Override
-            public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
-            {
-                mStayAreaListAdapter.setSelectedGroupPosition(groupPosition);
-
-                return true;
-            }
-        });
+        //        if (getViewDataBinding() == null || groupPosition < 0)
+        //        {
+        //            return null;
+        //        }
+        //
+        //        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
+        //
+        //        if (stayDistrict == null)
+        //        {
+        //            return null;
+        //        }
+        //
+        //        Observable<Boolean> observable = new Observable<Boolean>()
+        //        {
+        //            @Override
+        //            protected void subscribeActual(Observer<? super Boolean> observer)
+        //            {
+        //                if (animation == true)
+        //                {
+        //                    try
+        //                    {
+        //                        getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+        //                        {
+        //                            @Override
+        //                            public void onAnimationEnd()
+        //                            {
+        //                                observer.onNext(true);
+        //                                observer.onComplete();
+        //                            }
+        //                        });
+        //                    } catch (Exception e)
+        //                    {
+        //                        Crashlytics.logException(e);
+        //                        ExLog.e(e.toString());
+        //
+        //                        getViewDataBinding().expandableListView.expandGroup(groupPosition);
+        //                    }
+        //
+        //                    // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
+        //                    if (groupPosition == mStayAreaListAdapter.getGroupCount() - 1)
+        //                    {
+        //                        getViewDataBinding().expandableListView.setOnScrollListener(new AbsListView.OnScrollListener()
+        //                        {
+        //                            @Override
+        //                            public void onScrollStateChanged(AbsListView absListView, int scrollState)
+        //                            {
+        //                                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
+        //                                {
+        //                                    observer.onNext(true);
+        //                                    observer.onComplete();
+        //                                }
+        //                            }
+        //
+        //                            @Override
+        //                            public void onScroll(AbsListView absListView, int i, int i1, int i2)
+        //                            {
+        //
+        //                            }
+        //                        });
+        //                    }
+        //                } else
+        //                {
+        //                    getViewDataBinding().expandableListView.expandGroup(groupPosition);
+        //
+        //                    observer.onNext(true);
+        //                    observer.onComplete();
+        //                }
+        //            }
+        //        };
+        //
+        //        Observable<Boolean> arrowObservable = expandArrowAnimation(getGroupView(groupPosition));
+        //
+        //        if (arrowObservable == null)
+        //        {
+        //            arrowObservable = Observable.just(true);
+        //        }
+        //
+        //        return Observable.zip(observable, arrowObservable, new BiFunction<Boolean, Boolean, Boolean>()
+        //        {
+        //            @Override
+        //            public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
+        //            {
+        //                mStayAreaListAdapter.setSelectedGroupPosition(groupPosition);
+        //
+        //                return true;
+        //            }
+        //        });
     }
 
     @Override
     public void setSelectedAreaGroup(int groupPosition)
     {
-        if (getViewDataBinding() == null || mStayAreaListAdapter == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().expandableListView.setSelection(groupPosition);
-
-        if (mStayAreaListAdapter.getChildren(groupPosition) == null)
-        {
-            //            getViewDataBinding().expandableListView.setSelectedGroup(groupPosition);
-        } else
-        {
-            getViewDataBinding().expandableListView.expandGroup(groupPosition);
-        }
-
-        mStayAreaListAdapter.setSelectedGroupPosition(groupPosition);
+        //        if (getViewDataBinding() == null || mStayAreaListAdapter == null)
+        //        {
+        //            return;
+        //        }
+        //
+        //        getViewDataBinding().expandableListView.setSelection(groupPosition);
+        //
+        //        if (mStayAreaListAdapter.getChildren(groupPosition) == null)
+        //        {
+        //            //            getViewDataBinding().expandableListView.setSelectedGroup(groupPosition);
+        //        } else
+        //        {
+        //            getViewDataBinding().expandableListView.expandGroup(groupPosition);
+        //        }
+        //
+        //        mStayAreaListAdapter.setSelectedGroupPosition(groupPosition);
     }
 
     private void initToolbar(ActivityStayAreaListDataBinding viewDataBinding)
@@ -494,32 +493,32 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
 
     private View getGroupView(int groupPosition)
     {
-        if (getViewDataBinding() == null)
-        {
-            return null;
-        }
-
-        int count = getViewDataBinding().expandableListView.getChildCount();
-
-        for (int i = 0; i < count; i++)
-        {
-            View childView = getViewDataBinding().expandableListView.getChildAt(i);
-
-            if (childView != null)
-            {
-                Object tag = childView.getTag();
-
-                if (tag != null && tag instanceof Integer == true)
-                {
-                    Integer childTag = (Integer) tag;
-
-                    if (childTag == groupPosition)
-                    {
-                        return childView;
-                    }
-                }
-            }
-        }
+        //        if (getViewDataBinding() == null)
+        //        {
+        //            return null;
+        //        }
+        //
+        //        int count = getViewDataBinding().expandableListView.getChildCount();
+        //
+        //        for (int i = 0; i < count; i++)
+        //        {
+        //            View childView = getViewDataBinding().expandableListView.getChildAt(i);
+        //
+        //            if (childView != null)
+        //            {
+        //                Object tag = childView.getTag();
+        //
+        //                if (tag != null && tag instanceof Integer == true)
+        //                {
+        //                    Integer childTag = (Integer) tag;
+        //
+        //                    if (childTag == groupPosition)
+        //                    {
+        //                        return childView;
+        //                    }
+        //                }
+        //            }
+        //        }
 
         return null;
     }

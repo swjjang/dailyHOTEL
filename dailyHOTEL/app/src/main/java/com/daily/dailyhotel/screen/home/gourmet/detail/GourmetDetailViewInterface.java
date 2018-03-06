@@ -67,5 +67,7 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void performVisitTimeClick(String time);
 
+    void performFirstMenuClick();
+
     void showTrueAwardsDialog(TrueAwards trueAwards, Dialog.OnDismissListener onDismissListener);
 }

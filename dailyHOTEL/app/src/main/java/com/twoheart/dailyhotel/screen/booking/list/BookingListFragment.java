@@ -550,7 +550,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             }));
         }
 
-        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        if (mDailyDeepLink != null)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -1127,7 +1127,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             return false;
         }
 
-        if (mDailyDeepLink == null || mDailyDeepLink.isValidateLink() == false)
+        if (mDailyDeepLink == null)
         {
             return false;
         }
