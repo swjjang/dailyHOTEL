@@ -1,14 +1,12 @@
 package com.daily.dailyhotel.screen.common.area.stay.inbound;
 
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BasePagerFragment;
@@ -19,8 +17,6 @@ import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayAreaListDataBinding;
-
-import java.lang.reflect.Field;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

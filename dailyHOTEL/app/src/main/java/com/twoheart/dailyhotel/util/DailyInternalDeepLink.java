@@ -7,7 +7,6 @@ import android.net.Uri;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 
-import java.net.URLEncoder;
 import java.util.Set;
 
 public class DailyInternalDeepLink extends DailyDeepLink

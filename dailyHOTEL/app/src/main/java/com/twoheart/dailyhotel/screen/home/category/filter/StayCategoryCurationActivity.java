@@ -61,13 +61,13 @@ public class StayCategoryCurationActivity extends PlaceCurationActivity implemen
     private TextView mPersonCountView;
     protected ViewGroup mBedTypeLayout;
 
-//    public static Intent newInstance(Context context, ViewType viewType, StayCategoryCuration stayCategoryCuration)
-//    {
-//        Intent intent = new Intent(context, StayCategoryCurationActivity.class);
-//        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCategoryCuration);
-//        return intent;
-//    }
+    //    public static Intent newInstance(Context context, ViewType viewType, StayCategoryCuration stayCategoryCuration)
+    //    {
+    //        Intent intent = new Intent(context, StayCategoryCurationActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCategoryCuration);
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

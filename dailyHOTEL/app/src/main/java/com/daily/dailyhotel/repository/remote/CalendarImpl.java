@@ -111,9 +111,8 @@ public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
     }
 
     /**
-     *
      * @param placeIndex
-     * @param dateRange : 오늘로 부터 몇일까지 볼지
+     * @param dateRange   : 오늘로 부터 몇일까지 볼지
      * @param checkInDate
      * @return
      */

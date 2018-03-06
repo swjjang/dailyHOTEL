@@ -50,7 +50,8 @@ public class LeaveInfoData
         if (rewardCard == null)
         {
             info.rewardStickerCount = 0;
-        } else {
+        } else
+        {
             info.rewardStickerCount = rewardCard.rewardStickerCount;
         }
 

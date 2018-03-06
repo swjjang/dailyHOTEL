@@ -52,7 +52,7 @@ public class StayAreaFragmentView extends BaseFragmentDialogView<StayAreaFragmen
             @Override
             public void onAreaClick(int groupPosition, Area area)
             {
-                getEventListener().onAreaClick(groupPosition, (StayArea)area);
+                getEventListener().onAreaClick(groupPosition, (StayArea) area);
             }
 
             @Override

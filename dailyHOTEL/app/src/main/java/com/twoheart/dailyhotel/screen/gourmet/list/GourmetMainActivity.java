@@ -1438,7 +1438,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
-                int provinceIndex =externalDeepLink.getProvinceIndex();
+                int provinceIndex = externalDeepLink.getProvinceIndex();
                 int areaIndex = externalDeepLink.getAreaIndex();
 
                 // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다

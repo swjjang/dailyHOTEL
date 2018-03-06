@@ -50,7 +50,7 @@ public class StaySubwayFragmentView extends BaseFragmentDialogView<StaySubwayFra
             @Override
             public void onAreaClick(int groupPosition, Area area)
             {
-                getEventListener().onAreaClick(groupPosition , area);
+                getEventListener().onAreaClick(groupPosition, area);
             }
 
             @Override

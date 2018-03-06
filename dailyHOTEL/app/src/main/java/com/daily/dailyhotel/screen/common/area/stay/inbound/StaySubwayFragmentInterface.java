@@ -5,8 +5,6 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.Area;
-import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 
 import java.util.List;

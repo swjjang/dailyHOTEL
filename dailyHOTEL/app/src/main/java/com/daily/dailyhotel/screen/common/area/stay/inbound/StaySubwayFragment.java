@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.Area;
-import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 
 /**

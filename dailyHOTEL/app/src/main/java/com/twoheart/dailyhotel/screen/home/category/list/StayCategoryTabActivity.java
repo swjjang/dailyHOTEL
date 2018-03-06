@@ -8,7 +8,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
@@ -54,7 +53,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.home.category.filter.StayCategoryCurationActivity;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
@@ -90,18 +88,18 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
     StayRemoteImpl mStayRemoteImpl;
 
-//    public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
-//    {
-//        Intent intent = new Intent(context, StayCategoryTabActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
-//
-//        if (DailyTextUtils.isTextEmpty(deepLink) == false)
-//        {
-//            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
-//        }
-//
-//        return intent;
-//    }
+    //    public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
+    //    {
+    //        Intent intent = new Intent(context, StayCategoryTabActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
+    //
+    //        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+    //        {
+    //            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+    //        }
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -866,8 +864,8 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 return;
             }
 
-//            Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
-//            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+            //            Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 
         @Override

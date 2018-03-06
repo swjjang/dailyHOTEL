@@ -39,7 +39,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -61,9 +60,6 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
