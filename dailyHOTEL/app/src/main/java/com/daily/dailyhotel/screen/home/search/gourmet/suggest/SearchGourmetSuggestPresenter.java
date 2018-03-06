@@ -82,7 +82,7 @@ public class SearchGourmetSuggestPresenter //
     private List<GourmetSuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<GourmetSuggest> mRecentlySuggestList;
     private List<GourmetSuggestV2> mSuggestList;
-    GourmetSuggest mLocationSuggest;
+    GourmetSuggestV2 mLocationSuggest;
     String mKeyword;
 
     DailyLocationExFactory mDailyLocationExFactory;
@@ -132,9 +132,9 @@ public class SearchGourmetSuggestPresenter //
 
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
-        mLocationSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION //
-            , null);
-        mLocationSuggest.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
+        GourmetSuggestV2.Location location = new GourmetSuggestV2.Location();
+        location.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
+        mLocationSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_LOCATION, location);
 
         List<GourmetSuggestV2> popularList = new ArrayList<>();
         popularList.add(new GourmetSuggestV2(0, new GourmetSuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
@@ -678,12 +678,11 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-//        addRecentSearches(gourmetSuggest);
-
-//        getViewInterface().setSuggest(gourmetSuggest.displayName);
-//        startFinishAction(gourmetSuggest, mKeyword, null);
-
         // TODO : 최근 검색 어 저장 및 Edit 영역에 글자 표시 , 검색 홈으로 데이터 전송 필요
+        //        addRecentSearches(gourmetSuggest);
+
+        //        getViewInterface().setSuggest(gourmetSuggest.displayName);
+        //        startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
     @Override
@@ -876,7 +875,7 @@ public class SearchGourmetSuggestPresenter //
     }
 
     @Override
-    public void onNearbyClick(GourmetSuggest gourmetSuggest)
+    public void onNearbyClick(GourmetSuggestV2 gourmetSuggest)
     {
         startSearchMyLocation(true);
     }
@@ -911,15 +910,22 @@ public class SearchGourmetSuggestPresenter //
             screenLock(true);
         }
 
+        if (mLocationSuggest.suggestItem == null)
+        {
+            mLocationSuggest.suggestItem = new GourmetSuggestV2.Location();
+        }
+
+        GourmetSuggestV2.Location itemLocation = (GourmetSuggestV2.Location) mLocationSuggest.suggestItem;
+
         addCompositeDisposable(observable.subscribe(new Consumer<Location>()
         {
             @Override
             public void accept(Location location) throws Exception
             {
-                mLocationSuggest.displayName = getString(R.string.label_search_nearby_empty_address);
-                mLocationSuggest.address = getString(R.string.label_search_nearby_empty_address);
-                mLocationSuggest.latitude = location.getLatitude();
-                mLocationSuggest.longitude = location.getLongitude();
+                itemLocation.name = getString(R.string.label_search_nearby_empty_address);
+                itemLocation.address = getString(R.string.label_search_nearby_empty_address);
+                itemLocation.latitude = location.getLatitude();
+                itemLocation.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GoogleAddress>()
@@ -927,8 +933,8 @@ public class SearchGourmetSuggestPresenter //
                         @Override
                         public void accept(GoogleAddress address) throws Exception
                         {
-                            mLocationSuggest.address = address.address;
-                            mLocationSuggest.displayName = address.shortAddress;
+                            itemLocation.address = address.address;
+                            itemLocation.name = address.shortAddress;
 
                             getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 
@@ -939,8 +945,9 @@ public class SearchGourmetSuggestPresenter //
 
                             unLockAll();
 
-                            getViewInterface().setSuggest(mLocationSuggest.address);
-                            startFinishAction(mLocationSuggest, mKeyword, null);
+                            getViewInterface().setSuggest(itemLocation.address);
+                            // TODO : 위치 정보 Suggest를 검색홈에 넘기는 부분 수정 필요
+                            //                            startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -956,7 +963,7 @@ public class SearchGourmetSuggestPresenter //
 
                             unLockAll();
 
-                            getViewInterface().setSuggest(mLocationSuggest.address);
+                            getViewInterface().setSuggest(itemLocation.address);
 
                             try
                             {
@@ -966,7 +973,8 @@ public class SearchGourmetSuggestPresenter //
                                 ExLog.d(e.getMessage());
                             }
 
-                            startFinishAction(mLocationSuggest, mKeyword, null);
+                            // TODO : 위치 정보 Suggest를 검색홈에 넘기는 부분 수정 필요
+                            //                            startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));
 
@@ -983,7 +991,7 @@ public class SearchGourmetSuggestPresenter //
                     address = getString(R.string.label_search_nearby_description);
                 }
 
-                mLocationSuggest.address = address;
+                itemLocation.address = address;
 
                 getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 

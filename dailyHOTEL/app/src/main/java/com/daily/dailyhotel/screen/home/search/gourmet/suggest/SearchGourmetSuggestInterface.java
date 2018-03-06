@@ -18,9 +18,9 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
+    void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
-    void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggestV2> gourmetSuggestList);
+    void setPopularAreaSuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList);
 
     int getRecentlySuggestAllEntryCount();
 
@@ -32,5 +32,5 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void removeRecentlyItem(int position);
 
-    void setNearbyGourmetSuggest(GourmetSuggest nearbyGourmetSuggest);
+    void setNearbyGourmetSuggest(GourmetSuggestV2 nearbyGourmetSuggest);
 }

@@ -83,7 +83,7 @@ public class GourmetSuggestV2
     {
         public double latitude;
         public double longitude;
-        public String addess;
+        public String address;
         //        public String name;
     }
 

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
@@ -26,7 +25,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 {
     public interface OnPopularSuggestListener
     {
-        void onNearbyClick(GourmetSuggest gourmetSuggest);
+        void onNearbyClick(GourmetSuggestV2 gourmetSuggest);
     }
 
     private Context mContext;
@@ -138,25 +137,30 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
         return mSuggestList.get(position);
     }
 
-    public void setNearByGourmetSuggest(GourmetSuggest nearByGourmetSuggest)
+    public void setNearByGourmetSuggest(GourmetSuggestV2 nearByGourmetSuggest)
     {
         if (mSuggestList == null || mSuggestList.size() == 0 || nearByGourmetSuggest == null)
         {
             return;
         }
 
-        String descriptionText = mContext.getString(R.string.label_search_nearby_description);
+        GourmetSuggestV2.Location nearByLocation = (GourmetSuggestV2.Location) nearByGourmetSuggest.suggestItem;
+        if (nearByLocation == null)
+        {
+            return;
+        }
 
         for (ObjectItem item : mSuggestList)
         {
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
-                GourmetSuggest gourmetSuggest = item.getItem();
+                GourmetSuggestV2 gourmetSuggest = item.getItem();
+                GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.suggestItem;
 
-                gourmetSuggest.displayName = nearByGourmetSuggest != null ? nearByGourmetSuggest.displayName : descriptionText;
-                gourmetSuggest.latitude = nearByGourmetSuggest.latitude;
-                gourmetSuggest.longitude = nearByGourmetSuggest.longitude;
-                gourmetSuggest.categoryKey = nearByGourmetSuggest.categoryKey;
+                location.name = nearByLocation.name;
+                location.address = nearByLocation.address;
+                location.latitude = nearByLocation.latitude;
+                location.longitude = nearByLocation.longitude;
                 gourmetSuggest.menuType = nearByGourmetSuggest.menuType;
                 break;
             }
@@ -165,7 +169,8 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.suggestItem;
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -184,9 +189,9 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.address);
+        holder.dataBinding.descriptionTextView.setText(location.address);
 
-        if (DailyTextUtils.isTextEmpty(gourmetSuggest.address) == true)
+        if (DailyTextUtils.isTextEmpty(location.address) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else

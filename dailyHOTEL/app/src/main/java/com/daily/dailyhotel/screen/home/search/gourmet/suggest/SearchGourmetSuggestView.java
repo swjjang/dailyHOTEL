@@ -51,7 +51,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         void setCheckVoiceSearchEnabled();
 
-        void onNearbyClick(GourmetSuggest gourmetSuggest);
+        void onNearbyClick(GourmetSuggestV2 gourmetSuggest);
     }
 
     public SearchGourmetSuggestView(BaseActivity baseActivity, SearchGourmetSuggestView.OnEventListener listener)
@@ -307,7 +307,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setRecentlySuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList)
+    public void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -331,7 +331,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 }
 
                 @Override
-                public void onNearbyClick(GourmetSuggest gourmetSuggest)
+                public void onNearbyClick(GourmetSuggestV2 gourmetSuggest)
                 {
                     getEventListener().onNearbyClick(gourmetSuggest);
                 }
@@ -368,7 +368,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggestV2> gourmetSuggestList)
+    public void setPopularAreaSuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -380,7 +380,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
             mPopularSuggestListAdapter = new GourmetPopularSuggestListAdapter(getContext(), new GourmetPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
-                public void onNearbyClick(GourmetSuggest gourmetSuggest)
+                public void onNearbyClick(GourmetSuggestV2 gourmetSuggest)
                 {
                     getEventListener().onNearbyClick(gourmetSuggest);
                 }
@@ -467,7 +467,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setNearbyGourmetSuggest(GourmetSuggest locationSuggest)
+    public void setNearbyGourmetSuggest(GourmetSuggestV2 locationSuggest)
     {
         if (locationSuggest == null)
         {
