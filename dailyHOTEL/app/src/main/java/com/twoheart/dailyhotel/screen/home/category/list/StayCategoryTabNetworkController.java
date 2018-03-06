@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
  * Created by android_sam on 2017. 4. 19..
  */
 
+@Deprecated
 public class StayCategoryTabNetworkController extends PlaceMainNetworkController
 {
     public StayCategoryTabNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)

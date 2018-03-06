@@ -31,6 +31,7 @@ import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -66,6 +67,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     String mSearchWord;
     Constants.ViewType mViewType;
     StayFilterCount mStayFilterCount;
+    DailyCategoryType mCategoryType = DailyCategoryType.STAY_ALL;
 
     DailyLocationExFactory mDailyLocationExFactory;
 
@@ -132,6 +134,14 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         {
             ExLog.e(e.toString());
             return false;
+        }
+
+        try
+        {
+            mCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
+        } catch (Exception e)
+        {
+            mCategoryType = DailyCategoryType.STAY_ALL;
         }
 
         String viewType = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_VIEW_TYPE);
@@ -472,7 +482,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
-        addCompositeDisposable(mStayRemoteImpl.getListCountByFilter(getQueryMap(), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType())//
+        addCompositeDisposable(mStayRemoteImpl.getListCountByFilter(mCategoryType, getQueryMap(), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType())//
             .delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayFilterCount>()
             {
                 @Override

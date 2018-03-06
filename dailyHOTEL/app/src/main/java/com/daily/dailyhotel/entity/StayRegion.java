@@ -30,16 +30,6 @@ public class StayRegion
         return mArea;
     }
 
-    public void setAreaGroup(Area area)
-    {
-        mAreaGroup = area;
-    }
-
-    public void setArea(Area area)
-    {
-        mArea = area;
-    }
-
     public String getAreaGroupName()
     {
         return mAreaGroup == null ? null : mAreaGroup.name;

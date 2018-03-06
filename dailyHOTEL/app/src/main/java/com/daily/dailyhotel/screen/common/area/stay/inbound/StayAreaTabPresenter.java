@@ -366,7 +366,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         {
             if (stayAreaGroup.getAreaCount() == 0)
             {
-                return new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, stayAreaGroup);
+                return new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, new StayArea(StayArea.ALL, stayAreaGroup.name));
             } else
             {
                 for (Area area : stayAreaGroup.getAreaList())
@@ -422,7 +422,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup);
+            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, new StayArea(StayArea.ALL, areaGroup.name));
         } else
         {
             StayArea area = areaGroup.getAreaList().get(0);

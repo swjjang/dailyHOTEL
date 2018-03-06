@@ -139,11 +139,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     {
         if (DailyIntentUtils.hasDeepLink(intent) == true)
         {
-            if (intent != null && intent.hasExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_CODE) == true)
+            if (intent != null && intent.hasExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE) == true)
             {
                 try
                 {
-                    mStayViewModel.categoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_CODE));
+                    mStayViewModel.categoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
                 } catch (Exception e)
                 {
                     mStayViewModel.categoryType = DailyCategoryType.STAY_ALL;
@@ -166,7 +166,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             {
                 try
                 {
-                    mStayViewModel.categoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_CODE));
+                    mStayViewModel.categoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
                 } catch (Exception e)
                 {
                     mStayViewModel.categoryType = DailyCategoryType.STAY_ALL;
@@ -189,7 +189,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-            if (externalDeepLink.isHotelListView() == true)
+            if (externalDeepLink.isHotelListView() == true//
+                || externalDeepLink.isShortcutView() == true)
             {
 
             } else if (externalDeepLink.isHotelDetailView() == true)
@@ -503,7 +504,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) deepLink;
 
-            if (externalDeepLink.isHotelListView() == true)
+            if (externalDeepLink.isHotelListView() == true//
+                || externalDeepLink.isShortcutView() == true)
             {
                 if (externalDeepLink.hasStationIndexParam() == true)
                 {
@@ -583,7 +585,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup), areaGroup.getCategoryList());
+            return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, new StayArea(StayArea.ALL, areaGroup.name)), areaGroup.getCategoryList());
         } else
         {
             StayArea area = areaGroup.getAreaList().get(0);
@@ -616,7 +618,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             if (stayAreaGroup.getAreaCount() == 0)
             {
-                return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, stayAreaGroup), stayAreaGroup.getCategoryList());
+                return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, stayAreaGroup, new StayArea(StayArea.ALL, stayAreaGroup.name)), stayAreaGroup.getCategoryList());
             } else
             {
                 for (Area area : stayAreaGroup.getAreaList())
@@ -768,7 +770,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         }
 
         startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
-            , mStayViewModel.viewType.getValue(), mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue()//
+            , mStayViewModel.categoryType, mStayViewModel.viewType.getValue()//
+            , mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue()//
             , categoryList, location, radius, null), StayTabActivity.REQUEST_CODE_FILTER);
 
         mAnalytics.onFilterClick(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue());
@@ -1259,7 +1262,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     }
                 } else
                 {
-                    return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup), areaGroup.getCategoryList());
+                    return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, new StayArea(StayArea.ALL, areaGroup.name)), areaGroup.getCategoryList());
                 }
             }
         }

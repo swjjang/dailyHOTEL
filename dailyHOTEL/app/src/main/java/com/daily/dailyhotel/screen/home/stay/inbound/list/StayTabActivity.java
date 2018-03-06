@@ -29,7 +29,7 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
     static final int REQUEST_CODE_WISH_DIALOG = 10009;
     static final int REQUEST_CODE_CALL = 10010;
 
-    static final String INTENT_EXTRA_DATA_CATEGORY_CODE = "categoryCode";
+    static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
 
     public static Intent newInstance(Context context, DailyCategoryType categoryType)
     {
@@ -37,7 +37,7 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
 
         if (categoryType != null)
         {
-            intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_CODE, categoryType.name());
+            intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         }
 
         return intent;
@@ -61,7 +61,7 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
 
         if (categoryType != null)
         {
-            intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_CODE, categoryType.name());
+            intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         }
 
         if (DailyTextUtils.isTextEmpty(deepLink) == false)

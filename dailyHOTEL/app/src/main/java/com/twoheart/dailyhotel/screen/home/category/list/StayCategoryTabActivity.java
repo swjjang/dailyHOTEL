@@ -80,6 +80,8 @@ import retrofit2.Response;
 /**
  * Created by android_sam on 2017. 4. 19..
  */
+
+@Deprecated
 public class StayCategoryTabActivity extends PlaceMainActivity
 {
     StayCategoryCuration mStayCategoryCuration;
@@ -88,18 +90,18 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
     StayRemoteImpl mStayRemoteImpl;
 
-    public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
-    {
-        Intent intent = new Intent(context, StayCategoryTabActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
-
-        if (DailyTextUtils.isTextEmpty(deepLink) == false)
-        {
-            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
-        }
-
-        return intent;
-    }
+//    public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
+//    {
+//        Intent intent = new Intent(context, StayCategoryTabActivity.class);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
+//
+//        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+//        {
+//            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+//        }
+//
+//        return intent;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -864,8 +866,8 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 return;
             }
 
-            Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+//            Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
+//            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 
         @Override

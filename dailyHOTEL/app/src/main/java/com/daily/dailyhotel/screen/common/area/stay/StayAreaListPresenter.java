@@ -705,7 +705,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
 
         if (areaGroup.getAreaCount() == 0)
         {
-            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, areaGroup);
+            return new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, new StayArea(StayArea.ALL, areaGroup.name));
         } else
         {
             for (StayArea area : areaGroup.getAreaList())

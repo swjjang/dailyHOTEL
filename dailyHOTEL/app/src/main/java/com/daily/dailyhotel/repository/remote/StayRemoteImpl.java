@@ -125,42 +125,86 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<StayFilterCount> getListCountByFilter(Map<String, Object> queryMap, String abTestType)
+    public Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
-            : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
+        final String API;
 
-        String baseUrl;
-
-        if (Constants.DEBUG == true)
+        if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
         {
-            baseUrl = DailyPreference.getInstance(mContext).getBaseUrl();
-        } else
-        {
-            baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
-        }
+            API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
+                : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
 
-        return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API) + makeListQueryParams(queryMap, abTestType)) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
+            String baseUrl;
+
+            if (Constants.DEBUG == true)
             {
-                StayFilterCount stayFilterCount;
+                baseUrl = DailyPreference.getInstance(mContext).getBaseUrl();
+            } else
+            {
+                baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
+            }
 
-                if (baseDto != null)
+            return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API) + makeListQueryParams(queryMap, abTestType)) //
+                .subscribeOn(Schedulers.io()).map(baseDto ->
                 {
-                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    StayFilterCount stayFilterCount;
+
+                    if (baseDto != null)
                     {
-                        stayFilterCount = baseDto.data.getFilterCount();
+                        if (baseDto.msgCode == 100 && baseDto.data != null)
+                        {
+                            stayFilterCount = baseDto.data.getFilterCount();
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayFilterCount;
-            });
+                    return stayFilterCount;
+                });
+        } else
+        {
+            API = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{categoryAsPath}/sales"//
+                : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
+
+            String baseUrl;
+
+            if (Constants.DEBUG == true)
+            {
+                baseUrl = DailyPreference.getInstance(mContext).getBaseUrl();
+            } else
+            {
+                baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
+            }
+
+            Map<String, String> urlParams = new HashMap<>();
+            urlParams.put("{categoryAsPath}", categoryType.getCodeString(mContext));
+
+            return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API, urlParams) + makeListQueryParams(queryMap, abTestType)) //
+                .subscribeOn(Schedulers.io()).map(baseDto ->
+                {
+                    StayFilterCount stayFilterCount;
+
+                    if (baseDto != null)
+                    {
+                        if (baseDto.msgCode == 100 && baseDto.data != null)
+                        {
+                            stayFilterCount = baseDto.data.getFilterCount();
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayFilterCount;
+                });
+        }
     }
 
     @Override

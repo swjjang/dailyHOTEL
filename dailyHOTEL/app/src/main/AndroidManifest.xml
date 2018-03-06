@@ -374,11 +374,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.home.category.list.StayCategoryTabActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".screen.home.category.nearby.StayCategoryNearByActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -429,12 +424,6 @@
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".screen.search.stay.result.StaySearchResultCurationActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity
-            android:name=".screen.home.category.filter.StayCategoryCurationActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

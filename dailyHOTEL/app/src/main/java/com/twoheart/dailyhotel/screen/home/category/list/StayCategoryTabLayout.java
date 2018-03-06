@@ -24,6 +24,7 @@ import java.util.Locale;
  * Created by android_sam on 2017. 4. 19..
  */
 
+@Deprecated
 public class StayCategoryTabLayout extends PlaceMainLayout
 {
     private String mTitleText;
