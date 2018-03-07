@@ -183,22 +183,20 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
             case R.id.cancelRefundView05:
             case R.id.cancelRefundView06:
             {
-                getViewDataBinding().messageEditText.setText(null);
                 getViewDataBinding().messageClickView.setVisibility(View.VISIBLE);
                 getViewDataBinding().messageClickView.setOnClickListener(this);
 
                 getViewDataBinding().messageEditText.setCursorVisible(false);
-
-                // 넣을까 말까 고민중
-                //                getViewDataBinding().scrollView.post(new Runnable()
-                //                {
-                //                    @Override
-                //                    public void run()
-                //                    {
-                //                        int toY = (int) view.getY();
-                //                        getViewDataBinding().scrollView.scrollTo(0, toY);
-                //                    }
-                //                });
+                getViewDataBinding().messageEditText.setTextColor(getColor(R.color.default_text_c929292));
+//                getViewDataBinding().scrollView.post(new Runnable()
+//                {
+//                    @Override
+//                    public void run()
+//                    {
+//                        int toY = (int) view.getY();
+//                        getViewDataBinding().scrollView.scrollTo(0, toY);
+//                    }
+//                });
 
                 setSelected(view);
 
@@ -212,6 +210,7 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 getViewDataBinding().messageClickView.setOnClickListener(null);
 
                 getViewDataBinding().messageEditText.setCursorVisible(true);
+                getViewDataBinding().messageEditText.setTextColor(getColor(R.color.default_text_c323232));
 
                 setSelected(view);
 
