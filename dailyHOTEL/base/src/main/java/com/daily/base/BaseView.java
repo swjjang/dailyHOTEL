@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -148,6 +149,11 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     BaseActivity getActivity()
     {
         return mActivity;
+    }
+
+    protected View getCurrentFocus()
+    {
+        return mActivity == null ? null : mActivity.getCurrentFocus();
     }
 
     protected Fragment findFragmentById(int id)
