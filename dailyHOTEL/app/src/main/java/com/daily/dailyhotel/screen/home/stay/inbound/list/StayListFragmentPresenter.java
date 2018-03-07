@@ -350,7 +350,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             case MAP:
                 if (getViewInterface().isMapViewPagerVisible() == true)
                 {
-                    onMapClick();
+                    getViewInterface().setMapViewPagerVisible(false);
                 }
                 break;
         }
@@ -978,6 +978,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 {
 
                 }
+
+                if (mViewType == StayTabPresenter.ViewType.MAP)
+                {
+                    getViewInterface().setMapViewPagerVisible(false);
+                }
             }
         };
 
@@ -996,6 +1001,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 {
 
                 }
+
+                if (mViewType == StayTabPresenter.ViewType.MAP)
+                {
+                    getViewInterface().setMapViewPagerVisible(false);
+                }
             }
         };
 
@@ -1013,6 +1023,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 } else
                 {
 
+                }
+
+                if (mViewType == StayTabPresenter.ViewType.MAP)
+                {
+                    getViewInterface().setMapViewPagerVisible(false);
                 }
             }
         };
