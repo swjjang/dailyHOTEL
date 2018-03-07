@@ -202,9 +202,9 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
 
                 setSelected(view);
 
-                hideInputKeyboard();
-
                 scrollViewChangedLayoutDisabledByKeyboard();
+
+                hideInputKeyboard();
                 break;
             }
 
@@ -228,6 +228,8 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 });
 
                 showInputKeyboard();
+
+                getViewDataBinding().scrollView.setChangeLayoutEnabled(false);
                 break;
             }
 
