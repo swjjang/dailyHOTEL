@@ -128,8 +128,16 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 TextView selectedView = (TextView) ((View) getViewDataBinding().cancelRefundView01.getParent()).getTag();
                 if (selectedView != null)
                 {
-                    String cancelReason = selectedView.getText().toString();
-                    String message = getViewDataBinding().messageEditText.getText().toString().trim();
+                    String cancelReason = cancelReason = selectedView.getText().toString();
+                    String message;
+
+                    if (selectedView.getId() == R.id.cancelRefundView07)
+                    {
+                        message = getViewDataBinding().messageEditText.getText().toString().trim();
+                    } else
+                    {
+                        message = null;
+                    }
 
                     getEventListener().onPositiveButtonClick((Integer) selectedView.getTag(), cancelReason, message);
                 }
@@ -188,15 +196,6 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
 
                 getViewDataBinding().messageEditText.setCursorVisible(false);
                 getViewDataBinding().messageEditText.setTextColor(getColor(R.color.default_text_c929292));
-//                getViewDataBinding().scrollView.post(new Runnable()
-//                {
-//                    @Override
-//                    public void run()
-//                    {
-//                        int toY = (int) view.getY();
-//                        getViewDataBinding().scrollView.scrollTo(0, toY);
-//                    }
-//                });
 
                 setSelected(view);
 
@@ -213,8 +212,6 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 getViewDataBinding().messageEditText.setTextColor(getColor(R.color.default_text_c323232));
 
                 setSelected(view);
-
-                //                getViewDataBinding().scrollView.fullScroll(View.FOCUS_DOWN);
 
                 getViewDataBinding().scrollView.post(new Runnable()
                 {
@@ -262,15 +259,31 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
             return;
         }
 
-        getViewDataBinding().messageEditText.post(new Runnable()
+        View view = getCurrentFocus();
+
+        if (view != null)
         {
-            @Override
-            public void run()
+            view.post(new Runnable()
             {
-                InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getViewDataBinding().messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-            }
-        });
+                @Override
+                public void run()
+                {
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            });
+        } else
+        {
+            getViewDataBinding().messageEditText.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(getViewDataBinding().messageEditText.getWindowToken(), 0);
+                }
+            });
+        }
     }
 
     @Override
