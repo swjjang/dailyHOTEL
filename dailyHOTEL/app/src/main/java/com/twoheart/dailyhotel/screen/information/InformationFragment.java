@@ -322,7 +322,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            baseActivity.startActivityForResult(EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.EVENT//
+            baseActivity.startActivityForResult(EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOME_EVENT//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards(), getString(R.string.label_daily_true_awards)), Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.TRUE_AWARDS //
