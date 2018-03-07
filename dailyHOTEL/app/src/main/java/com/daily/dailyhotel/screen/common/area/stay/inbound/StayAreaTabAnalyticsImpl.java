@@ -119,7 +119,7 @@ public class StayAreaTabAnalyticsImpl implements StayAreaTabInterface.AnalyticsI
     }
 
     @Override
-    public void onEventAreaClick(Activity activity, String districtName, String townName)
+    public void onEventAreaClick(Activity activity, String areaGroupName, String areaName)
     {
         if (activity == null)
         {
@@ -127,7 +127,7 @@ public class StayAreaTabAnalyticsImpl implements StayAreaTabInterface.AnalyticsI
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), districtName, townName), null);
+            , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), areaGroupName, areaName), null);
     }
 
     @Override
@@ -177,18 +177,18 @@ public class StayAreaTabAnalyticsImpl implements StayAreaTabInterface.AnalyticsI
             AnalyticsManager.Action.STAY_NEARBY_SEARCH, label, null);
     }
 
-    private String getAnalyticsRegionLabel(String overseasName, String districtName, String townName)
+    private String getAnalyticsRegionLabel(String overseasName, String areGroupName, String areaName)
     {
-        if (DailyTextUtils.isTextEmpty(districtName) == true)
+        if (DailyTextUtils.isTextEmpty(areGroupName) == true)
         {
-            districtName = "None";
+            areGroupName = "None";
         }
 
-        if (DailyTextUtils.isTextEmpty(townName) == true)
+        if (DailyTextUtils.isTextEmpty(areaName) == true)
         {
-            townName = "None";
+            areaName = "None";
         }
 
-        return String.format(Locale.KOREA, "%s-%s-%s", overseasName, districtName, townName);
+        return String.format(Locale.KOREA, "%s-%s-%s", overseasName, areGroupName, areaName);
     }
 }

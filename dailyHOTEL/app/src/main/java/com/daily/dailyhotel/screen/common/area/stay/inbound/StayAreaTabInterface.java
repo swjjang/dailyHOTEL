@@ -53,12 +53,12 @@ public interface StayAreaTabInterface
 
         void onEventSearchClick(Activity activity, DailyCategoryType dailyCategoryType);
 
-        void onEventChangedAreaGroupClick(Activity activity, String previousDistrictName, String previousTownName//
-            , String changedDistrictName, String changedTownName, StayBookDateTime stayBookDateTime);
+        void onEventChangedAreaGroupClick(Activity activity, String previousAreaGroupName, String previousAreaName//
+            , String changedAreaGroupName, String changedAreaName, StayBookDateTime stayBookDateTime);
 
         void onEventChangedDateClick(Activity activity);
 
-        void onEventAreaClick(Activity activity, String districtName, String townName);
+        void onEventAreaClick(Activity activity, String areGroupName, String areaName);
 
         void onEventClosedClick(Activity activity, String stayCategory);
 

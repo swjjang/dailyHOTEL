@@ -81,8 +81,8 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
                         params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
                     }
 
-                    params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-                    params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAreaGroupName());
+                    params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAreaName());
                     params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
                     params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
@@ -159,8 +159,8 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
                 params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
             }
 
-            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAreaGroupName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAreaName());
             params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
@@ -246,7 +246,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.COUNTRY, overseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
 
-            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAreaGroupName());
 
             if (login == true)
             {
@@ -406,8 +406,8 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
         params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
         params.put(AnalyticsManager.KeyType.CATEGORY, category);
 
-        params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-        params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+        params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAreaGroupName());
+        params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAreaName());
         params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
         params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(discountPrice));
@@ -513,8 +513,8 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.overseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
             params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
 
-            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAreaGroupName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAreaName());
             params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
             params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(activity));

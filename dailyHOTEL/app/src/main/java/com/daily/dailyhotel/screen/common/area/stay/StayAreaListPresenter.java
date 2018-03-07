@@ -79,7 +79,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
 
         void onEventChangedDateClick(Activity activity);
 
-        void onEventTownClick(Activity activity, String districtName, String townName);
+        void onEventAreaClick(Activity activity, String areaGroupName, String areaName);
 
         void onEventClosedClick(Activity activity, String stayCategory);
 
@@ -511,7 +511,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
             }, true);
         }
 
-        mAnalytics.onEventTownClick(getActivity(), areaGroupName, areaName);
+        mAnalytics.onEventAreaClick(getActivity(), areaGroupName, areaName);
     }
 
     @Override

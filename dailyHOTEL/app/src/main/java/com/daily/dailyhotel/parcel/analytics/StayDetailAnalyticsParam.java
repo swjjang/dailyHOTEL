@@ -47,7 +47,7 @@ public class StayDetailAnalyticsParam implements Parcelable
         return mRegion;
     }
 
-    public String getProvinceName()
+    public String getAreaGroupName()
     {
         if (mRegion == null)
         {
@@ -57,7 +57,7 @@ public class StayDetailAnalyticsParam implements Parcelable
         return mRegion.getAreaGroupName();
     }
 
-    public String getDistrictName()
+    public String getAreaName()
     {
         if (mRegion == null)
         {

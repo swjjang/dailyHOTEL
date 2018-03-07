@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.Area;
-import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
@@ -44,17 +43,11 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
 
             if (stayRegion != null)
             {
-                if (stayRegion.getAreaType() == PreferenceRegion.AreaType.AREA)
-                {
-                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, stayRegion.getAreaGroupName());
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, stayRegion.getAreaGroupName());
 
-                    Area area = stayRegion.getArea();
-                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
-                } else
-                {
-
-                }
+                Area area = stayRegion.getArea();
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
             StringBuilder stringBuilder = new StringBuilder();

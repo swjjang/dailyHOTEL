@@ -1093,7 +1093,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
                             , mStayViewModel.commonDateTime.getValue().getTodayDateTime()//
                             , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()//
-                            , null, staySuggest, null, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
+                            , null, staySuggest, null, AnalyticsManager.Screen.HOME)//
                             , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                     } catch (Exception e)
                     {
@@ -1103,16 +1103,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     try
                     {
-                        StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
-
-                        Location location = new Location("provider");
-                        location.setLatitude(staySuggest.latitude);
-                        location.setLongitude(staySuggest.longitude);
-
                         startActivityForResult(StayCategoryNearByActivity.newInstance(getActivity()//
                             , mStayViewModel.commonDateTime.getValue().getTodayDateTime() //
                             , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()//
-                            , location, mStayViewModel.categoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
+                            , null, mStayViewModel.categoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
                             , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                     } catch (Exception e)
                     {

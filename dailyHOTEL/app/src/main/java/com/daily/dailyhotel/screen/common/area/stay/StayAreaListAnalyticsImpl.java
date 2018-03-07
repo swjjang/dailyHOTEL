@@ -79,16 +79,16 @@ public class StayAreaListAnalyticsImpl implements StayAreaListPresenter.StayArea
     }
 
     @Override
-    public void onEventAreaClick(Activity activity, String previousDistrictName, String previousTownName//
-        , String changedDistrictName, String changedTownName, StayBookDateTime stayBookDateTime)
+    public void onEventAreaClick(Activity activity, String previousAreaGroupName, String previousAreaName//
+        , String changedAreaGroupName, String changedAreaName, StayBookDateTime stayBookDateTime)
     {
         if (activity == null)
         {
             return;
         }
 
-        String previousLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), previousDistrictName, previousTownName);
-        String changedLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), changedDistrictName, changedTownName);
+        String previousLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), previousAreaGroupName, previousAreaName);
+        String changedLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), changedAreaGroupName, changedAreaName);
 
         String checkInDate = stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)");
         String checkOutDate = stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)");
@@ -112,7 +112,7 @@ public class StayAreaListAnalyticsImpl implements StayAreaListPresenter.StayArea
     }
 
     @Override
-    public void onEventTownClick(Activity activity, String districtName, String townName)
+    public void onEventAreaClick(Activity activity, String areaGroupName, String areaName)
     {
         if (activity == null)
         {
@@ -120,7 +120,7 @@ public class StayAreaListAnalyticsImpl implements StayAreaListPresenter.StayArea
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), districtName, townName), null);
+            , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), areaGroupName, areaName), null);
     }
 
     @Override
@@ -170,18 +170,18 @@ public class StayAreaListAnalyticsImpl implements StayAreaListPresenter.StayArea
             AnalyticsManager.Action.STAY_NEARBY_SEARCH, label, null);
     }
 
-    private String getAnalyticsRegionLabel(String overseasName, String districtName, String townName)
+    private String getAnalyticsRegionLabel(String overseasName, String areaGroupName, String areaName)
     {
-        if (DailyTextUtils.isTextEmpty(districtName) == true)
+        if (DailyTextUtils.isTextEmpty(areaGroupName) == true)
         {
-            districtName = "None";
+            areaGroupName = "None";
         }
 
-        if (DailyTextUtils.isTextEmpty(townName) == true)
+        if (DailyTextUtils.isTextEmpty(areaName) == true)
         {
-            townName = "None";
+            areaName = "None";
         }
 
-        return String.format(Locale.KOREA, "%s-%s-%s", overseasName, districtName, townName);
+        return String.format(Locale.KOREA, "%s-%s-%s", overseasName, areaGroupName, areaName);
     }
 }
