@@ -276,11 +276,25 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
             {
                 if (animation == true)
                 {
+                    setOnGroupCollapseListener(new OnGroupCollapseListener()
+                    {
+                        @Override
+                        public void onGroupCollapse(int groupPosition)
+                        {
+                            setOnGroupCollapseListener(null);
+
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+                    });
+
                     collapseGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
                     {
                         @Override
                         public void onAnimationEnd()
                         {
+                            setOnAnimationListener(null);
+
                             observer.onNext(true);
                             observer.onComplete();
                         }
@@ -345,11 +359,25 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
                 {
                     try
                     {
+                        setOnGroupExpandListener(new OnGroupExpandListener()
+                        {
+                            @Override
+                            public void onGroupExpand(int groupPosition)
+                            {
+                                setOnGroupExpandListener(null);
+
+                                observer.onNext(true);
+                                observer.onComplete();
+                            }
+                        });
+
                         expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
                         {
                             @Override
                             public void onAnimationEnd()
                             {
+                                setOnAnimationListener(null);
+
                                 observer.onNext(true);
                                 observer.onComplete();
                             }

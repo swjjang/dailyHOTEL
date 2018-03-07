@@ -1364,7 +1364,7 @@ public class ReviewActivity extends BaseActivity
                 finish();
             } else
             {
-                setResult(RESULT_OK);
+                setResult(Constants.CODE_RESULT_ACTIVITY_REVIEW_MODIFIABLE);
 
                 mHandler.postDelayed(new Runnable()
                 {
@@ -1385,6 +1385,8 @@ public class ReviewActivity extends BaseActivity
         public void onAddReviewDetailInformation()
         {
             DailyToast.showToast(ReviewActivity.this, R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_SHORT);
+
+            setResult(Constants.CODE_RESULT_ACTIVITY_REVIEW_COMPLETE);
 
             mHandler.postDelayed(new Runnable()
             {

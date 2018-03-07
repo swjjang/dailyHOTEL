@@ -206,6 +206,11 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
         return ANIMATION_DURATION;
     }
 
+    public void setOnAnimationListener(OnAnimationListener listener)
+    {
+        mOnAnimationListener = listener;
+    }
+
     /**
      * Used for holding information regarding the group.
      */

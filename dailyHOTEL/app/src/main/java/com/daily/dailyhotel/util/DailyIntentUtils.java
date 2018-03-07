@@ -11,7 +11,7 @@ public class DailyIntentUtils
 {
     public static boolean hasDeepLink(Intent intent)
     {
-        return intent != null || intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true;
+        return intent != null && intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true;
     }
 
     public static DailyDeepLink getDeepLink(Intent intent)

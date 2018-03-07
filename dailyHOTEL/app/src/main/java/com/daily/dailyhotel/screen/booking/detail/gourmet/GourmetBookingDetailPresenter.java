@@ -354,7 +354,20 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
             case GourmetBookingDetailActivity.REQUEST_CODE_REVIEW:
             {
-                if (resultCode == Activity.RESULT_OK)
+                String reviewStatusType = null;
+
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REVIEW_COMPLETE)
+                {
+                    reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_REVIEW_MODIFIABLE)
+                {
+                    reviewStatusType = PlaceBookingDetail.ReviewStatusType.MODIFIABLE;
+                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_REVIEW_ADDABLE)
+                {
+                    reviewStatusType = PlaceBookingDetail.ReviewStatusType.ADDABLE;
+                }
+
+                if (DailyTextUtils.isTextEmpty(reviewStatusType) == false)
                 {
                     if (mGourmetBookingDetail == null)
                     {
@@ -366,7 +379,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                         mGourmetBookingDetail.reviewInfo = new ReviewInfo();
                     }
 
-                    mGourmetBookingDetail.reviewInfo.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                    mGourmetBookingDetail.reviewInfo.reviewStatusType = reviewStatusType;
                     getViewInterface().setReviewButtonLayout(mGourmetBookingDetail.reviewInfo);
                 }
                 break;
