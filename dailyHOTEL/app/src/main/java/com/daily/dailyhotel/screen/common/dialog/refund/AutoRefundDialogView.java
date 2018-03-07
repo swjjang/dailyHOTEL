@@ -2,11 +2,13 @@ package com.daily.dailyhotel.screen.common.dialog.refund;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.daily.base.BaseActivity;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.base.BaseMultiWindowView;
 import com.twoheart.dailyhotel.R;
@@ -200,6 +203,8 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 setSelected(view);
 
                 hideInputKeyboard();
+
+                scrollViewChangedLayoutDisabledByKeyboard();
                 break;
             }
 
@@ -230,6 +235,39 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 getViewDataBinding().cancelRefundView07.performClick();
                 break;
         }
+    }
+
+    private void scrollViewChangedLayoutDisabledByKeyboard()
+    {
+        getViewDataBinding().scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            Rect rect = new Rect();
+            int screenHeight = ScreenUtils.getScreenHeight(getContext());
+
+            @Override
+            public void onGlobalLayout()
+            {
+                getViewDataBinding().getRoot().getRootView().getWindowVisibleDisplayFrame(rect);
+
+                int keypadHeight = screenHeight - rect.bottom;
+
+                if (keypadHeight > screenHeight * 0.15)
+                {
+                    getViewDataBinding().scrollView.setChangeLayoutEnabled(false);
+                } else
+                {
+                    if (VersionUtils.isOverAPI16() == true)
+                    {
+                        getViewDataBinding().scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else
+                    {
+                        getViewDataBinding().scrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    getViewDataBinding().scrollView.setChangeLayoutEnabled(true);
+                }
+            }
+        });
     }
 
     @Override

@@ -12,6 +12,7 @@ public class DailyScrollView extends ScrollView
 {
     private OnScrollChangedListener mOnScrollChangedListener;
     private boolean mIsScrollable = true;
+    private boolean mIsChangeLayout = true;
 
     public interface OnScrollChangedListener
     {
@@ -85,6 +86,28 @@ public class DailyScrollView extends ScrollView
         }
     }
 
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b)
+    {
+        if (mIsChangeLayout == false)
+        {
+            return;
+        }
+
+        super.onLayout(changed, l, t, r, b);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh)
+    {
+        if (mIsChangeLayout == false)
+        {
+            return;
+        }
+
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+
     public void setScrollingEnabled(boolean enabled)
     {
         mIsScrollable = enabled;
@@ -93,5 +116,10 @@ public class DailyScrollView extends ScrollView
     public boolean isScrollable()
     {
         return mIsScrollable;
+    }
+
+    public void setChangeLayoutEnabled(boolean enabled)
+    {
+        mIsChangeLayout = enabled;
     }
 }
