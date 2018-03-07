@@ -583,6 +583,7 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_LIST_MAP = "DailyHotel_HotelMapView";
         public static final String DAILYHOTEL_LIST_EMPTY = "DailyHotel_NotHotelAvailable";
         public static final String DAILYHOTEL_LIST_REGION_DOMESTIC = "DailyHotel_HotelDomesticLocationList";
+        public static final String DAILYHOTEL_HOTEL_DOMESTIC_SUBWAY_LIST = "DailyHotel_HotelDomesticSubwayList";
         public static final String DAILYHOTEL_LIST_REGION_GLOBAL = "DailyHotel_HotelGlobalLocationList";
         public static final String DAILYHOTEL_LIST_CALENDAR = "DailyHotel_HotelBookingWindow";
         public static final String DAILYHOTEL_CURATION = "DailyHotel_SortFilterSelectView";

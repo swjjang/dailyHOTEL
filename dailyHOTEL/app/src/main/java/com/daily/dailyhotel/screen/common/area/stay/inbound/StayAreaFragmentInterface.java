@@ -1,6 +1,8 @@
 package com.daily.dailyhotel.screen.common.area.stay.inbound;
 
 
+import android.app.Activity;
+
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
@@ -43,5 +45,8 @@ public interface StayAreaFragmentInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onEventAreaGroupClick(Activity activity, String name);
+
+        void onEventAreaClick(Activity activity, String areaGroupNanem, String areaName);
     }
 }

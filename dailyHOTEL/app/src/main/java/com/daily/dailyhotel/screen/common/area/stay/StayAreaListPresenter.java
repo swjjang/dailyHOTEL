@@ -50,6 +50,8 @@ import io.reactivex.functions.Function;
  * Created by sheldon
  * Clean Architecture
  */
+
+@Deprecated
 public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListActivity, StayAreaListInterface> implements StayAreaListView.OnEventListener
 {
     StayAreaListAnalyticsInterface mAnalytics;
@@ -72,7 +74,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
 
         void onEventSearchClick(Activity activity, DailyCategoryType dailyCategoryType);
 
-        void onEventChangedDistrictClick(Activity activity, String previousDistrictName, String previousTownName//
+        void onEventAreaClick(Activity activity, String previousDistrictName, String previousTownName//
             , String changedDistrictName, String changedTownName, StayBookDateTime stayBookDateTime);
 
         void onEventChangedDateClick(Activity activity);
@@ -475,7 +477,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                 @Override
                 public void onClick(View v)
                 {
-                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayBookDateTime);
+                    mAnalytics.onEventAreaClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayBookDateTime);
 
                     setResult(Activity.RESULT_OK, mDailyCategoryType, areaGroup, area);
                     finish();
@@ -485,7 +487,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                 @Override
                 public void onClick(View v)
                 {
-                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayBookDateTime);
+                    mAnalytics.onEventAreaClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayBookDateTime);
                     mAnalytics.onEventChangedDateClick(getActivity());
 
                     // 날짜 선택 화면으로 이동한다.

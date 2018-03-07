@@ -71,13 +71,13 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
 
         setRefresh(false);
 
-        switch (mStayAreaViewModel.categoryType.getValue())
+        switch (mStayAreaViewModel.categoryType)
         {
             case STAY_HOTEL:
             case STAY_BOUTIQUE:
             case STAY_PENSION:
             case STAY_RESORT:
-                getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mStayAreaViewModel.categoryType.getValue().getNameResId())));
+                getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mStayAreaViewModel.categoryType.getNameResId())));
                 break;
 
             default:
@@ -323,6 +323,8 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
                 }));
             }
         }
+
+        mAnalytics.onEventAreaGroupClick(getActivity(), mStayAreaViewModel.areaList.getValue().get(groupPosition).name);
     }
 
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)
@@ -364,9 +366,8 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             return;
         }
 
-        final String areaGroupName = areaGroup.name;
-        final String areaName = area.name;
-
         getFragment().getFragmentEventListener().onAreaClick(areaGroup, area);
+
+        mAnalytics.onEventAreaClick(getActivity(), areaGroup.name, area.name);
     }
 }

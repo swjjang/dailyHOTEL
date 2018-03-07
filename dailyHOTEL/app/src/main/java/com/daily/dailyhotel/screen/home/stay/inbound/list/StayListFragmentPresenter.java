@@ -45,7 +45,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -441,17 +440,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-        Observable<Stays> observable;
-
-        if (mStayViewModel.categoryType == DailyCategoryType.STAY_ALL)
-        {
-            observable = mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType());
-        } else
-        {
-            observable = mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType());
-        }
-
-        addCompositeDisposable(observable.map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
+        addCompositeDisposable(mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
@@ -563,7 +552,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         mPage++;
 
-        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
+        addCompositeDisposable(mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
@@ -673,7 +662,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
-        mAnalytics.onStayClick(getActivity(), mStayViewModel.categoryType, mViewType, stay);
+        mAnalytics.onEventStayClick(getActivity(), mStayViewModel.categoryType, mViewType, stay);
     }
 
     @Override
@@ -725,7 +714,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
+        addCompositeDisposable(mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
         {
             @Override
             public void accept(Stays stays) throws Exception
@@ -815,7 +804,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             }
         }));
 
-        mAnalytics.onMarkerClick(getActivity(), mStayViewModel.categoryType, stay.name);
+        mAnalytics.onEventMarkerClick(getActivity(), mStayViewModel.categoryType, stay.name);
     }
 
     @Override
@@ -940,7 +929,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
 
-        mAnalytics.onWishClick(getActivity(), mStayViewModel.categoryType, !currentWish);
+        mAnalytics.onEventWishClick(getActivity(), mStayViewModel.categoryType, !currentWish);
     }
 
     private void initViewModel(BaseActivity activity)

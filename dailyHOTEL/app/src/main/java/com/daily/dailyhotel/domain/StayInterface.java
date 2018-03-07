@@ -23,8 +23,6 @@ import io.reactivex.Observable;
 
 public interface StayInterface
 {
-    Observable<Stays> getList(Map<String, Object> queryMap, String abTestType);
-
     Observable<Stays> getList(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
 
     Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);

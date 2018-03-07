@@ -27,7 +27,7 @@ public class StayAreaViewModel extends ViewModel
     MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
     MutableLiveData<StayRegion> previousArea = new MutableLiveData<>();
     MutableLiveData<Boolean> isAgreeTermsOfLocation = new MutableLiveData<>();
-    MutableLiveData<DailyCategoryType> categoryType = new MutableLiveData<>();
+    DailyCategoryType categoryType;
 
     static class StayAreaViewModelFactory implements ViewModelProvider.Factory
     {
@@ -40,6 +40,8 @@ public class StayAreaViewModel extends ViewModel
         public StayAreaViewModel create(@NonNull Class modelClass)
         {
             StayAreaViewModel viewModel = new StayAreaViewModel();
+
+            viewModel.categoryType = DailyCategoryType.STAY_ALL;
 
             return viewModel;
         }

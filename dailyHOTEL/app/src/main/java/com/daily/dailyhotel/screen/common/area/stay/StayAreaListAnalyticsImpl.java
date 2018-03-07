@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@Deprecated
 public class StayAreaListAnalyticsImpl implements StayAreaListPresenter.StayAreaListAnalyticsInterface
 {
     @Override
@@ -78,7 +79,7 @@ public class StayAreaListAnalyticsImpl implements StayAreaListPresenter.StayArea
     }
 
     @Override
-    public void onEventChangedDistrictClick(Activity activity, String previousDistrictName, String previousTownName//
+    public void onEventAreaClick(Activity activity, String previousDistrictName, String previousTownName//
         , String changedDistrictName, String changedTownName, StayBookDateTime stayBookDateTime)
     {
         if (activity == null)

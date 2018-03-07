@@ -1,19 +1,18 @@
 package com.daily.dailyhotel.screen.common.area.stay;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
+
+@Deprecated
 public class StayAreaListActivity extends BaseActivity<StayAreaListPresenter>
 {
     static final int REQUEST_CODE_SETTING_LOCATION = 10000;
@@ -27,16 +26,16 @@ public class StayAreaListActivity extends BaseActivity<StayAreaListPresenter>
     public static final String INTENT_EXTRA_DATA_REGION = "area";
     public static final String INTENT_EXTRA_DATA_CHANGED_AREA_GROUP = "areaGroup";
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, DailyCategoryType dailyCategoryType, String categoryCode)
-    {
-        Intent intent = new Intent(context, StayAreaListActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_STAY_CATEGORY, dailyCategoryType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_CODE, categoryCode);
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, DailyCategoryType dailyCategoryType, String categoryCode)
+    //    {
+    //        Intent intent = new Intent(context, StayAreaListActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_STAY_CATEGORY, dailyCategoryType.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_CODE, categoryCode);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -145,11 +145,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
-        void onRoomListOpenClick(Activity activity, String stayName);
+        void onEventRoomListOpenClick(Activity activity, String stayName);
 
-        void onRoomListCloseClick(Activity activity, String stayName);
+        void onEventRoomListCloseClick(Activity activity, String stayName);
 
-        void onRoomClick(Activity activity, String roomName);
+        void onEventRoomClick(Activity activity, String roomName);
 
         void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
             , int stayIndex, String stayName, boolean overseas);
@@ -1175,7 +1175,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             {
                 screenLock(false);
 
-                mAnalytics.onRoomListCloseClick(getActivity(), mStayDetail.name);
+                mAnalytics.onEventRoomListCloseClick(getActivity(), mStayDetail.name);
             }
 
             addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
@@ -1228,7 +1228,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
 
                 mAnalytics.onScreenRoomList(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList);
-                mAnalytics.onRoomListOpenClick(getActivity(), mStayDetail.name);
+                mAnalytics.onEventRoomListOpenClick(getActivity(), mStayDetail.name);
                 break;
 
             default:
@@ -1471,7 +1471,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         mSelectedRoom = stayRoom;
 
-        mAnalytics.onRoomClick(getActivity(), stayRoom.name);
+        mAnalytics.onEventRoomClick(getActivity(), stayRoom.name);
     }
 
     void setStatus(int status)

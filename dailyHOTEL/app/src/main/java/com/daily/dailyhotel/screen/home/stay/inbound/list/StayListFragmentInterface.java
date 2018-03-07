@@ -102,10 +102,10 @@ public interface StayListFragmentInterface
     {
         void onScreen(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, StayBookDateTime stayBookDateTime, String categoryCode, StayFilter stayFilter, StayRegion stayRegion);
 
-        void onStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay);
+        void onEventStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay);
 
-        void onWishClick(Activity activity, DailyCategoryType categoryType, boolean wish);
+        void onEventWishClick(Activity activity, DailyCategoryType categoryType, boolean wish);
 
-        void onMarkerClick(Activity activity, DailyCategoryType categoryType, String name);
+        void onEventMarkerClick(Activity activity, DailyCategoryType categoryType, String name);
     }
 }

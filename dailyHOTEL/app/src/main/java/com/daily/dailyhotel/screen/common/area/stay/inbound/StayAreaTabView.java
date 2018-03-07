@@ -233,4 +233,15 @@ public class StayAreaTabView extends BaseDialogView<StayAreaTabInterface.OnEvent
 
         getViewDataBinding().categoryTabLayout.getTabAt(position).select();
     }
+
+    @Override
+    public int getSelectedTabPosition()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return 0;
+        }
+
+        return getViewDataBinding().categoryTabLayout.getSelectedTabPosition();
+    }
 }

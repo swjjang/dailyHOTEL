@@ -196,7 +196,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onRoomListOpenClick(Activity activity, String stayName)
+    public void onEventRoomListOpenClick(Activity activity, String stayName)
     {
         if (activity == null)
         {
@@ -208,7 +208,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onRoomListCloseClick(Activity activity, String stayName)
+    public void onEventRoomListCloseClick(Activity activity, String stayName)
     {
         if (activity == null)
         {
@@ -220,7 +220,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onRoomClick(Activity activity, String roomName)
+    public void onEventRoomClick(Activity activity, String roomName)
     {
         if (activity == null)
         {

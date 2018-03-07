@@ -27,6 +27,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
+@Deprecated
 public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventListener, ActivityStayAreaListDataBinding> implements StayAreaListInterface
 {
     StayAreaExpandableListAdapter mStayAreaListAdapter;

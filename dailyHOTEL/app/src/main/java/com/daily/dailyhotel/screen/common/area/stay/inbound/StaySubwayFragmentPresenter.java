@@ -75,13 +75,13 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
 
         setRefresh(false);
 
-        switch (mStayAreaViewModel.categoryType.getValue())
+        switch (mStayAreaViewModel.categoryType)
         {
             case STAY_HOTEL:
             case STAY_BOUTIQUE:
             case STAY_PENSION:
             case STAY_RESORT:
-                getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mStayAreaViewModel.categoryType.getValue().getNameResId())));
+                getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mStayAreaViewModel.categoryType.getNameResId())));
                 break;
 
             default:
@@ -368,12 +368,23 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                 }
             }));
         }
+
+        mAnalytics.onEventAreaGroupClick(getActivity(), mCurrentRegion.name, mStayAreaViewModel.subwayMap.getValue().get(mCurrentRegion).get(groupPosition).name);
     }
 
     @Override
     public void onAreaClick(int groupPosition, Area area)
     {
-        getFragment().getFragmentEventListener().onSubwayAreaClick(getAreaGroup(groupPosition), area);
+        StaySubwayAreaGroup areaGroup = getAreaGroup(groupPosition);
+
+        if (areaGroup == null || area == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onSubwayAreaClick(areaGroup, area);
+
+        mAnalytics.onEventAreaClick(getActivity(), mCurrentRegion.name, areaGroup.name, area.name);
     }
 
     private StaySubwayAreaGroup getAreaGroup(int position)
@@ -395,6 +406,8 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         getViewInterface().setAreaGroup(mStayAreaViewModel.subwayMap.getValue().get(tag));
 
         unLockAll();
+
+        mAnalytics.onEventRegionClick(getActivity(), mCurrentRegion.name);
     }
 
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)

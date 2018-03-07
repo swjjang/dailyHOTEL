@@ -147,7 +147,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
     }
 
     @Override
-    public void onStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay)
+    public void onEventStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay)
     {
         if (activity == null || viewType == null || stay == null)
         {
@@ -210,7 +210,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
     }
 
     @Override
-    public void onWishClick(Activity activity, DailyCategoryType categoryType, boolean wish)
+    public void onEventWishClick(Activity activity, DailyCategoryType categoryType, boolean wish)
     {
         if (activity == null)
         {
@@ -223,7 +223,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
     }
 
     @Override
-    public void onMarkerClick(Activity activity, DailyCategoryType categoryType, String stayName)
+    public void onEventMarkerClick(Activity activity, DailyCategoryType categoryType, String stayName)
     {
         if (activity == null)
         {
