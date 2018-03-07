@@ -423,19 +423,31 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
 
         if (selectedView != null)
         {
-            selectedView.performClick();
-
-            final int scrollY = selectedView.getTop();
-
-            getViewDataBinding().scrollView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    getViewDataBinding().scrollView.scrollTo(0, scrollY);
-                }
-            });
+            scrollSelectView(selectedView);
         }
+    }
+
+    private void scrollSelectView(final View view)
+    {
+        view.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                view.performClick();
+
+                final int scrollY = view.getTop();
+
+                getViewDataBinding().scrollView.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        getViewDataBinding().scrollView.scrollTo(0, scrollY);
+                    }
+                });
+            }
+        }, 200);
     }
 
     @Override
