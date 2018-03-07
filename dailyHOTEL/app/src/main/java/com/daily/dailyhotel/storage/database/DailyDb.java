@@ -1293,6 +1293,28 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
+    public Cursor getGourmetRecentlySuggestList(int maxCount)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            return null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_GOURMET_IB_RECENTLY_SUGGEST);
+        sqlBuilder.append(" ORDER BY ").append(GourmetRecentlySuggestList.SAVING_TIME).append(" DESC");
+
+        if (maxCount > 0)
+        {
+            sqlBuilder.append(" limit ").append(maxCount);
+        }
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
     public void addGourmetRecentlySuggest(String type, String name, int gourmetIndex //
         , int provinceIndex, String provinceName, int areaIndex, String areaName, String address //
         , double latitude, double longitude, String keyword)

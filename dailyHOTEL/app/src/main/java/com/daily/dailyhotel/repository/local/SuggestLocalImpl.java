@@ -10,6 +10,7 @@ import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.domain.SuggestLocalInterface;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.repository.local.model.GourmetRecentlySuggestList;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 
@@ -373,7 +374,120 @@ public class SuggestLocalImpl implements SuggestLocalInterface
             @Override
             public ObservableSource<List<GourmetSuggestV2>> call() throws Exception
             {
-                return null;
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                ArrayList<GourmetSuggestV2> gourmetSuggestList = null;
+                Cursor cursor = null;
+                try
+                {
+                    cursor = dailyDb.getGourmetRecentlySuggestList(maxCount);
+
+                    if (cursor == null)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    int size = cursor.getCount();
+                    if (size == 0)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    gourmetSuggestList = new ArrayList<>();
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        cursor.moveToPosition(i);
+
+                        String type = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.TYPE));
+                        String name = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.NAME));
+
+                        if (GourmetSuggestV2.Gourmet.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            int gourmetIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.GOURMET_INDEX));
+                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_INDEX));
+                            String provinceName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_NAME));
+
+                            GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
+                            GourmetSuggestV2.Province province = new GourmetSuggestV2.Province();
+
+                            province.index = provinceIndex;
+                            province.name = provinceName;
+                            province.area = null;
+
+                            gourmet.index = gourmetIndex;
+                            gourmet.name = name;
+                            gourmet.province = province;
+
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, gourmet));
+
+                        } else if (GourmetSuggestV2.Province.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_INDEX));
+                            String provinceName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_NAME));
+                            int areaIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_INDEX));
+                            String areaName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_NAME));
+
+                            GourmetSuggestV2.Province province = new GourmetSuggestV2.Province();
+                            GourmetSuggestV2.Area area = null;
+
+                            if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
+                            {
+                                area = new GourmetSuggestV2.Area();
+                                area.index = areaIndex;
+                                area.name = areaName;
+                            }
+
+                            province.index = provinceIndex;
+                            province.name = provinceName;
+                            province.area = area;
+
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, province));
+                        } else if (GourmetSuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            GourmetSuggestV2.Direct direct = new GourmetSuggestV2.Direct(name);
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, direct));
+
+                        } else if (GourmetSuggestV2.Location.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            String address = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.ADDRESS));
+                            double latitude = cursor.getDouble(cursor.getColumnIndex(GourmetRecentlySuggestList.LATITUDE));
+                            double longitude = cursor.getDouble(cursor.getColumnIndex(GourmetRecentlySuggestList.LONGITUDE));
+
+                            GourmetSuggestV2.Location location = new GourmetSuggestV2.Location();
+                            location.name = name;
+                            location.address = address;
+                            location.latitude = latitude;
+                            location.longitude = longitude;
+
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, location));
+                        }
+                    }
+
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                } finally
+                {
+                    try
+                    {
+                        if (cursor != null)
+                        {
+                            cursor.close();
+                        }
+                    } catch (Exception e)
+                    {
+                    }
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                if (gourmetSuggestList == null)
+                {
+                    gourmetSuggestList = new ArrayList<>();
+                }
+
+                return Observable.just(gourmetSuggestList);
             }
         });
     }
