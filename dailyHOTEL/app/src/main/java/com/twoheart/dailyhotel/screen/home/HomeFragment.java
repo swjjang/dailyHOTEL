@@ -39,6 +39,7 @@ import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
@@ -65,7 +66,6 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
-import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
@@ -399,7 +399,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         try
                         {
-                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, dailyCategoryType, null);
+                            Intent intent = StayTabActivity.newInstance(mBaseActivity, dailyCategoryType);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {
@@ -485,7 +485,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void moveDeepLink(DailyDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
+        if (dailyDeepLink == null)
         {
             return;
         }
@@ -605,7 +605,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     {
                         try
                         {
-                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, dailyCategoryType, dailyDeepLink.getDeepLink());
+                            Intent intent = StayTabActivity.newInstance(mBaseActivity, dailyCategoryType, dailyDeepLink.getDeepLink());
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {
@@ -645,17 +645,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
 
-            if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
-            {
-                try
-                {
-                    Intent intent = SearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
-                    startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                }
-            }
         }
 
         dailyDeepLink.clear();
@@ -2374,7 +2363,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
                 String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-                startActivityForResult(StayAreaListActivity.newInstance(mBaseActivity//
+                startActivityForResult(StayAreaTabActivity.newInstance(mBaseActivity//
                     , checkInDateTime, checkOutDateTime, categoryType, categoryType.getCodeString(mBaseActivity)), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
                 String label = "";

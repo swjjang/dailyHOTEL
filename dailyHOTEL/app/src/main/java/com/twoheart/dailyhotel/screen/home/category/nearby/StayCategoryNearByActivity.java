@@ -22,6 +22,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -45,7 +46,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.home.category.filter.StayCategoryNearByCurationActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -55,6 +55,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -620,7 +621,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                StayArea area = region.getArea();
+                com.daily.dailyhotel.entity.Area area = region.getArea();
                 params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
@@ -906,13 +907,33 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
+            final int DAYS_OF_MAX_COUNT = 60;
 
-            Intent intent = StayCalendarActivity.newInstance(StayCategoryNearByActivity.this, //
-                mTodayDateTime, stayBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-                , AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+            try
+            {
+                Calendar calendar = DailyCalendar.getInstance();
+                calendar.setTime(DailyCalendar.convertDate(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+                String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+                calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+
+                String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+                StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
+
+                Intent intent = StayCalendarActivity.newInstance(StayCategoryNearByActivity.this//
+                    , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
+                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , AnalyticsManager.ValueType.SEARCH_RESULT, true//
+                    , 0, true);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
 
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED,//
@@ -1158,7 +1179,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                             params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                             params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                            StayArea area = region.getArea();
+                            com.daily.dailyhotel.entity.Area area = region.getArea();
                             params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                         }
 
@@ -1559,7 +1580,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                     params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                    StayArea area = region.getArea();
+                    com.daily.dailyhotel.entity.Area area = region.getArea();
                     params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                 }
 

@@ -1411,6 +1411,37 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         }
     }
 
+    @Override
+    public void updateBookDateTime(StayBookDateTime stayBookDateTime)
+    {
+        if (stayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", stayBookDateTime.getCheckInDateTime("M.d(EEE)")//
+                , stayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, stayBookDateTime.getNights()));
+
+            getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.label_stay_outbound_detail_check_in_out), dateFormat);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    @Override
+    public void updatePeople(People people)
+    {
+        if (people == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_stay_outbound_detail_number_of_people), people.toShortString(getContext()));
+    }
+
     /**
      * 호텔 주소 및 맵
      */

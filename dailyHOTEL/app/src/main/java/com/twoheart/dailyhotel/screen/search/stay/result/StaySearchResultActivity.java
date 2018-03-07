@@ -24,6 +24,7 @@ import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.research.ResearchStayActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -47,7 +48,6 @@ import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchResultNetworkController;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -56,6 +56,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -172,16 +173,21 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            StayBookingDay stayBookingDay = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-
-            if (stayBookingDay == null)
+            try
             {
-                return;
+                String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(checkInDateTime);
+                stayBookingDay.setCheckOutDay(checkOutDateTime);
+
+                mStaySearchCuration.setStayBookingDay(stayBookingDay);
+                ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(stayBookingDay);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
-
-            mStaySearchCuration.setStayBookingDay(stayBookingDay);
-
-            ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(stayBookingDay);
 
             // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
             mStaySearchCuration.getCurationOption().clear();
@@ -701,7 +707,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                StayArea area = region.getArea();
+                com.daily.dailyhotel.entity.Area area = region.getArea();
                 params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
@@ -852,13 +858,33 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
+            final int DAYS_OF_MAX_COUNT = 60;
 
-            Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this //
-                , mTodayDateTime, stayBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-                , AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+            try
+            {
+                Calendar calendar = DailyCalendar.getInstance();
+                calendar.setTime(DailyCalendar.convertDate(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+                String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+                calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+
+                String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+                StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
+
+                Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this//
+                    , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
+                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , AnalyticsManager.ValueType.SEARCH_RESULT, true//
+                    , 0, true);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED,//
@@ -1189,7 +1215,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                             params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                             params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                            StayArea area = region.getArea();
+                            com.daily.dailyhotel.entity.Area area = region.getArea();
                             params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                         }
 
@@ -1636,7 +1662,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                    StayArea area = region.getArea();
+                    com.daily.dailyhotel.entity.Area area = region.getArea();
                     params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                 } else
                 {

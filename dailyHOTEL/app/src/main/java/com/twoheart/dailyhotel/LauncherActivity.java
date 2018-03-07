@@ -76,29 +76,26 @@ public class LauncherActivity extends Activity
 
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                if (externalDeepLink.isValidateLink() == true)
+                if (Constants.DEBUG == true)
                 {
-                    if (Constants.DEBUG == true)
+                    String baseUrl = externalDeepLink.getBaseUrl();
+                    String baseOutBoundUrl = externalDeepLink.getBaseOutBoundUrl();
+
+                    if (DailyTextUtils.isTextEmpty(baseUrl, baseOutBoundUrl) == false)
                     {
-                        String baseUrl = externalDeepLink.getBaseUrl();
-                        String baseOutBoundUrl = externalDeepLink.getBaseOutBoundUrl();
-
-                        if (DailyTextUtils.isTextEmpty(baseUrl, baseOutBoundUrl) == false)
-                        {
-                            logOut();
-                            DailyPreference.getInstance(this).setBaseUrl(baseUrl);
-                            DailyPreference.getInstance(this).setBaseOutBoundUrl(baseOutBoundUrl);
-                            externalDeepLink.clear();
-                            Util.restartExitApp(this);
-                            return;
-                        }
+                        logOut();
+                        DailyPreference.getInstance(this).setBaseUrl(baseUrl);
+                        DailyPreference.getInstance(this).setBaseOutBoundUrl(baseOutBoundUrl);
+                        externalDeepLink.clear();
+                        Util.restartExitApp(this);
+                        return;
                     }
-
-                    AnalyticsManager.getInstance(this).recordDeepLink(externalDeepLink);
-
-                    newIntent.setData(uri);
-                    newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 }
+
+                AnalyticsManager.getInstance(this).recordDeepLink(externalDeepLink);
+
+                newIntent.setData(uri);
+                newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                 dailyDeepLink.clear();
             }

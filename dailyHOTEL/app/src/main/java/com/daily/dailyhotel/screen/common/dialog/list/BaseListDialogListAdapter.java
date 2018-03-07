@@ -92,7 +92,8 @@ public class BaseListDialogListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             holder.dataBinding.textView.setSelected(false);
             holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        } else {
+        } else
+        {
             holder.dataBinding.textView.setSelected(true);
             holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.card_btn_v_select, 0);
         }

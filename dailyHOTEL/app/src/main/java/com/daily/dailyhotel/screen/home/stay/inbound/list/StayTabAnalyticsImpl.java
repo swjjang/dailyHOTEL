@@ -2,24 +2,35 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 import android.app.Activity;
 
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
 {
     @Override
-    public void onBackClick(Activity activity)
+    public void onBackClick(Activity activity, DailyCategoryType categoryType)
     {
         if (activity == null)
         {
             return;
         }
 
+        String label;
+
+        if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
+        {
+            label = AnalyticsManager.Label.HOME;
+        } else
+        {
+            label = activity.getString(categoryType.getCodeResId());
+        }
+
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-            AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, AnalyticsManager.Label.HOME, null);
+            AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, label, null);
     }
 
     @Override
-    public void onRegionChanged(Activity activity, String areaName)
+    public void onRegionChanged(Activity activity, DailyCategoryType categoryType, String areaName)
     {
         if (activity == null)
         {
@@ -30,7 +41,7 @@ public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
     }
 
     @Override
-    public void onCalendarClick(Activity activity)
+    public void onCalendarClick(Activity activity, DailyCategoryType categoryType)
     {
         if (activity == null)
         {
@@ -42,7 +53,7 @@ public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
     }
 
     @Override
-    public void onViewTypeClick(Activity activity, StayTabPresenter.ViewType viewType)
+    public void onViewTypeClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType)
     {
         if (activity == null || viewType == null)
         {
@@ -62,7 +73,7 @@ public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
     }
 
     @Override
-    public void onRegionClick(Activity activity, StayTabPresenter.ViewType viewType)
+    public void onRegionClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType)
     {
         if (activity == null || viewType == null)
         {
@@ -82,9 +93,9 @@ public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
     }
 
     @Override
-    public void onSearchClick(Activity activity, StayTabPresenter.ViewType viewType)
+    public void onSearchClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType)
     {
-        if (activity == null || viewType == null)
+        if (activity == null || categoryType == null || viewType == null)
         {
             return;
         }
@@ -92,19 +103,78 @@ public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
         switch (viewType)
         {
             case LIST:
+            {
+                String label;
+
+                switch (categoryType)
+                {
+                    case STAY_ALL:
+                        label = AnalyticsManager.Label.STAY_LIST;
+                        break;
+
+                    case STAY_HOTEL:
+                        label = AnalyticsManager.Label.HOTEL_LIST;
+                        break;
+
+                    case STAY_BOUTIQUE:
+                        label = AnalyticsManager.Label.BOUTIQUE_LIST;
+                        break;
+
+                    case STAY_PENSION:
+                        label = AnalyticsManager.Label.PENSION_LIST;
+                        break;
+
+                    case STAY_RESORT:
+                        label = AnalyticsManager.Label.RESORT_LIST;
+                        break;
+
+                    default:
+                        label = AnalyticsManager.Label.STAY_LIST;
+                        break;
+                }
+
                 AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
-                    , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_LIST, null);
+                    , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
                 break;
+            }
 
             case MAP:
+            {
+                String label;
+
+                switch (categoryType)
+                {
+                    case STAY_ALL:
+                        label = AnalyticsManager.Label.STAY_MAP_VIEW;
+                        break;
+
+                    case STAY_HOTEL:
+                        label = AnalyticsManager.Label.HOTEL_LIST_MAP;
+                        break;
+                    case STAY_BOUTIQUE:
+                        label = AnalyticsManager.Label.BOUTIQUE_LIST_MAP;
+                        break;
+                    case STAY_PENSION:
+                        label = AnalyticsManager.Label.PENSION_LIST_MAP;
+                        break;
+                    case STAY_RESORT:
+                        label = AnalyticsManager.Label.RESORT_LIST_MAP;
+                        break;
+
+                    default:
+                        label = AnalyticsManager.Label.STAY_MAP_VIEW;
+                        break;
+                }
+
                 AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
-                    , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_MAP_VIEW, null);
+                    , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
                 break;
+            }
         }
     }
 
     @Override
-    public void onFilterClick(Activity activity, StayTabPresenter.ViewType viewType)
+    public void onFilterClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType)
     {
         if (activity == null || viewType == null)
         {
@@ -126,7 +196,7 @@ public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
     }
 
     @Override
-    public void onCategoryFlicking(Activity activity, String categoryName)
+    public void onCategoryFlicking(Activity activity, DailyCategoryType categoryType, String categoryName)
     {
         if (activity == null)
         {
@@ -138,7 +208,7 @@ public class StayTabAnalyticsImpl implements StayTabInterface.AnalyticsInterface
     }
 
     @Override
-    public void onCategoryClick(Activity activity, String categoryName)
+    public void onCategoryClick(Activity activity, DailyCategoryType categoryType, String categoryName)
     {
         if (activity == null)
         {

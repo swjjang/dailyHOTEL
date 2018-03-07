@@ -26,6 +26,14 @@ public class DailyCalendar
         return Calendar.getInstance(TimeZone.getTimeZone("GMT+09:00"), Locale.KOREA);
     }
 
+    public static Calendar getInstance(String dateTime, String format) throws ParseException
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTime(DailyCalendar.convertDate(dateTime, format));
+
+        return calendar;
+    }
+
     /**
      * @param dateString    ISO-8601만 가능
      * @param isClearTField true인 경우 모든 시간 필드는 초기화 한다.

@@ -20,7 +20,7 @@ public class LeaveInfo
 
     public List<String> policyList;
 
-//    public RewardCardData rewardCard;
+    //    public RewardCardData rewardCard;
 
     public int rewardStickerCount;
 }

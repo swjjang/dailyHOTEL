@@ -297,7 +297,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_HOTEL_DOMESTIC_SUBWAY_LIST.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
@@ -502,12 +503,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     @Override
     void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
-        {
-            return;
-        }
-
-        if (dailyDeepLink.isExternalDeepLink() == false)
+        if (dailyDeepLink == null || dailyDeepLink.isExternalDeepLink() == false)
         {
             return;
         }

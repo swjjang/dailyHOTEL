@@ -13,25 +13,41 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/toolbar_height"
             android:background="@color/white"
-            android:elevation="2dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
+            dailyToolbar:underLineHeight="1px"/>
 
-        <com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView
-            android:id="@+id/expandableListView"
+        <FrameLayout
+            android:id="@+id/categoryLayout"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/categoryTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:tabIndicatorHeight="2dp"
+                app:tabMinWidth="0dp"
+                app:tabMode="fixed"
+                app:tabPadding="0dp"
+                app:tabSelectedTextColor="@color/default_text_cb70038"
+                app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
+                app:tabTextColor="@color/default_text_c929292"/>
+        </FrameLayout>
+
+        <com.daily.base.widget.DailyViewPager
+            android:id="@+id/viewPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="@null"
-            android:fadingEdge="none"
-            android:groupIndicator="@android:color/transparent"
-            android:listSelector="@android:color/transparent"
-            android:smoothScrollbar="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
+            app:layout_constraintTop_toBottomOf="@+id/categoryLayout"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

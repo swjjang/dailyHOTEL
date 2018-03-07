@@ -41,6 +41,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StayCategoryCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
@@ -60,13 +61,13 @@ public class StayCategoryCurationActivity extends PlaceCurationActivity implemen
     private TextView mPersonCountView;
     protected ViewGroup mBedTypeLayout;
 
-    public static Intent newInstance(Context context, ViewType viewType, StayCategoryCuration stayCategoryCuration)
-    {
-        Intent intent = new Intent(context, StayCategoryCurationActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCategoryCuration);
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, ViewType viewType, StayCategoryCuration stayCategoryCuration)
+    //    {
+    //        Intent intent = new Intent(context, StayCategoryCurationActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCategoryCuration);
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -630,7 +631,7 @@ public class StayCategoryCurationActivity extends PlaceCurationActivity implemen
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-            StayArea area = region.getArea();
+            com.daily.dailyhotel.entity.Area area = region.getArea();
             eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
         }
 

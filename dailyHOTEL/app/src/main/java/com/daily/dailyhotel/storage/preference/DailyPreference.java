@@ -6,11 +6,12 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -942,27 +943,25 @@ public class DailyPreference
         return getValue(mPreferences, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW_DATE, null);
     }
 
-    public JSONObject getDailyRegion(DailyCategoryType type)
+    public PreferenceRegion getDailyRegion(DailyCategoryType type)
     {
-        String value = getValue(mPreferences, getDailyRegionKey(type), null);
-        if (DailyTextUtils.isTextEmpty(value) == true)
-        {
-            return null;
-        }
-
-        JSONObject jsonObject = null;
         try
         {
-            jsonObject = new JSONObject(value);
+            return new PreferenceRegion(new JSONObject(getValue(mPreferences, getDailyRegionKey(type), null)));
         } catch (Exception e)
         {
-            com.daily.base.util.ExLog.e(e.toString());
+            ExLog.e(e.toString());
         }
 
-        return jsonObject;
+        return null;
     }
 
-    public void setDailyRegion(DailyCategoryType type, JSONObject jsonObject)
+    public void setDailyRegion(DailyCategoryType type, PreferenceRegion regionType)
+    {
+        setDailyRegion(type, regionType.toJSONObject());
+    }
+
+    private void setDailyRegion(DailyCategoryType type, JSONObject jsonObject)
     {
         String value;
 
@@ -975,14 +974,6 @@ public class DailyPreference
         }
 
         setValue(mEditor, getDailyRegionKey(type), value);
-    }
-
-    public void setDailyRegion(DailyCategoryType type //
-        , String provinceName, String areaName, boolean isOverSeas)
-    {
-        JSONObject jsonObject = Util.getDailyRegionJSONObject(provinceName, areaName, isOverSeas);
-
-        setDailyRegion(type, jsonObject);
     }
 
     private String getDailyRegionKey(DailyCategoryType type)

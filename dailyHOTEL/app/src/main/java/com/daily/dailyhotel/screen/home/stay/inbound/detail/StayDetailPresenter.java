@@ -38,6 +38,7 @@ import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
@@ -55,7 +56,6 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
@@ -70,7 +70,7 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -90,6 +90,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivity, StayDetailViewInterface> implements StayDetailView.OnEventListener
 {
+    private static final int DAYS_OF_MAX_COUNT = 60;
+
     public static final int STATUS_NONE = 0;
     public static final int STATUS_ROOM_LIST = 1;
     public static final int STATUS_BOOKING = 2;
@@ -126,7 +128,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     private boolean mIsDeepLink;
     private boolean mCheckChangedPrice;
     private int mGradientType;
-    private List<Integer> mSoldOutDateList;
+    private int[] mSoldOutDays;
     boolean mShowCalendar;
     boolean mShowTrueVR;
 
@@ -139,15 +141,15 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(StayDetail stayDetail, StayRoom stayRoom);
 
-        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
+        Disposable onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
         void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
-        void onRoomListOpenClick(Activity activity, String stayName);
+        void onEventRoomListOpenClick(Activity activity, String stayName);
 
-        void onRoomListCloseClick(Activity activity, String stayName);
+        void onEventRoomListCloseClick(Activity activity, String stayName);
 
-        void onRoomClick(Activity activity, String roomName);
+        void onEventRoomClick(Activity activity, String roomName);
 
         void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
             , int stayIndex, String stayName, boolean overseas);
@@ -498,6 +500,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
         }
 
+        addCompositeDisposable(mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList));
+
         return super.onBackPressed();
     }
 
@@ -523,26 +527,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         switch (requestCode)
         {
             case StayDetailActivity.REQUEST_CODE_CALENDAR:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE) == true//
-                        && data.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
-                    {
-                        String checkInDateTime = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE);
-                        String checkOutDateTime = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE);
-
-                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-                        {
-                            return;
-                        }
-
-                        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        setRefresh(true);
-                    }
-                }
+                onCalendarActivityResult(resultCode, data);
                 break;
-            }
 
             case StayDetailActivity.REQUEST_CODE_HAPPYTALK:
                 break;
@@ -604,15 +590,34 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
-
-            //            case StayDetailActivity.REQUEST_CODE_CHOOSER:
-            //            {
-            ////                ExLog.d("sam : " + (data == null ? "data is null" : data.toString()));
-            //                break;
-            //            }
-
         }
     }
+
+    private void onCalendarActivityResult(int resultCode, Intent data)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+            {
+                if (data != null && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
+                    && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                {
+                    String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                    String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                    if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                    {
+                        return;
+                    }
+
+                    setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                    setRefresh(true);
+                }
+                break;
+            }
+        }
+    }
+
 
     @Override
     protected synchronized void onRefresh(boolean showProgress)
@@ -1045,7 +1050,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         try
         {
-            startCalendar(mCommonDateTime, mStayBookDateTime, mStayIndex, mSoldOutDateList, true);
+            boolean soldOut = mStayDetail.getRoomList() == null || mStayDetail.getRoomList().size() == 0;
+
+            startCalendar(mCommonDateTime, mStayBookDateTime, mStayIndex, mSoldOutDays, soldOut, true);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1168,7 +1175,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             {
                 screenLock(false);
 
-                mAnalytics.onRoomListCloseClick(getActivity(), mStayDetail.name);
+                mAnalytics.onEventRoomListCloseClick(getActivity(), mStayDetail.name);
             }
 
             addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
@@ -1221,7 +1228,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
 
                 mAnalytics.onScreenRoomList(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList);
-                mAnalytics.onRoomListOpenClick(getActivity(), mStayDetail.name);
+                mAnalytics.onEventRoomListOpenClick(getActivity(), mStayDetail.name);
                 break;
 
             default:
@@ -1464,7 +1471,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         mSelectedRoom = stayRoom;
 
-        mAnalytics.onRoomClick(getActivity(), stayRoom.name);
+        mAnalytics.onEventRoomClick(getActivity(), stayRoom.name);
     }
 
     void setStatus(int status)
@@ -1491,21 +1498,20 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
     void setSoldOutDateList(List<String> soldOutList)
     {
-        if (mSoldOutDateList == null)
+        if (soldOutList == null || soldOutList.size() == 0)
         {
-            mSoldOutDateList = new ArrayList<>();
-        }
-
-        mSoldOutDateList.clear();
-
-        if (soldOutList != null && soldOutList.size() > 0)
+            mSoldOutDays = null;
+        } else
         {
-            for (String dayString : soldOutList)
+            mSoldOutDays = new int[soldOutList.size()];
+
+            int size = soldOutList.size();
+
+            for (int i = 0; i < size; i++)
             {
                 try
                 {
-                    int soldOutDay = Integer.parseInt(dayString.replaceAll("\\-", ""));
-                    mSoldOutDateList.add(soldOutDay);
+                    mSoldOutDays[i] = Integer.parseInt(soldOutList.get(i).replaceAll("-", ""));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -1518,7 +1524,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         mStayDetail = stayDetail;
 
-        mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList);
+        addCompositeDisposable(mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList));
     }
 
     void setTrueVRList(List<TrueVR> trueVRList)
@@ -1743,28 +1749,52 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     private void startCalendar(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime//
-        , int stayIndex, List<Integer> soldOutList, boolean animation) throws Exception
+        , int stayIndex, int[] soldOutDays, boolean soldOut, boolean animation) throws Exception
     {
         if (commonDateTime == null || stayBookDateTime == null)
         {
             return;
         }
 
-        int dayCount = mStayDetail.overseas == false //
-            ? StayDetailCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
+        //        int dayCount = mStayDetail.overseas == false //
+        //            ? StayDetailCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+        //            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
+        //
+        //        String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
+        //
+        //        Intent intent = StayDetailCalendarActivity.newInstance(getActivity(), commonDateTime //
+        //            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , dayCount, stayIndex, callByScreen //
+        //            , (ArrayList) soldOutList, true, animation, mStayDetail.singleStay);
+        //
+        //        startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_CALENDAR);
+        //
+        //        mAnalytics.onEventCalendarClick(getActivity());
 
-        String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
+        try
+        {
+            Calendar calendar = DailyCalendar.getInstance(mCommonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-        Intent intent = StayDetailCalendarActivity.newInstance(getActivity(), commonDateTime //
-            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , dayCount, stayIndex, callByScreen //
-            , (ArrayList) soldOutList, true, animation, mStayDetail.singleStay);
+            String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
 
-        startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_CALENDAR);
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayIndex, soldOutDays, callByScreen, soldOut == false//
+                , 0, true);
 
-        mAnalytics.onEventCalendarClick(getActivity());
+            startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_CALENDAR);
+
+            mAnalytics.onEventCalendarClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     private void checkChangedPrice(boolean isDeepLink, StayDetail stayDetail, int listViewPrice, boolean compareListPrice)
@@ -1843,7 +1873,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         addCompositeDisposable(Observable.zip(observable//
             , mStayRemoteImpl.getDetail(mStayIndex, mStayBookDateTime)//
-            , mCalendarImpl.getStayUnavailableCheckInDates(mStayIndex, StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT, false)//
+            , mCalendarImpl.getStayUnavailableCheckInDates(mStayIndex, DAYS_OF_MAX_COUNT, false)//
             , mStayRemoteImpl.getReviewScores(mStayIndex)//
             , mStayRemoteImpl.getTrueVR(mStayIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//

@@ -14,6 +14,7 @@ import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabPresenter;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -36,23 +37,19 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
     public static final String INTENT_EXTRA_DATA_LOCATION = "location";
     static final String INTENT_EXTRA_DATA_RADIOUS = "radius";
     static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
-
-    public static Intent newInstance(Context context)
-    {
-        Intent intent = new Intent(context, StayFilterActivity.class);
-
-        return intent;
-    }
+    static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
 
     protected double longitude;
     protected double latitude;
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, Constants.ViewType viewType//
+    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
+        , DailyCategoryType categoryType, Constants.ViewType viewType//
         , StayFilter stayFilter, StayRegion stayRegion, ArrayList<String> categories, Location location, double radius, String searchWord)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         intent.putExtra(INTENT_EXTRA_DATA_VIEW_TYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(stayFilter));
         intent.putExtra(INTENT_EXTRA_DATA_STAY_REGION, new StayRegionParcel(stayRegion));
@@ -64,12 +61,14 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
         return intent;
     }
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, StayTabPresenter.ViewType viewType//
+    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
+        , DailyCategoryType categoryType, StayTabPresenter.ViewType viewType//
         , StayFilter stayFilter, StayRegion stayRegion, ArrayList<String> categories, Location location, double radius, String searchWord)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         intent.putExtra(INTENT_EXTRA_DATA_VIEW_TYPE, viewType.name());
         intent.putExtra(INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(stayFilter));
         intent.putExtra(INTENT_EXTRA_DATA_STAY_REGION, new StayRegionParcel(stayRegion));

@@ -327,7 +327,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
             return;
         }
 
-        DailyEmoticonImageView selectedEmoticonView = mDailyEmoticonImageView[reviewScoreQuestion.selectedScore -1];
+        DailyEmoticonImageView selectedEmoticonView = mDailyEmoticonImageView[reviewScoreQuestion.selectedScore - 1];
         if (selectedEmoticonView == null || mSelectedEmoticonView != null && mSelectedEmoticonView.getId() == selectedEmoticonView.getId())
         {
             return;

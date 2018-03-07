@@ -1,0 +1,37 @@
+package com.daily.dailyhotel.screen.home.search;
+
+
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.support.annotation.NonNull;
+
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetSuggest;
+
+/**
+ * Created by sheldon
+ * Clean Architecture
+ */
+public class SearchGourmetViewModel extends ViewModel
+{
+    public MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
+    public MutableLiveData<GourmetSuggest> suggest = new MutableLiveData<>();
+    public String inputString;
+
+    public static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
+    {
+        public SearchGourmetViewModelFactory()
+        {
+        }
+
+        @NonNull
+        @Override
+        public SearchGourmetViewModel create(@NonNull Class modelClass)
+        {
+            SearchGourmetViewModel viewModel = new SearchGourmetViewModel();
+
+            return viewModel;
+        }
+    }
+}

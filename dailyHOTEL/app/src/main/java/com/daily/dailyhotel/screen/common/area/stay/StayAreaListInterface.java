@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
+@Deprecated
 public interface StayAreaListInterface extends BaseDialogViewInterface
 {
     void setAreaList(List<StayAreaGroup> areaList);
