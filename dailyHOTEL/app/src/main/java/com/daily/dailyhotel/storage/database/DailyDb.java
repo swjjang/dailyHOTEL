@@ -1389,9 +1389,43 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             }
         }
 
-        maintainMaxStayObRecentlySuggest();
+        mContext.getContentResolver().notifyChange(GourmetRecentlySuggestList.NOTIFICATION_URI, null);
+    }
 
-        mContext.getContentResolver().notifyChange(StayObRecentlySuggestList.NOTIFICATION_URI, null);
+    public void deleteGourmetRecentlySuggest(String type, String name)
+    {
+        if (DailyTextUtils.isTextEmpty(type, name))
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_GOURMET_IB_RECENTLY_SUGGEST, GourmetRecentlySuggestList.TYPE + " = '" + type + "'" //
+                + " AND " + GourmetRecentlySuggestList.NAME + " = '" + name + "'", null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(GourmetRecentlySuggestList.NOTIFICATION_URI, null);
     }
 
     //    public void exportDatabase(String databaseName)
