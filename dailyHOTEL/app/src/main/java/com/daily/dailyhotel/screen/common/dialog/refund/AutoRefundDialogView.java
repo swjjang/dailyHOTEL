@@ -375,28 +375,30 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
             return;
         }
 
+        View selectedView = null;
+
         switch (cancelType)
         {
             case 1:
-                getViewDataBinding().cancelRefundView01.performClick();
+                selectedView = getViewDataBinding().cancelRefundView01;
                 break;
             case 2:
-                getViewDataBinding().cancelRefundView02.performClick();
+                selectedView = getViewDataBinding().cancelRefundView02;
                 break;
             case 3:
-                getViewDataBinding().cancelRefundView03.performClick();
+                selectedView = getViewDataBinding().cancelRefundView03;
                 break;
             case 4:
-                getViewDataBinding().cancelRefundView04.performClick();
+                selectedView = getViewDataBinding().cancelRefundView04;
                 break;
             case 5:
-                getViewDataBinding().cancelRefundView05.performClick();
+                selectedView = getViewDataBinding().cancelRefundView05;
                 break;
             case 6:
-                getViewDataBinding().cancelRefundView06.performClick();
+                selectedView = getViewDataBinding().cancelRefundView06;
                 break;
             case 7:
-                getViewDataBinding().cancelRefundView07.performClick();
+                selectedView = getViewDataBinding().cancelRefundView07;
                 break;
 
             default:
@@ -415,6 +417,22 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                     }
                 });
                 break;
+        }
+
+        if (selectedView != null)
+        {
+            selectedView.performClick();
+
+            final int scrollY = selectedView.getTop();
+
+            getViewDataBinding().scrollView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    getViewDataBinding().scrollView.scrollTo(0, scrollY);
+                }
+            });
         }
     }
 
