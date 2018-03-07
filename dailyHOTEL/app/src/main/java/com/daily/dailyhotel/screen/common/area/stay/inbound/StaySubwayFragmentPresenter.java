@@ -402,12 +402,40 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
 
         mCurrentRegion = (Area) tag;
 
-        getViewInterface().setTabSelected(position);
-        getViewInterface().setAreaGroup(mStayAreaViewModel.subwayMap.getValue().get(tag));
+        Observable<Boolean> observable;
 
-        unLockAll();
+        if (mAreaGroupPosition >= 0)
+        {
+            observable = collapseGroupWithAnimation(mAreaGroupPosition, false).subscribeOn(AndroidSchedulers.mainThread());
+        } else
+        {
+            observable = Observable.just(true);
+        }
 
-        mAnalytics.onEventRegionClick(getActivity(), mCurrentRegion.name);
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                mAreaGroupPosition = -1;
+
+                getViewInterface().setTabSelected(position);
+                getViewInterface().setAreaGroup(mStayAreaViewModel.subwayMap.getValue().get(tag));
+
+                unLockAll();
+
+                mAnalytics.onEventRegionClick(getActivity(), mCurrentRegion.name);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)
