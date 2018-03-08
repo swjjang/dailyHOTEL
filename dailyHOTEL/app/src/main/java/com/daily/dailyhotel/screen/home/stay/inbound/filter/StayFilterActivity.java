@@ -15,7 +15,6 @@ import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
