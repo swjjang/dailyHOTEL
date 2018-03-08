@@ -224,6 +224,9 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
                     mCheckInDateTime = mCheckOutDateTime = null;
 
                     selectCalendarBookDateTime(checkInDateTime, checkOutDateTime);
+                } else
+                {
+                    reset();
                 }
 
                 if (mNightsOfMaxCount == 1)
