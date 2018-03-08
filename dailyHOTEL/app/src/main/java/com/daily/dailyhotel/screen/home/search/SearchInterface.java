@@ -28,6 +28,8 @@ public interface SearchInterface
 
         void setSearchStayButtonEnabled(boolean enabled);
 
+        Completable getStaySuggestAnimation();
+
 
         void showSearchStayOutbound();
 
@@ -53,6 +55,9 @@ public interface SearchInterface
         void setSearchGourmetCalendarText(String text);
 
         void setSearchGourmetButtonEnabled(boolean enabled);
+
+        Completable getGourmetSuggestAnimation();
+
 
         Observable<Boolean> getCompleteCreatedFragment();
     }

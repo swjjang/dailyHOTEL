@@ -19,6 +19,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
@@ -957,11 +958,27 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.getBookDateTime();
-
-        startStayCampaignTag(campaignTag.index, campaignTag.campaignTag//
-            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+        //        StaySuggestV2 staySuggest = new StaySuggestV2();
+        //
+        ////        mSearchModel.stayViewModel.suggest.setValue(stayOutboundSuggest);
+        //
+        //        addCompositeDisposable(getViewInterface().getStaySuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        //        {
+        //            @Override
+        //            public void run() throws Exception
+        //            {
+        //                unLockAll();
+        //            }
+        //        }));
+        //
+        //
+        //
+        //
+        //        StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.getBookDateTime();
+        //
+        //        startStayCampaignTag(campaignTag.index, campaignTag.campaignTag//
+        //            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+        //            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
     }
 
     @Override
@@ -1192,10 +1209,22 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2();
 
-        startGourmetCampaignTag(campaignTag.index, campaignTag.campaignTag//
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+//        GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+//
+//        startGourmetCampaignTag(campaignTag.index, campaignTag.campaignTag//
+//            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+
+
+        addCompositeDisposable(getViewInterface().getGourmetSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     private void initViewModel(BaseActivity activity)
