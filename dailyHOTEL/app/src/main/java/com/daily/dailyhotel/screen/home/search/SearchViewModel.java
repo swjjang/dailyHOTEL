@@ -47,4 +47,44 @@ public class SearchViewModel extends ViewModel
 
         stayViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
     }
+
+    public void setStayBookDateTime(String checkInDateTime, int afterCheckInDay, String checkOutDateTime, int afterCheckOutDay) throws Exception
+    {
+        if (stayViewModel == null)
+        {
+            return;
+        }
+
+        stayViewModel.setBookDateTime(checkInDateTime, afterCheckInDay, checkOutDateTime, afterCheckOutDay);
+    }
+
+    public void setStayOutboundBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
+    {
+        if (stayViewModel == null)
+        {
+            return;
+        }
+
+        stayOutboundViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
+    }
+
+    public void setStayOutboundBookDateTime(String checkInDateTime, int afterCheckInDay, String checkOutDateTime, int afterCheckOutDay) throws Exception
+    {
+        if (stayViewModel == null)
+        {
+            return;
+        }
+
+        stayOutboundViewModel.setBookDateTime(checkInDateTime, afterCheckInDay, checkOutDateTime, afterCheckOutDay);
+    }
+
+    public void setGourmetBookDateTime(String bookDateTime) throws Exception
+    {
+        if (gourmetViewModel == null)
+        {
+            return;
+        }
+
+        gourmetViewModel.setBookDateTime(bookDateTime);
+    }
 }

@@ -290,22 +290,19 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 if (DailyIntentUtils.hasIntentExtras(intent, SearchActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME//
                     , SearchActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME) == true)
                 {
-                    StayBookDateTime stayOutboundBookDateTime = new StayBookDateTime();
+                    String checkInDateTime = intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+                    String checkOutDateTime = intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
-                    stayOutboundBookDateTime.setCheckInDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME));
-                    stayOutboundBookDateTime.setCheckOutDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
-
-                    mSearchModel.stayOutboundViewModel.bookDateTime.setValue(stayOutboundBookDateTime);
+                    mSearchModel.setStayOutboundBookDateTime(checkInDateTime, checkOutDateTime);
                 }
                 break;
 
             case GOURMET:
                 if (DailyIntentUtils.hasIntentExtras(intent, SearchActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME) == true)
                 {
-                    GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
-                    gourmetBookDateTime.setVisitDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME));
+                    String visitDateTime = intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
 
-                    mSearchModel.gourmetViewModel.bookDateTime.setValue(gourmetBookDateTime);
+                    mSearchModel.setGourmetBookDateTime(visitDateTime);
                 }
                 break;
 
@@ -406,19 +403,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 break;
 
             case SearchActivity.REQUEST_CODE_STAY_CALENDAR:
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    try
-                    {
-                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
-
-                        mSearchModel.stayViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
+                onStayCalendarActivityResult(resultCode, data);
                 break;
 
             case SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT:
@@ -436,7 +421,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         String checkInDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
                         String checkOutDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
-                        mSearchModel.stayViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+                        mSearchModel.stayViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
@@ -483,7 +468,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
                         String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
-                        mSearchModel.stayOutboundViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+                        mSearchModel.setStayOutboundBookDateTime(checkInDateTime, checkOutDateTime);
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
@@ -521,7 +506,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         String checkInDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
                         String checkOutDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
-                        mSearchModel.stayOutboundViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+                        mSearchModel.setStayOutboundBookDateTime(checkInDateTime, checkOutDateTime);
 
                         int numberOfAdults = data.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
                         ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
@@ -572,7 +557,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                     {
                         String visitDate = data.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATE);
 
-                        mSearchModel.gourmetViewModel.bookDateTime.setValue(new GourmetBookDateTime(visitDate));
+                        mSearchModel.setGourmetBookDateTime(visitDate);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -594,7 +579,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
                         String visitDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
 
-                        mSearchModel.gourmetViewModel.bookDateTime.setValue(new GourmetBookDateTime(visitDateTime));
+                        mSearchModel.setGourmetBookDateTime(visitDateTime);
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
@@ -620,6 +605,28 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
     }
 
+    private void onStayCalendarActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    try
+                    {
+                        String checkInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                        mSearchModel.stayViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+                break;
+        }
+    }
+
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
@@ -638,27 +645,19 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             {
                 mSearchModel.commonDateTime.setValue(commonDateTime);
 
-                if (mSearchModel.stayViewModel.bookDateTime.getValue() == null)
+                if (mSearchModel.stayViewModel.getBookDateTime() == null)
                 {
-                    StayBookDateTime stayBookDateTime = new StayBookDateTime();
-                    stayBookDateTime.setCheckInDateTime(commonDateTime.dailyDateTime);
-                    stayBookDateTime.setCheckOutDateTime(commonDateTime.dailyDateTime, 1);
-                    mSearchModel.stayViewModel.bookDateTime.setValue(stayBookDateTime);
+                    mSearchModel.setStayBookDateTime(commonDateTime.dailyDateTime, 0, commonDateTime.dailyDateTime, 1);
                 }
 
-                if (mSearchModel.stayOutboundViewModel.bookDateTime.getValue() == null)
+                if (mSearchModel.stayOutboundViewModel.getBookDateTime() == null)
                 {
-                    StayBookDateTime stayOutboundBookDateTime = new StayBookDateTime();
-                    stayOutboundBookDateTime.setCheckInDateTime(mSearchModel.commonDateTime.getValue().currentDateTime);
-                    stayOutboundBookDateTime.setCheckOutDateTime(mSearchModel.commonDateTime.getValue().currentDateTime, 1);
-                    mSearchModel.stayOutboundViewModel.bookDateTime.setValue(stayOutboundBookDateTime);
+                    mSearchModel.setStayOutboundBookDateTime(commonDateTime.dailyDateTime, 0, commonDateTime.dailyDateTime, 1);
                 }
 
-                if (mSearchModel.gourmetViewModel.bookDateTime.getValue() == null)
+                if (mSearchModel.gourmetViewModel.getBookDateTime() == null)
                 {
-                    GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
-                    gourmetBookDateTime.setVisitDateTime(mSearchModel.commonDateTime.getValue().dailyDateTime);
-                    mSearchModel.gourmetViewModel.bookDateTime.setValue(gourmetBookDateTime);
+                    mSearchModel.setGourmetBookDateTime(commonDateTime.dailyDateTime);
                 }
 
                 return getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread());
@@ -797,10 +796,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         try
         {
+            StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.getBookDateTime();
+
             startActivityForResult(SearchStaySuggestActivity.newInstance(getActivity()//
                 , null //
-                , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SUGGEST);
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SUGGEST);
 
             mAnalytics.onEventStaySuggestClick(getActivity());
         } catch (Exception e)
@@ -826,7 +827,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-            StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.bookDateTime.getValue();
+            StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.getBookDateTime();
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
                 , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
@@ -857,7 +858,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         try
         {
             startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
-                , mSearchModel.stayViewModel.bookDateTime.getValue().getStayBookingDay()//
+                , mSearchModel.stayViewModel.getBookDateTime().getStayBookingDay()//
                 , mSearchModel.stayViewModel.inputString, mSearchModel.stayViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
                 , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
 
@@ -878,11 +879,13 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
 
+        StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.getBookDateTime();
+
         startActivityForResult(StayDetailActivity.newInstance(getActivity() //
             , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
             , StayDetailActivity.NONE_PRICE//
-            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_DETAIL);
 
@@ -897,9 +900,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
+        StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.getBookDateTime();
+
         startStayCampaignTag(campaignTag.index, campaignTag.campaignTag//
-            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
     }
 
     @Override
@@ -934,10 +939,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT);
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
+            StayBookDateTime stayBookDateTime = mSearchModel.stayOutboundViewModel.getBookDateTime();
+
             startActivityForResult(StayCalendarActivity.newInstance(getActivity()//
                 , startDateTime, endDateTime, NIGHTS_OF_MAX_COUNT//
-                , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR);
         } catch (Exception e)
         {
@@ -982,9 +989,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         analyticsParam.keyword = mSearchModel.stayOutboundViewModel.inputString;
         analyticsParam.analyticsClickType = mSearchModel.stayOutboundViewModel.clickType;
 
+        StayBookDateTime stayBookDateTime = mSearchModel.stayOutboundViewModel.getBookDateTime();
+
         startActivityForResult(StayOutboundListActivity.newInstance(getActivity(), mSearchModel.stayOutboundViewModel.suggest.getValue()//
-            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults//
             , mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT);
@@ -1000,10 +1009,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
+        StayBookDateTime stayBookDateTime = mSearchModel.stayOutboundViewModel.getBookDateTime();
+
         startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), recentlyDbPlace.index, recentlyDbPlace.name//
             , recentlyDbPlace.englishName, recentlyDbPlace.imageUrl, StayOutboundDetailActivity.NONE_PRICE//
-            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults, mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList()//
             , false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null)//
             , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_DETAIL);
@@ -1041,9 +1052,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         try
         {
+            GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+
             startActivityForResult(SearchGourmetSuggestActivity.newInstance(getActivity()//
                 , null //
-                , mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
+                , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
                 , SearchActivity.REQUEST_CODE_GOURMET_SUGGEST);
 
             mAnalytics.onEventGourmetSuggestClick(getActivity());
@@ -1061,8 +1074,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
+        GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+
         startActivityForResult(GourmetCalendarActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime() //
-            , mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
             , AnalyticsManager.ValueType.SEARCH, true, true), SearchActivity.REQUEST_CODE_GOURMET_CALENDAR);
     }
 
@@ -1076,8 +1091,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         try
         {
+            GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+
             startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
-                , mSearchModel.gourmetViewModel.bookDateTime.getValue().getGourmetBookingDay()//
+                , gourmetBookDateTime.getGourmetBookingDay()//
                 , mSearchModel.gourmetViewModel.inputString, mSearchModel.gourmetViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
                 , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
 
@@ -1097,11 +1114,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+        GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
 
         startActivityForResult(GourmetDetailActivity.newInstance(getActivity() //
             , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
             , GourmetDetailActivity.NONE_PRICE//
-            , mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , null, false, false, false, false//
             , StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
             , SearchActivity.REQUEST_CODE_GOURMET_DETAIL);
@@ -1117,8 +1135,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
+        GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+
         startGourmetCampaignTag(campaignTag.index, campaignTag.campaignTag//
-            , mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
     }
 
     private void initViewModel(BaseActivity activity)
@@ -1262,10 +1282,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             getViewInterface().setSearchStayButtonEnabled(true);
         }
 
+        StayBookDateTime stayBookDateTime = mSearchModel.stayViewModel.getBookDateTime();
+
         getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayViewModel.bookDateTime.getValue().getNights()));
+            , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+            , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+            , stayBookDateTime.getNights()));
 
         getViewInterface().showSearchStay();
     }
@@ -1282,10 +1304,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             getViewInterface().setSearchStayOutboundButtonEnabled(true);
         }
 
+        StayBookDateTime stayBookDateTime = mSearchModel.stayOutboundViewModel.getBookDateTime();
+
         getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getNights()));
+            , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+            , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+            , stayBookDateTime.getNights()));
 
         getViewInterface().showSearchStayOutbound();
     }
@@ -1302,7 +1326,9 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             getViewInterface().setSearchGourmetButtonEnabled(true);
         }
 
-        getViewInterface().setSearchGourmetCalendarText(mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime("yyyy.MM.dd(EEE)"));
+        GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+
+        getViewInterface().setSearchGourmetCalendarText(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
 
         getViewInterface().showSearchGourmet();
     }
