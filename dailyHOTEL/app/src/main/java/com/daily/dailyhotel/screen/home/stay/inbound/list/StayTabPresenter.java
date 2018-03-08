@@ -757,22 +757,19 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         categoryList.add(mStayViewModel.selectedCategory.getValue().code);
 
         Location location;
-        double radius;
 
         if (mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE)
         {
             location = mStayViewModel.location.getValue();
-            radius = 10;
         } else
         {
             location = null;
-            radius = 0;
         }
 
         startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
             , mStayViewModel.categoryType, mStayViewModel.viewType.getValue()//
             , mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue()//
-            , categoryList, location, radius, null), StayTabActivity.REQUEST_CODE_FILTER);
+            , categoryList, location, 0, null), StayTabActivity.REQUEST_CODE_FILTER);
 
         mAnalytics.onFilterClick(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue());
     }

@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseDialogView<T1, T2> implements View.OnClickListener
 {
@@ -122,7 +123,7 @@ public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListen
             }
         };
 
-        return observable;
+        return observable.subscribeOn(AndroidSchedulers.mainThread());
     }
 
     Observable<Boolean> hideAnimation()
@@ -210,7 +211,7 @@ public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListen
             }
         };
 
-        return observable;
+        return observable.subscribeOn(AndroidSchedulers.mainThread());
     }
 
     void setVisibility(boolean visibility)

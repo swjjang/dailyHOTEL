@@ -172,7 +172,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         mCategoryList = intent.getStringArrayListExtra(StayFilterActivity.INTENT_EXTRA_DATA_CATEGORIES);
 
         mLocation = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
-        mRadius = intent.getDoubleExtra(StayFilterActivity.INTENT_EXTRA_DATA_RADIOUS, 10);
+        mRadius = intent.getDoubleExtra(StayFilterActivity.INTENT_EXTRA_DATA_RADIOUS, 0);
         mSearchWord = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
 
         return true;
