@@ -3,8 +3,11 @@ package com.daily.dailyhotel.screen.home.stay.outbound.thankyou;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 
@@ -13,6 +16,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -263,6 +267,13 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
                 onRewardInformation(rewardInformation);
 
                 unLockAll();
+
+                if (isNotificationEnabled() == false)
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_stay_thankyou_disabled_notification)//
+                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                        , v -> startAppSettingActivity(), null);
+                }
             }
         }, new Consumer<Throwable>()
         {
@@ -331,5 +342,17 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
             getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                 , rewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage);
         }
+    }
+
+    boolean isNotificationEnabled()
+    {
+        return VersionUtils.isOverAPI19() ? NotificationManagerCompat.from(getActivity()).areNotificationsEnabled() : true;
+    }
+
+    void startAppSettingActivity()
+    {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+        startActivity(intent);
     }
 }
