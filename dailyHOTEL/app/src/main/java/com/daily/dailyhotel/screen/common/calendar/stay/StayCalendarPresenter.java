@@ -207,9 +207,9 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
                     getViewInterface().setVisibility(true);
                 }
 
-                return Observable.just(mIsSelected);
+                return Observable.just(mIsSelected).subscribeOn(AndroidSchedulers.mainThread());
             }
-        }).subscribe(new Consumer<Boolean>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull Boolean isSelectedDays) throws Exception
@@ -221,22 +221,14 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
                     String checkInDateTime = mCheckInDateTime;
                     String checkOutDateTime = mCheckOutDateTime;
 
-                    int checkInDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
-                    int checkOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
-
-                    int year = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy"));
-                    int month = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "MM"));
-
                     mCheckInDateTime = mCheckOutDateTime = null;
 
-                    onDayClick(checkInDateTime, checkInDay);
+                    selectCalendarBookDateTime(checkInDateTime, checkOutDateTime);
+                }
 
-                    if (mNightsOfMaxCount > 1)
-                    {
-                        onDayClick(checkOutDateTime, checkOutDay);
-                    }
-
-                    getViewInterface().scrollMonthPosition(year, month);
+                if (mNightsOfMaxCount == 1)
+                {
+                    getViewInterface().showToast(R.string.message_calendar_select_single_day, DailyToast.LENGTH_SHORT);
                 }
             }
         }));
@@ -266,6 +258,24 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         }
 
         return holidaySparseIntArray;
+    }
+
+    private void selectCalendarBookDateTime(String checkInDateTime, String checkOutDateTime) throws ParseException
+    {
+        int checkInDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+        int checkOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+
+        int year = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy"));
+        int month = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "MM"));
+
+        onDayClick(checkInDateTime, checkInDay);
+
+        if (mNightsOfMaxCount > 1)
+        {
+            onDayClick(checkOutDateTime, checkOutDay);
+        }
+
+        getViewInterface().scrollMonthPosition(year, month);
     }
 
     @Override
@@ -375,7 +385,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         }
 
         onDayClick(day.getDateTime(), day.toyyyyMMdd());
-        unLock();
+        unLockAll();
     }
 
     @Override
@@ -452,7 +462,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
             {
                 processCheckInDateTime(dayDateTime, yyyyMMdd);
 
-                if (mNightsOfMaxCount > 1)
+                if (mStayIndex > 0 & mNightsOfMaxCount > 1)
                 {
                     setAvailableCheckOutDays(mCheckInDateTime, DailyCalendar.compareDateDay(mEndDateTime, mStartDateTime) + 1);
                 }
