@@ -25,6 +25,7 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
@@ -35,7 +36,6 @@ import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
@@ -594,16 +594,34 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        if (gourmetSuggest.suggestItem == null)
+        {
+            return;
+        }
+
         if (lock() == true)
         {
             return;
         }
 
-        // TODO : 최근 검색 어 저장 및 Edit 영역에 글자 표시 , 검색 홈으로 데이터 전송 필요
-        //        addRecentSearches(gourmetSuggest);
-
-        //        getViewInterface().setSuggest(gourmetSuggest.displayName);
-        //        startFinishAction(gourmetSuggest, mKeyword, null);
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }));
     }
 
     @Override
@@ -614,52 +632,44 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        if (gourmetSuggest.suggestItem == null)
+        {
+            return;
+        }
+
         if (lock() == true)
         {
             return;
         }
 
-        // TODO : 최근 검색 어 저장 및 Edit 영역에 글자 표시 , 검색 홈으로 데이터 전송 필요
-        //        addRecentSearches(gourmetSuggest);
-        //
-        //        getViewInterface().setSuggest(gourmetSuggest.displayName);
-        //        startFinishAction(gourmetSuggest, mKeyword, null);
-    }
-
-    DailyRecentSearches getDailyRecentSearches()
-    {
-        if (mDailyRecentSearches == null)
-        {
-            mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getGourmetRecentSearches());
-        }
-
-        return mDailyRecentSearches;
-    }
-
-    private Keyword getKeyword(GourmetSuggest gourmetSuggest)
-    {
-        if (getActivity() == null || gourmetSuggest == null)
-        {
-            return null;
-        }
-
-        int icon = Keyword.DEFAULT_ICON;
-        if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
-        {
-            icon = Keyword.GOURMET_ICON;
-        }
-
-        return new Keyword(icon, gourmetSuggest.displayName);
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }));
     }
 
     void startFinishAction(GourmetSuggestV2 gourmetSuggest, String keyword)
     {
-//        Intent intent = new Intent();
-//        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
-//        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
-//
-//        setResult(Activity.RESULT_OK, intent);
-//        finish();
+        Intent intent = new Intent();
+        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     @Override
@@ -863,8 +873,7 @@ public class SearchGourmetSuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(itemLocation.address);
-                            // TODO : 위치 정보 Suggest를 검색홈에 넘기는 부분 수정 필요
-                            //                            startFinishAction(mLocationSuggest, mKeyword, null);
+                            startFinishAction(mLocationSuggest, mKeyword);
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -890,8 +899,7 @@ public class SearchGourmetSuggestPresenter //
                                 ExLog.d(e.getMessage());
                             }
 
-                            // TODO : 위치 정보 Suggest를 검색홈에 넘기는 부분 수정 필요
-                            //                            startFinishAction(mLocationSuggest, mKeyword, null);
+                            startFinishAction(mLocationSuggest, mKeyword);
                         }
                     }));
 

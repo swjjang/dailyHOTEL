@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by android_sam on 2018. 2. 1..
  */
@@ -30,7 +32,8 @@ public class GourmetSuggestV2
         this.suggestItem = suggestItem;
     }
 
-    public static class SuggestItem
+    @SuppressWarnings("serial")
+    public static class SuggestItem implements Serializable
     {
         public String name;
 
@@ -48,7 +51,7 @@ public class GourmetSuggestV2
     public static class Gourmet extends SuggestItem
     {
         public int index;
-        public String name;
+//        public String name;
         public int discount;
         public int availableTickets;
         public boolean isExpired;

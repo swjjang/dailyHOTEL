@@ -332,8 +332,9 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         String type = GourmetSuggestV2.Province.class.getSimpleName();
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
+                        String saveName = DailyTextUtils.isTextEmpty(areaName) ? province.name : areaName;
 
-                        dailyDb.addGourmetRecentlySuggest(type, province.name, 0 //
+                        dailyDb.addGourmetRecentlySuggest(type, saveName, 0 //
                             , province.index, province.name, areaIndex, areaName, null //
                             , 0, 0, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Location)
@@ -505,14 +506,25 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                if (gourmetSuggest.suggestItem == null)
+                GourmetSuggestV2.SuggestItem item = gourmetSuggest.suggestItem;
+                if (item == null)
                 {
                     return Observable.just(false);
                 }
 
-                String type = gourmetSuggest.suggestItem.getClass().getSimpleName();
-                String name = gourmetSuggest.suggestItem.name;
+                String type = item.getClass().getSimpleName();
+                String name = item.name;
                 ExLog.d("sam : type : " + type + " , name : " + name);
+                if (item instanceof GourmetSuggestV2.Province)
+                {
+                    GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) item;
+                    GourmetSuggestV2.Area area = province.area;
+
+                    if (area != null && DailyTextUtils.isTextEmpty(area.name) == false)
+                    {
+                        name = area.name;
+                    }
+                }
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 

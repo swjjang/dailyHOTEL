@@ -19,11 +19,13 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
@@ -554,7 +556,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        onOtherCategoryActivityResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, data);
+                        GourmetSuggestParcelV2 gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        GourmetSuggestV2 gourmetSuggest = gourmetSuggestParcel.getSuggest();
+
+//                        onOtherCategoryActivityResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, data);
                         break;
 
                     case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
