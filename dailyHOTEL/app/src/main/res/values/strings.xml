@@ -1054,6 +1054,9 @@
     <string name="label_product_count">상품 수량</string>
     <string name="label_reservation_wait_message">현재 예약대기 상태입니다. 예약 확정시, 확정 문자를 발송해 드립니다.</string>
 
+    <string name="message_stay_thankyou_disabled_notification">알림이 꺼져있는 경우 체크인 등 예약관련 알림을 받을 수 없습니다. 알림을 허용하시겠습니까?</string>
+    <string name="message_gourmet_thankyou_disabled_notification">알림이 꺼져있는 경우 방문일 등 예약관련 알림을 받을 수 없습니다. 알림을 허용하시겠습니까?</string>
+
     <!-- Search -->
     <string name="label_view_myaround_hotel">내 주변 스테이 보기</string>
     <string name="label_view_myaround_gourmet">내 주변 레스토랑 보기</string>
