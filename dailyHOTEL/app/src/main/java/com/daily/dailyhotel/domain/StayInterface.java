@@ -25,7 +25,11 @@ public interface StayInterface
 {
     Observable<Stays> getList(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
 
+    Observable<Stays> getBMList(Map<String, Object> queryMap);
+
     Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
+
+    Observable<StayFilterCount> getBMListCountByFilte(Map<String, Object> queryMap);
 
     Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime);
 

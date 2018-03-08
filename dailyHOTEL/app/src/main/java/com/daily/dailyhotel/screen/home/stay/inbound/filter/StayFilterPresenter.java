@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -482,41 +483,68 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
-        addCompositeDisposable(mStayRemoteImpl.getListCountByFilter(mCategoryType, getQueryMap(), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType())//
-            .delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayFilterCount>()
+        addCompositeDisposable(Observable.zip(getBMListCountByFilter(), mStayRemoteImpl.getListCountByFilter(mCategoryType, getQueryMap()//
+            , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<StayFilterCount, StayFilterCount, StayFilterCount>()
+        {
+            @Override
+            public StayFilterCount apply(StayFilterCount stayBMFilterCount, StayFilterCount stayFilterCount) throws Exception
             {
-                @Override
-                public void accept(StayFilterCount stayFilterCount) throws Exception
-                {
-                    mStayFilterCount = stayFilterCount;
+                stayFilterCount.searchCount += stayBMFilterCount.searchCount;
 
-                    if (stayFilterCount.searchCount <= 0)
-                    {
-                        getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
-                        getViewInterface().setConfirmEnabled(false);
-
-                        mAnalytics.onEmptyResult(getActivity(), mStayFilter);
-
-                    } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
-                    {
-                        getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, stayFilterCount.searchCount));
-                        getViewInterface().setConfirmEnabled(true);
-                    } else
-                    {
-                        getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, stayFilterCount.searchCountOfMax));
-                        getViewInterface().setConfirmEnabled(true);
-                    }
-
-                    unLockAll();
-                }
-            }, new Consumer<Throwable>()
+                return stayFilterCount;
+            }
+        }).delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayFilterCount>()
+        {
+            @Override
+            public void accept(StayFilterCount stayFilterCount) throws Exception
             {
-                @Override
-                public void accept(Throwable throwable) throws Exception
+                mStayFilterCount = stayFilterCount;
+
+                if (stayFilterCount.searchCount <= 0)
                 {
-                    onHandleError(throwable);
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
+                    getViewInterface().setConfirmEnabled(false);
+
+                    mAnalytics.onEmptyResult(getActivity(), mStayFilter);
+
+                } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
+                {
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, stayFilterCount.searchCount));
+                    getViewInterface().setConfirmEnabled(true);
+                } else
+                {
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, stayFilterCount.searchCountOfMax));
+                    getViewInterface().setConfirmEnabled(true);
                 }
-            }));
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
+    private Observable<StayFilterCount> getBMListCountByFilter()
+    {
+        if (mCategoryType == DailyCategoryType.STAY_BOUTIQUE && mStayFilter.sortType == StayFilter.SortType.DEFAULT)
+        {
+            boolean boutiqueBMEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
+
+            if (boutiqueBMEnabled == true)
+            {
+                Map<String, Object> queryMap = getQueryMap();
+                queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
+
+                return mStayRemoteImpl.getBMListCountByFilte(queryMap);
+            }
+        }
+
+        return Observable.just(new StayFilterCount());
     }
 
     Map<String, Object> getQueryMap()
