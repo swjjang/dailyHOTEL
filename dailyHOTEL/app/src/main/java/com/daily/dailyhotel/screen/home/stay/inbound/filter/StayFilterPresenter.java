@@ -483,7 +483,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
-        addCompositeDisposable(Observable.zip(getBMListCountByFilter(), mStayRemoteImpl.getListCountByFilter(mCategoryType, getQueryMap()//
+        addCompositeDisposable(Observable.zip(getLocalPlusListCountByFilter(), mStayRemoteImpl.getListCountByFilter(mCategoryType, getQueryMap()//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<StayFilterCount, StayFilterCount, StayFilterCount>()
         {
             @Override
@@ -529,22 +529,29 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         }));
     }
 
-    private Observable<StayFilterCount> getBMListCountByFilter()
+    private Observable<StayFilterCount> getLocalPlusListCountByFilter()
+    {
+        if (isLocalPlusEnabled() == true)
+        {
+            Map<String, Object> queryMap = getQueryMap();
+            queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
+
+            return mStayRemoteImpl.getLocalPlusListCountByFilte(queryMap);
+        } else
+        {
+            return Observable.just(new StayFilterCount());
+        }
+    }
+
+    private boolean isLocalPlusEnabled()
     {
         if (mCategoryType == DailyCategoryType.STAY_BOUTIQUE && mStayFilter.sortType == StayFilter.SortType.DEFAULT)
         {
-            boolean boutiqueBMEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
-
-            if (boutiqueBMEnabled == true)
-            {
-                Map<String, Object> queryMap = getQueryMap();
-                queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
-
-                return mStayRemoteImpl.getBMListCountByFilte(queryMap);
-            }
+            return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
+        } else
+        {
+            return false;
         }
-
-        return Observable.just(new StayFilterCount());
     }
 
     Map<String, Object> getQueryMap()
