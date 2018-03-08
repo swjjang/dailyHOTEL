@@ -442,7 +442,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-        addCompositeDisposable(Observable.zip(getBMList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<ObjectItem>>>()
+        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public Pair<Boolean, List<ObjectItem>> apply(Stays bmStays, Stays stays) throws Exception
@@ -518,22 +518,29 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         }));
     }
 
-    private Observable<Stays> getBMList()
+    private Observable<Stays> getLocalPlusList()
+    {
+        if (isLocalPlusEnabled() == true)
+        {
+            Map<String, Object> queryMap = getQueryMap(0);
+            queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
+
+            return mStayRemoteImpl.getLocalPlusList(queryMap);
+        } else
+        {
+            return Observable.just(new Stays());
+        }
+    }
+
+    private boolean isLocalPlusEnabled()
     {
         if (mStayViewModel.categoryType == DailyCategoryType.STAY_BOUTIQUE && mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT)
         {
-            boolean boutiqueBMEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
-
-            if (boutiqueBMEnabled == true)
-            {
-                Map<String, Object> queryMap = getQueryMap(0);
-                queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
-
-                return mStayRemoteImpl.getBMList(queryMap);
-            }
+            return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
+        } else
+        {
+            return false;
         }
-
-        return Observable.just(new Stays());
     }
 
     @Override
@@ -737,7 +744,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
 
-        addCompositeDisposable(Observable.zip(getBMList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<Stay>>>()
+        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<Stay>>>()
         {
             @Override
             public Pair<Boolean, List<Stay>> apply(Stays bmStays, Stays stays) throws Exception
