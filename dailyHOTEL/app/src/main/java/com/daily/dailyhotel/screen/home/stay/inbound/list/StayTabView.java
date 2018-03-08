@@ -493,23 +493,6 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
 
                     getEventListener().onFilterClick();
                 }
-
-                @Override
-                public void setCategoryVisible(boolean visible)
-                {
-                    if (categoryList.size() <= 2)
-                    {
-                        return;
-                    }
-
-                    setCategoryTabLayoutVisibility(visible ? View.VISIBLE : View.GONE);
-                }
-
-                @Override
-                public void setCategory(List<Category> categoryList)
-                {
-
-                }
             });
 
             fragmentList.add(stayListFragment);
