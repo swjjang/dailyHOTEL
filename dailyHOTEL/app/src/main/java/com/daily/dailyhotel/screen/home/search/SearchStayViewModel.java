@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 
 /**
  * Created by sheldon
@@ -52,5 +53,20 @@ public class SearchStayViewModel extends ViewModel
     public StayBookDateTime getBookDateTime()
     {
         return bookDateTime.getValue();
+    }
+
+    public void setSuggest(StaySuggest suggest)
+    {
+        this.suggest.setValue(suggest);
+    }
+
+    public void setSuggest(StaySuggestParcel suggestParcel)
+    {
+        if (suggestParcel == null)
+        {
+            return;
+        }
+
+        setSuggest(suggestParcel.getSuggest());
     }
 }
