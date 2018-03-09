@@ -138,19 +138,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onNewIntent(Intent intent)
     {
+        mStayViewModel.setCategoryType(intent, DailyCategoryType.STAY_ALL);
+
         if (DailyIntentUtils.hasDeepLink(intent) == true)
         {
-            if (intent != null && intent.hasExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE) == true)
-            {
-                try
-                {
-                    mStayViewModel.categoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
-                } catch (Exception e)
-                {
-                    mStayViewModel.categoryType = DailyCategoryType.STAY_ALL;
-                }
-            }
-
             try
             {
                 mDailyDeepLink = DailyIntentUtils.getDeepLink(intent);
@@ -165,14 +156,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             if (intent != null)
             {
-                try
-                {
-                    mStayViewModel.categoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayTabActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
-                } catch (Exception e)
-                {
-                    mStayViewModel.categoryType = DailyCategoryType.STAY_ALL;
-                }
-
                 mEntryShowCalendar = intent.getBooleanExtra(StayTabActivity.INTENT_EXTRA_DATA_SHOW_CALENDAR, false);
             }
         }
@@ -216,6 +199,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     private void startStayDetailActivity(DailyExternalDeepLink dailyDeepLink)
     {
+        if (dailyDeepLink == null)
+        {
+            return;
+        }
+
         Intent intent = StayDetailActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink());
         startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);
 
@@ -236,17 +224,20 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onPostCreate()
     {
-        String title;
-
-        if (mStayViewModel.categoryType == DailyCategoryType.STAY_ALL)
-        {
-            title = getString(R.string.label_daily_hotel);
-        } else
-        {
-            title = getString(mStayViewModel.categoryType.getNameResId());
-        }
+        String title = getTitle(mStayViewModel.categoryType);
 
         getViewInterface().setToolbarTitle(title);
+    }
+
+    private String getTitle(DailyCategoryType categoryType)
+    {
+        if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
+        {
+            return getString(R.string.label_daily_hotel);
+        } else
+        {
+            return getString(mStayViewModel.categoryType.getNameResId());
+        }
     }
 
     @Override
@@ -391,13 +382,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 try
                 {
                     // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
-                    if (mStayViewModel.stayBookDateTime.getValue() == null || mStayViewModel.stayBookDateTime.getValue().validate() == false)
+                    if (mStayViewModel.bookDateTime.getValue() == null || mStayViewModel.bookDateTime.getValue().validate() == false)
                     {
                         setStayBookDateTime(commonDateTime.dailyDateTime, 1);
                     } else
                     {
                         // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
-                        if (DailyCalendar.compareDateDay(commonDateTime.dailyDateTime, mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)) > 0)
+                        if (DailyCalendar.compareDateDay(commonDateTime.dailyDateTime, mStayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)) > 0)
                         {
                             setStayBookDateTime(commonDateTime.dailyDateTime, 1);
                         }
@@ -722,8 +713,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         try
         {
-            String checkInDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
-            String checkOutDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
+            StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+            String checkInDateTime = stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
+            String checkOutDateTime = stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
 
             startActivityForResult(StayAreaTabActivity.newInstance(getActivity()//
                 , checkInDateTime, checkOutDateTime, mStayViewModel.categoryType//
@@ -760,8 +752,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        String checkInDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
-        String checkOutDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
+        StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+        String checkInDateTime = stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
+        String checkOutDateTime = stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
 
         ArrayList<String> categoryList = new ArrayList();
         categoryList.add(mStayViewModel.selectedCategory.getValue().code);
@@ -830,9 +823,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         try
         {
+            StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+
             startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
-                , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT))//
+                , stayBookDateTime.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT))//
                 , StayTabActivity.REQUEST_CODE_SEARCH);
 
             mAnalytics.onSearchClick(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue());
@@ -921,10 +916,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
+            StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
                 , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
-                , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , callByScreen, true//
                 , 0, true);
 
@@ -956,17 +953,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        if (mStayViewModel.stayBookDateTime.getValue() == null)
-        {
-            mStayViewModel.stayBookDateTime.setValue(new StayBookDateTime());
-        }
-
         try
         {
-            mStayViewModel.stayBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
-            mStayViewModel.stayBookDateTime.getValue().setCheckOutDateTime(checkOutDateTime);
-
-            mStayViewModel.stayBookDateTime.setValue(mStayViewModel.stayBookDateTime.getValue());
+            mStayViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -980,17 +969,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        if (mStayViewModel.stayBookDateTime.getValue() == null)
-        {
-            mStayViewModel.stayBookDateTime.setValue(new StayBookDateTime());
-        }
-
         try
         {
-            mStayViewModel.stayBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
-            mStayViewModel.stayBookDateTime.getValue().setCheckOutDateTime(checkInDateTime, afterDay);
-
-            mStayViewModel.stayBookDateTime.setValue(mStayViewModel.stayBookDateTime.getValue());
+            mStayViewModel.setBookDateTime(checkInDateTime, 0, checkInDateTime, afterDay);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -999,13 +980,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     void notifyDateTextChanged()
     {
-        if (mStayViewModel == null || mStayViewModel.stayBookDateTime.getValue() == null)
+        if (mStayViewModel == null || mStayViewModel.bookDateTime.getValue() == null)
         {
             return;
         }
 
-        String checkInDay = mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime("M.d(EEE)");
-        String checkOutDay = mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime("M.d(EEE)");
+        StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+        String checkInDay = stayBookDateTime.getCheckInDateTime("M.d(EEE)");
+        String checkOutDay = stayBookDateTime.getCheckOutDateTime("M.d(EEE)");
 
         getViewInterface().setToolbarDateText(String.format(Locale.KOREA, "%s - %s", checkInDay, checkOutDay));
     }
@@ -1101,7 +1083,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                         startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
                             , mStayViewModel.commonDateTime.getValue().getTodayDateTime()//
-                            , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()//
+                            , mStayViewModel.bookDateTime.getValue().getStayBookingDay()//
                             , null, staySuggest, null, AnalyticsManager.Screen.HOME)//
                             , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                     } catch (Exception e)
@@ -1114,7 +1096,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         startActivityForResult(StayCategoryNearByActivity.newInstance(getActivity()//
                             , mStayViewModel.commonDateTime.getValue().getTodayDateTime() //
-                            , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()//
+                            , mStayViewModel.bookDateTime.getValue().getStayBookingDay()//
                             , null, mStayViewModel.categoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
                             , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                     } catch (Exception e)

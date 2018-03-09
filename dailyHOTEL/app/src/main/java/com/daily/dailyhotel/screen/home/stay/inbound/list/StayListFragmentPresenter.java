@@ -283,7 +283,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         if (mStayViewModel != null)
         {
             mStayViewModel.viewType.removeObserver(mViewTypeObserver);
-            mStayViewModel.stayBookDateTime.removeObserver(mStayBookDateTimeObserver);
+            mStayViewModel.bookDateTime.removeObserver(mStayBookDateTimeObserver);
             mStayViewModel.stayRegion.removeObserver(mStayRegionObserver);
             mStayViewModel.stayFilter.removeObserver(mStayFilterObserver);
 
@@ -428,7 +428,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             || mStayViewModel.stayFilter.getValue() == null//
             || mStayViewModel.viewType.getValue() == null//
             || mStayViewModel.stayRegion.getValue() == null//
-            || mStayViewModel.stayBookDateTime.getValue() == null//
+            || mStayViewModel.bookDateTime.getValue() == null//
             || mStayViewModel.commonDateTime.getValue() == null)
         {
             setRefresh(false);
@@ -471,7 +471,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
 
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.bookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
@@ -493,10 +493,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setListLayoutVisible(true);
 
                     getViewInterface().setList(objectItemList, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, activeReward//
+                        , mStayViewModel.bookDateTime.getValue().getNights() > 1, activeReward//
                         , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
 
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, mViewType, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, mViewType, mStayViewModel.bookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 }
 
                 mMoreRefreshing = false;
@@ -569,7 +569,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             || mStayViewModel.stayFilter.getValue() == null//
             || mStayViewModel.viewType.getValue() == null//
             || mStayViewModel.stayRegion.getValue() == null//
-            || mStayViewModel.stayBookDateTime.getValue() == null//
+            || mStayViewModel.bookDateTime.getValue() == null//
             || mStayViewModel.commonDateTime.getValue() == null)
         {
             return;
@@ -606,7 +606,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 }
 
                 getViewInterface().addList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                    , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first,//
+                    , mStayViewModel.bookDateTime.getValue().getNights() > 1, pair.first,//
                     DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
 
                 mMoreRefreshing = false;
@@ -647,6 +647,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         analyticsParam.isDailyChoice = stay.dailyChoice;
         analyticsParam.gradeName = stay.grade.getName(getActivity());
 
+        StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+
         if (Util.isUsedMultiTransition() == true && pairs != null)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
@@ -671,8 +673,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , true, gradientType, analyticsParam);
 
             startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
@@ -680,8 +682,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         {
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
             startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);
@@ -708,9 +710,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         getViewInterface().setBlurVisible(getActivity(), true);
 
+        StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+
         Intent intent = StayPreviewActivity.newInstance(getActivity()//
-            , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stay.index, stay.name, stay.discountPrice, stay.grade.name());
 
         startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PREVIEW);
@@ -728,7 +732,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             || mStayViewModel.stayFilter.getValue() == null//
             || mStayViewModel.viewType.getValue() == null//
             || mStayViewModel.stayRegion.getValue() == null//
-            || mStayViewModel.stayBookDateTime.getValue() == null//
+            || mStayViewModel.bookDateTime.getValue() == null//
             || mStayViewModel.commonDateTime.getValue() == null)
         {
             return;
@@ -785,7 +789,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     unLockAll();
 
                     mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null//
-                        , mStayViewModel.stayBookDateTime.getValue(), mCategory.code//
+                        , mStayViewModel.bookDateTime.getValue(), mCategory.code//
                         , mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
@@ -799,7 +803,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setMapList(stayList, true, true, false);
 
                     mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType//
-                        , mStayViewModel.viewType.getValue(), mStayViewModel.stayBookDateTime.getValue()//
+                        , mStayViewModel.viewType.getValue(), mStayViewModel.bookDateTime.getValue()//
                         , mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 }
             }
@@ -849,7 +853,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             @Override
             public void accept(@io.reactivex.annotations.NonNull List<Stay> stayList) throws Exception
             {
-                getViewInterface().setStayMapViewPagerList(getActivity(), stayList, mStayViewModel.stayBookDateTime.getValue().getNights() > 1//
+                getViewInterface().setStayMapViewPagerList(getActivity(), stayList, mStayViewModel.bookDateTime.getValue().getNights() > 1//
                     , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
                 getViewInterface().setMapViewPagerVisible(true);
 
@@ -1041,7 +1045,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             }
         };
 
-        mStayViewModel.stayBookDateTime.observe(activity, mStayBookDateTimeObserver);
+        mStayViewModel.bookDateTime.observe(activity, mStayBookDateTimeObserver);
 
         mStayRegionObserver = new Observer<StayRegion>()
         {
@@ -1214,46 +1218,18 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     {
         Map<String, Object> queryMap = new HashMap<>();
 
-        if (mStayViewModel.stayBookDateTime.getValue() != null)
-        {
-            // dateCheckIn
-            queryMap.put("dateCheckIn", mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime("yyyy-MM-dd"));
+        Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mStayViewModel.getBookDateTime());
 
-            // stays
-            queryMap.put("stays", mStayViewModel.stayBookDateTime.getValue().getNights());
+        if (bookDateTimeQueryMap != null)
+        {
+            queryMap.putAll(bookDateTimeQueryMap);
         }
 
-        if (mStayViewModel.stayRegion.getValue() != null)
+        Map<String, Object> regionQueryMap = getRegionQueryMap(mStayViewModel.stayRegion.getValue());
+
+        if (regionQueryMap != null)
         {
-            switch (mStayViewModel.stayRegion.getValue().getAreaType())
-            {
-                case AREA:
-                {
-                    Area areaGroup = mStayViewModel.stayRegion.getValue().getAreaGroup();
-                    if (areaGroup != null)
-                    {
-                        queryMap.put("provinceIdx", areaGroup.index);
-                    }
-
-                    Area area = mStayViewModel.stayRegion.getValue().getArea();
-                    if (area != null && area.index != StayArea.ALL)
-                    {
-                        queryMap.put("areaIdx", area.index);
-                    }
-                    break;
-                }
-
-                case SUBWAY_AREA:
-                {
-                    Area area = mStayViewModel.stayRegion.getValue().getArea();
-
-                    if (area != null)
-                    {
-                        queryMap.put("subwayIdx", area.index);
-                    }
-                    break;
-                }
-            }
+            queryMap.putAll(regionQueryMap);
         }
 
         if (mCategory != null && Category.ALL.code.equalsIgnoreCase(mCategory.code) == false)
@@ -1261,76 +1237,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             queryMap.put("category", mCategory.code);
         }
 
-        if (mStayViewModel.stayFilter.getValue() != null)
+        Map<String, Object> filterQueryMap = getFilterQueryMap(mStayViewModel.stayFilter.getValue());
+
+        if (filterQueryMap != null)
         {
-            // persons
-            queryMap.put("persons", mStayViewModel.stayFilter.getValue().person);
-
-            // bedType [Double, Twin, Ondol, Etc]
-            List<String> flagBedTypeFilters = mStayViewModel.stayFilter.getValue().getBedTypeList();
-
-            if (flagBedTypeFilters != null && flagBedTypeFilters.size() > 0)
-            {
-                queryMap.put("bedType", flagBedTypeFilters);
-            }
-
-            // luxury [Breakfast, Cooking, Bath, Parking, Pool, Finess, WiFi, NoParking, Pet, ShareBbq, KidsPlayRoom
-            // , Sauna, BusinessCenter, Tv, Pc, SpaWallPool, Karaoke, PartyRoom, PrivateBbq
-            List<String> luxuryFilterList = new ArrayList<>();
-            List<String> amenitiesFilterList = mStayViewModel.stayFilter.getValue().getAmenitiesFilter();
-            List<String> roomAmenitiesFilterList = mStayViewModel.stayFilter.getValue().getRoomAmenitiesFilterList();
-
-            if (amenitiesFilterList != null && amenitiesFilterList.size() > 0)
-            {
-                luxuryFilterList.addAll(amenitiesFilterList);
-            }
-
-            if (roomAmenitiesFilterList != null && roomAmenitiesFilterList.size() > 0)
-            {
-                luxuryFilterList.addAll(roomAmenitiesFilterList);
-            }
-
-            if (luxuryFilterList.size() > 0)
-            {
-                queryMap.put("luxury", luxuryFilterList);
-            }
-
-            // sortProperty
-            // sortDirection
-            switch (mStayViewModel.stayFilter.getValue().sortType)
-            {
-                case DEFAULT:
-                    break;
-
-                case DISTANCE:
-                    queryMap.put("sortProperty", "Distance");
-                    queryMap.put("sortDirection", "Asc");
-                    break;
-
-                case LOW_PRICE:
-                    queryMap.put("sortProperty", "Price");
-                    queryMap.put("sortDirection", "Asc");
-                    break;
-
-                case HIGH_PRICE:
-                    queryMap.put("sortProperty", "Price");
-                    queryMap.put("sortDirection", "Desc");
-                    break;
-
-                case SATISFACTION:
-                    queryMap.put("sortProperty", "Rating");
-                    queryMap.put("sortDirection", "Desc");
-                    break;
-            }
-
-            // longitude
-            // latitude
-            // radius
-            if (mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE && mStayViewModel.location.getValue() != null)
-            {
-                queryMap.put("latitude", mStayViewModel.location.getValue().getLatitude());
-                queryMap.put("longitude", mStayViewModel.location.getValue().getLongitude());
-            }
+            queryMap.putAll(filterQueryMap);
         }
 
         // page
@@ -1344,6 +1255,158 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         // details
         queryMap.put("details", true);
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getBookDateTimeQueryMap(StayBookDateTime stayBookDateTime)
+    {
+        if (stayBookDateTime == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        queryMap.put("dateCheckIn", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+        queryMap.put("stays", stayBookDateTime.getNights());
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getRegionQueryMap(StayRegion stayRegion)
+    {
+        if (stayRegion == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (stayRegion.getAreaType())
+        {
+            case AREA:
+            {
+                Area areaGroup = stayRegion.getAreaGroup();
+                if (areaGroup != null)
+                {
+                    queryMap.put("provinceIdx", areaGroup.index);
+                }
+
+                Area area = stayRegion.getArea();
+                if (area != null && area.index != StayArea.ALL)
+                {
+                    queryMap.put("areaIdx", area.index);
+                }
+                break;
+            }
+
+            case SUBWAY_AREA:
+            {
+                Area area = stayRegion.getArea();
+
+                if (area != null)
+                {
+                    queryMap.put("subwayIdx", area.index);
+                }
+                break;
+            }
+        }
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getFilterQueryMap(StayFilter stayFilter)
+    {
+        if (stayFilter == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        // persons
+        queryMap.put("persons", stayFilter.person);
+
+        // bedType [Double, Twin, Ondol, Etc]
+        List<String> flagBedTypeFilters = stayFilter.getBedTypeList();
+
+        if (flagBedTypeFilters != null && flagBedTypeFilters.size() > 0)
+        {
+            queryMap.put("bedType", flagBedTypeFilters);
+        }
+
+        // luxury [Breakfast, Cooking, Bath, Parking, Pool, Finess, WiFi, NoParking, Pet, ShareBbq, KidsPlayRoom
+        // , Sauna, BusinessCenter, Tv, Pc, SpaWallPool, Karaoke, PartyRoom, PrivateBbq
+        List<String> luxuryFilterList = new ArrayList<>();
+        List<String> amenitiesFilterList = stayFilter.getAmenitiesFilter();
+        List<String> roomAmenitiesFilterList = stayFilter.getRoomAmenitiesFilterList();
+
+        if (amenitiesFilterList != null && amenitiesFilterList.size() > 0)
+        {
+            luxuryFilterList.addAll(amenitiesFilterList);
+        }
+
+        if (roomAmenitiesFilterList != null && roomAmenitiesFilterList.size() > 0)
+        {
+            luxuryFilterList.addAll(roomAmenitiesFilterList);
+        }
+
+        if (luxuryFilterList.size() > 0)
+        {
+            queryMap.put("luxury", luxuryFilterList);
+        }
+
+        Map<String, Object> sortQueryMap = getSortQueryMap(stayFilter.sortType, mStayViewModel.location.getValue());
+
+        if (sortQueryMap != null)
+        {
+            queryMap.putAll(sortQueryMap);
+        }
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getSortQueryMap(StayFilter.SortType sortType, Location location)
+    {
+        if (sortType == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (sortType)
+        {
+            case DEFAULT:
+                break;
+
+            case DISTANCE:
+                queryMap.put("sortProperty", "Distance");
+                queryMap.put("sortDirection", "Asc");
+
+                if (location != null)
+                {
+                    queryMap.put("latitude", location.getLatitude());
+                    queryMap.put("longitude", location.getLongitude());
+                }
+                break;
+
+            case LOW_PRICE:
+                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortDirection", "Asc");
+                break;
+
+            case HIGH_PRICE:
+                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortDirection", "Desc");
+                break;
+
+            case SATISFACTION:
+                queryMap.put("sortProperty", "Rating");
+                queryMap.put("sortDirection", "Desc");
+                break;
+        }
 
         return queryMap;
     }
