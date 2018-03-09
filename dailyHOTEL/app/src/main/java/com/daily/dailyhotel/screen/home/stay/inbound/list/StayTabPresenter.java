@@ -686,7 +686,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+        finish();
     }
 
     @Override
