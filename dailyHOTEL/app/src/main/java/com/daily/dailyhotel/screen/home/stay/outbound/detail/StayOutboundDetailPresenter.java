@@ -937,7 +937,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , AnalyticsManager.ValueType.STAY, true, 0, true);
+                , AnalyticsManager.ValueType.STAY, soldOut(mStayOutboundDetail) == false, 0, true);
 
             startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
@@ -1531,7 +1531,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
-        if (mStayOutboundDetail.getRoomList() == null || mStayOutboundDetail.getRoomList().size() == 0)
+        if (soldOut(mStayOutboundDetail) == true)
         {
             setStatus(STATUS_SOLD_OUT);
         } else
@@ -1555,6 +1555,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             ExLog.d(e.getMessage());
         }
+    }
+
+    boolean soldOut(StayOutboundDetail stayOutboundDetail)
+    {
+        return stayOutboundDetail == null || stayOutboundDetail.getRoomList() == null || stayOutboundDetail.getRoomList().size() == 0;
     }
 
     /**
