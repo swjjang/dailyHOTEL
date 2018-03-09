@@ -1031,7 +1031,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 {
                     PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
 
-                    if (placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                    if (placeListFragment != null && placeListFragment.getPlaceListLayout() != null//
+                        && placeListFragment.getPlaceListLayout().getListMapFragment() != null//
+                        && placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
                     {
                         placeListFragment.getPlaceListLayout().getListMapFragment().clickMap();
                     }
@@ -1050,6 +1052,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             // 목록을 맵으로 보고 있는 경우 페이지 스크롤 중에 하단 옵션 레이아웃의 위치가 초기화 되는 이슈 수정
             if (mViewType == ViewType.MAP)
             {
+                if (prevPosition < 0)
+                {
+                    return;
+                }
+
                 try
                 {
                     PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(prevPosition);

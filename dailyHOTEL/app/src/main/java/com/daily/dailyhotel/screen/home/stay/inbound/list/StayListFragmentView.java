@@ -513,6 +513,17 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     }
 
     @Override
+    public void scrollStop()
+    {
+        if (getViewDataBinding() == null || mStayListAdapter == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().recyclerView.smoothScrollBy(0, 1);
+    }
+
+    @Override
     public Observable<Long> getLocationAnimation()
     {
         if (getViewDataBinding() == null || mStayMapFragment == null)

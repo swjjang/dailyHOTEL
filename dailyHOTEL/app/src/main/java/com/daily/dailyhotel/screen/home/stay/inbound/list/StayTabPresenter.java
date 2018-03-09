@@ -87,6 +87,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     StayTabViewModel mStayViewModel;
     DailyDeepLink mDailyDeepLink;
     boolean mHasStayDetailViewDeepLink;
+    boolean mEntryShowCalendar;
 
     public StayTabPresenter(@NonNull StayTabActivity activity)
     {
@@ -171,6 +172,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     mStayViewModel.categoryType = DailyCategoryType.STAY_ALL;
                 }
+
+                mEntryShowCalendar = intent.getBooleanExtra(StayTabActivity.INTENT_EXTRA_DATA_SHOW_CALENDAR, false);
             }
         }
     }
@@ -487,6 +490,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             public void accept(Boolean aBoolean) throws Exception
             {
                 unLockAll();
+
+                if (mEntryShowCalendar == true)
+                {
+                    mEntryShowCalendar = false;
+
+                    onCalendarClick();
+                }
             }
         }, new Consumer<Throwable>()
         {
@@ -782,14 +792,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
+        getViewInterface().expandedToolbar();
+
         switch (mStayViewModel.viewType.getValue())
         {
             // 현재 리스트 화면인 경우
             case LIST:
             {
                 screenLock(true);
-
-                getViewInterface().expandedToolbar();
 
                 mStayViewModel.viewType.setValue(ViewType.MAP);
                 break;
