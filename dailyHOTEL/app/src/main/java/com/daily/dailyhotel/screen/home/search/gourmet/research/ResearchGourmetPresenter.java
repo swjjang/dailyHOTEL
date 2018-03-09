@@ -95,7 +95,9 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
 
         try
         {
-            mSearchModel.bookDateTime.setValue(new GourmetBookDateTime(intent.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME)));
+            String visitDateTime = intent.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
+
+            mSearchModel.setBookDateTime(visitDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -132,7 +134,9 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             getViewInterface().setSearchButtonEnabled(true);
         }
 
-        getViewInterface().setSearchCalendarText(mSearchModel.bookDateTime.getValue().getVisitDateTime("yyyy.MM.dd(EEE)"));
+        GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+
+        getViewInterface().setSearchCalendarText(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
 
         addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
         {
@@ -226,7 +230,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
                     {
                         String visitDateTime = data.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATE);
 
-                        mSearchModel.bookDateTime.setValue(new GourmetBookDateTime(visitDateTime));
+                        mSearchModel.setBookDateTime(visitDateTime);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -260,9 +264,11 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     {
         try
         {
+            GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+
             startActivityForResult(SearchGourmetSuggestActivity.newInstance(getActivity()//
                 , null //
-                , mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)), ResearchGourmetActivity.REQUEST_CODE_SUGGEST);
+                , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)), ResearchGourmetActivity.REQUEST_CODE_SUGGEST);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -279,8 +285,10 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
 
         try
         {
+            GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+
             startActivityForResult(GourmetCalendarActivity.newInstance(getActivity(), mCommonDateTime.getTodayDateTime()//
-                , mSearchModel.bookDateTime.getValue().getGourmetBookingDay()//
+                , gourmetBookDateTime.getGourmetBookingDay()//
                 , GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true, true), ResearchGourmetActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
         {
@@ -293,8 +301,10 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     {
         try
         {
+            GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+
             Intent intent = new Intent();
-            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(mSearchModel.suggest.getValue()));
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
 
@@ -315,11 +325,12 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         }
 
         GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+        GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
 
         startActivityForResult(GourmetDetailActivity.newInstance(getActivity() //
             , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
             , GourmetDetailActivity.NONE_PRICE//
-            , mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , null, false, false, false, false, GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
             , ResearchGourmetActivity.REQUEST_CODE_DETAIL);
 
@@ -342,9 +353,11 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             return;
         }
 
+        GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+
         startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
             , campaignTag.index, campaignTag.campaignTag//
-            , mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) //
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) //
             , ResearchGourmetActivity.REQUEST_CODE_SEARCH_RESULT);
 
         onBackClick();

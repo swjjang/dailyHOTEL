@@ -22,10 +22,6 @@ public class StayListFragment extends BasePagerFragment<StayListFragmentPresente
         void onCalendarClick();
 
         void onFilterClick();
-
-        void setCategoryVisible(boolean visible);
-
-        void setCategory(List<Category> categoryList);
     }
 
     @NonNull

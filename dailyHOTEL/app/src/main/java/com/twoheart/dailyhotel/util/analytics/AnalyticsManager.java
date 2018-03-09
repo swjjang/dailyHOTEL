@@ -166,21 +166,6 @@ public class AnalyticsManager
         }
     }
 
-    public void setUserName(String name)
-    {
-        // 추후에 이름은 진행하도록 합니다.
-        //        try
-        //        {
-        //            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
-        //            {
-        //                analyticsManager.setUserName(name);
-        //            }
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.d(CANCEL_TAG + e.toString());
-        //        }
-    }
-
     public void setExceedBonus(boolean isExceedBonus)
     {
         try
@@ -414,13 +399,13 @@ public class AnalyticsManager
         }
     }
 
-    public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
+    public void signUpSocialUser(String userIndex, String gender, String userType, String callByScreen)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.signUpSocialUser(userIndex, email, name, gender, phoneNumber, userType, callByScreen);
+                analyticsManager.signUpSocialUser(userIndex, gender, userType, callByScreen);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -428,14 +413,13 @@ public class AnalyticsManager
         }
     }
 
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, //
-                                String birthday, String userType, String recommender, String callByScreen)
+    public void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, birthday, userType, recommender, callByScreen);
+                analyticsManager.signUpDailyUser(userIndex, birthday, userType, recommender, callByScreen);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());

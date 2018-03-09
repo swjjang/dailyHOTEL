@@ -1756,22 +1756,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
-        //        int dayCount = mStayDetail.overseas == false //
-        //            ? StayDetailCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-        //            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
-        //
-        //        String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
-        //
-        //        Intent intent = StayDetailCalendarActivity.newInstance(getActivity(), commonDateTime //
-        //            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-        //            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-        //            , dayCount, stayIndex, callByScreen //
-        //            , (ArrayList) soldOutList, true, animation, mStayDetail.singleStay);
-        //
-        //        startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_CALENDAR);
-        //
-        //        mAnalytics.onEventCalendarClick(getActivity());
-
         try
         {
             Calendar calendar = DailyCalendar.getInstance(mCommonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
@@ -1782,7 +1766,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
-                , startDateTime, endDateTime, DAYS_OF_MAX_COUNT - 1//
+                , startDateTime, endDateTime//
+                , mStayDetail.singleStay ? 1 : DAYS_OF_MAX_COUNT - 1//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayIndex, soldOutDays, callByScreen, soldOut == false//

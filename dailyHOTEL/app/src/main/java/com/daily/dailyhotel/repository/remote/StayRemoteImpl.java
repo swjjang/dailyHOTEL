@@ -68,9 +68,67 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
+    public Observable<Stays> getLocalPlusList(Map<String, Object> queryMap)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
+            : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
+
+        return mDailyMobileService.getStayList(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                Stays stays;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        stays = baseDto.data.getStays();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return stays;
+            });
+    }
+
+    @Override
     public Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
     {
         return mDailyMobileService.getStayListCountByFilter(getBaseUrl() + getListApiUrl(categoryType) + toStringQueryParams(queryMap, abTestType)) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                StayFilterCount stayFilterCount;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        stayFilterCount = baseDto.data.getFilterCount();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return stayFilterCount;
+            });
+    }
+
+    @Override
+    public Observable<StayFilterCount> getLocalPlusListCountByFilte(Map<String, Object> queryMap)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
+            : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
+
+        return mDailyMobileService.getStayListCountByFilter(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
             .subscribeOn(Schedulers.io()).map(baseDto ->
             {
                 StayFilterCount stayFilterCount;

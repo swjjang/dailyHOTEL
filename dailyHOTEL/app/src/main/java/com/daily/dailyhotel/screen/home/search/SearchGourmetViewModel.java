@@ -34,4 +34,14 @@ public class SearchGourmetViewModel extends ViewModel
             return viewModel;
         }
     }
+
+    public void setBookDateTime(String bookDateTime) throws Exception
+    {
+        this.bookDateTime.setValue(new GourmetBookDateTime(bookDateTime));
+    }
+
+    public GourmetBookDateTime getBookDateTime()
+    {
+        return bookDateTime.getValue();
+    }
 }

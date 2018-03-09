@@ -38,6 +38,8 @@ public interface StayTabInterface
         void showPreviewGuide();
 
         boolean onFragmentBackPressed();
+
+        void expandedToolbar();
     }
 
     interface OnEventListener extends OnBaseEventListener

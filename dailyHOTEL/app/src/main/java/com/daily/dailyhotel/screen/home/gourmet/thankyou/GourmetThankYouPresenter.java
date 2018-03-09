@@ -4,8 +4,11 @@ package com.daily.dailyhotel.screen.home.gourmet.thankyou;
 import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 
@@ -14,6 +17,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
@@ -270,12 +274,22 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
             public void accept(@io.reactivex.annotations.NonNull UserTracking userTracking) throws Exception
             {
                 mAnalytics.onEventTracking(getActivity(), userTracking);
+
+                unLockAll();
+
+                if (isNotificationEnabled() == false)
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_gourmet_thankyou_disabled_notification)//
+                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                        , v -> startAppSettingActivity(), null);
+                }
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
+                unLockAll();
             }
         }));
     }
@@ -320,5 +334,17 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         {
             ExLog.e(e.toString());
         }
+    }
+
+    boolean isNotificationEnabled()
+    {
+        return VersionUtils.isOverAPI19() ? NotificationManagerCompat.from(getActivity()).areNotificationsEnabled() : true;
+    }
+
+    void startAppSettingActivity()
+    {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+        startActivity(intent);
     }
 }

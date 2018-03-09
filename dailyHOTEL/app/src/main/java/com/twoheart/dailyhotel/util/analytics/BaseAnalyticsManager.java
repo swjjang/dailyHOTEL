@@ -28,8 +28,6 @@ public abstract class BaseAnalyticsManager
 
     abstract void setUserBirthday(String birthday);
 
-    abstract void setUserName(String name);
-
     abstract void setExceedBonus(boolean isExceedBonus);
 
     abstract void onActivityCreated(Activity activity, Bundle bundle);
@@ -52,9 +50,9 @@ public abstract class BaseAnalyticsManager
 
     abstract void updateCreditCard(String cardTypes);
 
-    abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen);
+    abstract void signUpSocialUser(String userIndex, String gender, String userType, String callByScreen);
 
-    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen);
+    abstract void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen);
 
     abstract void purchaseCompleteHotel(String aggregationId, Map<String, String> params);
 

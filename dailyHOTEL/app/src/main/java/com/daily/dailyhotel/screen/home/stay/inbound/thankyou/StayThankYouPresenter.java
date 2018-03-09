@@ -6,10 +6,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -20,6 +23,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
@@ -438,6 +442,13 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                 boolean hasData = !(carouselListItemList == null || carouselListItemList.size() == 0);
 
                 unLockAll();
+
+                if (isNotificationEnabled() == false)
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_stay_thankyou_disabled_notification)//
+                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                        , v -> startAppSettingActivity(), null);
+                }
 
                 mAnalytics.onEventRecommendGourmetVisible(getActivity(), hasData);
             }
@@ -859,5 +870,17 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                 , mRewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage);
         }
+    }
+
+    boolean isNotificationEnabled()
+    {
+        return VersionUtils.isOverAPI19() ? NotificationManagerCompat.from(getActivity()).areNotificationsEnabled() : true;
+    }
+
+    void startAppSettingActivity()
+    {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
+        startActivity(intent);
     }
 }

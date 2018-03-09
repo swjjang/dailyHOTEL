@@ -248,8 +248,6 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                     }
                 });
 
-                AnalyticsManager.getInstance(EditProfileNameActivity.this).setUserName(mNameEditText.getText().toString());
-
                 unLockUI();
             }
         }, new Consumer<Throwable>()

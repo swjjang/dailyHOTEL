@@ -37,4 +37,23 @@ public class SearchStayOutboundViewModel extends ViewModel
             return viewModel;
         }
     }
+
+    public void setBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
+    {
+        bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+    }
+
+    public void setBookDateTime(String checkInDateTime, int afterCheckInDay, String checkOutDateTime, int afterCheckOutDay) throws Exception
+    {
+        StayBookDateTime stayBookDateTime = new StayBookDateTime();
+        stayBookDateTime.setCheckInDateTime(checkInDateTime, afterCheckInDay);
+        stayBookDateTime.setCheckOutDateTime(checkOutDateTime, afterCheckOutDay);
+
+        bookDateTime.setValue(stayBookDateTime);
+    }
+
+    public StayBookDateTime getBookDateTime()
+    {
+        return bookDateTime.getValue();
+    }
 }

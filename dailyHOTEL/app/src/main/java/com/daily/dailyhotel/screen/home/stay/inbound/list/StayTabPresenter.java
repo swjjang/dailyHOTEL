@@ -437,7 +437,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         areaTypeRegionCategoryPair = processRegionCategoryByPreferenceRegion(getPreferenceRegion(mStayViewModel.categoryType), areaGroupList, areaGroupMap);
                     }
 
-                    if (areaTypeRegionCategoryPair == null)
+                    if (areaTypeRegionCategoryPair == null || areaTypeRegionCategoryPair.first == null || areaTypeRegionCategoryPair.second == null)
                     {
                         areaTypeRegionCategoryPair = new Pair(PreferenceRegion.AreaType.AREA, getDefaultRegion(areaGroupList));
                     }
@@ -757,22 +757,19 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         categoryList.add(mStayViewModel.selectedCategory.getValue().code);
 
         Location location;
-        double radius;
 
         if (mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE)
         {
             location = mStayViewModel.location.getValue();
-            radius = 10;
         } else
         {
             location = null;
-            radius = 0;
         }
 
         startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
             , mStayViewModel.categoryType, mStayViewModel.viewType.getValue()//
             , mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue()//
-            , categoryList, location, radius, null), StayTabActivity.REQUEST_CODE_FILTER);
+            , categoryList, location, 0, null), StayTabActivity.REQUEST_CODE_FILTER);
 
         mAnalytics.onFilterClick(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue());
     }
@@ -791,6 +788,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             case LIST:
             {
                 screenLock(true);
+
+                getViewInterface().expandedToolbar();
 
                 mStayViewModel.viewType.setValue(ViewType.MAP);
                 break;

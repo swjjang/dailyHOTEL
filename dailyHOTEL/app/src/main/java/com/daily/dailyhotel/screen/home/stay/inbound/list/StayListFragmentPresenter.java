@@ -45,6 +45,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -65,6 +66,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -440,21 +442,23 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-        addCompositeDisposable(mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
+        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
-            public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
+            public Pair<Boolean, List<ObjectItem>> apply(Stays bmStays, Stays stays) throws Exception
             {
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
 
-                return new Pair<>(stays.activeReward, makeObjectItemList(stays.getStayList(), mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT));
+                return new Pair<>(stays.activeReward, makeObjectItemList(bmStays.getStayList(), stays.getStayList(), mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT));
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public void accept(Pair<Boolean, List<ObjectItem>> pair) throws Exception
             {
-                int listSize = pair.second.size();
+                boolean activeReward = pair.first;
+                List<ObjectItem> objectItemList = pair.second;
+                int listSize = objectItemList.size();
 
                 boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefaultFilter() == false;
 
@@ -466,7 +470,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
-                    getFragment().getFragmentEventListener().setCategoryVisible(notDefaultFilter == false);
 
                     mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
@@ -475,23 +478,22 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                     getViewInterface().setFloatingActionViewVisible(true);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(true);
-                    getFragment().getFragmentEventListener().setCategoryVisible(true);
 
                     if (listSize < MAXIMUM_NUMBER_PER_PAGE)
                     {
                         mPage = PAGE_FINISH;
 
-                        pair.second.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
                     } else
                     {
-                        pair.second.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                     }
 
                     getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
                     getViewInterface().setListLayoutVisible(true);
 
-                    getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
+                    getViewInterface().setList(objectItemList, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
+                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, activeReward//
                         , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
 
                     mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, mViewType, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
@@ -512,6 +514,31 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 onHandleError(throwable);
             }
         }));
+    }
+
+    private Observable<Stays> getLocalPlusList()
+    {
+        if (isLocalPlusEnabled() == true)
+        {
+            Map<String, Object> queryMap = getQueryMap(0);
+            queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
+
+            return mStayRemoteImpl.getLocalPlusList(queryMap);
+        } else
+        {
+            return Observable.just(new Stays());
+        }
+    }
+
+    private boolean isLocalPlusEnabled()
+    {
+        if (mStayViewModel.categoryType == DailyCategoryType.STAY_BOUTIQUE && mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT)
+        {
+            return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
+        } else
+        {
+            return false;
+        }
     }
 
     @Override
@@ -559,7 +586,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             {
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
 
-                return new Pair<>(stays.activeReward, makeObjectItemList(stays.getStayList(), mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT));
+                return new Pair<>(stays.activeReward, makeObjectItemList(null, stays.getStayList(), mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT));
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Boolean, List<ObjectItem>>>()
         {
@@ -714,16 +741,39 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        addCompositeDisposable(mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
+
+        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<Stay>>>()
         {
             @Override
-            public void accept(Stays stays) throws Exception
+            public Pair<Boolean, List<Stay>> apply(Stays bmStays, Stays stays) throws Exception
             {
-                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+                List<Stay> stayList = new ArrayList<>();
+
+                if (bmStays.totalCount > 0)
+                {
+                    stayList.addAll(bmStays.getStayList());
+                }
+
+                if (stays.totalCount > 0)
+                {
+                    stayList.addAll(stays.getStayList());
+                }
+
+                return new Pair(stays.activeReward, stayList);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Boolean, List<Stay>>>()
+        {
+            @Override
+            public void accept(Pair<Boolean, List<Stay>> pair) throws Exception
+            {
+                boolean activeReward = pair.first;
+                List<Stay> stayList = pair.second;
+
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(activeReward);
 
                 boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefaultFilter() == false;
 
-                if (stays.getStayList() == null || stays.getStayList().size() == 0)
+                if (stayList == null || stayList.size() == 0)
                 {
                     mEmptyList = true;
 
@@ -734,7 +784,9 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                     unLockAll();
 
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null//
+                        , mStayViewModel.stayBookDateTime.getValue(), mCategory.code//
+                        , mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
@@ -744,9 +796,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setEmptyViewVisible(false, notDefaultFilter);
                     getViewInterface().setMapLayoutVisible(true);
 
-                    getViewInterface().setMapList(stays.getStayList(), true, true, false);
+                    getViewInterface().setMapList(stayList, true, true, false);
 
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue(), mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType//
+                        , mStayViewModel.viewType.getValue(), mStayViewModel.stayBookDateTime.getValue()//
+                        , mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 }
             }
         }, new Consumer<Throwable>()
@@ -757,7 +811,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 onHandleError(throwable);
             }
         }));
-
     }
 
     @Override
@@ -1087,7 +1140,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
      * @param hasSection
      * @return
      */
-    List<ObjectItem> makeObjectItemList(List<Stay> stayList, boolean hasSection)
+    List<ObjectItem> makeObjectItemList(List<Stay> stayBMList, List<Stay> stayList, boolean hasSection)
     {
         List<ObjectItem> objectItemList = new ArrayList<>();
 
@@ -1096,12 +1149,26 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             return objectItemList;
         }
 
-        // 초이스가 없는 경우 섹션이 필요없다.
+        int entryPosition = 0;
+        boolean hasBMList = false;
+
+        if (stayBMList != null && stayBMList.size() > 0)
+        {
+            hasBMList = true;
+
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_local_plus)));
+
+            for (Stay stay : stayBMList)
+            {
+                stay.entryPosition = ++entryPosition;
+                objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stay));
+            }
+        }
+
         if (hasSection == true && stayList.get(0).dailyChoice == true)
         {
             boolean addAllSection = false;
             boolean addDailyChoiceSection = false;
-            int entryPosition = 0;
 
             for (Stay stay : stayList)
             {
@@ -1126,7 +1193,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             }
         } else
         {
-            int entryPosition = 0;
+            if (hasBMList == true)
+            {
+                objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_all)));
+            }
 
             for (Stay stay : stayList)
             {
