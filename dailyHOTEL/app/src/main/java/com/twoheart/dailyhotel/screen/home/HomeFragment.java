@@ -369,7 +369,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             case Constants.CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
-
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
