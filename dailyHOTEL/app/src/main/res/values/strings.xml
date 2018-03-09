@@ -1367,7 +1367,7 @@
     <string name="message_review_dialog_cancel_review_description">리뷰를 입력하시면 다른 고객님들의 선택에\n큰 도움이 됩니다.</string>
     <string name="message_review_toast_canceled_review_detail">리뷰 입력이 취소되었습니다.\n(만족 여부는 저장됩니다.)</string>
     <string name="message_review_toast_canceled_review_detail_2">리뷰 입력이 취소되었습니다.</string>
-    <string name="message_review_toast_temp_save_review_detail">작성한 트루리뷰를 임시저장했습니다.</string>
+    <string name="message_review_toast_temp_save_review_detail">작성한 리뷰를 임시저장했습니다.</string>
     <string name="message_review_toast_canceled_review">리뷰 입력이 취소되었습니다.\n예약내역 메뉴를 통해\n원하실 때 입력해주세요!</string>
     <string name="message_review_answer_question">%1$d개의 질문에 대답해주세요!</string>
     <string name="message_review_remain_n_count">이제 %1$d개 남았어요!</string>
