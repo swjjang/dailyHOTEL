@@ -437,7 +437,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         areaTypeRegionCategoryPair = processRegionCategoryByPreferenceRegion(getPreferenceRegion(mStayViewModel.categoryType), areaGroupList, areaGroupMap);
                     }
 
-                    if (areaTypeRegionCategoryPair == null)
+                    if (areaTypeRegionCategoryPair == null || areaTypeRegionCategoryPair.first == null || areaTypeRegionCategoryPair.second == null)
                     {
                         areaTypeRegionCategoryPair = new Pair(PreferenceRegion.AreaType.AREA, getDefaultRegion(areaGroupList));
                     }
@@ -788,6 +788,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             case LIST:
             {
                 screenLock(true);
+
+                getViewInterface().expandedToolbar();
 
                 mStayViewModel.viewType.setValue(ViewType.MAP);
                 break;

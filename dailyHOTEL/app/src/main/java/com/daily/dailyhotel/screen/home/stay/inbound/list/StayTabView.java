@@ -392,6 +392,17 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         return mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onBackPressed();
     }
 
+    @Override
+    public void expandedToolbar()
+    {
+        if(getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().appBarLayout.setExpanded(true);
+    }
+
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)

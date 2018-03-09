@@ -635,8 +635,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             if (mIsSocialSignUp == true)
             {
                 AnalyticsManager.getInstance(LoginActivity.this).signUpSocialUser(//
-                    mStoreParams.get("user_idx"), mStoreParams.get("email"), mStoreParams.get("name")//
-                    , mStoreParams.get("gender"), null, mStoreParams.get("user_type"), mCallByScreen);
+                    mStoreParams.get("user_idx"), mStoreParams.get("gender"), mStoreParams.get("user_type"), mCallByScreen);
             }
 
             DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
@@ -868,7 +867,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             }
 
                             AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_REGISTRATION_CONFIRM, null);
-                            AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.REGISTRATION //
                                 , AnalyticsManager.Action.PRIVACY, "1", null);
                             return;

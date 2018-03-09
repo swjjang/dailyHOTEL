@@ -334,6 +334,8 @@ public class ReviewActivity extends BaseActivity
                 {
                     releaseUiComponent();
 
+                    DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_temp_save_review_detail, Toast.LENGTH_SHORT);
+
                     saveTempReview();
 
                     if (mReviewLayout != null)
