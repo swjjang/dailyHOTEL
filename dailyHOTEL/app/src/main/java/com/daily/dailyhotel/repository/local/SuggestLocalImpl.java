@@ -321,9 +321,9 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
 
-                        dailyDb.addGourmetRecentlySuggest(type, gourmet.name, gourmet.index //
-                            , provinceIndex, provinceName, areaIndex, areaName, null //
-                            , 0, 0, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, gourmet.name, gourmet.index, gourmet.name //
+                            , provinceIndex, provinceName, areaIndex, areaName, null, null //
+                            , 0, 0, null, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Province)
                     {
                         GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
@@ -332,27 +332,26 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         String type = GourmetSuggestV2.Province.class.getSimpleName();
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
-                        String saveName = DailyTextUtils.isTextEmpty(areaName) ? province.name : areaName;
 
-                        dailyDb.addGourmetRecentlySuggest(type, saveName, 0 //
-                            , province.index, province.name, areaIndex, areaName, null //
-                            , 0, 0, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, province.getProvinceName(), 0, null //
+                            , province.index, province.name, areaIndex, areaName, null, null //
+                            , 0, 0, null, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Location)
                     {
                         GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) suggestItem;
                         String type = GourmetSuggestV2.Location.class.getSimpleName();
 
-                        dailyDb.addGourmetRecentlySuggest(type, location.name, 0 //
-                            , 0, null, 0, null, location.address //
-                            , location.latitude, location.longitude, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, location.name, 0, null //
+                            , 0, null, 0, null, location.name, location.address //
+                            , location.latitude, location.longitude, null, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Direct)
                     {
                         GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) suggestItem;
                         String type = GourmetSuggestV2.Direct.class.getSimpleName();
 
-                        dailyDb.addGourmetRecentlySuggest(type, direct.name, 0 //
-                            , 0, null, 0, null, null //
-                            , 0, 0, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, direct.name, 0, null //
+                            , 0, null, 0, null, null, null //
+                            , 0, 0, direct.name, keyword);
                     } else
                     {
                         return Observable.just(false);
@@ -401,11 +400,11 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         cursor.moveToPosition(i);
 
                         String type = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.TYPE));
-                        String name = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.NAME));
 
                         if (GourmetSuggestV2.Gourmet.class.getSimpleName().equalsIgnoreCase(type))
                         {
                             int gourmetIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.GOURMET_INDEX));
+                            String gourmetName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.GOURMET_NAME));
                             int provinceIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_INDEX));
                             String provinceName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_NAME));
 
@@ -417,7 +416,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             province.area = null;
 
                             gourmet.index = gourmetIndex;
-                            gourmet.name = name;
+                            gourmet.name = gourmetName;
                             gourmet.province = province;
 
                             gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, gourmet));
@@ -446,17 +445,19 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, province));
                         } else if (GourmetSuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
                         {
-                            GourmetSuggestV2.Direct direct = new GourmetSuggestV2.Direct(name);
+                            String directName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.DIRECT_NAME));
+                            GourmetSuggestV2.Direct direct = new GourmetSuggestV2.Direct(directName);
                             gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, direct));
 
                         } else if (GourmetSuggestV2.Location.class.getSimpleName().equalsIgnoreCase(type))
                         {
+                            String locationName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.LOCATION_NAME));
                             String address = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.ADDRESS));
                             double latitude = cursor.getDouble(cursor.getColumnIndex(GourmetRecentlySuggestList.LATITUDE));
                             double longitude = cursor.getDouble(cursor.getColumnIndex(GourmetRecentlySuggestList.LONGITUDE));
 
                             GourmetSuggestV2.Location location = new GourmetSuggestV2.Location();
-                            location.name = name;
+                            location.name = locationName;
                             location.address = address;
                             location.latitude = latitude;
                             location.longitude = longitude;
