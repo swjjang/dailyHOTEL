@@ -794,17 +794,6 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setUserName(String name)
-    {
-        if (DailyTextUtils.isTextEmpty(name) == true)
-        {
-            return;
-        }
-
-        mAppboy.getCurrentUser().setFirstName(name);
-    }
-
-    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
         mAppboy.getCurrentUser().setCustomUserAttribute("credit_limit_over", isExceedBonus);
@@ -897,8 +886,7 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber,//
-                          String userType, String callByScreen)
+    void signUpSocialUser(String userIndex, String gender, String userType, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -932,8 +920,7 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber,//
-                         String birthday, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -941,7 +928,6 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.TYPE_OF_REGISTRATION, AnalyticsManager.UserType.EMAIL);
         appboyProperties.addProperty(AnalyticsManager.KeyType.REGISTRATION_DATE, new Date());
 
-        setUserName(name);
         setUserBirthday(birthday);
 
         if (DailyTextUtils.isTextEmpty(recommender) == true)

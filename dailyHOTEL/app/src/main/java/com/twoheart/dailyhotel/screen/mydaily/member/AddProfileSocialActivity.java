@@ -343,8 +343,6 @@ public class AddProfileSocialActivity extends BaseActivity
             AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(null);
         }
 
-        AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserName(mAddProfileSocialLayout.getName());
-
         int year = mAddProfileSocialLayout.getPrivacyYear();
         String label = year > 1 ? year + "yrs" : "yr";
 

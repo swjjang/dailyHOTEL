@@ -95,11 +95,6 @@ public class FirebaseManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setUserName(String name)
-    {
-    }
-
-    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
     }
@@ -155,14 +150,12 @@ public class FirebaseManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber,//
-                          String userType, String callByScreen)
+    void signUpSocialUser(String userIndex, String gender, String userType, String callByScreen)
     {
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber,//
-                         String birthday, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen)
     {
     }
 
