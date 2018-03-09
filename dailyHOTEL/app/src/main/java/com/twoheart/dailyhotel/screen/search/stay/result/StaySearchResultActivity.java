@@ -1031,7 +1031,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 {
                     PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
 
-                    if (placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                    if (placeListFragment != null && placeListFragment.getPlaceListLayout() != null//
+                        && placeListFragment.getPlaceListLayout().getListMapFragment() != null//
+                        && placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
                     {
                         placeListFragment.getPlaceListLayout().getListMapFragment().clickMap();
                     }
