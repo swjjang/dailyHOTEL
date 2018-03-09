@@ -57,6 +57,11 @@ public class GourmetSuggestV2
         public boolean isExpired;
         public int minimumOrderQuantity;
         public Province province;
+
+        public String getProvinceName()
+        {
+            return province == null ? null : province.getProvinceName();
+        }
     }
 
     public static class Province extends SuggestItem
@@ -64,6 +69,11 @@ public class GourmetSuggestV2
         public int index;
         //        public String name;
         public Area area;
+
+        public String getProvinceName()
+        {
+            return area == null ? name : area.name;
+        }
     }
 
     public static class Area extends SuggestItem
