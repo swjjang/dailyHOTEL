@@ -130,6 +130,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         ExLog.v("Upgrading database from version " + oldVersion + " to " + newVersion);
 
+        // TODO : 임시로 테이블 날리는 코드 삽입
+        upGradeGourmetRecentlySuggestDb(db);
+
         if (oldVersion >= DATABASE_VERSION)
         {
             return;
