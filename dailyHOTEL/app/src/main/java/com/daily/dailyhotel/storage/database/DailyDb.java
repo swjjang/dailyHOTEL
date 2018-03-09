@@ -130,6 +130,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         ExLog.v("Upgrading database from version " + oldVersion + " to " + newVersion);
 
+        // TODO : 임시로 테이블 날리는 코드 삽입
+        upGradeGourmetRecentlySuggestDb(db);
+
         if (oldVersion >= DATABASE_VERSION)
         {
             return;
@@ -1287,6 +1290,28 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         sqlBuilder.append(T_GOURMET_IB_RECENTLY_SUGGEST);
         sqlBuilder.append(" WHERE ").append(GourmetRecentlySuggestList.TYPE).append("=\"").append(type).append("\"");
         sqlBuilder.append(" AND ").append(GourmetRecentlySuggestList.NAME).append("=\"").append(name).append("\"");
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
+    public Cursor getGourmetRecentlySuggestList(int maxCount)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            return null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_GOURMET_IB_RECENTLY_SUGGEST);
+        sqlBuilder.append(" ORDER BY ").append(GourmetRecentlySuggestList.SAVING_TIME).append(" DESC");
+
+        if (maxCount > 0)
+        {
+            sqlBuilder.append(" limit ").append(maxCount);
+        }
 
         Cursor cursor = rawQuery(sqlBuilder.toString());
 

@@ -25,8 +25,9 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.RecentlyPlace;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
+import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -35,7 +36,6 @@ import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
@@ -56,9 +56,9 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -72,6 +72,7 @@ public class SearchGourmetSuggestPresenter //
     SearchGourmetSuggestAnalyticsInterface mAnalytics;
 
     private SuggestRemoteImpl mSuggestRemoteImpl;
+    private SuggestLocalImpl mSuggestLocalImpl;
     RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
     GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
@@ -126,6 +127,7 @@ public class SearchGourmetSuggestPresenter //
         setAnalytics(new SearchGourmetSuggestAnalyticsImpl());
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
+        mSuggestLocalImpl = new SuggestLocalImpl(activity);
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(activity);
         mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
         mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
@@ -345,36 +347,34 @@ public class SearchGourmetSuggestPresenter //
 
         addCompositeDisposable(Observable.zip(ibObservable //
             , mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.GOURMET) //
-            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<Integer>, List<GourmetSuggestV2>>()
+            , mSuggestLocalImpl.getRecentlyGourmetSuggestList(10) //
+            , new Function3<ArrayList<RecentlyPlace>, ArrayList<Integer>, List<GourmetSuggestV2>, List<GourmetSuggestV2>>()
             {
                 @Override
-                public List<GourmetSuggestV2> apply(ArrayList<RecentlyPlace> gourmetList, ArrayList<Integer> expectedList) throws Exception
+                public List<GourmetSuggestV2> apply(ArrayList<RecentlyPlace> placeList, ArrayList<Integer> indexList, List<GourmetSuggestV2> searchList) throws Exception
                 {
-                    if (expectedList != null && expectedList.size() > 0)
+                    if (indexList != null && indexList.size() > 0)
                     {
-                        Collections.sort(gourmetList, new Comparator<RecentlyPlace>()
+                        Collections.sort(placeList, new Comparator<RecentlyPlace>()
                         {
                             @Override
                             public int compare(RecentlyPlace o1, RecentlyPlace o2)
                             {
-                                Integer position1 = expectedList.indexOf(o1.index);
-                                Integer position2 = expectedList.indexOf(o2.index);
+                                Integer position1 = indexList.indexOf(o1.index);
+                                Integer position2 = indexList.indexOf(o2.index);
 
                                 return position1.compareTo(position2);
                             }
                         });
                     }
 
-                    // 최근 검색어
-                    List<Keyword> keywordList = getDailyRecentSearches().getList();
-
-                    List<GourmetSuggestV2> recentlySuggestList = getRecentlySuggestList(keywordList, gourmetList);
+                    List<GourmetSuggestV2> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
                     setRecentlySuggestList(recentlySuggestList);
 
                     try
                     {
-                        mAnalytics.onRecentlySearchList(getActivity(), keywordList != null && keywordList.size() > 0);
-                        mAnalytics.onRecentlyGourmetList(getActivity(), gourmetList != null && gourmetList.size() > 0);
+                        mAnalytics.onRecentlySearchList(getActivity(), searchList != null && searchList.size() > 0);
+                        mAnalytics.onRecentlyGourmetList(getActivity(), placeList != null && placeList.size() > 0);
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -412,21 +412,17 @@ public class SearchGourmetSuggestPresenter //
         mPopularAreaList = popularAreaList;
     }
 
-    List<GourmetSuggestV2> getRecentlySuggestList(List<Keyword> keywordList, List<RecentlyPlace> recentlyPlaceList)
+    List<GourmetSuggestV2> getRecentlySuggestList(List<GourmetSuggestV2> recentlySearchList, List<RecentlyPlace> recentlyPlaceList)
     {
         // 최근 검색어
         ArrayList<GourmetSuggestV2> recentlySuggestList = new ArrayList<>();
 
-        if (keywordList != null && keywordList.size() > 0)
+        if (recentlySearchList != null && recentlySearchList.size() > 0)
         {
             recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH //
                 , new GourmetSuggestV2.Section(getString(R.string.label_search_suggest_recently_search))));
 
-            // TODO : 최근 검색어 작업 필요.
-//            for (Keyword keyword : keywordList)
-//            {
-//                recentlySuggestList.add(new GourmetSuggest(keyword));
-//            }
+            recentlySuggestList.addAll(recentlySearchList);
         }
 
         // 최근 본 업장
@@ -545,90 +541,6 @@ public class SearchGourmetSuggestPresenter //
             unLockAll();
         } else
         {
-            //            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
-            //                .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
-            //                {
-            //                    @Override
-            //                    public List<GourmetSuggest> apply(Pair<String, ArrayList<GourmetKeyword>> stringArrayListPair) throws Exception
-            //                    {
-            //                        ArrayList<GourmetKeyword> keywordList = stringArrayListPair.second;
-            //                        ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
-            //
-            //                        if (keywordList == null || keywordList.size() == 0)
-            //                        {
-            //                            return gourmetSuggestList;
-            //                        }
-            //
-            //                        String oldCategoryKey = null;
-            //
-            //                        for (GourmetKeyword gourmetKeyword : keywordList)
-            //                        {
-            //                            GourmetSuggest gourmetSuggest = new GourmetSuggest(gourmetKeyword);
-            //
-            //                            if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(gourmetSuggest.categoryKey) == false)
-            //                            {
-            //                                int resId;
-            //                                if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
-            //                                {
-            //                                    resId = R.string.label_search_suggest_type_gourmet;
-            //                                    oldCategoryKey = gourmetSuggest.categoryKey;
-            //                                } else
-            //                                {
-            //                                    resId = R.string.label_search_suggest_type_region;
-            //                                    oldCategoryKey = GourmetSuggest.CATEGORY_REGION;
-            //                                }
-            //
-            //                                gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
-            //                            }
-            //
-            //                            gourmetSuggestList.add(gourmetSuggest);
-            //                        }
-            //
-            //                        return gourmetSuggestList;
-            //                    }
-            //                }).subscribe(new Consumer<List<GourmetSuggest>>()
-            //                {
-            //                    @Override
-            //                    public void accept(List<GourmetSuggest> gourmetSuggestList) throws Exception
-            //                    {
-            //                        setSuggestList(gourmetSuggestList);
-            //                        notifyDataSetChanged();
-            //
-            //                        getViewInterface().setProgressBarVisible(false);
-            //                        unLockAll();
-            //
-            //                        try
-            //                        {
-            //                            boolean hasGourmetSuggestList = gourmetSuggestList != null && gourmetSuggestList.size() > 0;
-            //                            mAnalytics.onSearchSuggestList(getActivity(), keyword, hasGourmetSuggestList);
-            //                        } catch (Exception e)
-            //                        {
-            //                            ExLog.d(e.getMessage());
-            //                        }
-            //                    }
-            //                }, new Consumer<Throwable>()
-            //                {
-            //                    @Override
-            //                    public void accept(Throwable throwable) throws Exception
-            //                    {
-            //                        setSuggestList(null);
-            //                        notifyDataSetChanged();
-            //
-            //                        getViewInterface().setProgressBarVisible(false);
-            //                        unLockAll();
-            //
-            //                        try
-            //                        {
-            //                            mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
-            //                        } catch (Exception e)
-            //                        {
-            //                            ExLog.d(e.getMessage());
-            //                        }
-            //                    }
-            //                });
-            //
-            //            addCompositeDisposable(mSuggestDisposable);
-
             mSuggestDisposable = mSuggestRemoteImpl.getSuggestByGourmetV2(visitDate, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()) //
                 .subscribe(new Consumer<List<GourmetSuggestV2>>()
@@ -682,16 +594,34 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        if (gourmetSuggest.suggestItem == null)
+        {
+            return;
+        }
+
         if (lock() == true)
         {
             return;
         }
 
-        // TODO : 최근 검색 어 저장 및 Edit 영역에 글자 표시 , 검색 홈으로 데이터 전송 필요
-        //        addRecentSearches(gourmetSuggest);
-
-        //        getViewInterface().setSuggest(gourmetSuggest.displayName);
-        //        startFinishAction(gourmetSuggest, mKeyword, null);
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }));
     }
 
     @Override
@@ -702,66 +632,40 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        if (gourmetSuggest.suggestItem == null)
+        {
+            return;
+        }
+
         if (lock() == true)
         {
             return;
         }
 
-        // TODO : 최근 검색 어 저장 및 Edit 영역에 글자 표시 , 검색 홈으로 데이터 전송 필요
-//        addRecentSearches(gourmetSuggest);
-//
-//        getViewInterface().setSuggest(gourmetSuggest.displayName);
-//        startFinishAction(gourmetSuggest, mKeyword, null);
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    startFinishAction(gourmetSuggest, mKeyword);
+                }
+            }));
     }
 
-    DailyRecentSearches getDailyRecentSearches()
-    {
-        if (mDailyRecentSearches == null)
-        {
-            mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getGourmetRecentSearches());
-        }
-
-        return mDailyRecentSearches;
-    }
-
-    private Keyword getKeyword(GourmetSuggest gourmetSuggest)
-    {
-        if (getActivity() == null || gourmetSuggest == null)
-        {
-            return null;
-        }
-
-        int icon = Keyword.DEFAULT_ICON;
-        if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
-        {
-            icon = Keyword.GOURMET_ICON;
-        }
-
-        return new Keyword(icon, gourmetSuggest.displayName);
-    }
-
-    private void addRecentSearches(GourmetSuggest gourmetSuggest)
-    {
-        if (getActivity() == null || gourmetSuggest == null)
-        {
-            return;
-        }
-
-        Keyword keyword = getKeyword(gourmetSuggest);
-
-        if (keyword == null)
-        {
-            return;
-        }
-
-        getDailyRecentSearches().addString(keyword);
-        DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(getDailyRecentSearches().toString());
-    }
-
-    void startFinishAction(GourmetSuggest gourmetSuggest, String keyword, String analyticsClickType)
+    void startFinishAction(GourmetSuggestV2 gourmetSuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
         intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Activity.RESULT_OK, intent);
@@ -799,7 +703,6 @@ public class SearchGourmetSuggestPresenter //
         {
             GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
 
-            // TODO 최근 본 업장 삭제 DB 처리 변경 필요.
             addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.GOURMET, gourmet.index) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
@@ -827,27 +730,30 @@ public class SearchGourmetSuggestPresenter //
         } else
         {
             // 최근 검색어
-            // TODO : 최근 검색어 삭제 동작 필요.
+            addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyGourmetSuggest(gourmetSuggest) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+                        unLockAll();
 
-//            Keyword keyword = getKeyword(gourmetSuggest);
-//            if (keyword == null)
-//            {
-//                unLockAll();
-//                return;
-//            }
-//
-//            getDailyRecentSearches().remove(keyword);
-//            DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(getDailyRecentSearches().toString());
-
-            unLockAll();
-
-//            try
-//            {
-//                mAnalytics.onDeleteRecentlySearch(getActivity(), keyword.name);
-//            } catch (Exception e)
-//            {
-//                ExLog.d(e.getMessage());
-//            }
+                        try
+                        {
+                            mAnalytics.onDeleteRecentlySearch(getActivity(), suggestItem.name);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        unLockAll();
+                    }
+                }));
         }
     }
 
@@ -967,8 +873,7 @@ public class SearchGourmetSuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(itemLocation.address);
-                            // TODO : 위치 정보 Suggest를 검색홈에 넘기는 부분 수정 필요
-                            //                            startFinishAction(mLocationSuggest, mKeyword, null);
+                            startFinishAction(mLocationSuggest, mKeyword);
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -994,8 +899,7 @@ public class SearchGourmetSuggestPresenter //
                                 ExLog.d(e.getMessage());
                             }
 
-                            // TODO : 위치 정보 Suggest를 검색홈에 넘기는 부분 수정 필요
-                            //                            startFinishAction(mLocationSuggest, mKeyword, null);
+                            startFinishAction(mLocationSuggest, mKeyword);
                         }
                     }));
 
