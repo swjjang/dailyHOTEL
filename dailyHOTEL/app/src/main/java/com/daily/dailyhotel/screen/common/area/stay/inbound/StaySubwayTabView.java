@@ -161,7 +161,7 @@ public class StaySubwayTabView extends LinearLayout implements View.OnClickListe
 
                 if (mOnTabChangeListener != null)
                 {
-                    mOnTabChangeListener.onTabChanged(v, i);
+                    mOnTabChangeListener.onTabChanged(v, i / 2);
                 }
             } else
             {
