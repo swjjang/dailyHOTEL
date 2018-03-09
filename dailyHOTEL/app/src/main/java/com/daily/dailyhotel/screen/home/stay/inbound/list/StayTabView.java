@@ -400,7 +400,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
             return;
         }
 
-        getViewDataBinding().appBarLayout.setExpanded(true);
+        getViewDataBinding().appBarLayout.setExpanded(true, false);
     }
 
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)

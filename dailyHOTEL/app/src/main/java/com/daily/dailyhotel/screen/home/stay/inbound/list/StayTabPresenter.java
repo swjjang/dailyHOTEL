@@ -782,14 +782,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
+        getViewInterface().expandedToolbar();
+
         switch (mStayViewModel.viewType.getValue())
         {
             // 현재 리스트 화면인 경우
             case LIST:
             {
                 screenLock(true);
-
-                getViewInterface().expandedToolbar();
 
                 mStayViewModel.viewType.setValue(ViewType.MAP);
                 break;
