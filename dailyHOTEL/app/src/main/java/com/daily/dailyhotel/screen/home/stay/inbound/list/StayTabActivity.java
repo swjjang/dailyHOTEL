@@ -30,8 +30,9 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
     static final int REQUEST_CODE_CALL = 10010;
 
     static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
+    static final String INTENT_EXTRA_DATA_SHOW_CALENDAR = "showCalendar";
 
-    public static Intent newInstance(Context context, DailyCategoryType categoryType)
+    public static Intent newInstance(Context context, DailyCategoryType categoryType, boolean showCalendar)
     {
         Intent intent = new Intent(context, StayTabActivity.class);
 
@@ -40,17 +41,7 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
             intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         }
 
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, String deepLink)
-    {
-        Intent intent = new Intent(context, StayTabActivity.class);
-
-        if (DailyTextUtils.isTextEmpty(deepLink) == false)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
-        }
+        intent.putExtra(INTENT_EXTRA_DATA_SHOW_CALENDAR, showCalendar);
 
         return intent;
     }

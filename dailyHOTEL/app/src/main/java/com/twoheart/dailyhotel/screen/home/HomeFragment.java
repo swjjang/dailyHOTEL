@@ -399,7 +399,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         try
                         {
-                            Intent intent = StayTabActivity.newInstance(mBaseActivity, dailyCategoryType);
+                            Intent intent = StayTabActivity.newInstance(mBaseActivity, dailyCategoryType, resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {
@@ -1775,11 +1775,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             return;
         }
 
-        //        mBaseActivity.startActivityForResult(StayMainActivity.newInstance(mBaseActivity//
-        //            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_STAY);
-
         mBaseActivity.startActivityForResult(StayTabActivity.newInstance(mBaseActivity//
-            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+            , DailyCategoryType.STAY_ALL, dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_STAY);
 
         if (isDeepLink == false)
         {
@@ -2355,10 +2352,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 int nights = 1;
                 stayBookingDay.setCheckInDay(checkInDay);
                 stayBookingDay.setCheckOutDay(checkInDay, nights);
-
-                //                mBaseActivity.startActivityForResult( //
-                //                    HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
-                //                    , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
                 String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
                 String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);

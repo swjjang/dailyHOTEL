@@ -684,7 +684,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false, null);
 
-                        startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL, false), Constants.CODE_REQUEST_ACTIVITY_STAY);
                         break;
 
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -1199,7 +1199,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         switch (changeScreen)
         {
             case Constants.CODE_RESULT_ACTIVITY_STAY_LIST:
-                startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL, false), Constants.CODE_REQUEST_ACTIVITY_STAY);
                 break;
 
             case Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST:

@@ -171,6 +171,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     mStayViewModel.categoryType = DailyCategoryType.STAY_ALL;
                 }
+
+                boolean showCalendar = intent.getBooleanExtra(StayTabActivity.INTENT_EXTRA_DATA_SHOW_CALENDAR, false);
+
+                if (showCalendar == true)
+                {
+                    onCalendarClick();
+                }
             }
         }
     }
