@@ -18,6 +18,7 @@ public class GourmetSuggestV2
     public static final int MENU_TYPE_RECENTLY_SEARCH = 3;
     public static final int MENU_TYPE_RECENTLY_GOURMET = 4;
     public static final int MENU_TYPE_SUGGEST = 5;
+    public static final int MENU_TYPE_CAMPAIGN_TAG = 6;
 
     public int menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
     public SuggestItem suggestItem;
@@ -98,6 +99,15 @@ public class GourmetSuggestV2
         public double longitude;
         public String address;
         //        public String name;
+    }
+
+    public static class CampaignTag extends SuggestItem
+    {
+        public int index;
+        public String startDate; // ISO-8601
+        public String endDate; // ISO-8601
+        //        public String campaignTag; // 이 항목은 name 으로 대체
+        public String serviceType;
     }
 
     // 서버에서 받은 타입이 아님, 리스트 노출용 섹션
