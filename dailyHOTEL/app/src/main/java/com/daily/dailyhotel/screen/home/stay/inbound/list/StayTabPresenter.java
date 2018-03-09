@@ -789,6 +789,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             {
                 screenLock(true);
 
+                getViewInterface().expandedToolbar();
+
                 mStayViewModel.viewType.setValue(ViewType.MAP);
                 break;
             }
