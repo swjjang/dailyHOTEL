@@ -10,7 +10,9 @@ import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.domain.SuggestLocalInterface;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.repository.local.model.GourmetRecentlySuggestList;
+import com.daily.dailyhotel.repository.local.model.StayIbRecentlySuggestList;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 
@@ -321,9 +323,11 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
 
-                        dailyDb.addGourmetRecentlySuggest(type, gourmet.name, gourmet.index, gourmet.name //
-                            , provinceIndex, provinceName, areaIndex, areaName, null, null //
-                            , 0, 0, null, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, gourmet.name //
+                            , gourmet.index, gourmet.name //
+                            , provinceIndex, provinceName, areaIndex, areaName //
+                            , null, null, 0, 0 //
+                            , null, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Province)
                     {
                         GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
@@ -333,25 +337,31 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
 
-                        dailyDb.addGourmetRecentlySuggest(type, province.getProvinceName(), 0, null //
-                            , province.index, province.name, areaIndex, areaName, null, null //
-                            , 0, 0, null, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, province.getProvinceName() //
+                            , 0, null //
+                            , province.index, province.name, areaIndex, areaName //
+                            , null, null, 0, 0 //
+                            , null, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Location)
                     {
                         GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) suggestItem;
                         String type = GourmetSuggestV2.Location.class.getSimpleName();
 
-                        dailyDb.addGourmetRecentlySuggest(type, location.name, 0, null //
-                            , 0, null, 0, null, location.name, location.address //
-                            , location.latitude, location.longitude, null, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, location.name //
+                            , 0, null //
+                            , 0, null, 0, null //
+                            , location.name, location.address, location.latitude, location.longitude //
+                            , null, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Direct)
                     {
                         GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) suggestItem;
                         String type = GourmetSuggestV2.Direct.class.getSimpleName();
 
-                        dailyDb.addGourmetRecentlySuggest(type, direct.name, 0, null //
-                            , 0, null, 0, null, null, null //
-                            , 0, 0, direct.name, keyword);
+                        dailyDb.addGourmetRecentlySuggest(type, direct.name //
+                            , 0, null //
+                            , 0, null, 0, null //
+                            , null, null, 0, 0 //
+                            , direct.name, keyword);
                     } else
                     {
                         return Observable.just(false);
@@ -363,7 +373,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 return Observable.just(true);
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -491,7 +501,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 return Observable.just(gourmetSuggestList);
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -532,6 +542,302 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 try
                 {
                     dailyDb.deleteGourmetRecentlySuggest(type, name);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(true);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> addRecentlyStaySuggest(StaySuggestV2 staySuggest, String keyword)
+    {
+        return Observable.defer(new Callable<ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> call() throws Exception
+            {
+                if (staySuggest == null)
+                {
+                    return Observable.just(false);
+                }
+
+                StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
+                if (suggestItem == null)
+                {
+                    return Observable.just(false);
+                }
+
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                try
+                {
+                    if (suggestItem instanceof StaySuggestV2.Station)
+                    {
+                        StaySuggestV2.Station station = (StaySuggestV2.Station) suggestItem;
+                        String type = StaySuggestV2.Station.class.getSimpleName();
+
+                        dailyDb.addStayIbRecentlySuggest(type, station.getDisplayName() //
+                            , station.index, station.name, station.region, station.line //
+                            , 0, null //
+                            , 0, null, 0, null //
+                            , null, null, 0, 0 //
+                            , null, keyword);
+                    } else if (suggestItem instanceof StaySuggestV2.Stay)
+                    {
+                        StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
+                        StaySuggestV2.Province province = stay.province;
+                        StaySuggestV2.Area area = province != null ? province.area : null;
+
+                        String type = StaySuggestV2.Stay.class.getSimpleName();
+                        int provinceIndex = province == null ? 0 : province.index;
+                        String provinceName = province == null ? null : province.name;
+                        int areaIndex = area == null ? 0 : area.index;
+                        String areaName = area == null ? null : area.name;
+
+                        dailyDb.addStayIbRecentlySuggest(type, stay.name //
+                            , 0, null, null, null //
+                            , stay.index, stay.name //
+                            , provinceIndex, provinceName, areaIndex, areaName //
+                            , null, null, 0, 0 //
+                            , null, keyword);
+                    } else if (suggestItem instanceof StaySuggestV2.Province)
+                    {
+                        StaySuggestV2.Province province = (StaySuggestV2.Province) suggestItem;
+                        StaySuggestV2.Area area = province.area;
+
+                        String type = StaySuggestV2.Province.class.getSimpleName();
+                        int areaIndex = area == null ? 0 : area.index;
+                        String areaName = area == null ? null : area.name;
+
+                        dailyDb.addStayIbRecentlySuggest(type, province.getProvinceName() //
+                            , 0, null, null, null //
+                            , 0, null //
+                            , province.index, province.name, areaIndex, areaName //
+                            , null, null, 0, 0 //
+                            , null, keyword);
+                    } else if (suggestItem instanceof StaySuggestV2.Location)
+                    {
+                        StaySuggestV2.Location location = (StaySuggestV2.Location) suggestItem;
+                        String type = StaySuggestV2.Location.class.getSimpleName();
+
+                        dailyDb.addStayIbRecentlySuggest(type, location.name //
+                            , 0, null, null, null //
+                            , 0, null //
+                            , 0, null, 0, null //
+                            , location.name, location.address, location.latitude, location.longitude //
+                            , null, keyword);
+                    } else if (suggestItem instanceof StaySuggestV2.Direct)
+                    {
+                        StaySuggestV2.Direct direct = (StaySuggestV2.Direct) suggestItem;
+                        String type = StaySuggestV2.Direct.class.getSimpleName();
+
+                        dailyDb.addStayIbRecentlySuggest(type, direct.name //
+                            , 0, null, null, null //
+                            , 0, null //
+                            , 0, null, 0, null //
+                            , null, null, 0, 0 //
+                            , direct.name, keyword);
+                    } else
+                    {
+                        return Observable.just(false);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                return Observable.just(true);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<List<StaySuggestV2>> getRecentlyStaySuggestList(int maxCount)
+    {
+        return Observable.defer(new Callable<ObservableSource<List<StaySuggestV2>>>()
+        {
+            @Override
+            public ObservableSource<List<StaySuggestV2>> call() throws Exception
+            {
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                ArrayList<StaySuggestV2> staySuggestList = null;
+                Cursor cursor = null;
+                try
+                {
+                    cursor = dailyDb.getStayIbRecentlySuggestList(maxCount);
+
+                    if (cursor == null)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    int size = cursor.getCount();
+                    if (size == 0)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    staySuggestList = new ArrayList<>();
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        cursor.moveToPosition(i);
+
+                        String type = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.TYPE));
+
+                        if (StaySuggestV2.Station.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            int stationIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_INDEX));
+                            String stationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_NAME));
+                            String stationRegion = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_REGION));
+                            String stationLine = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_LINE));
+
+                            StaySuggestV2.Station station = new StaySuggestV2.Station();
+                            station.index = stationIndex;
+                            station.name = stationName;
+                            station.region = stationRegion;
+                            station.line = stationLine;
+
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, station));
+
+                        } else if (StaySuggestV2.Stay.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            int stayIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_INDEX));
+                            String stayName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_NAME));
+                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_INDEX));
+                            String provinceName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_NAME));
+
+                            StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
+                            StaySuggestV2.Province province = new StaySuggestV2.Province();
+
+                            province.index = provinceIndex;
+                            province.name = provinceName;
+                            province.area = null;
+
+                            stay.index = stayIndex;
+                            stay.name = stayName;
+                            stay.province = province;
+
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, stay));
+
+                        } else if (StaySuggestV2.Province.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_INDEX));
+                            String provinceName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_NAME));
+                            int areaIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_INDEX));
+                            String areaName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_NAME));
+
+                            StaySuggestV2.Province province = new StaySuggestV2.Province();
+                            StaySuggestV2.Area area = null;
+
+                            if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
+                            {
+                                area = new StaySuggestV2.Area();
+                                area.index = areaIndex;
+                                area.name = areaName;
+                            }
+
+                            province.index = provinceIndex;
+                            province.name = provinceName;
+                            province.area = area;
+
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, province));
+
+                        } else if (StaySuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            String directName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.DIRECT_NAME));
+                            StaySuggestV2.Direct direct = new StaySuggestV2.Direct(directName);
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, direct));
+
+                        } else if (StaySuggestV2.Location.class.getSimpleName().equalsIgnoreCase(type))
+                        {
+                            String locationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.LOCATION_NAME));
+                            String address = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.ADDRESS));
+                            double latitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LATITUDE));
+                            double longitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LONGITUDE));
+
+                            StaySuggestV2.Location location = new StaySuggestV2.Location();
+                            location.name = locationName;
+                            location.address = address;
+                            location.latitude = latitude;
+                            location.longitude = longitude;
+
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, location));
+                        }
+                    }
+
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                } finally
+                {
+                    try
+                    {
+                        if (cursor != null)
+                        {
+                            cursor.close();
+                        }
+                    } catch (Exception e)
+                    {
+                    }
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                if (staySuggestList == null)
+                {
+                    staySuggestList = new ArrayList<>();
+                }
+
+                return Observable.just(staySuggestList);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> deleteRecentlyStaySuggest(StaySuggestV2 staySuggest)
+    {
+        return Observable.defer(new Callable<Observable<Boolean>>()
+        {
+            @Override
+            public Observable<Boolean> call() throws Exception
+            {
+                if (staySuggest == null)
+                {
+                    return Observable.just(false);
+                }
+
+                StaySuggestV2.SuggestItem item = staySuggest.suggestItem;
+                if (item == null)
+                {
+                    return Observable.just(false);
+                }
+
+                String type = item.getClass().getSimpleName();
+                String name = item.name;
+                ExLog.d("sam : type : " + type + " , name : " + name);
+                if (item instanceof StaySuggestV2.Province)
+                {
+                    StaySuggestV2.Province province = (StaySuggestV2.Province) item;
+                    name = province.getProvinceName();
+                } else if (item instanceof StaySuggestV2.Station)
+                {
+                    StaySuggestV2.Station station = (StaySuggestV2.Station) item;
+                    name = station.getDisplayName();
+                }
+
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                try
+                {
+                    dailyDb.deleteStayIbRecentlySuggest(type, name);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
