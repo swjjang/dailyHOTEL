@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.entity;
 
-public class Area
+public class Area extends AreaElement
 {
-    public int index;
-    public String name;
 }

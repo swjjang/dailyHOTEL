@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayRegion;
 
@@ -35,37 +36,37 @@ public class StayRegionParcel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        Area areaGroup = mRegion.getAreaGroup();
-        Area area = mRegion.getArea();
+        AreaElement areaGroupElement = mRegion.getAreaGroupElement();
+        AreaElement areaElement = mRegion.getAreaElement();
 
         dest.writeString(mRegion.getAreaType().name());
 
-        if (areaGroup == null)
+        if (areaGroupElement == null)
         {
             dest.writeInt(0);
             dest.writeString(null);
             dest.writeInt(0);
         } else
         {
-            dest.writeInt(areaGroup.index);
-            dest.writeString(areaGroup.name);
+            dest.writeInt(areaGroupElement.index);
+            dest.writeString(areaGroupElement.name);
         }
 
-        if (area == null)
+        if (areaElement == null)
         {
             dest.writeInt(0);
             dest.writeString(null);
             dest.writeInt(0);
         } else
         {
-            dest.writeInt(area.index);
-            dest.writeString(area.name);
+            dest.writeInt(areaElement.index);
+            dest.writeString(areaElement.name);
         }
     }
 
     private void readFromParcel(Parcel in)
     {
-        Area areaGroup;
+        AreaElement areaGroupElement;
 
         PreferenceRegion.AreaType areaType = PreferenceRegion.AreaType.valueOf(in.readString());
 
@@ -74,30 +75,30 @@ public class StayRegionParcel implements Parcelable
 
         if (areaGroupIndex == 0 && areaGroupName == null)
         {
-            areaGroup = null;
+            areaGroupElement = null;
         } else
         {
-            areaGroup = new Area();
-            areaGroup.index = areaGroupIndex;
-            areaGroup.name = areaGroupName;
+            areaGroupElement = new Area();
+            areaGroupElement.index = areaGroupIndex;
+            areaGroupElement.name = areaGroupName;
         }
 
-        Area area;
+        AreaElement areaElement;
 
         int areaIndex = in.readInt();
         String areaName = in.readString();
 
         if (areaIndex == 0 && areaName == null)
         {
-            area = null;
+            areaElement = null;
         } else
         {
-            area = new Area();
-            area.index = areaIndex;
-            area.name = areaName;
+            areaElement = new Area();
+            areaElement.index = areaIndex;
+            areaElement.name = areaName;
         }
 
-        mRegion = new StayRegion(areaType, areaGroup, area);
+        mRegion = new StayRegion(areaType, areaGroupElement, areaElement);
     }
 
     @Override

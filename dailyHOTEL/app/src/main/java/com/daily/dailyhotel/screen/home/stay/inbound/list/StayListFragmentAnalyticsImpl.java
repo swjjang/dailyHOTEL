@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -93,8 +94,8 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
 
             params.put(AnalyticsManager.KeyType.PROVINCE, stayRegion.getAreaGroupName());
 
-            Area area = stayRegion.getArea();
-            params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+            AreaElement areaElement = stayRegion.getAreaElement();
+            params.put(AnalyticsManager.KeyType.DISTRICT, areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name);
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, screen, null, params);
         } catch (Exception e)

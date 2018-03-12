@@ -4,15 +4,15 @@ public class StayRegion
 {
     private PreferenceRegion.AreaType mAreaType;
 
-    private Area mAreaGroup;
+    private AreaElement mAreaGroupElement;
 
-    private Area mArea;
+    private AreaElement mAreaElement;
 
-    public StayRegion(PreferenceRegion.AreaType areaType, Area areaGroup, Area area)
+    public StayRegion(PreferenceRegion.AreaType areaType, AreaElement areaGroupElement, AreaElement areaElement)
     {
         mAreaType = areaType;
-        mAreaGroup = areaGroup;
-        mArea = area;
+        mAreaGroupElement = areaGroupElement;
+        mAreaElement = areaElement;
     }
 
     public PreferenceRegion.AreaType getAreaType()
@@ -20,23 +20,23 @@ public class StayRegion
         return mAreaType;
     }
 
-    public Area getAreaGroup()
+    public AreaElement getAreaGroupElement()
     {
-        return mAreaGroup;
+        return mAreaGroupElement;
     }
 
-    public Area getArea()
+    public AreaElement getAreaElement()
     {
-        return mArea;
+        return mAreaElement;
     }
 
     public String getAreaGroupName()
     {
-        return mAreaGroup == null ? null : mAreaGroup.name;
+        return mAreaGroupElement == null ? null : mAreaGroupElement.name;
     }
 
     public String getAreaName()
     {
-        return mArea == null ? null : mArea.name;
+        return mAreaElement == null ? null : mAreaElement.name;
     }
 }

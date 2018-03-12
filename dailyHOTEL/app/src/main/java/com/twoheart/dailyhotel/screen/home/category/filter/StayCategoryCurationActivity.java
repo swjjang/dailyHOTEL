@@ -18,6 +18,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -631,8 +632,8 @@ public class StayCategoryCurationActivity extends PlaceCurationActivity implemen
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
             eventParams.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-            com.daily.dailyhotel.entity.Area area = region.getArea();
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+            AreaElement areaElement = region.getAreaElement();
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//

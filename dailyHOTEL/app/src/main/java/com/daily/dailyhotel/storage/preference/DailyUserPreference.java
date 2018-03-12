@@ -266,7 +266,7 @@ public class DailyUserPreference
 
     public boolean isThankYouBenefitAlarmEnabled()
     {
-        return getValue(mPreferences, KEY_THANK_YOU_BENEFIT_ALARM, false);
+        return getValue(mPreferences, KEY_THANK_YOU_BENEFIT_ALARM, true);
     }
 
     public void setThankYouBenefitAlarmEnabled(boolean value)

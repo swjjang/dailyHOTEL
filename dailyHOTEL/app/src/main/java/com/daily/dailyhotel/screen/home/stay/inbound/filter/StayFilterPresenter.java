@@ -18,6 +18,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -571,27 +572,27 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 case AREA:
                 {
                     // provinceIdx
-                    Area areaGroup = mStayRegion.getAreaGroup();
-                    if (areaGroup != null)
+                    AreaElement areaGroupElement = mStayRegion.getAreaGroupElement();
+                    if (areaGroupElement != null)
                     {
-                        queryMap.put("provinceIdx", areaGroup.index);
+                        queryMap.put("provinceIdx", areaGroupElement.index);
                     }
 
-                    Area area = mStayRegion.getArea();
-                    if (area != null && area.index != StayArea.ALL)
+                    AreaElement areaElement = mStayRegion.getAreaElement();
+                    if (areaElement != null && areaElement.index != StayArea.ALL)
                     {
                         // areaIdx
-                        queryMap.put("areaIdx", area.index);
+                        queryMap.put("areaIdx", areaElement.index);
                     }
                     break;
                 }
 
                 case SUBWAY_AREA:
                 {
-                    Area area = mStayRegion.getArea();
-                    if (area != null)
+                    AreaElement areaElement = mStayRegion.getAreaElement();
+                    if (areaElement != null)
                     {
-                        queryMap.put("subwayIdx", area.index);
+                        queryMap.put("subwayIdx", areaElement.index);
                     }
                     break;
                 }
