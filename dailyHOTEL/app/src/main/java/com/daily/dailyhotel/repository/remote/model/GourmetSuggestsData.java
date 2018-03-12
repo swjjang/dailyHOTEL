@@ -34,14 +34,8 @@ public class GourmetSuggestsData
         @JsonField(name = "discount")
         public int discount;
 
-        @JsonField(name = "availableTickets")
-        public int availableTickets;
-
-        @JsonField(name = "isExpired")
-        public boolean isExpired;
-
-        @JsonField(name = "minimumOrderQuantity")
-        public int minimumOrderQuantity;
+        @JsonField(name = "available")
+        public boolean available;
 
         @JsonField(name = "province")
         public ProvinceData provinceData;
@@ -52,9 +46,7 @@ public class GourmetSuggestsData
             gourmet.index = index;
             gourmet.name = name;
             gourmet.discount = discount;
-            gourmet.availableTickets = availableTickets;
-            gourmet.isExpired = isExpired;
-            gourmet.minimumOrderQuantity = minimumOrderQuantity;
+            gourmet.available = available;
             gourmet.province = provinceData == null ? null : provinceData.getProvince();
 
             return gourmet;

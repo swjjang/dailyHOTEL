@@ -246,7 +246,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
             holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
 
-            if (gourmet.availableTickets == 0 || gourmet.availableTickets < gourmet.minimumOrderQuantity || gourmet.isExpired == true)
+            if (gourmet.available == false)
             {
                 holder.dataBinding.priceTextView.setText(R.string.label_soldout);
             } else

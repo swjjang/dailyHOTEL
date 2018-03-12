@@ -54,9 +54,7 @@ public class GourmetSuggestV2
         public int index;
 //        public String name;
         public int discount;
-        public int availableTickets;
-        public boolean isExpired;
-        public int minimumOrderQuantity;
+        public boolean available;
         public Province province;
 
         public String getProvinceName()
