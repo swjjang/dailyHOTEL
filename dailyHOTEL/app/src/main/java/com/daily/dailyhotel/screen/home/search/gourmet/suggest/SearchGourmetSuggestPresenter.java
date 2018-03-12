@@ -870,10 +870,28 @@ public class SearchGourmetSuggestPresenter //
                                 return;
                             }
 
-                            unLockAll();
+                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(mLocationSuggest, mKeyword) //
+                                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception
+                                    {
+                                        unLockAll();
 
-                            getViewInterface().setSuggest(itemLocation.address);
-                            startFinishAction(mLocationSuggest, mKeyword);
+                                        getViewInterface().setSuggest(itemLocation.address);
+                                        startFinishAction(mLocationSuggest, mKeyword);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        getViewInterface().setSuggest(itemLocation.address);
+                                        startFinishAction(mLocationSuggest, mKeyword);
+                                    }
+                                }));
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -887,9 +905,28 @@ public class SearchGourmetSuggestPresenter //
                                 return;
                             }
 
-                            unLockAll();
+                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(mLocationSuggest, mKeyword) //
+                                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception
+                                    {
+                                        unLockAll();
 
-                            getViewInterface().setSuggest(itemLocation.address);
+                                        getViewInterface().setSuggest(itemLocation.address);
+                                        startFinishAction(mLocationSuggest, mKeyword);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        getViewInterface().setSuggest(itemLocation.address);
+                                        startFinishAction(mLocationSuggest, mKeyword);
+                                    }
+                                }));
 
                             try
                             {
@@ -898,8 +935,6 @@ public class SearchGourmetSuggestPresenter //
                             {
                                 ExLog.d(e.getMessage());
                             }
-
-                            startFinishAction(mLocationSuggest, mKeyword);
                         }
                     }));
 
