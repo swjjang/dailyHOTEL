@@ -1346,14 +1346,14 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                     int idColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList._ID);
                     oldId = cursor.getLong(idColumnIndex);
 
-                    int savingTimeColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList.SAVING_TIME);
-                    savingTime = cursor.getLong(savingTimeColumnIndex);
+//                    int savingTimeColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList.SAVING_TIME);
+//                    savingTime = cursor.getLong(savingTimeColumnIndex);
                 }
 
             } catch (Exception e)
             {
                 oldId = -1;
-                savingTime = -1;
+//                savingTime = -1;
             } finally
             {
                 try
@@ -1368,11 +1368,11 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                 }
             }
 
-            if (savingTime == -1)
-            {
+//            if (savingTime == -1)
+//            {
                 Calendar calendar = DailyCalendar.getInstance();
                 savingTime = calendar.getTimeInMillis();
-            }
+//            }
 
             ContentValues contentValues = new ContentValues();
 
