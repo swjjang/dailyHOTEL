@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.home.gourmet.thankyou;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -21,15 +23,20 @@ import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.NoticeAgreementMessage;
+import com.daily.dailyhotel.entity.NoticeAgreementResultMessage;
 import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -41,6 +48,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     GourmetThankYouAnalyticsInterface mAnalytics;
 
     private ProfileRemoteImpl mProfileRemoteImpl;
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     private String mAggregationId;
     private GourmetBookDateTime mGourmetBookDateTime;
@@ -86,6 +94,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         setAnalytics(new GourmetThankYouAnalyticsImpl());
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -282,6 +291,9 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                     getViewInterface().showSimpleDialog(null, getString(R.string.message_gourmet_thankyou_disabled_notification)//
                         , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
                         , v -> startAppSettingActivity(), null);
+                } else if (isBenefitAlarm() == false)
+                {
+                    getNotificationMessage();
                 }
             }
         }, new Consumer<Throwable>()
@@ -341,10 +353,110 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         return VersionUtils.isOverAPI19() ? NotificationManagerCompat.from(getActivity()).areNotificationsEnabled() : true;
     }
 
+    boolean isBenefitAlarm()
+    {
+        return DailyUserPreference.getInstance(getActivity()).isBenefitAlarm();
+    }
+
+
     void startAppSettingActivity()
     {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
         startActivity(intent);
+    }
+
+    void getNotificationMessage()
+    {
+        addCompositeDisposable(mCommonRemoteImpl.getNoticeAgreementMessage().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<NoticeAgreementMessage>()
+        {
+            @Override
+            public void accept(NoticeAgreementMessage benefitMessage) throws Exception
+            {
+                getViewInterface().showSimpleDialog(getString(R.string.label_setting_alarm), benefitMessage.description1 + "\n\n" + benefitMessage.description2//
+                    , getString(R.string.label_now_setting_alarm), 2.0f, getString(R.string.label_after_setting_alarm), 1.0f//
+                    , new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            updateNotificationResultMessage(true);
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            updateNotificationResultMessage(false);
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            updateNotificationResultMessage(false);
+                        }
+                    }, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+
+                        }
+                    }, true);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                ExLog.e(throwable.toString());
+            }
+        }));
+    }
+
+    void updateNotificationResultMessage(boolean agreed)
+    {
+        addCompositeDisposable(mCommonRemoteImpl.updateNoticeAgreement(agreed).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<NoticeAgreementResultMessage>()
+        {
+            @Override
+            public void accept(NoticeAgreementResultMessage noticeAgreementResultMessage) throws Exception
+            {
+                DailyUserPreference.getInstance(getActivity()).setBenefitAlarm(agreed);
+
+                String dateFormatString = DailyCalendar.convertDateFormatString(noticeAgreementResultMessage.agreedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+
+                if (agreed == true)
+                {
+                    String message = noticeAgreementResultMessage.description1InAgree.replace("{{DATE}}", "\n" + dateFormatString) + "\n\n" + noticeAgreementResultMessage.description2InAgree;
+
+                    getViewInterface().showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                        }
+                    });
+                } else
+                {
+                    String message = noticeAgreementResultMessage.description1InReject.replace("{{DATE}}", "\n" + dateFormatString) + "\n\n" + noticeAgreementResultMessage.description2InReject;
+
+                    getViewInterface().showSimpleDialog(getString(R.string.label_setting_alarm), message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                        }
+                    });
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+
+            }
+        }));
     }
 }

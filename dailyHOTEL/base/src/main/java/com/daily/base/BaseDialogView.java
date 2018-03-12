@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 
 import com.daily.base.databinding.DialogLayoutDataBinding;
 import com.daily.base.util.DailyTextUtils;
@@ -219,6 +220,108 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
         {
             ExLog.d(e.toString());
         }
+    }
+
+    @Override
+    public void showSimpleDialog(String titleText, String msg, String positive, float positiveWeight, String negative, float negativeWeight//
+        , final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
+                                 DialogInterface.OnDismissListener dismissListener, boolean cancelable)
+    {
+        if (getActivity().isFinishing() == true)
+        {
+            return;
+        }
+
+        hideSimpleDialog();
+
+        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_layout_data, null, false);
+
+        mDialog = new Dialog(getActivity());
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        dataBinding.titleTextView.setVisibility(View.VISIBLE);
+
+        if (DailyTextUtils.isTextEmpty(titleText) == true)
+        {
+            dataBinding.titleTextView.setText(getString(R.string.label_notice));
+        } else
+        {
+            dataBinding.titleTextView.setText(titleText);
+        }
+
+        // 메시지
+        dataBinding.messageTextView.setText(msg);
+
+        // 버튼
+        if (positiveWeight > 0 && negativeWeight > 0)
+        {
+            dataBinding.twoButtonLayout.setWeightSum(positiveWeight + negativeWeight);
+
+            ((LinearLayout.LayoutParams) dataBinding.positiveTextView.getLayoutParams()).weight = positiveWeight;
+            ((LinearLayout.LayoutParams) dataBinding.negativeTextView.getLayoutParams()).weight = negativeWeight;
+
+            dataBinding.positiveTextView.requestLayout();
+            dataBinding.negativeTextView.requestLayout();
+        }
+
+
+        if (DailyTextUtils.isTextEmpty(positive, negative) == false)
+        {
+            dataBinding.twoButtonLayout.setVisibility(View.VISIBLE);
+            dataBinding.oneButtonLayout.setVisibility(View.GONE);
+
+            dataBinding.negativeTextView.setText(negative);
+            dataBinding.negativeTextView.setOnClickListener(v ->
+            {
+                if (mDialog != null && mDialog.isShowing() == true)
+                {
+                    mDialog.dismiss();
+                }
+
+                if (negativeListener != null)
+                {
+                    negativeListener.onClick(v);
+                }
+            });
+
+
+            dataBinding.positiveTextView.setText(positive);
+            dataBinding.positiveTextView.setOnClickListener(v ->
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+                if (positiveListener != null)
+                {
+                    positiveListener.onClick(v);
+                }
+            });
+        } else
+        {
+            dataBinding.twoButtonLayout.setVisibility(View.GONE);
+            dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
+
+            dataBinding.confirmTextView.setText(positive);
+            dataBinding.oneButtonLayout.setOnClickListener(v ->
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+                if (positiveListener != null)
+                {
+                    positiveListener.onClick(v);
+                }
+            });
+        }
+
+        showSimpleDialog(dataBinding.getRoot(), cancelListener, dismissListener, cancelable);
     }
 
     @Override
