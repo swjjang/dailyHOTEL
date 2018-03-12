@@ -116,6 +116,7 @@
     <string name="label_delete">삭제</string>
     <string name="label_area_list">지역명</string>
     <string name="label_subway_list">지하철역</string>
+    <string name="label_allow_notification">알림허용</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
