@@ -1663,6 +1663,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
+        getViewInterface().setRewardVisible(mStayOutboundDetail.activeReward == true && mStayOutboundDetail.provideRewardSticker == true, hasRecommendAroundList);
         getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
 
         if (hasRecommendAroundList == true)
