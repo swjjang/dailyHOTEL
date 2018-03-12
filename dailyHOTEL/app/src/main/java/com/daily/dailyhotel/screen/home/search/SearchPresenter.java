@@ -18,13 +18,12 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
@@ -476,7 +475,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 {
                     try
                     {
-                        GourmetSuggestParcel suggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        GourmetSuggestParcelV2 suggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                         if (suggestParcel != null)
                         {
@@ -616,7 +615,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                GourmetSuggestParcel suggestParcel = intent.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
@@ -1209,13 +1208,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2();
+        GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG, suggestItem);
 
-//        GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
-//
-//        startGourmetCampaignTag(campaignTag.index, campaignTag.campaignTag//
-//            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
-
+        mSearchModel.gourmetViewModel.suggest.setValue(gourmetSuggest);
 
         addCompositeDisposable(getViewInterface().getGourmetSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
         {
@@ -1323,14 +1319,16 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         mSearchModel.stayOutboundViewModel.people.setValue(new People(People.DEFAULT_ADULTS, null));
 
         // Gourmet
-        mSearchModel.gourmetViewModel.suggest.observe(activity, new Observer<GourmetSuggest>()
+        mSearchModel.gourmetViewModel.suggest.observe(activity, new Observer<GourmetSuggestV2>()
         {
             @Override
-            public void onChanged(@Nullable GourmetSuggest suggest)
+            public void onChanged(@Nullable GourmetSuggestV2 suggest)
             {
-                getViewInterface().setSearchGourmetSuggestText(suggest.displayName);
+                String displayName = suggest.getDisplayNameBySearchHome(getActivity());
 
-                getViewInterface().setSearchGourmetButtonEnabled(DailyTextUtils.isTextEmpty(suggest.displayName) == false);
+                getViewInterface().setSearchGourmetSuggestText(displayName);
+
+                getViewInterface().setSearchGourmetButtonEnabled(DailyTextUtils.isTextEmpty(displayName) == false);
             }
         });
 
@@ -1402,13 +1400,15 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void showSearchGourmet()
     {
-        if (mSearchModel.gourmetViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.gourmetViewModel.suggest.getValue().displayName) == true)
+        String displayName = mSearchModel.gourmetViewModel.suggest.getValue().getDisplayNameBySearchHome(getActivity());
+
+        if (mSearchModel.gourmetViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(displayName) == true)
         {
             getViewInterface().setSearchGourmetSuggestText(null);
             getViewInterface().setSearchGourmetButtonEnabled(false);
         } else
         {
-            getViewInterface().setSearchGourmetSuggestText(mSearchModel.gourmetViewModel.suggest.getValue().displayName);
+            getViewInterface().setSearchGourmetSuggestText(displayName);
             getViewInterface().setSearchGourmetButtonEnabled(true);
         }
 
@@ -1540,8 +1540,9 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
+        GourmetSuggestV2.Direct suggestItem = new GourmetSuggestV2.Direct(word);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggest.MENU_TYPE_DIRECT, suggestItem);
         Constants.SortType sortType = externalDeepLink.getSorting();
-        GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, word);
 
         try
         {

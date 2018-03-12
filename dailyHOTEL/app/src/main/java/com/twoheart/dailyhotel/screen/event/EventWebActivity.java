@@ -18,7 +18,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
@@ -459,9 +459,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 if (DailyTextUtils.isTextEmpty(word) == false)
                 {
-                    GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, word);
+                    GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_DIRECT, new GourmetSuggestV2.Direct(word));
 
-                    Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, gourmetSuggest, sortType, null);
+                    Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, suggest, sortType, null);
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {

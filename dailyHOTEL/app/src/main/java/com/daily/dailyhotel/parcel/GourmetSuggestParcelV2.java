@@ -40,31 +40,32 @@ public class GourmetSuggestParcelV2 implements Parcelable
     {
         dest.writeInt(mGourmetSuggest.menuType);
 
-        GourmetSuggestV2.SuggestItem item = mGourmetSuggest.suggestItem;
-        if (item == null)
+        GourmetSuggestV2.SuggestItem suggestItem = mGourmetSuggest.suggestItem;
+
+        if (suggestItem == null)
         {
             return;
         }
 
-        if (item instanceof GourmetSuggestV2.Gourmet)
+        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
         {
-            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) item;
+            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
             dest.writeSerializable(gourmet);
-        } else if (item instanceof GourmetSuggestV2.Province)
+        } else if (suggestItem instanceof GourmetSuggestV2.Province)
         {
-            GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) item;
+            GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
             dest.writeSerializable(province);
-        } else if (item instanceof GourmetSuggestV2.Direct)
+        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
         {
-            GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) item;
+            GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) suggestItem;
             dest.writeSerializable(direct);
-        } else if (item instanceof GourmetSuggestV2.Location)
+        } else if (suggestItem instanceof GourmetSuggestV2.Location)
         {
-            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) item;
+            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) suggestItem;
             dest.writeSerializable(location);
         } else {
-            dest.writeSerializable(item);
-            ExLog.e("sam : writeToParcel error suggestItem name : " + item.name);
+            dest.writeSerializable(suggestItem);
+            ExLog.e("sam : writeToParcel error suggestItem name : " + suggestItem.name);
         }
     }
 

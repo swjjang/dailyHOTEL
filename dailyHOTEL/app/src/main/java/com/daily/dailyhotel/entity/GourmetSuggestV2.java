@@ -1,5 +1,9 @@
 package com.daily.dailyhotel.entity;
 
+import android.content.Context;
+
+import com.twoheart.dailyhotel.R;
+
 import java.io.Serializable;
 
 /**
@@ -8,10 +12,10 @@ import java.io.Serializable;
 
 public class GourmetSuggestV2
 {
-//    public static final String CATEGORY_REGION = "region"; // default - 지역
-//    public static final String CATEGORY_GOURMET = "gourmet"; // 레스토랑
-//    public static final String CATEGORY_LOCATION = "location"; // 위치
-//    public static final String CATEGORY_DIRECT = "direct"; // 검색어 - 직접 입력
+    //    public static final String CATEGORY_REGION = "region"; // default - 지역
+    //    public static final String CATEGORY_GOURMET = "gourmet"; // 레스토랑
+    //    public static final String CATEGORY_LOCATION = "location"; // 위치
+    //    public static final String CATEGORY_DIRECT = "direct"; // 검색어 - 직접 입력
 
     public static final int MENU_TYPE_DIRECT = 1;
     public static final int MENU_TYPE_LOCATION = 2;
@@ -33,6 +37,38 @@ public class GourmetSuggestV2
         this.suggestItem = suggestItem;
     }
 
+    public String getDisplayNameBySearchHome(Context context)
+    {
+        if (suggestItem == null || context == null)
+        {
+            return null;
+        }
+
+        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
+        {
+            return suggestItem.name;
+        } else if (suggestItem instanceof GourmetSuggestV2.Province)
+        {
+            return ((GourmetSuggestV2.Province) suggestItem).getProvinceName();
+        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
+        {
+            return ((GourmetSuggestV2.Direct) suggestItem).name;
+        } else if (suggestItem instanceof GourmetSuggestV2.Location)
+        {
+            return context.getString(R.string.label_search_suggest_type_location_item_format, ((GourmetSuggestV2.Location) suggestItem).name);
+        } else if (suggestItem instanceof GourmetSuggestV2.CampaignTag)
+        {
+            return "#" + ((GourmetSuggestV2.CampaignTag) suggestItem).name;
+        }
+
+        return null;
+    }
+
+    public boolean isLocationSuggestItem()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Location;
+    }
+
     @SuppressWarnings("serial")
     public static class SuggestItem implements Serializable
     {
@@ -52,7 +88,7 @@ public class GourmetSuggestV2
     public static class Gourmet extends SuggestItem
     {
         public int index;
-//        public String name;
+        //        public String name;
         public int discount;
         public int availableTickets;
         public boolean isExpired;
@@ -108,6 +144,18 @@ public class GourmetSuggestV2
         public String endDate; // ISO-8601
         //        public String campaignTag; // 이 항목은 name 으로 대체
         public String serviceType;
+
+        public static CampaignTag getSuggestItem(com.daily.dailyhotel.entity.CampaignTag campaignTag)
+        {
+            GourmetSuggestV2.CampaignTag suggestItem = new GourmetSuggestV2.CampaignTag();
+            suggestItem.index = campaignTag.index;
+            suggestItem.name = campaignTag.campaignTag;
+            suggestItem.startDate = campaignTag.startDate;
+            suggestItem.endDate = campaignTag.endDate;
+            suggestItem.serviceType = campaignTag.serviceType;
+
+            return suggestItem;
+        }
     }
 
     // 서버에서 받은 타입이 아님, 리스트 노출용 섹션

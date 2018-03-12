@@ -6,7 +6,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
@@ -132,6 +132,6 @@ public interface SearchInterface
 
         void onEventGourmetSuggestClick(Activity activity);
 
-        void onEventGourmetDoSearch(Activity activity, GourmetSuggest suggest);
+        void onEventGourmetDoSearch(Activity activity, GourmetSuggestV2 suggest);
     }
 }

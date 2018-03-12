@@ -18,8 +18,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.GourmetSuggest;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
@@ -76,13 +76,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     private PlaceSearchResultNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
-        , String inputText, GourmetSuggest gourmetSuggest, SortType sortType, String callByScreen)
+        , String inputText, GourmetSuggestV2 gourmetSuggest, SortType sortType, String callByScreen)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
 
         if (sortType != null)
         {
@@ -95,12 +95,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     }
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
-        , GourmetSuggest gourmetSuggest, double radius, boolean isDeepLink)
+        , GourmetSuggestV2 gourmetSuggest, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
         intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
 
@@ -117,45 +117,46 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(this);
         mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        switch (mGourmetSearchCuration.getSuggest().categoryKey)
-        {
-            case GourmetSuggest.CATEGORY_LOCATION:
-                try
-                {
-                    if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetSearchCuration.getLocation() == null)
-                    {
-                        unLockUI();
+        GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-                        searchMyLocation();
+        if (suggest != null && suggest.isLocationSuggestItem() == true)
+        {
+            try
+            {
+                if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetSearchCuration.getLocation() == null)
+                {
+                    unLockUI();
+
+                    searchMyLocation();
+                } else
+                {
+                    // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                    mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                    mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                    mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
+
+                    mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
+
+                    String displayName = suggest.getDisplayNameBySearchHome(GourmetSearchResultActivity.this);
+
+                    if (DailyTextUtils.isTextEmpty(displayName) == true)
+                    {
+                        mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
                     } else
                     {
-                        // 기본적으로 시작시에 전체 카테고리를 넣는다.
-                        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-                        mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-                        mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
-
-                        mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
-
-                        if (DailyTextUtils.isTextEmpty(mGourmetSearchCuration.getSuggest().displayName) == true)
-                        {
-                            mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
-                        } else
-                        {
-                            mOnNetworkControllerListener.onResponseAddress(mGourmetSearchCuration.getSuggest().displayName);
-                        }
+                        mOnNetworkControllerListener.onResponseAddress(displayName);
                     }
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
                 }
-                break;
-
-            default:
-                // 기본적으로 시작시에 전체 카테고리를 넣는다.
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-                mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
-                break;
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        } else
+        {
+            // 기본적으로 시작시에 전체 카테고리를 넣는다.
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
         }
     }
 

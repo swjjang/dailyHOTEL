@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -50,17 +49,10 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         RadioButton radioButton = mSortRadioGroup.findViewById(R.id.regionCheckView);
         RadioButton emptyCheckView = mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
-        //        if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
-        //        {
-        //            radioButton.setVisibility(View.GONE);
-        //            emptyCheckView.setVisibility(View.INVISIBLE);
-        //        } else
-        //        {
         radioButton.setText(R.string.label_sort_by_rank);
         radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_sort_06, 0, 0);
 
         emptyCheckView.setVisibility(View.GONE);
-        //        }
 
         if (viewType == ViewType.MAP)
         {
@@ -105,7 +97,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
+            if (((GourmetSearchCuration) mGourmetCuration).getSuggest().isLocationSuggestItem() == true)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

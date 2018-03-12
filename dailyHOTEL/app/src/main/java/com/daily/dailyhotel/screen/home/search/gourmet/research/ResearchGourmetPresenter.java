@@ -17,8 +17,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
@@ -103,7 +102,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             ExLog.e(e.toString());
         }
 
-        GourmetSuggestParcel suggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+        GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel != null)
         {
@@ -124,13 +123,15 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_search_search_gourmet));
 
-        if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.suggest.getValue().displayName) == true)
+        String displayName = mSearchModel.suggest.getValue().getDisplayNameBySearchHome(getActivity());
+
+        if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(displayName) == true)
         {
             getViewInterface().setSearchSuggestText(null);
             getViewInterface().setSearchButtonEnabled(false);
         } else
         {
-            getViewInterface().setSearchSuggestText(mSearchModel.suggest.getValue().displayName);
+            getViewInterface().setSearchSuggestText(displayName);
             getViewInterface().setSearchButtonEnabled(true);
         }
 

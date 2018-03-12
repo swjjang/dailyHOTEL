@@ -8,8 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
@@ -63,7 +62,8 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 ? new GourmetCurationOption() //
                 : (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
-            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
+
+            if (((GourmetSearchCuration) mGourmetCuration).getSuggest().menuType == GourmetSuggestV2.MENU_TYPE_LOCATION)
             {
                 if ((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
                 {
@@ -220,39 +220,34 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
     /**
      * 검색 방식에 따라서 빈화면의 내용이 다르다.
-     *
-     * @param categoryKey
      */
-    public void setEmptyType(String categoryKey)
+    public void setEmptyType(boolean locationSearchType)
     {
-        if (DailyTextUtils.isTextEmpty(categoryKey) == true || mEmptyView == null || mFilterEmptyView == null)
+        if (mEmptyView == null || mFilterEmptyView == null)
         {
             return;
         }
 
-        switch (categoryKey)
+        if (locationSearchType == true)
         {
-            case GourmetSuggest.CATEGORY_LOCATION:
-                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
-                    && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
-                {
-                    setLocationTypeEmptyView(mEmptyView);
-                } else
-                {
-                    setLocationTypeFilterEmptyView(mFilterEmptyView);
-                }
-                break;
-
-            default:
-                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
-                    && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
-                {
-                    setDefaultTypeEmptyView(mEmptyView);
-                } else
-                {
-                    setDefaultTypeFilterEmptyView(mFilterEmptyView);
-                }
-                break;
+            if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+                && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+            {
+                setLocationTypeEmptyView(mEmptyView);
+            } else
+            {
+                setLocationTypeFilterEmptyView(mFilterEmptyView);
+            }
+        } else
+        {
+            if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+                && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+            {
+                setDefaultTypeEmptyView(mEmptyView);
+            } else
+            {
+                setDefaultTypeFilterEmptyView(mFilterEmptyView);
+            }
         }
     }
 
