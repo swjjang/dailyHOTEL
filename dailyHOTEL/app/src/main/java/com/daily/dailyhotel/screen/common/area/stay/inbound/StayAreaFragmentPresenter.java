@@ -129,7 +129,7 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             @Override
             public void onChanged(@Nullable Boolean isAgree)
             {
-                getViewInterface().setLocationTermVisible(isAgree);
+                getViewInterface().setLocationTermVisible(isAgree == false);
             }
         });
     }
