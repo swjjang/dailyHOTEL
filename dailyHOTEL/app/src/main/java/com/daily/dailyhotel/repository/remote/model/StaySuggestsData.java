@@ -64,8 +64,8 @@ public class StaySuggestsData
         @JsonField(name = "discountAvg")
         public int discountAvg;
 
-        @JsonField(name = "availableRooms")
-        public int availableRooms;
+        @JsonField(name = "available")
+        public boolean available;
 
         @JsonField(name = "province")
         public ProvinceData province;
@@ -76,7 +76,7 @@ public class StaySuggestsData
             stay.index = index;
             stay.name = name;
             stay.discountAvg = discountAvg;
-            stay.availableRooms = availableRooms;
+            stay.available = available;
             stay.province = province == null ? null : province.getProvince();
 
             return stay;

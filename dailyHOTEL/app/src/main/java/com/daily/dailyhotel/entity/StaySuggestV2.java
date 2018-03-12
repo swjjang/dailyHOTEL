@@ -68,7 +68,7 @@ public class StaySuggestV2
         public int index;
         //        public String name;
         public int discountAvg;
-        public int availableRooms;
+        public boolean available;
         public Province province;
 
         public String getProvinceName()

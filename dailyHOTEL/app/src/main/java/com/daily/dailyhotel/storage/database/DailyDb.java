@@ -18,6 +18,7 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.local.model.GourmetRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
+import com.daily.dailyhotel.repository.local.model.StayIbRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.StayObRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.TempReviewList;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -105,6 +106,29 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + GourmetRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
 
+    // added database version 5
+    private static final String CREATE_T_STAY_IB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_IB_RECENTLY_SUGGEST + " (" //
+        + StayIbRecentlySuggestList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
+        + StayIbRecentlySuggestList.TYPE + " TEXT NOT NULL, " //
+        + StayIbRecentlySuggestList.DISPLAY + " TEXT NOT NULL, " //
+        + StayIbRecentlySuggestList.STATION_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.STATION_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.STATION_REGION + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.STATION_LINE + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.STAY_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.STAY_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.PROVINCE_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.PROVINCE_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.AREA_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.AREA_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.LOCATION_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.ADDRESS + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.DIRECT_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
+
     public DailyDb(Context context)
     {
         super(context, DB_NAME, null, DATABASE_VERSION);
@@ -141,6 +165,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         if (oldVersion <= 4)
         {
             upGradeGourmetRecentlySuggestDb(db);
+            upGradeStayIbRecentlySuggestDb(db);
         }
 
         if (oldVersion <= 3)
@@ -161,6 +186,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         upGradeStayObRecentlySuggestDb(db);
         upGradeTempReviewDb(db);
         upGradeGourmetRecentlySuggestDb(db);
+        upGradeStayIbRecentlySuggestDb(db);
     }
 
     public void upGradeRecentlyPlaceDb(SQLiteDatabase db)
@@ -185,6 +211,12 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         db.execSQL("drop table if exists " + T_GOURMET_IB_RECENTLY_SUGGEST);
         db.execSQL(CREATE_T_GOURMET_RECENTLY_SUGGEST);
+    }
+
+    private void upGradeStayIbRecentlySuggestDb(SQLiteDatabase db)
+    {
+        db.execSQL("drop table if exists " + T_STAY_IB_RECENTLY_SUGGEST);
+        db.execSQL(CREATE_T_STAY_IB_RECENTLY_SUGGEST);
     }
 
     private SQLiteDatabase getDb()
@@ -1376,14 +1408,14 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                     int idColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList._ID);
                     oldId = cursor.getLong(idColumnIndex);
 
-//                    int savingTimeColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList.SAVING_TIME);
-//                    savingTime = cursor.getLong(savingTimeColumnIndex);
+                    //                    int savingTimeColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList.SAVING_TIME);
+                    //                    savingTime = cursor.getLong(savingTimeColumnIndex);
                 }
 
             } catch (Exception e)
             {
                 oldId = -1;
-//                savingTime = -1;
+                //                savingTime = -1;
             } finally
             {
                 try
@@ -1398,11 +1430,11 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                 }
             }
 
-//            if (savingTime == -1)
-//            {
-                Calendar calendar = DailyCalendar.getInstance();
-                savingTime = calendar.getTimeInMillis();
-//            }
+            //            if (savingTime == -1)
+            //            {
+            Calendar calendar = DailyCalendar.getInstance();
+            savingTime = calendar.getTimeInMillis();
+            //            }
 
             ContentValues contentValues = new ContentValues();
 
