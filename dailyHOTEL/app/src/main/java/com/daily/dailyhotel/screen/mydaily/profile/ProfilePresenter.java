@@ -20,6 +20,8 @@ import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.mydaily.profile.leave.LeaveDailyActivity;
 import com.daily.dailyhotel.screen.mydaily.profile.password.CheckPasswordActivity;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.login.LoginManager;
@@ -484,6 +486,11 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             {
                 DailyPreference.getInstance(getActivity()).clear();
                 DailyUserPreference.getInstance(getActivity()).clear();
+
+                // 임시 저장된 리뷰 전체 삭제
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
+                dailyDb.deleteAllTempReview();
+                DailyDbHelper.getInstance().close();
 
                 try
                 {

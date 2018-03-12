@@ -45,6 +45,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
     StayAreaViewModel mStayAreaViewModel;
     int mAreaGroupPosition = -1;
     Area mCurrentRegion;
+    Pair<Integer, StaySubwayAreaGroup> mLastSelectedSubwayAreaGroup;
 
     public StaySubwayFragmentPresenter(@NonNull StaySubwayFragment fragment)
     {
@@ -144,6 +145,8 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                             getViewInterface().setTabSelected(region.second);
                             getViewInterface().setAreaGroup(subwayAreaGroupList);
                             getViewInterface().setAreaGroupSelected(groupPosition);
+
+                            mLastSelectedSubwayAreaGroup = new Pair(groupPosition, subwayAreaGroup);
                         }
                     }
                 }
@@ -157,7 +160,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
             @Override
             public void onChanged(@Nullable Boolean isAgree)
             {
-                getViewInterface().setLocationTermVisible(isAgree);
+                getViewInterface().setLocationTermVisible(isAgree == false);
             }
         });
     }
@@ -330,6 +333,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                 public void accept(Boolean aBoolean) throws Exception
                 {
                     mAreaGroupPosition = -1;
+                    mLastSelectedSubwayAreaGroup = null;
 
                     unLockAll();
                 }
@@ -356,6 +360,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                 public void accept(Boolean aBoolean) throws Exception
                 {
                     mAreaGroupPosition = groupPosition;
+                    mLastSelectedSubwayAreaGroup = new Pair(groupPosition, getAreaGroup(groupPosition));
 
                     unLockAll();
                 }
@@ -414,6 +419,28 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
 
         addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
+            private boolean equalsRegion(Area region, StaySubwayAreaGroup lastAreaGroup)
+            {
+                if (region == null || lastAreaGroup == null)
+                {
+                    return false;
+                }
+
+                Area lastRegion = lastAreaGroup.getRegion();
+
+                if (lastRegion == null)
+                {
+                    return false;
+                }
+
+                if (region.index == lastRegion.index)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
@@ -422,11 +449,18 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                 getViewInterface().setTabSelected(position);
                 getViewInterface().setAreaGroup(mStayAreaViewModel.subwayMap.getValue().get(tag));
 
+                if (mLastSelectedSubwayAreaGroup != null && equalsRegion(mCurrentRegion, mLastSelectedSubwayAreaGroup.second) == true)
+                {
+                    if (mLastSelectedSubwayAreaGroup.first != null)
+                    {
+                        getViewInterface().setAreaGroupSelected(mLastSelectedSubwayAreaGroup.first);
+                        mAreaGroupPosition = mLastSelectedSubwayAreaGroup.first;
+                    }
+                }
+
                 unLockAll();
 
                 mAnalytics.onEventRegionClick(getActivity(), mCurrentRegion.name);
-
-                unLockAll();
             }
         }, new Consumer<Throwable>()
         {

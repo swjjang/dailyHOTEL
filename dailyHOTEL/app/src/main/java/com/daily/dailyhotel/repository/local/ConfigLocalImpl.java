@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.domain.ConfigInterface;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -68,6 +70,11 @@ public class ConfigLocalImpl implements ConfigInterface
             {
                 DailyPreference.getInstance(mContext).clear();
                 DailyUserPreference.getInstance(mContext).clear();
+
+                // 임시 저장된 리뷰 전체 삭제
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                dailyDb.deleteAllTempReview();
+                DailyDbHelper.getInstance().close();
 
                 observer.onNext(true);
                 observer.onComplete();
