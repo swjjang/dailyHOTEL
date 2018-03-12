@@ -4,6 +4,7 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 
     void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList);
 
-    void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList);
+    void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggestV2> staySuggestList);
 
     int getRecentlySuggestAllEntryCount();
 

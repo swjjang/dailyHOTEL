@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.GourmetSuggestListAdapter;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.StayOutboundSuggestListAdapter;
 import com.twoheart.dailyhotel.R;
@@ -496,7 +497,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList)
+    public void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggestV2> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -527,7 +528,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (staySuggestList != null && staySuggestList.size() > 0)
         {
-            for (StaySuggest staySuggest : staySuggestList)
+            for (StaySuggestV2 staySuggest : staySuggestList)
             {
                 objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, staySuggest));
             }

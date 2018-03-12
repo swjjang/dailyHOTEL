@@ -139,7 +139,8 @@ public class SearchGourmetSuggestPresenter //
         mLocationSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_LOCATION, location);
 
         List<GourmetSuggestV2> popularList = new ArrayList<>();
-        popularList.add(new GourmetSuggestV2(0, new GourmetSuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
+        popularList.add(new GourmetSuggestV2(0 //
+            , new GourmetSuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
 

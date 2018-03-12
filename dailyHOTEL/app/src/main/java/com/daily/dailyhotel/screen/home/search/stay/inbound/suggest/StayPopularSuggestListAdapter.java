@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeRecommendDataBinding;
@@ -196,11 +197,13 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggest staySuggest = item.getItem();
+        StaySuggestV2 staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
 
-        holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
+        StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
+
+        holder.dataBinding.descriptionTextView.setText(suggestItem.name);
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder

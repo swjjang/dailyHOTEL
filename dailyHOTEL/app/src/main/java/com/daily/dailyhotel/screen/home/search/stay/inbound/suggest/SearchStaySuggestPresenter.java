@@ -27,6 +27,7 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
@@ -86,7 +87,7 @@ public class SearchStaySuggestPresenter //
 
     DailyRecentSearches mDailyRecentSearches;
     private StayBookDateTime mStayBookDateTime;
-    private List<StaySuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
+    private List<StaySuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<StaySuggest> mRecentlySuggestList;
     private List<StaySuggest> mSuggestList;
     private List<GourmetSuggest> mGourmetSuggestList;
@@ -151,8 +152,9 @@ public class SearchStaySuggestPresenter //
             , null);
         mLocationSuggest.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
 
-        List<StaySuggest> popularList = new ArrayList<>();
-        popularList.add(new StaySuggest(0, "", getString(R.string.label_search_suggest_recently_empty_description_type_stay)));
+        List<StaySuggestV2> popularList = new ArrayList<>();
+        popularList.add(new StaySuggestV2(0 //
+            , new StaySuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_stay))));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
 
@@ -452,7 +454,7 @@ public class SearchStaySuggestPresenter //
         }));
     }
 
-    private void setPopularAreaList(List<StaySuggest> popularAreaList)
+    private void setPopularAreaList(List<StaySuggestV2> popularAreaList)
     {
         mPopularAreaList = popularAreaList;
     }
