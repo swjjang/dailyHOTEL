@@ -454,6 +454,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                     if (mLastSelectedSubwayAreaGroup.first != null)
                     {
                         getViewInterface().setAreaGroupSelected(mLastSelectedSubwayAreaGroup.first);
+                        mAreaGroupPosition = mLastSelectedSubwayAreaGroup.first;
                     }
                 }
 
