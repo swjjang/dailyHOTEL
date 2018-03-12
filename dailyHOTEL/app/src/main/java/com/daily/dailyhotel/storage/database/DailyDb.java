@@ -1238,6 +1238,36 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         mContext.getContentResolver().notifyChange(TempReviewList.NOTIFICATION_URI, null);
     }
 
+    public void deleteAllTempReview()
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_TEMP_REVIEW, null, null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(TempReviewList.NOTIFICATION_URI, null);
+    }
+
     //    public void exportDatabase(String databaseName)
     //    {
     //        try

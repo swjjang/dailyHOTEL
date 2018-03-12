@@ -1,11 +1,14 @@
 package com.twoheart.dailyhotel.screen.mydaily.member;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +30,8 @@ import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -150,6 +155,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void initTopLayout()
     {
         mScrollView = findViewById(R.id.scrollView);
@@ -333,6 +339,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         super.onStart();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onDestroy()
     {
@@ -1030,6 +1037,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     } else
                     {
                         DailyUserPreference.getInstance(LoginActivity.this).clear();
+
+                        // 임시 저장된 리뷰 전체 삭제
+                        DailyDb dailyDb = DailyDbHelper.getInstance().open(LoginActivity.this);
+                        dailyDb.deleteAllTempReview();
+                        DailyDbHelper.getInstance().close();
 
                         try
                         {
