@@ -62,6 +62,10 @@ public class GourmetSuggestParcelV2 implements Parcelable
         {
             GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) item;
             dest.writeSerializable(location);
+        } else if (item instanceof GourmetSuggestV2.CampaignTag)
+        {
+            GourmetSuggestV2.CampaignTag campaignTag = (GourmetSuggestV2.CampaignTag) item;
+            dest.writeSerializable(campaignTag);
         } else {
             dest.writeSerializable(item);
             ExLog.e("sam : writeToParcel error suggestItem name : " + item.name);

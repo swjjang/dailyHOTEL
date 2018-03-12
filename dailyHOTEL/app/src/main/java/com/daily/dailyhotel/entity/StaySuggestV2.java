@@ -1,16 +1,18 @@
 package com.daily.dailyhotel.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by android_sam on 2018. 3. 5..
  */
 
 public class StaySuggestV2
 {
-    public static final String CATEGORY_REGION = "region"; // default - 지역
-    public static final String CATEGORY_STAY = "stay"; // 호텔
-    public static final String CATEGORY_STATION = "station"; // 역
-    public static final String CATEGORY_LOCATION = "location"; // 위치
-    public static final String CATEGORY_DIRECT = "direct"; // 검색어 - 직접 입력
+//    public static final String CATEGORY_REGION = "region"; // default - 지역
+//    public static final String CATEGORY_STAY = "stay"; // 호텔
+//    public static final String CATEGORY_STATION = "station"; // 역
+//    public static final String CATEGORY_LOCATION = "location"; // 위치
+//    public static final String CATEGORY_DIRECT = "direct"; // 검색어 - 직접 입력
 
     public static final int MENU_TYPE_DIRECT = 1;
     public static final int MENU_TYPE_LOCATION = 2;
@@ -32,7 +34,8 @@ public class StaySuggestV2
         this.suggestItem = suggestItem;
     }
 
-    public static class SuggestItem
+    @SuppressWarnings("serial")
+    public static class SuggestItem implements Serializable
     {
         public String name;
 
