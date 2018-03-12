@@ -291,7 +291,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                     getViewInterface().showSimpleDialog(null, getString(R.string.message_gourmet_thankyou_disabled_notification)//
                         , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
                         , v -> startAppSettingActivity(), null);
-                } else if (isBenefitAlarm() == false)
+                } else if (isThankYouBenefitAlarmEnabled() == true && isBenefitAlarmEnabled() == false)
                 {
                     getNotificationMessage();
                 }
@@ -353,11 +353,15 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         return VersionUtils.isOverAPI19() ? NotificationManagerCompat.from(getActivity()).areNotificationsEnabled() : true;
     }
 
-    boolean isBenefitAlarm()
+    boolean isThankYouBenefitAlarmEnabled()
+    {
+        return DailyUserPreference.getInstance(getActivity()).isThankYouBenefitAlarmEnabled();
+    }
+
+    boolean isBenefitAlarmEnabled()
     {
         return DailyUserPreference.getInstance(getActivity()).isBenefitAlarm();
     }
-
 
     void startAppSettingActivity()
     {
@@ -401,7 +405,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
-
+                            DailyUserPreference.getInstance(getActivity()).setThankYouBenefitAlarmEnabled(false);
                         }
                     }, true);
             }
