@@ -289,7 +289,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                 if (isNotificationEnabled() == false)
                 {
                     getViewInterface().showSimpleDialog(null, getString(R.string.message_gourmet_thankyou_disabled_notification)//
-                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                        , getString(R.string.label_allow_notification), getString(R.string.dialog_btn_text_no)//
                         , v -> startAppSettingActivity(), null);
                 } else if (isThankYouBenefitAlarmEnabled() == true && isBenefitAlarmEnabled() == false)
                 {
