@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.PreferenceRegion;
@@ -560,8 +561,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         if (areaType == PreferenceRegion.AreaType.SUBWAY_AREA)
         {
-            Area areaGroup = stayRegion.getAreaGroup();
-            setPreferenceSubwayArea(((StaySubwayAreaGroup) areaGroup).getRegion().name, stayRegion.getAreaGroupName(), stayRegion.getAreaName());
+            AreaElement areaGroupElement = stayRegion.getAreaGroupElement();
+            setPreferenceSubwayArea(((StaySubwayAreaGroup) areaGroupElement).getRegion().name, stayRegion.getAreaGroupName(), stayRegion.getAreaName());
         } else
         {
             setPreferenceArea(stayRegion.getAreaGroupName(), stayRegion.getAreaName());
@@ -1054,7 +1055,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                     StayRegion region = stayRegionParcel.getRegion();
 
-                    if (region == null || region.getAreaGroup() == null || region.getArea() == null)
+                    if (region == null || region.getAreaGroupElement() == null || region.getAreaElement() == null)
                     {
                         return;
                     }

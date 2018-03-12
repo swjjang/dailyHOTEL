@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.PreferenceRegion;
@@ -111,7 +112,7 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             {
                 if (stayRegion.getAreaType() == PreferenceRegion.AreaType.AREA)
                 {
-                    int groupPosition = getAreaGroupPosition(mStayAreaViewModel.areaList.getValue(), (StayAreaGroup) stayRegion.getAreaGroup());
+                    int groupPosition = getAreaGroupPosition(mStayAreaViewModel.areaList.getValue(), stayRegion.getAreaGroupName());
 
                     if (groupPosition >= 0)
                     {
@@ -134,9 +135,9 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
         });
     }
 
-    int getAreaGroupPosition(List<StayAreaGroup> areaGroupList, StayAreaGroup areaGroup)
+    int getAreaGroupPosition(List<StayAreaGroup> areaGroupList, String areaGroupName)
     {
-        if (areaGroupList == null || areaGroup == null)
+        if (areaGroupList == null || DailyTextUtils.isTextEmpty(areaGroupName) == true)
         {
             return -1;
         }
@@ -145,7 +146,7 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
 
         for (int i = 0; i < size; i++)
         {
-            if (areaGroupList.get(i).name.equalsIgnoreCase(areaGroup.name) == true)
+            if (areaGroupList.get(i).name.equalsIgnoreCase(areaGroupName) == true)
             {
                 return i;
             }

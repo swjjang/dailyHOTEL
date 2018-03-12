@@ -127,9 +127,9 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
             @Override
             public void onChanged(@Nullable StayRegion stayRegion)
             {
-                if (stayRegion.getAreaType() == PreferenceRegion.AreaType.SUBWAY_AREA)
+                if (stayRegion.getAreaType() == PreferenceRegion.AreaType.SUBWAY_AREA && stayRegion.getAreaGroupElement() instanceof StaySubwayAreaGroup)
                 {
-                    StaySubwayAreaGroup subwayAreaGroup = (StaySubwayAreaGroup) stayRegion.getAreaGroup();
+                    StaySubwayAreaGroup subwayAreaGroup = (StaySubwayAreaGroup) stayRegion.getAreaGroupElement();
                     Pair<Area, Integer> region = getRegion(mStayAreaViewModel.subwayMap.getValue(), subwayAreaGroup);
 
                     if (region != null)

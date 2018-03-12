@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
@@ -64,9 +65,9 @@ public class StayDetailAnalyticsParam implements Parcelable
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        Area area = mRegion.getArea();
+        AreaElement areaElement = mRegion.getAreaElement();
 
-        return area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name;
+        return areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name;
     }
 
     public String getAddressAreaName()

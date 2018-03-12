@@ -20,6 +20,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.AreaGroup;
 import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
@@ -854,14 +855,14 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             return false;
         }
 
-        Area stayRegionArea = stayRegion.getAreaGroup();
+        AreaElement areaGroupElement = stayRegion.getAreaGroupElement();
 
-        if (stayRegionArea == null)
+        if (areaGroupElement == null)
         {
             return false;
         }
 
-        return areaGroupName.name.equalsIgnoreCase(stayRegionArea.name) && areaGroupName.index == stayRegionArea.index;
+        return areaGroupName.name.equalsIgnoreCase(areaGroupElement.name) && areaGroupName.index == areaGroupElement.index;
     }
 
     void setResult(int resultCode, DailyCategoryType categoryType, StayAreaGroup areaGroup, StayArea area)
@@ -884,7 +885,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         setResult(resultCode, categoryType, areaGroup, area, new StayRegion(PreferenceRegion.AreaType.SUBWAY_AREA, areaGroup, area));
     }
 
-    void setResult(int resultCode, DailyCategoryType categoryType, Area areaGroup, Area area, StayRegion stayRegion)
+    void setResult(int resultCode, DailyCategoryType categoryType, AreaGroup areaGroup, Area area, StayRegion stayRegion)
     {
         if (categoryType == null)
         {

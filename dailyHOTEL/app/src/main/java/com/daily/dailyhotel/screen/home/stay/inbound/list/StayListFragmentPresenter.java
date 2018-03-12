@@ -25,6 +25,7 @@ import com.daily.base.exception.ProviderException;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
@@ -1287,27 +1288,27 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         {
             case AREA:
             {
-                Area areaGroup = stayRegion.getAreaGroup();
-                if (areaGroup != null)
+                AreaElement areaGroupElement = stayRegion.getAreaGroupElement();
+                if (areaGroupElement != null)
                 {
-                    queryMap.put("provinceIdx", areaGroup.index);
+                    queryMap.put("provinceIdx", areaGroupElement.index);
                 }
 
-                Area area = stayRegion.getArea();
-                if (area != null && area.index != StayArea.ALL)
+                AreaElement areaElement = stayRegion.getAreaElement();
+                if (areaElement != null && areaElement.index != StayArea.ALL)
                 {
-                    queryMap.put("areaIdx", area.index);
+                    queryMap.put("areaIdx", areaElement.index);
                 }
                 break;
             }
 
             case SUBWAY_AREA:
             {
-                Area area = stayRegion.getArea();
+                AreaElement areaElement = stayRegion.getAreaElement();
 
-                if (area != null)
+                if (areaElement != null)
                 {
-                    queryMap.put("subwayIdx", area.index);
+                    queryMap.put("subwayIdx", areaElement.index);
                 }
                 break;
             }

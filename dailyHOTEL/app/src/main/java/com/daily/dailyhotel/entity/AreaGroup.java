@@ -2,7 +2,7 @@ package com.daily.dailyhotel.entity;
 
 import java.util.List;
 
-public class AreaGroup<E extends Area> extends Area
+public class AreaGroup<E extends Area> extends AreaElement
 {
     private List<E> mAreaList;
 

@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -74,17 +75,17 @@ public class StayParams extends PlaceParams
             {
                 case AREA:
                 {
-                    com.daily.dailyhotel.entity.Area areaGroup = stayRegion.getAreaGroup();
+                    AreaElement areaGroupElement = stayRegion.getAreaGroupElement();
 
-                    if (areaGroup != null)
+                    if (areaGroupElement != null)
                     {
-                        provinceIdx = areaGroup.index;
+                        provinceIdx = areaGroupElement.index;
 
-                        com.daily.dailyhotel.entity.Area area = stayRegion.getArea();
+                        AreaElement areaElement = stayRegion.getAreaElement();
 
-                        if (area != null && area.index != StayArea.ALL)
+                        if (areaElement != null && areaElement.index != StayArea.ALL)
                         {
-                            areaIdx = area.index;
+                            areaIdx = areaElement.index;
                         }
                     }
                     break;
@@ -92,11 +93,11 @@ public class StayParams extends PlaceParams
 
                 case SUBWAY_AREA:
                 {
-                    com.daily.dailyhotel.entity.Area area = stayRegion.getArea();
+                    AreaElement areaElement = stayRegion.getAreaElement();
 
-                    if (area != null)
+                    if (areaElement != null)
                     {
-                        subwayIndex = area.index;
+                        subwayIndex = areaElement.index;
                     }
                     break;
                 }
