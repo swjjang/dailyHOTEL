@@ -434,6 +434,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         needSetPreferenceRegion = false;
                         areaTypeRegionCategoryPair = processRegionCategoryDeepLink(mDailyDeepLink, areaGroupList, areaGroupMap);
+
+                        if (areaTypeRegionCategoryPair == null || areaTypeRegionCategoryPair.first == null || areaTypeRegionCategoryPair.second == null)
+                        {
+                            areaTypeRegionCategoryPair = processRegionCategoryByPreferenceRegion(getPreferenceRegion(mStayViewModel.categoryType), areaGroupList, areaGroupMap);
+                        }
                     } else
                     {
                         needSetPreferenceRegion = true;
@@ -517,12 +522,16 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             if (externalDeepLink.isHotelListView() == true//
                 || externalDeepLink.isShortcutView() == true)
             {
+                Pair<StayRegion, List<Category>> regionCategoryPair;
+
                 if (externalDeepLink.hasStationIndexParam() == true)
                 {
-                    return new Pair(PreferenceRegion.AreaType.SUBWAY_AREA, parseSubwayAreaDeepLinkStayList(areaGroupMap, mStayViewModel.commonDateTime.getValue(), externalDeepLink));
+                    regionCategoryPair = parseSubwayAreaDeepLinkStayList(areaGroupMap, mStayViewModel.commonDateTime.getValue(), externalDeepLink);
+                    return regionCategoryPair == null ? null : new Pair(PreferenceRegion.AreaType.SUBWAY_AREA, regionCategoryPair);
                 } else
                 {
-                    return new Pair(PreferenceRegion.AreaType.AREA, parseAreaDeepLinkStayList(areaGroupList, mStayViewModel.commonDateTime.getValue(), externalDeepLink));
+                    regionCategoryPair = parseAreaDeepLinkStayList(areaGroupList, mStayViewModel.commonDateTime.getValue(), externalDeepLink);
+                    return regionCategoryPair == null ? null : new Pair(PreferenceRegion.AreaType.AREA, regionCategoryPair);
                 }
             }
         }
@@ -1209,29 +1218,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-            int provinceIndex = externalDeepLink.getProvinceIndex();
-            int areaIndex = externalDeepLink.getAreaIndex();
-
-            // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-            Pair<StayRegion, List<Category>> pair = searchRegionCategory(areaGroupList, provinceIndex, areaIndex);
-
-            if (pair == null)
-            {
-                return null;
-            }
-
-            StayRegion stayRegion = pair.first;
-            List<Category> categoryList = pair.second;
-
-            if (stayRegion == null)
-            {
-                return null;
-            }
-
             StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
-            return pair;
+
+            int provinceIndex = externalDeepLink.getProvinceIndex();
+            int areaIndex = externalDeepLink.getAreaIndex();
+
+            return searchRegionCategory(areaGroupList, provinceIndex, areaIndex);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1263,9 +1257,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                             return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, area), area.getCategoryList());
                         }
                     }
-                } else
-                {
-                    return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, new StayArea(StayArea.ALL, areaGroup.name)), areaGroup.getCategoryList());
                 }
             }
         }
@@ -1288,28 +1279,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-            int stationIndex = externalDeepLink.getStationIndex();
-
-            // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-            Pair<StayRegion, List<Category>> pair = searchRegionCategory(areaGroupMap, stationIndex);
-
-            if (pair == null)
-            {
-                return null;
-            }
-
-            StayRegion stayRegion = pair.first;
-            List<Category> categoryList = pair.second;
-
-            if (stayRegion == null)
-            {
-                return null;
-            }
-
             StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
-            return pair;
+            int stationIndex = externalDeepLink.getStationIndex();
+
+            return searchRegionCategory(areaGroupMap, stationIndex);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
