@@ -513,8 +513,13 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             {
                 getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
                 getViewDataBinding().recommendAroundTopLineView.requestLayout();
+
+                getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+                getViewDataBinding().conciergeTopLineView.requestLayout();
             } else
             {
+                getViewDataBinding().recommendAroundTopLineView.setVisibility(View.GONE);
+
                 getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
                 getViewDataBinding().conciergeTopLineView.requestLayout();
             }

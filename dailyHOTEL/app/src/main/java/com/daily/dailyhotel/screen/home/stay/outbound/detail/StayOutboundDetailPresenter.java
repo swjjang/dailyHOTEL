@@ -90,7 +90,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function4;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
@@ -1663,6 +1663,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
+        getViewInterface().setRewardVisible(mStayOutboundDetail.activeReward == true && mStayOutboundDetail.provideRewardSticker == true, hasRecommendAroundList);
         getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
 
         if (hasRecommendAroundList == true)
@@ -1774,18 +1775,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         addCompositeDisposable(Observable.zip(observable, mCommonRemoteImpl.getCommonDateTime() //
-            , mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople) //
-            , mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople) //
-            , new Function4<Boolean, CommonDateTime, StayOutboundDetail, StayOutbounds, StayOutboundDetail>()
+            , mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople)//
+            , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
             {
                 @Override
                 public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
-                    , @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail //
-                    , @io.reactivex.annotations.NonNull StayOutbounds stayOutbounds) throws Exception
+                    , @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
-                    setRecommendAroundList(stayOutbounds);
+
                     return stayOutboundDetail;
                 }
             }).subscribe(new Consumer<StayOutboundDetail>()
@@ -1793,8 +1792,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
             {
-                // 순서 변경 금지... 추천 영역과 상세 데이터 넣는 부분 변경시 Oreo에서 스크롤이 하단가는 이슈 발생
-                notifyRecommendAroundList();
                 onStayOutboundDetail(stayOutboundDetail);
                 notifyWishChanged();
                 notifyRewardChanged();
@@ -1803,28 +1800,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayOutboundDetail, mListTotalPrice);
 
-                    boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
-
-                    mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
-
                     if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
                     {
                         showWishTooltip();
-                    }
-
-                    if (hasRecommendList == true)
-                    {
-                        List<Integer> recommendIndexList = new ArrayList<>();
-                        for (CarouselListItem carouselListItem : mRecommendAroundList)
-                        {
-                            StayOutbound stayOutbound = carouselListItem.getItem();
-                            if (stayOutbound != null)
-                            {
-                                recommendIndexList.add(stayOutbound.index);
-                            }
-                        }
-
-                        mAnalytics.onEventRecommendItemList(getActivity(), stayOutboundDetail.index, recommendIndexList);
                     }
                 } catch (Exception e)
                 {
@@ -1849,6 +1827,42 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 }
 
                 onHandleError(throwable);
+            }
+        }));
+
+        addCompositeDisposable(mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
+        {
+            @Override
+            public void accept(StayOutbounds stayOutbounds) throws Exception
+            {
+                setRecommendAroundList(stayOutbounds);
+                notifyRecommendAroundList();
+
+                boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+
+                mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
+
+                if (hasRecommendList == true)
+                {
+                    List<Integer> recommendIndexList = new ArrayList<>();
+                    for (CarouselListItem carouselListItem : mRecommendAroundList)
+                    {
+                        StayOutbound stayOutbound = carouselListItem.getItem();
+                        if (stayOutbound != null)
+                        {
+                            recommendIndexList.add(stayOutbound.index);
+                        }
+                    }
+
+                    mAnalytics.onEventRecommendItemList(getActivity(), mStayIndex, recommendIndexList);
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                ExLog.e(throwable.toString());
             }
         }));
     }

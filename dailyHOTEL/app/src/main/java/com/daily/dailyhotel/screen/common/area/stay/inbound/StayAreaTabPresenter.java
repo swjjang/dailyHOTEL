@@ -137,7 +137,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         // 이름으로 넘어오는 경우
         mCategoryCode = intent.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_CATEGORY_CODE);
 
-        mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation() == false);
+        mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation());
 
         return true;
     }
@@ -229,7 +229,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         switch (requestCode)
         {
             case StayAreaTabActivity.REQUEST_CODE_PERMISSION_MANAGER:
-                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(false);
+                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation());
 
                 if (resultCode == Activity.RESULT_OK)
                 {
@@ -241,7 +241,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 break;
 
             case StayAreaTabActivity.REQUEST_CODE_SETTING_LOCATION:
-                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(false);
+                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation());
 
                 onAroundSearchClick();
                 break;

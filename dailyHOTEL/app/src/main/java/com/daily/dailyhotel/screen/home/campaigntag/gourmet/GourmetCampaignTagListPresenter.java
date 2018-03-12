@@ -170,9 +170,9 @@ public class GourmetCampaignTagListPresenter //
     {
         super.onResume();
 
-        if (getViewInterface() != null && getViewInterface().getBlurVisibility() == true)
+        if (getViewInterface() != null && getViewInterface().isBlurVisible() == true)
         {
-            getViewInterface().setBlurVisibility(getActivity(), false);
+            getViewInterface().setBlurVisible(getActivity(), false);
         }
 
         if (isRefresh() == true)
@@ -755,7 +755,7 @@ public class GourmetCampaignTagListPresenter //
             return;
         }
 
-        getViewInterface().setBlurVisibility(getActivity(), true);
+        getViewInterface().setBlurVisible(getActivity(), true);
 
         Gourmet gourmet = placeViewItem.getItem();
 

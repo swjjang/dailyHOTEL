@@ -39,8 +39,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.AccessToken;
-import com.facebook.LoginStatusCallback;
-import com.facebook.login.LoginManager;
+import com.facebook.FacebookException;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
@@ -1862,24 +1861,17 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 @Override
                 protected void subscribeActual(Observer<? super Boolean> observer)
                 {
-                    LoginManager.getInstance().retrieveLoginStatus(MainActivity.this, new LoginStatusCallback()
+                    AccessToken.refreshCurrentAccessTokenAsync(new AccessToken.AccessTokenRefreshCallback()
                     {
                         @Override
-                        public void onCompleted(AccessToken accessToken)
+                        public void OnTokenRefreshed(AccessToken accessToken)
                         {
                             observer.onNext(true);
                             observer.onComplete();
                         }
 
                         @Override
-                        public void onFailure()
-                        {
-                            observer.onNext(false);
-                            observer.onComplete();
-                        }
-
-                        @Override
-                        public void onError(Exception exception)
+                        public void OnTokenRefreshFailed(FacebookException exception)
                         {
                             observer.onNext(false);
                             observer.onComplete();
