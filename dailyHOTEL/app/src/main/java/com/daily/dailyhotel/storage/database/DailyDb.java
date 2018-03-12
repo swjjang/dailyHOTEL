@@ -133,9 +133,6 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         ExLog.v("Upgrading database from version " + oldVersion + " to " + newVersion);
 
-        // TODO : 임시로 테이블 날리는 코드 삽입
-        upGradeGourmetRecentlySuggestDb(db);
-
         if (oldVersion >= DATABASE_VERSION)
         {
             return;
@@ -166,7 +163,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         upGradeGourmetRecentlySuggestDb(db);
     }
 
-    private void upGradeRecentlyPlaceDb(SQLiteDatabase db)
+    public void upGradeRecentlyPlaceDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_RECENTLY);
         db.execSQL(CREATE_T_RECENTLY);
