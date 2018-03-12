@@ -53,9 +53,9 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         void onSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
-        void onRecentlySuggestClick(StaySuggest staySuggest);
+        void onRecentlySuggestClick(StaySuggestV2 staySuggest);
 
-        void onDeleteRecentlySuggest(int position, StaySuggest staySuggest);
+        void onDeleteRecentlySuggest(int position, StaySuggestV2 staySuggest);
 
         void onVoiceSearchClick();
 
@@ -436,7 +436,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList)
+    public void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggestV2> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -448,13 +448,13 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             mRecentlySuggestListAdapter = new StayRecentlySuggestListAdapter(getContext(), new StayRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
-                public void onItemClick(int position, StaySuggest staySuggest)
+                public void onItemClick(int position, StaySuggestV2 staySuggest)
                 {
                     getEventListener().onRecentlySuggestClick(staySuggest);
                 }
 
                 @Override
-                public void onDeleteClick(int position, StaySuggest staySuggest)
+                public void onDeleteClick(int position, StaySuggestV2 staySuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, staySuggest);
                 }
@@ -478,9 +478,9 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (staySuggestList != null && staySuggestList.size() > 0)
         {
-            for (StaySuggest staySuggest : staySuggestList)
+            for (StaySuggestV2 staySuggest : staySuggestList)
             {
-                if (DailyTextUtils.isTextEmpty(staySuggest.categoryKey))
+                if (staySuggest.suggestItem instanceof StaySuggestV2.Section)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else

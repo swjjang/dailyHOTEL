@@ -24,7 +24,7 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList);
+    void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggestV2> staySuggestList);
 
     void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggestV2> staySuggestList);
 

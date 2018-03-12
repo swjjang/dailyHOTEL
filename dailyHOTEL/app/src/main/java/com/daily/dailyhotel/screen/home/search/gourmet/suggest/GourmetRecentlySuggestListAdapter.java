@@ -393,6 +393,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
         String title = null;
         String description = null;
+
         if (suggestItem instanceof GourmetSuggestV2.Gourmet)
         {
             holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
