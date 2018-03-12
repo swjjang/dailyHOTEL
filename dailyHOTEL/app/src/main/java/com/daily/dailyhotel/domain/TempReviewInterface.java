@@ -16,4 +16,6 @@ public interface TempReviewInterface
     Observable<ArrayList<String>> getTempReview(int reservationIndex, String serviceType, String startDate, String endDate);
 
     Observable<Boolean> deleteTempReview(int reservationIndex, String serviceType, String startDate);
+
+    Observable<Boolean> deleteAllTempReview();
 }

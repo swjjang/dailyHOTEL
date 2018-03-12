@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,6 +14,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.login.LoginManager;
@@ -25,6 +29,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class LauncherActivity extends Activity
 {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -110,6 +115,11 @@ public class LauncherActivity extends Activity
     {
         DailyPreference.getInstance(this).clear();
         DailyUserPreference.getInstance(this).clear();
+
+        // 임시 저장된 리뷰 전체 삭제
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(this);
+        dailyDb.deleteAllTempReview();
+        DailyDbHelper.getInstance().close();
 
         try
         {
