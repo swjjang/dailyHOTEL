@@ -9,6 +9,8 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Configurations;
+import com.daily.dailyhotel.entity.NoticeAgreementMessage;
+import com.daily.dailyhotel.entity.NoticeAgreementResultMessage;
 import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -156,6 +158,65 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
                 }
 
                 return configuration;
+            });
+    }
+
+    @Override
+    public Observable<NoticeAgreementMessage> getNoticeAgreementMessage()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/notice/agreement/confirm"//
+            : "NTYkNjgkMTkkNyQ4JDI4JDUyJDE4JDc5JDg1JDY0JDg0JDY5JDc5JDYxJDk0JA==$ODdCM0QIL5RDY2RTRFNQjlFGRDhBRATk5ODlCMkEyQjVBQjYxRjc2YQkRENzUEzTOVUExMAjZENzkD1NVDEE3RTNFBHQjNRCOUYyNA==$";
+
+        return mDailyMobileService.getNoticeAgreementMessage(Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map((baseDto) ->
+            {
+                NoticeAgreementMessage noticeAgreementMessage;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        noticeAgreementMessage = baseDto.data.getNoticeAgreementMessage();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return noticeAgreementMessage;
+            });
+    }
+
+
+    @Override
+    public Observable<NoticeAgreementResultMessage> updateNoticeAgreement(boolean agreed)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/notice/agreement/result"//
+            : "NjgkOSQ4NSQ3NiQ3MCQ0NyQ1MCQzMiQ5NCQxNiQ5JDE3JDQxJDQ4JDk1JDUk$QTcxNVjkwRTOUEyOURMYBQTcyQzlBOTBCOUIS1OTg2VQ0JBREUI5NDTEwYRDA5M0RCNzAxMzM0ODIzXVNzc5NzRM3NjUxNEUODxMQQ==$";
+
+        return mDailyMobileService.updateNoticeAgreement(Crypto.getUrlDecoderEx(API), agreed)//
+            .subscribeOn(Schedulers.io()).map((baseDto) ->
+            {
+                NoticeAgreementResultMessage noticeAgreementResultMessage;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        noticeAgreementResultMessage = baseDto.data.getNoticeAgreementResultMessage();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return noticeAgreementResultMessage;
             });
     }
 }

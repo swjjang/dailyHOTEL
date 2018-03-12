@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
 import com.daily.dailyhotel.repository.remote.model.BankData;
+import com.daily.dailyhotel.repository.remote.model.NoticeAgreementMessageData;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
@@ -22,6 +23,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
 import com.daily.dailyhotel.repository.remote.model.GourmetSuggestsData;
 import com.daily.dailyhotel.repository.remote.model.LeaveInfoData;
+import com.daily.dailyhotel.repository.remote.model.NoticeAgreementMessageResultData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.OldRefundData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
@@ -551,6 +553,13 @@ public interface DailyMobileService
     @GET()
     Observable<GoogleMapListDto<GoogleAddressData>> getSearchAddress(@Url String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<NoticeAgreementMessageData>> getNoticeAgreementMessage(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @PUT("{mobileAPI}")
+    Observable<BaseDto<NoticeAgreementMessageResultData>> updateNoticeAgreement(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("isAgreed") boolean agreed);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl
