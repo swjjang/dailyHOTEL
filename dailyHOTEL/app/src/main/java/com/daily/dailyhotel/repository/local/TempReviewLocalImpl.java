@@ -127,4 +127,21 @@ public class TempReviewLocalImpl implements TempReviewInterface
             }
         }).subscribeOn(Schedulers.io());
     }
+
+    @Override
+    public Observable<Boolean> deleteAllTempReview()
+    {
+        return Observable.defer(new Callable<ObservableSource<? extends Boolean>>()
+        {
+            @Override
+            public ObservableSource<? extends Boolean> call() throws Exception
+            {
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                dailyDb.deleteAllTempReview();
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(true);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
 }

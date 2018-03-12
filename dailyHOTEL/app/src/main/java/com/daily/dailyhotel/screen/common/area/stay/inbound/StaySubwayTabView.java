@@ -91,16 +91,25 @@ public class StaySubwayTabView extends LinearLayout implements View.OnClickListe
             return;
         }
 
+        int dividerCount = position;
+        int childIndex = position + dividerCount;
         int childCount = getChildCount();
 
-        if (position >= childCount)
+        if (childIndex >= childCount)
         {
             return;
         }
 
+        View childView;
+
         for (int i = 0; i < childCount; i++)
         {
-            getChildAt(i).setSelected(i == position);
+            childView = getChildAt(i);
+
+            if (childView instanceof DailyTextView)
+            {
+                childView.setSelected(i == childIndex);
+            }
         }
     }
 
@@ -152,7 +161,7 @@ public class StaySubwayTabView extends LinearLayout implements View.OnClickListe
 
                 if (mOnTabChangeListener != null)
                 {
-                    mOnTabChangeListener.onTabChanged(v, i);
+                    mOnTabChangeListener.onTabChanged(v, i / 2);
                 }
             } else
             {

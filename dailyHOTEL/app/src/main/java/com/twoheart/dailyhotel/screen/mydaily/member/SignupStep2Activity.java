@@ -350,7 +350,7 @@ public class SignupStep2Activity extends BaseActivity
 
             // 이미 가입된것이기 때문에 미리 Analytics 넣음
             AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //
-                userIndex, email, name, phoneNumber, birthday, Constants.DAILY_USER, mRecommender, mCallByScreen);
+                userIndex, birthday, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
             showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
 

@@ -124,7 +124,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         makeCategoryTab(categoryTabList);
         TabLayout.Tab selectedTab = getCategoryTab(selectedCategory);
 
-        return createFragmentPagerAdapter(getSupportFragmentManager(), categoryList).map(new Function<BaseFragmentPagerAdapter, Boolean>()
+        return createFragmentPagerAdapter(getSupportFragmentManager(), categoryTabList).map(new Function<BaseFragmentPagerAdapter, Boolean>()
         {
             @Override
             public Boolean apply(BaseFragmentPagerAdapter baseFragmentPagerAdapter) throws Exception
@@ -390,6 +390,17 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         }
 
         return mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onBackPressed();
+    }
+
+    @Override
+    public void expandedToolbar()
+    {
+        if(getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().appBarLayout.setExpanded(true, false);
     }
 
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)

@@ -1054,8 +1054,8 @@
     <string name="label_product_count">상품 수량</string>
     <string name="label_reservation_wait_message">현재 예약대기 상태입니다. 예약 확정시, 확정 문자를 발송해 드립니다.</string>
 
-    <string name="message_stay_thankyou_disabled_notification">알림이 꺼져있는 경우 체크인 등 예약관련 알림을 받을 수 없습니다. 알림을 허용하시겠습니까?</string>
-    <string name="message_gourmet_thankyou_disabled_notification">알림이 꺼져있는 경우 방문일 등 예약관련 알림을 받을 수 없습니다. 알림을 허용하시겠습니까?</string>
+    <string name="message_stay_thankyou_disabled_notification">휴대폰 알림 설정이 꺼져있으면 체크인 안내등의 예약과 관련된 중요 알림을 못 보실수 있어요. 알림을 허용으로 바꿔주시겠어요?</string>
+    <string name="message_gourmet_thankyou_disabled_notification">휴대폰 알림 설정이 꺼져있으면 방문일 안내등의 예약과 관련된 중요 알림을 못 보실수 있어요. 알림을 허용으로 바꿔주시겠어요?</string>
 
     <!-- Search -->
     <string name="label_view_myaround_hotel">내 주변 스테이 보기</string>
@@ -1367,6 +1367,7 @@
     <string name="message_review_dialog_cancel_review_description">리뷰를 입력하시면 다른 고객님들의 선택에\n큰 도움이 됩니다.</string>
     <string name="message_review_toast_canceled_review_detail">리뷰 입력이 취소되었습니다.\n(만족 여부는 저장됩니다.)</string>
     <string name="message_review_toast_canceled_review_detail_2">리뷰 입력이 취소되었습니다.</string>
+    <string name="message_review_toast_temp_save_review_detail">작성한 리뷰를 임시저장했습니다.</string>
     <string name="message_review_toast_canceled_review">리뷰 입력이 취소되었습니다.\n예약내역 메뉴를 통해\n원하실 때 입력해주세요!</string>
     <string name="message_review_answer_question">%1$d개의 질문에 대답해주세요!</string>
     <string name="message_review_remain_n_count">이제 %1$d개 남았어요!</string>

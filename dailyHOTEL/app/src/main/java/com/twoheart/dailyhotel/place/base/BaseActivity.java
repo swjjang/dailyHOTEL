@@ -37,6 +37,8 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -409,6 +411,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
         DailyPreference.getInstance(this).clear();
         DailyUserPreference.getInstance(this).clear();
+
+        // 임시 저장된 리뷰 전체 삭제
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(this);
+        dailyDb.deleteAllTempReview();
+        DailyDbHelper.getInstance().close();
 
         try
         {

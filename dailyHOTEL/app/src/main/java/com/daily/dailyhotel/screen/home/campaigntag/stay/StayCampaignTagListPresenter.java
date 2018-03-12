@@ -178,9 +178,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     {
         super.onResume();
 
-        if (getViewInterface() != null && getViewInterface().getBlurVisibility() == true)
+        if (getViewInterface() != null && getViewInterface().isBlurVisible() == true)
         {
-            getViewInterface().setBlurVisibility(getActivity(), false);
+            getViewInterface().setBlurVisible(getActivity(), false);
         }
 
         if (isRefresh() == true)
@@ -766,7 +766,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             return;
         }
 
-        getViewInterface().setBlurVisibility(getActivity(), true);
+        getViewInterface().setBlurVisible(getActivity(), true);
 
         Stay stay = placeViewItem.getItem();
 

@@ -117,12 +117,6 @@ public class KakaoManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setUserName(String name)
-    {
-
-    }
-
-    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
 
@@ -189,7 +183,7 @@ public class KakaoManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
+    void signUpSocialUser(String userIndex, String gender, String userType, String callByScreen)
     {
         CompleteRegistration event = new CompleteRegistration();
         event.tag = userType;
@@ -203,7 +197,7 @@ public class KakaoManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen)
     {
         CompleteRegistration event = new CompleteRegistration();
         event.tag = userType;

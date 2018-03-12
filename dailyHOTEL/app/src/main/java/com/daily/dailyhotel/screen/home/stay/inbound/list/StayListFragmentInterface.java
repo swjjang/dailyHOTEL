@@ -57,6 +57,8 @@ public interface StayListFragmentInterface
 
         void scrollTop();
 
+        void scrollStop();
+
         Observable<Long> getLocationAnimation();
 
         void setMyLocation(Location location);

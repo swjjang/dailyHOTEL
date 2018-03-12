@@ -90,15 +90,18 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     private static final String CREATE_T_GOURMET_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_GOURMET_IB_RECENTLY_SUGGEST + " (" //
         + GourmetRecentlySuggestList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + GourmetRecentlySuggestList.TYPE + " TEXT NOT NULL, " //
-        + GourmetRecentlySuggestList.NAME + " TEXT NOT NULL, " //
+        + GourmetRecentlySuggestList.DISPLAY + " TEXT NOT NULL, " //
         + GourmetRecentlySuggestList.GOURMET_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
+        + GourmetRecentlySuggestList.GOURMET_NAME + " TEXT NULL, " //
         + GourmetRecentlySuggestList.PROVINCE_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.PROVINCE_NAME + " TEXT NULL, " //
         + GourmetRecentlySuggestList.AREA_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.AREA_NAME + " TEXT NULL, " //
+        + GourmetRecentlySuggestList.LOCATION_NAME + " TEXT NULL, " //
         + GourmetRecentlySuggestList.ADDRESS + " TEXT NULL, " //
         + GourmetRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
+        + GourmetRecentlySuggestList.DIRECT_NAME + " TEXT NULL, " //
         + GourmetRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
 
@@ -160,7 +163,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         upGradeGourmetRecentlySuggestDb(db);
     }
 
-    private void upGradeRecentlyPlaceDb(SQLiteDatabase db)
+    public void upGradeRecentlyPlaceDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_RECENTLY);
         db.execSQL(CREATE_T_RECENTLY);
@@ -1270,9 +1273,39 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         mContext.getContentResolver().notifyChange(TempReviewList.NOTIFICATION_URI, null);
     }
 
-    public Cursor getGourmetRecentlySuggest(String type, String name)
+    public void deleteAllTempReview()
     {
-        if (DailyTextUtils.isTextEmpty(type, name))
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_TEMP_REVIEW, null, null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(TempReviewList.NOTIFICATION_URI, null);
+    }
+
+    public Cursor getGourmetRecentlySuggest(String type, String display)
+    {
+        if (DailyTextUtils.isTextEmpty(type, display))
         {
             return null;
         }
@@ -1286,16 +1319,38 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
         sqlBuilder.append(T_GOURMET_IB_RECENTLY_SUGGEST);
         sqlBuilder.append(" WHERE ").append(GourmetRecentlySuggestList.TYPE).append("=\"").append(type).append("\"");
-        sqlBuilder.append(" AND ").append(GourmetRecentlySuggestList.NAME).append("=\"").append(name).append("\"");
+        sqlBuilder.append(" AND ").append(GourmetRecentlySuggestList.DISPLAY).append("=\"").append(display).append("\"");
 
         Cursor cursor = rawQuery(sqlBuilder.toString());
 
         return cursor;
     }
 
-    public void addGourmetRecentlySuggest(String type, String name, int gourmetIndex //
-        , int provinceIndex, String provinceName, int areaIndex, String areaName, String address //
-        , double latitude, double longitude, String keyword)
+    public Cursor getGourmetRecentlySuggestList(int maxCount)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            return null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_GOURMET_IB_RECENTLY_SUGGEST);
+        sqlBuilder.append(" ORDER BY ").append(GourmetRecentlySuggestList.SAVING_TIME).append(" DESC");
+
+        if (maxCount > 0)
+        {
+            sqlBuilder.append(" limit ").append(maxCount);
+        }
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
+    public void addGourmetRecentlySuggest(String type, String display, int gourmetIndex, String gourmetName //
+        , int provinceIndex, String provinceName, int areaIndex, String areaName, String locationName, String address //
+        , double latitude, double longitude, String directName, String keyword)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -1312,7 +1367,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
             try
             {
-                cursor = getGourmetRecentlySuggest(type, name);
+                cursor = getGourmetRecentlySuggest(type, display);
 
                 if (cursor != null)
                 {
@@ -1321,14 +1376,14 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                     int idColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList._ID);
                     oldId = cursor.getLong(idColumnIndex);
 
-                    int savingTimeColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList.SAVING_TIME);
-                    savingTime = cursor.getLong(savingTimeColumnIndex);
+//                    int savingTimeColumnIndex = cursor.getColumnIndex(GourmetRecentlySuggestList.SAVING_TIME);
+//                    savingTime = cursor.getLong(savingTimeColumnIndex);
                 }
 
             } catch (Exception e)
             {
                 oldId = -1;
-                savingTime = -1;
+//                savingTime = -1;
             } finally
             {
                 try
@@ -1343,11 +1398,11 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                 }
             }
 
-            if (savingTime == -1)
-            {
+//            if (savingTime == -1)
+//            {
                 Calendar calendar = DailyCalendar.getInstance();
                 savingTime = calendar.getTimeInMillis();
-            }
+//            }
 
             ContentValues contentValues = new ContentValues();
 
@@ -1357,15 +1412,18 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             }
 
             contentValues.put(GourmetRecentlySuggestList.TYPE, type);
-            contentValues.put(GourmetRecentlySuggestList.NAME, name);
+            contentValues.put(GourmetRecentlySuggestList.DISPLAY, display);
             contentValues.put(GourmetRecentlySuggestList.GOURMET_INDEX, gourmetIndex);
+            contentValues.put(GourmetRecentlySuggestList.GOURMET_NAME, gourmetName);
             contentValues.put(GourmetRecentlySuggestList.PROVINCE_INDEX, provinceIndex);
             contentValues.put(GourmetRecentlySuggestList.PROVINCE_NAME, provinceName);
             contentValues.put(GourmetRecentlySuggestList.AREA_INDEX, areaIndex);
             contentValues.put(GourmetRecentlySuggestList.AREA_NAME, areaName);
+            contentValues.put(GourmetRecentlySuggestList.LOCATION_NAME, locationName);
             contentValues.put(GourmetRecentlySuggestList.ADDRESS, address);
             contentValues.put(GourmetRecentlySuggestList.LATITUDE, latitude);
             contentValues.put(GourmetRecentlySuggestList.LONGITUDE, longitude);
+            contentValues.put(GourmetRecentlySuggestList.DIRECT_NAME, directName);
             contentValues.put(GourmetRecentlySuggestList.SAVING_TIME, savingTime);
             contentValues.put(GourmetRecentlySuggestList.KEYWORD, keyword);
 
@@ -1392,9 +1450,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         mContext.getContentResolver().notifyChange(GourmetRecentlySuggestList.NOTIFICATION_URI, null);
     }
 
-    public void deleteGourmetRecentlySuggest(String type, String name)
+    public void deleteGourmetRecentlySuggest(String type, String display)
     {
-        if (DailyTextUtils.isTextEmpty(type, name))
+        if (DailyTextUtils.isTextEmpty(type, display))
         {
             return;
         }
@@ -1410,7 +1468,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             db.beginTransaction();
             db.delete(T_GOURMET_IB_RECENTLY_SUGGEST, GourmetRecentlySuggestList.TYPE + " = '" + type + "'" //
-                + " AND " + GourmetRecentlySuggestList.NAME + " = '" + name + "'", null);
+                + " AND " + GourmetRecentlySuggestList.DISPLAY + " = '" + display + "'", null);
             db.setTransactionSuccessful();
         } catch (Exception e)
         {

@@ -16,11 +16,11 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.AreaGroup;
 import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
@@ -137,7 +137,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         // 이름으로 넘어오는 경우
         mCategoryCode = intent.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_CATEGORY_CODE);
 
-        mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation() == false);
+        mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation());
 
         return true;
     }
@@ -229,7 +229,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         switch (requestCode)
         {
             case StayAreaTabActivity.REQUEST_CODE_PERMISSION_MANAGER:
-                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(false);
+                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation());
 
                 if (resultCode == Activity.RESULT_OK)
                 {
@@ -241,7 +241,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 break;
 
             case StayAreaTabActivity.REQUEST_CODE_SETTING_LOCATION:
-                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(false);
+                mStayAreaViewModel.isAgreeTermsOfLocation.setValue(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation());
 
                 onAroundSearchClick();
                 break;
@@ -712,7 +712,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         final String areaName = area.name;
 
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
-        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroupName) == true)
+        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroup) == true)
         {
             setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType, areaGroup, area);
             finish();
@@ -786,7 +786,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         final String areaName = area.name;
 
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
-        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroupName) == true)
+        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroup) == true)
         {
             setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType, areaGroup.getRegion(), areaGroup, area);
             finish();
@@ -847,14 +847,21 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         mAnalytics.onEventAreaClick(getActivity(), areaGroupName, areaName);
     }
 
-    private boolean equalsAreaGroupName(StayRegion stayRegion, String areaName)
+    private boolean equalsAreaGroupName(StayRegion stayRegion, AreaGroup areaGroupName)
     {
-        if (stayRegion == null || DailyTextUtils.isTextEmpty(areaName) == true)
+        if (stayRegion == null || areaGroupName == null)
         {
             return false;
         }
 
-        return areaName.equalsIgnoreCase(stayRegion.getAreaGroupName());
+        Area stayRegionArea = stayRegion.getAreaGroup();
+
+        if (stayRegionArea == null)
+        {
+            return false;
+        }
+
+        return areaGroupName.name.equalsIgnoreCase(stayRegionArea.name) && areaGroupName.index == stayRegionArea.index;
     }
 
     void setResult(int resultCode, DailyCategoryType categoryType, StayAreaGroup areaGroup, StayArea area)

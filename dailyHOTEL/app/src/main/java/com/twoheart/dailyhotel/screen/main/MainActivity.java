@@ -39,8 +39,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.AccessToken;
-import com.facebook.LoginStatusCallback;
-import com.facebook.login.LoginManager;
+import com.facebook.FacebookException;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
@@ -684,7 +683,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false, null);
 
-                        startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL, false), Constants.CODE_REQUEST_ACTIVITY_STAY);
                         break;
 
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -1199,7 +1198,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         switch (changeScreen)
         {
             case Constants.CODE_RESULT_ACTIVITY_STAY_LIST:
-                startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                startActivityForResult(StayTabActivity.newInstance(this, DailyCategoryType.STAY_ALL, false), Constants.CODE_REQUEST_ACTIVITY_STAY);
                 break;
 
             case Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -1862,24 +1861,17 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 @Override
                 protected void subscribeActual(Observer<? super Boolean> observer)
                 {
-                    LoginManager.getInstance().retrieveLoginStatus(MainActivity.this, new LoginStatusCallback()
+                    AccessToken.refreshCurrentAccessTokenAsync(new AccessToken.AccessTokenRefreshCallback()
                     {
                         @Override
-                        public void onCompleted(AccessToken accessToken)
+                        public void OnTokenRefreshed(AccessToken accessToken)
                         {
                             observer.onNext(true);
                             observer.onComplete();
                         }
 
                         @Override
-                        public void onFailure()
-                        {
-                            observer.onNext(false);
-                            observer.onComplete();
-                        }
-
-                        @Override
-                        public void onError(Exception exception)
+                        public void OnTokenRefreshFailed(FacebookException exception)
                         {
                             observer.onNext(false);
                             observer.onComplete();
