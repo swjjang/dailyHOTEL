@@ -64,8 +64,8 @@ public class StaySuggestsData
         @JsonField(name = "discountAvg")
         public int discountAvg;
 
-        @JsonField(name = "availableRooms")
-        public int availableRooms;
+        @JsonField(name = "available")
+        public boolean available;
 
         @JsonField(name = "province")
         public ProvinceData province;
@@ -76,7 +76,7 @@ public class StaySuggestsData
             stay.index = index;
             stay.name = name;
             stay.discountAvg = discountAvg;
-            stay.availableRooms = availableRooms;
+            stay.available = available;
             stay.province = province == null ? null : province.getProvince();
 
             return stay;
@@ -136,7 +136,7 @@ public class StaySuggestsData
 
         if (stayList != null && stayList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.SuggestItem(context.getString(R.string.label_search_suggest_type_stay))));
+            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_stay))));
 
             for (StayData stayData : stayList)
             {

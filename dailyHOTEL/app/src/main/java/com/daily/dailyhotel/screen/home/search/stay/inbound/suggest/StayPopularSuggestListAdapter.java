@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeRecommendDataBinding;
@@ -25,7 +25,7 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
 {
     public interface OnPopularSuggestListener
     {
-        void onNearbyClick(StaySuggest staySuggest);
+        void onNearbyClick(StaySuggestV2 staySuggest);
     }
 
     private Context mContext;
@@ -137,25 +137,30 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
         return mSuggestList.get(position);
     }
 
-    public void setNearByStaySuggest(StaySuggest nearByStaySuggest)
+    public void setNearByStaySuggest(StaySuggestV2 nearByStaySuggest)
     {
         if (mSuggestList == null || mSuggestList.size() == 0 || nearByStaySuggest == null)
         {
             return;
         }
 
-        String descriptionText = mContext.getString(R.string.label_search_nearby_description);
+        StaySuggestV2.Location nearByLocation = (StaySuggestV2.Location) nearByStaySuggest.suggestItem;
+        if (nearByLocation == null)
+        {
+            return;
+        }
 
         for (ObjectItem item : mSuggestList)
         {
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
-                StaySuggest staySuggest = item.getItem();
+                StaySuggestV2 staySuggest = item.getItem();
+                StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
 
-                staySuggest.displayName = nearByStaySuggest != null ? nearByStaySuggest.displayName : descriptionText;
-                staySuggest.latitude = nearByStaySuggest.latitude;
-                staySuggest.longitude = nearByStaySuggest.longitude;
-                staySuggest.categoryKey = nearByStaySuggest.categoryKey;
+                location.name = nearByLocation.name;
+                location.address = nearByLocation.address;
+                location.latitude = nearByLocation.latitude;
+                location.longitude = nearByLocation.longitude;
                 staySuggest.menuType = nearByStaySuggest.menuType;
                 break;
             }
@@ -164,7 +169,8 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
 
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
-        StaySuggest staySuggest = item.getItem();
+        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
 
         holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -183,9 +189,9 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(staySuggest.address);
+        holder.dataBinding.descriptionTextView.setText(location.address);
 
-        if (DailyTextUtils.isTextEmpty(staySuggest.address) == true)
+        if (DailyTextUtils.isTextEmpty(location.address) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else
@@ -196,11 +202,13 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggest staySuggest = item.getItem();
+        StaySuggestV2 staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
 
-        holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
+        StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
+
+        holder.dataBinding.descriptionTextView.setText(suggestItem.name);
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder

@@ -209,6 +209,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
+            holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
@@ -246,7 +247,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
             holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
 
-            if (gourmet.availableTickets == 0 || gourmet.availableTickets < gourmet.minimumOrderQuantity || gourmet.isExpired == true)
+            if (gourmet.available == false)
             {
                 holder.dataBinding.priceTextView.setText(R.string.label_soldout);
             } else

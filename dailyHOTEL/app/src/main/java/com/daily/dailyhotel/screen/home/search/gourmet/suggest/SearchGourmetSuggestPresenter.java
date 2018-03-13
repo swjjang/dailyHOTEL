@@ -38,7 +38,6 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -78,7 +77,6 @@ public class SearchGourmetSuggestPresenter //
     GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
     private Disposable mSuggestDisposable;
 
-    DailyRecentSearches mDailyRecentSearches;
     private GourmetBookDateTime mGourmetBookDateTime;
     private List<GourmetSuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<GourmetSuggestV2> mRecentlySuggestList;
@@ -139,7 +137,8 @@ public class SearchGourmetSuggestPresenter //
         mLocationSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_LOCATION, location);
 
         List<GourmetSuggestV2> popularList = new ArrayList<>();
-        popularList.add(new GourmetSuggestV2(0, new GourmetSuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
+        popularList.add(new GourmetSuggestV2(0 //
+            , new GourmetSuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
 
@@ -604,13 +603,21 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        final String displayName;
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        {
+            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+        } else {
+            displayName = gourmetSuggest.suggestItem.name;
+        }
+
         addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
@@ -618,7 +625,7 @@ public class SearchGourmetSuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }));
@@ -642,13 +649,21 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        final String displayName;
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        {
+            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+        } else {
+            displayName = gourmetSuggest.suggestItem.name;
+        }
+
         addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
@@ -656,7 +671,7 @@ public class SearchGourmetSuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }));

@@ -329,15 +329,15 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         GourmetSuggestV2 gourmetSuggest = item.getItem();
         GourmetSuggestV2.Section section = (GourmetSuggestV2.Section) gourmetSuggest.suggestItem;
 
-        if (DailyTextUtils.isTextEmpty(section.name) == true)
+        if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
+            holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.titleTextView.setText(section.name);
         }
-
-        holder.dataBinding.titleTextView.setText(section.name);
     }
 
     private void onBindViewHolder(FooterViewHolder holder)
@@ -393,6 +393,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
         String title = null;
         String description = null;
+
         if (suggestItem instanceof GourmetSuggestV2.Gourmet)
         {
             holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
