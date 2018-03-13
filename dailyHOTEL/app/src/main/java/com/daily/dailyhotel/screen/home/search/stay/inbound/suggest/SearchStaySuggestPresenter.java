@@ -778,9 +778,9 @@ public class SearchStaySuggestPresenter //
         }
 
         final String displayName;
-        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.AreaGroup)
         {
-            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+            displayName = ((GourmetSuggestV2.AreaGroup) gourmetSuggest.suggestItem).getDisplayName();
         } else {
             displayName = gourmetSuggest.suggestItem.name;
         }

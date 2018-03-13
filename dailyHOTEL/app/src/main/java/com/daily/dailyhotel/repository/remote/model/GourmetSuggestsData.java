@@ -20,7 +20,7 @@ public class GourmetSuggestsData
     public List<GourmetData> gourmetList;
 
     @JsonField(name = "region")
-    public List<ProvinceData> provinceList;
+    public List<AreaGroupData> areaGroupList;
 
     @JsonObject
     static class GourmetData
@@ -38,7 +38,7 @@ public class GourmetSuggestsData
         public boolean available;
 
         @JsonField(name = "province")
-        public ProvinceData provinceData;
+        public AreaGroupData areaGroupData;
 
         public GourmetSuggestV2.Gourmet getGourmet()
         {
@@ -47,14 +47,14 @@ public class GourmetSuggestsData
             gourmet.name = name;
             gourmet.discount = discount;
             gourmet.available = available;
-            gourmet.province = provinceData == null ? null : provinceData.getProvince();
+            gourmet.areaGroup = areaGroupData == null ? null : areaGroupData.getAreaGroup();
 
             return gourmet;
         }
     }
 
     @JsonObject
-    static class ProvinceData
+    static class AreaGroupData
     {
         @JsonField(name = "idx")
         public int index;
@@ -65,14 +65,14 @@ public class GourmetSuggestsData
         @JsonField(name = "area")
         public AreaData area;
 
-        public GourmetSuggestV2.Province getProvince()
+        public GourmetSuggestV2.AreaGroup getAreaGroup()
         {
-            GourmetSuggestV2.Province province = new GourmetSuggestV2.Province();
-            province.index = index;
-            province.name = name;
-            province.area = area == null ? null : area.getArea();
+            GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
+            areaGroup.index = index;
+            areaGroup.name = name;
+            areaGroup.area = area == null ? null : area.getArea();
 
-            return province;
+            return areaGroup;
         }
     }
 
@@ -117,16 +117,16 @@ public class GourmetSuggestsData
             }
         }
 
-        if (provinceList != null && provinceList.size() > 0)
+        if (areaGroupList != null && areaGroupList.size() > 0)
         {
             list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
                 , new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
 
-            for (ProvinceData provinceData : provinceList)
+            for (AreaGroupData areaGroupData : areaGroupList)
             {
-                GourmetSuggestV2.Province province = provinceData.getProvince();
+                GourmetSuggestV2.AreaGroup areaGroup = areaGroupData.getAreaGroup();
 
-                list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, province));
+                list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, areaGroup));
             }
         }
 

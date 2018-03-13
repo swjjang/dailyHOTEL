@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 
 /**
@@ -46,30 +45,7 @@ public class GourmetSuggestParcelV2 implements Parcelable
             return;
         }
 
-        if (item instanceof GourmetSuggestV2.Gourmet)
-        {
-            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) item;
-            dest.writeSerializable(gourmet);
-        } else if (item instanceof GourmetSuggestV2.Province)
-        {
-            GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) item;
-            dest.writeSerializable(province);
-        } else if (item instanceof GourmetSuggestV2.Direct)
-        {
-            GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) item;
-            dest.writeSerializable(direct);
-        } else if (item instanceof GourmetSuggestV2.Location)
-        {
-            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) item;
-            dest.writeSerializable(location);
-        } else if (item instanceof GourmetSuggestV2.CampaignTag)
-        {
-            GourmetSuggestV2.CampaignTag campaignTag = (GourmetSuggestV2.CampaignTag) item;
-            dest.writeSerializable(campaignTag);
-        } else {
-            dest.writeSerializable(item);
-            ExLog.e("sam : writeToParcel error suggestItem name : " + item.name);
-        }
+        dest.writeSerializable(item);
     }
 
     private void readFromParcel(Parcel in)
@@ -78,7 +54,13 @@ public class GourmetSuggestParcelV2 implements Parcelable
 
         mGourmetSuggest.menuType = in.readInt();
 
-        mGourmetSuggest.suggestItem = (GourmetSuggestV2.SuggestItem) in.readSerializable();
+        try
+        {
+            mGourmetSuggest.suggestItem = (GourmetSuggestV2.SuggestItem) in.readSerializable();
+        } catch (Exception e)
+        {
+            mGourmetSuggest.suggestItem = null;
+        }
     }
 
     @Override
