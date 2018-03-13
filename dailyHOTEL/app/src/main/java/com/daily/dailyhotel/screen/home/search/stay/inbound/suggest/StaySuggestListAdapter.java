@@ -160,8 +160,6 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         holder.itemView.getRootView().setTag(staySuggest);
 
-        StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.suggestItem;
-
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
         holder.dataBinding.priceTextView.setVisibility(View.GONE);
@@ -169,12 +167,12 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(direct.name) == true)
+        if (DailyTextUtils.isTextEmpty(staySuggest.getText1()) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, direct.name);
+            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, staySuggest.getText1());
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
@@ -204,17 +202,16 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
         StaySuggestV2 staySuggest = item.getItem();
-        StaySuggestV2.Section section = (StaySuggestV2.Section) staySuggest.suggestItem;
 
-        if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
+        if (DailyTextUtils.isTextEmpty(staySuggest.getText1()) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
-            holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.titleTextView.setText(section.name);
         }
+
+        holder.dataBinding.titleTextView.setText(staySuggest.getText1());
 
     }
 
@@ -224,7 +221,6 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         holder.itemView.getRootView().setTag(staySuggest);
 
-        //        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
@@ -236,58 +232,53 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return;
         }
 
-        String title = null;
-        String description = null;
+        String title = staySuggest.getText1();
+        String description = staySuggest.getText2();
 
-        if (suggestItem instanceof StaySuggestV2.Station)
+        switch (staySuggest.getCategory())
         {
-            StaySuggestV2.Station station = (StaySuggestV2.Station) suggestItem;
-
-            title = station.getDisplayName();
-            description = station.region;
-
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
-            holder.dataBinding.priceTextView.setVisibility(View.GONE);
-        } else if (suggestItem instanceof StaySuggestV2.Stay)
-        {
-            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
-            title = stay.name;
-            description = stay.province == null ? null : stay.province.name;
-
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-
-            if (stay.available == false)
+            case StaySuggestV2.Category.STATION:
             {
-                holder.dataBinding.priceTextView.setText(R.string.label_soldout);
-            } else
-            {
-                holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stay.discountAvg, false));
-            }
-        } else if (suggestItem instanceof StaySuggestV2.Province)
-        {
-            StaySuggestV2.Province province = (StaySuggestV2.Province) suggestItem;
-
-            if (province.area == null)
-            {
-                title = province.name + " " + mContext.getString(R.string.label_all);
-                description = null;
-            } else
-            {
-                title = province.area.name;
-                description = province.name;
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
+                holder.dataBinding.priceTextView.setVisibility(View.GONE);
+                break;
             }
 
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-            holder.dataBinding.priceTextView.setVisibility(View.GONE);
-        } else
-        {
-            title = suggestItem.name;
-            description = null;
+            case StaySuggestV2.Category.STAY:
+            {
+                StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
 
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
-            holder.dataBinding.priceTextView.setVisibility(View.GONE);
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
+                holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
 
+                if (stay.available == false)
+                {
+                    holder.dataBinding.priceTextView.setText(R.string.label_soldout);
+                } else
+                {
+                    holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stay.discountAvg, false));
+                }
+                break;
+            }
+
+            case StaySuggestV2.Category.PROVINCE:
+            {
+                if (DailyTextUtils.isTextEmpty(description))
+                {
+                    title += " " + mContext.getString(R.string.label_all);
+                }
+
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+                holder.dataBinding.priceTextView.setVisibility(View.GONE);
+                break;
+            }
+
+            default:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+                holder.dataBinding.priceTextView.setVisibility(View.GONE);
+                break;
+            }
         }
 
         if (DailyTextUtils.isTextEmpty(title) == true)
