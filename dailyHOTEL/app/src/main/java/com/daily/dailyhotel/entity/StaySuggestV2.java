@@ -202,7 +202,8 @@ public class StaySuggestV2
 
         public String getDisplayName()
         {
-            return "[" + line + "] " + name;
+            return name + "(" + line + ")";
+            //            return "[" + line + "] " + name;
         }
     }
 
