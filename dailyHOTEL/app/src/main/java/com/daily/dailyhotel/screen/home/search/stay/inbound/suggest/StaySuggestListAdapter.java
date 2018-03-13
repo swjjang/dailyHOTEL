@@ -237,14 +237,14 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         switch (staySuggest.getCategory())
         {
-            case StaySuggestV2.Category.STATION:
+            case STATION:
             {
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
                 holder.dataBinding.priceTextView.setVisibility(View.GONE);
                 break;
             }
 
-            case StaySuggestV2.Category.STAY:
+            case STAY:
             {
                 StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
 
@@ -261,7 +261,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 break;
             }
 
-            case StaySuggestV2.Category.AREA_GROUP:
+            case AREA_GROUP:
             {
                 if (DailyTextUtils.isTextEmpty(description))
                 {
