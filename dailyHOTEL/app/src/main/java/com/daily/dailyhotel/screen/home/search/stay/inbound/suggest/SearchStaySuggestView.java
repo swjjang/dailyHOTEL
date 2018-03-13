@@ -47,7 +47,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     {
         void onSearchSuggest(String keyword);
 
-        void onSuggestClick(StaySuggest staySuggest);
+        void onSuggestClick(StaySuggestV2 staySuggest);
 
         void onSuggestClick(GourmetSuggest gourmetSuggest);
 
@@ -188,7 +188,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setStaySuggests(List<StaySuggest> staySuggestList)
+    public void setStaySuggests(List<StaySuggestV2> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -202,7 +202,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 @Override
                 public void onClick(View v)
                 {
-                    StaySuggest staySuggest = (StaySuggest) v.getTag();
+                    StaySuggestV2 staySuggest = (StaySuggestV2) v.getTag();
 
                     if (staySuggest != null)
                     {
@@ -220,14 +220,20 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, keyword)));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(keyword))));
         }
 
         if (staySuggestList != null && staySuggestList.size() > 0)
         {
-            for (StaySuggest staySuggest : staySuggestList)
+            for (StaySuggestV2 staySuggest : staySuggestList)
             {
-                if (DailyTextUtils.isTextEmpty(staySuggest.categoryKey) == true)
+                StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
+                if (suggestItem == null)
+                {
+                    continue;
+                }
+
+                if (suggestItem instanceof StaySuggestV2.Section)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else
@@ -237,7 +243,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             }
 
             // 마지막줄
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, null)));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, null)));
         }
 
         mStaySuggestListAdapter.setAll(keyword, objectItemList);
@@ -629,12 +635,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             case R.id.textView:
                 Object object = view.getTag();
 
-                if (object == null || object instanceof StaySuggest == false)
+                if (object == null || object instanceof StaySuggestV2 == false)
                 {
                     return;
                 }
 
-                StaySuggest staySuggest = (StaySuggest) object;
+                StaySuggestV2 staySuggest = (StaySuggestV2) object;
 
                 getEventListener().onSuggestClick(staySuggest);
                 break;

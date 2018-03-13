@@ -67,9 +67,10 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         // URL 만들때 사용
         //        com.twoheart.dailyhotel.util.Crypto.getUrlEncoder("");
 
-        // TODO : 고메 검색어 DB 삭제 - 추후 릴리즈시 빼야 함
+        // TODO : 고메, 스테이 검색어 DB 삭제 - 추후 릴리즈시 빼야 함
         DailyDb dailyDb = DailyDbHelper.getInstance().open(this);
-        dailyDb.upGradeRecentlyPlaceDb(dailyDb.getWritableDatabase());
+        dailyDb.upGradeGourmetRecentlySuggestDb(dailyDb.getWritableDatabase());
+        dailyDb.upGradeStayIbRecentlySuggestDb(dailyDb.getWritableDatabase());
         DailyDbHelper.getInstance().close();
 
 

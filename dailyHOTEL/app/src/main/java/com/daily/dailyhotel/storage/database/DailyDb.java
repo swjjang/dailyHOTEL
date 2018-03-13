@@ -189,7 +189,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         upGradeStayIbRecentlySuggestDb(db);
     }
 
-    public void upGradeRecentlyPlaceDb(SQLiteDatabase db)
+    private void upGradeRecentlyPlaceDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_RECENTLY);
         db.execSQL(CREATE_T_RECENTLY);
@@ -207,13 +207,13 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         db.execSQL(CREATE_T_TEMP_REVIEW);
     }
 
-    private void upGradeGourmetRecentlySuggestDb(SQLiteDatabase db)
+    public void upGradeGourmetRecentlySuggestDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_GOURMET_IB_RECENTLY_SUGGEST);
         db.execSQL(CREATE_T_GOURMET_RECENTLY_SUGGEST);
     }
 
-    private void upGradeStayIbRecentlySuggestDb(SQLiteDatabase db)
+    public void upGradeStayIbRecentlySuggestDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_STAY_IB_RECENTLY_SUGGEST);
         db.execSQL(CREATE_T_STAY_IB_RECENTLY_SUGGEST);

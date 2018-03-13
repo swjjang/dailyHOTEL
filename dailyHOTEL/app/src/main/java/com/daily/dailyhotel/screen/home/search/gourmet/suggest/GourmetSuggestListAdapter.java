@@ -209,6 +209,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
+            holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);

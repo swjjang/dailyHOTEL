@@ -605,13 +605,21 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        final String displayName;
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        {
+            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+        } else {
+            displayName = gourmetSuggest.suggestItem.name;
+        }
+
         addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
@@ -619,7 +627,7 @@ public class SearchGourmetSuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }));
@@ -643,13 +651,21 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
+        final String displayName;
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        {
+            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+        } else {
+            displayName = gourmetSuggest.suggestItem.name;
+        }
+
         addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
@@ -657,7 +673,7 @@ public class SearchGourmetSuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    getViewInterface().setSuggest(gourmetSuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
                     startFinishAction(gourmetSuggest, mKeyword);
                 }
             }));

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 {
-    void setStaySuggests(List<StaySuggest> staySuggestList);
+    void setStaySuggests(List<StaySuggestV2> staySuggestList);
 
     void setGourmetSuggests(List<GourmetSuggest> gourmetSuggestList);
 

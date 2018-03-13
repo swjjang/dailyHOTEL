@@ -43,7 +43,6 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
-import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
@@ -92,7 +91,7 @@ public class SearchStaySuggestPresenter //
     private StayBookDateTime mStayBookDateTime;
     private List<StaySuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<StaySuggestV2> mRecentlySuggestList;
-    private List<StaySuggest> mSuggestList;
+    private List<StaySuggestV2> mSuggestList;
     private List<GourmetSuggest> mGourmetSuggestList;
     private List<StayOutboundSuggest> mStayOutboundSuggestList;
     ArrayList<String> mStayOutboundKeywordList;
@@ -503,7 +502,7 @@ public class SearchStaySuggestPresenter //
         mRecentlySuggestList = recentlySuggestList;
     }
 
-    void setSuggestList(List<StaySuggest> suggestList)
+    void setSuggestList(List<StaySuggestV2> suggestList)
     {
         mSuggestList = suggestList;
     }
@@ -620,10 +619,11 @@ public class SearchStaySuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = getStaySuggestList(checkInDate, nights, keyword).flatMap(new Function<List<StaySuggest>, ObservableSource<List>>()
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByStayV2(checkInDate, nights, keyword) //
+                .delaySubscription(500, TimeUnit.MILLISECONDS).flatMap(new Function<List<StaySuggestV2>, ObservableSource<List>>()
             {
                 @Override
-                public ObservableSource<List> apply(List<StaySuggest> staySuggestList) throws Exception
+                public ObservableSource<List> apply(List<StaySuggestV2> staySuggestList) throws Exception
                 {
                     if (staySuggestList == null || staySuggestList.size() == 0)
                     {
@@ -703,52 +703,6 @@ public class SearchStaySuggestPresenter //
         }
     }
 
-    private Observable<List<StaySuggest>> getStaySuggestList(String checkInDate, int nights, final String keyword)
-    {
-        return mSuggestRemoteImpl.getSuggestsByStayInbound(checkInDate, nights, keyword)//
-            .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<StayKeyword>>, List<StaySuggest>>()
-            {
-                @Override
-                public List<StaySuggest> apply(Pair<String, ArrayList<StayKeyword>> stringArrayListPair) throws Exception
-                {
-                    ArrayList<StayKeyword> keywordList = stringArrayListPair.second;
-                    ArrayList<StaySuggest> staySuggestList = new ArrayList<>();
-
-                    if (keywordList == null || keywordList.size() == 0)
-                    {
-                        return staySuggestList;
-                    }
-
-                    String oldCategoryKey = null;
-
-                    for (StayKeyword stayKeyword : keywordList)
-                    {
-                        StaySuggest staySuggest = new StaySuggest(stayKeyword);
-
-                        if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(staySuggest.categoryKey) == false)
-                        {
-                            int resId;
-                            if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
-                            {
-                                resId = R.string.label_search_suggest_type_stay;
-                                oldCategoryKey = staySuggest.categoryKey;
-                            } else
-                            {
-                                resId = R.string.label_search_suggest_type_region;
-                                oldCategoryKey = StaySuggest.CATEGORY_REGION;
-                            }
-
-                            staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
-                        }
-
-                        staySuggestList.add(staySuggest);
-                    }
-
-                    return staySuggestList;
-                }
-            }).observeOn(Schedulers.io());
-    }
-
     Observable getGourmetSuggestList(String visitDate, String keyword)
     {
         return mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
@@ -786,9 +740,14 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onSuggestClick(StaySuggest staySuggest)
+    public void onSuggestClick(StaySuggestV2 staySuggest)
     {
         if (staySuggest == null)
+        {
+            return;
+        }
+
+        if (staySuggest.suggestItem == null)
         {
             return;
         }
@@ -798,10 +757,40 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        addRecentSearches(staySuggest);
+        final String displayName;
+        if (staySuggest.suggestItem instanceof StaySuggestV2.Province)
+        {
+            displayName = ((StaySuggestV2.Province) staySuggest.suggestItem).getProvinceName();
+        } else if (staySuggest.suggestItem instanceof StaySuggestV2.Station)
+        {
+            displayName = ((StaySuggestV2.Station) staySuggest.suggestItem).getDisplayName();
+        } else
+        {
+            displayName = staySuggest.suggestItem.name;
+        }
 
-        getViewInterface().setSuggest(staySuggest.displayName);
-        startFinishAction(staySuggest, mKeyword);
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    getViewInterface().setSuggest(displayName);
+
+                    // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
+                    //        startFinishAction(staySuggest, mKeyword);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setSuggest(displayName);
+
+                    // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
+                    //        startFinishAction(staySuggest, mKeyword);
+                }
+            }));
     }
 
     @Override
@@ -819,13 +808,40 @@ public class SearchStaySuggestPresenter //
 
         if (GourmetSuggest.MENU_TYPE_DIRECT == gourmetSuggest.menuType)
         {
-            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, gourmetSuggest.displayName);
-            addRecentSearches(staySuggest);
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggest.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(gourmetSuggest.displayName));
 
-            getViewInterface().setSuggest(staySuggest.displayName);
-            startFinishAction(staySuggest, mKeyword);
+            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+                        getViewInterface().setSuggest(gourmetSuggest.displayName);
+
+                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
+                        //        startFinishAction(staySuggest, mKeyword);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        getViewInterface().setSuggest(gourmetSuggest.displayName);
+
+                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
+                        //        startFinishAction(staySuggest, mKeyword);
+                    }
+                }));
             return;
         }
+
+//        final String displayName;
+//        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+//        {
+//            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+//        } else {
+//            displayName = gourmetSuggest.suggestItem.name;
+//        }
 
         getViewInterface().setSuggest(gourmetSuggest.displayName);
 
@@ -855,11 +871,30 @@ public class SearchStaySuggestPresenter //
 
         if (StayOutboundSuggest.MENU_TYPE_DIRECT == stayOutboundSuggest.menuType)
         {
-            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, stayOutboundSuggest.display);
-            addRecentSearches(staySuggest);
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggest.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(stayOutboundSuggest.display));
 
-            getViewInterface().setSuggest(staySuggest.displayName);
-            startFinishAction(staySuggest, mKeyword);
+            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+                        getViewInterface().setSuggest(stayOutboundSuggest.display);
+
+                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
+                        //        startFinishAction(staySuggest, mKeyword);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        getViewInterface().setSuggest(stayOutboundSuggest.display);
+
+                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
+                        //        startFinishAction(staySuggest, mKeyword);
+                    }
+                }));
             return;
         }
 
@@ -894,13 +929,25 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
+        final String displayName;
+        if (staySuggest.suggestItem instanceof StaySuggestV2.Province)
+        {
+            displayName = ((StaySuggestV2.Province) staySuggest.suggestItem).getProvinceName();
+        } else if (staySuggest.suggestItem instanceof StaySuggestV2.Station)
+        {
+            displayName = ((StaySuggestV2.Station) staySuggest.suggestItem).getDisplayName();
+        } else
+        {
+            displayName = staySuggest.suggestItem.name;
+        }
+
         addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setSuggest(staySuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
 
                     // TODO : 검색 홈에 데이터 넘기는 부분 작업 필요.
                     //                    startFinishAction(staySuggest, mKeyword);
@@ -910,7 +957,7 @@ public class SearchStaySuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    getViewInterface().setSuggest(staySuggest.suggestItem.name);
+                    getViewInterface().setSuggest(displayName);
 
                     // TODO : 검색 홈에 데이터 넘기는 부분 작업 필요.
                     //                    startFinishAction(staySuggest, mKeyword);

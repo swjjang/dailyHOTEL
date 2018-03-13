@@ -11,8 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeSectionDataBinding;
@@ -155,9 +156,11 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private void onBindViewHolder(DirectViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggest staySuggest = item.getItem();
+        StaySuggestV2 staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
+
+        StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.suggestItem;
 
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
@@ -166,12 +169,12 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(direct.name) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, staySuggest.displayName);
+            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, direct.name);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
@@ -200,40 +203,104 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggest staySuggest = item.getItem();
+        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggestV2.Section section = (StaySuggestV2.Section) staySuggest.suggestItem;
 
-        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
+        if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
+            holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.titleTextView.setText(section.name);
         }
 
-        holder.dataBinding.titleTextView.setText(staySuggest.displayName);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggest staySuggest = item.getItem();
+        StaySuggestV2 staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
 
-        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
+        StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
+        if (suggestItem == null)
+        {
+            holder.itemView.getRootView().setVisibility(View.GONE);
+            ExLog.e("suggestItem is null - check StaySuggestV2");
+            return;
+        }
+
+        String title = null;
+        String description = null;
+
+        if (suggestItem instanceof StaySuggestV2.Station)
+        {
+            StaySuggestV2.Station station = (StaySuggestV2.Station) suggestItem;
+
+            title = station.getDisplayName();
+            description = station.region;
+
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
+            holder.dataBinding.priceTextView.setVisibility(View.GONE);
+        } else if (suggestItem instanceof StaySuggestV2.Stay)
+        {
+            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
+            title = stay.name;
+            description = stay.province == null ? null : stay.province.name;
+
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
+            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+
+            if (stay.available == false)
+            {
+                holder.dataBinding.priceTextView.setText(R.string.label_soldout);
+            } else
+            {
+                holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stay.discountAvg, false));
+            }
+        } else if (suggestItem instanceof StaySuggestV2.Province)
+        {
+            StaySuggestV2.Province province = (StaySuggestV2.Province) suggestItem;
+
+            if (province.area == null)
+            {
+                title = province.name + " " + mContext.getString(R.string.label_all);
+                description = null;
+            } else
+            {
+                title = province.area.name;
+                description = province.name;
+            }
+
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+            holder.dataBinding.priceTextView.setVisibility(View.GONE);
+        } else
+        {
+            title = suggestItem.name;
+            description = null;
+
+            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+            holder.dataBinding.priceTextView.setVisibility(View.GONE);
+
+        }
+
+        if (DailyTextUtils.isTextEmpty(title) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(staySuggest.displayName);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
             {
                 String keywordUpperCase = mKeyword.toUpperCase();
-                String displayNameUpperCase = DailyTextUtils.isTextEmpty(staySuggest.displayName) ? "" : staySuggest.displayName.toUpperCase();
+                String displayNameUpperCase = DailyTextUtils.isTextEmpty(title) ? "" : title.toUpperCase();
 
                 int fromIndex = 0;
                 do
@@ -256,52 +323,8 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             holder.dataBinding.titleTextView.setText(spannableStringBuilder);
         }
 
-        switch (staySuggest.categoryKey)
-        {
-            case StaySuggest.CATEGORY_STAY:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
-
-                if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
-                {
-                    holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                } else
-                {
-                    holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-
-                    if (staySuggest.availableRooms == 0)
-                    {
-                        holder.dataBinding.priceTextView.setText(R.string.label_soldout);
-                    } else
-                    {
-                        holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, staySuggest.discountAveragePrice, false));
-                    }
-                }
-                break;
-
-            case StaySuggest.CATEGORY_LOCATION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                break;
-
-            case StaySuggest.CATEGORY_REGION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                break;
-
-            case StaySuggest.CATEGORY_STATION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                break;
-
-            default:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                break;
-        }
+        holder.dataBinding.descriptionTextView.setText(description);
+        holder.dataBinding.descriptionTextView.setVisibility(DailyTextUtils.isTextEmpty(description) ? View.GONE : View.VISIBLE);
     }
 
     class DirectViewHolder extends RecyclerView.ViewHolder
