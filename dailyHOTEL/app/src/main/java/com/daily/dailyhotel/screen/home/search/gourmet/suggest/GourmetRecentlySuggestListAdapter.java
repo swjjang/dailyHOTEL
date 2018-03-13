@@ -225,7 +225,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         return gourmetSuggest;
     }
 
-    private void checkAndRemoveSection(int menuType)
+    private void checkAndRemoveSection(GourmetSuggestV2.MenuType menuType)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
