@@ -26,11 +26,10 @@ import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
@@ -41,7 +40,6 @@ import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -96,7 +94,7 @@ public class SearchStaySuggestPresenter //
     private List<StayOutboundSuggest> mStayOutboundSuggestList;
     ArrayList<String> mStayOutboundKeywordList;
     ArrayList<String> mGourmetKeywordList;
-    StaySuggest mLocationSuggest;
+    StaySuggestV2 mLocationSuggest;
     String mKeyword;
 
     DailyLocationExFactory mDailyLocationExFactory;
@@ -151,9 +149,9 @@ public class SearchStaySuggestPresenter //
 
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
-        mLocationSuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION //
-            , null);
-        mLocationSuggest.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
+        StaySuggestV2.Location location = new StaySuggestV2.Location();
+        location.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
+        mLocationSuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_LOCATION, location);
 
         List<StaySuggestV2> popularList = new ArrayList<>();
         popularList.add(new StaySuggestV2(0 //
@@ -621,83 +619,83 @@ public class SearchStaySuggestPresenter //
         {
             mSuggestDisposable = mSuggestRemoteImpl.getSuggestByStayV2(checkInDate, nights, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).flatMap(new Function<List<StaySuggestV2>, ObservableSource<List>>()
-            {
-                @Override
-                public ObservableSource<List> apply(List<StaySuggestV2> staySuggestList) throws Exception
                 {
-                    if (staySuggestList == null || staySuggestList.size() == 0)
+                    @Override
+                    public ObservableSource<List> apply(List<StaySuggestV2> staySuggestList) throws Exception
                     {
-                        if (mGourmetKeywordList != null && mGourmetKeywordList.size() > 0 && mGourmetKeywordList.contains(keyword))
+                        if (staySuggestList == null || staySuggestList.size() == 0)
                         {
-                            return getGourmetSuggestList(checkInDate, keyword);
+                            if (mGourmetKeywordList != null && mGourmetKeywordList.size() > 0 && mGourmetKeywordList.contains(keyword))
+                            {
+                                return getGourmetSuggestList(checkInDate, keyword);
+                            }
+
+                            if (mStayOutboundKeywordList != null && mStayOutboundKeywordList.size() > 0 && mStayOutboundKeywordList.contains(keyword))
+                            {
+                                return getStayOutboundSuggestList(keyword);
+                            }
                         }
 
-                        if (mStayOutboundKeywordList != null && mStayOutboundKeywordList.size() > 0 && mStayOutboundKeywordList.contains(keyword))
-                        {
-                            return getStayOutboundSuggestList(keyword);
-                        }
+                        return Observable.just(staySuggestList);
                     }
-
-                    return Observable.just(staySuggestList);
-                }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List>()
-            {
-                @Override
-                public void accept(List list) throws Exception
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List>()
                 {
-                    boolean hasStaySuggestList = false;
-
-                    if (list != null && list.size() > 0)
+                    @Override
+                    public void accept(List list) throws Exception
                     {
-                        if (list.get(0) instanceof StayOutboundSuggest)
+                        boolean hasStaySuggestList = false;
+
+                        if (list != null && list.size() > 0)
                         {
-                            setStayOutboundSuggestList(list);
-                        } else if (list.get(0) instanceof GourmetSuggest)
-                        {
-                            setGourmetSuggestList(list);
+                            if (list.get(0) instanceof StayOutboundSuggest)
+                            {
+                                setStayOutboundSuggestList(list);
+                            } else if (list.get(0) instanceof GourmetSuggest)
+                            {
+                                setGourmetSuggestList(list);
+                            } else
+                            {
+                                hasStaySuggestList = true;
+                                setSuggestList(list);
+                            }
                         } else
                         {
-                            hasStaySuggestList = true;
                             setSuggestList(list);
                         }
-                    } else
-                    {
-                        setSuggestList(list);
+
+                        notifyDataSetChanged();
+
+                        getViewInterface().setProgressBarVisible(false);
+                        unLockAll();
+
+                        try
+                        {
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, hasStaySuggestList);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
-
-                    notifyDataSetChanged();
-
-                    getViewInterface().setProgressBarVisible(false);
-                    unLockAll();
-
-                    try
-                    {
-                        mAnalytics.onSearchSuggestList(getActivity(), keyword, hasStaySuggestList);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(Throwable throwable) throws Exception
+                }, new Consumer<Throwable>()
                 {
-                    setSuggestList(null);
-                    notifyDataSetChanged();
-
-                    getViewInterface().setProgressBarVisible(false);
-                    unLockAll();
-
-                    try
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
                     {
-                        mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
+                        setSuggestList(null);
+                        notifyDataSetChanged();
+
+                        getViewInterface().setProgressBarVisible(false);
+                        unLockAll();
+
+                        try
+                        {
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
-                }
-            });
+                });
 
             addCompositeDisposable(mSuggestDisposable);
         }
@@ -776,9 +774,7 @@ public class SearchStaySuggestPresenter //
                 public void accept(Boolean aBoolean) throws Exception
                 {
                     getViewInterface().setSuggest(displayName);
-
-                    // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
-                    //        startFinishAction(staySuggest, mKeyword);
+                    startFinishAction(staySuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
             {
@@ -786,9 +782,7 @@ public class SearchStaySuggestPresenter //
                 public void accept(Throwable throwable) throws Exception
                 {
                     getViewInterface().setSuggest(displayName);
-
-                    // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
-                    //        startFinishAction(staySuggest, mKeyword);
+                    startFinishAction(staySuggest, mKeyword);
                 }
             }));
     }
@@ -808,7 +802,7 @@ public class SearchStaySuggestPresenter //
 
         if (GourmetSuggest.MENU_TYPE_DIRECT == gourmetSuggest.menuType)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggest.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(gourmetSuggest.displayName));
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(gourmetSuggest.displayName));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -817,9 +811,7 @@ public class SearchStaySuggestPresenter //
                     public void accept(Boolean aBoolean) throws Exception
                     {
                         getViewInterface().setSuggest(gourmetSuggest.displayName);
-
-                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
-                        //        startFinishAction(staySuggest, mKeyword);
+                        startFinishAction(staySuggest, mKeyword);
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -827,21 +819,19 @@ public class SearchStaySuggestPresenter //
                     public void accept(Throwable throwable) throws Exception
                     {
                         getViewInterface().setSuggest(gourmetSuggest.displayName);
-
-                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
-                        //        startFinishAction(staySuggest, mKeyword);
+                        startFinishAction(staySuggest, mKeyword);
                     }
                 }));
             return;
         }
 
-//        final String displayName;
-//        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
-//        {
-//            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
-//        } else {
-//            displayName = gourmetSuggest.suggestItem.name;
-//        }
+        //        final String displayName;
+        //        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        //        {
+        //            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+        //        } else {
+        //            displayName = gourmetSuggest.suggestItem.name;
+        //        }
 
         getViewInterface().setSuggest(gourmetSuggest.displayName);
 
@@ -871,7 +861,7 @@ public class SearchStaySuggestPresenter //
 
         if (StayOutboundSuggest.MENU_TYPE_DIRECT == stayOutboundSuggest.menuType)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggest.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(stayOutboundSuggest.display));
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(stayOutboundSuggest.display));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -880,9 +870,7 @@ public class SearchStaySuggestPresenter //
                     public void accept(Boolean aBoolean) throws Exception
                     {
                         getViewInterface().setSuggest(stayOutboundSuggest.display);
-
-                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
-                        //        startFinishAction(staySuggest, mKeyword);
+                        startFinishAction(staySuggest, mKeyword);
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -890,9 +878,7 @@ public class SearchStaySuggestPresenter //
                     public void accept(Throwable throwable) throws Exception
                     {
                         getViewInterface().setSuggest(stayOutboundSuggest.display);
-
-                        // TODO : 검색 홈에 값 넘기는 부분 작업 필요.
-                        //        startFinishAction(staySuggest, mKeyword);
+                        startFinishAction(staySuggest, mKeyword);
                     }
                 }));
             return;
@@ -948,9 +934,7 @@ public class SearchStaySuggestPresenter //
                 public void accept(Boolean aBoolean) throws Exception
                 {
                     getViewInterface().setSuggest(displayName);
-
-                    // TODO : 검색 홈에 데이터 넘기는 부분 작업 필요.
-                    //                    startFinishAction(staySuggest, mKeyword);
+                    startFinishAction(staySuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
             {
@@ -958,9 +942,7 @@ public class SearchStaySuggestPresenter //
                 public void accept(Throwable throwable) throws Exception
                 {
                     getViewInterface().setSuggest(displayName);
-
-                    // TODO : 검색 홈에 데이터 넘기는 부분 작업 필요.
-                    //                    startFinishAction(staySuggest, mKeyword);
+                    startFinishAction(staySuggest, mKeyword);
                 }
             }));
     }
@@ -975,44 +957,10 @@ public class SearchStaySuggestPresenter //
         return mDailyRecentSearches;
     }
 
-    private Keyword getKeyword(StaySuggest staySuggest)
-    {
-        if (getActivity() == null || staySuggest == null)
-        {
-            return null;
-        }
-
-        int icon = Keyword.DEFAULT_ICON;
-        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
-        {
-            icon = Keyword.HOTEL_ICON;
-        }
-
-        return new Keyword(icon, staySuggest.displayName);
-    }
-
-    private void addRecentSearches(StaySuggest staySuggest)
-    {
-        if (getActivity() == null || staySuggest == null)
-        {
-            return;
-        }
-
-        Keyword keyword = getKeyword(staySuggest);
-
-        if (keyword == null)
-        {
-            return;
-        }
-
-        getDailyRecentSearches().addString(keyword);
-        DailyPreference.getInstance(getActivity()).setHotelRecentSearches(getDailyRecentSearches().toString());
-    }
-
-    void startFinishAction(StaySuggest staySuggest, String keyword)
+    void startFinishAction(StaySuggestV2 staySuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(staySuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Activity.RESULT_OK, intent);
@@ -1066,7 +1014,7 @@ public class SearchStaySuggestPresenter //
             notifyDataSetChanged();
         }
 
-        if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
+        if (StaySuggestV2.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
         {
             StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
 
@@ -1169,7 +1117,7 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onNearbyClick(StaySuggest staySuggest)
+    public void onNearbyClick(StaySuggestV2 staySuggest)
     {
         startSearchMyLocation(true);
     }
@@ -1266,15 +1214,22 @@ public class SearchStaySuggestPresenter //
             screenLock(true);
         }
 
+        if (mLocationSuggest.suggestItem == null)
+        {
+            mLocationSuggest.suggestItem = new StaySuggestV2.Location();
+        }
+
+        StaySuggestV2.Location itemLocation = (StaySuggestV2.Location) mLocationSuggest.suggestItem;
+
         addCompositeDisposable(observable.subscribe(new Consumer<Location>()
         {
             @Override
             public void accept(Location location) throws Exception
             {
-                mLocationSuggest.displayName = getString(R.string.label_search_nearby_empty_address);
-                mLocationSuggest.address = getString(R.string.label_search_nearby_empty_address);
-                mLocationSuggest.latitude = location.getLatitude();
-                mLocationSuggest.longitude = location.getLongitude();
+                itemLocation.name = getString(R.string.label_search_nearby_empty_address);
+                itemLocation.address = getString(R.string.label_search_nearby_empty_address);
+                itemLocation.latitude = location.getLatitude();
+                itemLocation.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GoogleAddress>()
@@ -1282,8 +1237,8 @@ public class SearchStaySuggestPresenter //
                         @Override
                         public void accept(GoogleAddress address) throws Exception
                         {
-                            mLocationSuggest.address = address.address;
-                            mLocationSuggest.displayName = address.shortAddress;
+                            itemLocation.address = address.address;
+                            itemLocation.name = address.shortAddress;
 
                             getViewInterface().setNearbyStaySuggest(mLocationSuggest);
 
@@ -1292,23 +1247,44 @@ public class SearchStaySuggestPresenter //
                                 return;
                             }
 
-                            unLockAll();
-
-                            getViewInterface().setSuggest(mLocationSuggest.address);
 
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
-                                startFinishAction(mLocationSuggest, mKeyword);
+                                addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(mLocationSuggest, mKeyword) //
+                                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                    {
+                                        @Override
+                                        public void accept(Boolean aBoolean) throws Exception
+                                        {
+                                            unLockAll();
+
+                                            getViewInterface().setSuggest(itemLocation.address);
+                                            startFinishAction(mLocationSuggest, mKeyword);
+                                        }
+                                    }, new Consumer<Throwable>()
+                                    {
+                                        @Override
+                                        public void accept(Throwable throwable) throws Exception
+                                        {
+                                            unLockAll();
+
+                                            getViewInterface().setSuggest(itemLocation.address);
+                                            startFinishAction(mLocationSuggest, mKeyword);
+                                        }
+                                    }));
                             } else
                             {
-                                StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, mLocationSuggest.address);
+                                StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, itemLocation.address);
                                 stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
                                 stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
-                                stayOutboundSuggest.latitude = mLocationSuggest.latitude;
-                                stayOutboundSuggest.longitude = mLocationSuggest.longitude;
+                                stayOutboundSuggest.latitude = itemLocation.latitude;
+                                stayOutboundSuggest.longitude = itemLocation.longitude;
                                 stayOutboundSuggest.country = address.country;
                                 stayOutboundSuggest.city = address.shortAddress;
 
+                                unLockAll();
+
+                                getViewInterface().setSuggest(itemLocation.address);
                                 startFinishAction(stayOutboundSuggest, mKeyword);
                             }
 
@@ -1325,9 +1301,28 @@ public class SearchStaySuggestPresenter //
                                 return;
                             }
 
-                            unLockAll();
+                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(mLocationSuggest, mKeyword) //
+                                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception
+                                    {
+                                        unLockAll();
 
-                            getViewInterface().setSuggest(mLocationSuggest.address);
+                                        getViewInterface().setSuggest(itemLocation.address);
+                                        startFinishAction(mLocationSuggest, mKeyword);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        getViewInterface().setSuggest(itemLocation.address);
+                                        startFinishAction(mLocationSuggest, mKeyword);
+                                    }
+                                }));
 
                             try
                             {
@@ -1336,8 +1331,6 @@ public class SearchStaySuggestPresenter //
                             {
                                 ExLog.d(e.getMessage());
                             }
-
-                            startFinishAction(mLocationSuggest, mKeyword);
                         }
                     }));
 
@@ -1354,7 +1347,7 @@ public class SearchStaySuggestPresenter //
                     address = getString(R.string.label_search_nearby_description);
                 }
 
-                mLocationSuggest.address = address;
+                itemLocation.address = address;
 
                 getViewInterface().setNearbyStaySuggest(mLocationSuggest);
 

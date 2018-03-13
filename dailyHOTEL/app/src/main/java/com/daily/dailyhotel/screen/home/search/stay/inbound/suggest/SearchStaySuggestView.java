@@ -20,7 +20,6 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.GourmetSuggestListAdapter;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.StayOutboundSuggestListAdapter;
@@ -61,7 +60,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         void setCheckVoiceSearchEnabled();
 
-        void onNearbyClick(StaySuggest staySuggest);
+        void onNearbyClick(StaySuggestV2 staySuggest);
     }
 
     public SearchStaySuggestView(BaseActivity baseActivity, SearchStaySuggestView.OnEventListener listener)
@@ -442,7 +441,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggestV2> staySuggestList)
+    public void setRecentlySuggests(StaySuggestV2 locationSuggest, List<StaySuggestV2> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -466,7 +465,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 }
 
                 @Override
-                public void onNearbyClick(StaySuggest staySuggest)
+                public void onNearbyClick(StaySuggestV2 staySuggest)
                 {
                     getEventListener().onNearbyClick(staySuggest);
                 }
@@ -503,7 +502,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggestV2> staySuggestList)
+    public void setPopularAreaSuggests(StaySuggestV2 locationSuggest, List<StaySuggestV2> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -515,7 +514,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             mPopularSuggestListAdapter = new StayPopularSuggestListAdapter(getContext(), new StayPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
-                public void onNearbyClick(StaySuggest staySuggest)
+                public void onNearbyClick(StaySuggestV2 staySuggest)
                 {
                     getEventListener().onNearbyClick(staySuggest);
                 }
@@ -602,7 +601,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setNearbyStaySuggest(StaySuggest locationSuggest)
+    public void setNearbyStaySuggest(StaySuggestV2 locationSuggest)
     {
         if (locationSuggest == null)
         {

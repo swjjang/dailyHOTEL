@@ -38,7 +38,6 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -78,7 +77,6 @@ public class SearchGourmetSuggestPresenter //
     GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
     private Disposable mSuggestDisposable;
 
-    DailyRecentSearches mDailyRecentSearches;
     private GourmetBookDateTime mGourmetBookDateTime;
     private List<GourmetSuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<GourmetSuggestV2> mRecentlySuggestList;
