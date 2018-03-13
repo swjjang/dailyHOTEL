@@ -290,7 +290,7 @@ public class StayOutboundBookingDetailPresenter //
                     }
 
                     mStayOutboundBookingDetail.reviewStatusType = reviewStatusType;
-                    getViewInterface().setReviewButtonLayout(mStayOutboundBookingDetail.reviewStatusType);
+                    getViewInterface().setReviewButtonLayout(mStayOutboundBookingDetail.reviewStatusType, true);
                 }
                 break;
             }
@@ -880,9 +880,12 @@ public class StayOutboundBookingDetailPresenter //
         }
 
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+        boolean possibleShowReviewDay = false;
 
         try
         {
+            possibleShowReviewDay = DailyCalendar.compareDateDay(mStayOutboundBookingDetail.checkOutDate, mCommonDateTime.currentDateTime) < 0;
+
             String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkInTime.split(":")[0]);
             String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
 
@@ -917,7 +920,7 @@ public class StayOutboundBookingDetailPresenter //
             ExLog.d(e.toString());
         }
 
-        getViewInterface().setBookingDetail(mStayOutboundBookingDetail);
+        getViewInterface().setBookingDetail(mStayOutboundBookingDetail, possibleShowReviewDay);
 
         getViewInterface().setRefundPolicy(mStayOutboundBookingDetail);
     }

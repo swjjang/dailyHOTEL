@@ -198,9 +198,9 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
-    public void setBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail)
+    public void setBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail, boolean possibleShowReviewDay)
     {
-        setHeaderLayout(getContext(), stayOutboundBookingDetail);
+        setHeaderLayout(getContext(), stayOutboundBookingDetail, possibleShowReviewDay);
 
         setBookingInformation(getContext(), mBookingDetail01DataBinding, stayOutboundBookingDetail);
 
@@ -560,14 +560,14 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
-    public void setReviewButtonLayout(String reviewStatusType)
+    public void setReviewButtonLayout(String reviewStatusType, boolean possibleShowReviewDay)
     {
         if (getContext() == null || getViewDataBinding() == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(reviewStatusType) == true)
+        if (DailyTextUtils.isTextEmpty(reviewStatusType) == true || possibleShowReviewDay == false)
         {
             reviewStatusType = PlaceBookingDetail.ReviewStatusType.NONE;
         }
@@ -990,7 +990,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         setBookingDetailToolbar();
     }
 
-    private void setHeaderLayout(Context context, StayOutboundBookingDetail stayOutboundBookingDetail)
+    private void setHeaderLayout(Context context, StayOutboundBookingDetail stayOutboundBookingDetail, boolean possibleShowReviewDay)
     {
         if (context == null || stayOutboundBookingDetail == null || getViewDataBinding() == null)
         {
@@ -1018,7 +1018,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         getViewDataBinding().inputReviewView.setOnClickListener(this);
 
-        setReviewButtonLayout(stayOutboundBookingDetail.reviewStatusType);
+        setReviewButtonLayout(stayOutboundBookingDetail.reviewStatusType, possibleShowReviewDay);
     }
 
     private void setImageMapLayout(Context context, double latitude, double longitude, int height, int width)

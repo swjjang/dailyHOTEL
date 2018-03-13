@@ -11,7 +11,7 @@ import io.reactivex.Observable;
 
 public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterface
 {
-    void setBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail);
+    void setBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail, boolean showReview);
 
     Observable<Boolean> expandMap(double latitude, double longitude);
 
@@ -27,7 +27,7 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
 
     void setMyLocation(Location location);
 
-    void setReviewButtonLayout(String reviewStatusType);
+    void setReviewButtonLayout(String reviewStatusType, boolean possibleShowReviewDay);
 
     void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail);
 
