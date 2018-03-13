@@ -77,7 +77,7 @@ public class StaySuggestsData
             stay.name = name;
             stay.discountAvg = discountAvg;
             stay.available = available;
-            stay.province = areaGroup == null ? null : areaGroup.getAreaGroup();
+            stay.areaGroup = areaGroup == null ? null : areaGroup.getAreaGroup();
 
             return stay;
         }
@@ -95,14 +95,14 @@ public class StaySuggestsData
         @JsonField(name = "area")
         public AreaData area;
 
-        public StaySuggestV2.Province getAreaGroup()
+        public StaySuggestV2.AreaGroup getAreaGroup()
         {
-            StaySuggestV2.Province province = new StaySuggestV2.Province();
-            province.index = index;
-            province.name = name;
-            province.area = area == null ? null : area.getArea();
+            StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
+            areaGroup.index = index;
+            areaGroup.name = name;
+            areaGroup.area = area == null ? null : area.getArea();
 
-            return province;
+            return areaGroup;
         }
     }
 
@@ -152,9 +152,9 @@ public class StaySuggestsData
 
             for (AreaGroupData areaGroupData : areaGroupList)
             {
-                StaySuggestV2.Province province = areaGroupData.getAreaGroup();
+                StaySuggestV2.AreaGroup areaGroup = areaGroupData.getAreaGroup();
 
-                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, province));
+                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, areaGroup));
             }
         }
 
