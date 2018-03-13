@@ -152,7 +152,7 @@ public class SearchStaySuggestPresenter //
         mLocationSuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, location);
 
         List<StaySuggestV2> popularList = new ArrayList<>();
-        popularList.add(new StaySuggestV2(0 //
+        popularList.add(new StaySuggestV2(StaySuggestV2.MenuType.UNKNOWN //
             , new StaySuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_stay))));
         setPopularAreaList(popularList);
         notifyDataSetChanged();

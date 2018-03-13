@@ -225,7 +225,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         return staySuggest;
     }
 
-    private void checkAndRemoveSection(int menuType)
+    private void checkAndRemoveSection(StaySuggestV2.MenuType menuType)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {

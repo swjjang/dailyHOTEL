@@ -10,28 +10,30 @@ import java.io.Serializable;
 
 public class GourmetSuggestV2
 {
-    public interface Category
+    public enum Category
     {
-        int STATION = 1;
-        int GOURMET = 2;
-        int AREA_GROUP = 3;
-        int DIRECT = 4;
-        int LOCATION = 5;
-        int CAMPAIGN_TAG = 6;
-        int SECTION = 7;
+        UNKNOWN,
+        STATION,
+        GOURMET,
+        AREA_GROUP,
+        DIRECT,
+        LOCATION,
+        CAMPAIGN_TAG,
+        SECTION
     }
 
-    public interface MenuType
+    public enum MenuType
     {
-        int DIRECT = 1;
-        int LOCATION = 2;
-        int RECENTLY_SEARCH = 3;
-        int RECENTLY_GOURMET = 4;
-        int SUGGEST = 5;
-        int CAMPAIGN_TAG = 6;
+        UNKNOWN,
+        DIRECT,
+        LOCATION,
+        RECENTLY_SEARCH,
+        RECENTLY_GOURMET,
+        SUGGEST,
+        CAMPAIGN_TAG
     }
 
-    public int menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
+    public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
     public SuggestItem suggestItem;
     //    public int category; // 카테고리 비교 용
     //    public String text1;
@@ -41,33 +43,32 @@ public class GourmetSuggestV2
     {
     }
 
-    public GourmetSuggestV2(int menuType, SuggestItem suggestItem)
+    public GourmetSuggestV2(MenuType menuType, SuggestItem suggestItem)
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;
-//                this.category = getCategory();
+        //                this.category = getCategory();
         //        this.text1 = getText1();
         //        this.text2 = getText2();
     }
 
     /**
-     *
      * @return
      */
-    public int getCategory()
+    public Category getCategory()
     {
         if (suggestItem == null)
         {
-            return 0;
+            return Category.UNKNOWN;
         }
 
         if (suggestItem instanceof Gourmet)
         {
             return Category.GOURMET;
-//        } else if (suggestItem instanceof Station)
-//        {
-//            return Category.STATION;
-//
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return Category.STATION;
+            //
         } else if (suggestItem instanceof AreaGroup)
         {
             return Category.AREA_GROUP;
@@ -85,7 +86,7 @@ public class GourmetSuggestV2
             return Category.SECTION;
         }
 
-        return 0;
+        return Category.UNKNOWN;
     }
 
     public String getText1()
@@ -98,9 +99,9 @@ public class GourmetSuggestV2
         if (suggestItem instanceof Gourmet)
         {
             return suggestItem.name;
-//        } else if (suggestItem instanceof Station)
-//        {
-//            return ((Station) suggestItem).getDisplayName();
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return ((Station) suggestItem).getDisplayName();
         } else if (suggestItem instanceof AreaGroup)
         {
             AreaGroup areaGroup = (AreaGroup) suggestItem;
@@ -145,9 +146,9 @@ public class GourmetSuggestV2
         {
             AreaGroup areaGroup = ((Gourmet) suggestItem).areaGroup;
             return areaGroup.name;
-//        } else if (suggestItem instanceof Station)
-//        {
-//            return ((Station) suggestItem).region;
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return ((Station) suggestItem).region;
         } else if (suggestItem instanceof AreaGroup)
         {
             AreaGroup areaGroup = (AreaGroup) suggestItem;
@@ -200,7 +201,7 @@ public class GourmetSuggestV2
     public static class Gourmet extends SuggestItem
     {
         public int index;
-//        public String name;
+        //        public String name;
         public int discount;
         public boolean available;
         public AreaGroup areaGroup;

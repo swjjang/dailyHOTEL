@@ -37,7 +37,7 @@ public class StaySuggestParcelV2 implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(mStaySuggest.menuType);
+        dest.writeString(mStaySuggest.menuType.name());
         dest.writeSerializable(mStaySuggest.suggestItem);
     }
 
@@ -45,7 +45,14 @@ public class StaySuggestParcelV2 implements Parcelable
     {
         mStaySuggest = new StaySuggestV2();
 
-        mStaySuggest.menuType = in.readInt();
+        try
+        {
+            mStaySuggest.menuType = StaySuggestV2.MenuType.valueOf(in.readString());
+        } catch (Exception e)
+        {
+            mStaySuggest.menuType = StaySuggestV2.MenuType.UNKNOWN;
+        }
+
         mStaySuggest.suggestItem = (StaySuggestV2.SuggestItem) in.readSerializable();
     }
 
