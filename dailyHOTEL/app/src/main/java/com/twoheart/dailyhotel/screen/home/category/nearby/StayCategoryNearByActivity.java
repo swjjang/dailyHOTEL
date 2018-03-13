@@ -349,34 +349,45 @@ public class StayCategoryNearByActivity extends BaseActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            StayBookingDay stayBookingDay = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+            String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+            String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
-            if (stayBookingDay == null)
+            if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
             {
                 return;
             }
 
-            mStayCategoryNearByCuration.setStayBookingDay(stayBookingDay);
-
-            mStayCategoryNearByLayout.setCalendarText(stayBookingDay);
-
-            // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
-            mStayCategoryNearByCuration.getCurationOption().clear();
-
-            mStayCategoryNearByLayout.setOptionFilterSelected(false);
-            mStayCategoryNearByLayout.clearCategoryTab();
-            mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mStayCategoryNearByLayout.setScreenVisible(ScreenType.NONE);
-
-            if (mStayCategoryNearByCuration.getLocation() == null)
+            try
             {
-                searchMyLocation();
-            } else
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(checkInDateTime);
+                stayBookingDay.setCheckOutDay(checkOutDateTime);
+
+                mStayCategoryNearByCuration.setStayBookingDay(stayBookingDay);
+
+                mStayCategoryNearByLayout.setCalendarText(stayBookingDay);
+
+                // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
+                mStayCategoryNearByCuration.getCurationOption().clear();
+
+                mStayCategoryNearByLayout.setOptionFilterSelected(false);
+                mStayCategoryNearByLayout.clearCategoryTab();
+                mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mStayCategoryNearByLayout.setScreenVisible(ScreenType.NONE);
+
+                if (mStayCategoryNearByCuration.getLocation() == null)
+                {
+                    searchMyLocation();
+                } else
+                {
+                    mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                }
+
+                mStayCategoryNearByLayout.setMenuBarLayoutTranslationY(0);
+            } catch (Exception e)
             {
-                mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                ExLog.e(e.toString());
             }
-
-            mStayCategoryNearByLayout.setMenuBarLayoutTranslationY(0);
         }
     }
 
