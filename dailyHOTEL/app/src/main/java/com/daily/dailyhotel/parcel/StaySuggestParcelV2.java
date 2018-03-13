@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 
 /**
@@ -46,35 +45,7 @@ public class StaySuggestParcelV2 implements Parcelable
             return;
         }
 
-        if (item instanceof StaySuggestV2.Station)
-        {
-            StaySuggestV2.Station station = (StaySuggestV2.Station) item;
-            dest.writeSerializable(station);
-        } else if (item instanceof StaySuggestV2.Stay)
-        {
-            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) item;
-            dest.writeSerializable(stay);
-        } else if (item instanceof StaySuggestV2.Province)
-        {
-            StaySuggestV2.Province province = (StaySuggestV2.Province) item;
-            dest.writeSerializable(province);
-        } else if (item instanceof StaySuggestV2.Direct)
-        {
-            StaySuggestV2.Direct direct = (StaySuggestV2.Direct) item;
-            dest.writeSerializable(direct);
-        } else if (item instanceof StaySuggestV2.Location)
-        {
-            StaySuggestV2.Location location = (StaySuggestV2.Location) item;
-            dest.writeSerializable(location);
-        } else if (item instanceof StaySuggestV2.CampaignTag)
-        {
-            StaySuggestV2.CampaignTag campaignTag = (StaySuggestV2.CampaignTag) item;
-            dest.writeSerializable(campaignTag);
-        } else
-        {
-            dest.writeSerializable(item);
-            ExLog.e("sam : writeToParcel error suggestItem name : " + item.name);
-        }
+        dest.writeSerializable(item);
     }
 
     private void readFromParcel(Parcel in)
@@ -83,7 +54,13 @@ public class StaySuggestParcelV2 implements Parcelable
 
         mStaySuggest.menuType = in.readInt();
 
-        mStaySuggest.suggestItem = (StaySuggestV2.SuggestItem) in.readSerializable();
+        try
+        {
+            mStaySuggest.suggestItem = (StaySuggestV2.SuggestItem) in.readSerializable();
+        } catch (Exception e)
+        {
+            mStaySuggest.suggestItem = null;
+        }
     }
 
     @Override

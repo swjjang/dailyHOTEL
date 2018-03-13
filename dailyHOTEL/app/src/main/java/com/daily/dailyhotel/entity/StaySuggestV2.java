@@ -14,7 +14,7 @@ public class StaySuggestV2
     {
         int STATION = 1;
         int STAY = 2;
-        int PROVINCE = 3;
+        int AREA_GROUP = 3;
         int DIRECT = 4;
         int LOCATION = 5;
         int CAMPAIGN_TAG = 6;
@@ -64,9 +64,9 @@ public class StaySuggestV2
         {
             return Category.STATION;
 
-        } else if (suggestItem instanceof Province)
+        } else if (suggestItem instanceof AreaGroup)
         {
-            return Category.PROVINCE;
+            return Category.AREA_GROUP;
         } else if (suggestItem instanceof Direct)
         {
             return Category.DIRECT;
@@ -97,18 +97,18 @@ public class StaySuggestV2
         } else if (suggestItem instanceof Station)
         {
             return ((Station) suggestItem).getDisplayName();
-        } else if (suggestItem instanceof Province)
+        } else if (suggestItem instanceof AreaGroup)
         {
-            Province province = (Province) suggestItem;
-            if (province.area == null)
+            AreaGroup areaGroup = (AreaGroup) suggestItem;
+            if (areaGroup.area == null)
             {
-                return province.name;
+                return areaGroup.name;
             } else
             {
-                Area area = province.area;
+                Area area = areaGroup.area;
                 if (area == null || DailyTextUtils.isTextEmpty(area.name))
                 {
-                    return province.name;
+                    return areaGroup.name;
                 }
 
                 return area.name;
@@ -139,26 +139,26 @@ public class StaySuggestV2
 
         if (suggestItem instanceof Stay)
         {
-            Province province = ((Stay) suggestItem).province;
-            return province.name;
+            AreaGroup areaGroup = ((Stay) suggestItem).areaGroup;
+            return areaGroup.name;
         } else if (suggestItem instanceof Station)
         {
             return ((Station) suggestItem).region;
-        } else if (suggestItem instanceof Province)
+        } else if (suggestItem instanceof AreaGroup)
         {
-            Province province = (Province) suggestItem;
-            if (province.area == null)
+            AreaGroup areaGroup = (AreaGroup) suggestItem;
+            if (areaGroup.area == null)
             {
                 return null;
             } else
             {
-                Area area = province.area;
+                Area area = areaGroup.area;
                 if (area == null || DailyTextUtils.isTextEmpty(area.name))
                 {
                     return null;
                 }
 
-                return province.name;
+                return areaGroup.name;
             }
         } else if (suggestItem instanceof Direct)
         {
@@ -213,21 +213,21 @@ public class StaySuggestV2
         //        public String name;
         public int discountAvg;
         public boolean available;
-        public Province province;
+        public AreaGroup areaGroup;
 
-        public String getProvinceName()
+        public String getAreaGroupName()
         {
-            return province == null ? null : province.getProvinceName();
+            return areaGroup == null ? null : areaGroup.name;
         }
     }
 
-    public static class Province extends SuggestItem
+    public static class AreaGroup extends SuggestItem
     {
         public int index;
         //        public String name;
         public Area area;
 
-        public String getProvinceName()
+        public String getDisplayName()
         {
             return area == null ? name : area.name;
         }

@@ -478,13 +478,13 @@ public class SearchStaySuggestPresenter //
             for (RecentlyPlace recentlyPlace : recentlyPlaceList)
             {
                 StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
-                StaySuggestV2.Province province = new StaySuggestV2.Province();
+                StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
 
-                province.name = recentlyPlace.regionName;
+                areaGroup.name = recentlyPlace.regionName;
 
                 stay.index = recentlyPlace.index;
                 stay.name = recentlyPlace.title;
-                stay.province = province;
+                stay.areaGroup = areaGroup;
 
                 recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_STAY, stay));
             }
@@ -728,9 +728,9 @@ public class SearchStaySuggestPresenter //
         }
 
         final String displayName;
-        if (staySuggest.suggestItem instanceof StaySuggestV2.Province)
+        if (staySuggest.suggestItem instanceof StaySuggestV2.AreaGroup)
         {
-            displayName = ((StaySuggestV2.Province) staySuggest.suggestItem).getProvinceName();
+            displayName = ((StaySuggestV2.AreaGroup) staySuggest.suggestItem).getDisplayName();
         } else if (staySuggest.suggestItem instanceof StaySuggestV2.Station)
         {
             displayName = ((StaySuggestV2.Station) staySuggest.suggestItem).getDisplayName();
@@ -778,9 +778,9 @@ public class SearchStaySuggestPresenter //
         }
 
         final String displayName;
-        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.AreaGroup)
         {
-            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+            displayName = ((GourmetSuggestV2.AreaGroup) gourmetSuggest.suggestItem).getDisplayName();
         } else {
             displayName = gourmetSuggest.suggestItem.name;
         }
@@ -893,9 +893,9 @@ public class SearchStaySuggestPresenter //
         }
 
         final String displayName;
-        if (staySuggest.suggestItem instanceof StaySuggestV2.Province)
+        if (staySuggest.suggestItem instanceof StaySuggestV2.AreaGroup)
         {
-            displayName = ((StaySuggestV2.Province) staySuggest.suggestItem).getProvinceName();
+            displayName = ((StaySuggestV2.AreaGroup) staySuggest.suggestItem).getDisplayName();
         } else if (staySuggest.suggestItem instanceof StaySuggestV2.Station)
         {
             displayName = ((StaySuggestV2.Station) staySuggest.suggestItem).getDisplayName();

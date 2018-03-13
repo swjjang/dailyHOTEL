@@ -400,7 +400,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
             GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
             title = gourmet.name;
-            description = gourmet.province == null ? null : gourmet.province.name;
+            description = gourmet.areaGroup == null ? null : gourmet.areaGroup.name;
         } else if (suggestItem instanceof GourmetSuggestV2.Location)
         {
             holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
@@ -409,20 +409,20 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
             title = mContext.getString(R.string.label_search_suggest_type_location_item_format, location.name);
             description = null;
-        } else if (suggestItem instanceof GourmetSuggestV2.Province)
+        } else if (suggestItem instanceof GourmetSuggestV2.AreaGroup)
         {
             holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
 
-            GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
+            GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) suggestItem;
 
-            if (province.area == null)
+            if (areaGroup.area == null)
             {
-                title = province.name + " " + mContext.getString(R.string.label_all);
+                title = areaGroup.name + " " + mContext.getString(R.string.label_all);
                 description = null;
             } else
             {
-                title = province.area.name;
-                description = province.name;
+                title = areaGroup.area.name;
+                description = areaGroup.name;
             }
         } else
         {
