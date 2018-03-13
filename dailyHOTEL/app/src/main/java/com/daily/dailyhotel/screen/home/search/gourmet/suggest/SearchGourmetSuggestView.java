@@ -211,7 +211,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
-                , new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_DIRECT, new GourmetSuggestV2.Direct(keyword))));
+                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, new GourmetSuggestV2.Direct(keyword))));
         }
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
@@ -235,7 +235,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, null)));
+                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, null)));
         }
 
         mSuggestListAdapter.setAll(keyword, objectItemList);

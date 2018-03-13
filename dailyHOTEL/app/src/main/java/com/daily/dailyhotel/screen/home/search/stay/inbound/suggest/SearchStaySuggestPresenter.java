@@ -149,7 +149,7 @@ public class SearchStaySuggestPresenter //
 
         StaySuggestV2.Location location = new StaySuggestV2.Location();
         location.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
-        mLocationSuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_LOCATION, location);
+        mLocationSuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, location);
 
         List<StaySuggestV2> popularList = new ArrayList<>();
         popularList.add(new StaySuggestV2(0 //
@@ -463,7 +463,7 @@ public class SearchStaySuggestPresenter //
 
         if (recentlySearchList != null && recentlySearchList.size() > 0)
         {
-            recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH //
+            recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH //
                 , new StaySuggestV2.Section(getString(R.string.label_search_suggest_recently_search))));
 
             recentlySuggestList.addAll(recentlySearchList);
@@ -472,7 +472,7 @@ public class SearchStaySuggestPresenter //
         // 최근 본 업장
         if (recentlyPlaceList != null && recentlyPlaceList.size() > 0)
         {
-            recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_STAY //
+            recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_STAY //
                 , new StaySuggestV2.Section(getString(R.string.label_recently_stay))));
 
             for (RecentlyPlace recentlyPlace : recentlyPlaceList)
@@ -486,7 +486,7 @@ public class SearchStaySuggestPresenter //
                 stay.name = recentlyPlace.title;
                 stay.province = province;
 
-                recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_STAY, stay));
+                recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_STAY, stay));
             }
         }
 
@@ -785,9 +785,9 @@ public class SearchStaySuggestPresenter //
             displayName = gourmetSuggest.suggestItem.name;
         }
 
-        if (GourmetSuggestV2.MENU_TYPE_DIRECT == gourmetSuggest.menuType)
+        if (GourmetSuggestV2.MenuType.DIRECT == gourmetSuggest.menuType)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(displayName));
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(displayName));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -838,7 +838,7 @@ public class SearchStaySuggestPresenter //
 
         if (StayOutboundSuggest.MENU_TYPE_DIRECT == stayOutboundSuggest.menuType)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(stayOutboundSuggest.display));
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(stayOutboundSuggest.display));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -991,7 +991,7 @@ public class SearchStaySuggestPresenter //
             notifyDataSetChanged();
         }
 
-        if (StaySuggestV2.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
+        if (StaySuggestV2.MenuType.RECENTLY_STAY == staySuggest.menuType)
         {
             StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
 

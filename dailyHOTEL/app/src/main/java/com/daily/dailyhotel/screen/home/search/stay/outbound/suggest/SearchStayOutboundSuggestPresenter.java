@@ -926,7 +926,7 @@ public class SearchStayOutboundSuggestPresenter //
                                 itemLocation.latitude = mLocationSuggest.latitude;
                                 itemLocation.longitude = mLocationSuggest.longitude;
 
-                                StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_LOCATION, itemLocation);
+                                StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, itemLocation);
                                 startFinishAction(staySuggest, mKeyword);
                             } else
                             {

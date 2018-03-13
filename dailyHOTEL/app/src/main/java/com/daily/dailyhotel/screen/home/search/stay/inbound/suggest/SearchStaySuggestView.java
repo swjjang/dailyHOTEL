@@ -219,7 +219,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(keyword))));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(keyword))));
         }
 
         if (staySuggestList != null && staySuggestList.size() > 0)
@@ -242,7 +242,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             }
 
             // 마지막줄
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, null)));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, null)));
         }
 
         mStaySuggestListAdapter.setAll(keyword, objectItemList);
@@ -283,12 +283,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
-                , new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_DIRECT, new GourmetSuggestV2.Direct(keyword))));
+                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, new GourmetSuggestV2.Direct(keyword))));
         }
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            GourmetSuggestV2 sectionGourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST //
+            GourmetSuggestV2 sectionGourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
                 , new GourmetSuggestV2.Section(getString(R.string.label_search_suggest_check_gourmet)));
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, sectionGourmetSuggest));
 
@@ -311,7 +311,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, null)));
+                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, null)));
         }
 
         mGourmetSuggestListAdapter.setAll(keyword, objectItemList);
