@@ -27,5 +27,5 @@ public interface SuggestInterface
 
     Observable<List<StaySuggestV2>> getSuggestByStayV2(String checkInDate, int stays, String keyword);
 
-    Observable<List<GourmetSuggestV2>> getSuggestByGourmetV2(String reservationDate, String term);
+    Observable<List<GourmetSuggestV2>> getSuggestsByGourmetV2(String reservationDate, String term);
 }

@@ -106,7 +106,8 @@ public class GourmetSuggestsData
 
         if (gourmetList != null && gourmetList.size() > 0)
         {
-            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_gourmet))));
+            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST //
+                , new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_gourmet))));
 
             for (GourmetData gourmetData : gourmetList)
             {
@@ -118,7 +119,8 @@ public class GourmetSuggestsData
 
         if (provinceList != null && provinceList.size() > 0)
         {
-            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
+            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST //
+                , new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
 
             for (ProvinceData provinceData : provinceList)
             {

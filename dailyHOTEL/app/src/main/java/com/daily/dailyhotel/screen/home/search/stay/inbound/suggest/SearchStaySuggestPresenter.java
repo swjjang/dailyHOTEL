@@ -10,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -22,12 +21,12 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
@@ -40,7 +39,6 @@ import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
@@ -90,7 +88,7 @@ public class SearchStaySuggestPresenter //
     private List<StaySuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<StaySuggestV2> mRecentlySuggestList;
     private List<StaySuggestV2> mSuggestList;
-    private List<GourmetSuggest> mGourmetSuggestList;
+    private List<GourmetSuggestV2> mGourmetSuggestList;
     private List<StayOutboundSuggest> mStayOutboundSuggestList;
     ArrayList<String> mStayOutboundKeywordList;
     ArrayList<String> mGourmetKeywordList;
@@ -505,7 +503,7 @@ public class SearchStaySuggestPresenter //
         mSuggestList = suggestList;
     }
 
-    void setGourmetSuggestList(List<GourmetSuggest> suggestList)
+    void setGourmetSuggestList(List<GourmetSuggestV2> suggestList)
     {
         mGourmetSuggestList = suggestList;
     }
@@ -650,7 +648,7 @@ public class SearchStaySuggestPresenter //
                             if (list.get(0) instanceof StayOutboundSuggest)
                             {
                                 setStayOutboundSuggestList(list);
-                            } else if (list.get(0) instanceof GourmetSuggest)
+                            } else if (list.get(0) instanceof GourmetSuggestV2)
                             {
                                 setGourmetSuggestList(list);
                             } else
@@ -703,33 +701,7 @@ public class SearchStaySuggestPresenter //
 
     Observable getGourmetSuggestList(String visitDate, String keyword)
     {
-        return mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
-            .map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
-            {
-                @Override
-                public List<GourmetSuggest> apply(Pair<String, ArrayList<GourmetKeyword>> stringArrayListPair) throws Exception
-                {
-                    ArrayList<GourmetKeyword> keywordList = stringArrayListPair.second;
-                    ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
-
-                    if (keywordList == null || keywordList.size() == 0)
-                    {
-                        return gourmetSuggestList;
-                    }
-
-                    for (GourmetKeyword gourmetKeyword : keywordList)
-                    {
-                        GourmetSuggest gourmetSuggest = new GourmetSuggest(gourmetKeyword);
-
-                        if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
-                        {
-                            gourmetSuggestList.add(gourmetSuggest);
-                        }
-                    }
-
-                    return gourmetSuggestList;
-                }
-            }).observeOn(Schedulers.io());
+        return mSuggestRemoteImpl.getSuggestsByGourmetV2(visitDate, keyword).observeOn(Schedulers.io());
     }
 
     Observable getStayOutboundSuggestList(String keyword)
@@ -788,9 +760,14 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onSuggestClick(GourmetSuggest gourmetSuggest)
+    public void onSuggestClick(GourmetSuggestV2 gourmetSuggest)
     {
         if (gourmetSuggest == null)
+        {
+            return;
+        }
+
+        if (gourmetSuggest.suggestItem == null)
         {
             return;
         }
@@ -800,9 +777,17 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        if (GourmetSuggest.MENU_TYPE_DIRECT == gourmetSuggest.menuType)
+        final String displayName;
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(gourmetSuggest.displayName));
+            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+        } else {
+            displayName = gourmetSuggest.suggestItem.name;
+        }
+
+        if (GourmetSuggestV2.MENU_TYPE_DIRECT == gourmetSuggest.menuType)
+        {
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MENU_TYPE_DIRECT, new StaySuggestV2.Direct(displayName));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -810,7 +795,7 @@ public class SearchStaySuggestPresenter //
                     @Override
                     public void accept(Boolean aBoolean) throws Exception
                     {
-                        getViewInterface().setSuggest(gourmetSuggest.displayName);
+                        getViewInterface().setSuggest(displayName);
                         startFinishAction(staySuggest, mKeyword);
                     }
                 }, new Consumer<Throwable>()
@@ -818,22 +803,14 @@ public class SearchStaySuggestPresenter //
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        getViewInterface().setSuggest(gourmetSuggest.displayName);
+                        getViewInterface().setSuggest(displayName);
                         startFinishAction(staySuggest, mKeyword);
                     }
                 }));
             return;
         }
 
-        //        final String displayName;
-        //        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
-        //        {
-        //            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
-        //        } else {
-        //            displayName = gourmetSuggest.suggestItem.name;
-        //        }
-
-        getViewInterface().setSuggest(gourmetSuggest.displayName);
+        getViewInterface().setSuggest(displayName);
 
         try
         {
@@ -967,10 +944,10 @@ public class SearchStaySuggestPresenter //
         finish();
     }
 
-    private void startFinishAction(GourmetSuggest gourmetSuggest, String keyword)
+    private void startFinishAction(GourmetSuggestV2 gourmetSuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, intent);

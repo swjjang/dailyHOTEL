@@ -22,7 +22,6 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
@@ -540,7 +539,7 @@ public class SearchGourmetSuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByGourmetV2(visitDate, keyword) //
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmetV2(visitDate, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()) //
                 .subscribe(new Consumer<List<GourmetSuggestV2>>()
                 {
@@ -607,7 +606,8 @@ public class SearchGourmetSuggestPresenter //
         if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
         {
             displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
-        } else {
+        } else
+        {
             displayName = gourmetSuggest.suggestItem.name;
         }
 
@@ -653,7 +653,8 @@ public class SearchGourmetSuggestPresenter //
         if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
         {
             displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
-        } else {
+        } else
+        {
             displayName = gourmetSuggest.suggestItem.name;
         }
 
@@ -714,7 +715,7 @@ public class SearchGourmetSuggestPresenter //
             notifyDataSetChanged();
         }
 
-        if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
+        if (GourmetSuggestV2.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
         {
             GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
 

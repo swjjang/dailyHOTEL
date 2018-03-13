@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 
@@ -11,7 +11,7 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 {
     void setStaySuggests(List<StaySuggestV2> staySuggestList);
 
-    void setGourmetSuggests(List<GourmetSuggest> gourmetSuggestList);
+    void setGourmetSuggests(List<GourmetSuggestV2> gourmetSuggestList);
 
     void setStayOutboundSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 

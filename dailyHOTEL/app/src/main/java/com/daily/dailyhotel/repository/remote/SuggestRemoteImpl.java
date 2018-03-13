@@ -244,7 +244,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<GourmetSuggestV2>> getSuggestByGourmetV2(String visitDate, String keyword)
+    public Observable<List<GourmetSuggestV2>> getSuggestsByGourmetV2(String visitDate, String keyword)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/gourmet/sales/search/suggest"//
             : "NjgkNjYkMzMkMjQkMTQkMzAkNjkkMTExJDY4JDExOCQ5NiQxMDckODMkOTckMjQkMzIk$NDVFRUFBRTFFNTOQ0RTcwQUEO4CQThCXZMURFRZDY3NkEwN0VDMDY3Q0EwQUExOEY5RjAyMMTjAA3KOEZDMTVEGNjRDNUFCM0I0BQNjFEODc4NjPZEQ0JEHMkM3NUUEzODk1NTNDMjM5NDU4$";

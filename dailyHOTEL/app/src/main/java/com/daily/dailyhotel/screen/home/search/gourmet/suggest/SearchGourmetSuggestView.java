@@ -17,7 +17,6 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
@@ -211,7 +210,8 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, new GourmetSuggestV2(GourmetSuggest.MENU_TYPE_DIRECT, new GourmetSuggestV2.Direct(keyword))));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
+                , new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_DIRECT, new GourmetSuggestV2.Direct(keyword))));
         }
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
@@ -234,7 +234,8 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
             }
 
             // 마지막줄
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new GourmetSuggestV2(GourmetSuggest.MENU_TYPE_SUGGEST, null)));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
+                , new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, null)));
         }
 
         mSuggestListAdapter.setAll(keyword, objectItemList);
