@@ -42,4 +42,10 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
 
         viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
+
+    @Override
+    public void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)
+    {
+
+    }
 }

@@ -1176,7 +1176,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
             GourmetSuggestV2 suggest = mSearchModel.gourmetViewModel.suggest.getValue();
 
-            if (suggest.menuType == GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG && suggest.isCampaignTagSuggestItem() == true)
+            if (suggest.menuType == GourmetSuggestV2.MenuType.CAMPAIGN_TAG && suggest.isCampaignTagSuggestItem() == true)
             {
                 GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
 
@@ -1228,7 +1228,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG, suggestItem);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchModel.gourmetViewModel.suggest.setValue(gourmetSuggest);
 
@@ -1343,7 +1343,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             @Override
             public void onChanged(@Nullable GourmetSuggestV2 suggest)
             {
-                String displayName = suggest.getDisplayNameSearchHomeType(getActivity());
+                String displayName = suggest.getText1();
 
                 getViewInterface().setSearchGourmetSuggestText(displayName);
 
@@ -1425,7 +1425,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             getViewInterface().setSearchGourmetButtonEnabled(false);
         } else
         {
-            String displayName = mSearchModel.gourmetViewModel.suggest.getValue().getDisplayNameSearchHomeType(getActivity());
+            String displayName = mSearchModel.gourmetViewModel.suggest.getValue().getText1();
 
             getViewInterface().setSearchGourmetSuggestText(displayName);
             getViewInterface().setSearchGourmetButtonEnabled(true);
@@ -1560,7 +1560,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         GourmetSuggestV2.Direct suggestItem = new GourmetSuggestV2.Direct(word);
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_DIRECT, suggestItem);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, suggestItem);
         Constants.SortType sortType = externalDeepLink.getSorting();
 
         try

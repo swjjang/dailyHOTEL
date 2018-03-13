@@ -383,7 +383,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         lockUI();
 
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_LOCATION, null);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.LOCATION, null);
 
         Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, null, gourmetSuggest, null, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);

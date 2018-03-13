@@ -136,37 +136,37 @@ public class StaySuggestsData
 
         if (stayList != null && stayList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_stay))));
+            list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_stay))));
 
             for (StayData stayData : stayList)
             {
                 StaySuggestV2.Stay stay = stayData.getStay();
 
-                list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, stay));
+                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, stay));
             }
         }
 
         if (provinceList != null && provinceList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
+            list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
 
             for (ProvinceData provinceData : provinceList)
             {
                 StaySuggestV2.Province province = provinceData.getProvince();
 
-                list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, province));
+                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, province));
             }
         }
 
         if (stationList != null && stationList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_station))));
+            list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_station))));
 
             for (StationData stationData : stationList)
             {
                 StaySuggestV2.Station station = stationData.getStation();
 
-                list.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_SUGGEST, station));
+                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, station));
             }
         }
 

@@ -123,7 +123,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_search_search_gourmet));
 
-        String displayName = mSearchModel.suggest.getValue().getDisplayNameSearchHomeType(getActivity());
+        String displayName = mSearchModel.suggest.getValue().getText1();
 
         if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(displayName) == true)
         {
@@ -360,7 +360,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         }
 
         GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG, suggestItem);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchModel.suggest.setValue(gourmetSuggest);
 
@@ -398,7 +398,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             @Override
             public void onChanged(@Nullable GourmetSuggestV2 gourmetSuggest)
             {
-                String displayName = gourmetSuggest.getDisplayNameSearchHomeType(getActivity());
+                String displayName = gourmetSuggest.getText1();
 
                 getViewInterface().setSearchSuggestText(displayName);
 

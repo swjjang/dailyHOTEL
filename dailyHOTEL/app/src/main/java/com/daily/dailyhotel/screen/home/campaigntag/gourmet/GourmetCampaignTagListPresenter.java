@@ -674,7 +674,7 @@ public class GourmetCampaignTagListPresenter //
             suggestItem.index = mTagIndex;
             suggestItem.name = mTitle;
 
-            GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG, suggestItem);
+            GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
 
             startActivityForResult(ResearchGourmetActivity.newInstance(getActivity(), todayDateTime.openDateTime, todayDateTime.closeDateTime//
                 , todayDateTime.currentDateTime, todayDateTime.dailyDateTime//

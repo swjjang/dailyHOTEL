@@ -429,7 +429,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             gourmet.name = gourmetName;
                             gourmet.province = province;
 
-                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, gourmet));
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, gourmet));
 
                         } else if (GourmetSuggestV2.Province.class.getSimpleName().equalsIgnoreCase(type))
                         {
@@ -452,12 +452,12 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             province.name = provinceName;
                             province.area = area;
 
-                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, province));
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, province));
                         } else if (GourmetSuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
                         {
                             String directName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.DIRECT_NAME));
                             GourmetSuggestV2.Direct direct = new GourmetSuggestV2.Direct(directName);
-                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, direct));
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, direct));
 
                         } else if (GourmetSuggestV2.Location.class.getSimpleName().equalsIgnoreCase(type))
                         {
@@ -472,7 +472,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             location.latitude = latitude;
                             location.longitude = longitude;
 
-                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH, location));
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, location));
                         }
                     }
 
@@ -705,7 +705,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             station.region = stationRegion;
                             station.line = stationLine;
 
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, station));
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, station));
 
                         } else if (StaySuggestV2.Stay.class.getSimpleName().equalsIgnoreCase(type))
                         {
@@ -725,7 +725,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             stay.name = stayName;
                             stay.province = province;
 
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, stay));
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, stay));
 
                         } else if (StaySuggestV2.Province.class.getSimpleName().equalsIgnoreCase(type))
                         {
@@ -748,13 +748,13 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             province.name = provinceName;
                             province.area = area;
 
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, province));
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, province));
 
                         } else if (StaySuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
                         {
                             String directName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.DIRECT_NAME));
                             StaySuggestV2.Direct direct = new StaySuggestV2.Direct(directName);
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, direct));
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, direct));
 
                         } else if (StaySuggestV2.Location.class.getSimpleName().equalsIgnoreCase(type))
                         {
@@ -769,7 +769,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             location.latitude = latitude;
                             location.longitude = longitude;
 
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MENU_TYPE_RECENTLY_SEARCH, location));
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, location));
                         }
                     }
 

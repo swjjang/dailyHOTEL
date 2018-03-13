@@ -459,7 +459,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 if (DailyTextUtils.isTextEmpty(word) == false)
                 {
-                    GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_DIRECT, new GourmetSuggestV2.Direct(word));
+                    GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, new GourmetSuggestV2.Direct(word));
 
                     Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, suggest, sortType, null);
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);

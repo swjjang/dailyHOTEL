@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.network;
 
 import com.daily.dailyhotel.repository.remote.model.BankData;
-import com.daily.dailyhotel.repository.remote.model.NoticeAgreementMessageData;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
@@ -23,6 +22,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
 import com.daily.dailyhotel.repository.remote.model.GourmetSuggestsData;
 import com.daily.dailyhotel.repository.remote.model.LeaveInfoData;
+import com.daily.dailyhotel.repository.remote.model.NoticeAgreementMessageData;
 import com.daily.dailyhotel.repository.remote.model.NoticeAgreementMessageResultData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.OldRefundData;
@@ -72,7 +72,6 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.dto.GoogleMapListDto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
-import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
@@ -84,7 +83,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
-import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
@@ -1043,27 +1041,14 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseListDto<StayKeyword>> getSuggestsByStayInbound(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                  @Query("dateCheckIn") String date, //
-                                                                  @Query("stays") int stays, //
-                                                                  @Query("term") String term);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
-    Observable<BaseListDto<GourmetKeyword>> getSuggestsByGourmet(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                 @Query("reservationDate") String date, //
-                                                                 @Query("term") String term);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
-    Observable<BaseDto<StaySuggestsData>> getSuggestsByStayInboundV2(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+    Observable<BaseDto<StaySuggestsData>> getSuggestsByStayInbound(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                                    @Query("dateCheckIn") String date, //
                                                                    @Query("stays") int stays, //
                                                                    @Query("term") String term);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<GourmetSuggestsData>> getSuggestsByGourmetV2(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+    Observable<BaseDto<GourmetSuggestsData>> getSuggestsByGourmet(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                                   @Query("reservationDate") String date, //
                                                                   @Query("term") String term);
 

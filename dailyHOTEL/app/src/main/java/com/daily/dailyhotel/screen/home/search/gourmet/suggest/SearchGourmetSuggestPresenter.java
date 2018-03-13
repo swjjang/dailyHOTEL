@@ -22,7 +22,6 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
@@ -134,7 +133,7 @@ public class SearchGourmetSuggestPresenter //
 
         GourmetSuggestV2.Location location = new GourmetSuggestV2.Location();
         location.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
-        mLocationSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_LOCATION, location);
+        mLocationSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.LOCATION, location);
 
         List<GourmetSuggestV2> popularList = new ArrayList<>();
         popularList.add(new GourmetSuggestV2(0 //
@@ -418,7 +417,7 @@ public class SearchGourmetSuggestPresenter //
 
         if (recentlySearchList != null && recentlySearchList.size() > 0)
         {
-            recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH //
+            recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH //
                 , new GourmetSuggestV2.Section(getString(R.string.label_search_suggest_recently_search))));
 
             recentlySuggestList.addAll(recentlySearchList);
@@ -427,7 +426,7 @@ public class SearchGourmetSuggestPresenter //
         // 최근 본 업장
         if (recentlyPlaceList != null && recentlyPlaceList.size() > 0)
         {
-            recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_GOURMET //
+            recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_GOURMET //
                 , new GourmetSuggestV2.Section(getString(R.string.label_recently_gourmet))));
 
             for (RecentlyPlace recentlyPlace : recentlyPlaceList)
@@ -440,7 +439,7 @@ public class SearchGourmetSuggestPresenter //
                 gourmet.name = recentlyPlace.title;
                 gourmet.province = province;
 
-                recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_RECENTLY_GOURMET, gourmet));
+                recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_GOURMET, gourmet));
             }
         }
 
@@ -540,7 +539,7 @@ public class SearchGourmetSuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByGourmetV2(visitDate, keyword) //
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()) //
                 .subscribe(new Consumer<List<GourmetSuggestV2>>()
                 {
@@ -607,7 +606,8 @@ public class SearchGourmetSuggestPresenter //
         if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
         {
             displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
-        } else {
+        } else
+        {
             displayName = gourmetSuggest.suggestItem.name;
         }
 
@@ -653,7 +653,8 @@ public class SearchGourmetSuggestPresenter //
         if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
         {
             displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
-        } else {
+        } else
+        {
             displayName = gourmetSuggest.suggestItem.name;
         }
 
@@ -714,7 +715,7 @@ public class SearchGourmetSuggestPresenter //
             notifyDataSetChanged();
         }
 
-        if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
+        if (GourmetSuggestV2.MenuType.RECENTLY_GOURMET == gourmetSuggest.menuType)
         {
             GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
 

@@ -2,6 +2,7 @@ package com.daily.dailyhotel.entity;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 
 import java.io.Serializable;
@@ -12,20 +13,32 @@ import java.io.Serializable;
 
 public class GourmetSuggestV2
 {
-    //    public static final String CATEGORY_REGION = "region"; // default - 지역
-    //    public static final String CATEGORY_GOURMET = "gourmet"; // 레스토랑
-    //    public static final String CATEGORY_LOCATION = "location"; // 위치
-    //    public static final String CATEGORY_DIRECT = "direct"; // 검색어 - 직접 입력
+    public interface Category
+    {
+        int STATION = 1;
+        int GOURMET = 2;
+        int PROVINCE = 3;
+        int DIRECT = 4;
+        int LOCATION = 5;
+        int CAMPAIGN_TAG = 6;
+        int SECTION = 7;
+    }
 
-    public static final int MENU_TYPE_DIRECT = 1;
-    public static final int MENU_TYPE_LOCATION = 2;
-    public static final int MENU_TYPE_RECENTLY_SEARCH = 3;
-    public static final int MENU_TYPE_RECENTLY_GOURMET = 4;
-    public static final int MENU_TYPE_SUGGEST = 5;
-    public static final int MENU_TYPE_CAMPAIGN_TAG = 6;
+    public interface MenuType
+    {
+        int DIRECT = 1;
+        int LOCATION = 2;
+        int RECENTLY_SEARCH = 3;
+        int RECENTLY_GOURMET = 4;
+        int SUGGEST = 5;
+        int CAMPAIGN_TAG = 6;
+    }
 
     public int menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
     public SuggestItem suggestItem;
+    //    public int category; // 카테고리 비교 용
+    //    public String text1;
+    //    public String text2;
 
     public GourmetSuggestV2()
     {
@@ -35,34 +48,167 @@ public class GourmetSuggestV2
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;
+        //                this.category = getCategory();
+        //        this.text1 = getText1();
+        //        this.text2 = getText2();
     }
 
-    public String getDisplayNameSearchHomeType(Context context)
+    /**
+     * @return
+     */
+    public int getCategory()
     {
-        if (suggestItem == null || context == null)
+        if (suggestItem == null)
+        {
+            return 0;
+        }
+
+        if (suggestItem instanceof Gourmet)
+        {
+            return Category.GOURMET;
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return Category.STATION;
+            //
+        } else if (suggestItem instanceof Province)
+        {
+            return Category.PROVINCE;
+        } else if (suggestItem instanceof Direct)
+        {
+            return Category.DIRECT;
+        } else if (suggestItem instanceof Location)
+        {
+            return Category.LOCATION;
+        } else if (suggestItem instanceof CampaignTag)
+        {
+            return Category.CAMPAIGN_TAG;
+        } else if (suggestItem instanceof Section)
+        {
+            return Category.SECTION;
+        }
+
+        return 0;
+    }
+
+    public String getText1()
+    {
+        if (suggestItem == null)
         {
             return null;
         }
 
-        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
+        if (suggestItem instanceof Gourmet)
         {
             return suggestItem.name;
-        } else if (suggestItem instanceof GourmetSuggestV2.Province)
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return ((Station) suggestItem).getDisplayName();
+        } else if (suggestItem instanceof Province)
         {
-            return ((GourmetSuggestV2.Province) suggestItem).getProvinceName();
-        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
+            Province province = (Province) suggestItem;
+            if (province.area == null)
+            {
+                return province.name;
+            } else
+            {
+                Area area = province.area;
+                if (area == null || DailyTextUtils.isTextEmpty(area.name))
+                {
+                    return province.name;
+                }
+
+                return area.name;
+            }
+        } else if (suggestItem instanceof Direct)
         {
-            return ((GourmetSuggestV2.Direct) suggestItem).name;
-        } else if (suggestItem instanceof GourmetSuggestV2.Location)
+            return suggestItem.name;
+        } else if (suggestItem instanceof Location)
         {
-            return context.getString(R.string.label_search_suggest_type_location_item_format, ((GourmetSuggestV2.Location) suggestItem).name);
-        } else if (suggestItem instanceof GourmetSuggestV2.CampaignTag)
+            return suggestItem.name;
+        } else if (suggestItem instanceof CampaignTag)
         {
-            return "#" + ((GourmetSuggestV2.CampaignTag) suggestItem).name;
+            return suggestItem.name;
+        } else if (suggestItem instanceof Section)
+        {
+            return suggestItem.name;
         }
 
         return null;
     }
+
+    public String getText2()
+    {
+        if (suggestItem == null)
+        {
+            return null;
+        }
+
+        if (suggestItem instanceof Gourmet)
+        {
+            Province province = ((Gourmet) suggestItem).province;
+            return province.name;
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return ((Station) suggestItem).region;
+        } else if (suggestItem instanceof Province)
+        {
+            Province province = (Province) suggestItem;
+            if (province.area == null)
+            {
+                return null;
+            } else
+            {
+                Area area = province.area;
+                if (area == null || DailyTextUtils.isTextEmpty(area.name))
+                {
+                    return null;
+                }
+
+                return province.name;
+            }
+        } else if (suggestItem instanceof Direct)
+        {
+            return null;
+        } else if (suggestItem instanceof Location)
+        {
+            return ((Location) suggestItem).address;
+        } else if (suggestItem instanceof CampaignTag)
+        {
+            return null;
+        } else if (suggestItem instanceof Section)
+        {
+            return null;
+        }
+
+        return null;
+    }
+
+//    public String getTitleName(Context context)
+//    {
+//        if (suggestItem == null || context == null)
+//        {
+//            return null;
+//        }
+//
+//        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
+//        {
+//            return suggestItem.name;
+//        } else if (suggestItem instanceof GourmetSuggestV2.Province)
+//        {
+//            return ((GourmetSuggestV2.Province) suggestItem).getProvinceName();
+//        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
+//        {
+//            return ((GourmetSuggestV2.Direct) suggestItem).name;
+//        } else if (suggestItem instanceof GourmetSuggestV2.Location)
+//        {
+//            return context.getString(R.string.label_search_suggest_type_location_item_format, ((GourmetSuggestV2.Location) suggestItem).name);
+//        } else if (suggestItem instanceof GourmetSuggestV2.CampaignTag)
+//        {
+//            return "#" + ((GourmetSuggestV2.CampaignTag) suggestItem).name;
+//        }
+//
+//        return null;
+//    }
 
     public boolean isLocationSuggestItem()
     {

@@ -106,25 +106,27 @@ public class GourmetSuggestsData
 
         if (gourmetList != null && gourmetList.size() > 0)
         {
-            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_gourmet))));
+            list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
+                , new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_gourmet))));
 
             for (GourmetData gourmetData : gourmetList)
             {
                 GourmetSuggestV2.Gourmet gourmet = gourmetData.getGourmet();
 
-                list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, gourmet));
+                list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, gourmet));
             }
         }
 
         if (provinceList != null && provinceList.size() > 0)
         {
-            list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
+            list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
+                , new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
 
             for (ProvinceData provinceData : provinceList)
             {
                 GourmetSuggestV2.Province province = provinceData.getProvince();
 
-                list.add(new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_SUGGEST, province));
+                list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, province));
             }
         }
 

@@ -137,7 +137,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                     mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
 
-                    String displayName = suggest.getDisplayNameSearchHomeType(GourmetSearchResultActivity.this);
+                    String displayName = suggest.getText1();
 
                     if (DailyTextUtils.isTextEmpty(displayName) == true)
                     {
@@ -525,7 +525,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setSpinnerVisible(true);
             } else
             {
-                mPlaceSearchResultLayout.setToolbarTitle(suggest.getDisplayNameSearchHomeType(GourmetSearchResultActivity.this));
+                mPlaceSearchResultLayout.setToolbarTitle(suggest.getText1());
 
                 mPlaceSearchResultLayout.setSpinnerVisible(false);
             }
@@ -677,7 +677,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , isEmpty ? "AroundSearchNotFound_LocationList_gourmet" : "AroundSearchClicked_LocationList_gourmet"//
-                , mGourmetSearchCuration.getSuggest().getDisplayNameSearchHomeType(GourmetSearchResultActivity.this), params);
+                , mGourmetSearchCuration.getSuggest().getText1(), params);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -900,13 +900,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
                 }
 
-                String label = suggest != null && suggest.isLocationSuggestItem() == true //
-                    ? mAddress : suggest.getDisplayNameSearchHomeType(GourmetSearchResultActivity.this);
+                String label = suggest != null && suggest.isLocationSuggestItem() == true ? mAddress : suggest.getText1();
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
                     .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
 
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
-                    .recordEvent(AnalyticsManager.Category.SEARCH_, "gourmet_around_result_range_change", suggest.getDisplayNameSearchHomeType(GourmetSearchResultActivity.this), null);
+                    .recordEvent(AnalyticsManager.Category.SEARCH_, "gourmet_around_result_range_change", suggest.getText1(), null);
             } catch (Exception e)
             {
                 if (Constants.DEBUG == true)
@@ -963,7 +962,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             if (suggest != null && suggest.isLocationSuggestItem() == true)
             {
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , "gourmet_around_result_research", suggest.getDisplayNameSearchHomeType(GourmetSearchResultActivity.this), null);
+                    , "gourmet_around_result_research", suggest.getText1(), null);
             } else
             {
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
@@ -1252,23 +1251,23 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 switch (suggest.menuType)
                 {
-                    case GourmetSuggestV2.MENU_TYPE_LOCATION:
+                    case GourmetSuggestV2.MenuType.LOCATION:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
                         break;
 
-                    case GourmetSuggestV2.MENU_TYPE_SUGGEST:
+                    case GourmetSuggestV2.MenuType.SUGGEST:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
                         break;
 
-                    case GourmetSuggestV2.MENU_TYPE_DIRECT:
+                    case GourmetSuggestV2.MenuType.DIRECT:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.KEYWORD, Integer.toString(gourmet.index), null);
                         break;
 
-                    case GourmetSuggestV2.MENU_TYPE_RECENTLY_GOURMET:
-                    case GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH:
+                    case GourmetSuggestV2.MenuType.RECENTLY_GOURMET:
+                    case GourmetSuggestV2.MenuType.RECENTLY_SEARCH:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
                         break;
@@ -1547,20 +1546,20 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     }
                 }
 
-                String displayName = suggest.getDisplayNameSearchHomeType(GourmetSearchResultActivity.this);
+                String displayName = suggest.getText1();
 
                 switch (suggest.menuType)
                 {
-                    case GourmetSuggestV2.MENU_TYPE_RECENTLY_SEARCH:
-                    case GourmetSuggestV2.MENU_TYPE_RECENTLY_GOURMET:
+                    case GourmetSuggestV2.MenuType.RECENTLY_SEARCH:
+                    case GourmetSuggestV2.MenuType.RECENTLY_GOURMET:
                         recordEventSearchResultByRecentKeyword(displayName, isShow, ServiceType.GOURMET, params);
                         break;
 
-                    case GourmetSuggestV2.MENU_TYPE_DIRECT:
+                    case GourmetSuggestV2.MenuType.DIRECT:
                         recordEventSearchResultByKeyword(displayName, isShow, ServiceType.GOURMET, params);
                         break;
 
-                    case GourmetSuggestV2.MENU_TYPE_SUGGEST:
+                    case GourmetSuggestV2.MenuType.SUGGEST:
                         recordEventSearchResultByAutoSearch(displayName, mInputText, isShow, ServiceType.GOURMET, params);
                         break;
                 }

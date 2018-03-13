@@ -62,8 +62,9 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 ? new GourmetCurationOption() //
                 : (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
+            GourmetSuggestV2 suggest = ((GourmetSearchCuration) mGourmetCuration).getSuggest();
 
-            if (((GourmetSearchCuration) mGourmetCuration).getSuggest().menuType == GourmetSuggestV2.MENU_TYPE_LOCATION)
+            if (suggest.isCampaignTagSuggestItem() == true)
             {
                 if ((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
                 {
