@@ -221,7 +221,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
                     {
                         StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchModel.suggest.setValue(staySuggestParcel.getSuggest());
-                        mSearchModel.inputString = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        mSearchModel.inputKeyword = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -329,7 +329,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mSearchModel.suggest.getValue()));
-            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
+            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputKeyword);
 
             setResult(Activity.RESULT_OK, intent);
             onBackClick();

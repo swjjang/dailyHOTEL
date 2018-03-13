@@ -13,7 +13,10 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -75,6 +78,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
 
         mViewModel = ViewModelProviders.of(activity, new SearchGourmetResultViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetResultViewModel.class);
+        mViewModel.gourmetViewModel = ViewModelProviders.of(activity, new SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetViewModel.class);
 
         mViewModel.viewType.observe(activity, new Observer<ViewType>()
         {
@@ -100,6 +104,17 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             public void onChanged(@Nullable CommonDateTime commonDateTime)
             {
 
+            }
+        });
+
+        mViewModel.gourmetViewModel.bookDateTime.observe(activity, new Observer<GourmetBookDateTime>()
+        {
+            @Override
+            public void onChanged(@Nullable GourmetBookDateTime gourmetBookDateTime)
+            {
+                final String dateFormat = "MM.dd(EEE)";
+
+                getViewInterface().setToolbarDateText(gourmetBookDateTime.getVisitDateTime(dateFormat));
             }
         });
     }
@@ -128,6 +143,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             {
                 ExLog.e(e.toString());
                 clearDeepLink();
+
+                return false;
             }
         } else
         {
@@ -136,7 +153,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 parseIntent(intent);
             } catch (Exception e)
             {
-                ExLog.e(e.toString());
+                return false;
             }
         }
 
@@ -180,7 +197,16 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             throw new NullPointerException("intent == null");
         }
 
-        
+        mViewModel.setBookDateTime(intent, SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
+        GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+        if (suggestParcel == null || suggestParcel.getSuggest() == null)
+        {
+            throw new NullPointerException("suggestParcel == null || suggestParcel.getSuggest() == null");
+        }
+
+        mViewModel.setSuggest(suggestParcel.getSuggest());
+        mViewModel.setInputKeyword(intent.getStringExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_INPUT_KEYWORD));
     }
 
     @Override
@@ -192,6 +218,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(mViewModel.getSuggest().getText1());
     }
 
     @Override
@@ -269,14 +296,14 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             @Override
             public void accept(CommonDateTime commonDateTime) throws Exception
             {
-
+                mViewModel.commonDateTime.setValue(commonDateTime);
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-
+                onHandleErrorAndFinish(throwable);
             }
         }));
     }

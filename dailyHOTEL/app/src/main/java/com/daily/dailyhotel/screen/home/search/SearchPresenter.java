@@ -586,7 +586,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 StaySuggestParcel suggestParcel = intent.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                 mSearchModel.setStaySuggest(suggestParcel);
 
-                mSearchModel.stayViewModel.inputString = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                mSearchModel.stayViewModel.inputKeyword = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
 
                 getViewInterface().refreshStay();
             } catch (Exception e)
@@ -609,7 +609,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 mSearchModel.stayOutboundViewModel.suggest.setValue(suggestParcel.getSuggest());
             }
 
-            mSearchModel.stayOutboundViewModel.inputString = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+            mSearchModel.stayOutboundViewModel.inputKeyword = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
             mSearchModel.stayOutboundViewModel.clickType = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
 
             getViewInterface().refreshStayOutbound();
@@ -631,7 +631,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                     mSearchModel.gourmetViewModel.suggest.setValue(suggestParcel.getSuggest());
                 }
 
-                mSearchModel.gourmetViewModel.inputString = intent.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                mSearchModel.gourmetViewModel.inputKeyword = intent.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
 
                 getViewInterface().refreshGourmet();
             } catch (Exception e)
@@ -925,7 +925,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
                 , mSearchModel.stayViewModel.getBookDateTime().getStayBookingDay()//
-                , mSearchModel.stayViewModel.inputString, mSearchModel.stayViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
+                , mSearchModel.stayViewModel.inputKeyword, mSearchModel.stayViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
                 , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
 
             mAnalytics.onEventStayDoSearch(getActivity(), mSearchModel.stayViewModel.suggest.getValue());
@@ -1068,7 +1068,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         StayOutboundListAnalyticsParam analyticsParam = new StayOutboundListAnalyticsParam();
-        analyticsParam.keyword = mSearchModel.stayOutboundViewModel.inputString;
+        analyticsParam.keyword = mSearchModel.stayOutboundViewModel.inputKeyword;
         analyticsParam.analyticsClickType = mSearchModel.stayOutboundViewModel.clickType;
 
         StayBookDateTime stayBookDateTime = mSearchModel.stayOutboundViewModel.getBookDateTime();
@@ -1186,7 +1186,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             {
                 startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
                     , gourmetBookDateTime.getGourmetBookingDay()//
-                    , mSearchModel.gourmetViewModel.inputString, mSearchModel.gourmetViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
+                    , mSearchModel.gourmetViewModel.inputKeyword, mSearchModel.gourmetViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
                     , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
             }
 

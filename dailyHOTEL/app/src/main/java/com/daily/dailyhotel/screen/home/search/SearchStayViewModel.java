@@ -18,7 +18,7 @@ public class SearchStayViewModel extends ViewModel
 {
     public MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
     public MutableLiveData<StaySuggest> suggest = new MutableLiveData<>();
-    public String inputString;
+    public String inputKeyword;
 
     public static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {

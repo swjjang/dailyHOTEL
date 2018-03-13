@@ -216,7 +216,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
                     {
                         GourmetSuggestParcelV2 gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchModel.suggest.setValue(gourmetSuggestParcel.getSuggest());
-                        mSearchModel.inputString = data.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        mSearchModel.inputKeyword = data.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -311,7 +311,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
 
             if (suggest.isCampaignTagSuggestItem() == false)
             {
-                intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
+                intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputKeyword);
             }
 
             setResult(Activity.RESULT_OK, intent);

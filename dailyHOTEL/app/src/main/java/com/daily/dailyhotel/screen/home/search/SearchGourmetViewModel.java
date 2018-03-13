@@ -19,7 +19,7 @@ public class SearchGourmetViewModel extends ViewModel
 {
     public MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
     public MutableLiveData<GourmetSuggestV2> suggest = new MutableLiveData<>();
-    public String inputString;
+    public String inputKeyword;
 
     public static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
     {

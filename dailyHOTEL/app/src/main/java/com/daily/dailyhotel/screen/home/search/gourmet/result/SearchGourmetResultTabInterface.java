@@ -9,6 +9,8 @@ public interface SearchGourmetResultTabInterface
     interface ViewInterface extends BaseDialogViewInterface
     {
         void setViewType(SearchGourmetResultTabPresenter.ViewType viewType);
+
+        void setToolbarDateText(String text);
     }
 
     interface OnEventListener extends OnBaseEventListener
