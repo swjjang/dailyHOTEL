@@ -432,12 +432,12 @@ public class SearchGourmetSuggestPresenter //
             for (RecentlyPlace recentlyPlace : recentlyPlaceList)
             {
                 GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
-                GourmetSuggestV2.Province province = new GourmetSuggestV2.Province();
-                province.name = recentlyPlace.regionName;
+                GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
+                areaGroup.name = recentlyPlace.regionName;
 
                 gourmet.index = recentlyPlace.index;
                 gourmet.name = recentlyPlace.title;
-                gourmet.province = province;
+                gourmet.areaGroup = areaGroup;
 
                 recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_GOURMET, gourmet));
             }
@@ -603,9 +603,9 @@ public class SearchGourmetSuggestPresenter //
         }
 
         final String displayName;
-        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.AreaGroup)
         {
-            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+            displayName = ((GourmetSuggestV2.AreaGroup) gourmetSuggest.suggestItem).getDisplayName();
         } else
         {
             displayName = gourmetSuggest.suggestItem.name;
@@ -650,9 +650,9 @@ public class SearchGourmetSuggestPresenter //
         }
 
         final String displayName;
-        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.Province)
+        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.AreaGroup)
         {
-            displayName = ((GourmetSuggestV2.Province) gourmetSuggest.suggestItem).getProvinceName();
+            displayName = ((GourmetSuggestV2.AreaGroup) gourmetSuggest.suggestItem).getDisplayName();
         } else
         {
             displayName = gourmetSuggest.suggestItem.name;

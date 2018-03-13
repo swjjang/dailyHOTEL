@@ -16,8 +16,8 @@ public interface StayIbRecentlySuggestColumns extends BaseColumns
     String STATION_LINE = "station_line";
     String STAY_INDEX = "stay_index";
     String STAY_NAME = "stay_name";
-    String PROVINCE_INDEX = "province_index";
-    String PROVINCE_NAME = "province_name";
+    String AREA_GROUP_INDEX = "area_group_index";
+    String AREA_GROUP_NAME = "area_group_name";
     String AREA_INDEX = "area_index";
     String AREA_NAME = "area_name";
     String LOCATION_NAME = "location_name";

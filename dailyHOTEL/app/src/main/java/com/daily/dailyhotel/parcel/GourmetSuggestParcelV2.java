@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 
 /**
@@ -39,38 +38,7 @@ public class GourmetSuggestParcelV2 implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(mGourmetSuggest.menuType);
-
-        GourmetSuggestV2.SuggestItem suggestItem = mGourmetSuggest.suggestItem;
-
-        if (suggestItem == null)
-        {
-            return;
-        }
-
-        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
-        {
-            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
-            dest.writeSerializable(gourmet);
-        } else if (suggestItem instanceof GourmetSuggestV2.Province)
-        {
-            GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
-            dest.writeSerializable(province);
-        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
-        {
-            GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) suggestItem;
-            dest.writeSerializable(direct);
-        } else if (suggestItem instanceof GourmetSuggestV2.Location)
-        {
-            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) suggestItem;
-            dest.writeSerializable(location);
-        } else if (suggestItem instanceof GourmetSuggestV2.CampaignTag)
-        {
-            GourmetSuggestV2.CampaignTag campaignTag = (GourmetSuggestV2.CampaignTag) suggestItem;
-            dest.writeSerializable(campaignTag);
-        } else {
-            dest.writeSerializable(suggestItem);
-            ExLog.e("sam : writeToParcel error suggestItem name : " + suggestItem.name);
-        }
+        dest.writeSerializable(mGourmetSuggest.suggestItem);
     }
 
     private void readFromParcel(Parcel in)
@@ -78,7 +46,6 @@ public class GourmetSuggestParcelV2 implements Parcelable
         mGourmetSuggest = new GourmetSuggestV2();
 
         mGourmetSuggest.menuType = in.readInt();
-
         mGourmetSuggest.suggestItem = (GourmetSuggestV2.SuggestItem) in.readSerializable();
     }
 

@@ -408,7 +408,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
             StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
 
             title = stay.name;
-            description = stay.province == null ? null : stay.province.name;
+            description = stay.areaGroup == null ? null : stay.areaGroup.name;
         } else if (suggestItem instanceof StaySuggestV2.Location)
         {
             holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
@@ -417,20 +417,20 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
 
             title = mContext.getString(R.string.label_search_suggest_type_location_item_format, location.name);
             description = null;
-        } else if (suggestItem instanceof StaySuggestV2.Province)
+        } else if (suggestItem instanceof StaySuggestV2.AreaGroup)
         {
             holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
 
-            StaySuggestV2.Province province = (StaySuggestV2.Province) suggestItem;
+            StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) suggestItem;
 
-            if (province.area == null)
+            if (areaGroup.area == null)
             {
-                title = province.name + " " + mContext.getString(R.string.label_all);
+                title = areaGroup.name + " " + mContext.getString(R.string.label_all);
                 description = null;
             } else
             {
-                title = province.area.name;
-                description = province.name;
+                title = areaGroup.area.name;
+                description = areaGroup.name;
             }
         } else
         {

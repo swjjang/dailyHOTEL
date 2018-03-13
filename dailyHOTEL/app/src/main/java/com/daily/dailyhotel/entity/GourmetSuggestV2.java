@@ -1,9 +1,6 @@
 package com.daily.dailyhotel.entity;
 
-import android.content.Context;
-
 import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.R;
 
 import java.io.Serializable;
 
@@ -17,7 +14,7 @@ public class GourmetSuggestV2
     {
         int STATION = 1;
         int GOURMET = 2;
-        int PROVINCE = 3;
+        int AREA_GROUP = 3;
         int DIRECT = 4;
         int LOCATION = 5;
         int CAMPAIGN_TAG = 6;
@@ -70,9 +67,9 @@ public class GourmetSuggestV2
             //        {
             //            return Category.STATION;
             //
-        } else if (suggestItem instanceof Province)
+        } else if (suggestItem instanceof AreaGroup)
         {
-            return Category.PROVINCE;
+            return Category.AREA_GROUP;
         } else if (suggestItem instanceof Direct)
         {
             return Category.DIRECT;
@@ -103,18 +100,18 @@ public class GourmetSuggestV2
             //        } else if (suggestItem instanceof Station)
             //        {
             //            return ((Station) suggestItem).getDisplayName();
-        } else if (suggestItem instanceof Province)
+        } else if (suggestItem instanceof AreaGroup)
         {
-            Province province = (Province) suggestItem;
-            if (province.area == null)
+            AreaGroup areaGroup = (AreaGroup) suggestItem;
+            if (areaGroup.area == null)
             {
-                return province.name;
+                return areaGroup.name;
             } else
             {
-                Area area = province.area;
+                Area area = areaGroup.area;
                 if (area == null || DailyTextUtils.isTextEmpty(area.name))
                 {
-                    return province.name;
+                    return areaGroup.name;
                 }
 
                 return area.name;
@@ -145,26 +142,26 @@ public class GourmetSuggestV2
 
         if (suggestItem instanceof Gourmet)
         {
-            Province province = ((Gourmet) suggestItem).province;
-            return province.name;
+            AreaGroup areaGroup = ((Gourmet) suggestItem).areaGroup;
+            return areaGroup.name;
             //        } else if (suggestItem instanceof Station)
             //        {
             //            return ((Station) suggestItem).region;
-        } else if (suggestItem instanceof Province)
+        } else if (suggestItem instanceof AreaGroup)
         {
-            Province province = (Province) suggestItem;
-            if (province.area == null)
+            AreaGroup areaGroup = (AreaGroup) suggestItem;
+            if (areaGroup.area == null)
             {
                 return null;
             } else
             {
-                Area area = province.area;
+                Area area = areaGroup.area;
                 if (area == null || DailyTextUtils.isTextEmpty(area.name))
                 {
                     return null;
                 }
 
-                return province.name;
+                return areaGroup.name;
             }
         } else if (suggestItem instanceof Direct)
         {
@@ -183,32 +180,32 @@ public class GourmetSuggestV2
         return null;
     }
 
-//    public String getTitleName(Context context)
-//    {
-//        if (suggestItem == null || context == null)
-//        {
-//            return null;
-//        }
-//
-//        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
-//        {
-//            return suggestItem.name;
-//        } else if (suggestItem instanceof GourmetSuggestV2.Province)
-//        {
-//            return ((GourmetSuggestV2.Province) suggestItem).getProvinceName();
-//        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
-//        {
-//            return ((GourmetSuggestV2.Direct) suggestItem).name;
-//        } else if (suggestItem instanceof GourmetSuggestV2.Location)
-//        {
-//            return context.getString(R.string.label_search_suggest_type_location_item_format, ((GourmetSuggestV2.Location) suggestItem).name);
-//        } else if (suggestItem instanceof GourmetSuggestV2.CampaignTag)
-//        {
-//            return "#" + ((GourmetSuggestV2.CampaignTag) suggestItem).name;
-//        }
-//
-//        return null;
-//    }
+    //    public String getTitleName(Context context)
+    //    {
+    //        if (suggestItem == null || context == null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
+    //        {
+    //            return suggestItem.name;
+    //        } else if (suggestItem instanceof GourmetSuggestV2.Province)
+    //        {
+    //            return ((GourmetSuggestV2.Province) suggestItem).getProvinceName();
+    //        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
+    //        {
+    //            return ((GourmetSuggestV2.Direct) suggestItem).name;
+    //        } else if (suggestItem instanceof GourmetSuggestV2.Location)
+    //        {
+    //            return context.getString(R.string.label_search_suggest_type_location_item_format, ((GourmetSuggestV2.Location) suggestItem).name);
+    //        } else if (suggestItem instanceof GourmetSuggestV2.CampaignTag)
+    //        {
+    //            return "#" + ((GourmetSuggestV2.CampaignTag) suggestItem).name;
+    //        }
+    //
+    //        return null;
+    //    }
 
     public boolean isLocationSuggestItem()
     {
@@ -247,21 +244,21 @@ public class GourmetSuggestV2
         //        public String name;
         public int discount;
         public boolean available;
-        public Province province;
+        public AreaGroup areaGroup;
 
-        public String getProvinceName()
+        public String getAreaGroupName()
         {
-            return province == null ? null : province.getProvinceName();
+            return areaGroup == null ? null : areaGroup.name;
         }
     }
 
-    public static class Province extends SuggestItem
+    public static class AreaGroup extends SuggestItem
     {
         public int index;
         //        public String name;
         public Area area;
 
-        public String getProvinceName()
+        public String getDisplayName()
         {
             return area == null ? name : area.name;
         }

@@ -314,32 +314,32 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     if (suggestItem instanceof GourmetSuggestV2.Gourmet)
                     {
                         GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
-                        GourmetSuggestV2.Province province = gourmet.province;
-                        GourmetSuggestV2.Area area = province != null ? province.area : null;
+                        GourmetSuggestV2.AreaGroup areaGroup = gourmet.areaGroup;
+                        GourmetSuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
 
                         String type = GourmetSuggestV2.Gourmet.class.getSimpleName();
-                        int provinceIndex = province == null ? 0 : province.index;
-                        String provinceName = province == null ? null : province.name;
+                        int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
+                        String areaGroupName = areaGroup == null ? null : areaGroup.name;
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
 
                         dailyDb.addGourmetRecentlySuggest(type, gourmet.name //
                             , gourmet.index, gourmet.name //
-                            , provinceIndex, provinceName, areaIndex, areaName //
+                            , areaGroupIndex, areaGroupName, areaIndex, areaName //
                             , null, null, 0, 0 //
                             , null, keyword);
-                    } else if (suggestItem instanceof GourmetSuggestV2.Province)
+                    } else if (suggestItem instanceof GourmetSuggestV2.AreaGroup)
                     {
-                        GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) suggestItem;
-                        GourmetSuggestV2.Area area = province.area;
+                        GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) suggestItem;
+                        GourmetSuggestV2.Area area = areaGroup.area;
 
-                        String type = GourmetSuggestV2.Province.class.getSimpleName();
+                        String type = GourmetSuggestV2.AreaGroup.class.getSimpleName();
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
 
-                        dailyDb.addGourmetRecentlySuggest(type, province.getProvinceName() //
+                        dailyDb.addGourmetRecentlySuggest(type, areaGroup.getDisplayName() //
                             , 0, null //
-                            , province.index, province.name, areaIndex, areaName //
+                            , areaGroup.index, areaGroup.name, areaIndex, areaName //
                             , null, null, 0, 0 //
                             , null, keyword);
                     } else if (suggestItem instanceof GourmetSuggestV2.Location)
@@ -415,30 +415,30 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         {
                             int gourmetIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.GOURMET_INDEX));
                             String gourmetName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.GOURMET_NAME));
-                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_INDEX));
-                            String provinceName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_NAME));
+                            int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_INDEX));
+                            String areaGroupName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_NAME));
 
                             GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
-                            GourmetSuggestV2.Province province = new GourmetSuggestV2.Province();
+                            GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
 
-                            province.index = provinceIndex;
-                            province.name = provinceName;
-                            province.area = null;
+                            areaGroup.index = areaGroupIndex;
+                            areaGroup.name = areaGroupName;
+                            areaGroup.area = null;
 
                             gourmet.index = gourmetIndex;
                             gourmet.name = gourmetName;
-                            gourmet.province = province;
+                            gourmet.areaGroup = areaGroup;
 
                             gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, gourmet));
 
-                        } else if (GourmetSuggestV2.Province.class.getSimpleName().equalsIgnoreCase(type))
+                        } else if (GourmetSuggestV2.AreaGroup.class.getSimpleName().equalsIgnoreCase(type))
                         {
-                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_INDEX));
-                            String provinceName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.PROVINCE_NAME));
+                            int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_INDEX));
+                            String areaGroupName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_NAME));
                             int areaIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_INDEX));
                             String areaName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_NAME));
 
-                            GourmetSuggestV2.Province province = new GourmetSuggestV2.Province();
+                            GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
                             GourmetSuggestV2.Area area = null;
 
                             if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
@@ -448,11 +448,11 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                                 area.name = areaName;
                             }
 
-                            province.index = provinceIndex;
-                            province.name = provinceName;
-                            province.area = area;
+                            areaGroup.index = areaGroupIndex;
+                            areaGroup.name = areaGroupName;
+                            areaGroup.area = area;
 
-                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, province));
+                            gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, areaGroup));
                         } else if (GourmetSuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
                         {
                             String directName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.DIRECT_NAME));
@@ -526,10 +526,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 String type = item.getClass().getSimpleName();
                 String name = item.name;
                 ExLog.d("sam : type : " + type + " , name : " + name);
-                if (item instanceof GourmetSuggestV2.Province)
+                if (item instanceof GourmetSuggestV2.AreaGroup)
                 {
-                    GourmetSuggestV2.Province province = (GourmetSuggestV2.Province) item;
-                    GourmetSuggestV2.Area area = province.area;
+                    GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) item;
+                    GourmetSuggestV2.Area area = areaGroup.area;
 
                     if (area != null && DailyTextUtils.isTextEmpty(area.name) == false)
                     {
@@ -591,34 +591,34 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     } else if (suggestItem instanceof StaySuggestV2.Stay)
                     {
                         StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
-                        StaySuggestV2.Province province = stay.province;
-                        StaySuggestV2.Area area = province != null ? province.area : null;
+                        StaySuggestV2.AreaGroup areaGroup = stay.areaGroup;
+                        StaySuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
 
                         String type = StaySuggestV2.Stay.class.getSimpleName();
-                        int provinceIndex = province == null ? 0 : province.index;
-                        String provinceName = province == null ? null : province.name;
+                        int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
+                        String areaGroupName = areaGroup == null ? null : areaGroup.name;
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
 
                         dailyDb.addStayIbRecentlySuggest(type, stay.name //
                             , 0, null, null, null //
                             , stay.index, stay.name //
-                            , provinceIndex, provinceName, areaIndex, areaName //
+                            , areaGroupIndex, areaGroupName, areaIndex, areaName //
                             , null, null, 0, 0 //
                             , null, keyword);
-                    } else if (suggestItem instanceof StaySuggestV2.Province)
+                    } else if (suggestItem instanceof StaySuggestV2.AreaGroup)
                     {
-                        StaySuggestV2.Province province = (StaySuggestV2.Province) suggestItem;
-                        StaySuggestV2.Area area = province.area;
+                        StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) suggestItem;
+                        StaySuggestV2.Area area = areaGroup.area;
 
-                        String type = StaySuggestV2.Province.class.getSimpleName();
+                        String type = StaySuggestV2.AreaGroup.class.getSimpleName();
                         int areaIndex = area == null ? 0 : area.index;
                         String areaName = area == null ? null : area.name;
 
-                        dailyDb.addStayIbRecentlySuggest(type, province.getProvinceName() //
+                        dailyDb.addStayIbRecentlySuggest(type, areaGroup.getDisplayName() //
                             , 0, null, null, null //
                             , 0, null //
-                            , province.index, province.name, areaIndex, areaName //
+                            , areaGroup.index, areaGroup.name, areaIndex, areaName //
                             , null, null, 0, 0 //
                             , null, keyword);
                     } else if (suggestItem instanceof StaySuggestV2.Location)
@@ -711,30 +711,30 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         {
                             int stayIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_INDEX));
                             String stayName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_NAME));
-                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_INDEX));
-                            String provinceName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_NAME));
+                            int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
+                            String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
 
                             StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
-                            StaySuggestV2.Province province = new StaySuggestV2.Province();
+                            StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
 
-                            province.index = provinceIndex;
-                            province.name = provinceName;
-                            province.area = null;
+                            areaGroup.index = areaGroupIndex;
+                            areaGroup.name = areaGroupName;
+                            areaGroup.area = null;
 
                             stay.index = stayIndex;
                             stay.name = stayName;
-                            stay.province = province;
+                            stay.areaGroup = areaGroup;
 
                             staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, stay));
 
-                        } else if (StaySuggestV2.Province.class.getSimpleName().equalsIgnoreCase(type))
+                        } else if (StaySuggestV2.AreaGroup.class.getSimpleName().equalsIgnoreCase(type))
                         {
-                            int provinceIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_INDEX));
-                            String provinceName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.PROVINCE_NAME));
+                            int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
+                            String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
                             int areaIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_INDEX));
                             String areaName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_NAME));
 
-                            StaySuggestV2.Province province = new StaySuggestV2.Province();
+                            StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
                             StaySuggestV2.Area area = null;
 
                             if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
@@ -744,11 +744,11 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                                 area.name = areaName;
                             }
 
-                            province.index = provinceIndex;
-                            province.name = provinceName;
-                            province.area = area;
+                            areaGroup.index = areaGroupIndex;
+                            areaGroup.name = areaGroupName;
+                            areaGroup.area = area;
 
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, province));
+                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, areaGroup));
 
                         } else if (StaySuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
                         {
@@ -823,10 +823,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 String type = item.getClass().getSimpleName();
                 String name = item.name;
                 ExLog.d("sam : type : " + type + " , name : " + name);
-                if (item instanceof StaySuggestV2.Province)
+                if (item instanceof StaySuggestV2.AreaGroup)
                 {
-                    StaySuggestV2.Province province = (StaySuggestV2.Province) item;
-                    name = province.getProvinceName();
+                    StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) item;
+                    name = areaGroup.getDisplayName();
                 } else if (item instanceof StaySuggestV2.Station)
                 {
                     StaySuggestV2.Station station = (StaySuggestV2.Station) item;
