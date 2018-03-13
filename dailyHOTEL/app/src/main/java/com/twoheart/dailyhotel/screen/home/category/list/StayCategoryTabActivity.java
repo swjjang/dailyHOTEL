@@ -19,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
@@ -224,7 +225,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                     StayRegion region = stayRegionParcel.getRegion();
 
-                    if (region == null || region.getAreaGroup() == null || region.getArea() == null)
+                    if (region == null || region.getAreaGroupElement() == null || region.getAreaElement() == null)
                     {
                         return;
                     }
@@ -512,8 +513,8 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                com.daily.dailyhotel.entity.Area area = region.getArea();
-                params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+                AreaElement areaElement = region.getAreaElement();
+                params.put(AnalyticsManager.KeyType.DISTRICT, areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name);
             }
 
             AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);

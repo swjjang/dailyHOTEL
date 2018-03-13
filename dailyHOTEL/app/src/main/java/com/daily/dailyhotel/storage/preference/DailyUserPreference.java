@@ -27,6 +27,7 @@ public class DailyUserPreference
     private static final String KEY_IS_EXCEED_BONUS = "6";
     private static final String KEY_BIRTHDAY = "7";
     private static final String KEY_AUTHORIZATION = "8";
+    private static final String KEY_THANK_YOU_BENEFIT_ALARM = "9";
 
     // Payment
     private static final String KEY_OVERSEAS_NAME = "20";
@@ -261,6 +262,16 @@ public class DailyUserPreference
     public void setBenefitAlarm(boolean value)
     {
         setValue(mEditor, KEY_BENEFIT_ALARM, value);
+    }
+
+    public boolean isThankYouBenefitAlarmEnabled()
+    {
+        return getValue(mPreferences, KEY_THANK_YOU_BENEFIT_ALARM, true);
+    }
+
+    public void setThankYouBenefitAlarmEnabled(boolean value)
+    {
+        setValue(mEditor, KEY_THANK_YOU_BENEFIT_ALARM, value);
     }
 
     public boolean isExceedBonus()

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
@@ -707,8 +708,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                com.daily.dailyhotel.entity.Area area = region.getArea();
-                params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+                AreaElement areaElement = region.getAreaElement();
+                params.put(AnalyticsManager.KeyType.DISTRICT, areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name);
             }
 
             if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
@@ -1222,8 +1223,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                             params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                             params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                            com.daily.dailyhotel.entity.Area area = region.getArea();
-                            params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+                            AreaElement areaElement = region.getAreaElement();
+                            params.put(AnalyticsManager.KeyType.DISTRICT, areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name);
                         }
 
                         params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
@@ -1669,8 +1670,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
 
-                    com.daily.dailyhotel.entity.Area area = region.getArea();
-                    params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+                    AreaElement areaElement = region.getAreaElement();
+                    params.put(AnalyticsManager.KeyType.DISTRICT, areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name);
                 } else
                 {
                     params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);

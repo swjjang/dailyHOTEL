@@ -389,7 +389,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         StayRegion region = stayRegionParcel.getRegion();
 
-                        if (region == null || region.getAreaGroup() == null || region.getArea() == null)
+                        if (region == null || region.getAreaGroupElement() == null || region.getAreaElement() == null)
                         {
                             return;
                         }
