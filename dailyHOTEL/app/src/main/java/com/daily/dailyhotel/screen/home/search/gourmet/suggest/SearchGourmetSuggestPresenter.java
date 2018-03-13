@@ -539,7 +539,7 @@ public class SearchGourmetSuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmetV2(visitDate, keyword) //
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()) //
                 .subscribe(new Consumer<List<GourmetSuggestV2>>()
                 {

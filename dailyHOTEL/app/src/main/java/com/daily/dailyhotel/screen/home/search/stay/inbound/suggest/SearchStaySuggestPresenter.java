@@ -615,7 +615,7 @@ public class SearchStaySuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByStayV2(checkInDate, nights, keyword) //
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByStay(checkInDate, nights, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).flatMap(new Function<List<StaySuggestV2>, ObservableSource<List>>()
                 {
                     @Override
@@ -701,7 +701,7 @@ public class SearchStaySuggestPresenter //
 
     Observable getGourmetSuggestList(String visitDate, String keyword)
     {
-        return mSuggestRemoteImpl.getSuggestsByGourmetV2(visitDate, keyword).observeOn(Schedulers.io());
+        return mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword).observeOn(Schedulers.io());
     }
 
     Observable getStayOutboundSuggestList(String keyword)
