@@ -23,7 +23,7 @@ public class StaySuggestsData
     public List<StayData> stayList;
 
     @JsonField(name = "region")
-    public List<ProvinceData> provinceList;
+    public List<ProvinceData> areaGroupList;
 
     @JsonObject
     static class StationData
@@ -146,11 +146,11 @@ public class StaySuggestsData
             }
         }
 
-        if (provinceList != null && provinceList.size() > 0)
+        if (areaGroupList != null && areaGroupList.size() > 0)
         {
             list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
 
-            for (ProvinceData provinceData : provinceList)
+            for (ProvinceData provinceData : areaGroupList)
             {
                 StaySuggestV2.Province province = provinceData.getProvince();
 
