@@ -21,7 +21,6 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
-import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
@@ -304,11 +303,16 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         try
         {
             GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+            GourmetSuggestV2 suggest = mSearchModel.suggest.getValue();
 
             Intent intent = new Intent();
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
-            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(mSearchModel.suggest.getValue()));
-            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
+            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(suggest));
+
+            if (suggest.isCampaignTagSuggestItem() == false)
+            {
+                intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
+            }
 
             setResult(Activity.RESULT_OK, intent);
             onBackClick();
@@ -355,14 +359,28 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             return;
         }
 
-        GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+        GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG, suggestItem);
 
-        startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
-            , campaignTag.index, campaignTag.campaignTag//
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) //
-            , ResearchGourmetActivity.REQUEST_CODE_SEARCH_RESULT);
+        mSearchModel.suggest.setValue(gourmetSuggest);
 
-        onBackClick();
+        addCompositeDisposable(getViewInterface().getSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                unLockAll();
+            }
+        }));
+
+        //        GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
+        //
+        //        startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
+        //            , campaignTag.index, campaignTag.campaignTag//
+        //            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) //
+        //            , ResearchGourmetActivity.REQUEST_CODE_SEARCH_RESULT);
+        //
+        //        onBackClick();
     }
 
     private void initViewModel(BaseActivity activity)

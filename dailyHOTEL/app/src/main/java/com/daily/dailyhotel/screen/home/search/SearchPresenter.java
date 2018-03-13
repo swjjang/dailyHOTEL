@@ -471,39 +471,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 break;
 
             case SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT:
-                if (data != null)
-                {
-                    try
-                    {
-                        GourmetSuggestParcelV2 suggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
-
-                        if (suggestParcel != null)
-                        {
-                            mSearchModel.gourmetViewModel.suggest.setValue(suggestParcel.getSuggest());
-                        }
-
-                        mSearchModel.setGourmetBookDateTime(data, PlaceSearchResultActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
-                    } catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
-                }
-
-                getViewInterface().refreshGourmet();
-
-                switch (resultCode)
-                {
-                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
-                        mSearchModel.setServiceType(Constants.ServiceType.HOTEL);
-                        break;
-
-                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
-                        mSearchModel.setServiceType(Constants.ServiceType.OB_STAY);
-                        break;
-
-                    default:
-                        break;
-                }
+                onGourmetSearchResult(resultCode, data);
                 break;
         }
     }
@@ -546,6 +514,47 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
             default:
                 selectActivityResult(resultCode, intent);
+                break;
+        }
+    }
+
+    private void onGourmetSearchResult(int resultCode, Intent intent)
+    {
+        if (intent != null)
+        {
+            try
+            {
+                GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                if (suggestParcel != null)
+                {
+                    mSearchModel.gourmetViewModel.suggest.setValue(suggestParcel.getSuggest());
+                }
+
+                mSearchModel.setGourmetBookDateTime(intent, PlaceSearchResultActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+
+        getViewInterface().refreshGourmet();
+
+        switch (resultCode)
+        {
+            case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
+                mSearchModel.setServiceType(Constants.ServiceType.HOTEL);
+                break;
+
+            case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
+                mSearchModel.setServiceType(Constants.ServiceType.OB_STAY);
+                break;
+
+            case Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET:
+                onGourmetDoSearchClick();
+                break;
+
+            default:
                 break;
         }
     }
@@ -1165,11 +1174,21 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         try
         {
             GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
+            GourmetSuggestV2 suggest = mSearchModel.gourmetViewModel.suggest.getValue();
 
-            startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
-                , gourmetBookDateTime.getGourmetBookingDay()//
-                , mSearchModel.gourmetViewModel.inputString, mSearchModel.gourmetViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
-                , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
+            if (suggest.menuType == GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG && suggest.isCampaignTagSuggestItem() == true)
+            {
+                GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
+
+                startGourmetCampaignTag(suggestItem.index, suggestItem.name//
+                    , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+            } else
+            {
+                startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
+                    , gourmetBookDateTime.getGourmetBookingDay()//
+                    , mSearchModel.gourmetViewModel.inputString, mSearchModel.gourmetViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
+                    , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
+            }
 
             mAnalytics.onEventGourmetDoSearch(getActivity(), mSearchModel.gourmetViewModel.suggest.getValue());
         } catch (Exception e)
@@ -1400,14 +1419,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void showSearchGourmet()
     {
-        String displayName = mSearchModel.gourmetViewModel.suggest.getValue().getDisplayNameSearchHomeType(getActivity());
-
-        if (mSearchModel.gourmetViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(displayName) == true)
+        if (mSearchModel.gourmetViewModel.suggest.getValue() == null)
         {
             getViewInterface().setSearchGourmetSuggestText(null);
             getViewInterface().setSearchGourmetButtonEnabled(false);
         } else
         {
+            String displayName = mSearchModel.gourmetViewModel.suggest.getValue().getDisplayNameSearchHomeType(getActivity());
+
             getViewInterface().setSearchGourmetSuggestText(displayName);
             getViewInterface().setSearchGourmetButtonEnabled(true);
         }

@@ -225,6 +225,10 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
             case GourmetSuggestV2.MENU_TYPE_SUGGEST:
                 action += "auto";
                 break;
+
+            case GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG:
+                action += "";
+                break;
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//

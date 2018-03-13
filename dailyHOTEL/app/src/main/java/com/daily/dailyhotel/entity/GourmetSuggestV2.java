@@ -74,6 +74,11 @@ public class GourmetSuggestV2
         return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Gourmet;
     }
 
+    public boolean isCampaignTagSuggestItem()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.CampaignTag;
+    }
+
     @SuppressWarnings("serial")
     public static class SuggestItem implements Serializable
     {

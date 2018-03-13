@@ -16,12 +16,13 @@ import com.twoheart.dailyhotel.R;
 public class GourmetCampaignTagListActivity extends BaseActivity<GourmetCampaignTagListPresenter>
 {
     static final int REQUEST_CODE_WISH_DIALOG = 10000;
+    static final int REQUEST_CODE_RESEARCH = 10001;
+    protected static final int REQUEST_CODE_CALL = 10000;
 
     protected static final String INTENT_EXTRA_DATA_INDEX = "index";
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
     protected static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
 
-    protected static final int REQUEST_CODE_CALL = 10000;
 
     public static Intent newInstance(Context context, int index, String hashTag, String visitDate)
     {

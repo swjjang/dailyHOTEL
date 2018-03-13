@@ -56,7 +56,7 @@ public class StayCampaignTagListView //
             @Override
             public void onTitleClick()
             {
-                getEventListener().onCalendarClick();
+                getEventListener().onResearchClick();
             }
 
             @Override

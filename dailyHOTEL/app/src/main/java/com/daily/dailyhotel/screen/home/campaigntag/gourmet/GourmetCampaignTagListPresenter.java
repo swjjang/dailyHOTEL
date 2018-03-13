@@ -20,18 +20,21 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
@@ -323,6 +326,24 @@ public class GourmetCampaignTagListPresenter //
                     case BaseActivity.RESULT_CODE_REFRESH:
                         setRefresh(true);
                         break;
+                }
+                break;
+
+            case GourmetCampaignTagListActivity.REQUEST_CODE_RESEARCH:
+                onResearchActivityResult(resultCode, data);
+                break;
+        }
+    }
+
+    private void onResearchActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, intent);
+                    onBackClick();
                 }
                 break;
         }
@@ -639,7 +660,32 @@ public class GourmetCampaignTagListPresenter //
     @Override
     public void onResearchClick()
     {
-        onBackClick();
+        if (lock() == true)
+        {
+            return;
+        }
+
+        try
+        {
+            TodayDateTime todayDateTime = mCommonDateTime.getTodayDateTime();
+            GourmetBookingDay gourmetBookingDay = mGourmetBookDateTime.getGourmetBookingDay();
+
+            GourmetSuggestV2.CampaignTag suggestItem = new GourmetSuggestV2.CampaignTag();
+            suggestItem.index = mTagIndex;
+            suggestItem.name = mTitle;
+
+            GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_CAMPAIGN_TAG, suggestItem);
+
+            startActivityForResult(ResearchGourmetActivity.newInstance(getActivity(), todayDateTime.openDateTime, todayDateTime.closeDateTime//
+                , todayDateTime.currentDateTime, todayDateTime.dailyDateTime//
+                , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , suggest), GourmetCampaignTagListActivity.REQUEST_CODE_RESEARCH);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLockAll();
+        }
     }
 
     @Override
