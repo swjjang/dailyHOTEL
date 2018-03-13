@@ -37,7 +37,7 @@ public class GourmetSuggestV2
         this.suggestItem = suggestItem;
     }
 
-    public String getDisplayNameBySearchHome(Context context)
+    public String getDisplayNameSearchHomeType(Context context)
     {
         if (suggestItem == null || context == null)
         {
@@ -67,6 +67,11 @@ public class GourmetSuggestV2
     public boolean isLocationSuggestItem()
     {
         return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Location;
+    }
+
+    public boolean isGourmetSuggestItem()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Gourmet;
     }
 
     @SuppressWarnings("serial")

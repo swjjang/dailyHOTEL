@@ -1324,7 +1324,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             @Override
             public void onChanged(@Nullable GourmetSuggestV2 suggest)
             {
-                String displayName = suggest.getDisplayNameBySearchHome(getActivity());
+                String displayName = suggest.getDisplayNameSearchHomeType(getActivity());
 
                 getViewInterface().setSearchGourmetSuggestText(displayName);
 
@@ -1400,7 +1400,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void showSearchGourmet()
     {
-        String displayName = mSearchModel.gourmetViewModel.suggest.getValue().getDisplayNameBySearchHome(getActivity());
+        String displayName = mSearchModel.gourmetViewModel.suggest.getValue().getDisplayNameSearchHomeType(getActivity());
 
         if (mSearchModel.gourmetViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(displayName) == true)
         {
@@ -1541,7 +1541,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         GourmetSuggestV2.Direct suggestItem = new GourmetSuggestV2.Direct(word);
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggest.MENU_TYPE_DIRECT, suggestItem);
+        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MENU_TYPE_DIRECT, suggestItem);
         Constants.SortType sortType = externalDeepLink.getSorting();
 
         try
