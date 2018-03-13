@@ -261,7 +261,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 break;
             }
 
-            case StaySuggestV2.Category.PROVINCE:
+            case StaySuggestV2.Category.AREA_GROUP:
             {
                 if (DailyTextUtils.isTextEmpty(description))
                 {

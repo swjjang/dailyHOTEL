@@ -14,7 +14,7 @@ public class StaySuggestV2
     {
         int STATION = 1;
         int STAY = 2;
-        int PROVINCE = 3;
+        int AREA_GROUP = 3;
         int DIRECT = 4;
         int LOCATION = 5;
         int CAMPAIGN_TAG = 6;
@@ -66,7 +66,7 @@ public class StaySuggestV2
 
         } else if (suggestItem instanceof Province)
         {
-            return Category.PROVINCE;
+            return Category.AREA_GROUP;
         } else if (suggestItem instanceof Direct)
         {
             return Category.DIRECT;
