@@ -94,8 +94,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + GourmetRecentlySuggestList.DISPLAY + " TEXT NOT NULL, " //
         + GourmetRecentlySuggestList.GOURMET_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.GOURMET_NAME + " TEXT NULL, " //
-        + GourmetRecentlySuggestList.PROVINCE_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + GourmetRecentlySuggestList.PROVINCE_NAME + " TEXT NULL, " //
+        + GourmetRecentlySuggestList.AREA_GROUP_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
+        + GourmetRecentlySuggestList.AREA_GROUP_NAME + " TEXT NULL, " //
         + GourmetRecentlySuggestList.AREA_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.AREA_NAME + " TEXT NULL, " //
         + GourmetRecentlySuggestList.LOCATION_NAME + " TEXT NULL, " //
@@ -117,8 +117,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayIbRecentlySuggestList.STATION_LINE + " TEXT NULL, " //
         + StayIbRecentlySuggestList.STAY_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
         + StayIbRecentlySuggestList.STAY_NAME + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.PROVINCE_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.PROVINCE_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.AREA_GROUP_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
+        + StayIbRecentlySuggestList.AREA_GROUP_NAME + " TEXT NULL, " //
         + StayIbRecentlySuggestList.AREA_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
         + StayIbRecentlySuggestList.AREA_NAME + " TEXT NULL, " //
         + StayIbRecentlySuggestList.LOCATION_NAME + " TEXT NULL, " //
@@ -1380,9 +1380,11 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public void addGourmetRecentlySuggest(String type, String display, int gourmetIndex, String gourmetName //
-        , int provinceIndex, String provinceName, int areaIndex, String areaName, String locationName, String address //
-        , double latitude, double longitude, String directName, String keyword)
+    public void addGourmetRecentlySuggest(String type, String display //
+        , int gourmetIndex, String gourmetName //
+        , int areaGroupIndex, String areaGroupName, int areaIndex, String areaName //
+        , String locationName, String address , double latitude, double longitude //
+        , String directName, String keyword)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -1447,8 +1449,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             contentValues.put(GourmetRecentlySuggestList.DISPLAY, display);
             contentValues.put(GourmetRecentlySuggestList.GOURMET_INDEX, gourmetIndex);
             contentValues.put(GourmetRecentlySuggestList.GOURMET_NAME, gourmetName);
-            contentValues.put(GourmetRecentlySuggestList.PROVINCE_INDEX, provinceIndex);
-            contentValues.put(GourmetRecentlySuggestList.PROVINCE_NAME, provinceName);
+            contentValues.put(GourmetRecentlySuggestList.AREA_GROUP_INDEX, areaGroupIndex);
+            contentValues.put(GourmetRecentlySuggestList.AREA_GROUP_NAME, areaGroupName);
             contentValues.put(GourmetRecentlySuggestList.AREA_INDEX, areaIndex);
             contentValues.put(GourmetRecentlySuggestList.AREA_NAME, areaName);
             contentValues.put(GourmetRecentlySuggestList.LOCATION_NAME, locationName);
@@ -1563,10 +1565,12 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public void addStayIbRecentlySuggest(String type, String display, int stationIndex, String stationName //
-        , String stationRegion, String stationLine, int stayIndex, String stayName //
-        , int provinceIndex, String provinceName, int areaIndex, String areaName, String locationName, String address //
-        , double latitude, double longitude, String directName, String keyword)
+    public void addStayIbRecentlySuggest(String type, String display //
+        , int stationIndex, String stationName , String stationRegion, String stationLine //
+        , int stayIndex, String stayName //
+        , int areaGroupIndex, String areaGroupName, int areaIndex, String areaName //
+        , String locationName, String address , double latitude, double longitude //
+        , String directName, String keyword)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -1628,8 +1632,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             contentValues.put(StayIbRecentlySuggestList.STATION_LINE, stationLine);
             contentValues.put(StayIbRecentlySuggestList.STAY_INDEX, stayIndex);
             contentValues.put(StayIbRecentlySuggestList.STAY_NAME, stayName);
-            contentValues.put(StayIbRecentlySuggestList.PROVINCE_INDEX, provinceIndex);
-            contentValues.put(StayIbRecentlySuggestList.PROVINCE_NAME, provinceName);
+            contentValues.put(StayIbRecentlySuggestList.AREA_GROUP_INDEX, areaGroupIndex);
+            contentValues.put(StayIbRecentlySuggestList.AREA_GROUP_NAME, areaGroupName);
             contentValues.put(StayIbRecentlySuggestList.AREA_INDEX, areaIndex);
             contentValues.put(StayIbRecentlySuggestList.AREA_NAME, areaName);
             contentValues.put(StayIbRecentlySuggestList.LOCATION_NAME, locationName);
