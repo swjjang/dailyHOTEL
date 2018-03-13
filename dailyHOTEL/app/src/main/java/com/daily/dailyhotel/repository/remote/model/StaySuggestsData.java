@@ -23,7 +23,7 @@ public class StaySuggestsData
     public List<StayData> stayList;
 
     @JsonField(name = "region")
-    public List<ProvinceData> areaGroupList;
+    public List<AreaGroupData> areaGroupList;
 
     @JsonObject
     static class StationData
@@ -68,7 +68,7 @@ public class StaySuggestsData
         public boolean available;
 
         @JsonField(name = "province")
-        public ProvinceData province;
+        public AreaGroupData areaGroup;
 
         public StaySuggestV2.Stay getStay()
         {
@@ -77,14 +77,14 @@ public class StaySuggestsData
             stay.name = name;
             stay.discountAvg = discountAvg;
             stay.available = available;
-            stay.province = province == null ? null : province.getProvince();
+            stay.province = areaGroup == null ? null : areaGroup.getAreaGroup();
 
             return stay;
         }
     }
 
     @JsonObject
-    static class ProvinceData
+    static class AreaGroupData
     {
         @JsonField(name = "idx")
         public int index;
@@ -95,7 +95,7 @@ public class StaySuggestsData
         @JsonField(name = "area")
         public AreaData area;
 
-        public StaySuggestV2.Province getProvince()
+        public StaySuggestV2.Province getAreaGroup()
         {
             StaySuggestV2.Province province = new StaySuggestV2.Province();
             province.index = index;
@@ -150,9 +150,9 @@ public class StaySuggestsData
         {
             list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
 
-            for (ProvinceData provinceData : areaGroupList)
+            for (AreaGroupData areaGroupData : areaGroupList)
             {
-                StaySuggestV2.Province province = provinceData.getProvince();
+                StaySuggestV2.Province province = areaGroupData.getAreaGroup();
 
                 list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, province));
             }
