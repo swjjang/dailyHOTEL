@@ -69,6 +69,17 @@ public class DailySearchStayOutboundAreaCardView extends ConstraintLayout
         mViewDataBinding.subTitleTextView.setText(date);
     }
 
+    public void setSubTitleVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.subTitleTextView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+
     //    public void setOnDeleteClickListener(OnClickListener listener)
     //    {
     //        if (mViewDataBinding == null)
