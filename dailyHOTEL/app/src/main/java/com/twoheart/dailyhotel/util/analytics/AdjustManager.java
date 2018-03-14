@@ -56,7 +56,7 @@ public class AdjustManager extends BaseAnalyticsManager
             config.setLogLevel(LogLevel.VERBOSE);
         }
 
-        config.setAppSecret(1, 1234670093, 2111342584, 880174570, 1102400251);
+        config.setAppSecret(3, 1885442567, 779097740, 1595381378, 59819778);
 
         // set attribution delegate
         config.setOnAttributionChangedListener(new OnAttributionChangedListener()
