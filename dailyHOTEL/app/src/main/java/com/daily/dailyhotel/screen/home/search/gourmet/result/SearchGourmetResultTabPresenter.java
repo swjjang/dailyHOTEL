@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.search.gourmet.result;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -15,12 +16,15 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
+import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -32,6 +36,8 @@ import io.reactivex.functions.Consumer;
  */
 public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<SearchGourmetResultTabActivity, SearchGourmetResultTabInterface.ViewInterface> implements SearchGourmetResultTabInterface.OnEventListener
 {
+    public static final float DEFAULT_RADIUS = 10.0f;
+
     private SearchGourmetResultTabInterface.AnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
@@ -292,6 +298,57 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case SearchGourmetResultTabActivity.REQUEST_CODE_RESEARCH:
+                onResearchActivityResult(resultCode, data);
+                break;
+        }
+    }
+
+    private void onResearchActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (intent != null)
+                {
+                    try
+                    {
+                        GourmetSuggestParcelV2 gourmetSuggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (gourmetSuggestParcel == null || gourmetSuggestParcel.getSuggest() == null)
+                        {
+                            return;
+                        }
+
+                        GourmetSuggestV2 suggest = gourmetSuggestParcel.getSuggest();
+
+                        mViewModel.setSuggest(suggest);
+                        mViewModel.setInputKeyword(intent.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD));
+
+                        if (suggest.isLocationSuggestItem() == true)
+                        {
+                            mViewModel.filter.getValue().defaultSortType = GourmetFilter.SortType.DISTANCE;
+                            mViewModel.radius = DEFAULT_RADIUS;
+                        } else
+                        {
+                            mViewModel.filter.getValue().defaultSortType = GourmetFilter.SortType.DEFAULT;
+                        }
+
+                        mViewModel.setBookDateTime(intent, ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
+
+                        mViewModel.filter.getValue().reset();
+                        mViewModel.viewType.setValue(ViewType.LIST);
+                        setRefresh(true);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+                break;
+        }
     }
 
     @Override
@@ -349,6 +406,50 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     public void onBackClick()
     {
         getActivity().onBackPressed();
+
+        setResultCode(Activity.RESULT_CANCELED);
     }
 
+    private void setResultCode(int resultCode)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(mViewModel.getSuggest()));
+        intent.putExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, mViewModel.getBookDateTime().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+
+        setResult(resultCode, intent);
+    }
+
+    @Override
+    public void onResearchClick()
+    {
+        try
+        {
+            CommonDateTime commonDateTime = mViewModel.commonDateTime.getValue();
+            GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
+            GourmetSuggestV2 suggest = mViewModel.getSuggest();
+
+            startActivityForResult(ResearchGourmetActivity.newInstance(getActivity(), commonDateTime.openDateTime, commonDateTime.closeDateTime//
+                , commonDateTime.currentDateTime, commonDateTime.dailyDateTime//
+                , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , suggest), SearchGourmetResultTabActivity.REQUEST_CODE_RESEARCH);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLockAll();
+        }
+    }
+
+    @Override
+    public void onFinishAndRefresh()
+    {
+        setResult(BaseActivity.RESULT_CODE_REFRESH);
+        onBackClick();
+    }
+
+    @Override
+    public void onChangedRadius(float radius)
+    {
+
+    }
 }

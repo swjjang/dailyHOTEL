@@ -25,6 +25,11 @@ public interface SearchGourmetResultTabInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
+        void onResearchClick();
+
+        void onFinishAndRefresh();
+
+        void onChangedRadius(float radius);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

@@ -86,9 +86,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
     SearchGourmetResultViewModel mViewModel;
 
-    Observer mViewTypeObserver;
-    Observer mFilterObserver;
-
     int mPage = PAGE_NONE; // 리스트에서 페이지
     boolean mMoreRefreshing; // 특정 스크를 이상 내려가면 더보기로 목록을 요청하는데 lock()걸리면 안되지만 계속 요청되면 안되어서 해당 키로 락을 건다.
     boolean mNeedToRefresh; // 화면 리플래쉬가 필요한 경우
@@ -147,39 +144,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         setViewType(SearchGourmetResultTabPresenter.ViewType.NONE);
 
         mViewModel = ViewModelProviders.of(activity).get(SearchGourmetResultViewModel.class);
-
-        mViewTypeObserver = new Observer<SearchGourmetResultTabPresenter.ViewType>()
-        {
-            @Override
-            public void onChanged(@Nullable SearchGourmetResultTabPresenter.ViewType viewType)
-            {
-                getViewInterface().scrollStop();
-
-                // 이전 타입이 맵이고 리스트로 이동하는 경우 리스트를 재 호출 한다.
-                if (mViewType == SearchGourmetResultTabPresenter.ViewType.MAP && viewType == SearchGourmetResultTabPresenter.ViewType.LIST)
-                {
-                    mNeedToRefresh = true;
-                }
-
-                setViewType(viewType);
-            }
-        };
-
-        mViewModel.viewType.observe(activity, mViewTypeObserver);
-
-        mFilterObserver = new Observer<GourmetFilter>()
-        {
-            @Override
-            public void onChanged(@Nullable GourmetFilter gourmetFilter)
-            {
-                if (mViewType == SearchGourmetResultTabPresenter.ViewType.MAP)
-                {
-                    getViewInterface().setMapViewPagerVisible(false);
-                }
-            }
-        };
-
-        mViewModel.filter.observe(activity, mFilterObserver);
     }
 
     @Override
@@ -334,9 +298,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         if (mViewModel != null)
         {
-            mViewModel.viewType.removeObserver(mViewTypeObserver);
-            mViewModel.filter.removeObserver(mFilterObserver);
-
             mViewModel = null;
         }
     }
@@ -537,6 +498,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             {
                 if (throwable instanceof BaseException)
                 {
+                    unLockAll();
+
                     BaseException baseException = (BaseException) throwable;
 
                     switch (baseException.getCode())
@@ -552,8 +515,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                             showExpireTagDialog();
                             return;
                     }
-
-                    unLockAll();
                 }
 
                 onHandleErrorAndFinish(throwable);
@@ -571,7 +532,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                 @Override
                 public void onDismiss(DialogInterface dialog)
                 {
-                    getFragment().getFragmentEventListener().onExpireTag();
+                    getFragment().getFragmentEventListener().onFinishAndRefresh();
                 }
             });
     }
@@ -867,17 +828,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         }
 
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), SearchGourmetResultTabActivity.REQUEST_CODE_CALL);
-    }
-
-    @Override
-    public void onCalendarClick()
-    {
-        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
-        {
-            return;
-        }
-
-        getFragment().getFragmentEventListener().onCalendarClick();
     }
 
     @Override

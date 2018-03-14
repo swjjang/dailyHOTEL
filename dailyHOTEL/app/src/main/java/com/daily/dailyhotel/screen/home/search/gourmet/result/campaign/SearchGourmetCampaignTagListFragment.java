@@ -14,13 +14,9 @@ public class SearchGourmetCampaignTagListFragment extends BasePagerFragment<Sear
 {
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
-        void onRegionClick();
+        void onResearchClick();
 
-        void onCalendarClick();
-
-        void onFilterClick();
-
-        void onExpireTag();
+        void onFinishAndRefresh();
     }
 
     @NonNull

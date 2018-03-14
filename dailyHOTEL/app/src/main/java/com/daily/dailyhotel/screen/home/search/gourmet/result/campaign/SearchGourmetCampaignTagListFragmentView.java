@@ -325,7 +325,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
                     @Override
                     public void onClick(View v)
                     {
-                        getEventListener().onCalendarClick();
                     }
                 });
 
@@ -432,7 +431,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
                     @Override
                     public void onClick(View v)
                     {
-                        getEventListener().onCalendarClick();
                     }
                 });
 

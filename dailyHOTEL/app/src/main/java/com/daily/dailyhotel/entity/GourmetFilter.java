@@ -27,7 +27,8 @@ public class GourmetFilter
     public int flagTimeFilter;
     public int flagAmenitiesFilters;
 
-    public SortType sortType = SortType.DEFAULT;
+    public SortType defaultSortType = SortType.DEFAULT;
+    public SortType sortType = defaultSortType;
 
     public enum SortType
     {
@@ -52,7 +53,7 @@ public class GourmetFilter
 
     public boolean isDefault()
     {
-        return (sortType == SortType.DEFAULT//
+        return (sortType == defaultSortType//
             && mFlagCategoryFilterMap.size() == 0//
             && flagTimeFilter == GourmetFilter.FLAG_TIME_NONE//
             && flagAmenitiesFilters == GourmetFilter.FLAG_AMENITIES_NONE);
@@ -63,7 +64,7 @@ public class GourmetFilter
         mFlagCategoryFilterMap.clear();
         flagTimeFilter = FLAG_TIME_NONE;
         flagAmenitiesFilters = FLAG_AMENITIES_NONE;
-        sortType = SortType.DEFAULT;
+        sortType = defaultSortType;
 
         return this;
     }

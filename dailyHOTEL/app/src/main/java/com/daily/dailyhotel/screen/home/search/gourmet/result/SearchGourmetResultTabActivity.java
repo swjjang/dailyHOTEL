@@ -20,8 +20,7 @@ public class SearchGourmetResultTabActivity extends BaseActivity<SearchGourmetRe
 {
     public static final int REQUEST_CODE_CALENDAR = 10000;
     public static final int REQUEST_CODE_FILTER = 10001;
-    public static final int REQUEST_CODE_SEARCH = 10002;
-    public static final int REQUEST_CODE_SEARCH_RESULT = 10003;
+    public static final int REQUEST_CODE_RESEARCH = 10002;
     public static final int REQUEST_CODE_DETAIL = 10005;
     public static final int REQUEST_CODE_PREVIEW = 10006;
     public static final int REQUEST_CODE_PERMISSION_MANAGER = 10007;
