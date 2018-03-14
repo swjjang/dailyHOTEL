@@ -586,8 +586,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
-                if (suggestItem == null)
+                if (staySuggest.getCategory() == StaySuggestV2.Category.UNKNOWN)
                 {
                     return Observable.just(false);
                 }
@@ -596,79 +595,99 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 try
                 {
-                    if (suggestItem instanceof StaySuggestV2.Station)
+                    switch (staySuggest.getCategory())
                     {
-                        StaySuggestV2.Station station = (StaySuggestV2.Station) suggestItem;
-                        String type = StaySuggestV2.Station.class.getSimpleName();
+                        case STATION:
+                        {
+                            StaySuggestV2.Station station = (StaySuggestV2.Station) staySuggest.suggestItem;
+                            String type = StaySuggestV2.Category.STATION.name();
 
-                        dailyDb.addStayIbRecentlySuggest(type, station.getDisplayName() //
-                            , station.index, station.name, station.region, station.line //
-                            , 0, null //
-                            , 0, null, 0, null //
-                            , null, null, 0, 0 //
-                            , null, keyword);
-                    } else if (suggestItem instanceof StaySuggestV2.Stay)
-                    {
-                        StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
-                        StaySuggestV2.AreaGroup areaGroup = stay.areaGroup;
-                        StaySuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
+                            dailyDb.addStayIbRecentlySuggest(type, station.getDisplayName() //
+                                , station.index, station.name, station.region, station.line //
+                                , 0, null //
+                                , 0, null, 0, null //
+                                , null, null, 0, 0 //
+                                , null, keyword);
+                            break;
+                        }
 
-                        String type = StaySuggestV2.Stay.class.getSimpleName();
-                        int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
-                        String areaGroupName = areaGroup == null ? null : areaGroup.name;
-                        int areaIndex = area == null ? 0 : area.index;
-                        String areaName = area == null ? null : area.name;
+                        case STAY:
+                        {
+                            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.suggestItem;
+                            StaySuggestV2.AreaGroup areaGroup = stay.areaGroup;
+                            StaySuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
 
-                        dailyDb.addStayIbRecentlySuggest(type, stay.name //
-                            , 0, null, null, null //
-                            , stay.index, stay.name //
-                            , areaGroupIndex, areaGroupName, areaIndex, areaName //
-                            , null, null, 0, 0 //
-                            , null, keyword);
-                    } else if (suggestItem instanceof StaySuggestV2.AreaGroup)
-                    {
-                        StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) suggestItem;
-                        StaySuggestV2.Area area = areaGroup.area;
+                            String type = StaySuggestV2.Category.STAY.name();
+                            int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
+                            String areaGroupName = areaGroup == null ? null : areaGroup.name;
+                            int areaIndex = area == null ? 0 : area.index;
+                            String areaName = area == null ? null : area.name;
 
-                        String type = StaySuggestV2.AreaGroup.class.getSimpleName();
-                        int areaIndex = area == null ? 0 : area.index;
-                        String areaName = area == null ? null : area.name;
+                            dailyDb.addStayIbRecentlySuggest(type, stay.name //
+                                , 0, null, null, null //
+                                , stay.index, stay.name //
+                                , areaGroupIndex, areaGroupName, areaIndex, areaName //
+                                , null, null, 0, 0 //
+                                , null, keyword);
+                            break;
+                        }
 
-                        dailyDb.addStayIbRecentlySuggest(type, areaGroup.getDisplayName() //
-                            , 0, null, null, null //
-                            , 0, null //
-                            , areaGroup.index, areaGroup.name, areaIndex, areaName //
-                            , null, null, 0, 0 //
-                            , null, keyword);
-                    } else if (suggestItem instanceof StaySuggestV2.Location)
-                    {
-                        StaySuggestV2.Location location = (StaySuggestV2.Location) suggestItem;
-                        String type = StaySuggestV2.Location.class.getSimpleName();
+                        case AREA_GROUP:
+                        {
 
-                        dailyDb.addStayIbRecentlySuggest(type, location.name //
-                            , 0, null, null, null //
-                            , 0, null //
-                            , 0, null, 0, null //
-                            , location.name, location.address, location.latitude, location.longitude //
-                            , null, keyword);
-                    } else if (suggestItem instanceof StaySuggestV2.Direct)
-                    {
-                        StaySuggestV2.Direct direct = (StaySuggestV2.Direct) suggestItem;
-                        String type = StaySuggestV2.Direct.class.getSimpleName();
+                            StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) staySuggest.suggestItem;
+                            StaySuggestV2.Area area = areaGroup.area;
 
-                        dailyDb.addStayIbRecentlySuggest(type, direct.name //
-                            , 0, null, null, null //
-                            , 0, null //
-                            , 0, null, 0, null //
-                            , null, null, 0, 0 //
-                            , direct.name, keyword);
-                    } else
-                    {
-                        return Observable.just(false);
+                            String type = StaySuggestV2.Category.AREA_GROUP.name();
+                            int areaIndex = area == null ? 0 : area.index;
+                            String areaName = area == null ? null : area.name;
+
+                            dailyDb.addStayIbRecentlySuggest(type, areaGroup.getDisplayName() //
+                                , 0, null, null, null //
+                                , 0, null //
+                                , areaGroup.index, areaGroup.name, areaIndex, areaName //
+                                , null, null, 0, 0 //
+                                , null, keyword);
+                            break;
+                        }
+
+                        case LOCATION:
+                        {
+                            StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
+                            String type = StaySuggestV2.Category.LOCATION.name();
+
+                            dailyDb.addStayIbRecentlySuggest(type, location.name //
+                                , 0, null, null, null //
+                                , 0, null //
+                                , 0, null, 0, null //
+                                , location.name, location.address, location.latitude, location.longitude //
+                                , null, keyword);
+                            break;
+                        }
+
+                        case DIRECT:
+                        {
+                            StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.suggestItem;
+                            String type = StaySuggestV2.Category.DIRECT.name();
+
+                            dailyDb.addStayIbRecentlySuggest(type, direct.name //
+                                , 0, null, null, null //
+                                , 0, null //
+                                , 0, null, 0, null //
+                                , null, null, 0, 0 //
+                                , direct.name, keyword);
+                            break;
+                        }
+
+                        default:
+                            return Observable.just(false);
                     }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
+                } finally
+                {
+                    DailyDbHelper.getInstance().close();
                 }
 
                 return Observable.just(true);
@@ -711,84 +730,105 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         String type = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.TYPE));
 
-                        if (StaySuggestV2.Station.class.getSimpleName().equalsIgnoreCase(type))
+                        StaySuggestV2.Category category;
+                        try
                         {
-                            int stationIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_INDEX));
-                            String stationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_NAME));
-                            String stationRegion = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_REGION));
-                            String stationLine = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_LINE));
-
-                            StaySuggestV2.Station station = new StaySuggestV2.Station();
-                            station.index = stationIndex;
-                            station.name = stationName;
-                            station.region = stationRegion;
-                            station.line = stationLine;
-
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, station));
-
-                        } else if (StaySuggestV2.Stay.class.getSimpleName().equalsIgnoreCase(type))
+                            category = StaySuggestV2.Category.valueOf(type);
+                        } catch (Exception e)
                         {
-                            int stayIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_INDEX));
-                            String stayName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_NAME));
-                            int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
-                            String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
+                            category = StaySuggestV2.Category.UNKNOWN;
+                        }
 
-                            StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
-                            StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
-
-                            areaGroup.index = areaGroupIndex;
-                            areaGroup.name = areaGroupName;
-                            areaGroup.area = null;
-
-                            stay.index = stayIndex;
-                            stay.name = stayName;
-                            stay.areaGroup = areaGroup;
-
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, stay));
-
-                        } else if (StaySuggestV2.AreaGroup.class.getSimpleName().equalsIgnoreCase(type))
+                        switch (category)
                         {
-                            int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
-                            String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
-                            int areaIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_INDEX));
-                            String areaName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_NAME));
-
-                            StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
-                            StaySuggestV2.Area area = null;
-
-                            if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
+                            case STATION:
                             {
-                                area = new StaySuggestV2.Area();
-                                area.index = areaIndex;
-                                area.name = areaName;
+                                int stationIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_INDEX));
+                                String stationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_NAME));
+                                String stationRegion = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_REGION));
+                                String stationLine = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_LINE));
+
+                                StaySuggestV2.Station station = new StaySuggestV2.Station();
+                                station.index = stationIndex;
+                                station.name = stationName;
+                                station.region = stationRegion;
+                                station.line = stationLine;
+
+                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, station));
+                                break;
                             }
 
-                            areaGroup.index = areaGroupIndex;
-                            areaGroup.name = areaGroupName;
-                            areaGroup.area = area;
+                            case STAY:
+                            {
+                                int stayIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_INDEX));
+                                String stayName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_NAME));
+                                int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
+                                String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
 
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, areaGroup));
+                                StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
+                                StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
 
-                        } else if (StaySuggestV2.Direct.class.getSimpleName().equalsIgnoreCase(type))
-                        {
-                            String directName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.DIRECT_NAME));
-                            StaySuggestV2.Direct direct = new StaySuggestV2.Direct(directName);
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, direct));
+                                areaGroup.index = areaGroupIndex;
+                                areaGroup.name = areaGroupName;
+                                areaGroup.area = null;
 
-                        } else if (StaySuggestV2.Location.class.getSimpleName().equalsIgnoreCase(type))
-                        {
-                            String locationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.LOCATION_NAME));
-                            String address = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.ADDRESS));
-                            double latitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LATITUDE));
-                            double longitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LONGITUDE));
+                                stay.index = stayIndex;
+                                stay.name = stayName;
+                                stay.areaGroup = areaGroup;
 
-                            StaySuggestV2.Location location = new StaySuggestV2.Location();
-                            location.name = locationName;
-                            location.address = address;
-                            location.latitude = latitude;
-                            location.longitude = longitude;
+                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, stay));
+                                break;
+                            }
 
-                            staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, location));
+                            case AREA_GROUP:
+                            {
+                                int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
+                                String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
+                                int areaIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_INDEX));
+                                String areaName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_NAME));
+
+                                StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
+                                StaySuggestV2.Area area = null;
+
+                                if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
+                                {
+                                    area = new StaySuggestV2.Area();
+                                    area.index = areaIndex;
+                                    area.name = areaName;
+                                }
+
+                                areaGroup.index = areaGroupIndex;
+                                areaGroup.name = areaGroupName;
+                                areaGroup.area = area;
+
+                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, areaGroup));
+                                break;
+                            }
+
+                            case DIRECT:
+                            {
+                                String directName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.DIRECT_NAME));
+                                StaySuggestV2.Direct direct = new StaySuggestV2.Direct(directName);
+                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, direct));
+                                break;
+                            }
+
+                            case LOCATION:
+                            {
+                                String locationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.LOCATION_NAME));
+                                String address = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.ADDRESS));
+                                double latitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LATITUDE));
+                                double longitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LONGITUDE));
+
+                                StaySuggestV2.Location location = new StaySuggestV2.Location();
+                                location.name = locationName;
+                                location.address = address;
+                                location.latitude = latitude;
+                                location.longitude = longitude;
+
+                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, location));
+                                break;
+                            }
                         }
                     }
 
@@ -833,24 +873,9 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                StaySuggestV2.SuggestItem item = staySuggest.suggestItem;
-                if (item == null)
-                {
-                    return Observable.just(false);
-                }
-
-                String type = item.getClass().getSimpleName();
-                String name = item.name;
+                String type = staySuggest.getCategory().name();
+                String name = staySuggest.getText1();
                 ExLog.d("sam : type : " + type + " , name : " + name);
-                if (item instanceof StaySuggestV2.AreaGroup)
-                {
-                    StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) item;
-                    name = areaGroup.getDisplayName();
-                } else if (item instanceof StaySuggestV2.Station)
-                {
-                    StaySuggestV2.Station station = (StaySuggestV2.Station) item;
-                    name = station.getDisplayName();
-                }
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 

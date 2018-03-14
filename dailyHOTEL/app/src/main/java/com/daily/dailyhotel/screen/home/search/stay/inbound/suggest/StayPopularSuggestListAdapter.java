@@ -170,7 +170,6 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
         StaySuggestV2 staySuggest = item.getItem();
-        StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
 
         holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -189,15 +188,9 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(location.address);
-
-        if (DailyTextUtils.isTextEmpty(location.address) == true)
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
-        }
+        holder.dataBinding.descriptionTextView.setText(staySuggest.getText2());
+        holder.dataBinding.descriptionTextView.setVisibility( //
+            DailyTextUtils.isTextEmpty(staySuggest.getText2()) ? View.GONE : View.VISIBLE);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
@@ -205,10 +198,7 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
         StaySuggestV2 staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
-
-        StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
-
-        holder.dataBinding.descriptionTextView.setText(suggestItem.name);
+        holder.dataBinding.descriptionTextView.setText(staySuggest.getText1());
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder

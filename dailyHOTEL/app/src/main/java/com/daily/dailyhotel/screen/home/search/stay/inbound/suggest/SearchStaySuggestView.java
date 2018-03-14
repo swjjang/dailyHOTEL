@@ -219,20 +219,20 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(keyword))));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
+                , new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(keyword))));
         }
 
         if (staySuggestList != null && staySuggestList.size() > 0)
         {
             for (StaySuggestV2 staySuggest : staySuggestList)
             {
-                StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
-                if (suggestItem == null)
+                if (staySuggest.getCategory() == StaySuggestV2.Category.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (suggestItem instanceof StaySuggestV2.Section)
+                if (staySuggest.getCategory() == StaySuggestV2.Category.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else
@@ -490,7 +490,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         {
             for (StaySuggestV2 staySuggest : staySuggestList)
             {
-                if (staySuggest.suggestItem instanceof StaySuggestV2.Section)
+                if (staySuggest.getCategory() == StaySuggestV2.Category.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else
@@ -645,7 +645,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 }
 
                 StaySuggestV2 staySuggest = (StaySuggestV2) object;
-
                 getEventListener().onSuggestClick(staySuggest);
                 break;
 

@@ -129,7 +129,7 @@ public class StaySuggestV2
             return suggestItem.name;
         }
 
-        return null;
+        return suggestItem.name;
     }
 
     public String getText2()
