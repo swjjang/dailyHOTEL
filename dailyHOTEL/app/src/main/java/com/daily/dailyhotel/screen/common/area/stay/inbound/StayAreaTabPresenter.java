@@ -769,8 +769,6 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 }
             }, true);
         }
-
-        mAnalytics.onEventAreaClick(getActivity(), areaGroupName, areaName);
     }
 
     @Override
@@ -843,8 +841,6 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                 }
             }, true);
         }
-
-        mAnalytics.onEventAreaClick(getActivity(), areaGroupName, areaName);
     }
 
     private boolean equalsAreaGroupName(StayRegion stayRegion, AreaGroup areaGroupName)
