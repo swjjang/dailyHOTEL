@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.R;
@@ -224,14 +223,6 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
-        if (suggestItem == null)
-        {
-            holder.itemView.getRootView().setVisibility(View.GONE);
-            ExLog.e("suggestItem is null - check StaySuggestV2");
-            return;
-        }
-
         String title = staySuggest.getText1();
         String description = staySuggest.getText2();
 
@@ -246,7 +237,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             case STAY:
             {
-                StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
+                StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.suggestItem;
 
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
                 holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);

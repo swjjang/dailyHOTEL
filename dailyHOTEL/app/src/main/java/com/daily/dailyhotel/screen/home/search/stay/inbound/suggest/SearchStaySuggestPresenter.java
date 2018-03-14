@@ -717,26 +717,9 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        if (staySuggest.suggestItem == null)
-        {
-            return;
-        }
-
         if (lock() == true)
         {
             return;
-        }
-
-        final String displayName;
-        if (staySuggest.suggestItem instanceof StaySuggestV2.AreaGroup)
-        {
-            displayName = ((StaySuggestV2.AreaGroup) staySuggest.suggestItem).getDisplayName();
-        } else if (staySuggest.suggestItem instanceof StaySuggestV2.Station)
-        {
-            displayName = ((StaySuggestV2.Station) staySuggest.suggestItem).getDisplayName();
-        } else
-        {
-            displayName = staySuggest.suggestItem.name;
         }
 
         addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
@@ -745,7 +728,7 @@ public class SearchStaySuggestPresenter //
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setSuggest(displayName);
+                    getViewInterface().setSuggest(staySuggest.getText1());
                     startFinishAction(staySuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
@@ -753,7 +736,7 @@ public class SearchStaySuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    getViewInterface().setSuggest(displayName);
+                    getViewInterface().setSuggest(staySuggest.getText1());
                     startFinishAction(staySuggest, mKeyword);
                 }
             }));
@@ -874,26 +857,9 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        if (staySuggest.suggestItem == null)
-        {
-            return;
-        }
-
         if (lock() == true)
         {
             return;
-        }
-
-        final String displayName;
-        if (staySuggest.suggestItem instanceof StaySuggestV2.AreaGroup)
-        {
-            displayName = ((StaySuggestV2.AreaGroup) staySuggest.suggestItem).getDisplayName();
-        } else if (staySuggest.suggestItem instanceof StaySuggestV2.Station)
-        {
-            displayName = ((StaySuggestV2.Station) staySuggest.suggestItem).getDisplayName();
-        } else
-        {
-            displayName = staySuggest.suggestItem.name;
         }
 
         addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
@@ -902,7 +868,7 @@ public class SearchStaySuggestPresenter //
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setSuggest(displayName);
+                    getViewInterface().setSuggest(staySuggest.getText1());
                     startFinishAction(staySuggest, mKeyword);
                 }
             }, new Consumer<Throwable>()
@@ -910,20 +876,10 @@ public class SearchStaySuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    getViewInterface().setSuggest(displayName);
+                    getViewInterface().setSuggest(staySuggest.getText1());
                     startFinishAction(staySuggest, mKeyword);
                 }
             }));
-    }
-
-    DailyRecentSearches getDailyRecentSearches()
-    {
-        if (mDailyRecentSearches == null)
-        {
-            mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getHotelRecentSearches());
-        }
-
-        return mDailyRecentSearches;
     }
 
     void startFinishAction(StaySuggestV2 staySuggest, String keyword)

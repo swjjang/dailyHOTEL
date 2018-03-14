@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.R;
@@ -294,7 +293,6 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
         StaySuggestV2 staySuggest = item.getItem();
-        StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
 
         holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -313,30 +311,23 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(location.address);
-
-        if (DailyTextUtils.isTextEmpty(location.address) == true)
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
-        }
+        holder.dataBinding.descriptionTextView.setText(staySuggest.getText2());
+        holder.dataBinding.descriptionTextView.setVisibility(//
+            DailyTextUtils.isTextEmpty(staySuggest.getText2()) ? View.GONE : View.VISIBLE);
     }
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
         StaySuggestV2 staySuggest = item.getItem();
-        StaySuggestV2.Section section = (StaySuggestV2.Section) staySuggest.suggestItem;
 
-        if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
+        if (DailyTextUtils.isTextEmpty(staySuggest.getText1()) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.titleTextView.setText(section.name);
+            holder.dataBinding.titleTextView.setText(staySuggest.getText1());
         }
     }
 
@@ -349,14 +340,6 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
         StaySuggestV2 staySuggest = item.getItem();
-        StaySuggestV2.SuggestItem suggestItem = staySuggest.suggestItem;
-
-        if (suggestItem == null)
-        {
-            holder.itemView.getRootView().setVisibility(View.GONE);
-            ExLog.e("suggestItem is null - check StaySuggestV2");
-            return;
-        }
 
         holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -391,53 +374,48 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
             }
         });
 
-        String title = null;
-        String description = null;
+        String title = staySuggest.getText1();
+        String description = staySuggest.getText2();
 
-        if (suggestItem instanceof StaySuggestV2.Station)
+        switch (staySuggest.getCategory())
         {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
-
-            StaySuggestV2.Station station = (StaySuggestV2.Station) suggestItem;
-            title = station.getDisplayName();
-            description = station.region;
-        } else if (suggestItem instanceof StaySuggestV2.Stay)
-        {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
-
-            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
-
-            title = stay.name;
-            description = stay.areaGroup == null ? null : stay.areaGroup.name;
-        } else if (suggestItem instanceof StaySuggestV2.Location)
-        {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
-
-            StaySuggestV2.Location location = (StaySuggestV2.Location) suggestItem;
-
-            title = mContext.getString(R.string.label_search_suggest_type_location_item_format, location.name);
-            description = null;
-        } else if (suggestItem instanceof StaySuggestV2.AreaGroup)
-        {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-
-            StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) suggestItem;
-
-            if (areaGroup.area == null)
+            case STATION:
             {
-                title = areaGroup.name + " " + mContext.getString(R.string.label_all);
-                description = null;
-            } else
-            {
-                title = areaGroup.area.name;
-                description = areaGroup.name;
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
+                break;
             }
-        } else
-        {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
 
-            title = suggestItem.name;
-            description = null;
+            case STAY:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
+                break;
+            }
+
+            case LOCATION:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
+
+                title = mContext.getString(R.string.label_search_suggest_type_location_item_format, title);
+                description = null;
+                break;
+            }
+
+            case AREA_GROUP:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+
+                if (DailyTextUtils.isTextEmpty(description))
+                {
+                    title += " " + mContext.getString(R.string.label_all);
+                }
+                break;
+            }
+
+            default:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+                break;
+            }
         }
 
         holder.dataBinding.titleTextView.setText(title);
