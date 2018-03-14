@@ -170,7 +170,6 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
         GourmetSuggestV2 gourmetSuggest = item.getItem();
-        GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.suggestItem;
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -189,9 +188,9 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(location.address);
+        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.getText2());
 
-        if (DailyTextUtils.isTextEmpty(location.address) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetSuggest.getText2()) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else
@@ -206,9 +205,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 
-        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
-
-        holder.dataBinding.descriptionTextView.setText(suggestItem.name);
+        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.getText1());
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder

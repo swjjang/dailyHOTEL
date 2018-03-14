@@ -10,6 +10,9 @@ import java.io.Serializable;
 
 public class GourmetSuggestV2
 {
+    /**
+     * Category Name 변경 금지, DB에 해당 이름으로 Type field 에 저장 됨
+     */
     public enum Category
     {
         UNKNOWN,
@@ -132,7 +135,7 @@ public class GourmetSuggestV2
             return suggestItem.name;
         }
 
-        return null;
+        return suggestItem.name;
     }
 
     public String getText2()

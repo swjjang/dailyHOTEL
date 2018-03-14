@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
@@ -294,7 +293,6 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
         GourmetSuggestV2 gourmetSuggest = item.getItem();
-        GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.suggestItem;
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -313,30 +311,23 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(location.address);
-
-        if (DailyTextUtils.isTextEmpty(location.address) == true)
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
-        }
+        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.getText2());
+        holder.dataBinding.descriptionTextView.setVisibility( //
+            DailyTextUtils.isTextEmpty(gourmetSuggest.getText2()) ? View.GONE : View.VISIBLE);
     }
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
         GourmetSuggestV2 gourmetSuggest = item.getItem();
-        GourmetSuggestV2.Section section = (GourmetSuggestV2.Section) gourmetSuggest.suggestItem;
 
-        if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetSuggest.getText1()) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.titleTextView.setText(section.name);
+            holder.dataBinding.titleTextView.setText(gourmetSuggest.getText1());
         }
     }
 
@@ -349,14 +340,6 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
         GourmetSuggestV2 gourmetSuggest = item.getItem();
-        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
-
-        if (suggestItem == null)
-        {
-            holder.itemView.getRootView().setVisibility(View.GONE);
-            ExLog.e("suggestItem is null - check GourmetSuggestV2");
-            return;
-        }
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -391,45 +374,43 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
             }
         });
 
-        String title = null;
-        String description = null;
+        String title = gourmetSuggest.getText1();
+        String description = gourmetSuggest.getText2();
 
-        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
+        switch (gourmetSuggest.getCategory())
         {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
-
-            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
-            title = gourmet.name;
-            description = gourmet.areaGroup == null ? null : gourmet.areaGroup.name;
-        } else if (suggestItem instanceof GourmetSuggestV2.Location)
-        {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
-
-            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) suggestItem;
-
-            title = mContext.getString(R.string.label_search_suggest_type_location_item_format, location.name);
-            description = null;
-        } else if (suggestItem instanceof GourmetSuggestV2.AreaGroup)
-        {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-
-            GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) suggestItem;
-
-            if (areaGroup.area == null)
+            case GOURMET:
             {
-                title = areaGroup.name + " " + mContext.getString(R.string.label_all);
-                description = null;
-            } else
-            {
-                title = areaGroup.area.name;
-                description = areaGroup.name;
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
+                break;
             }
-        } else
-        {
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
 
-            title = suggestItem.name;
-            description = null;
+            case LOCATION:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
+
+                title = mContext.getString(R.string.label_search_suggest_type_location_item_format, title);
+                description = null;
+                break;
+            }
+
+            case AREA_GROUP:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+
+                if (DailyTextUtils.isTextEmpty(description))
+                {
+                    title += " " + mContext.getString(R.string.label_all);
+                }
+            }
+
+            default:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+
+                description = null;
+                break;
+            }
         }
 
         holder.dataBinding.titleTextView.setText(title);
