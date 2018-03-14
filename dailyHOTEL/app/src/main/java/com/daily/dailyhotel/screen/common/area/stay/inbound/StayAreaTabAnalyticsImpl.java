@@ -119,18 +119,6 @@ public class StayAreaTabAnalyticsImpl implements StayAreaTabInterface.AnalyticsI
     }
 
     @Override
-    public void onEventAreaClick(Activity activity, String areaGroupName, String areaName)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), areaGroupName, areaName), null);
-    }
-
-    @Override
     public void onEventClosedClick(Activity activity, String stayCategory)
     {
         if (activity == null)
