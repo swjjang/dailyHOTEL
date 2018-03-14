@@ -573,7 +573,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         {
             rewardCardView.setOptionVisible(true);
             rewardCardView.setOptionText(optionText);
-            rewardCardView.setOnClickListener(v -> getEventListener().onRewardClick());
+            rewardCardView.setOnOptionClickListener(v -> getEventListener().onRewardClick());
         } else
         {
             rewardCardView.setOptionVisible(false);

@@ -495,45 +495,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         setRefresh(true);
                         break;
                 }
-
-                // https://dailyhotel.atlassian.net/browse/ANDKR-1601 상세화면에서 목록을 갱신시키지 않도록 한다.
-                //                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
-                //                {
-                //                    if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
-                //                    {
-                //                        Observable observable = searchMyLocation(null);
-                //
-                //                        if (observable != null)
-                //                        {
-                //                            screenLock(true);
-                //
-                //                            setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-                //
-                //                            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
-                //                            {
-                //                                @Override
-                //                                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                //                                {
-                //                                    unLockAll();
-                //
-                //                                    onRefreshAll(false);
-                //                                }
-                //                            }, new Consumer<Throwable>()
-                //                            {
-                //                                @Override
-                //                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                //                                {
-                //                                    unLockAll();
-                //
-                //                                    setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                //                                }
-                //                            }));
-                //                        }
-                //                    } else
-                //                    {
-                //                        setRefresh(true);
-                //                    }
-                //                }
                 break;
 
             case StayOutboundListActivity.REQUEST_CODE_CALENDAR:
@@ -800,6 +761,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             return;
         }
+
+        clearCompositeDisposable();
 
         setRefresh(false);
         screenLock(showProgress);

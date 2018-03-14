@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.daily.base.BaseFragmentDialogView;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
@@ -145,7 +146,16 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
         areaCardView.setPadding(DP_15, 0, DP_15, 0);
         areaCardView.setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
         areaCardView.setTitleText(stayOutboundSuggest.display);
-        areaCardView.setSubTitleText(stayOutboundSuggest.country);
+
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.country) == true)
+        {
+            areaCardView.setSubTitleVisible(false);
+        } else
+        {
+            areaCardView.setSubTitleVisible(true);
+            areaCardView.setSubTitleText(stayOutboundSuggest.country);
+        }
+
         areaCardView.setTag(stayOutboundSuggest);
 
         return areaCardView;
