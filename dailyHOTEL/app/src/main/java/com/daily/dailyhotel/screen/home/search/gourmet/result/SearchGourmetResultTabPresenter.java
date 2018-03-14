@@ -279,6 +279,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public boolean onBackPressed()
     {
+        setResultCode(Activity.RESULT_CANCELED);
+
         return super.onBackPressed();
     }
 
@@ -406,8 +408,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     public void onBackClick()
     {
         getActivity().onBackPressed();
-
-        setResultCode(Activity.RESULT_CANCELED);
     }
 
     private void setResultCode(int resultCode)
@@ -415,6 +415,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         Intent intent = new Intent();
         intent.putExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(mViewModel.getSuggest()));
         intent.putExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, mViewModel.getBookDateTime().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_INPUT_KEYWORD, mViewModel.getInputKeyword());
 
         setResult(resultCode, intent);
     }
@@ -443,8 +444,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onFinishAndRefresh()
     {
-        setResult(BaseActivity.RESULT_CODE_REFRESH);
-        onBackClick();
+        setResultCode(BaseActivity.RESULT_CODE_REFRESH);
+        finish();
     }
 
     @Override

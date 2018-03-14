@@ -28,9 +28,9 @@ public class SearchGourmetResultTabActivity extends BaseActivity<SearchGourmetRe
     public static final int REQUEST_CODE_WISH_DIALOG = 10009;
     public static final int REQUEST_CODE_CALL = 10010;
 
-    static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
-    static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
-    static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
+    public static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
+    public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
 
     public static Intent newInstance(Context context, String visitDateTime, GourmetSuggestV2 suggest, String inputKeyWord)
     {
