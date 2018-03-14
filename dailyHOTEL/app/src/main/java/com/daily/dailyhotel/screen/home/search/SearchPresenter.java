@@ -552,10 +552,6 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 mSearchModel.setServiceType(Constants.ServiceType.OB_STAY);
                 break;
 
-            case Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET:
-                onGourmetDoSearchClick();
-                break;
-
             default:
                 break;
         }

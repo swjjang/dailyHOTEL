@@ -11,10 +11,14 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.dailyhotel.base.BasePagerFragment;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.campaign.SearchGourmetCampaignTagListFragment;
+import com.daily.dailyhotel.view.DailySearchResultEmptyView;
 import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchGourmetResultTabDataBinding;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
@@ -37,6 +41,7 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         }
 
         initToolbar(viewDataBinding);
+        initEmptyView(viewDataBinding);
     }
 
     @Override
@@ -120,6 +125,40 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         });
     }
 
+    private void initEmptyView(ActivitySearchGourmetResultTabDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.emptyView.setImage(R.drawable.no_gourmet_ic);
+        viewDataBinding.emptyView.setMessage(R.string.message_searchresult_gourmet_empty_subtitle);
+        viewDataBinding.emptyView.setBottomLeftButton(R.drawable.vector_search_shortcut_01_stay, R.string.label_searchresult_search_stay);
+        viewDataBinding.emptyView.setBottomRightButton(R.drawable.vector_search_shortcut_02_ob, R.string.label_searchresult_search_stayoutbound);
+
+        viewDataBinding.emptyView.setOnEventListener(new DailySearchResultEmptyView.OnEventListener()
+        {
+            @Override
+            public void onCampaignTagClick(CampaignTag campaignTag)
+            {
+                getEventListener().onCampaignTagClick(campaignTag);
+            }
+
+            @Override
+            public void onBottomLeftButtonClick()
+            {
+                getEventListener().onStayClick();
+            }
+
+            @Override
+            public void onBottomRightButtonClick()
+            {
+                getEventListener().onStayOutboundClick();
+            }
+        });
+    }
+
     @Override
     public void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)
     {
@@ -160,6 +199,12 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         basePagerFragment.setOnFragmentEventListener(new SearchGourmetCampaignTagListFragment.OnEventListener()
         {
             @Override
+            public void setEmptyViewVisible(boolean visible)
+            {
+                getEventListener().setEmptyViewVisible(visible);
+            }
+
+            @Override
             public void onResearchClick()
             {
                 getEventListener().onResearchClick();
@@ -189,6 +234,39 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     public Observable<Boolean> setSearchResultFragment()
     {
         return null;
+    }
+
+    @Override
+    public void setEmptyViewVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().emptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setEmptyViewCampaignTagVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().emptyView.setCampaignTagVisible(visible);
+    }
+
+    @Override
+    public void setEmptyViewCampaignTag(String title, List<CampaignTag> campaignTagList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().emptyView.setCampaignTag(title, campaignTagList);
     }
 
     private class RadiusArrayAdapter extends ArrayAdapter<CharSequence>

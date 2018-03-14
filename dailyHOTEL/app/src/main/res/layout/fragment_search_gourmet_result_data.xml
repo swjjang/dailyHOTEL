@@ -62,8 +62,20 @@
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <com.daily.dailyhotel.view.DailyStayListEmptyView
+        <com.daily.dailyhotel.view.DailyGourmetListEmptyView
             android:id="@+id/emptyView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/default_background"
+            android:fillViewport="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.daily.dailyhotel.view.DailyGourmetListFilterEmptyView
+            android:id="@+id/filterEmptyView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/default_background"

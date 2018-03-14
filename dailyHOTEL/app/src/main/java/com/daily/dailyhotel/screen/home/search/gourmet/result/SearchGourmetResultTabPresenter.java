@@ -14,18 +14,23 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.base.BasePagerFragment;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -41,6 +46,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     private SearchGourmetResultTabInterface.AnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
+    private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     SearchGourmetResultViewModel mViewModel;
 
@@ -73,6 +79,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         setAnalytics(new SearchGourmetResultTabAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
 
         initViewModel(activity);
 
@@ -452,5 +459,79 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     public void onChangedRadius(float radius)
     {
 
+    }
+
+    @Override
+    public void setEmptyViewVisible(boolean visible)
+    {
+        getViewInterface().setEmptyViewVisible(visible);
+
+
+        addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(Constants.ServiceType.GOURMET.name()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<CampaignTag>>()
+        {
+            @Override
+            public void accept(List<CampaignTag> campaignTagList) throws Exception
+            {
+                if (campaignTagList == null || campaignTagList.size() == 0)
+                {
+                    getViewInterface().setEmptyViewCampaignTagVisible(false);
+                    return;
+                }
+
+                getViewInterface().setEmptyViewCampaignTagVisible(true);
+                getViewInterface().setEmptyViewCampaignTag(getString(R.string.label_search_gourmet_popular_search_tag), campaignTagList);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                ExLog.e(throwable.toString());
+
+                getViewInterface().setEmptyViewCampaignTagVisible(false);
+            }
+        }));
+    }
+
+    @Override
+    public void onStayClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+        onBackClick();
+    }
+
+    @Override
+    public void onStayOutboundClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND);
+        onBackClick();
+    }
+
+    @Override
+    public void onCampaignTagClick(CampaignTag campaignTag)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG//
+            , GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag));
+
+        mViewModel.setInputKeyword(null);
+        mViewModel.setSuggest(suggest);
+
+        setRefresh(true);
+        onRefresh(true);
     }
 }

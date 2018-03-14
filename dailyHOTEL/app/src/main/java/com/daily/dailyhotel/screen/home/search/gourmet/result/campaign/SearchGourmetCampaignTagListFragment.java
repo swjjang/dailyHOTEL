@@ -14,6 +14,8 @@ public class SearchGourmetCampaignTagListFragment extends BasePagerFragment<Sear
 {
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
+        void setEmptyViewVisible(boolean visible);
+
         void onResearchClick();
 
         void onFinishAndRefresh();

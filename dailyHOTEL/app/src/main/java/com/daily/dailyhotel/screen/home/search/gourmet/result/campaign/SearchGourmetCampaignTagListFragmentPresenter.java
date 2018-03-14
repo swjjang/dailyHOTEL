@@ -464,8 +464,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     mEmptyList = true;
                     mPage = PAGE_NONE;
 
-                    getViewInterface().setEmptyViewVisible(true, false);
-
+                    getFragment().getFragmentEventListener().setEmptyViewVisible(true);
                 } else
                 {
                     mEmptyList = false;
@@ -480,7 +479,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                         objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                     }
 
-                    getViewInterface().setEmptyViewVisible(false, false);
+                    getFragment().getFragmentEventListener().setEmptyViewVisible(false);
                     getViewInterface().setListLayoutVisible(true);
 
                     getViewInterface().setSearchResultCount(size);
@@ -508,7 +507,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                             mEmptyList = true;
                             mPage = PAGE_NONE;
 
-                            getViewInterface().setEmptyViewVisible(true, false);
+                            getFragment().getFragmentEventListener().setEmptyViewVisible(true);
                             return;
 
                         case 200: // 종료된 캠페인 태그
