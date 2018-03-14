@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
@@ -160,8 +159,6 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 
-        GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) gourmetSuggest.suggestItem;
-
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
         holder.dataBinding.priceTextView.setVisibility(View.GONE);
@@ -169,12 +166,12 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(direct.name) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetSuggest.getText1()) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, direct.name);
+            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, gourmetSuggest.getText1());
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
@@ -204,16 +201,15 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
         GourmetSuggestV2 gourmetSuggest = item.getItem();
-        GourmetSuggestV2.Section section = (GourmetSuggestV2.Section) gourmetSuggest.suggestItem;
 
-        if (section == null || DailyTextUtils.isTextEmpty(section.name) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetSuggest.getText1()) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.titleTextView.setText(section.name);
+            holder.dataBinding.titleTextView.setText(gourmetSuggest.getText1());
         }
     }
 
@@ -223,62 +219,50 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 
-        //        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
-        if (suggestItem == null)
+        String title = gourmetSuggest.getText1();
+        String description = gourmetSuggest.getText2();
+
+        switch (gourmetSuggest.getCategory())
         {
-            holder.itemView.getRootView().setVisibility(View.GONE);
-            ExLog.e("suggestItem is null - check GourmetSuggestV2");
-            return;
-        }
-
-        String title = null;
-        String description = null;
-        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
-        {
-            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
-            title = gourmet.name;
-            description = gourmet.areaGroup == null ? null : gourmet.areaGroup.name;
-
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
-
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-
-            if (gourmet.available == false)
+            case GOURMET:
             {
-                holder.dataBinding.priceTextView.setText(R.string.label_soldout);
-            } else
-            {
-                holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmet.discount, false));
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
+                holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+
+                GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.suggestItem;
+
+                if (gourmet.available == false)
+                {
+                    holder.dataBinding.priceTextView.setText(R.string.label_soldout);
+                } else
+                {
+                    holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmet.discount, false));
+                }
+                break;
             }
-        } else if (suggestItem instanceof GourmetSuggestV2.AreaGroup)
-        {
-            GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) suggestItem;
 
-            if (areaGroup.area == null)
+            case AREA_GROUP:
             {
-                title = areaGroup.name + " " + mContext.getString(R.string.label_all);
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+                holder.dataBinding.priceTextView.setVisibility(View.GONE);
+
+                if (DailyTextUtils.isTextEmpty(description))
+                {
+                    title += " " + mContext.getString(R.string.label_all);
+                }
+                break;
+            }
+
+            default:
+            {
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+                holder.dataBinding.priceTextView.setVisibility(View.GONE);
+
                 description = null;
-            } else
-            {
-                title = areaGroup.area.name;
-                description = areaGroup.name;
             }
-
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-
-            holder.dataBinding.priceTextView.setVisibility(View.GONE);
-        } else
-        {
-            title = suggestItem.name;
-            description = null;
-
-            holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
-
-            holder.dataBinding.priceTextView.setVisibility(View.GONE);
         }
 
         if (DailyTextUtils.isTextEmpty(title))

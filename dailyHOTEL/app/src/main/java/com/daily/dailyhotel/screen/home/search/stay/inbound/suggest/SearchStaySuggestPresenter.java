@@ -777,17 +777,9 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        final String displayName;
-        if (gourmetSuggest.suggestItem instanceof GourmetSuggestV2.AreaGroup)
-        {
-            displayName = ((GourmetSuggestV2.AreaGroup) gourmetSuggest.suggestItem).getDisplayName();
-        } else {
-            displayName = gourmetSuggest.suggestItem.name;
-        }
-
         if (GourmetSuggestV2.MenuType.DIRECT == gourmetSuggest.menuType)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(displayName));
+            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(gourmetSuggest.getText1()));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -795,7 +787,7 @@ public class SearchStaySuggestPresenter //
                     @Override
                     public void accept(Boolean aBoolean) throws Exception
                     {
-                        getViewInterface().setSuggest(displayName);
+                        getViewInterface().setSuggest(staySuggest.getText1());
                         startFinishAction(staySuggest, mKeyword);
                     }
                 }, new Consumer<Throwable>()
@@ -803,14 +795,14 @@ public class SearchStaySuggestPresenter //
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        getViewInterface().setSuggest(displayName);
+                        getViewInterface().setSuggest(staySuggest.getText1());
                         startFinishAction(staySuggest, mKeyword);
                     }
                 }));
             return;
         }
 
-        getViewInterface().setSuggest(displayName);
+        getViewInterface().setSuggest(gourmetSuggest.getText1());
 
         try
         {

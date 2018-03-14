@@ -294,13 +294,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
             {
-                GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
-                if (suggestItem == null)
+                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (suggestItem instanceof GourmetSuggestV2.Section)
+                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
