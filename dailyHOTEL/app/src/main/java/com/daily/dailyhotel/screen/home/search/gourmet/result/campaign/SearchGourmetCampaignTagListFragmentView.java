@@ -35,14 +35,14 @@ import io.reactivex.Observable;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<SearchGourmetCampaignListFragmentInterface.OnEventListener, FragmentSearchGourmetResultDataBinding>//
-    implements SearchGourmetCampaignListFragmentInterface.ViewInterface
+public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentView<SearchGourmetCampaignTagListFragmentInterface.OnEventListener, FragmentSearchGourmetResultDataBinding>//
+    implements SearchGourmetCampaignTagListFragmentInterface.ViewInterface
 {
     private static final int ANIMATION_DELAY = 200;
     private static final int VIEWPAGER_HEIGHT_DP = 115;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    SearchGourmetCampaignListAdapter mListAdapter;
+    SearchGourmetCampaignTagListAdapter mListAdapter;
 
     GourmetMapFragment mMapFragment;
 
@@ -52,7 +52,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
 
     DailyFloatingActionView mFloatingActionView;
 
-    public SearchGourmetCampaignListFragmentView(SearchGourmetCampaignListFragmentInterface.OnEventListener listener)
+    public SearchGourmetCampaignTagListFragmentView(SearchGourmetCampaignTagListFragmentInterface.OnEventListener listener)
     {
         super(listener);
     }
@@ -67,6 +67,17 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
     }
 
     @Override
+    public void setSearchResultCount(int count)
+    {
+        if (getViewDataBinding() == null || count <= 0)
+        {
+            return;
+        }
+
+        getViewDataBinding().countTextView.setText(getString(R.string.label_searchresult_resultcount, count));
+    }
+
+    @Override
     public void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR)
     {
         if (getViewDataBinding() == null || objectItemList == null || objectItemList.size() == 0)
@@ -76,7 +87,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
 
         if (mListAdapter == null)
         {
-            mListAdapter = new SearchGourmetCampaignListAdapter(getContext(), null);
+            mListAdapter = new SearchGourmetCampaignTagListAdapter(getContext(), null);
             mListAdapter.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -168,7 +179,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
 
         if (mListAdapter == null)
         {
-            mListAdapter = new SearchGourmetCampaignListAdapter(getContext(), null);
+            mListAdapter = new SearchGourmetCampaignTagListAdapter(getContext(), null);
 
             getViewDataBinding().recyclerView.setAdapter(mListAdapter);
         }
@@ -662,7 +673,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
             @Override
             public void run()
             {
-                SearchGourmetCampaignListAdapter.GourmetViewHolder gourmetViewHolder = (SearchGourmetCampaignListAdapter.GourmetViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+                SearchGourmetCampaignTagListAdapter.GourmetViewHolder gourmetViewHolder = (SearchGourmetCampaignTagListAdapter.GourmetViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
 
                 if (gourmetViewHolder != null)
                 {

@@ -73,14 +73,14 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmentPresenter<SearchGourmetCampaignListFragment, SearchGourmetCampaignListFragmentInterface.ViewInterface>//
-    implements SearchGourmetCampaignListFragmentInterface.OnEventListener
+public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFragmentPresenter<SearchGourmetCampaignTagListFragment, SearchGourmetCampaignTagListFragmentInterface.ViewInterface>//
+    implements SearchGourmetCampaignTagListFragmentInterface.OnEventListener
 {
     static final int MAXIMUM_NUMBER_PER_PAGE = Constants.PAGENATION_LIST_SIZE;
     static final int PAGE_NONE = -1;
     static final int PAGE_FINISH = Integer.MAX_VALUE;
 
-    SearchGourmetCampaignListFragmentInterface.AnalyticsInterface mAnalytics;
+    SearchGourmetCampaignTagListFragmentInterface.AnalyticsInterface mAnalytics;
 
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
@@ -105,7 +105,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
 
     DailyLocationExFactory mDailyLocationFactory;
 
-    public SearchGourmetCampaignListFragmentPresenter(@NonNull SearchGourmetCampaignListFragment fragment)
+    public SearchGourmetCampaignTagListFragmentPresenter(@NonNull SearchGourmetCampaignTagListFragment fragment)
     {
         super(fragment);
     }
@@ -120,15 +120,15 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
 
     @NonNull
     @Override
-    protected SearchGourmetCampaignListFragmentInterface.ViewInterface createInstanceViewInterface()
+    protected SearchGourmetCampaignTagListFragmentInterface.ViewInterface createInstanceViewInterface()
     {
-        return new SearchGourmetCampaignListFragmentView(this);
+        return new SearchGourmetCampaignTagListFragmentView(this);
     }
 
     @Override
     public void constructorInitialize(BaseActivity activity)
     {
-        setAnalytics(new SearchGourmetCampaignListFragmentAnalyticsImpl());
+        setAnalytics(new SearchGourmetCampaignTagListFragmentAnalyticsImpl());
 
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
 
@@ -185,7 +185,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (SearchGourmetCampaignListFragmentInterface.AnalyticsInterface) analytics;
+        mAnalytics = (SearchGourmetCampaignTagListFragmentInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -539,6 +539,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                     getViewInterface().setEmptyViewVisible(false, false);
                     getViewInterface().setListLayoutVisible(true);
 
+                    getViewInterface().setSearchResultCount(size);
                     getViewInterface().setList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 

@@ -35,6 +35,7 @@ import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
@@ -1178,10 +1179,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
             if (suggest.menuType == GourmetSuggestV2.MenuType.CAMPAIGN_TAG && suggest.isCampaignTagSuggestItem() == true)
             {
-                GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
-
-                startGourmetCampaignTag(suggestItem.index, suggestItem.name//
-                    , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+                startGourmetCampaignTag(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
             } else
             {
                 startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
@@ -1450,15 +1448,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
-    void startGourmetCampaignTag(int index, String campaignTag, String visitDateTime)
+    void startGourmetCampaignTag(GourmetSuggestV2 suggest, String visitDateTime)
     {
-        if (index <= 0 || DailyTextUtils.isTextEmpty(visitDateTime) == true)
+        if (suggest == null || DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
             return;
         }
 
-        startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
-            , index, campaignTag, visitDateTime)//
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), visitDateTime, suggest, null)//
             , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
     }
 
@@ -1496,23 +1493,26 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        GourmetBookDateTime gourmetBookDateTime = externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink);
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
+            , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
 
-        int index;
-        try
-        {
-            index = Integer.parseInt(externalDeepLink.getIndex());
-        } catch (Exception e)
-        {
-            index = -1;
-        }
-
-        if (gourmetBookDateTime == null || index < 0)
-        {
-            return;
-        }
-
-        startGourmetCampaignTag(index, null, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+//        GourmetBookDateTime gourmetBookDateTime = externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink);
+//
+//        int index;
+//        try
+//        {
+//            index = Integer.parseInt(externalDeepLink.getIndex());
+//        } catch (Exception e)
+//        {
+//            index = -1;
+//        }
+//
+//        if (gourmetBookDateTime == null || index < 0)
+//        {
+//            return;
+//        }
+//
+//        startGourmetCampaignTag(index, null, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
     }
 
     void moveDeepLinkStaySearchResult(CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)

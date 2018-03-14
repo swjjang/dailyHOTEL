@@ -10,7 +10,7 @@ import com.daily.dailyhotel.base.BasePagerFragment;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchGourmetCampaignListFragment extends BasePagerFragment<SearchGourmetCampaignListFragmentPresenter, SearchGourmetCampaignListFragment.OnEventListener>
+public class SearchGourmetCampaignTagListFragment extends BasePagerFragment<SearchGourmetCampaignTagListFragmentPresenter, SearchGourmetCampaignTagListFragment.OnEventListener>
 {
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
@@ -25,9 +25,9 @@ public class SearchGourmetCampaignListFragment extends BasePagerFragment<SearchG
 
     @NonNull
     @Override
-    protected SearchGourmetCampaignListFragmentPresenter createInstancePresenter()
+    protected SearchGourmetCampaignTagListFragmentPresenter createInstancePresenter()
     {
-        return new SearchGourmetCampaignListFragmentPresenter(this);
+        return new SearchGourmetCampaignTagListFragmentPresenter(this);
     }
 
     @Override

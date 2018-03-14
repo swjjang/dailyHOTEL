@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class SearchGourmetCampaignTagListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
     Context mContext;
     List<ObjectItem> mList;
@@ -39,7 +39,7 @@ public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<Recyc
     View.OnClickListener mOnWishClickListener;
     View.OnLongClickListener mOnLongClickListener;
 
-    public SearchGourmetCampaignListAdapter(Context context, ArrayList<ObjectItem> arrayList)
+    public SearchGourmetCampaignTagListAdapter(Context context, ArrayList<ObjectItem> arrayList)
     {
         mContext = context;
 

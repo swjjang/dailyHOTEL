@@ -4,6 +4,9 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+
 public interface SearchGourmetResultTabInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
@@ -12,9 +15,9 @@ public interface SearchGourmetResultTabInterface
 
         void setToolbarDateText(String text);
 
-        void setCampaignFragment();
+        Observable setCampaignTagFragment();
 
-        void setSearchResultFragment();
+        Observable<Boolean> setSearchResultFragment();
     }
 
     interface OnEventListener extends OnBaseEventListener

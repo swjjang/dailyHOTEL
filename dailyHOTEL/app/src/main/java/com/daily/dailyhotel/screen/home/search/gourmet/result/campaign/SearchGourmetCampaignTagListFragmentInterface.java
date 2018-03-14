@@ -23,10 +23,12 @@ import io.reactivex.Observable;
  * Created by sheldon
  * Clean Architecture
  */
-public interface SearchGourmetCampaignListFragmentInterface
+public interface SearchGourmetCampaignTagListFragmentInterface
 {
     interface ViewInterface extends BaseBlurFragmentViewInterface
     {
+        void setSearchResultCount(int count);
+
         void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR);
 
         void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR);

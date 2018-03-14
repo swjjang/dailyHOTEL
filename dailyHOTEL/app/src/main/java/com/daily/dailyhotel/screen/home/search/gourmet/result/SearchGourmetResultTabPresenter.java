@@ -22,6 +22,8 @@ import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -228,7 +230,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setToolbarTitle(mViewModel.getSuggest().getText1());
+
     }
 
     @Override
@@ -307,6 +309,34 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             public void accept(CommonDateTime commonDateTime) throws Exception
             {
                 mViewModel.commonDateTime.setValue(commonDateTime);
+
+                GourmetSuggestV2 suggest = mViewModel.getSuggest();
+
+                Observable observable;
+
+                if (suggest.isCampaignTagSuggestItem() == true)
+                {
+                    observable = getViewInterface().setCampaignTagFragment();
+                } else
+                {
+                    observable = null;
+                }
+
+                addCompositeDisposable(observable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Object>()
+                {
+                    @Override
+                    public void accept(Object o) throws Exception
+                    {
+
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleErrorAndFinish(throwable);
+                    }
+                }));
             }
         }, new Consumer<Throwable>()
         {
