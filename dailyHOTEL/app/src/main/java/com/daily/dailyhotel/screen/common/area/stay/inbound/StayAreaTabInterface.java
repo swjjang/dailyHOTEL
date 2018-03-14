@@ -58,8 +58,6 @@ public interface StayAreaTabInterface
 
         void onEventChangedDateClick(Activity activity);
 
-        void onEventAreaClick(Activity activity, String areGroupName, String areaName);
-
         void onEventClosedClick(Activity activity, String stayCategory);
 
         void onEventAroundSearchClick(Activity activity, DailyCategoryType dailyCategoryType);
