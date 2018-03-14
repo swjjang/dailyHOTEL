@@ -139,8 +139,8 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
 
         // 스테이, 고메 쿠폰인지
         holder.dataBinding.useableStayTextView.setVisibility(coupon.availableInStay ? View.VISIBLE : View.GONE);
-        holder.dataBinding.useableStayOutboundTextView.setVisibility(coupon.availableInOutboundHotel == true ? View.VISIBLE : View.GONE);
-        holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
+        holder.dataBinding.useableStayOutboundTextView.setVisibility(coupon.availableInOutboundHotel ? View.VISIBLE : View.GONE);
+        holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet ? View.VISIBLE : View.GONE);
 
         setDownLoadLayout(holder, coupon.type == Coupon.Type.REWARD, coupon.isDownloaded);
 
