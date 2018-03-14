@@ -24,8 +24,8 @@ public class SearchGourmetResultViewModel extends ViewModel
     public SearchGourmetViewModel searchViewModel;
 
     public MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
-    public MutableLiveData<GourmetFilter> filter = new MutableLiveData<>();
     public MutableLiveData<SearchGourmetResultTabPresenter.ViewType> viewType = new MutableLiveData<>();
+    public MutableLiveData<GourmetFilter> filter = new MutableLiveData<>();
     public MutableLiveData<Location> location = new MutableLiveData<>();
 
     static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
@@ -40,6 +40,7 @@ public class SearchGourmetResultViewModel extends ViewModel
         {
             SearchGourmetResultViewModel searchViewModel = new SearchGourmetResultViewModel();
 
+            searchViewModel.viewType.setValue(SearchGourmetResultTabPresenter.ViewType.LIST);
             searchViewModel.filter.setValue(new GourmetFilter().reset());
 
             return searchViewModel;

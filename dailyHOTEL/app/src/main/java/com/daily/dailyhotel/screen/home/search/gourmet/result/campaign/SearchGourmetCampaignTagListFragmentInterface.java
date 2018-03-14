@@ -92,10 +92,6 @@ public interface SearchGourmetCampaignTagListFragmentInterface
 
         void onCallClick();
 
-        void onFilterClick();
-
-        void onRegionClick();
-
         void onCalendarClick();
 
         void onWishClick(int position, Gourmet gourmet);

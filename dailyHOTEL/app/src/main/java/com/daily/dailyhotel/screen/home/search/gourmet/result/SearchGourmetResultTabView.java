@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.home.search.gourmet.result;
 
+import android.view.View;
+
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
@@ -8,7 +10,6 @@ import com.daily.dailyhotel.screen.home.search.gourmet.result.campaign.SearchGou
 import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.twoheart.dailyhotel.databinding.ActivitySearchGourmetResultTabDataBinding;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 
@@ -79,12 +80,29 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     @Override
     public void setToolbarDateText(String text)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
         getViewDataBinding().toolbarView.setSubTitleText(text);
     }
 
     @Override
-    public Observable setCampaignTagFragment()
+    public void setFloatingActionViewVisible(boolean visible)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().floatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public Observable<BasePagerFragment> setCampaignTagFragment()
+    {
+        getViewDataBinding().viewPager.setOffscreenPageLimit(1);
         getViewDataBinding().viewPager.setAdapter(null);
         getViewDataBinding().viewPager.removeAllViews();
 
@@ -121,7 +139,14 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         fragmentPagerAdapter.addFragment(basePagerFragment);
         getViewDataBinding().viewPager.setAdapter(fragmentPagerAdapter);
 
-        return basePagerFragment.getCompleteCreatedObservable();
+        return basePagerFragment.getCompleteCreatedObservable().map(new Function()
+        {
+            @Override
+            public BasePagerFragment apply(Object o) throws Exception
+            {
+                return basePagerFragment;
+            }
+        });
     }
 
     @Override

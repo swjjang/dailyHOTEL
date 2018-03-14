@@ -258,14 +258,7 @@ public class SearchGourmetCampaignTagListAdapter extends RecyclerView.Adapter<Re
         }
 
         holder.cardView.setBenefitText(gourmet.dBenefitText);
-
-        if (position == 0 || getItem(position - 1).mType != ObjectItem.TYPE_SECTION)
-        {
-            holder.cardView.setDividerVisible(true);
-        } else
-        {
-            holder.cardView.setDividerVisible(false);
-        }
+        holder.cardView.setDividerVisible(position > 0);
     }
 
     protected class GourmetViewHolder extends RecyclerView.ViewHolder

@@ -304,7 +304,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
                     @Override
                     public void onClick(View v)
                     {
-                        getEventListener().onFilterClick();
                     }
                 });
 
@@ -318,7 +317,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
                     @Override
                     public void onClick(View v)
                     {
-                        getEventListener().onRegionClick();
                     }
                 });
 
@@ -413,7 +411,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
                     @Override
                     public void onClick(View v)
                     {
-                        getEventListener().onFilterClick();
                     }
                 });
 
@@ -427,7 +424,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
                     @Override
                     public void onClick(View v)
                     {
-                        getEventListener().onRegionClick();
                     }
                 });
 

@@ -361,27 +361,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             setViewType(mViewModel.viewType.getValue());
         } else
         {
-            if (mNeedToRefresh == true)
+            if(mNeedToRefresh == true)
             {
                 onRefresh();
             }
-        }
-
-        if (mEmptyList == false)
-        {
-            getViewInterface().setFloatingActionViewVisible(true);
-            getViewInterface().setFloatingActionViewTypeMapEnabled(true);
-        } else
-        {
-            if (mViewModel.filter.getValue().isDefault() == true)
-            {
-                getViewInterface().setFloatingActionViewVisible(false);
-            } else
-            {
-                getViewInterface().setFloatingActionViewVisible(true);
-            }
-
-            getViewInterface().setFloatingActionViewTypeMapEnabled(false);
         }
     }
 
@@ -884,28 +867,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         }
 
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), SearchGourmetResultTabActivity.REQUEST_CODE_CALL);
-    }
-
-    @Override
-    public void onFilterClick()
-    {
-        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
-        {
-            return;
-        }
-
-        getFragment().getFragmentEventListener().onFilterClick();
-    }
-
-    @Override
-    public void onRegionClick()
-    {
-        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
-        {
-            return;
-        }
-
-        getFragment().getFragmentEventListener().onRegionClick();
     }
 
     @Override
