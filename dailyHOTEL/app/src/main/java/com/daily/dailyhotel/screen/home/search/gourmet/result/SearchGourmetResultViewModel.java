@@ -21,10 +21,10 @@ import com.daily.dailyhotel.util.DailyIntentUtils;
  */
 public class SearchGourmetResultViewModel extends ViewModel
 {
-    public MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
+    public SearchGourmetViewModel searchViewModel;
 
-    public SearchGourmetViewModel gourmetViewModel;
-    public MutableLiveData<GourmetFilter> gourmetFilter = new MutableLiveData<>();
+    public MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
+    public MutableLiveData<GourmetFilter> filter = new MutableLiveData<>();
     public MutableLiveData<SearchGourmetResultTabPresenter.ViewType> viewType = new MutableLiveData<>();
     public MutableLiveData<Location> location = new MutableLiveData<>();
 
@@ -40,67 +40,64 @@ public class SearchGourmetResultViewModel extends ViewModel
         {
             SearchGourmetResultViewModel searchViewModel = new SearchGourmetResultViewModel();
 
+            searchViewModel.filter.setValue(new GourmetFilter().reset());
+
             return searchViewModel;
         }
     }
 
+    public GourmetBookDateTime getBookDateTime()
+    {
+        return searchViewModel == null ? null : searchViewModel.getBookDateTime();
+    }
+
     public void setBookDateTime(Intent intent, String bookDateTimeExtraName) throws Exception
     {
-        if (intent == null)
+        if (intent == null || searchViewModel == null)
         {
-            throw new NullPointerException("intent == null");
+            return;
         }
 
         if (DailyIntentUtils.hasIntentExtras(intent, bookDateTimeExtraName) == true)
         {
             String bookDateTime = intent.getStringExtra(bookDateTimeExtraName);
 
-            setBookDateTime(bookDateTime);
+            searchViewModel.setBookDateTime(bookDateTime);
         }
-    }
-
-    public void setBookDateTime(String bookDateTime) throws Exception
-    {
-        if (gourmetViewModel == null)
-        {
-            return;
-        }
-
-        gourmetViewModel.setBookDateTime(bookDateTime);
-    }
-
-    public GourmetBookDateTime getBookDateTime()
-    {
-        return gourmetViewModel == null ? null : gourmetViewModel.getBookDateTime();
     }
 
     public void setSuggest(GourmetSuggestV2 suggest)
     {
-        if (gourmetViewModel == null)
+        if (searchViewModel == null)
         {
             return;
         }
 
-        gourmetViewModel.suggest.setValue(suggest);
+        searchViewModel.suggest.setValue(suggest);
     }
 
     public GourmetSuggestV2 getSuggest()
     {
-        return gourmetViewModel == null ? null : gourmetViewModel.suggest.getValue();
+        return searchViewModel == null ? null : searchViewModel.suggest.getValue();
     }
 
     public void setInputKeyword(String inputKeyword)
     {
-        if (gourmetViewModel == null)
+        if (searchViewModel == null)
         {
             return;
         }
 
-        gourmetViewModel.inputKeyword = inputKeyword;
+        searchViewModel.inputKeyword = inputKeyword;
     }
 
     public String getInputKeyword()
     {
-        return gourmetViewModel == null ? null : gourmetViewModel.inputKeyword;
+        return searchViewModel == null ? null : searchViewModel.inputKeyword;
+    }
+
+    public boolean isDistanceSort()
+    {
+        return filter.getValue() == null ? false : filter.getValue().isDistanceSort();
     }
 }

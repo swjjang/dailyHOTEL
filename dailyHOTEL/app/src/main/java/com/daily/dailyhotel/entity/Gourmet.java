@@ -1,25 +1,8 @@
 package com.daily.dailyhotel.entity;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.util.SparseArray;
 
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.network.model.GourmetWishDetails;
-import com.twoheart.dailyhotel.network.model.GourmetWishItem;
-import com.twoheart.dailyhotel.network.model.Prices;
-import com.twoheart.dailyhotel.network.model.Sticker;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class Gourmet
 {
@@ -31,12 +14,12 @@ public class Gourmet
     public String addressSummary;
     public double latitude;
     public double longitude;
-    public boolean isDailyChoice;
-    public boolean isSoldOut;
+    public boolean dailyChoice;
+    public boolean soldOut;
     public int satisfaction;
     public String districtName;
     public int entryPosition;
-    public boolean truevr;
+    public boolean trueVR;
     public String stickerUrl;
     public int stickerIndex;
 
@@ -56,7 +39,6 @@ public class Gourmet
 
     public Grade grade;
 
-    public boolean soldOut;
     public String regionName;
 
     public String createdWishDateTime; // ISO-8601 위시 등록 시간
@@ -90,5 +72,52 @@ public class Gourmet
         {
             return mMarkerResId;
         }
+    }
+
+    public com.twoheart.dailyhotel.model.Gourmet toGourmet()
+    {
+        com.twoheart.dailyhotel.model.Gourmet gourmet = new com.twoheart.dailyhotel.model.Gourmet();
+
+        gourmet.index = index;
+        gourmet.imageUrl = imageUrl;
+        gourmet.name = name;
+        gourmet.price = price;
+        gourmet.discountPrice = discountPrice;
+        gourmet.addressSummary = addressSummary;
+        gourmet.latitude = latitude;
+        gourmet.longitude = longitude;
+        gourmet.isDailyChoice = dailyChoice;
+        gourmet.isSoldOut = soldOut;
+        gourmet.satisfaction = satisfaction;
+        gourmet.districtName = districtName;
+        gourmet.entryPosition = entryPosition;
+        gourmet.truevr = trueVR;
+        gourmet.stickerUrl = stickerUrl;
+        gourmet.stickerIndex = stickerIndex;
+
+        // 신규 추가
+        gourmet.reviewCount = reviewCount;
+        gourmet.discountRate = discountRate;
+        gourmet.newItem = newItem;
+        gourmet.myWish = myWish;
+        gourmet.couponDiscountText = couponDiscountText;
+
+        gourmet.dBenefitText = dBenefitText;
+        gourmet.persons = persons;
+        gourmet.category = category;
+        gourmet.categoryCode = categoryCode;
+        gourmet.subCategory = subCategory;
+        gourmet.distance = distance;
+        gourmet.regionName = regionName;
+
+        try
+        {
+            gourmet.grade = com.twoheart.dailyhotel.model.Gourmet.Grade.valueOf(grade.name());
+        } catch (Exception e)
+        {
+            gourmet.grade = com.twoheart.dailyhotel.model.Gourmet.Grade.gourmet;
+        }
+
+        return gourmet;
     }
 }

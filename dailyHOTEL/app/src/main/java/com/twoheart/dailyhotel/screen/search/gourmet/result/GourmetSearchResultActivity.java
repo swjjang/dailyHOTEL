@@ -1251,23 +1251,23 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 switch (suggest.menuType)
                 {
-                    case GourmetSuggestV2.MenuType.LOCATION:
+                    case LOCATION:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
                         break;
 
-                    case GourmetSuggestV2.MenuType.SUGGEST:
+                    case SUGGEST:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
                         break;
 
-                    case GourmetSuggestV2.MenuType.DIRECT:
+                    case DIRECT:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.KEYWORD, Integer.toString(gourmet.index), null);
                         break;
 
-                    case GourmetSuggestV2.MenuType.RECENTLY_GOURMET:
-                    case GourmetSuggestV2.MenuType.RECENTLY_SEARCH:
+                    case RECENTLY_GOURMET:
+                    case RECENTLY_SEARCH:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
                         break;
@@ -1550,16 +1550,16 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 switch (suggest.menuType)
                 {
-                    case GourmetSuggestV2.MenuType.RECENTLY_SEARCH:
-                    case GourmetSuggestV2.MenuType.RECENTLY_GOURMET:
+                    case RECENTLY_SEARCH:
+                    case RECENTLY_GOURMET:
                         recordEventSearchResultByRecentKeyword(displayName, isShow, ServiceType.GOURMET, params);
                         break;
 
-                    case GourmetSuggestV2.MenuType.DIRECT:
+                    case DIRECT:
                         recordEventSearchResultByKeyword(displayName, isShow, ServiceType.GOURMET, params);
                         break;
 
-                    case GourmetSuggestV2.MenuType.SUGGEST:
+                    case SUGGEST:
                         recordEventSearchResultByAutoSearch(displayName, mInputText, isShow, ServiceType.GOURMET, params);
                         break;
                 }

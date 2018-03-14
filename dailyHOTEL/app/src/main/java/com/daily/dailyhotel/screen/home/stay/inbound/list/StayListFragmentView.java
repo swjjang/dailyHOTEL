@@ -42,9 +42,9 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     private static final int VIEWPAGER_HEIGHT_DP = 115;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    StayListAdapter mStayListAdapter;
+    StayListAdapter mListAdapter;
 
-    StayMapFragment mStayMapFragment;
+    StayMapFragment mMapFragment;
 
     StayMapViewPagerAdapter mViewPagerAdapter;
 
@@ -74,10 +74,10 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
             return;
         }
 
-        if (mStayListAdapter == null)
+        if (mListAdapter == null)
         {
-            mStayListAdapter = new StayListAdapter(getContext(), null);
-            mStayListAdapter.setOnClickListener(new View.OnClickListener()
+            mListAdapter = new StayListAdapter(getContext(), null);
+            mListAdapter.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -88,13 +88,13 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
                         return;
                     }
 
-                    ObjectItem objectItem = mStayListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
-                            getEventListener().onStayClick(position, objectItem.getItem(), mStayListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                            getEventListener().onStayClick(position, objectItem.getItem(), mListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                         } else
                         {
 
@@ -112,18 +112,18 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
                         return false;
                     }
 
-                    ObjectItem objectItem = mStayListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        getEventListener().onStayLongClick(position, objectItem.getItem(), mStayListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat());
+                        getEventListener().onStayLongClick(position, objectItem.getItem(), mListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat());
                     }
 
                     return true;
                 }
             });
 
-            mStayListAdapter.setOnWishClickListener(new View.OnClickListener()
+            mListAdapter.setOnWishClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -139,7 +139,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
                         return;
                     }
 
-                    ObjectItem objectItem = mStayListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
@@ -149,13 +149,13 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
             });
         }
 
-        mStayListAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListAdapter.setNightsEnabled(nightsEnabled);
-        mStayListAdapter.setRewardEnabled(rewardEnabled);
-        mStayListAdapter.setTrueVREnabled(supportTrueVR);
-        mStayListAdapter.setAll(objectItemList);
+        mListAdapter.setDistanceEnabled(isSortByDistance);
+        mListAdapter.setNightsEnabled(nightsEnabled);
+        mListAdapter.setRewardEnabled(rewardEnabled);
+        mListAdapter.setTrueVREnabled(supportTrueVR);
+        mListAdapter.setAll(objectItemList);
 
-        getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
+        getViewDataBinding().recyclerView.setAdapter(mListAdapter);
     }
 
     @Override
@@ -166,26 +166,26 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
             return;
         }
 
-        if (mStayListAdapter == null)
+        if (mListAdapter == null)
         {
-            mStayListAdapter = new StayListAdapter(getContext(), null);
+            mListAdapter = new StayListAdapter(getContext(), null);
 
-            getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
+            getViewDataBinding().recyclerView.setAdapter(mListAdapter);
         }
 
         // 항상 마지막 아이템은 Loading, Footer View 이다.
-        int itemCount = mStayListAdapter.getItemCount();
+        int itemCount = mListAdapter.getItemCount();
         if (itemCount > 0)
         {
-            mStayListAdapter.remove(itemCount - 1);
+            mListAdapter.remove(itemCount - 1);
         }
 
-        mStayListAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListAdapter.setNightsEnabled(nightsEnabled);
-        mStayListAdapter.setRewardEnabled(rewardEnabled);
-        mStayListAdapter.setTrueVREnabled(supportTrueVR);
-        mStayListAdapter.addAll(objectItemList);
-        mStayListAdapter.notifyDataSetChanged();
+        mListAdapter.setDistanceEnabled(isSortByDistance);
+        mListAdapter.setNightsEnabled(nightsEnabled);
+        mListAdapter.setRewardEnabled(rewardEnabled);
+        mListAdapter.setTrueVREnabled(supportTrueVR);
+        mListAdapter.addAll(objectItemList);
+        mListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -242,9 +242,9 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
         {
             hideViewPagerAnimation();
 
-            if (mStayMapFragment != null)
+            if (mMapFragment != null)
             {
-                mStayMapFragment.hideSelectedMarker();
+                mMapFragment.hideSelectedMarker();
             }
         }
     }
@@ -362,10 +362,10 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
         getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
-        if (mStayMapFragment == null)
+        if (mMapFragment == null)
         {
-            mStayMapFragment = new StayMapFragment();
-            mStayMapFragment.setOnEventListener(new StayMapFragment.OnEventListener()
+            mMapFragment = new StayMapFragment();
+            mMapFragment.setOnEventListener(new StayMapFragment.OnEventListener()
             {
                 @Override
                 public void onMapReady()
@@ -405,7 +405,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
             });
         }
 
-        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment).commitAllowingStateLoss();
+        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mMapFragment).commitAllowingStateLoss();
 
         //        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
         //        {
@@ -433,7 +433,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     @Override
     public void hideMapLayout(FragmentManager fragmentManager)
     {
-        if (getViewDataBinding() == null || fragmentManager == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || fragmentManager == null || mMapFragment == null)
         {
             return;
         }
@@ -448,12 +448,12 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
         getViewDataBinding().mapViewPager.setAdapter(null);
         getViewDataBinding().mapViewPager.setVisibility(View.GONE);
 
-        fragmentManager.beginTransaction().remove(mStayMapFragment).commitAllowingStateLoss();
+        fragmentManager.beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
 
         getViewDataBinding().mapLayout.removeAllViews();
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
 
-        mStayMapFragment = null;
+        mMapFragment = null;
 
         mFloatingActionView.setTranslationY(0);
         getViewDataBinding().mapViewPager.setTranslationY(0);
@@ -462,28 +462,28 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     @Override
     public void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide)
     {
-        if (getViewDataBinding() == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || mMapFragment == null)
         {
             return;
         }
 
         getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
-        mStayMapFragment.setStayList(stayList, moveCameraBounds, clear);
+        mMapFragment.setStayList(stayList, moveCameraBounds, clear);
 
     }
 
     @Override
     public void setWish(int position, boolean wish)
     {
-        if (getViewDataBinding() == null || mStayListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return;
         }
 
-        if (mStayListAdapter.getItem(position).mType == ObjectItem.TYPE_ENTRY)
+        if (mListAdapter.getItem(position).mType == ObjectItem.TYPE_ENTRY)
         {
-            ((Stay) mStayListAdapter.getItem(position).getItem()).myWish = wish;
+            ((Stay) mListAdapter.getItem(position).getItem()).myWish = wish;
         }
 
         getViewDataBinding().recyclerView.post(new Runnable()
@@ -504,7 +504,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     @Override
     public void scrollTop()
     {
-        if (getViewDataBinding() == null || mStayListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return;
         }
@@ -515,7 +515,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     @Override
     public void scrollStop()
     {
-        if (getViewDataBinding() == null || mStayListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return;
         }
@@ -526,23 +526,23 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     @Override
     public Observable<Long> getLocationAnimation()
     {
-        if (getViewDataBinding() == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || mMapFragment == null)
         {
             return null;
         }
 
-        return mStayMapFragment.getLocationAnimation();
+        return mMapFragment.getLocationAnimation();
     }
 
     @Override
     public void setMyLocation(Location location)
     {
-        if (getViewDataBinding() == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || mMapFragment == null)
         {
             return;
         }
 
-        mStayMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
+        mMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
     }
 
     @Override
@@ -654,7 +654,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
 
                 if (stay != null)
                 {
-                    mStayMapFragment.setSelectedMarker(stay);
+                    mMapFragment.setSelectedMarker(stay);
                 }
             }
 

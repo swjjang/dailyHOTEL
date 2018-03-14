@@ -19,6 +19,8 @@ public class SearchGourmetCampaignListFragment extends BasePagerFragment<SearchG
         void onCalendarClick();
 
         void onFilterClick();
+
+        void onExpireTag();
     }
 
     @NonNull

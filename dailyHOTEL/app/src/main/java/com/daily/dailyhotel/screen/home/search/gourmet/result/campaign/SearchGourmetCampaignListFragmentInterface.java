@@ -9,13 +9,11 @@ import android.support.v4.app.FragmentManager;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
+import com.daily.dailyhotel.entity.Gourmet;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabPresenter;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 
 import java.util.List;
 
@@ -29,11 +27,11 @@ public interface SearchGourmetCampaignListFragmentInterface
 {
     interface ViewInterface extends BaseBlurFragmentViewInterface
     {
-        void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR);
+        void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR);
 
-        void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR);
+        void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR);
 
-        void setStayMapViewPagerList(Context context, List<Stay> stayList, boolean nightsEnabled, boolean rewardEnabled);
+        void setMapViewPagerList(Context context, List<Gourmet> gourmetList);
 
         void setMapViewPagerVisible(boolean visible);
 
@@ -52,7 +50,7 @@ public interface SearchGourmetCampaignListFragmentInterface
 
         void hideMapLayout(FragmentManager fragmentManager);
 
-        void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide);
+        void setMapList(List<Gourmet> gourmetList, boolean moveCameraBounds, boolean clear, boolean hide);
 
         void setWish(int position, boolean wish);
 
@@ -75,14 +73,14 @@ public interface SearchGourmetCampaignListFragmentInterface
 
         void onMoreRefreshing();
 
-        void onGourmetClick(int position, Gourmet stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType);
+        void onGourmetClick(int position, Gourmet gourmet, int listCount, android.support.v4.util.Pair[] pairs, int gradientType);
 
-        void onGourmetLongClick(int position, Gourmet stay, int listCount, android.support.v4.util.Pair[] pairs);
+        void onGourmetLongClick(int position, Gourmet gourmet, int listCount, android.support.v4.util.Pair[] pairs);
 
         // Map Event
         void onMapReady();
 
-        void onMarkerClick(Stay stay, List<Stay> stayList);
+        void onMarkerClick(Gourmet gourmet, List<Gourmet> gourmetList);
 
         void onMarkersCompleted();
 
@@ -98,17 +96,17 @@ public interface SearchGourmetCampaignListFragmentInterface
 
         void onCalendarClick();
 
-        void onWishClick(int position, Stay stay);
+        void onWishClick(int position, Gourmet gourmet);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, StayBookDateTime stayBookDateTime, String categoryCode, StayFilter stayFilter, StayRegion stayRegion);
+        void onScreen(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, GourmetBookDateTime gourmetBookDateTime, GourmetFilter gourmetFilter);
 
-        void onEventStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay);
+        void onEventGourmetClick(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, Gourmet gourmet);
 
-        void onEventWishClick(Activity activity, DailyCategoryType categoryType, boolean wish);
+        void onEventWishClick(Activity activity, boolean wish);
 
-        void onEventMarkerClick(Activity activity, DailyCategoryType categoryType, String name);
+        void onEventMarkerClick(Activity activity, String name);
     }
 }

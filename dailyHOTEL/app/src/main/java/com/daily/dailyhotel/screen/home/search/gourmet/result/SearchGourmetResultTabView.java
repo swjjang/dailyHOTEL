@@ -2,9 +2,10 @@ package com.daily.dailyhotel.screen.home.search.gourmet.result;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
+import com.daily.dailyhotel.view.DailySearchToolbarView;
+import com.twoheart.dailyhotel.databinding.ActivitySearchGourmetResultTabDataBinding;
 
-public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResultTabInterface.OnEventListener, ActivityCopyDataBinding> implements SearchGourmetResultTabInterface.ViewInterface
+public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResultTabInterface.OnEventListener, ActivitySearchGourmetResultTabDataBinding> implements SearchGourmetResultTabInterface.ViewInterface
 {
     public SearchGourmetResultTabView(BaseActivity baseActivity, SearchGourmetResultTabInterface.OnEventListener listener)
     {
@@ -12,7 +13,7 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     }
 
     @Override
-    protected void setContentView(final ActivityCopyDataBinding viewDataBinding)
+    protected void setContentView(final ActivitySearchGourmetResultTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -33,19 +34,44 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         getViewDataBinding().toolbarView.setTitleText(title);
     }
 
-    private void initToolbar(ActivityCopyDataBinding viewDataBinding)
+    private void initToolbar(ActivitySearchGourmetResultTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
             return;
         }
 
-        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
+        {
+            @Override
+            public void onTitleClick()
+            {
+
+            }
+
+            @Override
+            public void onBackClick()
+            {
+                getEventListener().onBackClick();
+            }
+
+            @Override
+            public void onSelectedRadiusPosition(int position)
+            {
+
+            }
+        });
     }
 
     @Override
     public void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)
     {
 
+    }
+
+    @Override
+    public void setToolbarDateText(String text)
+    {
+        getViewDataBinding().toolbarView.setSubTitleText(text);
     }
 }

@@ -12,30 +12,27 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.BaseException;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
-import com.daily.dailyhotel.entity.AreaElement;
-import com.daily.dailyhotel.entity.Category;
+import com.daily.dailyhotel.entity.Gourmet;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetCampaignTags;
+import com.daily.dailyhotel.entity.GourmetFilter;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.entity.Stays;
-import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
-import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -43,19 +40,14 @@ import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResul
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultViewModel;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabPresenter;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabViewModel;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -65,9 +57,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -75,7 +65,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -97,8 +86,8 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
 
     SearchGourmetResultViewModel mViewModel;
 
-    Observer mBookDateTimeObserver;
-    Observer mSuggestObserver;
+    Observer mViewTypeObserver;
+    Observer mFilterObserver;
 
     int mPage = PAGE_NONE; // 리스트에서 페이지
     boolean mMoreRefreshing; // 특정 스크를 이상 내려가면 더보기로 목록을 요청하는데 lock()걸리면 안되지만 계속 요청되면 안되어서 해당 키로 락을 건다.
@@ -113,6 +102,8 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     //
     int mWishPosition;
     boolean mEmptyList; // 목록, 맵이 비어있는지 확인
+
+    DailyLocationExFactory mDailyLocationFactory;
 
     public SearchGourmetCampaignListFragmentPresenter(@NonNull SearchGourmetCampaignListFragment fragment)
     {
@@ -146,6 +137,51 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
         setRefresh(false);
     }
 
+    private void initViewModel(BaseActivity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        setViewType(SearchGourmetResultTabPresenter.ViewType.NONE);
+
+        mViewModel = ViewModelProviders.of(activity).get(SearchGourmetResultViewModel.class);
+
+        mViewTypeObserver = new Observer<SearchGourmetResultTabPresenter.ViewType>()
+        {
+            @Override
+            public void onChanged(@Nullable SearchGourmetResultTabPresenter.ViewType viewType)
+            {
+                getViewInterface().scrollStop();
+
+                // 이전 타입이 맵이고 리스트로 이동하는 경우 리스트를 재 호출 한다.
+                if (mViewType == SearchGourmetResultTabPresenter.ViewType.MAP && viewType == SearchGourmetResultTabPresenter.ViewType.LIST)
+                {
+                    mNeedToRefresh = true;
+                }
+
+                setViewType(viewType);
+            }
+        };
+
+        mViewModel.viewType.observe(activity, mViewTypeObserver);
+
+        mFilterObserver = new Observer<GourmetFilter>()
+        {
+            @Override
+            public void onChanged(@Nullable GourmetFilter gourmetFilter)
+            {
+                if (mViewType == SearchGourmetResultTabPresenter.ViewType.MAP)
+                {
+                    getViewInterface().setMapViewPagerVisible(false);
+                }
+            }
+        };
+
+        mViewModel.filter.observe(activity, mFilterObserver);
+    }
+
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
@@ -166,82 +202,100 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
         switch (requestCode)
         {
             case SearchGourmetResultTabActivity.REQUEST_CODE_PREVIEW:
-                switch (resultCode)
-                {
-                    case Activity.RESULT_OK:
-                        Observable.create(new ObservableOnSubscribe<Object>()
-                        {
-                            @Override
-                            public void subscribe(ObservableEmitter<Object> e) throws Exception
-                            {
-                                onStayClick(mWishPosition, mGourmetByLongPress, mListCountByLongPress, mPairsByLongPress, GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
-                            }
-                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
-                        break;
-
-                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
-                        if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
-                        {
-                            onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
-                        } else
-                        {
-                            onRefresh();
-                        }
-                        break;
-                }
+                onPreviewActivityResult(resultCode, data);
                 break;
 
             case SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG:
-                switch (resultCode)
-                {
-                    case Activity.RESULT_OK:
-                    case BaseActivity.RESULT_CODE_ERROR:
-                        if (data != null)
-                        {
-                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
-                        }
-                        break;
-
-                    case BaseActivity.RESULT_CODE_REFRESH:
-                        onRefresh();
-                        break;
-                }
+                onWishDialogActivityResult(resultCode, data);
                 break;
 
             case SearchGourmetResultTabActivity.REQUEST_CODE_DETAIL:
-                switch (resultCode)
-                {
-                    case BaseActivity.RESULT_CODE_REFRESH:
-                        if (data != null && data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
-                        {
-                            onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
-                        } else
-                        {
-                            onRefresh();
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+                onDetailActivityResult(resultCode, data);
                 break;
 
             case SearchGourmetResultTabActivity.REQUEST_CODE_PERMISSION_MANAGER:
-            {
-                switch (resultCode)
-                {
-                    case Activity.RESULT_OK:
-                        onMyLocationClick();
-                        break;
-
-                    default:
-                        break;
-                }
+                onPermissionActivityResult(resultCode, data);
                 break;
-            }
 
             case SearchGourmetResultTabActivity.REQUEST_CODE_SETTING_LOCATION:
                 onMyLocationClick();
+                break;
+        }
+    }
+
+    private void onPreviewActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                Observable.create(new ObservableOnSubscribe<Object>()
+                {
+                    @Override
+                    public void subscribe(ObservableEmitter<Object> e) throws Exception
+                    {
+                        onGourmetClick(mWishPosition, mGourmetByLongPress, mListCountByLongPress, mPairsByLongPress, GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                    }
+                }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                break;
+
+            case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                if (intent != null && intent.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                {
+                    onChangedWish(mWishPosition, intent.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                } else
+                {
+                    onRefresh();
+                }
+                break;
+        }
+    }
+
+    private void onWishDialogActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+            case BaseActivity.RESULT_CODE_ERROR:
+                if (intent != null)
+                {
+                    onChangedWish(mWishPosition, intent.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                }
+                break;
+
+            case BaseActivity.RESULT_CODE_REFRESH:
+                onRefresh();
+                break;
+        }
+    }
+
+    private void onDetailActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case BaseActivity.RESULT_CODE_REFRESH:
+                if (intent != null && intent.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                {
+                    onChangedWish(mWishPosition, intent.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                } else
+                {
+                    onRefresh();
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void onPermissionActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                onMyLocationClick();
+                break;
+
+            default:
                 break;
         }
     }
@@ -278,14 +332,12 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     {
         super.onDestroy();
 
-        if (mStayViewModel != null)
+        if (mViewModel != null)
         {
-            mStayViewModel.viewType.removeObserver(mViewTypeObserver);
-            mStayViewModel.bookDateTime.removeObserver(mStayBookDateTimeObserver);
-            mStayViewModel.stayRegion.removeObserver(mStayRegionObserver);
-            mStayViewModel.stayFilter.removeObserver(mStayFilterObserver);
+            mViewModel.viewType.removeObserver(mViewTypeObserver);
+            mViewModel.filter.removeObserver(mFilterObserver);
 
-            mStayViewModel = null;
+            mViewModel = null;
         }
     }
 
@@ -299,14 +351,14 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     public void onSelected()
     {
         if (getFragment().isRemoving() == true || getFragment().isAdded() == false || getActivity() == null//
-            || mViewType == null || mStayViewModel == null)
+            || mViewType == null || mViewModel == null)
         {
             return;
         }
 
-        if (mStayViewModel.viewType.getValue() != mViewType)
+        if (mViewModel.viewType.getValue() != mViewType)
         {
-            setViewType(mStayViewModel.viewType.getValue());
+            setViewType(mViewModel.viewType.getValue());
         } else
         {
             if (mNeedToRefresh == true)
@@ -321,7 +373,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
             getViewInterface().setFloatingActionViewTypeMapEnabled(true);
         } else
         {
-            if (mStayViewModel.stayFilter.getValue().isDefaultFilter() == true)
+            if (mViewModel.filter.getValue().isDefault() == true)
             {
                 getViewInterface().setFloatingActionViewVisible(false);
             } else
@@ -337,7 +389,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     public void onUnselected()
     {
         if (getFragment().isRemoving() == true || getFragment().isAdded() == false || getActivity() == null//
-            || mViewType == null || mStayViewModel == null)
+            || mViewType == null || mViewModel == null)
         {
             return;
         }
@@ -388,11 +440,6 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     @Override
     public boolean onBackPressed()
     {
-        if (isCurrentFragment() == false)
-        {
-            return false;
-        }
-
         switch (mViewType)
         {
             case LIST:
@@ -404,7 +451,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                     onMapClick();
                 } else
                 {
-                    mStayViewModel.viewType.setValue(StayTabPresenter.ViewType.LIST);
+                    mViewModel.viewType.setValue(SearchGourmetResultTabPresenter.ViewType.LIST);
                 }
                 return true;
         }
@@ -415,19 +462,18 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getFragment().isRemoving() == true || getActivity().isFinishing() == true || isRefresh() == false || mStayViewModel == null)
+        if (getFragment().isRemoving() == true || getActivity().isFinishing() == true || isRefresh() == false || mViewModel == null)
         {
             setRefresh(false);
             return;
         }
 
-        if (mStayViewModel.categoryType == null//
-            || mStayViewModel.selectedCategory.getValue() == null//
-            || mStayViewModel.stayFilter.getValue() == null//
-            || mStayViewModel.viewType.getValue() == null//
-            || mStayViewModel.stayRegion.getValue() == null//
-            || mStayViewModel.bookDateTime.getValue() == null//
-            || mStayViewModel.commonDateTime.getValue() == null)
+        if (mViewModel.commonDateTime.getValue() == null//
+            || mViewModel.searchViewModel == null//
+            || mViewModel.getBookDateTime() == null//
+            || mViewModel.getSuggest() == null//
+            || mViewModel.filter.getValue() == null//
+            || mViewModel.viewType.getValue() == null)
         {
             setRefresh(false);
             return;
@@ -438,46 +484,49 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
 
         mPage = 1;
 
-        getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+        getViewInterface().setEmptyViewVisible(false, mViewModel.filter.getValue().isDefault() == false);
 
-        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<ObjectItem>>>()
+        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
+        final String DATE_FORMAT = "yyyy-MM-dd";
+
+        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).map(new Function<GourmetCampaignTags, List<ObjectItem>>()
         {
             @Override
-            public Pair<Boolean, List<ObjectItem>> apply(Stays bmStays, Stays stays) throws Exception
+            public List<ObjectItem> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags gourmetCampaignTags) throws Exception
             {
-                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+                List<ObjectItem> objectItemList = new ArrayList<>();
+                List<Gourmet> gourmetList = gourmetCampaignTags.getGourmetList();
 
-                return new Pair<>(stays.activeReward, makeObjectItemList(bmStays.getStayList(), stays.getStayList(), mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT));
+                if (gourmetList != null && gourmetList.size() > 0)
+                {
+                    for (Gourmet gourmet : gourmetCampaignTags.getGourmetList())
+                    {
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmet));
+                    }
+                }
+
+                return objectItemList;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Boolean, List<ObjectItem>>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
         {
             @Override
-            public void accept(Pair<Boolean, List<ObjectItem>> pair) throws Exception
+            public void accept(List<ObjectItem> objectItemList) throws Exception
             {
-                boolean activeReward = pair.first;
-                List<ObjectItem> objectItemList = pair.second;
-                int listSize = objectItemList.size();
+                int size = objectItemList.size();
 
-                boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefaultFilter() == false;
-
-                if (listSize == 0)
+                if (objectItemList.size() == 0)
                 {
                     mEmptyList = true;
                     mPage = PAGE_NONE;
 
-                    getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
-                    getViewInterface().setFloatingActionViewTypeMapEnabled(false);
-                    getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
+                    getViewInterface().setEmptyViewVisible(true, false);
 
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.bookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
 
-                    getViewInterface().setFloatingActionViewVisible(true);
-                    getViewInterface().setFloatingActionViewTypeMapEnabled(true);
-
-                    if (listSize < MAXIMUM_NUMBER_PER_PAGE)
+                    if (size < MAXIMUM_NUMBER_PER_PAGE)
                     {
                         mPage = PAGE_FINISH;
 
@@ -487,14 +536,10 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                         objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                     }
 
-                    getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+                    getViewInterface().setEmptyViewVisible(false, false);
                     getViewInterface().setListLayoutVisible(true);
 
-                    getViewInterface().setList(objectItemList, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                        , mStayViewModel.bookDateTime.getValue().getNights() > 1, activeReward//
-                        , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
-
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, mViewType, mStayViewModel.bookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    getViewInterface().setList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 
                 mMoreRefreshing = false;
@@ -506,37 +551,45 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                mMoreRefreshing = false;
-                getViewInterface().setSwipeRefreshing(false);
+                if (throwable instanceof BaseException)
+                {
+                    BaseException baseException = (BaseException) throwable;
 
-                onHandleError(throwable);
+                    switch (baseException.getCode())
+                    {
+                        case -101: // 조회된 데이터가 없을때
+                            mEmptyList = true;
+                            mPage = PAGE_NONE;
+
+                            getViewInterface().setEmptyViewVisible(true, false);
+                            return;
+
+                        case 200: // 종료된 캠페인 태그
+                            showExpireTagDialog();
+                            return;
+                    }
+
+                    unLockAll();
+                }
+
+                onHandleErrorAndFinish(throwable);
             }
         }));
     }
 
-    private Observable<Stays> getLocalPlusList()
+    private void showExpireTagDialog()
     {
-        if (isLocalPlusEnabled() == true)
-        {
-            Map<String, Object> queryMap = getQueryMap(0);
-            queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
-
-            return mStayRemoteImpl.getLocalPlusList(queryMap);
-        } else
-        {
-            return Observable.just(new Stays());
-        }
-    }
-
-    private boolean isLocalPlusEnabled()
-    {
-        if (mStayViewModel.categoryType == DailyCategoryType.STAY_BOUTIQUE && mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT)
-        {
-            return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
-        } else
-        {
-            return false;
-        }
+        getViewInterface().showSimpleDialog(null //
+            , getString(R.string.message_campaign_tag_finished) //
+            , getString(R.string.dialog_btn_text_confirm) //
+            , null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    getFragment().getFragmentEventListener().onExpireTag();
+                }
+            });
     }
 
     @Override
@@ -558,94 +611,32 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     @Override
     public void onMoreRefreshing()
     {
-        if (getActivity().isFinishing() == true || mStayViewModel == null || mPage == PAGE_FINISH || mMoreRefreshing == true)
-        {
-            return;
-        }
-
-        if (mStayViewModel.selectedCategory.getValue() == null//
-            || mStayViewModel.stayFilter.getValue() == null//
-            || mStayViewModel.viewType.getValue() == null//
-            || mStayViewModel.stayRegion.getValue() == null//
-            || mStayViewModel.bookDateTime.getValue() == null//
-            || mStayViewModel.commonDateTime.getValue() == null)
-        {
-            return;
-        }
-
-        mMoreRefreshing = true;
-
-        mPage++;
-
-        addCompositeDisposable(mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
-        {
-            @Override
-            public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
-            {
-                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
-
-                return new Pair<>(stays.activeReward, makeObjectItemList(null, stays.getStayList(), mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT));
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Boolean, List<ObjectItem>>>()
-        {
-            @Override
-            public void accept(Pair<Boolean, List<ObjectItem>> pair) throws Exception
-            {
-                int listSize = pair.second.size();
-
-                if (listSize < MAXIMUM_NUMBER_PER_PAGE)
-                {
-                    mPage = PAGE_FINISH;
-
-                    pair.second.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
-                } else
-                {
-                    pair.second.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
-                }
-
-                getViewInterface().addList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                    , mStayViewModel.bookDateTime.getValue().getNights() > 1, pair.first,//
-                    DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
-
-                mMoreRefreshing = false;
-                getViewInterface().setSwipeRefreshing(false);
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                mMoreRefreshing = false;
-                getViewInterface().setSwipeRefreshing(false);
-
-                onHandleError(throwable);
-            }
-        }));
     }
 
     @Override
-    public void onStayClick(int position, Gourmet gourmet, int listCount, android.support.v4.util.Pair[] pairs, int gradientType)
+    public void onGourmetClick(int position, Gourmet gourmet, int listCount, android.support.v4.util.Pair[] pairs, int gradientType)
     {
-        if (mStayViewModel == null || stay == null || lock() == true)
+        if (mViewModel == null || gourmet == null || lock() == true)
         {
             return;
         }
 
         mWishPosition = position;
 
-        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
-        analyticsParam.setAddressAreaName(stay.addressSummary);
-        analyticsParam.discountPrice = stay.discountPrice;
-        analyticsParam.price = stay.price;
+        // --> 추후에 정리되면 메소드로 수정
+        GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+        analyticsParam.price = gourmet.price;
+        analyticsParam.discountPrice = gourmet.discountPrice;
         analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-        analyticsParam.setRegion(mStayViewModel.stayRegion.getValue());
-        analyticsParam.entryPosition = stay.entryPosition;
+        analyticsParam.setProvince(null);
+        analyticsParam.entryPosition = gourmet.entryPosition;
         analyticsParam.totalListCount = listCount;
-        analyticsParam.isDailyChoice = stay.dailyChoice;
-        analyticsParam.gradeName = stay.grade.getName(getActivity());
+        analyticsParam.isDailyChoice = gourmet.dailyChoice;
+        analyticsParam.setAddressAreaName(gourmet.addressSummary);
 
-        StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+        // <-- 추후에 정리되면 메소드로 수정
+
+        GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
 
         if (Util.isUsedMultiTransition() == true && pairs != null)
         {
@@ -669,33 +660,33 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
 
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
 
-            Intent intent = StayDetailActivity.newInstance(getActivity() //
-                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , true, gradientType, analyticsParam);
+            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , gourmet.category, gourmet.soldOut, false, false, true//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                , analyticsParam);
 
-            startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
+            startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
         } else
         {
-            Intent intent = StayDetailActivity.newInstance(getActivity() //
-                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , gourmet.category, gourmet.soldOut, false, false, false//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , analyticsParam);
 
-            startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);
+            startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_DETAIL);
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
-
-        mAnalytics.onEventStayClick(getActivity(), mStayViewModel.categoryType, mViewType, stay);
     }
 
     @Override
-    public void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs)
+    public void onGourmetLongClick(int position, Gourmet gourmet, int listCount, android.support.v4.util.Pair[] pairs)
     {
-        if (mStayViewModel == null || stay == null || lock() == true)
+        if (mViewModel == null || gourmet == null || lock() == true)
         {
             return;
         }
@@ -704,34 +695,32 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
 
         mListCountByLongPress = listCount;
         mPairsByLongPress = pairs;
-        mStayByLongPress = stay;
+        mGourmetByLongPress = gourmet;
 
         getViewInterface().setBlurVisible(getActivity(), true);
 
-        StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
+        GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
 
-        Intent intent = StayPreviewActivity.newInstance(getActivity()//
-            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stay.index, stay.name, stay.discountPrice, stay.grade.name());
+        Intent intent = GourmetPreviewActivity.newInstance(getActivity() //
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmet.toGourmet());
 
-        startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PREVIEW);
+        startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_PREVIEW);
     }
 
     @Override
     public void onMapReady()
     {
-        if (getActivity().isFinishing() == true || mStayViewModel == null)
+        if (getActivity().isFinishing() == true || mViewModel == null)
         {
             return;
         }
 
-        if (mStayViewModel.selectedCategory.getValue() == null//
-            || mStayViewModel.stayFilter.getValue() == null//
-            || mStayViewModel.viewType.getValue() == null//
-            || mStayViewModel.stayRegion.getValue() == null//
-            || mStayViewModel.bookDateTime.getValue() == null//
-            || mStayViewModel.commonDateTime.getValue() == null)
+        if (mViewModel.commonDateTime.getValue() == null//
+            || mViewModel.searchViewModel == null//
+            || mViewModel.getBookDateTime() == null//
+            || mViewModel.getSuggest() == null//
+            || mViewModel.filter.getValue() == null//
+            || mViewModel.viewType.getValue() == null)
         {
             return;
         }
@@ -739,70 +728,36 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
         lock();
         screenLock(true);
 
-        getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+        getViewInterface().setEmptyViewVisible(false, false);
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
+        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
+        final String DATE_FORMAT = "yyyy-MM-dd";
 
-        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<Stay>>>()
+        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTags>()
         {
             @Override
-            public Pair<Boolean, List<Stay>> apply(Stays bmStays, Stays stays) throws Exception
+            public void accept(GourmetCampaignTags gourmetCampaignTags) throws Exception
             {
-                List<Stay> stayList = new ArrayList<>();
+                List<Gourmet> gourmetList = gourmetCampaignTags.getGourmetList();
 
-                if (bmStays.totalCount > 0)
-                {
-                    stayList.addAll(bmStays.getStayList());
-                }
-
-                if (stays.totalCount > 0)
-                {
-                    stayList.addAll(stays.getStayList());
-                }
-
-                return new Pair(stays.activeReward, stayList);
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Boolean, List<Stay>>>()
-        {
-            @Override
-            public void accept(Pair<Boolean, List<Stay>> pair) throws Exception
-            {
-                boolean activeReward = pair.first;
-                List<Stay> stayList = pair.second;
-
-                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(activeReward);
-
-                boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefaultFilter() == false;
-
-                if (stayList == null || stayList.size() == 0)
+                if (gourmetList == null || gourmetList.size() == 0)
                 {
                     mEmptyList = true;
 
-                    getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
-                    getViewInterface().setFloatingActionViewTypeMapEnabled(false);
-
-                    getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
+                    getViewInterface().setEmptyViewVisible(true, false);
 
                     unLockAll();
-
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null//
-                        , mStayViewModel.bookDateTime.getValue(), mCategory.code//
-                        , mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
-                    getViewInterface().setFloatingActionViewVisible(true);
-                    getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
-                    getViewInterface().setEmptyViewVisible(false, notDefaultFilter);
+                    getViewInterface().setEmptyViewVisible(false, false);
                     getViewInterface().setMapLayoutVisible(true);
 
-                    getViewInterface().setMapList(stayList, true, true, false);
-
-                    mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType//
-                        , mStayViewModel.viewType.getValue(), mStayViewModel.bookDateTime.getValue()//
-                        , mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
+                    getViewInterface().setMapList(gourmetList, true, true, false);
                 }
             }
         }, new Consumer<Throwable>()
@@ -810,56 +765,55 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                onHandleError(throwable);
+                ExLog.e(throwable.toString());
+
+                mViewModel.viewType.setValue(SearchGourmetResultTabPresenter.ViewType.LIST);
             }
         }));
     }
 
     @Override
-    public void onMarkerClick(Stay stay, List<Stay> stayList)
+    public void onMarkerClick(Gourmet gourmet, List<Gourmet> gourmetList)
     {
-        if (stay == null || stayList == null || lock() == true)
+        if (gourmet == null || gourmetList == null || lock() == true)
         {
             return;
         }
 
-        addCompositeDisposable(Observable.just(stay).subscribeOn(Schedulers.io()).map(new Function<Stay, List<Stay>>()
+        addCompositeDisposable(Observable.just(gourmet).subscribeOn(Schedulers.io()).map(new Function<Gourmet, List<Gourmet>>()
         {
             @Override
-            public List<Stay> apply(@io.reactivex.annotations.NonNull Stay stay) throws Exception
+            public List<Gourmet> apply(@io.reactivex.annotations.NonNull Gourmet gourmet) throws Exception
             {
-                Comparator<Stay> comparator = new Comparator<Stay>()
+                Comparator<Gourmet> comparator = new Comparator<Gourmet>()
                 {
-                    public int compare(Stay stay1, Stay stay2)
+                    public int compare(Gourmet gourmet1, Gourmet gourmet2)
                     {
                         float[] results1 = new float[3];
-                        Location.distanceBetween(stay.latitude, stay.longitude, stay1.latitude, stay1.longitude, results1);
+                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet2.longitude, results1);
 
                         float[] results2 = new float[3];
-                        Location.distanceBetween(stay.latitude, stay.longitude, stay2.latitude, stay2.longitude, results2);
+                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet2.longitude, results2);
 
                         return Float.compare(results1[0], results2[0]);
                     }
                 };
 
-                Collections.sort(stayList, comparator);
+                Collections.sort(gourmetList, comparator);
 
-                return stayList;
+                return gourmetList;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Stay>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Gourmet>>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull List<Stay> stayList) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull List<Gourmet> gourmetList) throws Exception
             {
-                getViewInterface().setStayMapViewPagerList(getActivity(), stayList, mStayViewModel.bookDateTime.getValue().getNights() > 1//
-                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
+                getViewInterface().setMapViewPagerList(getActivity(), gourmetList);
                 getViewInterface().setMapViewPagerVisible(true);
 
                 unLockAll();
             }
         }));
-
-        mAnalytics.onEventMarkerClick(getActivity(), mStayViewModel.categoryType, stay.name);
     }
 
     @Override
@@ -892,7 +846,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
         screenLock(true);
         Observable<Long> locationAnimationObservable = null;
 
-        if (mViewType == StayTabPresenter.ViewType.MAP)
+        if (mViewType == SearchGourmetResultTabPresenter.ViewType.MAP)
         {
             locationAnimationObservable = getViewInterface().getLocationAnimation();
         }
@@ -928,7 +882,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
             return;
         }
 
-        startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayTabActivity.REQUEST_CODE_CALL);
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), SearchGourmetResultTabActivity.REQUEST_CODE_CALL);
     }
 
     @Override
@@ -965,140 +919,27 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
     }
 
     @Override
-    public void onWishClick(int position, Stay stay)
+    public void onWishClick(int position, Gourmet gourmet)
     {
-        if (position < 0 || stay == null)
+        if (position < 0 || gourmet == null)
         {
             return;
         }
 
         mWishPosition = position;
 
-        boolean currentWish = stay.myWish;
+        boolean currentWish = gourmet.myWish;
 
         if (DailyHotel.isLogin() == true)
         {
             onChangedWish(position, !currentWish);
         }
 
-        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
-            , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
-
-        mAnalytics.onEventWishClick(getActivity(), mStayViewModel.categoryType, !currentWish);
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
+            , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
     }
 
-    private void initViewModel(BaseActivity activity)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        setViewType(StayTabPresenter.ViewType.NONE);
-
-        mStayViewModel = ViewModelProviders.of(activity).get(StayTabViewModel.class);
-
-        mViewTypeObserver = new Observer<StayTabPresenter.ViewType>()
-        {
-            @Override
-            public void onChanged(@Nullable StayTabPresenter.ViewType viewType)
-            {
-                if (isCurrentFragment() == false)
-                {
-                } else
-                {
-                    getViewInterface().scrollStop();
-
-                    // 이전 타입이 맵이고 리스트로 이동하는 경우 리스트를 재 호출 한다.
-                    if (mViewType == StayTabPresenter.ViewType.MAP && viewType == StayTabPresenter.ViewType.LIST)
-                    {
-                        mNeedToRefresh = true;
-                    }
-
-                    setViewType(viewType);
-                }
-            }
-        };
-
-        mStayViewModel.viewType.observe(activity, mViewTypeObserver);
-
-        mStayBookDateTimeObserver = new Observer<StayBookDateTime>()
-        {
-            @Override
-            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
-            {
-                // 날짜가 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
-                if (isCurrentFragment() == false)
-                {
-                    mNeedToRefresh = true;
-                } else
-                {
-
-                }
-
-                if (mViewType == StayTabPresenter.ViewType.MAP)
-                {
-                    getViewInterface().setMapViewPagerVisible(false);
-                }
-            }
-        };
-
-        mStayViewModel.bookDateTime.observe(activity, mStayBookDateTimeObserver);
-
-        mStayRegionObserver = new Observer<StayRegion>()
-        {
-            @Override
-            public void onChanged(@Nullable StayRegion stayRegion)
-            {
-                // 지역이 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
-                if (isCurrentFragment() == false)
-                {
-                    mNeedToRefresh = true;
-                } else
-                {
-
-                }
-
-                if (mViewType == StayTabPresenter.ViewType.MAP)
-                {
-                    getViewInterface().setMapViewPagerVisible(false);
-                }
-            }
-        };
-
-        mStayViewModel.stayRegion.observe(activity, mStayRegionObserver);
-
-        mStayFilterObserver = new Observer<StayFilter>()
-        {
-            @Override
-            public void onChanged(@Nullable StayFilter stayFilter)
-            {
-                // 필터가 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
-                if (isCurrentFragment() == false)
-                {
-                    mNeedToRefresh = true;
-                } else
-                {
-
-                }
-
-                if (mViewType == StayTabPresenter.ViewType.MAP)
-                {
-                    getViewInterface().setMapViewPagerVisible(false);
-                }
-            }
-        };
-
-        mStayViewModel.stayFilter.observe(activity, mStayFilterObserver);
-    }
-
-    boolean isCurrentFragment()
-    {
-        return (mStayViewModel.selectedCategory.getValue() != null && mCategory != null//
-            && mStayViewModel.selectedCategory.getValue().code.equalsIgnoreCase(mCategory.code) == true);
-    }
-
-    void setViewType(StayTabPresenter.ViewType viewType)
+    void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)
     {
         if (viewType == null || mViewType == viewType)
         {
@@ -1139,284 +980,14 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
         getViewInterface().setWish(position, wish);
     }
 
-    /**
-     * @param stayList
-     * @param hasSection
-     * @return
-     */
-    List<ObjectItem> makeObjectItemList(List<Stay> stayBMList, List<Stay> stayList, boolean hasSection)
-    {
-        List<ObjectItem> objectItemList = new ArrayList<>();
-
-        if (stayList == null || stayList.size() == 0)
-        {
-            return objectItemList;
-        }
-
-        int entryPosition = 0;
-        boolean hasBMList = false;
-
-        if (stayBMList != null && stayBMList.size() > 0)
-        {
-            hasBMList = true;
-
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_local_plus)));
-
-            for (Stay stay : stayBMList)
-            {
-                stay.entryPosition = ++entryPosition;
-                objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stay));
-            }
-        }
-
-        if (hasSection == true && stayList.get(0).dailyChoice == true)
-        {
-            boolean addAllSection = false;
-            boolean addDailyChoiceSection = false;
-
-            for (Stay stay : stayList)
-            {
-                if (stay.dailyChoice == true)
-                {
-                    if (addDailyChoiceSection == false)
-                    {
-                        addDailyChoiceSection = true;
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_dailychoice)));
-                    }
-                } else
-                {
-                    if (addAllSection == false)
-                    {
-                        addAllSection = true;
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_all)));
-                    }
-                }
-
-                stay.entryPosition = ++entryPosition;
-                objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stay));
-            }
-        } else
-        {
-            if (hasBMList == true)
-            {
-                objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_all)));
-            }
-
-            for (Stay stay : stayList)
-            {
-                stay.entryPosition = ++entryPosition;
-                objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stay));
-            }
-        }
-
-        return objectItemList;
-    }
-
-    Map<String, Object> getQueryMap(int page)
-    {
-        Map<String, Object> queryMap = new HashMap<>();
-
-        Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mStayViewModel.getBookDateTime());
-
-        if (bookDateTimeQueryMap != null)
-        {
-            queryMap.putAll(bookDateTimeQueryMap);
-        }
-
-        Map<String, Object> regionQueryMap = getRegionQueryMap(mStayViewModel.stayRegion.getValue());
-
-        if (regionQueryMap != null)
-        {
-            queryMap.putAll(regionQueryMap);
-        }
-
-        if (mCategory != null && Category.ALL.code.equalsIgnoreCase(mCategory.code) == false)
-        {
-            queryMap.put("category", mCategory.code);
-        }
-
-        Map<String, Object> filterQueryMap = getFilterQueryMap(mStayViewModel.stayFilter.getValue());
-
-        if (filterQueryMap != null)
-        {
-            queryMap.putAll(filterQueryMap);
-        }
-
-        // page
-        // limit
-        // 페이지 번호. 0 보다 큰 정수. 값을 입력하지 않으면 페이지네이션을 적용하지 않고 전체 데이터를 반환함
-        if (page > 0)
-        {
-            queryMap.put("page", page);
-            queryMap.put("limit", MAXIMUM_NUMBER_PER_PAGE);
-        }
-
-        // details
-        queryMap.put("details", true);
-
-        return queryMap;
-    }
-
-    private Map<String, Object> getBookDateTimeQueryMap(StayBookDateTime stayBookDateTime)
-    {
-        if (stayBookDateTime == null)
-        {
-            return null;
-        }
-
-        Map<String, Object> queryMap = new HashMap<>();
-
-        queryMap.put("dateCheckIn", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-        queryMap.put("stays", stayBookDateTime.getNights());
-
-        return queryMap;
-    }
-
-    private Map<String, Object> getRegionQueryMap(StayRegion stayRegion)
-    {
-        if (stayRegion == null)
-        {
-            return null;
-        }
-
-        Map<String, Object> queryMap = new HashMap<>();
-
-        switch (stayRegion.getAreaType())
-        {
-            case AREA:
-            {
-                AreaElement areaGroupElement = stayRegion.getAreaGroupElement();
-                if (areaGroupElement != null)
-                {
-                    queryMap.put("provinceIdx", areaGroupElement.index);
-                }
-
-                AreaElement areaElement = stayRegion.getAreaElement();
-                if (areaElement != null && areaElement.index != StayArea.ALL)
-                {
-                    queryMap.put("areaIdx", areaElement.index);
-                }
-                break;
-            }
-
-            case SUBWAY_AREA:
-            {
-                AreaElement areaElement = stayRegion.getAreaElement();
-
-                if (areaElement != null)
-                {
-                    queryMap.put("subwayIdx", areaElement.index);
-                }
-                break;
-            }
-        }
-
-        return queryMap;
-    }
-
-    private Map<String, Object> getFilterQueryMap(StayFilter stayFilter)
-    {
-        if (stayFilter == null)
-        {
-            return null;
-        }
-
-        Map<String, Object> queryMap = new HashMap<>();
-
-        // persons
-        queryMap.put("persons", stayFilter.person);
-
-        // bedType [Double, Twin, Ondol, Etc]
-        List<String> flagBedTypeFilters = stayFilter.getBedTypeList();
-
-        if (flagBedTypeFilters != null && flagBedTypeFilters.size() > 0)
-        {
-            queryMap.put("bedType", flagBedTypeFilters);
-        }
-
-        // luxury [Breakfast, Cooking, Bath, Parking, Pool, Finess, WiFi, NoParking, Pet, ShareBbq, KidsPlayRoom
-        // , Sauna, BusinessCenter, Tv, Pc, SpaWallPool, Karaoke, PartyRoom, PrivateBbq
-        List<String> luxuryFilterList = new ArrayList<>();
-        List<String> amenitiesFilterList = stayFilter.getAmenitiesFilter();
-        List<String> roomAmenitiesFilterList = stayFilter.getRoomAmenitiesFilterList();
-
-        if (amenitiesFilterList != null && amenitiesFilterList.size() > 0)
-        {
-            luxuryFilterList.addAll(amenitiesFilterList);
-        }
-
-        if (roomAmenitiesFilterList != null && roomAmenitiesFilterList.size() > 0)
-        {
-            luxuryFilterList.addAll(roomAmenitiesFilterList);
-        }
-
-        if (luxuryFilterList.size() > 0)
-        {
-            queryMap.put("luxury", luxuryFilterList);
-        }
-
-        Map<String, Object> sortQueryMap = getSortQueryMap(stayFilter.sortType, mStayViewModel.location.getValue());
-
-        if (sortQueryMap != null)
-        {
-            queryMap.putAll(sortQueryMap);
-        }
-
-        return queryMap;
-    }
-
-    private Map<String, Object> getSortQueryMap(StayFilter.SortType sortType, Location location)
-    {
-        if (sortType == null)
-        {
-            return null;
-        }
-
-        Map<String, Object> queryMap = new HashMap<>();
-
-        switch (sortType)
-        {
-            case DEFAULT:
-                break;
-
-            case DISTANCE:
-                queryMap.put("sortProperty", "Distance");
-                queryMap.put("sortDirection", "Asc");
-
-                if (location != null)
-                {
-                    queryMap.put("latitude", location.getLatitude());
-                    queryMap.put("longitude", location.getLongitude());
-                }
-                break;
-
-            case LOW_PRICE:
-                queryMap.put("sortProperty", "Price");
-                queryMap.put("sortDirection", "Asc");
-                break;
-
-            case HIGH_PRICE:
-                queryMap.put("sortProperty", "Price");
-                queryMap.put("sortDirection", "Desc");
-                break;
-
-            case SATISFACTION:
-                queryMap.put("sortProperty", "Rating");
-                queryMap.put("sortDirection", "Desc");
-                break;
-        }
-
-        return queryMap;
-    }
-
     private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
     {
-        if (mDailyLocationExFactory == null)
+        if (mDailyLocationFactory == null)
         {
-            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
+            mDailyLocationFactory = new DailyLocationExFactory(getActivity());
         }
 
-        if (mDailyLocationExFactory.measuringLocation() == true)
+        if (mDailyLocationFactory.measuringLocation() == true)
         {
             return null;
         }
@@ -1436,7 +1007,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
             @Override
             protected void subscribeActual(io.reactivex.Observer<? super Location> observer)
             {
-                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
+                mDailyLocationFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
                 {
                     @Override
                     public void onRequirePermission()
@@ -1459,7 +1030,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                     @Override
                     public void onProviderEnabled()
                     {
-                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
+                        mDailyLocationFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
                         {
                             @Override
                             public void onFailed()
@@ -1478,7 +1049,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                             {
                                 unLockAll();
 
-                                mDailyLocationExFactory.stopLocationMeasure();
+                                mDailyLocationFactory.stopLocationMeasure();
 
                                 if (location == null)
                                 {
@@ -1534,7 +1105,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                 if (throwable instanceof PermissionException)
                 {
                     Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                    startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                    startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_PERMISSION_MANAGER);
                 } else if (throwable instanceof ProviderException)
                 {
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
@@ -1548,7 +1119,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                             public void onClick(View v)
                             {
                                 Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, StayTabActivity.REQUEST_CODE_SETTING_LOCATION);
+                                startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_SETTING_LOCATION);
                             }
                         }, new View.OnClickListener()//
                         {
@@ -1572,7 +1143,7 @@ public class SearchGourmetCampaignListFragmentPresenter extends BasePagerFragmen
                 {
                     try
                     {
-                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), StayTabActivity.REQUEST_CODE_SETTING_LOCATION);
+                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), SearchGourmetResultTabActivity.REQUEST_CODE_SETTING_LOCATION);
                     } catch (Exception e)
                     {
                         getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

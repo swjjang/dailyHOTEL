@@ -14,6 +14,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
@@ -78,7 +79,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
 
         mViewModel = ViewModelProviders.of(activity, new SearchGourmetResultViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetResultViewModel.class);
-        mViewModel.gourmetViewModel = ViewModelProviders.of(activity, new SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetViewModel.class);
+        mViewModel.searchViewModel = ViewModelProviders.of(activity, new SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetViewModel.class);
 
         mViewModel.viewType.observe(activity, new Observer<ViewType>()
         {
@@ -107,7 +108,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             }
         });
 
-        mViewModel.gourmetViewModel.bookDateTime.observe(activity, new Observer<GourmetBookDateTime>()
+        mViewModel.searchViewModel.bookDateTime.observe(activity, new Observer<GourmetBookDateTime>()
         {
             @Override
             public void onChanged(@Nullable GourmetBookDateTime gourmetBookDateTime)
@@ -115,6 +116,15 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 final String dateFormat = "MM.dd(EEE)";
 
                 getViewInterface().setToolbarDateText(gourmetBookDateTime.getVisitDateTime(dateFormat));
+            }
+        });
+
+        mViewModel.searchViewModel.suggest.observe(activity, new Observer<GourmetSuggestV2>()
+        {
+            @Override
+            public void onChanged(@Nullable GourmetSuggestV2 suggest)
+            {
+                getViewInterface().setToolbarTitle(suggest.getText1());
             }
         });
     }

@@ -11,6 +11,10 @@ public interface SearchGourmetResultTabInterface
         void setViewType(SearchGourmetResultTabPresenter.ViewType viewType);
 
         void setToolbarDateText(String text);
+
+        void setCampaignFragment();
+
+        void setSearchResultFragment();
     }
 
     interface OnEventListener extends OnBaseEventListener

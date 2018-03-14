@@ -14,17 +14,17 @@ import android.view.View;
 
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurFragmentView;
+import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapFragment;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapViewPagerAdapter;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.list.map.GourmetMapFragment;
+import com.daily.dailyhotel.screen.home.gourmet.list.map.GourmetMapViewPagerAdapter;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
-import com.daily.dailyhotel.view.DailyStayCardView;
-import com.daily.dailyhotel.view.DailyStayMapCardView;
+import com.daily.dailyhotel.view.DailyGourmetCardView;
+import com.daily.dailyhotel.view.DailyGourmetMapCardView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
+import com.twoheart.dailyhotel.databinding.FragmentSearchGourmetResultDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.List;
@@ -35,18 +35,18 @@ import io.reactivex.Observable;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<SearchGourmetCampaignListFragmentInterface.OnEventListener, FragmentStayListDataBinding>//
+public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<SearchGourmetCampaignListFragmentInterface.OnEventListener, FragmentSearchGourmetResultDataBinding>//
     implements SearchGourmetCampaignListFragmentInterface.ViewInterface
 {
     private static final int ANIMATION_DELAY = 200;
     private static final int VIEWPAGER_HEIGHT_DP = 115;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    SearchGourmetCampaignListAdapter mStayListAdapter;
+    SearchGourmetCampaignListAdapter mListAdapter;
 
-    StayMapFragment mStayMapFragment;
+    GourmetMapFragment mMapFragment;
 
-    StayMapViewPagerAdapter mViewPagerAdapter;
+    GourmetMapViewPagerAdapter mViewPagerAdapter;
 
     ValueAnimator mValueAnimator;
 
@@ -58,7 +58,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
     }
 
     @Override
-    protected void setContentView(FragmentStayListDataBinding viewDataBinding)
+    protected void setContentView(FragmentSearchGourmetResultDataBinding viewDataBinding)
     {
         mFloatingActionView = getWindow().findViewById(R.id.floatingActionView);
 
@@ -67,17 +67,17 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
     }
 
     @Override
-    public void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR)
+    public void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR)
     {
         if (getViewDataBinding() == null || objectItemList == null || objectItemList.size() == 0)
         {
             return;
         }
 
-        if (mStayListAdapter == null)
+        if (mListAdapter == null)
         {
-            mStayListAdapter = new SearchGourmetCampaignListAdapter(getContext(), null);
-            mStayListAdapter.setOnClickListener(new View.OnClickListener()
+            mListAdapter = new SearchGourmetCampaignListAdapter(getContext(), null);
+            mListAdapter.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -88,13 +88,14 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
                         return;
                     }
 
-                    ObjectItem objectItem = mStayListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        if (view instanceof DailyStayCardView == true)
+                        if (view instanceof DailyGourmetCardView == true)
                         {
-                            getEventListener().onStayClick(position, objectItem.getItem(), mStayListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                            getEventListener().onGourmetClick(position, objectItem.getItem(), mListAdapter.getItemCount()//
+                                , ((DailyGourmetCardView) view).getOptionsCompat(), GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                         } else
                         {
 
@@ -112,18 +113,19 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
                         return false;
                     }
 
-                    ObjectItem objectItem = mStayListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        getEventListener().onStayLongClick(position, objectItem.getItem(), mStayListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat());
+                        getEventListener().onGourmetLongClick(position, objectItem.getItem(), mListAdapter.getItemCount()//
+                            , ((DailyGourmetCardView) view).getOptionsCompat());
                     }
 
                     return true;
                 }
             });
 
-            mStayListAdapter.setOnWishClickListener(new View.OnClickListener()
+            mListAdapter.setOnWishClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -139,7 +141,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
                         return;
                     }
 
-                    ObjectItem objectItem = mStayListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
@@ -149,47 +151,43 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
             });
         }
 
-        mStayListAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListAdapter.setNightsEnabled(nightsEnabled);
-        mStayListAdapter.setRewardEnabled(rewardEnabled);
-        mStayListAdapter.setTrueVREnabled(supportTrueVR);
-        mStayListAdapter.setAll(objectItemList);
+        mListAdapter.setDistanceEnabled(isSortByDistance);
+        mListAdapter.setTrueVREnabled(supportTrueVR);
+        mListAdapter.setAll(objectItemList);
 
-        getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
+        getViewDataBinding().recyclerView.setAdapter(mListAdapter);
     }
 
     @Override
-    public void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR)
+    public void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR)
     {
         if (getViewDataBinding() == null || objectItemList == null || objectItemList.size() == 0)
         {
             return;
         }
 
-        if (mStayListAdapter == null)
+        if (mListAdapter == null)
         {
-            mStayListAdapter = new SearchGourmetCampaignListAdapter(getContext(), null);
+            mListAdapter = new SearchGourmetCampaignListAdapter(getContext(), null);
 
-            getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
+            getViewDataBinding().recyclerView.setAdapter(mListAdapter);
         }
 
         // 항상 마지막 아이템은 Loading, Footer View 이다.
-        int itemCount = mStayListAdapter.getItemCount();
+        int itemCount = mListAdapter.getItemCount();
         if (itemCount > 0)
         {
-            mStayListAdapter.remove(itemCount - 1);
+            mListAdapter.remove(itemCount - 1);
         }
 
-        mStayListAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListAdapter.setNightsEnabled(nightsEnabled);
-        mStayListAdapter.setRewardEnabled(rewardEnabled);
-        mStayListAdapter.setTrueVREnabled(supportTrueVR);
-        mStayListAdapter.addAll(objectItemList);
-        mStayListAdapter.notifyDataSetChanged();
+        mListAdapter.setDistanceEnabled(isSortByDistance);
+        mListAdapter.setTrueVREnabled(supportTrueVR);
+        mListAdapter.addAll(objectItemList);
+        mListAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void setStayMapViewPagerList(Context context, List<Stay> stayList, boolean nightsEnabled, boolean rewardEnabled)
+    public void setMapViewPagerList(Context context, List<Gourmet> gourmetList)
     {
         if (context == null)
         {
@@ -198,15 +196,16 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
 
         if (mViewPagerAdapter == null)
         {
-            mViewPagerAdapter = new StayMapViewPagerAdapter(context);
-            mViewPagerAdapter.setOnPlaceMapViewPagerAdapterListener(new StayMapViewPagerAdapter.OnPlaceMapViewPagerAdapterListener()
+            mViewPagerAdapter = new GourmetMapViewPagerAdapter(context);
+            mViewPagerAdapter.setOnPlaceMapViewPagerAdapterListener(new GourmetMapViewPagerAdapter.OnPlaceMapViewPagerAdapterListener()
             {
                 @Override
-                public void onStayClick(View view, Stay stay)
+                public void onGourmetClick(View view, Gourmet gourmet)
                 {
-                    if (view instanceof DailyStayMapCardView)
+                    if (view instanceof DailyGourmetMapCardView)
                     {
-                        getEventListener().onStayClick(-1, stay, getViewDataBinding().mapViewPager.getChildCount(), ((DailyStayMapCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                        getEventListener().onGourmetClick(-1, gourmet, getViewDataBinding().mapViewPager.getChildCount()//
+                            , ((DailyGourmetMapCardView) view).getOptionsCompat(), GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
                     }
                 }
 
@@ -221,9 +220,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
         getViewDataBinding().mapViewPager.setAdapter(mViewPagerAdapter);
 
         mViewPagerAdapter.clear();
-        mViewPagerAdapter.setData(stayList);
-        mViewPagerAdapter.setNightsEnabled(nightsEnabled);
-        mViewPagerAdapter.setRewardEnabled(rewardEnabled);
+        mViewPagerAdapter.setData(gourmetList);
         mViewPagerAdapter.notifyDataSetChanged();
     }
 
@@ -242,9 +239,9 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
         {
             hideViewPagerAnimation();
 
-            if (mStayMapFragment != null)
+            if (mMapFragment != null)
             {
-                mStayMapFragment.hideSelectedMarker();
+                mMapFragment.hideSelectedMarker();
             }
         }
     }
@@ -290,7 +287,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
 
             if (applyFilter == true)
             {
-                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_filter_empty_message01), getString(R.string.message_changing_filter_option));
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_gourmet_filter_empty_message01), getString(R.string.message_changing_filter_option));
                 getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
                 {
                     @Override
@@ -304,7 +301,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
                 getViewDataBinding().emptyView.setBottomMessageVisible(false);
             } else
             {
-                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_stay_empty_message01), getString(R.string.message_stay_empty_message02));
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_gourmet_empty_message01), getString(R.string.message_gourmet_empty_message02));
                 getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_stay_category_change_region), new View.OnClickListener()
                 {
                     @Override
@@ -328,6 +325,202 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
             }
         }
     }
+
+    //    private void setDefaultTypeEmptyView(View view)
+    //    {
+    //        if (view == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+    //        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+    //
+    //        messageTextView01.setText(R.string.message_searchresult_gourmet_empty_message01);
+    //        messageTextView02.setText(R.string.message_changing_option);
+    //
+    //        View changeRegionView = view.findViewById(R.id.changeRegionView);
+    //        View changeDateView = view.findViewById(R.id.changeDateView);
+    //
+    //        changeRegionView.setVisibility(View.GONE);
+    //        changeDateView.setVisibility(View.GONE);
+    //
+    //        TextView callTextView = view.findViewById(R.id.callTextView);
+    //        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    //
+    //        callTextView.setOnClickListener(new View.OnClickListener()
+    //        {
+    //            @Override
+    //            public void onClick(View v)
+    //            {
+    //                ((OnEventListener) mOnEventListener).onShowCallDialog();
+    //            }
+    //        });
+    //    }
+    //
+    //    private void setDefaultTypeFilterEmptyView(View view)
+    //    {
+    //        if (view == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
+    //        TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
+    //
+    //        filterMessageTextView01.setText(R.string.message_searchresult_gourmet_filter_empty_message01);
+    //        filterMessageTextView02.setText(R.string.message_changing_filter_option);
+    //
+    //        TextView buttonView = view.findViewById(R.id.buttonView);
+    //        buttonView.setText(R.string.label_hotel_list_changing_filter);
+    //
+    //        buttonView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
+    //    }
+
+
+    public void setLocationEmptyViewVisible(boolean visible, boolean applyFilter)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visible == false)
+        {
+            getViewDataBinding().emptyView.setVisibility(View.GONE);
+        } else
+        {
+            getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
+            getViewDataBinding().mapLayout.setVisibility(View.GONE);
+            getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+
+            if (applyFilter == true)
+            {
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_gourmet_filter_empty_message01), getString(R.string.message_changing_filter_option));
+                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onFilterClick();
+                    }
+                });
+
+                getViewDataBinding().emptyView.setButton02(false, null, null);
+                getViewDataBinding().emptyView.setBottomMessageVisible(false);
+            } else
+            {
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_gourmet_empty_message01), getString(R.string.message_gourmet_empty_message02));
+                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_stay_category_change_region), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onRegionClick();
+                    }
+                });
+
+                getViewDataBinding().emptyView.setButton02(true, getString(R.string.label_stay_category_change_date), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onCalendarClick();
+                    }
+                });
+
+                getViewDataBinding().emptyView.setBottomMessageVisible(true);
+                getViewDataBinding().emptyView.setOnCallClickListener(v -> getEventListener().onCallClick());
+            }
+        }
+    }
+
+    //    private void setEmptyType(boolean locationSearchType)
+    //    {
+    //        if (mEmptyView == null || mFilterEmptyView == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        if (locationSearchType == true)
+    //        {
+    //            if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+    //                && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+    //            {
+    //                setLocationTypeEmptyView(mEmptyView);
+    //            } else
+    //            {
+    //                setLocationTypeFilterEmptyView(mFilterEmptyView);
+    //            }
+    //        } else
+    //        {
+    //            if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+    //                && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+    //            {
+    //                setDefaultTypeEmptyView(mEmptyView);
+    //            } else
+    //            {
+    //                setDefaultTypeFilterEmptyView(mFilterEmptyView);
+    //            }
+    //        }
+    //    }
+    //
+    //    private void setLocationTypeEmptyView(View view)
+    //    {
+    //        if (view == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+    //        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+    //
+    //        messageTextView01.setText(R.string.message_searchresult_gourmet_empty_message01);
+    //        messageTextView02.setText(R.string.message_searchresult_stay_empty_message02);
+    //
+    //        TextView researchView = view.findViewById(R.id.changeRegionView);
+    //        View changeDateView = view.findViewById(R.id.changeDateView);
+    //
+    //        researchView.setText(R.string.label_searchresult_research);
+    //        changeDateView.setVisibility(View.GONE);
+    //
+    //        researchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onResearchClick());
+    //
+    //        TextView callTextView = view.findViewById(R.id.callTextView);
+    //        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    //
+    //        callTextView.setOnClickListener(new View.OnClickListener()
+    //        {
+    //            @Override
+    //            public void onClick(View v)
+    //            {
+    //                ((OnEventListener) mOnEventListener).onShowCallDialog();
+    //            }
+    //        });
+    //    }
+    //
+    //
+    //
+    //    private void setLocationTypeFilterEmptyView(View view)
+    //    {
+    //        if (view == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //
+    //        TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
+    //        TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
+    //
+    //        filterMessageTextView01.setText(R.string.message_searchresult_gourmet_filter_empty_message01);
+    //        filterMessageTextView02.setText(R.string.message_searchresult_stay_filter_empty_message02);
+    //
+    //        TextView buttonView = view.findViewById(R.id.buttonView);
+    //        buttonView.setText(R.string.label_searchresult_change_radius);
+    //
+    //        buttonView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onRadiusClick());
+    //    }
+
 
     @Override
     public void setListLayoutVisible(boolean visible)
@@ -362,10 +555,10 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
         getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
-        if (mStayMapFragment == null)
+        if (mMapFragment == null)
         {
-            mStayMapFragment = new StayMapFragment();
-            mStayMapFragment.setOnEventListener(new StayMapFragment.OnEventListener()
+            mMapFragment = new GourmetMapFragment();
+            mMapFragment.setOnEventListener(new GourmetMapFragment.OnEventListener()
             {
                 @Override
                 public void onMapReady()
@@ -374,9 +567,9 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
                 }
 
                 @Override
-                public void onMarkerClick(Stay stay, List<Stay> stayList)
+                public void onMarkerClick(Gourmet gourmet, List<Gourmet> gourmetList)
                 {
-                    getEventListener().onMarkerClick(stay, stayList);
+                    getEventListener().onMarkerClick(gourmet, gourmetList);
                 }
 
                 @Override
@@ -405,35 +598,13 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
             });
         }
 
-        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment).commitAllowingStateLoss();
-
-        //        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
-        //        {
-        //            @Override
-        //            public boolean onTouch(View v, MotionEvent event)
-        //            {
-        //                switch (event.getAction())
-        //                {
-        //                    case MotionEvent.ACTION_DOWN:
-        //                        mPossibleLoadingListByMap = false;
-        //
-        //                        getEventListener().onClearChangedLocation();
-        //                        break;
-        //
-        //                    case MotionEvent.ACTION_UP:
-        //                        mPossibleLoadingListByMap = true;
-        //                        break;
-        //                }
-        //
-        //                return false;
-        //            }
-        //        });
+        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mMapFragment).commitAllowingStateLoss();
     }
 
     @Override
     public void hideMapLayout(FragmentManager fragmentManager)
     {
-        if (getViewDataBinding() == null || fragmentManager == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || fragmentManager == null || mMapFragment == null)
         {
             return;
         }
@@ -448,42 +619,42 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
         getViewDataBinding().mapViewPager.setAdapter(null);
         getViewDataBinding().mapViewPager.setVisibility(View.GONE);
 
-        fragmentManager.beginTransaction().remove(mStayMapFragment).commitAllowingStateLoss();
+        fragmentManager.beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
 
         getViewDataBinding().mapLayout.removeAllViews();
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
 
-        mStayMapFragment = null;
+        mMapFragment = null;
 
         mFloatingActionView.setTranslationY(0);
         getViewDataBinding().mapViewPager.setTranslationY(0);
     }
 
     @Override
-    public void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide)
+    public void setMapList(List<Gourmet> gourmetList, boolean moveCameraBounds, boolean clear, boolean hide)
     {
-        if (getViewDataBinding() == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || mMapFragment == null)
         {
             return;
         }
 
         getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
-        mStayMapFragment.setStayList(stayList, moveCameraBounds, clear);
+        mMapFragment.setList(gourmetList, moveCameraBounds, clear);
 
     }
 
     @Override
     public void setWish(int position, boolean wish)
     {
-        if (getViewDataBinding() == null || mStayListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return;
         }
 
-        if (mStayListAdapter.getItem(position).mType == ObjectItem.TYPE_ENTRY)
+        if (mListAdapter.getItem(position).mType == ObjectItem.TYPE_ENTRY)
         {
-            ((Stay) mStayListAdapter.getItem(position).getItem()).myWish = wish;
+            ((Gourmet) mListAdapter.getItem(position).getItem()).myWish = wish;
         }
 
         getViewDataBinding().recyclerView.post(new Runnable()
@@ -491,11 +662,11 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
             @Override
             public void run()
             {
-                SearchGourmetCampaignListAdapter.StayViewHolder stayViewHolder = (SearchGourmetCampaignListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+                SearchGourmetCampaignListAdapter.GourmetViewHolder gourmetViewHolder = (SearchGourmetCampaignListAdapter.GourmetViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
 
-                if (stayViewHolder != null)
+                if (gourmetViewHolder != null)
                 {
-                    stayViewHolder.stayCardView.setWish(wish);
+                    gourmetViewHolder.cardView.setWish(wish);
                 }
             }
         });
@@ -504,7 +675,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
     @Override
     public void scrollTop()
     {
-        if (getViewDataBinding() == null || mStayListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return;
         }
@@ -515,7 +686,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
     @Override
     public void scrollStop()
     {
-        if (getViewDataBinding() == null || mStayListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return;
         }
@@ -526,23 +697,23 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
     @Override
     public Observable<Long> getLocationAnimation()
     {
-        if (getViewDataBinding() == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || mMapFragment == null)
         {
             return null;
         }
 
-        return mStayMapFragment.getLocationAnimation();
+        return mMapFragment.getLocationAnimation();
     }
 
     @Override
     public void setMyLocation(Location location)
     {
-        if (getViewDataBinding() == null || mStayMapFragment == null)
+        if (getViewDataBinding() == null || mMapFragment == null)
         {
             return;
         }
 
-        mStayMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
+        mMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
     }
 
     @Override
@@ -567,7 +738,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
         mFloatingActionView.setViewOptionMapEnabled(enabled);
     }
 
-    private void initListLayout(FragmentStayListDataBinding viewDataBinding)
+    private void initListLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -629,7 +800,7 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
     }
 
-    private void initMapLayout(FragmentStayListDataBinding viewDataBinding)
+    private void initMapLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -650,11 +821,11 @@ public class SearchGourmetCampaignListFragmentView extends BaseBlurFragmentView<
                     return;
                 }
 
-                Stay stay = mViewPagerAdapter.getItem(position);
+                Gourmet gourmet = mViewPagerAdapter.getItem(position);
 
-                if (stay != null)
+                if (gourmet != null)
                 {
-                    mStayMapFragment.setSelectedMarker(stay);
+                    mMapFragment.setSelectedMarker(gourmet);
                 }
             }
 

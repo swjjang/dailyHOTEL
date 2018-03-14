@@ -398,7 +398,8 @@ public class GourmetCampaignTagListPresenter //
                     mGourmetCampaignTags = new GourmetCampaignTags();
                 }
 
-                return makePlaceList(mGourmetCampaignTags.getGourmetList());
+//                return makePlaceList(mGourmetCampaignTags.getGourmetList()); // 기존 코드
+                return new ArrayList<>();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
         {

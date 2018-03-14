@@ -206,27 +206,27 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         switch (suggest.menuType)
         {
-            case GourmetSuggestV2.MenuType.DIRECT:
+            case DIRECT:
                 action += "direct";
                 break;
 
-            case GourmetSuggestV2.MenuType.LOCATION:
+            case LOCATION:
                 action += "around";
                 break;
 
-            case GourmetSuggestV2.MenuType.RECENTLY_SEARCH:
+            case RECENTLY_SEARCH:
                 action += "recent";
                 break;
 
-            case GourmetSuggestV2.MenuType.RECENTLY_GOURMET:
+            case RECENTLY_GOURMET:
                 action += "recent_checked";
                 break;
 
-            case GourmetSuggestV2.MenuType.SUGGEST:
+            case SUGGEST:
                 action += "auto";
                 break;
 
-            case GourmetSuggestV2.MenuType.CAMPAIGN_TAG:
+            case CAMPAIGN_TAG:
                 action += "";
                 break;
         }

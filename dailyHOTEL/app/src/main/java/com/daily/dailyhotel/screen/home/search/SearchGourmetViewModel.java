@@ -4,12 +4,10 @@ package com.daily.dailyhotel.screen.home.search;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.twoheart.dailyhotel.R;
 
 /**
  * Created by sheldon

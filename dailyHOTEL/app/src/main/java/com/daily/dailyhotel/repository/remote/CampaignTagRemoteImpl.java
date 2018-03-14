@@ -158,32 +158,6 @@ public class CampaignTagRemoteImpl extends BaseRemoteImpl implements CampaignTag
                         if (gourmetCampaignTagsDataBaseDto.msgCode == 100 && gourmetCampaignTagsDataBaseDto.data != null)
                         {
                             gourmetCampaignTags = gourmetCampaignTagsDataBaseDto.data.getGourmetCampaignTags(mContext);
-
-                            if (gourmetCampaignTags == null)
-                            {
-                                gourmetCampaignTags = new GourmetCampaignTags();
-                            }
-
-                            gourmetCampaignTags.msgCode = gourmetCampaignTagsDataBaseDto.msgCode;
-                        } else if (gourmetCampaignTagsDataBaseDto.msgCode == -101)
-                        {
-                            if (gourmetCampaignTagsDataBaseDto.data != null)
-                            {
-                                gourmetCampaignTags = gourmetCampaignTagsDataBaseDto.data.getGourmetCampaignTags(mContext);
-                            }
-
-                            if (gourmetCampaignTags == null)
-                            {
-                                // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
-                                gourmetCampaignTags = new GourmetCampaignTags();
-                            }
-
-                            gourmetCampaignTags.msgCode = gourmetCampaignTagsDataBaseDto.msgCode;
-                        } else if (gourmetCampaignTagsDataBaseDto.msgCode == 200)
-                        {
-                            // 종료된 캠페인 태그
-                            gourmetCampaignTags = new GourmetCampaignTags();
-                            gourmetCampaignTags.msgCode = gourmetCampaignTagsDataBaseDto.msgCode;
                         } else
                         {
                             throw new BaseException(gourmetCampaignTagsDataBaseDto.msgCode, gourmetCampaignTagsDataBaseDto.msg);

@@ -910,7 +910,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             @Override
             public void onChanged(@Nullable StayFilter stayFilter)
             {
-                getViewInterface().setOptionFilterSelected(stayFilter != null && stayFilter.isDefaultFilter() == false);
+                getViewInterface().setOptionFilterSelected(stayFilter != null && stayFilter.isDefault() == false);
             }
         });
     }
@@ -1063,7 +1063,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     mStayViewModel.stayRegion.setValue(region);
 
                     // 지역이 수정 되면 필터가 초기화 된다.
-                    mStayViewModel.stayFilter.setValue(mStayViewModel.stayFilter.getValue().resetFilter());
+                    mStayViewModel.stayFilter.setValue(mStayViewModel.stayFilter.getValue().reset());
                     mStayViewModel.selectedCategory.setValue(Category.ALL);
 
                     setRefresh(true);
@@ -1172,7 +1172,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         Crashlytics.logException(e);
 
                         // 지역이 수정 되면 필터가 초기화 된다.
-                        mStayViewModel.stayFilter.setValue(mStayViewModel.stayFilter.getValue().resetFilter());
+                        mStayViewModel.stayFilter.setValue(mStayViewModel.stayFilter.getValue().reset());
                         mStayViewModel.selectedCategory.setValue(Category.ALL);
 
                         setRefresh(true);
@@ -1195,11 +1195,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         try
         {
-            StayFilter stayFilter = mStayViewModel.stayFilter.getValue() == null ? new StayFilter().resetFilter() : mStayViewModel.stayFilter.getValue();
+            StayFilter stayFilter = mStayViewModel.stayFilter.getValue() == null ? new StayFilter().reset() : mStayViewModel.stayFilter.getValue();
             stayFilter.sortType = StayFilter.SortType.valueOf(externalDeepLink.getSorting().name());
             mStayViewModel.stayFilter.setValue(stayFilter);
 
-            getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+            getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefault() == false);
 
             StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
@@ -1256,11 +1256,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         try
         {
-            StayFilter stayFilter = mStayViewModel.stayFilter.getValue() == null ? new StayFilter().resetFilter() : mStayViewModel.stayFilter.getValue();
+            StayFilter stayFilter = mStayViewModel.stayFilter.getValue() == null ? new StayFilter().reset() : mStayViewModel.stayFilter.getValue();
             stayFilter.sortType = StayFilter.SortType.valueOf(externalDeepLink.getSorting().name());
             mStayViewModel.stayFilter.setValue(stayFilter);
 
-            getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+            getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefault() == false);
 
             StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));

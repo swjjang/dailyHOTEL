@@ -11,10 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.view.DailyStayCardView;
+import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutListLoadingDataBinding;
@@ -32,8 +33,6 @@ public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<Recyc
     List<ObjectItem> mList;
 
     private boolean mDistanceEnabled;
-    private boolean mNightsEnabled; // 연박 여부
-    private boolean mRewardEnabled;
     private boolean mTrueVREnabled;
 
     View.OnClickListener mOnClickListener;
@@ -52,16 +51,6 @@ public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<Recyc
     public void setDistanceEnabled(boolean enabled)
     {
         mDistanceEnabled = enabled;
-    }
-
-    public void setNightsEnabled(boolean enabled)
-    {
-        mNightsEnabled = enabled;
-    }
-
-    public void setRewardEnabled(boolean enabled)
-    {
-        mRewardEnabled = enabled;
     }
 
     public void setTrueVREnabled(boolean enabled)
@@ -171,10 +160,10 @@ public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<Recyc
 
             case ObjectItem.TYPE_ENTRY:
             {
-                DailyStayCardView stayCardView = new DailyStayCardView(mContext);
-                stayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                DailyGourmetCardView gourmetCardView = new DailyGourmetCardView(mContext);
+                gourmetCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new StayViewHolder(stayCardView);
+                return new GourmetViewHolder(gourmetCardView);
             }
 
             case ObjectItem.TYPE_FOOTER_VIEW:
@@ -211,7 +200,7 @@ public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<Recyc
         switch (item.mType)
         {
             case ObjectItem.TYPE_ENTRY:
-                onBindViewHolder((StayViewHolder) holder, item, position);
+                onBindViewHolder((GourmetViewHolder) holder, item, position);
                 break;
 
             case ObjectItem.TYPE_SECTION:
@@ -231,70 +220,69 @@ public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<Recyc
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    protected void onBindViewHolder(StayViewHolder holder, ObjectItem objectItem, int position)
+    protected void onBindViewHolder(GourmetViewHolder holder, ObjectItem objectItem, int position)
     {
-        final Stay stay = objectItem.getItem();
+        final Gourmet gourmet = objectItem.getItem();
 
-        holder.stayCardView.setStickerVisible(mRewardEnabled && stay.provideRewardSticker);
-        holder.stayCardView.setDeleteVisible(false);
-        holder.stayCardView.setWishVisible(true);
-        holder.stayCardView.setWish(stay.myWish);
+        holder.cardView.setStickerVisible(false);
+        holder.cardView.setDeleteVisible(false);
+        holder.cardView.setWishVisible(true);
+        holder.cardView.setWish(gourmet.myWish);
 
-        holder.stayCardView.setImage(stay.imageUrl);
+        holder.cardView.setTagStickerImage(gourmet.stickerUrl);
+        holder.cardView.setImage(gourmet.imageUrl);
 
-        holder.stayCardView.setGradeText(stay.grade.getName(mContext));
-        holder.stayCardView.setVRVisible(stay.trueVR && mTrueVREnabled);
-        holder.stayCardView.setReviewText(stay.satisfaction, stay.reviewCount);
-
-        holder.stayCardView.setNewVisible(stay.newStay);
-
-        holder.stayCardView.setStayNameText(stay.name);
+        holder.cardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
+        holder.cardView.setVRVisible(gourmet.trueVR && mTrueVREnabled);
+        holder.cardView.setReviewText(gourmet.satisfaction, gourmet.reviewCount);
+        holder.cardView.setNewVisible(gourmet.newItem);
+        holder.cardView.setGourmetNameText(gourmet.name);
 
         if (mDistanceEnabled == true)
         {
-            holder.stayCardView.setDistanceVisible(true);
-            holder.stayCardView.setDistanceText(stay.distance);
+            holder.cardView.setDistanceVisible(true);
+            holder.cardView.setDistanceText(gourmet.distance);
         } else
         {
-            holder.stayCardView.setDistanceVisible(false);
+            holder.cardView.setDistanceVisible(false);
         }
 
-        holder.stayCardView.setAddressText(stay.addressSummary);
+        holder.cardView.setAddressText(gourmet.addressSummary);
 
-        if (stay.soldOut == true)
+        if (gourmet.soldOut == true)
         {
-            holder.stayCardView.setPriceText(0, 0, 0, null, false);
+            holder.cardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            holder.stayCardView.setPriceText(stay.discountRate, stay.discountPrice, stay.price, stay.couponDiscountText, mNightsEnabled);
+            holder.cardView.setPriceText(gourmet.discountRate, gourmet.discountPrice, gourmet.price, gourmet.couponDiscountText, gourmet.persons);
         }
 
-        holder.stayCardView.setBenefitText(stay.dBenefitText);
+        holder.cardView.setBenefitText(gourmet.dBenefitText);
 
         if (position == 0 || getItem(position - 1).mType != ObjectItem.TYPE_SECTION)
         {
-            holder.stayCardView.setDividerVisible(true);
+            holder.cardView.setDividerVisible(true);
         } else
         {
-            holder.stayCardView.setDividerVisible(false);
+            holder.cardView.setDividerVisible(false);
         }
     }
 
-    protected class StayViewHolder extends RecyclerView.ViewHolder
+    protected class GourmetViewHolder extends RecyclerView.ViewHolder
     {
-        public DailyStayCardView stayCardView;
+        public DailyGourmetCardView cardView;
 
-        public StayViewHolder(DailyStayCardView stayCardView)
+        public GourmetViewHolder(DailyGourmetCardView cardView)
         {
-            super(stayCardView);
+            super(cardView);
 
-            this.stayCardView = stayCardView;
+            this.cardView = cardView;
 
-            stayCardView.setOnClickListener(mOnClickListener);
+            cardView.setOnClickListener(mOnClickListener);
 
             if (Util.supportPreview(mContext) == true)
             {
-                stayCardView.setOnLongClickListener(new View.OnLongClickListener()
+                cardView.setOnLongClickListener(new View.OnLongClickListener()
                 {
                     @Override
                     public boolean onLongClick(View v)
@@ -313,11 +301,11 @@ public class SearchGourmetCampaignListAdapter extends RecyclerView.Adapter<Recyc
                 });
             }
 
-            stayCardView.setOnWishClickListener(v ->
+            cardView.setOnWishClickListener(v ->
             {
                 if (mOnWishClickListener != null)
                 {
-                    mOnWishClickListener.onClick(stayCardView);
+                    mOnWishClickListener.onClick(cardView);
                 }
             });
         }
