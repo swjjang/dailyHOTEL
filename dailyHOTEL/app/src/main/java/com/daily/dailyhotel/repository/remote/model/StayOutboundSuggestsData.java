@@ -36,8 +36,6 @@ public class StayOutboundSuggestsData
 
     public List<StayOutboundSuggest> getSuggestList(Context context)
     {
-        final int SUGGEST_MAX_COUNT = 5;
-
         List<StayOutboundSuggest> list = new ArrayList<>();
 
         if (context == null)
@@ -45,35 +43,35 @@ public class StayOutboundSuggestsData
             return list;
         }
 
-        List<StayOutboundSuggest> regionList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_region), regionSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> regionList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_region), regionSuggestDataList);
 
         if (regionList != null)
         {
             list.addAll(regionList);
         }
 
-        List<StayOutboundSuggest> hotelList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_hotel), hotelSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> hotelList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_hotel), hotelSuggestDataList);
 
         if (hotelList != null)
         {
             list.addAll(hotelList);
         }
 
-        List<StayOutboundSuggest> pointList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_point), pointSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> pointList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_point), pointSuggestDataList);
 
         if (pointList != null)
         {
             list.addAll(pointList);
         }
 
-        List<StayOutboundSuggest> airportList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_airport), airportSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> airportList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_airport), airportSuggestDataList);
 
         if (airportList != null)
         {
             list.addAll(airportList);
         }
 
-        List<StayOutboundSuggest> stationList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_station), stationSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> stationList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_station), stationSuggestDataList);
 
         if (stationList != null)
         {
@@ -107,7 +105,7 @@ public class StayOutboundSuggestsData
         return regionStayOutboundSuggestList;
     }
 
-    private List<StayOutboundSuggest> getSuggestList(String title, List<StayOutboundSuggestData> stayOutboundSuggestDataList, int maxCount)
+    private List<StayOutboundSuggest> getSuggestList(String title, List<StayOutboundSuggestData> stayOutboundSuggestDataList)
     {
         if (stayOutboundSuggestDataList == null || stayOutboundSuggestDataList.size() == 0 || DailyTextUtils.isTextEmpty(title) == true)
         {
@@ -118,11 +116,9 @@ public class StayOutboundSuggestsData
 
         list.add(new StayOutboundSuggest(0, title));
 
-        int size = Math.min(stayOutboundSuggestDataList.size(), maxCount);
-
-        for (int i = 0; i < size; i++)
+        for (StayOutboundSuggestData data : stayOutboundSuggestDataList)
         {
-            list.add(stayOutboundSuggestDataList.get(i).getSuggests());
+            list.add(data.getSuggests());
         }
 
         return list;

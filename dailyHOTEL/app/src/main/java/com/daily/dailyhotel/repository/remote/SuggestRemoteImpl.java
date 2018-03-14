@@ -35,8 +35,8 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
-            : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/category-suggests"//
+            : "MCQ1NSQ1MiQ4MSQ2NyQ0NiQ1OSQ1MCQ0MSQ1MyQ4OCQyNSQ1OCQ5JDUyJDE0JA==$XMDI3ODcwTOTMzTNEM4MDQzNzA5OQzA0MTM1NDNENkQwZREI0QOkQX0CQFzUNNxMzAlZEMDhENEE4LNjAxRTRDRUM5MzUAlEQjVEMA==$";
 
         return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
             .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
@@ -66,8 +66,8 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
-            : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/category-suggests"//
+            : "MCQ1NSQ1MiQ4MSQ2NyQ0NiQ1OSQ1MCQ0MSQ1MyQ4OCQyNSQ1OCQ5JDUyJDE0JA==$XMDI3ODcwTOTMzTNEM4MDQzNzA5OQzA0MTM1NDNENkQwZREI0QOkQX0CQFzUNNxMzAlZEMDhENEE4LNjAxRTRDRUM5MzUAlEQjVEMA==$";
 
         return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
             .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
