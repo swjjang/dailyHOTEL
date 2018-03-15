@@ -225,7 +225,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         String title = gourmetSuggest.getText1();
         String description = gourmetSuggest.getText2();
 
-        switch (gourmetSuggest.getCategory())
+        switch (gourmetSuggest.getSuggestType())
         {
             case GOURMET:
             {

@@ -218,12 +218,12 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
         {
             for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
             {
-                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.UNKNOWN)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.SECTION)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
@@ -234,7 +234,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, null)));
+                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, new GourmetSuggestV2.Section(null))));
         }
 
         mSuggestListAdapter.setAll(keyword, objectItemList);
@@ -351,7 +351,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
         {
             for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
             {
-                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.SECTION)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
