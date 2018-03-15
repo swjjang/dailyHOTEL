@@ -122,11 +122,11 @@
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <ImageView
+                            <com.daily.base.widget.DailyImageView
                                 android:id="@+id/orderCountMinusView"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                app:srcCompat="@drawable/selector_amount_minus_button"/>
+                                app:srcCompat="@drawable/vector_ic_amount_circle_minus_off"/>
 
                             <com.daily.base.widget.DailyTextView
                                 android:id="@+id/orderCountTextView"
@@ -137,11 +137,11 @@
                                 android:textSize="16dp"
                                 dailyFont:style="Medium"/>
 
-                            <ImageView
+                            <com.daily.base.widget.DailyImageView
                                 android:id="@+id/orderCountPlusView"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                app:srcCompat="@drawable/selector_amount_plus_button"/>
+                                app:srcCompat="@drawable/vector_ic_amount_circle_plus_off"/>
                         </LinearLayout>
                     </android.support.constraint.ConstraintLayout>
 
