@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.search.gourmet.result.campaign;
 
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,7 +27,6 @@ import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
-import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
@@ -140,8 +138,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         {
             return;
         }
-
-        setViewType(SearchGourmetResultTabPresenter.ViewType.NONE);
 
         mViewModel = ViewModelProviders.of(activity).get(SearchGourmetResultViewModel.class);
     }
@@ -311,18 +307,17 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
     @Override
     public void onSelected()
     {
-        if (getFragment().isRemoving() == true || getFragment().isAdded() == false || getActivity() == null//
-            || mViewType == null || mViewModel == null)
+        if (getFragment().isRemoving() == true || getFragment().isAdded() == false || getActivity() == null || mViewModel == null)
         {
             return;
         }
 
-        if (mViewModel.viewType.getValue() != mViewType)
+        if (mViewModel.getViewType() != mViewType)
         {
-            setViewType(mViewModel.viewType.getValue());
+            setViewType(mViewModel.getViewType());
         } else
         {
-            if(mNeedToRefresh == true)
+            if (mNeedToRefresh == true)
             {
                 onRefresh();
             }
@@ -395,7 +390,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     onMapClick();
                 } else
                 {
-                    mViewModel.viewType.setValue(SearchGourmetResultTabPresenter.ViewType.LIST);
+                    mViewModel.setViewType(SearchGourmetResultTabPresenter.ViewType.LIST);
                 }
                 return true;
         }
@@ -412,12 +407,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             return;
         }
 
-        if (mViewModel.commonDateTime.getValue() == null//
+        if (mViewModel.getCommonDateTime() == null//
             || mViewModel.searchViewModel == null//
             || mViewModel.getBookDateTime() == null//
-            || mViewModel.getSuggest() == null//
-            || mViewModel.filter.getValue() == null//
-            || mViewModel.viewType.getValue() == null)
+            || mViewModel.getSuggest() == null)
         {
             setRefresh(false);
             return;
@@ -428,7 +421,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         mPage = 1;
 
-        getViewInterface().setEmptyViewVisible(false, mViewModel.filter.getValue().isDefault() == false);
+        getViewInterface().setEmptyViewVisible(false, mViewModel.getFilter().isDefault() == false);
 
         GourmetSuggestV2 suggest = mViewModel.getSuggest();
         GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
@@ -659,12 +652,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             return;
         }
 
-        if (mViewModel.commonDateTime.getValue() == null//
+        if (mViewModel.getCommonDateTime() == null//
             || mViewModel.searchViewModel == null//
             || mViewModel.getBookDateTime() == null//
-            || mViewModel.getSuggest() == null//
-            || mViewModel.filter.getValue() == null//
-            || mViewModel.viewType.getValue() == null)
+            || mViewModel.getSuggest() == null)
         {
             return;
         }
@@ -711,7 +702,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             {
                 ExLog.e(throwable.toString());
 
-                mViewModel.viewType.setValue(SearchGourmetResultTabPresenter.ViewType.LIST);
+                mViewModel.setViewType(SearchGourmetResultTabPresenter.ViewType.LIST);
             }
         }));
     }

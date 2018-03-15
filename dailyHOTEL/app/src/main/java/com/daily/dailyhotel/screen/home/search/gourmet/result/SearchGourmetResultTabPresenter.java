@@ -54,7 +54,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
     public enum ViewType
     {
-        NONE,
         LIST,
         MAP,
     }
@@ -96,7 +95,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         mViewModel = ViewModelProviders.of(activity, new SearchGourmetResultViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetResultViewModel.class);
         mViewModel.searchViewModel = ViewModelProviders.of(activity, new SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetViewModel.class);
 
-        mViewModel.viewType.observe(activity, new Observer<ViewType>()
+        mViewModel.setViewTypeObserver(activity, new Observer<ViewType>()
         {
             @Override
             public void onChanged(@Nullable ViewType viewType)
@@ -111,15 +110,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                         getViewInterface().setViewType(ViewType.LIST);
                         break;
                 }
-            }
-        });
-
-        mViewModel.commonDateTime.observe(activity, new Observer<CommonDateTime>()
-        {
-            @Override
-            public void onChanged(@Nullable CommonDateTime commonDateTime)
-            {
-
             }
         });
 
@@ -339,17 +329,17 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
                         if (suggest.isLocationSuggestItem() == true)
                         {
-                            mViewModel.filter.getValue().defaultSortType = GourmetFilter.SortType.DISTANCE;
+                            mViewModel.getFilter().defaultSortType = GourmetFilter.SortType.DISTANCE;
                             mViewModel.radius = DEFAULT_RADIUS;
                         } else
                         {
-                            mViewModel.filter.getValue().defaultSortType = GourmetFilter.SortType.DEFAULT;
+                            mViewModel.getFilter().defaultSortType = GourmetFilter.SortType.DEFAULT;
                         }
 
                         mViewModel.setBookDateTime(intent, ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
 
-                        mViewModel.filter.getValue().reset();
-                        mViewModel.viewType.setValue(ViewType.LIST);
+                        mViewModel.getFilter().reset();
+                        mViewModel.setViewType(ViewType.LIST);
                         setRefresh(true);
                     } catch (Exception e)
                     {
@@ -376,7 +366,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             @Override
             public void accept(CommonDateTime commonDateTime) throws Exception
             {
-                mViewModel.commonDateTime.setValue(commonDateTime);
+                mViewModel.setCommonDateTime(commonDateTime);
 
                 GourmetSuggestV2 suggest = mViewModel.getSuggest();
 
@@ -432,7 +422,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     {
         try
         {
-            CommonDateTime commonDateTime = mViewModel.commonDateTime.getValue();
+            CommonDateTime commonDateTime = mViewModel.getCommonDateTime();
             GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
             GourmetSuggestV2 suggest = mViewModel.getSuggest();
 
@@ -502,7 +492,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
-        onBackClick();
+        finish();
     }
 
     @Override
@@ -514,7 +504,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND);
-        onBackClick();
+        finish();
     }
 
     @Override

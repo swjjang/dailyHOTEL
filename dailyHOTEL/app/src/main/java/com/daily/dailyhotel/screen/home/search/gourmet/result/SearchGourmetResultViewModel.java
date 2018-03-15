@@ -2,12 +2,13 @@ package com.daily.dailyhotel.screen.home.search.gourmet.result;
 
 
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
-import android.location.Location;
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
@@ -22,10 +23,10 @@ import com.daily.dailyhotel.util.DailyIntentUtils;
 public class SearchGourmetResultViewModel extends ViewModel
 {
     public SearchGourmetViewModel searchViewModel;
+    private CommonDateTime mCommonDateTime;
 
-    public MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
-    public MutableLiveData<SearchGourmetResultTabPresenter.ViewType> viewType = new MutableLiveData<>();
-    public MutableLiveData<GourmetFilter> filter = new MutableLiveData<>();
+    private MutableLiveData<SearchGourmetResultTabPresenter.ViewType> mViewType = new MutableLiveData<>();
+    private MutableLiveData<GourmetFilter> mFilter = new MutableLiveData<>();
     public float radius;
 
     static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
@@ -40,16 +41,51 @@ public class SearchGourmetResultViewModel extends ViewModel
         {
             SearchGourmetResultViewModel searchViewModel = new SearchGourmetResultViewModel();
 
-            searchViewModel.viewType.setValue(SearchGourmetResultTabPresenter.ViewType.LIST);
-            searchViewModel.filter.setValue(new GourmetFilter().reset());
+            searchViewModel.setViewType(SearchGourmetResultTabPresenter.ViewType.LIST);
+            searchViewModel.setFilter(new GourmetFilter().reset());
 
             return searchViewModel;
         }
     }
 
+    public void setViewType(@NonNull SearchGourmetResultTabPresenter.ViewType viewType)
+    {
+        if (viewType == null)
+        {
+            throw new NullPointerException("viewType == null");
+        }
+
+        mViewType.setValue(viewType);
+    }
+
+    public SearchGourmetResultTabPresenter.ViewType getViewType()
+    {
+        return mViewType.getValue();
+    }
+
+    public void setViewTypeObserver(BaseActivity baseActivity, Observer<SearchGourmetResultTabPresenter.ViewType> observer)
+    {
+        mViewType.observe(baseActivity, observer);
+    }
+
+    public void removeViewTypeObserver(Observer<SearchGourmetResultTabPresenter.ViewType> observer)
+    {
+        mViewType.removeObserver(observer);
+    }
+
     public GourmetBookDateTime getBookDateTime()
     {
         return searchViewModel == null ? null : searchViewModel.getBookDateTime();
+    }
+
+    public void setCommonDateTime(CommonDateTime commonDateTime)
+    {
+        mCommonDateTime = commonDateTime;
+    }
+
+    public CommonDateTime getCommonDateTime()
+    {
+        return mCommonDateTime;
     }
 
     public void setBookDateTime(Intent intent, String bookDateTimeExtraName) throws Exception
@@ -67,11 +103,16 @@ public class SearchGourmetResultViewModel extends ViewModel
         }
     }
 
-    public void setSuggest(GourmetSuggestV2 suggest)
+    public void setSuggest(@NonNull GourmetSuggestV2 suggest)
     {
         if (searchViewModel == null)
         {
             return;
+        }
+
+        if (suggest == null)
+        {
+            throw new NullPointerException("suggest == null");
         }
 
         searchViewModel.suggest.setValue(suggest);
@@ -99,6 +140,31 @@ public class SearchGourmetResultViewModel extends ViewModel
 
     public boolean isDistanceSort()
     {
-        return filter.getValue() == null ? false : filter.getValue().isDistanceSort();
+        return mFilter.getValue().isDistanceSort();
+    }
+
+    public GourmetFilter getFilter()
+    {
+        return mFilter.getValue();
+    }
+
+    public void setFilter(@NonNull GourmetFilter filter)
+    {
+        if (filter == null)
+        {
+            throw new NullPointerException("filter == null");
+        }
+
+        mFilter.setValue(filter);
+    }
+
+    public void setFilterObserver(BaseActivity baseActivity, Observer<GourmetFilter> observer)
+    {
+        mFilter.observe(baseActivity, observer);
+    }
+
+    public void removeFilterObserver(Observer<GourmetFilter> observer)
+    {
+        mFilter.removeObserver(observer);
     }
 }
