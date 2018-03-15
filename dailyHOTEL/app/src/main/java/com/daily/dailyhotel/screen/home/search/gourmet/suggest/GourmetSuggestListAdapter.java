@@ -232,7 +232,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
                 holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
 
-                GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.suggestItem;
+                GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.getSuggestItem();
 
                 if (gourmet.available == false)
                 {

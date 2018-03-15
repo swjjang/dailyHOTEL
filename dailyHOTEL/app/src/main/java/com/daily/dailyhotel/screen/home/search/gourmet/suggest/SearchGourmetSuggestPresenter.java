@@ -592,7 +592,7 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-        if (gourmetSuggest.suggestItem == null)
+        if (gourmetSuggest.getSuggestItem() == null)
         {
             return;
         }
@@ -630,7 +630,7 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-        if (gourmetSuggest.suggestItem == null)
+        if (gourmetSuggest.getSuggestItem() == null)
         {
             return;
         }
@@ -678,7 +678,7 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.suggestItem;
+        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.getSuggestItem();
         if (suggestItem == null)
         {
             return;
@@ -835,12 +835,7 @@ public class SearchGourmetSuggestPresenter //
             screenLock(true);
         }
 
-        if (mLocationSuggest.suggestItem == null)
-        {
-            mLocationSuggest.suggestItem = new GourmetSuggestV2.Location();
-        }
-
-        GourmetSuggestV2.Location itemLocation = (GourmetSuggestV2.Location) mLocationSuggest.suggestItem;
+        GourmetSuggestV2.Location itemLocation = (GourmetSuggestV2.Location) mLocationSuggest.getSuggestItem();
 
         addCompositeDisposable(observable.subscribe(new Consumer<Location>()
         {

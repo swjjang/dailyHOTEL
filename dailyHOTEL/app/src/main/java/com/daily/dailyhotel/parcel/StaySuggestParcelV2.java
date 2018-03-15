@@ -38,7 +38,7 @@ public class StaySuggestParcelV2 implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(mStaySuggest.menuType.name());
-        dest.writeSerializable(mStaySuggest.suggestItem);
+        dest.writeSerializable(mStaySuggest.getSuggestItem());
     }
 
     private void readFromParcel(Parcel in)

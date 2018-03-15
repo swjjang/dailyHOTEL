@@ -144,7 +144,7 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
             return;
         }
 
-        StaySuggestV2.Location nearByLocation = (StaySuggestV2.Location) nearByStaySuggest.suggestItem;
+        StaySuggestV2.Location nearByLocation = (StaySuggestV2.Location) nearByStaySuggest.getSuggestItem();
         if (nearByLocation == null)
         {
             return;
@@ -155,7 +155,7 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
                 StaySuggestV2 staySuggest = item.getItem();
-                StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
+                StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.getSuggestItem();
 
                 location.name = nearByLocation.name;
                 location.address = nearByLocation.address;
