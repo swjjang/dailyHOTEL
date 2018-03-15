@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.entity;
 
+import android.support.annotation.NonNull;
+
 import com.daily.base.util.DailyTextUtils;
 
 import java.io.Serializable;
@@ -39,11 +41,7 @@ public class StaySuggestV2
     //    public String text1;
     //    public String text2;
 
-    public StaySuggestV2()
-    {
-    }
-
-    public StaySuggestV2(MenuType menuType, SuggestItem suggestItem)
+    public StaySuggestV2(MenuType menuType, @NonNull SuggestItem suggestItem)
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;

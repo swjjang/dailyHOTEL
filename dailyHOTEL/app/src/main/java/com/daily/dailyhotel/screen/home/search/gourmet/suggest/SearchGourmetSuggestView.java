@@ -234,7 +234,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, null)));
+                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, new GourmetSuggestV2.Section(null))));
         }
 
         mSuggestListAdapter.setAll(keyword, objectItemList);
