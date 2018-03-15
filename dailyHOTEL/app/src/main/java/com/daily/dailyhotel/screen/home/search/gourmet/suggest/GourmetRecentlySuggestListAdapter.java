@@ -267,7 +267,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
             return;
         }
 
-        GourmetSuggestV2.Location nearByLocation = (GourmetSuggestV2.Location) nearByGourmetSuggest.suggestItem;
+        GourmetSuggestV2.Location nearByLocation = (GourmetSuggestV2.Location) nearByGourmetSuggest.getSuggestItem();
         if (nearByLocation == null)
         {
             return;
@@ -278,7 +278,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
                 GourmetSuggestV2 gourmetSuggest = item.getItem();
-                GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.suggestItem;
+                GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.getSuggestItem();
 
                 location.name = nearByLocation.name;
                 location.address = nearByLocation.address;

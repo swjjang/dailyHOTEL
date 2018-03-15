@@ -38,7 +38,7 @@ public class GourmetSuggestParcelV2 implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(mGourmetSuggest.menuType.name());
-        dest.writeSerializable(mGourmetSuggest.suggestItem);
+        dest.writeSerializable(mGourmetSuggest.getSuggestItem());
     }
 
     private void readFromParcel(Parcel in)

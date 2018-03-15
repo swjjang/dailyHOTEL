@@ -314,7 +314,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         case GOURMET:
                         {
-                            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.suggestItem;
+                            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.getSuggestItem();
                             GourmetSuggestV2.AreaGroup areaGroup = gourmet.areaGroup;
                             GourmetSuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
 
@@ -334,7 +334,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         case AREA_GROUP:
                         {
-                            GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) gourmetSuggest.suggestItem;
+                            GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) gourmetSuggest.getSuggestItem();
                             GourmetSuggestV2.Area area = areaGroup.area;
 
                             String type = GourmetSuggestV2.SuggestType.AREA_GROUP.name();
@@ -351,7 +351,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         case LOCATION:
                         {
-                            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.suggestItem;
+                            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.getSuggestItem();
                             String type = GourmetSuggestV2.SuggestType.LOCATION.name();
 
                             dailyDb.addGourmetRecentlySuggest(type, location.name //
@@ -364,7 +364,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         case DIRECT:
                         {
-                            GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) gourmetSuggest.suggestItem;
+                            GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) gourmetSuggest.getSuggestItem();
                             String type = GourmetSuggestV2.SuggestType.DIRECT.name();
 
                             dailyDb.addGourmetRecentlySuggest(type, direct.name //
@@ -599,7 +599,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         case STATION:
                         {
-                            StaySuggestV2.Station station = (StaySuggestV2.Station) staySuggest.suggestItem;
+                            StaySuggestV2.Station station = (StaySuggestV2.Station) staySuggest.getSuggestItem();
                             String type = StaySuggestV2.SuggestType.STATION.name();
 
                             dailyDb.addStayIbRecentlySuggest(type, station.getDisplayName() //
@@ -613,7 +613,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         case STAY:
                         {
-                            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.suggestItem;
+                            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.getSuggestItem();
                             StaySuggestV2.AreaGroup areaGroup = stay.areaGroup;
                             StaySuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
 
@@ -635,7 +635,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         case AREA_GROUP:
                         {
 
-                            StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) staySuggest.suggestItem;
+                            StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) staySuggest.getSuggestItem();
                             StaySuggestV2.Area area = areaGroup.area;
 
                             String type = StaySuggestV2.SuggestType.AREA_GROUP.name();
@@ -653,7 +653,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         case LOCATION:
                         {
-                            StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
+                            StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.getSuggestItem();
                             String type = StaySuggestV2.SuggestType.LOCATION.name();
 
                             dailyDb.addStayIbRecentlySuggest(type, location.name //
@@ -667,7 +667,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         case DIRECT:
                         {
-                            StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.suggestItem;
+                            StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.getSuggestItem();
                             String type = StaySuggestV2.SuggestType.DIRECT.name();
 
                             dailyDb.addStayIbRecentlySuggest(type, direct.name //

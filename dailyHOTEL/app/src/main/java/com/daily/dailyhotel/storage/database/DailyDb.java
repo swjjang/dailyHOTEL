@@ -18,6 +18,7 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.local.model.GourmetRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
+import com.daily.dailyhotel.repository.local.model.SearchResultHistoryList;
 import com.daily.dailyhotel.repository.local.model.StayIbRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.StayObRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.TempReviewList;
@@ -50,7 +51,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     public static final String T_TEMP_REVIEW = "temp_review";
     public static final String T_STAY_IB_RECENTLY_SUGGEST = "stay_ib_recently_suggest";
     public static final String T_GOURMET_IB_RECENTLY_SUGGEST = "gourmet_ib_recently_suggest";
-    public static final String T_RECENTLY_SEARCH_RESULT = "recently_search_result";
+    public static final String T_SEARCH_RESULT_HISTORY = "search_result_history";
 
     // added database version 1
     private static final String CREATE_T_RECENTLY = "CREATE TABLE IF NOT EXISTS " + T_RECENTLY + " (" //
@@ -128,6 +129,16 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayIbRecentlySuggestList.DIRECT_NAME + " TEXT NULL, " //
         + StayIbRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + StayIbRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
+
+    // added database version 5
+    private static final String CREATE_T_SEARCH_RESULT_HISTORY = "CREATE TABLE IF NOT EXISTS " + T_SEARCH_RESULT_HISTORY + " (" //
+        + SearchResultHistoryList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
+        + SearchResultHistoryList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
+        + SearchResultHistoryList.START_DATE + " TEXT NOT NULL, " //
+        + SearchResultHistoryList.END_DATE + " TEXT NOT NULL, " //
+        + SearchResultHistoryList.SUGGEST + " TEXT NULL, " // StaySuggestV2, GourmetSuggestV2, StayOutboundSuggest - json String 예정
+        + SearchResultHistoryList.ADULT_COUNT + " INTEGER NOT NULL DEFAULT 0, " //
+        + SearchResultHistoryList.CHILD_AGE_LIST + " TEXT NULL " + ");";
 
     public DailyDb(Context context)
     {
@@ -1383,7 +1394,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     public void addGourmetRecentlySuggest(String type, String display //
         , int gourmetIndex, String gourmetName //
         , int areaGroupIndex, String areaGroupName, int areaIndex, String areaName //
-        , String locationName, String address , double latitude, double longitude //
+        , String locationName, String address, double latitude, double longitude //
         , String directName, String keyword)
     {
         SQLiteDatabase db = getDb();
@@ -1566,10 +1577,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     }
 
     public void addStayIbRecentlySuggest(String type, String display //
-        , int stationIndex, String stationName , String stationRegion, String stationLine //
+        , int stationIndex, String stationName, String stationRegion, String stationLine //
         , int stayIndex, String stayName //
         , int areaGroupIndex, String areaGroupName, int areaIndex, String areaName //
-        , String locationName, String address , double latitude, double longitude //
+        , String locationName, String address, double latitude, double longitude //
         , String directName, String keyword)
     {
         SQLiteDatabase db = getDb();

@@ -39,7 +39,7 @@ public class GourmetSuggestV2
     }
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
-    public SuggestItem suggestItem;
+    private SuggestItem suggestItem;
     //    public int suggestType; // 카테고리 비교 용
     //    public String text1;
     //    public String text2;
@@ -88,6 +88,21 @@ public class GourmetSuggestV2
         }
 
         return SuggestType.UNKNOWN;
+    }
+
+    public boolean isLocationSuggestItem()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Location;
+    }
+
+    public boolean isGourmetSuggestItem()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Gourmet;
+    }
+
+    public boolean isCampaignTagSuggestItem()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.CampaignTag;
     }
 
     public String getText1()
@@ -183,46 +198,9 @@ public class GourmetSuggestV2
         return null;
     }
 
-    //    public String getTitleName(Context context)
-    //    {
-    //        if (suggestItem == null || context == null)
-    //        {
-    //            return null;
-    //        }
-    //
-    //        if (suggestItem instanceof GourmetSuggestV2.Gourmet)
-    //        {
-    //            return suggestItem.name;
-    //        } else if (suggestItem instanceof GourmetSuggestV2.Province)
-    //        {
-    //            return ((GourmetSuggestV2.Province) suggestItem).getProvinceName();
-    //        } else if (suggestItem instanceof GourmetSuggestV2.Direct)
-    //        {
-    //            return ((GourmetSuggestV2.Direct) suggestItem).name;
-    //        } else if (suggestItem instanceof GourmetSuggestV2.Location)
-    //        {
-    //            return context.getString(R.string.label_search_suggest_type_location_item_format, ((GourmetSuggestV2.Location) suggestItem).name);
-    //        } else if (suggestItem instanceof GourmetSuggestV2.CampaignTag)
-    //        {
-    //            return "#" + ((GourmetSuggestV2.CampaignTag) suggestItem).name;
-    //        }
-    //
-    //        return null;
-    //    }
-
-    public boolean isLocationSuggestItem()
+    public SuggestItem getSuggestItem()
     {
-        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Location;
-    }
-
-    public boolean isGourmetSuggestItem()
-    {
-        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Gourmet;
-    }
-
-    public boolean isCampaignTagSuggestItem()
-    {
-        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.CampaignTag;
+        return suggestItem;
     }
 
     @SuppressWarnings("serial")

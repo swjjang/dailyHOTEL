@@ -237,7 +237,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             case STAY:
             {
-                StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.suggestItem;
+                StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.getSuggestItem();
 
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
                 holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);

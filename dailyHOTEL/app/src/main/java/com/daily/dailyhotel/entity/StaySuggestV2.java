@@ -36,7 +36,7 @@ public class StaySuggestV2
     }
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
-    public SuggestItem suggestItem;
+    private SuggestItem suggestItem;
     //    public int suggestType; // 카테고리 비교 용
     //    public String text1;
     //    public String text2;
@@ -175,6 +175,11 @@ public class StaySuggestV2
         }
 
         return null;
+    }
+
+    public SuggestItem getSuggestItem()
+    {
+        return suggestItem;
     }
 
     @SuppressWarnings("serial")
