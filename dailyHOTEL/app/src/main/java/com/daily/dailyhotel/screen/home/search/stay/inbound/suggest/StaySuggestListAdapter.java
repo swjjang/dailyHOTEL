@@ -226,7 +226,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         String title = staySuggest.getText1();
         String description = staySuggest.getText2();
 
-        switch (staySuggest.getCategory())
+        switch (staySuggest.getSuggestType())
         {
             case STATION:
             {

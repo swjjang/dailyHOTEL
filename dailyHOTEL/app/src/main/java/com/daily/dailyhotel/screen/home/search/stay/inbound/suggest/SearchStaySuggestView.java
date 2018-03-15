@@ -227,12 +227,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         {
             for (StaySuggestV2 staySuggest : staySuggestList)
             {
-                if (staySuggest.getCategory() == StaySuggestV2.Category.UNKNOWN)
+                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (staySuggest.getCategory() == StaySuggestV2.Category.SECTION)
+                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else
@@ -294,12 +294,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
             {
-                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.UNKNOWN)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.SECTION)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
@@ -490,7 +490,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         {
             for (StaySuggestV2 staySuggest : staySuggestList)
             {
-                if (staySuggest.getCategory() == StaySuggestV2.Category.SECTION)
+                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else

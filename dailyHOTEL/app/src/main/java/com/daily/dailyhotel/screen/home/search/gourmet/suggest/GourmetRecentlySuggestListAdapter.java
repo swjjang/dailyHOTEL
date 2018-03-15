@@ -377,7 +377,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         String title = gourmetSuggest.getText1();
         String description = gourmetSuggest.getText2();
 
-        switch (gourmetSuggest.getCategory())
+        switch (gourmetSuggest.getSuggestType())
         {
             case GOURMET:
             {

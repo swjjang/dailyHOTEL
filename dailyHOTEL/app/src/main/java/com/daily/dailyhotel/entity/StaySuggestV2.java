@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class StaySuggestV2
 {
-    public enum Category
+    public enum SuggestType
     {
         UNKNOWN,
         STATION,
@@ -35,7 +35,7 @@ public class StaySuggestV2
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
     public SuggestItem suggestItem;
-    //    public int category; // 카테고리 비교 용
+    //    public int suggestType; // 카테고리 비교 용
     //    public String text1;
     //    public String text2;
 
@@ -47,43 +47,43 @@ public class StaySuggestV2
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;
-        //        this.category = getCategory();
+        //        this.suggestType = getSuggestType();
         //        this.text1 = getText1();
         //        this.text2 = getText2();
     }
 
-    public Category getCategory()
+    public SuggestType getSuggestType()
     {
         if (suggestItem == null)
         {
-            return Category.UNKNOWN;
+            return SuggestType.UNKNOWN;
         }
 
         if (suggestItem instanceof Stay)
         {
-            return Category.STAY;
+            return SuggestType.STAY;
         } else if (suggestItem instanceof Station)
         {
-            return Category.STATION;
+            return SuggestType.STATION;
 
         } else if (suggestItem instanceof AreaGroup)
         {
-            return Category.AREA_GROUP;
+            return SuggestType.AREA_GROUP;
         } else if (suggestItem instanceof Direct)
         {
-            return Category.DIRECT;
+            return SuggestType.DIRECT;
         } else if (suggestItem instanceof Location)
         {
-            return Category.LOCATION;
+            return SuggestType.LOCATION;
         } else if (suggestItem instanceof CampaignTag)
         {
-            return Category.CAMPAIGN_TAG;
+            return SuggestType.CAMPAIGN_TAG;
         } else if (suggestItem instanceof Section)
         {
-            return Category.SECTION;
+            return SuggestType.SECTION;
         }
 
-        return Category.UNKNOWN;
+        return SuggestType.UNKNOWN;
     }
 
     public String getText1()
