@@ -177,6 +177,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             upGradeGourmetRecentlySuggestDb(db);
             upGradeStayIbRecentlySuggestDb(db);
+            upGradeSearchResultHistoryDb(db);
         }
 
         if (oldVersion <= 3)
@@ -198,6 +199,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         upGradeTempReviewDb(db);
         upGradeGourmetRecentlySuggestDb(db);
         upGradeStayIbRecentlySuggestDb(db);
+        upGradeSearchResultHistoryDb(db);
     }
 
     private void upGradeRecentlyPlaceDb(SQLiteDatabase db)
@@ -228,6 +230,12 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         db.execSQL("drop table if exists " + T_STAY_IB_RECENTLY_SUGGEST);
         db.execSQL(CREATE_T_STAY_IB_RECENTLY_SUGGEST);
+    }
+
+    public void upGradeSearchResultHistoryDb(SQLiteDatabase db)
+    {
+        db.execSQL("drop table if exists " + T_SEARCH_RESULT_HISTORY);
+        db.execSQL(CREATE_T_SEARCH_RESULT_HISTORY);
     }
 
     private SQLiteDatabase getDb()
