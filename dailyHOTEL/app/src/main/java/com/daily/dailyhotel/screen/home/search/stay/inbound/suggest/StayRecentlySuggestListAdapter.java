@@ -377,7 +377,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         String title = staySuggest.getText1();
         String description = staySuggest.getText2();
 
-        switch (staySuggest.getCategory())
+        switch (staySuggest.getSuggestType())
         {
             case STATION:
             {

@@ -301,7 +301,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                if (gourmetSuggest.getCategory() == GourmetSuggestV2.Category.UNKNOWN)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.UNKNOWN)
                 {
                     return Observable.just(false);
                 }
@@ -310,7 +310,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 try
                 {
-                    switch (gourmetSuggest.getCategory())
+                    switch (gourmetSuggest.getSuggestType())
                     {
                         case GOURMET:
                         {
@@ -318,7 +318,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             GourmetSuggestV2.AreaGroup areaGroup = gourmet.areaGroup;
                             GourmetSuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
 
-                            String type = GourmetSuggestV2.Category.GOURMET.name();
+                            String type = GourmetSuggestV2.SuggestType.GOURMET.name();
                             int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
                             String areaGroupName = areaGroup == null ? null : areaGroup.name;
                             int areaIndex = area == null ? 0 : area.index;
@@ -337,7 +337,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) gourmetSuggest.suggestItem;
                             GourmetSuggestV2.Area area = areaGroup.area;
 
-                            String type = GourmetSuggestV2.Category.AREA_GROUP.name();
+                            String type = GourmetSuggestV2.SuggestType.AREA_GROUP.name();
                             int areaIndex = area == null ? 0 : area.index;
                             String areaName = area == null ? null : area.name;
 
@@ -352,7 +352,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         case LOCATION:
                         {
                             GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.suggestItem;
-                            String type = GourmetSuggestV2.Category.LOCATION.name();
+                            String type = GourmetSuggestV2.SuggestType.LOCATION.name();
 
                             dailyDb.addGourmetRecentlySuggest(type, location.name //
                                 , 0, null //
@@ -365,7 +365,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         case DIRECT:
                         {
                             GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) gourmetSuggest.suggestItem;
-                            String type = GourmetSuggestV2.Category.DIRECT.name();
+                            String type = GourmetSuggestV2.SuggestType.DIRECT.name();
 
                             dailyDb.addGourmetRecentlySuggest(type, direct.name //
                                 , 0, null //
@@ -426,16 +426,16 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         String type = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.TYPE));
 
-                        GourmetSuggestV2.Category category;
+                        GourmetSuggestV2.SuggestType suggestType;
                         try
                         {
-                            category = GourmetSuggestV2.Category.valueOf(type);
+                            suggestType = GourmetSuggestV2.SuggestType.valueOf(type);
                         } catch (Exception e)
                         {
-                            category = GourmetSuggestV2.Category.UNKNOWN;
+                            suggestType = GourmetSuggestV2.SuggestType.UNKNOWN;
                         }
 
-                        switch (category)
+                        switch (suggestType)
                         {
                             case GOURMET:
                             {
@@ -552,7 +552,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                String type = gourmetSuggest.getCategory().name();
+                String type = gourmetSuggest.getSuggestType().name();
                 String display = gourmetSuggest.getText1();
                 ExLog.d("sam : type : " + type + " , display : " + display);
 
@@ -586,7 +586,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                if (staySuggest.getCategory() == StaySuggestV2.Category.UNKNOWN)
+                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.UNKNOWN)
                 {
                     return Observable.just(false);
                 }
@@ -595,12 +595,12 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 try
                 {
-                    switch (staySuggest.getCategory())
+                    switch (staySuggest.getSuggestType())
                     {
                         case STATION:
                         {
                             StaySuggestV2.Station station = (StaySuggestV2.Station) staySuggest.suggestItem;
-                            String type = StaySuggestV2.Category.STATION.name();
+                            String type = StaySuggestV2.SuggestType.STATION.name();
 
                             dailyDb.addStayIbRecentlySuggest(type, station.getDisplayName() //
                                 , station.index, station.name, station.region, station.line //
@@ -617,7 +617,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             StaySuggestV2.AreaGroup areaGroup = stay.areaGroup;
                             StaySuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
 
-                            String type = StaySuggestV2.Category.STAY.name();
+                            String type = StaySuggestV2.SuggestType.STAY.name();
                             int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
                             String areaGroupName = areaGroup == null ? null : areaGroup.name;
                             int areaIndex = area == null ? 0 : area.index;
@@ -638,7 +638,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                             StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) staySuggest.suggestItem;
                             StaySuggestV2.Area area = areaGroup.area;
 
-                            String type = StaySuggestV2.Category.AREA_GROUP.name();
+                            String type = StaySuggestV2.SuggestType.AREA_GROUP.name();
                             int areaIndex = area == null ? 0 : area.index;
                             String areaName = area == null ? null : area.name;
 
@@ -654,7 +654,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         case LOCATION:
                         {
                             StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.suggestItem;
-                            String type = StaySuggestV2.Category.LOCATION.name();
+                            String type = StaySuggestV2.SuggestType.LOCATION.name();
 
                             dailyDb.addStayIbRecentlySuggest(type, location.name //
                                 , 0, null, null, null //
@@ -668,7 +668,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         case DIRECT:
                         {
                             StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.suggestItem;
-                            String type = StaySuggestV2.Category.DIRECT.name();
+                            String type = StaySuggestV2.SuggestType.DIRECT.name();
 
                             dailyDb.addStayIbRecentlySuggest(type, direct.name //
                                 , 0, null, null, null //
@@ -730,16 +730,16 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                         String type = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.TYPE));
 
-                        StaySuggestV2.Category category;
+                        StaySuggestV2.SuggestType suggestType;
                         try
                         {
-                            category = StaySuggestV2.Category.valueOf(type);
+                            suggestType = StaySuggestV2.SuggestType.valueOf(type);
                         } catch (Exception e)
                         {
-                            category = StaySuggestV2.Category.UNKNOWN;
+                            suggestType = StaySuggestV2.SuggestType.UNKNOWN;
                         }
 
-                        switch (category)
+                        switch (suggestType)
                         {
                             case STATION:
                             {
@@ -873,7 +873,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                String type = staySuggest.getCategory().name();
+                String type = staySuggest.getSuggestType().name();
                 String name = staySuggest.getText1();
                 ExLog.d("sam : type : " + type + " , name : " + name);
 
