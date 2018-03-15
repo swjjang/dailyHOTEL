@@ -2,6 +2,7 @@ package com.daily.dailyhotel.entity;
 
 import android.support.annotation.NonNull;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.daily.base.util.DailyTextUtils;
 
 import java.io.Serializable;
@@ -90,17 +91,17 @@ public class GourmetSuggestV2
         return SuggestType.UNKNOWN;
     }
 
-    public boolean isLocationSuggestItem()
+    public boolean isLocationSuggestType()
     {
         return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Location;
     }
 
-    public boolean isGourmetSuggestItem()
+    public boolean isGourmetSuggestType()
     {
         return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Gourmet;
     }
 
-    public boolean isCampaignTagSuggestItem()
+    public boolean isCampaignTagSuggestType()
     {
         return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.CampaignTag;
     }

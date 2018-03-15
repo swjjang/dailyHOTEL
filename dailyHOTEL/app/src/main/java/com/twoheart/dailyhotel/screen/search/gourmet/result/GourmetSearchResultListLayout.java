@@ -64,7 +64,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
             GourmetSuggestV2 suggest = ((GourmetSearchCuration) mGourmetCuration).getSuggest();
 
-            if (suggest.isCampaignTagSuggestItem() == true)
+            if (suggest.isCampaignTagSuggestType() == true)
             {
                 if ((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
                 {

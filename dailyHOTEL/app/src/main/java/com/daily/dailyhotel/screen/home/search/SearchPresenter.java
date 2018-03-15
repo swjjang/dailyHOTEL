@@ -1174,7 +1174,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
             GourmetSuggestV2 suggest = mSearchModel.gourmetViewModel.suggest.getValue();
 
-            if (suggest.menuType == GourmetSuggestV2.MenuType.CAMPAIGN_TAG && suggest.isCampaignTagSuggestItem() == true)
+            if (suggest.menuType == GourmetSuggestV2.MenuType.CAMPAIGN_TAG && suggest.isCampaignTagSuggestType() == true)
             {
                 startGourmetCampaignTag(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
             } else

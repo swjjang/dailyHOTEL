@@ -59,15 +59,15 @@ public class GourmetSearchParams extends GourmetParams
 
         GourmetSuggestV2 suggest = gourmetSearchCuration.getSuggest();
 
-        if (suggest == null || suggest.isLocationSuggestItem() == true)
+        if (suggest == null || suggest.isLocationSuggestType() == true)
         {
             term = null;
         } else
         {
-            term = suggest.suggestItem.name;
+            term = suggest.getSuggestItem().name;
         }
 
-        if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestItem() == true)
+        if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
         {
             radius = gourmetSearchCuration.getRadius();
 

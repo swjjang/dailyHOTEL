@@ -309,7 +309,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(suggest));
 
-            if (suggest.isCampaignTagSuggestItem() == false)
+            if (suggest.isCampaignTagSuggestType() == false)
             {
                 intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputKeyword);
             }

@@ -197,7 +197,7 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
     @Override
     public void onEventGourmetDoSearch(Activity activity, GourmetSuggestV2 suggest)
     {
-        if (activity == null || suggest == null || suggest.suggestItem == null)
+        if (activity == null || suggest == null || suggest.getSuggestItem() == null)
         {
             return;
         }
@@ -232,6 +232,6 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, suggest.suggestItem.name, null);
+            , action, suggest.getSuggestItem().name, null);
     }
 }

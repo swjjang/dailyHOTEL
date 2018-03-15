@@ -119,7 +119,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-        if (suggest != null && suggest.isLocationSuggestItem() == true)
+        if (suggest != null && suggest.isLocationSuggestType() == true)
         {
             try
             {
@@ -192,7 +192,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-            if (suggest != null && suggest.isLocationSuggestItem() == true)
+            if (suggest != null && suggest.isLocationSuggestType() == true)
             {
                 mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
                 mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
@@ -271,7 +271,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     return;
                 }
 
-                if (gourmetSuggest.isLocationSuggestItem() == true)
+                if (gourmetSuggest.isLocationSuggestType() == true)
                 {
                     mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
                 } else
@@ -307,12 +307,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-                if (suggest.isLocationSuggestItem() == true)
+                if (suggest.isLocationSuggestType() == true)
                 {
                     mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
                     mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
 
-                    GourmetSuggestV2.Location suggestItemLocation = (GourmetSuggestV2.Location) suggest.suggestItem;
+                    GourmetSuggestV2.Location suggestItemLocation = (GourmetSuggestV2.Location)suggest.getSuggestItem();
 
                     if (suggestItemLocation.latitude != 0.0d && suggestItemLocation.longitude != 0.0d)
                     {
@@ -343,7 +343,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     {
         GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-        if (suggest != null && suggest.isLocationSuggestItem() == true)
+        if (suggest != null && suggest.isLocationSuggestType() == true)
         {
             showEmptyLayout();
         } else
@@ -367,7 +367,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-        if (suggest != null && suggest.isLocationSuggestItem() == true)
+        if (suggest != null && suggest.isLocationSuggestType() == true)
         {
             showEmptyLayout();
         } else
@@ -391,7 +391,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-            if (suggest != null && suggest.isLocationSuggestItem() == true)
+            if (suggest != null && suggest.isLocationSuggestType() == true)
             {
                 mNetworkController.requestAddress(location);
             }
@@ -463,9 +463,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         mGourmetSearchCuration.setSuggest(suggest);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
-        if (suggest != null && suggest.isLocationSuggestItem() == true)
+        if (suggest != null && suggest.isLocationSuggestType() == true)
         {
-            GourmetSuggestV2.Location suggestItemLocation = (GourmetSuggestV2.Location) suggest.suggestItem;
+            GourmetSuggestV2.Location suggestItemLocation = (GourmetSuggestV2.Location) suggest.getSuggestItem();
 
             if (suggestItemLocation.latitude != 0.0d && suggestItemLocation.longitude != 0.0d)
             {
@@ -518,7 +518,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-            if (suggest != null && suggest.isLocationSuggestItem() == true)
+            if (suggest != null && suggest.isLocationSuggestType() == true)
             {
                 mPlaceSearchResultLayout.setToolbarTitle(getString(R.string.label_search_nearby_empty_address));
 
@@ -596,7 +596,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-        mPlaceSearchResultLayout.setSpinnerVisible(suggest != null && suggest.isLocationSuggestItem() == true);
+        mPlaceSearchResultLayout.setSpinnerVisible(suggest != null && suggest.isLocationSuggestType() == true);
 
         if (mPlaceSearchResultLayout.hasCampaignTag() == false)
         {
@@ -900,7 +900,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
                 }
 
-                String label = suggest != null && suggest.isLocationSuggestItem() == true ? mAddress : suggest.getText1();
+                String label = suggest != null && suggest.isLocationSuggestType() == true ? mAddress : suggest.getText1();
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
                     .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
 
@@ -914,7 +914,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 }
             }
 
-            if (suggest != null && suggest.isLocationSuggestItem() == true//
+            if (suggest != null && suggest.isLocationSuggestType() == true//
                 && mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
                 && mGourmetSearchCuration.getLocation() == null)
             {
@@ -959,7 +959,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-            if (suggest != null && suggest.isLocationSuggestItem() == true)
+            if (suggest != null && suggest.isLocationSuggestType() == true)
             {
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , "gourmet_around_result_research", suggest.getText1(), null);
@@ -1041,7 +1041,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             GourmetSuggestV2 suggest = mGourmetSearchCuration.getSuggest();
 
-            if (suggest == null || suggest.isLocationSuggestItem() == false)
+            if (suggest == null || suggest.isLocationSuggestType() == false)
             {
                 return;
             }
@@ -1531,7 +1531,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (suggest != null)
             {
-                if (suggest.isLocationSuggestItem() == true)
+                if (suggest.isLocationSuggestType() == true)
                 {
                     synchronized (GourmetSearchResultActivity.this)
                     {

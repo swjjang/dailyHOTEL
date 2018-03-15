@@ -424,7 +424,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         getViewInterface().setEmptyViewVisible(false, mViewModel.getFilter().isDefault() == false);
 
         GourmetSuggestV2 suggest = mViewModel.getSuggest();
-        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
+        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).map(new Function<GourmetCampaignTags, List<ObjectItem>>()
@@ -668,7 +668,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
         GourmetSuggestV2 suggest = mViewModel.getSuggest();
-        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.suggestItem;
+        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTags>()

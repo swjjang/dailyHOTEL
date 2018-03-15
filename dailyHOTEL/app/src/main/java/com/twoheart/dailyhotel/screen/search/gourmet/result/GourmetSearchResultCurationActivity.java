@@ -97,7 +97,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if (((GourmetSearchCuration) mGourmetCuration).getSuggest().isLocationSuggestItem() == true)
+            if (((GourmetSearchCuration) mGourmetCuration).getSuggest().isLocationSuggestType() == true)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

@@ -235,7 +235,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     {
         GourmetSuggestV2 suggest = mViewModel.getSuggest();
 
-        getViewInterface().setFloatingActionViewVisible(suggest.isCampaignTagSuggestItem() == false);
+        getViewInterface().setFloatingActionViewVisible(suggest.isCampaignTagSuggestType() == false);
     }
 
     @Override
@@ -327,7 +327,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                         mViewModel.setSuggest(suggest);
                         mViewModel.setInputKeyword(intent.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD));
 
-                        if (suggest.isLocationSuggestItem() == true)
+                        if (suggest.isLocationSuggestType() == true)
                         {
                             mViewModel.getFilter().defaultSortType = GourmetFilter.SortType.DISTANCE;
                             mViewModel.radius = DEFAULT_RADIUS;
@@ -370,7 +370,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
                 GourmetSuggestV2 suggest = mViewModel.getSuggest();
 
-                if (suggest.isCampaignTagSuggestItem() == true)
+                if (suggest.isCampaignTagSuggestType() == true)
                 {
                     addCompositeDisposable(getViewInterface().setCampaignTagFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<BasePagerFragment>()
                     {

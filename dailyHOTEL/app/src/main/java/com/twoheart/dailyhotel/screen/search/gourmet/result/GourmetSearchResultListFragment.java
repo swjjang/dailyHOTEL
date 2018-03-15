@@ -74,7 +74,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
         GourmetSuggestV2 suggest = ((GourmetSearchCuration) curation).getSuggest();
 
-        boolean locationSearchType = suggest.isLocationSuggestItem();
+        boolean locationSearchType = suggest.isLocationSuggestType();
 
         ((GourmetSearchResultListLayout) mPlaceListLayout).setLocationSearchType(locationSearchType);
         ((GourmetSearchResultListLayout) mPlaceListLayout).setEmptyType(locationSearchType);
@@ -147,7 +147,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, sortType, hasSection);
 
         GourmetSuggestV2 suggest = ((GourmetSearchCuration) mGourmetCuration).getSuggest();
-        boolean locationSearchType = suggest.isLocationSuggestItem();
+        boolean locationSearchType = suggest.isLocationSuggestType();
 
         switch (mViewType)
         {
