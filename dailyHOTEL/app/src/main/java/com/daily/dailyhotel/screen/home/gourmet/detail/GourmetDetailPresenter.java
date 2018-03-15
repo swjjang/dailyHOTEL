@@ -2205,47 +2205,46 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         if (DailyCalendar.compareDateTime(gourmetCart.visitTime, mOperationTimeList.get(0)) < 0)
         {
             return INVALID_GOURMET_CART_VISIT_TIME;
-        } else
+        }
+
+        boolean changedPrice = false;
+
+        for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
         {
-            boolean changedPrice = false;
+            boolean hasMenu = false;
+            boolean hasOrderQuantity = false;
 
-            for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
+            for (GourmetMenu gourmetMenu : gourmetMenuList)
             {
-                boolean hasMenu = false;
-                boolean hasOrderQuantity = false;
-
-                for (GourmetMenu gourmetMenu : gourmetMenuList)
+                if (gourmetCartMenu.index == gourmetMenu.index)
                 {
-                    if (gourmetCartMenu.index == gourmetMenu.index)
+                    hasMenu = true;
+
+                    // 수량
+                    if (gourmetCartMenu.count <= gourmetMenu.availableTicketNumbers)
                     {
-                        hasMenu = true;
+                        hasOrderQuantity = true;
+                    }
 
-                        // 수량
-                        if (gourmetCartMenu.count <= gourmetMenu.availableTicketNumbers)
-                        {
-                            hasOrderQuantity = true;
-                        }
+                    if (gourmetCartMenu.discountPrice != gourmetMenu.discountPrice)
+                    {
+                        changedPrice = true;
 
-                        if (gourmetCartMenu.discountPrice != gourmetMenu.discountPrice)
-                        {
-                            changedPrice = true;
-
-                            gourmetCartMenu.price = gourmetMenu.price;
-                            gourmetCartMenu.discountPrice = gourmetMenu.discountPrice;
-                        }
+                        gourmetCartMenu.price = gourmetMenu.price;
+                        gourmetCartMenu.discountPrice = gourmetMenu.discountPrice;
                     }
                 }
-
-                if (hasMenu == false || hasOrderQuantity == false)
-                {
-                    return INVALID_GOURMET_CART_QUANTITY;
-                }
             }
 
-            if (changedPrice == true)
+            if (hasMenu == false || hasOrderQuantity == false)
             {
-                return INVALID_GOURMET_CART_CHANGED_PRICE;
+                return INVALID_GOURMET_CART_QUANTITY;
             }
+        }
+
+        if (changedPrice == true)
+        {
+            return INVALID_GOURMET_CART_CHANGED_PRICE;
         }
 
         return VALID_GOURMET_CART_DEFAULT;
