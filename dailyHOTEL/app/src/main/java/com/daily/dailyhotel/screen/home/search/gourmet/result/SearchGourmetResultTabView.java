@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.search.gourmet.result;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,6 +188,17 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     }
 
     @Override
+    public void setToolbarTitleImageResource(int resId)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleImageResource(resId);
+    }
+
+    @Override
     public void setToolbarDateText(String text)
     {
         if (getViewDataBinding() == null)
@@ -197,6 +207,50 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         }
 
         getViewDataBinding().toolbarView.setSubTitleText(text);
+    }
+
+    @Override
+    public void setToolbarRadiusSpinnerVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setRadiusSpinnerVisible(visible);
+    }
+
+    @Override
+    public void setRadiusSpinnerSelection(float radius)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int position = getRadiusPosition(radius);
+
+        getViewDataBinding().toolbarView.setRadiusSpinnerSelection(position);
+    }
+
+    private int getRadiusPosition(float radius)
+    {
+        if (radius > 5.0f)
+        {
+            return 4; // 10km
+        } else if (radius > 3.0f)
+        {
+            return 3; // 5km
+        } else if (radius > 1.0f)
+        {
+            return 2; // 3km
+        } else if (radius > 0.5f)
+        {
+            return 1; // 1km
+        } else
+        {
+            return 0; // 0.5km
+        }
     }
 
     @Override
@@ -287,6 +341,12 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
             public void onFilterClick()
             {
                 getEventListener().onFilterClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onCalendarClick();
             }
         });
 

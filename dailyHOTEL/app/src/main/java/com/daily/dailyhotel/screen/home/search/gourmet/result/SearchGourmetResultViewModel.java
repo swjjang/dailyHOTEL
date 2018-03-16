@@ -105,6 +105,16 @@ public class SearchGourmetResultViewModel extends ViewModel
         }
     }
 
+    public void setBookDateTime(String bookDateTime) throws Exception
+    {
+        if (searchViewModel == null)
+        {
+            return;
+        }
+
+        searchViewModel.setBookDateTime(bookDateTime);
+    }
+
     public void setSuggest(@NonNull GourmetSuggestV2 suggest)
     {
         if (searchViewModel == null)

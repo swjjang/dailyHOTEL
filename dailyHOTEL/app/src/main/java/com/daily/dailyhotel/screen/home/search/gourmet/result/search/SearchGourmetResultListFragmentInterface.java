@@ -41,7 +41,9 @@ public interface SearchGourmetResultListFragmentInterface
 
         void setSwipeRefreshing(boolean refreshing);
 
-        void setEmptyViewVisible(boolean visible, boolean applyFilter);
+        void hideEmptyViewVisible();
+
+        void showEmptyViewVisible(boolean applyFilter, boolean distanceSortType);
 
         void setListLayoutVisible(boolean visible);
 
@@ -96,6 +98,8 @@ public interface SearchGourmetResultListFragmentInterface
         void onCallClick();
 
         void onFilterClick();
+
+        void onCalendarClick();
 
         void onWishClick(int position, Gourmet gourmet);
     }

@@ -24,6 +24,7 @@ import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
+import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
@@ -32,6 +33,7 @@ import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
@@ -43,6 +45,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.maps.MapView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -62,6 +65,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -85,6 +89,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
     GourmetRemoteImpl mGourmetRemoteImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
+    GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
 
     SearchGourmetResultViewModel mViewModel;
 
@@ -133,6 +138,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
 
         initViewModel(activity);
 
@@ -484,9 +490,54 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         boolean applyFilter = mViewModel.getFilter().isDefault() == false;
 
-        getViewInterface().setEmptyViewVisible(false, applyFilter);
+        getViewInterface().hideEmptyViewVisible();
 
-        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(mPage)).map(new Function<Gourmets, Pair<Gourmets, List<ObjectItem>>>()
+        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+
+        Observable<Boolean> observable;
+
+        if (suggest.isLocationSuggestType() == true && hasLocationDataInSuggest(suggest) == false)
+        {
+            getViewInterface().setLocationProgressBarVisible(true);
+
+            GourmetSuggestV2.Location locationSuggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+
+            observable = searchMyLocation(null).flatMap(new Function<Location, ObservableSource<GoogleAddress>>()
+            {
+                @Override
+                public ObservableSource<GoogleAddress> apply(Location location) throws Exception
+                {
+                    locationSuggestItem.latitude = location.getLatitude();
+                    locationSuggestItem.longitude = location.getLongitude();
+
+                    return mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude());
+                }
+            }).flatMap(new Function<GoogleAddress, ObservableSource<Boolean>>()
+            {
+                @Override
+                public ObservableSource<Boolean> apply(GoogleAddress googleAddress) throws Exception
+                {
+                    locationSuggestItem.address = googleAddress.address;
+                    locationSuggestItem.name = googleAddress.shortAddress;
+
+                    getActivity().runOnUiThread(() -> mViewModel.setSuggest(mViewModel.getSuggest()));
+
+                    return Observable.just(true);
+                }
+            });
+        } else
+        {
+            observable = Observable.just(true);
+        }
+
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Gourmets>>()
+        {
+            @Override
+            public ObservableSource<Gourmets> apply(Boolean result) throws Exception
+            {
+                return mGourmetRemoteImpl.getList(getQueryMap(mPage));
+            }
+        }).map(new Function<Gourmets, Pair<Gourmets, List<ObjectItem>>>()
         {
             @Override
             public Pair<Gourmets, List<ObjectItem>> apply(Gourmets gourmets) throws Exception
@@ -509,6 +560,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             @Override
             public void accept(Pair<Gourmets, List<ObjectItem>> pair) throws Exception
             {
+                getViewInterface().setLocationProgressBarVisible(false);
+
                 Gourmets gourmets = pair.first;
                 List<ObjectItem> objectItemList = pair.second;
 
@@ -526,7 +579,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                         getViewInterface().setFloatingActionViewVisible(applyFilter);
                         getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
-                        getViewInterface().setEmptyViewVisible(false, true);
+                        getViewInterface().showEmptyViewVisible(true, mViewModel.isDistanceSort());
                     } else
                     {
                         getViewInterface().setFloatingActionViewVisible(false);
@@ -534,7 +587,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
                         if (mViewModel.isDistanceSort() == true)
                         {
-                            getViewInterface().setEmptyViewVisible(false, false);
+                            getViewInterface().showEmptyViewVisible(false, true);
                         } else
                         {
                             getFragment().getFragmentEventListener().setEmptyViewVisible(true);
@@ -560,7 +613,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     }
 
                     getFragment().getFragmentEventListener().setEmptyViewVisible(false);
-                    getViewInterface().setEmptyViewVisible(false, applyFilter);
+                    getViewInterface().hideEmptyViewVisible();
                     getViewInterface().setListLayoutVisible(true);
 
                     getViewInterface().setSearchResultCount(size, MAXIMUM_NUMBER_PER_PAGE);
@@ -579,9 +632,26 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                 mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
 
-                onHandleError(throwable);
+                onHandleErrorAndFinish(throwable);
             }
         }));
+    }
+
+    private boolean hasLocationDataInSuggest(@NonNull GourmetSuggestV2 suggest)
+    {
+        if (suggest == null)
+        {
+            return false;
+        }
+
+        if (suggest.isLocationSuggestType() == true)
+        {
+            GourmetSuggestV2.Location locationSuggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+
+            return locationSuggestItem.latitude != 0.0d && locationSuggestItem.longitude != 0.0d;
+        }
+
+        return false;
     }
 
     @Override
@@ -788,7 +858,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         boolean applyFilter = mViewModel.getFilter().isDefault() == false;
 
-        getViewInterface().setEmptyViewVisible(false, applyFilter);
+        getViewInterface().hideEmptyViewVisible();
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
@@ -806,7 +876,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setFloatingActionViewVisible(applyFilter);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
-                    getViewInterface().setEmptyViewVisible(true, applyFilter);
+                    getViewInterface().showEmptyViewVisible(applyFilter, mViewModel.isDistanceSort());
 
                     unLockAll();
                 } else
@@ -815,7 +885,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setFloatingActionViewVisible(true);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
-                    getViewInterface().setEmptyViewVisible(false, applyFilter);
+                    getViewInterface().hideEmptyViewVisible();
                     getViewInterface().setMapLayoutVisible(true);
 
                     getViewInterface().setMapList(gourmetList, true, true);
@@ -955,6 +1025,17 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }
 
         getFragment().getFragmentEventListener().onFilterClick();
+    }
+
+    @Override
+    public void onCalendarClick()
+    {
+        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onCalendarClick();
     }
 
     @Override

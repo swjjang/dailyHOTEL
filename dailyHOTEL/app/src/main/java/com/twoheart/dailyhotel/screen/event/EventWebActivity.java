@@ -25,6 +25,7 @@ import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagLi
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
@@ -461,8 +462,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 {
                     GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, new GourmetSuggestV2.Direct(word));
 
-                    Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, suggest, sortType, null);
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+//                    Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, suggest, sortType, null);
+//                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+
+                    startActivityForResult(SearchGourmetResultTabActivity.newInstance(context, externalDeepLink.toString())//
+                        , CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                 } else
                 {
                     return false;

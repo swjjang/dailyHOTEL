@@ -16,7 +16,13 @@ public interface SearchGourmetResultTabInterface
     {
         void setViewType(SearchGourmetResultTabPresenter.ViewType viewType);
 
+        void setToolbarTitleImageResource(int resId);
+
         void setToolbarDateText(String text);
+
+        void setToolbarRadiusSpinnerVisible(boolean visible);
+
+        void setRadiusSpinnerSelection(float radius);
 
         void setFloatingActionViewVisible(boolean visible);
 
@@ -46,6 +52,8 @@ public interface SearchGourmetResultTabInterface
         void onViewTypeClick();
 
         void onFilterClick();
+
+        void onCalendarClick();
 
         void onChangedRadius(float radius);
 

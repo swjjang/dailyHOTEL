@@ -1554,9 +1554,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         try
         {
-            startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity()//
-                , commonDateTime.getTodayDateTime(), gourmetBookDateTime.getGourmetBookingDay()//
-                , word, gourmetSuggest, sortType, AnalyticsManager.Screen.SEARCH_MAIN)//
+            startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), externalDeepLink.toString())//
                 , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
         } catch (Exception e)
         {

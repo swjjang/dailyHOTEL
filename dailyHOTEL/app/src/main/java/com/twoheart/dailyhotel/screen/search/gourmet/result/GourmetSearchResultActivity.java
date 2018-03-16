@@ -38,7 +38,6 @@ import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
@@ -75,37 +74,37 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
-        , String inputText, GourmetSuggestV2 gourmetSuggest, SortType sortType, String callByScreen)
-    {
-        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
-
-        if (sortType != null)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
-        }
-
-        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
-        , GourmetSuggestV2 gourmetSuggest, double radius, boolean isDeepLink)
-    {
-        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
-        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
+    //        , String inputText, GourmetSuggestV2 gourmetSuggest, SortType sortType, String callByScreen)
+    //    {
+    //        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+    //
+    //        if (sortType != null)
+    //        {
+    //            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
+    //        }
+    //
+    //        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
+    //        , GourmetSuggestV2 gourmetSuggest, double radius, boolean isDeepLink)
+    //    {
+    //        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+    //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
+    //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -312,7 +311,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
                     mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
 
-                    GourmetSuggestV2.Location suggestItemLocation = (GourmetSuggestV2.Location)suggest.getSuggestItem();
+                    GourmetSuggestV2.Location suggestItemLocation = (GourmetSuggestV2.Location) suggest.getSuggestItem();
 
                     if (suggestItemLocation.latitude != 0.0d && suggestItemLocation.longitude != 0.0d)
                     {

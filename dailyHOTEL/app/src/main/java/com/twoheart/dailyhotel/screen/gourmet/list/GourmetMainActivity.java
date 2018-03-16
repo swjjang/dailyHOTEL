@@ -26,6 +26,7 @@ import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -52,7 +53,6 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
-import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -383,10 +383,17 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         lockUI();
 
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.LOCATION, null);
+        GourmetSuggestV2.Location suggestItem = new GourmetSuggestV2.Location();
+        suggestItem.name = getString(R.string.label_search_nearby_empty_address);
+        suggestItem.address = getString(R.string.label_search_nearby_empty_address);
 
-        Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, null, gourmetSuggest, null, callByScreen);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.REGION_LOCATION, suggestItem);
+
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(context, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+            , suggest, null), CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+
+        //        Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, null, gourmetSuggest, null, callByScreen);
+        //        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     @Override
