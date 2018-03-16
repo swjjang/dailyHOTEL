@@ -172,8 +172,6 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         String text = getContext().getString(R.string.label_booking_own_bonus, priceFormat);
 
         mViewDataBinding.bonusTextView.setText(text);
-
-        setBonusEnabled(bonus > 0);
     }
 
     public void setBonus(int bonus)
