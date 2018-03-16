@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
+import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
@@ -27,6 +28,8 @@ public class SearchGourmetResultViewModel extends ViewModel
 
     private MutableLiveData<SearchGourmetResultTabPresenter.ViewType> mViewType = new MutableLiveData<>();
     private MutableLiveData<GourmetFilter> mFilter = new MutableLiveData<>();
+
+    public Location location;
     public float radius;
 
     static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory

@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.GourmetInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
+import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
@@ -61,6 +63,35 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
 
                 return gourmetList;
             }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<Gourmets> getList(Map<String, Object> queryMap)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
+            : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
+
+        return mDailyMobileService.getGourmetList(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                Gourmets gourmets;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        gourmets = baseDto.data.getGourmets();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return gourmets;
+            });
     }
 
     @Override
@@ -286,5 +317,95 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
 
                 return trueVR;
             });
+    }
+
+    private String toStringQueryParams(Map<String, Object> queryMap)
+    {
+        StringBuilder stringBuilder = new StringBuilder(1024);
+        stringBuilder.append('?');
+
+        for (Map.Entry<String, Object> entry : queryMap.entrySet())
+        {
+            String entryKey = entry.getKey();
+            if (DailyTextUtils.isTextEmpty(entryKey) == true)
+            {
+                continue;
+            }
+
+            Object entryValue = entry.getValue();
+            if (entryValue == null)
+            {
+                continue;
+            }
+
+            if (entryValue instanceof List)
+            {
+                stringBuilder.append(toStringListQueryParams(entryKey, (List) entryValue, stringBuilder.length() > 1));
+            } else
+            {
+                String convertedEntryValue = entryValue.toString();
+
+                if (DailyTextUtils.isTextEmpty(convertedEntryValue) == true)
+                {
+                    continue;
+                }
+
+                stringBuilder.append(toStringQueryParams(entryKey, convertedEntryValue, stringBuilder.length() > 1));
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private String toStringListQueryParams(String entryKey, List entryValue, boolean addAmpersand)
+    {
+        if (entryKey == null || entryValue == null)
+        {
+            return "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Object valueObject : entryValue)
+        {
+            String convertedEntryValue = valueObject.toString();
+
+            if (DailyTextUtils.isTextEmpty(convertedEntryValue) == true)
+            {
+                continue;
+            }
+
+            if (addAmpersand == true)
+            {
+                stringBuilder.append('&');
+            }
+
+            stringBuilder.append(entryKey);
+            stringBuilder.append("=");
+            stringBuilder.append(convertedEntryValue);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private String toStringQueryParams(String entryKey, String entryValue, boolean addAmpersand)
+    {
+        if (entryKey == null || entryValue == null)
+        {
+            return "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (addAmpersand == true)
+        {
+            stringBuilder.append('&');
+        }
+
+        stringBuilder.append(entryKey);
+        stringBuilder.append("=");
+        stringBuilder.append(entryValue);
+
+        return stringBuilder.toString();
     }
 }

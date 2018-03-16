@@ -440,7 +440,9 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         mPage = 1;
 
-        getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefault() == false);
+        boolean applyFilter = mStayViewModel.stayFilter.getValue().isDefault() == false;
+
+        getViewInterface().setEmptyViewVisible(false, applyFilter);
 
         addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<ObjectItem>>>()
         {
@@ -460,16 +462,14 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 List<ObjectItem> objectItemList = pair.second;
                 int listSize = objectItemList.size();
 
-                boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefault() == false;
-
                 if (listSize == 0)
                 {
                     mEmptyList = true;
                     mPage = PAGE_NONE;
 
-                    getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
+                    getViewInterface().setFloatingActionViewVisible(applyFilter);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
-                    getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
+                    getViewInterface().setEmptyViewVisible(true, applyFilter);
 
                     mAnalytics.onScreen(getActivity(), mStayViewModel.categoryType, null, mStayViewModel.bookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
@@ -489,7 +489,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                         objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                     }
 
-                    getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefault() == false);
+                    getViewInterface().setEmptyViewVisible(false, applyFilter);
                     getViewInterface().setListLayoutVisible(true);
 
                     getViewInterface().setList(objectItemList, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
@@ -775,16 +775,16 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(activeReward);
 
-                boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefault() == false;
+                boolean applyFilter = mStayViewModel.stayFilter.getValue().isDefault() == false;
 
                 if (stayList == null || stayList.size() == 0)
                 {
                     mEmptyList = true;
 
-                    getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
+                    getViewInterface().setFloatingActionViewVisible(applyFilter);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
-                    getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
+                    getViewInterface().setEmptyViewVisible(true, applyFilter);
 
                     unLockAll();
 
@@ -797,7 +797,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setFloatingActionViewVisible(true);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
-                    getViewInterface().setEmptyViewVisible(false, notDefaultFilter);
+                    getViewInterface().setEmptyViewVisible(false, applyFilter);
                     getViewInterface().setMapLayoutVisible(true);
 
                     getViewInterface().setMapList(stayList, true, true, false);

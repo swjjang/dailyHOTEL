@@ -21,6 +21,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetOldWaitingDepositData
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
 import com.daily.dailyhotel.repository.remote.model.GourmetSuggestsData;
+import com.daily.dailyhotel.repository.remote.model.GourmetsData;
 import com.daily.dailyhotel.repository.remote.model.LeaveInfoData;
 import com.daily.dailyhotel.repository.remote.model.NoticeAgreementMessageData;
 import com.daily.dailyhotel.repository.remote.model.NoticeAgreementMessageResultData;
@@ -721,6 +722,10 @@ public interface DailyMobileService
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // GourmetRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<GourmetsData>> getGourmetList(@Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

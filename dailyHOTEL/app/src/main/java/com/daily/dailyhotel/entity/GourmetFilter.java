@@ -3,6 +3,7 @@ package com.daily.dailyhotel.entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GourmetFilter
 {
@@ -21,9 +22,9 @@ public class GourmetFilter
     public static final int FLAG_AMENITIES_GROUPBOOKING = FLAG_AMENITIES_PRIVATEROOM << 1;
     public static final int FLAG_AMENITIES_CORKAGE = FLAG_AMENITIES_GROUPBOOKING << 1;
 
-    private HashMap<String, Integer> mFlagCategoryFilterMap; // 선택된 음식 종류
-    private HashMap<String, Integer> mCategoryCodeMap; // 음식 종류 코드
-    private HashMap<String, Integer> mCategorySequenceMap; // 음식 종류 시퀀스
+    private Map<String, Integer> mFlagCategoryFilterMap; // 선택된 음식 종류
+    private Map<String, Category> mCategoryMap;
+
     public int flagTimeFilter;
     public int flagAmenitiesFilters;
 
@@ -39,16 +40,52 @@ public class GourmetFilter
         SATISFACTION
     }
 
+    public static class Category
+    {
+        public String name;
+        public int code;
+        public int sequence;
+    }
+
     public GourmetFilter()
     {
         mFlagCategoryFilterMap = new HashMap<>();
-        mCategoryCodeMap = new HashMap<>();
-        mCategorySequenceMap = new HashMap<>();
+        mCategoryMap = new HashMap<>();
     }
 
     public boolean isDistanceSort()
     {
         return sortType == SortType.DISTANCE;
+    }
+
+    public void setCategoryMap(Map<String, Category> categoryMap)
+    {
+        if (categoryMap == null)
+        {
+            return;
+        }
+
+        mCategoryMap.putAll(categoryMap);
+    }
+
+    public void addCategory(Category category)
+    {
+        if (category == null)
+        {
+            return;
+        }
+
+        mFlagCategoryFilterMap.put(category.name, category.code);
+    }
+
+    public void removeCategory(Category category)
+    {
+        if (category == null)
+        {
+            return;
+        }
+
+        mFlagCategoryFilterMap.remove(category.name);
     }
 
     public boolean isDefault()
@@ -61,22 +98,32 @@ public class GourmetFilter
 
     public GourmetFilter reset()
     {
+        sortType = defaultSortType;
         mFlagCategoryFilterMap.clear();
         flagTimeFilter = FLAG_TIME_NONE;
         flagAmenitiesFilters = FLAG_AMENITIES_NONE;
-        sortType = defaultSortType;
 
         return this;
     }
 
-    protected List<String> getTimeFilter()
+    public List<Integer> getCategoryFilter()
+    {
+        if (mFlagCategoryFilterMap.size() == 0)
+        {
+            return null;
+        }
+
+        return new ArrayList(mFlagCategoryFilterMap.values());
+    }
+
+    public List<String> getTimeFilter()
     {
         if (flagTimeFilter == GourmetFilter.FLAG_TIME_NONE)
         {
             return null;
         }
 
-        ArrayList<String> arrayList = new ArrayList();
+        List<String> arrayList = new ArrayList();
 
         if ((flagTimeFilter & GourmetFilter.FLAG_TIME_06_11) == GourmetFilter.FLAG_TIME_06_11)
         {
@@ -106,14 +153,14 @@ public class GourmetFilter
         return arrayList;
     }
 
-    protected List<String> getAmenitiesFilter()
+    public List<String> getAmenitiesFilter()
     {
         if (flagAmenitiesFilters == GourmetFilter.FLAG_AMENITIES_NONE)
         {
             return null;
         }
 
-        ArrayList<String> arrayList = new ArrayList();
+        List<String> arrayList = new ArrayList();
 
         if ((flagAmenitiesFilters & GourmetFilter.FLAG_AMENITIES_PARKING) == GourmetFilter.FLAG_AMENITIES_PARKING)
         {

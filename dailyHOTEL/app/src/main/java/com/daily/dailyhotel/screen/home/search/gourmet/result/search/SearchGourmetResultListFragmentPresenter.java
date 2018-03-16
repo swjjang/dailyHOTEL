@@ -1,7 +1,8 @@
-package com.daily.dailyhotel.screen.home.search.gourmet.result.campaign;
+package com.daily.dailyhotel.screen.home.search.gourmet.result.search;
 
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,26 +12,27 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.exception.BaseException;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
-import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetCampaignTags;
+import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -53,7 +55,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -69,18 +73,23 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFragmentPresenter<SearchGourmetCampaignTagListFragment, SearchGourmetCampaignTagListFragmentInterface.ViewInterface>//
-    implements SearchGourmetCampaignTagListFragmentInterface.OnEventListener
+public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentPresenter<SearchGourmetResultListFragment, SearchGourmetResultListFragmentInterface.ViewInterface>//
+    implements SearchGourmetResultListFragmentInterface.OnEventListener
 {
-    static final int MAXIMUM_NUMBER_PER_PAGE = Constants.PAGENATION_LIST_SIZE;
+    static final int MAXIMUM_NUMBER_PER_PAGE = 200;
+
     static final int PAGE_NONE = -1;
     static final int PAGE_FINISH = Integer.MAX_VALUE;
 
-    SearchGourmetCampaignTagListFragmentInterface.AnalyticsInterface mAnalytics;
+    SearchGourmetResultListFragmentInterface.AnalyticsInterface mAnalytics;
 
+    GourmetRemoteImpl mGourmetRemoteImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     SearchGourmetResultViewModel mViewModel;
+
+    Observer mViewTypeObserver;
+    Observer mFilterObserver;
 
     int mPage = PAGE_NONE; // 리스트에서 페이지
     boolean mMoreRefreshing; // 특정 스크를 이상 내려가면 더보기로 목록을 요청하는데 lock()걸리면 안되지만 계속 요청되면 안되어서 해당 키로 락을 건다.
@@ -95,10 +104,9 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
     //
     int mWishPosition;
     boolean mEmptyList; // 목록, 맵이 비어있는지 확인
+    DailyLocationExFactory mDailyLocationExFactory;
 
-    DailyLocationExFactory mDailyLocationFactory;
-
-    public SearchGourmetCampaignTagListFragmentPresenter(@NonNull SearchGourmetCampaignTagListFragment fragment)
+    public SearchGourmetResultListFragmentPresenter(@NonNull SearchGourmetResultListFragment fragment)
     {
         super(fragment);
     }
@@ -113,16 +121,17 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
     @NonNull
     @Override
-    protected SearchGourmetCampaignTagListFragmentInterface.ViewInterface createInstanceViewInterface()
+    protected SearchGourmetResultListFragmentInterface.ViewInterface createInstanceViewInterface()
     {
-        return new SearchGourmetCampaignTagListFragmentView(this);
+        return new SearchGourmetResultListFragmentView(this);
     }
 
     @Override
     public void constructorInitialize(BaseActivity activity)
     {
-        setAnalytics(new SearchGourmetCampaignTagListFragmentAnalyticsImpl());
+        setAnalytics(new SearchGourmetResultListFragmentAnalyticsImpl());
 
+        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
 
         initViewModel(activity);
@@ -138,12 +147,45 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         }
 
         mViewModel = ViewModelProviders.of(activity).get(SearchGourmetResultViewModel.class);
+
+        mViewTypeObserver = new Observer<SearchGourmetResultTabPresenter.ViewType>()
+        {
+            @Override
+            public void onChanged(@Nullable SearchGourmetResultTabPresenter.ViewType viewType)
+            {
+                getViewInterface().scrollStop();
+
+                // 이전 타입이 맵이고 리스트로 이동하는 경우 리스트를 재 호출 한다.
+                if (mViewType == SearchGourmetResultTabPresenter.ViewType.MAP && viewType == SearchGourmetResultTabPresenter.ViewType.LIST)
+                {
+                    mNeedToRefresh = true;
+                }
+
+                setViewType(viewType);
+            }
+        };
+
+        mViewModel.setViewTypeObserver(activity, mViewTypeObserver);
+
+        mFilterObserver = new Observer<GourmetFilter>()
+        {
+            @Override
+            public void onChanged(@Nullable GourmetFilter gourmetFilter)
+            {
+                if (mViewType == SearchGourmetResultTabPresenter.ViewType.MAP)
+                {
+                    getViewInterface().setMapViewPagerVisible(false);
+                }
+            }
+        };
+
+        mViewModel.setFilterObserver(activity, mFilterObserver);
     }
 
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (SearchGourmetCampaignTagListFragmentInterface.AnalyticsInterface) analytics;
+        mAnalytics = (SearchGourmetResultListFragmentInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -292,6 +334,9 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         if (mViewModel != null)
         {
+            mViewModel.removeViewTypeObserver(mViewTypeObserver);
+            mViewModel.removeFilterObserver(mFilterObserver);
+
             mViewModel = null;
         }
     }
@@ -319,6 +364,23 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             {
                 onRefresh();
             }
+        }
+
+        if (mEmptyList == false)
+        {
+            getViewInterface().setFloatingActionViewVisible(true);
+            getViewInterface().setFloatingActionViewTypeMapEnabled(true);
+        } else
+        {
+            if (mViewModel.getFilter().isDefault() == true)
+            {
+                getViewInterface().setFloatingActionViewVisible(false);
+            } else
+            {
+                getViewInterface().setFloatingActionViewVisible(true);
+            }
+
+            getViewInterface().setFloatingActionViewTypeMapEnabled(false);
         }
     }
 
@@ -405,10 +467,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             return;
         }
 
-        if (mViewModel.getCommonDateTime() == null//
-            || mViewModel.searchViewModel == null//
+        if (mViewModel.getFilter() == null//
+            || mViewModel.getViewType() == null//
             || mViewModel.getBookDateTime() == null//
-            || mViewModel.getSuggest() == null)
+            || mViewModel.getCommonDateTime() == null)
         {
             setRefresh(false);
             return;
@@ -419,19 +481,17 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         mPage = 1;
 
-        getViewInterface().setEmptyViewVisible(false, mViewModel.getFilter().isDefault() == false);
+        boolean applyFilter = mViewModel.getFilter().isDefault() == false;
 
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
-        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
-        final String DATE_FORMAT = "yyyy-MM-dd";
+        getViewInterface().setEmptyViewVisible(false, applyFilter);
 
-        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).map(new Function<GourmetCampaignTags, List<ObjectItem>>()
+        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(mPage)).map(new Function<Gourmets, Pair<Gourmets, List<ObjectItem>>>()
         {
             @Override
-            public List<ObjectItem> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags gourmetCampaignTags) throws Exception
+            public Pair<Gourmets, List<ObjectItem>> apply(Gourmets gourmets) throws Exception
             {
                 List<ObjectItem> objectItemList = new ArrayList<>();
-                List<Gourmet> gourmetList = gourmetCampaignTags.getGourmetList();
+                List<Gourmet> gourmetList = gourmets.getGourmetList();
 
                 if (gourmetList != null && gourmetList.size() > 0)
                 {
@@ -441,26 +501,54 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     }
                 }
 
-                return objectItemList;
+                return new Pair(gourmets, objectItemList);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Gourmets, List<ObjectItem>>>()
         {
             @Override
-            public void accept(List<ObjectItem> objectItemList) throws Exception
+            public void accept(Pair<Gourmets, List<ObjectItem>> pair) throws Exception
             {
-                int size = objectItemList.size();
+                Gourmets gourmets = pair.first;
+                List<ObjectItem> objectItemList = pair.second;
 
-                if (objectItemList.size() == 0)
+                mViewModel.getFilter().setCategoryMap(gourmets.getCategoryMap());
+
+                int listSize = objectItemList.size();
+
+                if (listSize == 0)
                 {
                     mEmptyList = true;
                     mPage = PAGE_NONE;
 
-                    getFragment().getFragmentEventListener().setEmptyViewVisible(true);
+                    if (applyFilter == true)
+                    {
+                        getViewInterface().setFloatingActionViewVisible(applyFilter);
+                        getViewInterface().setFloatingActionViewTypeMapEnabled(false);
+
+                        getViewInterface().setEmptyViewVisible(false, true);
+                    } else
+                    {
+                        getViewInterface().setFloatingActionViewVisible(false);
+                        getViewInterface().setFloatingActionViewTypeMapEnabled(false);
+
+                        if (mViewModel.isDistanceSort() == true)
+                        {
+                            getViewInterface().setEmptyViewVisible(false, false);
+                        } else
+                        {
+                            getFragment().getFragmentEventListener().setEmptyViewVisible(true);
+                        }
+                    }
                 } else
                 {
                     mEmptyList = false;
 
-                    if (size < MAXIMUM_NUMBER_PER_PAGE)
+                    getViewInterface().setSearchResultCount(gourmets.totalCount, gourmets.searchMaxCount);
+
+                    getViewInterface().setFloatingActionViewVisible(true);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(true);
+
+                    if (listSize < MAXIMUM_NUMBER_PER_PAGE)
                     {
                         mPage = PAGE_FINISH;
 
@@ -471,9 +559,9 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     }
 
                     getFragment().getFragmentEventListener().setEmptyViewVisible(false);
+                    getViewInterface().setEmptyViewVisible(false, applyFilter);
                     getViewInterface().setListLayoutVisible(true);
 
-                    getViewInterface().setSearchResultCount(size);
                     getViewInterface().setList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 
@@ -486,45 +574,12 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                if (throwable instanceof BaseException)
-                {
-                    unLockAll();
+                mMoreRefreshing = false;
+                getViewInterface().setSwipeRefreshing(false);
 
-                    BaseException baseException = (BaseException) throwable;
-
-                    switch (baseException.getCode())
-                    {
-                        case -101: // 조회된 데이터가 없을때
-                            mEmptyList = true;
-                            mPage = PAGE_NONE;
-
-                            getFragment().getFragmentEventListener().setEmptyViewVisible(true);
-                            return;
-
-                        case 200: // 종료된 캠페인 태그
-                            showExpireTagDialog();
-                            return;
-                    }
-                }
-
-                onHandleErrorAndFinish(throwable);
+                onHandleError(throwable);
             }
         }));
-    }
-
-    private void showExpireTagDialog()
-    {
-        getViewInterface().showSimpleDialog(null //
-            , getString(R.string.message_campaign_tag_finished) //
-            , getString(R.string.dialog_btn_text_confirm) //
-            , null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    getFragment().getFragmentEventListener().onFinishAndRefresh();
-                }
-            });
     }
 
     @Override
@@ -546,6 +601,76 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
     @Override
     public void onMoreRefreshing()
     {
+        if (getActivity() == null || getActivity().isFinishing() == true || mViewModel == null || mPage == PAGE_FINISH || mMoreRefreshing == true)
+        {
+            return;
+        }
+
+        if (mViewModel.getFilter() == null//
+            || mViewModel.getViewType() == null//
+            || mViewModel.getBookDateTime() == null//
+            || mViewModel.getCommonDateTime() == null)
+        {
+            return;
+        }
+
+        mMoreRefreshing = true;
+
+        mPage++;
+
+
+        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(mPage)).map(new Function<Gourmets, List<ObjectItem>>()
+        {
+            @Override
+            public List<ObjectItem> apply(Gourmets gourmets) throws Exception
+            {
+                List<ObjectItem> objectItemList = new ArrayList<>();
+                List<Gourmet> gourmetList = gourmets.getGourmetList();
+
+                if (gourmetList != null && gourmetList.size() > 0)
+                {
+                    for (Gourmet gourmet : gourmetList)
+                    {
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmet));
+                    }
+                }
+
+                return objectItemList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
+        {
+            @Override
+            public void accept(List<ObjectItem> objectItemList) throws Exception
+            {
+                int listSize = objectItemList.size();
+
+                if (listSize < MAXIMUM_NUMBER_PER_PAGE)
+                {
+                    mPage = PAGE_FINISH;
+
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                } else
+                {
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                }
+
+                getViewInterface().addList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+
+                mMoreRefreshing = false;
+                getViewInterface().setSwipeRefreshing(false);
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mMoreRefreshing = false;
+                getViewInterface().setSwipeRefreshing(false);
+
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override
@@ -558,7 +683,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         mWishPosition = position;
 
-        // --> 추후에 정리되면 메소드로 수정
         GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
         analyticsParam.price = gourmet.price;
         analyticsParam.discountPrice = gourmet.discountPrice;
@@ -568,8 +692,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         analyticsParam.totalListCount = listCount;
         analyticsParam.isDailyChoice = gourmet.dailyChoice;
         analyticsParam.setAddressAreaName(gourmet.addressSummary);
-
-        // <-- 추후에 정리되면 메소드로 수정
 
         GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
 
@@ -650,10 +772,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             return;
         }
 
-        if (mViewModel.getCommonDateTime() == null//
-            || mViewModel.searchViewModel == null//
+        if (mViewModel.getFilter() == null//
+            || mViewModel.getViewType() == null//
             || mViewModel.getBookDateTime() == null//
-            || mViewModel.getSuggest() == null)
+            || mViewModel.getCommonDateTime() == null)
         {
             return;
         }
@@ -661,33 +783,36 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         lock();
         screenLock(true);
 
-        getViewInterface().setEmptyViewVisible(false, false);
+        boolean applyFilter = mViewModel.getFilter().isDefault() == false;
+
+        getViewInterface().setEmptyViewVisible(false, applyFilter);
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
-        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
-        final String DATE_FORMAT = "yyyy-MM-dd";
-
-        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTags>()
+        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(mPage)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Gourmets>()
         {
             @Override
-            public void accept(GourmetCampaignTags gourmetCampaignTags) throws Exception
+            public void accept(Gourmets gourmets) throws Exception
             {
-                List<Gourmet> gourmetList = gourmetCampaignTags.getGourmetList();
+                List<Gourmet> gourmetList = gourmets.getGourmetList();
 
                 if (gourmetList == null || gourmetList.size() == 0)
                 {
                     mEmptyList = true;
 
-                    getViewInterface().setEmptyViewVisible(true, false);
+                    getViewInterface().setFloatingActionViewVisible(applyFilter);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(false);
+
+                    getViewInterface().setEmptyViewVisible(true, applyFilter);
 
                     unLockAll();
                 } else
                 {
                     mEmptyList = false;
+                    getViewInterface().setFloatingActionViewVisible(true);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
-                    getViewInterface().setEmptyViewVisible(false, false);
+                    getViewInterface().setEmptyViewVisible(false, applyFilter);
                     getViewInterface().setMapLayoutVisible(true);
 
                     getViewInterface().setMapList(gourmetList, true, true, false);
@@ -698,9 +823,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                ExLog.e(throwable.toString());
-
-                mViewModel.setViewType(SearchGourmetResultTabPresenter.ViewType.LIST);
+                onHandleError(throwable);
             }
         }));
     }
@@ -723,10 +846,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     public int compare(Gourmet gourmet1, Gourmet gourmet2)
                     {
                         float[] results1 = new float[3];
-                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet2.longitude, results1);
+                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet1.longitude, results1);
 
                         float[] results2 = new float[3];
-                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet2.longitude, results2);
+                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet2.latitude, gourmet2.longitude, results2);
 
                         return Float.compare(results1[0], results2[0]);
                     }
@@ -819,6 +942,17 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
     }
 
     @Override
+    public void onFilterClick()
+    {
+        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onFilterClick();
+    }
+
+    @Override
     public void onWishClick(int position, Gourmet gourmet)
     {
         if (position < 0 || gourmet == null)
@@ -835,7 +969,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             onChangedWish(position, !currentWish);
         }
 
-        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
     }
 
@@ -880,14 +1014,194 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         getViewInterface().setWish(position, wish);
     }
 
-    private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
+    Map<String, Object> getQueryMap(int page)
     {
-        if (mDailyLocationFactory == null)
+        Map<String, Object> queryMap = new HashMap<>();
+
+        Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mViewModel.getBookDateTime());
+
+        if (bookDateTimeQueryMap != null)
         {
-            mDailyLocationFactory = new DailyLocationExFactory(getActivity());
+            queryMap.putAll(bookDateTimeQueryMap);
         }
 
-        if (mDailyLocationFactory.measuringLocation() == true)
+        Map<String, Object> suggestQueryMap = getSuggestQueryMap(mViewModel.getSuggest(), mViewModel.radius);
+
+        if (suggestQueryMap != null)
+        {
+            queryMap.putAll(suggestQueryMap);
+        }
+
+        Map<String, Object> filterQueryMap = getFilterQueryMap(mViewModel.getFilter());
+
+        if (filterQueryMap != null)
+        {
+            queryMap.putAll(filterQueryMap);
+        }
+
+        // page
+        // limit
+        // 페이지 번호. 0 보다 큰 정수. 값을 입력하지 않으면 페이지네이션을 적용하지 않고 전체 데이터를 반환함
+        if (page > 0)
+        {
+            queryMap.put("page", page);
+            queryMap.put("limit", MAXIMUM_NUMBER_PER_PAGE);
+        }
+
+        // details
+        queryMap.put("details", true);
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getBookDateTimeQueryMap(GourmetBookDateTime gourmetBookDateTime)
+    {
+        if (gourmetBookDateTime == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        queryMap.put("reserveDate", gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getSuggestQueryMap(GourmetSuggestV2 suggest, float radius)
+    {
+        if (suggest == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (suggest.getSuggestType())
+        {
+            case GOURMET:
+            case DIRECT:
+                queryMap.put("term", suggest.getSuggestItem().name);
+                break;
+
+            case LOCATION:
+            {
+                GourmetSuggestV2.Location suggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+
+                queryMap.put("latitude", suggestItem.latitude);
+                queryMap.put("longitude", suggestItem.longitude);
+                queryMap.put("radius", radius);
+                break;
+            }
+
+            case AREA_GROUP:
+            {
+                GourmetSuggestV2.AreaGroup areaGroupSuggestItem = (GourmetSuggestV2.AreaGroup) suggest.getSuggestItem();
+
+                queryMap.put("provinceIdx", areaGroupSuggestItem.index);
+
+                GourmetSuggestV2.Area areaSuggestItem = areaGroupSuggestItem.area;
+
+                if (areaSuggestItem != null)
+                {
+                    queryMap.put("areaIdx", areaSuggestItem.index);
+                }
+                break;
+            }
+        }
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getFilterQueryMap(GourmetFilter gourmetFilter)
+    {
+        if (gourmetFilter == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+        List<Integer> categoryFilterList = gourmetFilter.getCategoryFilter();
+        List<String> amenitiesFilterList = gourmetFilter.getAmenitiesFilter();
+        List<String> timeFilterList = gourmetFilter.getTimeFilter();
+
+        if (categoryFilterList != null && categoryFilterList.size() > 0)
+        {
+            queryMap.put("category", categoryFilterList);
+        }
+
+        if (amenitiesFilterList != null && amenitiesFilterList.size() > 0)
+        {
+            queryMap.put("luxury", amenitiesFilterList);
+        }
+
+        if (timeFilterList != null && timeFilterList.size() > 0)
+        {
+            queryMap.put("timeFrame", timeFilterList);
+        }
+
+        Map<String, Object> sortQueryMap = getSortQueryMap(gourmetFilter.sortType, mViewModel.location);
+
+        if (sortQueryMap != null)
+        {
+            queryMap.putAll(sortQueryMap);
+        }
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getSortQueryMap(GourmetFilter.SortType sortType, Location location)
+    {
+        if (sortType == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (sortType)
+        {
+            case DEFAULT:
+                break;
+
+            case DISTANCE:
+                queryMap.put("sortProperty", "Distance");
+                queryMap.put("sortDirection", "Asc");
+
+                if (location != null)
+                {
+                    queryMap.put("latitude", location.getLatitude());
+                    queryMap.put("longitude", location.getLongitude());
+                }
+                break;
+
+            case LOW_PRICE:
+                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortDirection", "Asc");
+                break;
+
+            case HIGH_PRICE:
+                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortDirection", "Desc");
+                break;
+
+            case SATISFACTION:
+                queryMap.put("sortProperty", "Rating");
+                queryMap.put("sortDirection", "Desc");
+                break;
+        }
+
+        return queryMap;
+    }
+
+    private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
+    {
+        if (mDailyLocationExFactory == null)
+        {
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
+        }
+
+        if (mDailyLocationExFactory.measuringLocation() == true)
         {
             return null;
         }
@@ -907,7 +1221,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             @Override
             protected void subscribeActual(io.reactivex.Observer<? super Location> observer)
             {
-                mDailyLocationFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
                 {
                     @Override
                     public void onRequirePermission()
@@ -930,7 +1244,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     @Override
                     public void onProviderEnabled()
                     {
-                        mDailyLocationFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
                         {
                             @Override
                             public void onFailed()
@@ -949,7 +1263,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                             {
                                 unLockAll();
 
-                                mDailyLocationFactory.stopLocationMeasure();
+                                mDailyLocationExFactory.stopLocationMeasure();
 
                                 if (location == null)
                                 {
