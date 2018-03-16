@@ -27,10 +27,9 @@ public class SearchGourmetResultViewModel extends ViewModel
     private CommonDateTime mCommonDateTime;
 
     private MutableLiveData<SearchGourmetResultTabPresenter.ViewType> mViewType = new MutableLiveData<>();
-    private MutableLiveData<GourmetFilter> mFilter = new MutableLiveData<>();
 
-    public Location location;
-    public float radius;
+    private MutableLiveData<GourmetFilter> mFilter = new MutableLiveData<>();
+    public Location filterLocation;
 
     static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
     {

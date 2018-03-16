@@ -54,7 +54,7 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
             gourmetMapCardView.setPriceText(gourmet.discountRate, gourmet.discountPrice, gourmet.price, gourmet.couponDiscountText);
         }
 
-        gourmetMapCardView.setReviewText(gourmet.satisfaction);
+        gourmetMapCardView.setReviewText(gourmet.rating);
 
         if (DailyTextUtils.isTextEmpty(gourmet.subCategory) == false)
         {

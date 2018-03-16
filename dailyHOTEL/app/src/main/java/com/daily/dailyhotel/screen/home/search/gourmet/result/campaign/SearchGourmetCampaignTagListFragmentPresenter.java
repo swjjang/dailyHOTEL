@@ -95,7 +95,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
     //
     int mWishPosition;
     boolean mEmptyList; // 목록, 맵이 비어있는지 확인
-
     DailyLocationExFactory mDailyLocationFactory;
 
     public SearchGourmetCampaignTagListFragmentPresenter(@NonNull SearchGourmetCampaignTagListFragment fragment)
@@ -558,7 +557,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         mWishPosition = position;
 
-        // --> 추후에 정리되면 메소드로 수정
         GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
         analyticsParam.price = gourmet.price;
         analyticsParam.discountPrice = gourmet.discountPrice;
@@ -568,8 +566,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         analyticsParam.totalListCount = listCount;
         analyticsParam.isDailyChoice = gourmet.dailyChoice;
         analyticsParam.setAddressAreaName(gourmet.addressSummary);
-
-        // <-- 추후에 정리되면 메소드로 수정
 
         GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
 
@@ -723,10 +719,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     public int compare(Gourmet gourmet1, Gourmet gourmet2)
                     {
                         float[] results1 = new float[3];
-                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet2.longitude, results1);
+                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet1.longitude, results1);
 
                         float[] results2 = new float[3];
-                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet1.latitude, gourmet2.longitude, results2);
+                        Location.distanceBetween(gourmet.latitude, gourmet.longitude, gourmet2.latitude, gourmet2.longitude, results2);
 
                         return Float.compare(results1[0], results2[0]);
                     }
@@ -836,7 +832,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
-            , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
+            , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
     }
 
     void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)

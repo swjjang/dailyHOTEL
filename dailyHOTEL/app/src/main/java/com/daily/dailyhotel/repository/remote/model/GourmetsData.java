@@ -1,10 +1,14 @@
 package com.daily.dailyhotel.repository.remote.model;
 
+import android.content.Context;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.Gourmets;
+import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +36,10 @@ public class GourmetsData
     @JsonField(name = "filter")
     public Filter filter;
 
-    public Gourmets getGourmets()
+    @JsonField(name = "stickers")
+    public List<StickerData> stickerList;
+
+    public Gourmets getGourmets(Context context)
     {
         Gourmets gourmets = new Gourmets();
 
@@ -43,17 +50,27 @@ public class GourmetsData
         {
             List<Gourmet> gourmetList = new ArrayList<>();
 
+            boolean lowDpi = false;
+
+            if (ScreenUtils.getScreenWidth(context) <= Sticker.DEFAULT_SCREEN_WIDTH)
+            {
+                lowDpi = true;
+            }
+
             for (GourmetData gourmetData : gourmetDataList)
             {
-                gourmetList.add(gourmetData.getGourmet(imageUrl));
+                Gourmet gourmet = gourmetData.getGourmet(imageUrl);
+                gourmet.stickerUrl = getStickerUrl(gourmet.stickerIndex, stickerList, lowDpi);
+
+                gourmetList.add(gourmet);
             }
 
             gourmets.setGourmetList(gourmetList);
         }
 
-        if(filter != null)
+        if (filter != null)
         {
-
+            gourmets.setCategoryMap(filter.getCategory());
         }
 
         return gourmets;
@@ -103,5 +120,41 @@ public class GourmetsData
 
             return category;
         }
+    }
+
+    @JsonObject
+    static class StickerData
+    {
+        @JsonField(name = "idx")
+        public int index;
+
+        @JsonField(name = "defaultImageUrl")
+        public String defaultImageUrl;
+
+        @JsonField(name = "lowResolutionImageUrl")
+        public String lowResolutionImageUrl;
+
+        public StickerData()
+        {
+
+        }
+    }
+
+    private String getStickerUrl(int index, List<StickerData> stickerList, boolean lowDpi)
+    {
+        if (index < 0 || stickerList == null || stickerList.size() == 0)
+        {
+            return null;
+        }
+
+        for (StickerData sticker : stickerList)
+        {
+            if (sticker.index == index)
+            {
+                return lowDpi ? sticker.lowResolutionImageUrl : sticker.defaultImageUrl;
+            }
+        }
+
+        return null;
     }
 }

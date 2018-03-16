@@ -202,7 +202,6 @@ public class GourmetSalesData
         gourmet.pricePerPerson = pricePerPerson;
         gourmet.startEatingTime = startEatingTime;
         gourmet.ticketIdx = ticketIdx;
-
         gourmet.reviewCount = reviewCount;
         gourmet.discountRate = discountRate;
         gourmet.newItem = newItem;
@@ -250,9 +249,8 @@ public class GourmetSalesData
         gourmet.soldOut = availableTicketNumbers == 0 || availableTicketNumbers < minimumOrderQuantity || isExpired;
         gourmet.persons = persons;
         gourmet.category = category;
-        gourmet.categoryCode = categoryCode;
         gourmet.subCategory = subCategory;
-        gourmet.satisfaction = rating;
+        gourmet.rating = rating;
         gourmet.distance = distance;
         gourmet.trueVR = isTrueVr;
         gourmet.stickerIndex = stickerIdx;

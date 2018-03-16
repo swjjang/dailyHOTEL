@@ -104,7 +104,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
     //
     int mWishPosition;
     boolean mEmptyList; // 목록, 맵이 비어있는지 확인
-    DailyLocationExFactory mDailyLocationExFactory;
+    DailyLocationExFactory mDailyLocationFactory;
 
     public SearchGourmetResultListFragmentPresenter(@NonNull SearchGourmetResultListFragment fragment)
     {
@@ -468,6 +468,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }
 
         if (mViewModel.getFilter() == null//
+            || mViewModel.searchViewModel == null//
             || mViewModel.getViewType() == null//
             || mViewModel.getBookDateTime() == null//
             || mViewModel.getCommonDateTime() == null)
@@ -513,9 +514,9 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
                 mViewModel.getFilter().setCategoryMap(gourmets.getCategoryMap());
 
-                int listSize = objectItemList.size();
+                int size = objectItemList.size();
 
-                if (listSize == 0)
+                if (size == 0)
                 {
                     mEmptyList = true;
                     mPage = PAGE_NONE;
@@ -548,7 +549,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setFloatingActionViewVisible(true);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
-                    if (listSize < MAXIMUM_NUMBER_PER_PAGE)
+                    if (size < MAXIMUM_NUMBER_PER_PAGE)
                     {
                         mPage = PAGE_FINISH;
 
@@ -562,6 +563,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setEmptyViewVisible(false, applyFilter);
                     getViewInterface().setListLayoutVisible(true);
 
+                    getViewInterface().setSearchResultCount(size, MAXIMUM_NUMBER_PER_PAGE);
                     getViewInterface().setList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 
@@ -607,6 +609,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }
 
         if (mViewModel.getFilter() == null//
+            || mViewModel.searchViewModel == null//
             || mViewModel.getViewType() == null//
             || mViewModel.getBookDateTime() == null//
             || mViewModel.getCommonDateTime() == null)
@@ -617,7 +620,6 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         mMoreRefreshing = true;
 
         mPage++;
-
 
         addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(mPage)).map(new Function<Gourmets, List<ObjectItem>>()
         {
@@ -773,6 +775,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }
 
         if (mViewModel.getFilter() == null//
+            || mViewModel.searchViewModel == null//
             || mViewModel.getViewType() == null//
             || mViewModel.getBookDateTime() == null//
             || mViewModel.getCommonDateTime() == null)
@@ -815,7 +818,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setEmptyViewVisible(false, applyFilter);
                     getViewInterface().setMapLayoutVisible(true);
 
-                    getViewInterface().setMapList(gourmetList, true, true, false);
+                    getViewInterface().setMapList(gourmetList, true, true);
                 }
             }
         }, new Consumer<Throwable>()
@@ -824,6 +827,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             public void accept(Throwable throwable) throws Exception
             {
                 onHandleError(throwable);
+
+                mViewModel.setViewType(SearchGourmetResultTabPresenter.ViewType.LIST);
             }
         }));
     }
@@ -969,8 +974,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             onChangedWish(position, !currentWish);
         }
 
-        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
-            , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
+            , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
     }
 
     void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)
@@ -999,7 +1004,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
                 // mPage == PAGE_NONE은 현재 호출된 목록이 없다. 진입을 바로 맵으로 했다.
                 // show가 되면 onMapReady() 가 호출 되어서 자동 갱신된다.
-                getViewInterface().showMapLayout(getFragment().getChildFragmentManager(), mPage == PAGE_NONE);
+                getViewInterface().setMapLayoutVisible(mPage != PAGE_NONE);
+                getViewInterface().showMapLayout(getFragment().getChildFragmentManager());
                 break;
         }
     }
@@ -1025,7 +1031,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             queryMap.putAll(bookDateTimeQueryMap);
         }
 
-        Map<String, Object> suggestQueryMap = getSuggestQueryMap(mViewModel.getSuggest(), mViewModel.radius);
+        Map<String, Object> suggestQueryMap = getSuggestQueryMap(mViewModel.getSuggest(), mViewModel.searchViewModel.radius);
 
         if (suggestQueryMap != null)
         {
@@ -1140,7 +1146,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             queryMap.put("timeFrame", timeFilterList);
         }
 
-        Map<String, Object> sortQueryMap = getSortQueryMap(gourmetFilter.sortType, mViewModel.location);
+        Map<String, Object> sortQueryMap = getSortQueryMap(gourmetFilter.sortType, mViewModel.filterLocation);
 
         if (sortQueryMap != null)
         {
@@ -1196,12 +1202,12 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
     private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
     {
-        if (mDailyLocationExFactory == null)
+        if (mDailyLocationFactory == null)
         {
-            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
+            mDailyLocationFactory = new DailyLocationExFactory(getActivity());
         }
 
-        if (mDailyLocationExFactory.measuringLocation() == true)
+        if (mDailyLocationFactory.measuringLocation() == true)
         {
             return null;
         }
@@ -1221,7 +1227,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             @Override
             protected void subscribeActual(io.reactivex.Observer<? super Location> observer)
             {
-                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
+                mDailyLocationFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
                 {
                     @Override
                     public void onRequirePermission()
@@ -1244,7 +1250,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     @Override
                     public void onProviderEnabled()
                     {
-                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
+                        mDailyLocationFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
                         {
                             @Override
                             public void onFailed()
@@ -1263,7 +1269,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                             {
                                 unLockAll();
 
-                                mDailyLocationExFactory.stopLocationMeasure();
+                                mDailyLocationFactory.stopLocationMeasure();
 
                                 if (location == null)
                                 {

@@ -234,7 +234,7 @@ public class SearchGourmetCampaignTagListAdapter extends RecyclerView.Adapter<Re
 
         holder.cardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
         holder.cardView.setVRVisible(gourmet.trueVR && mTrueVREnabled);
-        holder.cardView.setReviewText(gourmet.satisfaction, gourmet.reviewCount);
+        holder.cardView.setReviewText(gourmet.rating, gourmet.reviewCount);
         holder.cardView.setNewVisible(gourmet.newItem);
         holder.cardView.setGourmetNameText(gourmet.name);
 

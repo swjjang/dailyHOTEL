@@ -36,7 +36,8 @@ public class GourmetSuggestV2
         RECENTLY_SEARCH,
         RECENTLY_GOURMET,
         SUGGEST,
-        CAMPAIGN_TAG
+        CAMPAIGN_TAG,
+        REGION_LOCATION // 지역목록에서 내 주변으로 검색 할 경우
     }
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용

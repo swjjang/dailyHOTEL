@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.GourmetFilter;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -15,6 +17,8 @@ import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;

@@ -66,6 +66,113 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
         initMapLayout(viewDataBinding);
     }
 
+    private void initListLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                getEventListener().onSwipeRefreshing();
+            }
+        });
+
+        viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (getViewDataBinding().swipeRefreshLayout.isRefreshing() == true)
+                {
+                    return;
+                }
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                // SwipeRefreshLayout
+                if (dy <= 0)
+                {
+                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (firstVisibleItem == 0)
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
+                    } else
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
+                    }
+                } else
+                {
+                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    int itemCount = linearLayoutManager.getItemCount();
+
+                    if (lastVisibleItemPosition > itemCount * 2 / 3)
+                    {
+                        getEventListener().onMoreRefreshing();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+            }
+        });
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
+    }
+
+    private void initMapLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.mapViewPager.setOffscreenPageLimit(2);
+        viewDataBinding.mapViewPager.setClipToPadding(false);
+        viewDataBinding.mapViewPager.setPageMargin(ScreenUtils.dpToPx(getContext(), VIEWPAGER_PAGE_MARGIN_DP));
+        viewDataBinding.mapViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        viewDataBinding.mapViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+                if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
+                {
+                    return;
+                }
+
+                Gourmet gourmet = mViewPagerAdapter.getItem(position);
+
+                if (gourmet != null)
+                {
+                    mMapFragment.setSelectedMarker(gourmet);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+
+            }
+        });
+
+        viewDataBinding.mapViewPager.setVisibility(View.GONE);
+    }
+
     @Override
     public void setSearchResultCount(int count)
     {
@@ -295,42 +402,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
             getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
             getViewDataBinding().mapLayout.setVisibility(View.GONE);
             getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
-
-            if (applyFilter == true)
-            {
-                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_gourmet_filter_empty_message01), getString(R.string.message_changing_filter_option));
-                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                    }
-                });
-
-                getViewDataBinding().emptyView.setButton02(false, null, null);
-                getViewDataBinding().emptyView.setBottomMessageVisible(false);
-            } else
-            {
-                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_gourmet_empty_message01), getString(R.string.message_gourmet_empty_message02));
-                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_stay_category_change_region), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                    }
-                });
-
-                getViewDataBinding().emptyView.setButton02(true, getString(R.string.label_stay_category_change_date), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                    }
-                });
-
-                getViewDataBinding().emptyView.setBottomMessageVisible(true);
-                getViewDataBinding().emptyView.setOnCallClickListener(v -> getEventListener().onCallClick());
-            }
         }
     }
 
@@ -741,113 +812,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
         }
 
         mFloatingActionView.setViewOptionMapEnabled(enabled);
-    }
-
-    private void initListLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                getEventListener().onSwipeRefreshing();
-            }
-        });
-
-        viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (getViewDataBinding().swipeRefreshLayout.isRefreshing() == true)
-                {
-                    return;
-                }
-
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                // SwipeRefreshLayout
-                if (dy <= 0)
-                {
-                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-
-                    if (firstVisibleItem == 0)
-                    {
-                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
-                    } else
-                    {
-                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
-                    }
-                } else
-                {
-                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                    int itemCount = linearLayoutManager.getItemCount();
-
-                    if (lastVisibleItemPosition > itemCount * 2 / 3)
-                    {
-                        getEventListener().onMoreRefreshing();
-                    }
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-            }
-        });
-
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
-    }
-
-    private void initMapLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.mapViewPager.setOffscreenPageLimit(2);
-        viewDataBinding.mapViewPager.setClipToPadding(false);
-        viewDataBinding.mapViewPager.setPageMargin(ScreenUtils.dpToPx(getContext(), VIEWPAGER_PAGE_MARGIN_DP));
-        viewDataBinding.mapViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        viewDataBinding.mapViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-                if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
-                {
-                    return;
-                }
-
-                Gourmet gourmet = mViewPagerAdapter.getItem(position);
-
-                if (gourmet != null)
-                {
-                    mMapFragment.setSelectedMarker(gourmet);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-
-            }
-        });
-
-        viewDataBinding.mapViewPager.setVisibility(View.GONE);
     }
 
     private void showViewPagerAnimation()

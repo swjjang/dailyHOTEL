@@ -20,15 +20,21 @@ public interface SearchGourmetResultTabInterface
 
         void setFloatingActionViewVisible(boolean visible);
 
+        void setOptionFilterSelected(boolean selected);
+
         Observable<BasePagerFragment> setCampaignTagFragment();
 
-        Observable<Boolean> setSearchResultFragment();
+        Observable<BasePagerFragment> setSearchResultFragment();
 
         void setEmptyViewVisible(boolean visible);
 
         void setEmptyViewCampaignTagVisible(boolean visible);
 
         void setEmptyViewCampaignTag(String title, List<CampaignTag> campaignTagList);
+
+        boolean onFragmentBackPressed();
+
+        void refreshCurrentFragment();
     }
 
     interface OnEventListener extends OnBaseEventListener
@@ -36,6 +42,10 @@ public interface SearchGourmetResultTabInterface
         void onResearchClick();
 
         void onFinishAndRefresh();
+
+        void onViewTypeClick();
+
+        void onFilterClick();
 
         void onChangedRadius(float radius);
 

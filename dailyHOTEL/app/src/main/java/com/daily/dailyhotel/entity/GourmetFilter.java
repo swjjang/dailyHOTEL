@@ -88,6 +88,16 @@ public class GourmetFilter
         mFlagCategoryFilterMap.remove(category.name);
     }
 
+    public Map<String, Integer> getCategoryFilterMap()
+    {
+        return mFlagCategoryFilterMap;
+    }
+
+    public Map<String, Category> getCategoryMap()
+    {
+        return mCategoryMap;
+    }
+
     public boolean isDefault()
     {
         return (sortType == defaultSortType//

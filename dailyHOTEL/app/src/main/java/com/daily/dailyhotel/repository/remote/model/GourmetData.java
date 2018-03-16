@@ -4,15 +4,12 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Gourmet;
-import com.daily.dailyhotel.entity.Stay;
+import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by android_sam on 2017. 6. 15..
- */
 @JsonObject
 public class GourmetData
 {
@@ -27,6 +24,9 @@ public class GourmetData
 
     @JsonField(name = "imgPathMain")
     public Map<String, Object> imgPathMain;
+
+    @JsonField(name = "availableTicketNumbers")
+    public int availableTicketNumbers;
 
     @JsonField(name = "name")
     public String name;
@@ -61,6 +61,18 @@ public class GourmetData
     @JsonField(name = "isDailyChoice")
     public boolean isDailyChoice;
 
+    @JsonField(name = "isExpired")
+    public boolean isExpired;
+
+    @JsonField(name = "minimumOrderQuantity")
+    public int minimumOrderQuantity;
+
+    @JsonField(name = "persons")
+    public int persons;
+
+    @JsonField(name = "isSoldOut")
+    public boolean isSoldOut;
+
     @JsonField(name = "distance")
     public int distance;
 
@@ -87,11 +99,54 @@ public class GourmetData
 
     public Gourmet getGourmet(String imageUrl)
     {
+        Gourmet gourmet = new Gourmet();
+        gourmet.index = index;
+        gourmet.imageUrl = imageUrl + getImagePath(imgPathMain);
+        gourmet.name = name;
+        gourmet.price = price;
+        gourmet.discountPrice = discount;
 
-        return null;
+        // 인트라넷에서 값을 잘못 넣는 경우가 있다.
+        if (DailyTextUtils.isTextEmpty(addrSummary) == false)
+        {
+            if (addrSummary.indexOf('|') >= 0)
+            {
+                addrSummary = addrSummary.replace(" | ", "ㅣ");
+            } else if (addrSummary.indexOf('l') >= 0)
+            {
+                addrSummary = addrSummary.replace(" l ", "ㅣ");
+            }
+        }
+
+        gourmet.addressSummary = addrSummary;
+        gourmet.latitude = latitude;
+        gourmet.longitude = longitude;
+        gourmet.dailyChoice = isDailyChoice;
+        gourmet.soldOut = availableTicketNumbers == 0 || availableTicketNumbers < minimumOrderQuantity || isExpired;
+        gourmet.rating = rating;
+        gourmet.districtName = districtName;
+//        gourmet.entryPosition;
+        gourmet.trueVR = truevr;
+//        gourmet.stickerUrl;
+        gourmet.stickerIndex = stickerIdx;
+        gourmet.reviewCount = reviewCount;
+        gourmet.discountRate = discountRate;
+        gourmet.newItem = newItem;
+        gourmet.myWish = myWish;
+        gourmet.couponDiscountText = couponDiscountText;
+        gourmet.dBenefitText = benefit;
+        gourmet.distance = distance;
+        gourmet.category = category;
+        gourmet.subCategory = categorySub;
+        gourmet.persons = persons;
+        gourmet.grade =com.daily.dailyhotel.entity.Gourmet.Grade.gourmet;
+        gourmet.regionName = regionName;
+//        gourmet.createdWishDateTime; // ISO-8601 위시 등록 시간
+
+        return gourmet;
     }
 
-    private String getImagePath(Map<String, Object> imgPathMain)
+    private String getImagePath(Map<String, Object> lowDpi)
     {
         if (imgPathMain == null || imgPathMain.size() == 0)
         {

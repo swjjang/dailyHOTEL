@@ -43,36 +43,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbarUnderLineView"/>
 
-        <RelativeLayout
-            android:id="@+id/searchLocationLayout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarUnderLineView">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/progressBarTextView"
-                android:layout_centerHorizontal="true"
-                android:indeterminate="true"
-                android:indeterminateOnly="true"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/progressBarTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="12dp"
-                android:text="@string/label_searching_around_location"
-                android:textColor="@color/default_text_cb4b4b4"
-                android:textSize="12dp"/>
-        </RelativeLayout>
-
         <com.daily.dailyhotel.view.DailyFloatingActionView
             android:id="@+id/floatingActionView"
             android:layout_width="wrap_content"

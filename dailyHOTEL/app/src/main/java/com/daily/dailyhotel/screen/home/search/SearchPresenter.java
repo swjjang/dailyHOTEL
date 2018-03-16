@@ -1174,16 +1174,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             GourmetBookDateTime gourmetBookDateTime = mSearchModel.gourmetViewModel.getBookDateTime();
             GourmetSuggestV2 suggest = mSearchModel.gourmetViewModel.suggest.getValue();
 
-            if (suggest.menuType == GourmetSuggestV2.MenuType.CAMPAIGN_TAG && suggest.isCampaignTagSuggestType() == true)
-            {
-                startGourmetCampaignTag(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
-            } else
-            {
-                startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
-                    , gourmetBookDateTime.getGourmetBookingDay()//
-                    , mSearchModel.gourmetViewModel.inputKeyword, mSearchModel.gourmetViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
-                    , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
-            }
+            startSearchGourmetResultTab(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mSearchModel.gourmetViewModel.inputKeyword);
 
             mAnalytics.onEventGourmetDoSearch(getActivity(), mSearchModel.gourmetViewModel.suggest.getValue());
         } catch (Exception e)
@@ -1445,14 +1437,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
-    void startGourmetCampaignTag(GourmetSuggestV2 suggest, String visitDateTime)
+    void startSearchGourmetResultTab(GourmetSuggestV2 suggest, String visitDateTime, String inputKeyword)
     {
         if (suggest == null || DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
             return;
         }
 
-        startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), visitDateTime, suggest, null)//
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), visitDateTime, suggest, inputKeyword)//
             , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
     }
 

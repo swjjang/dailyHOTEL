@@ -80,7 +80,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
                 {
                     if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        gourmets = baseDto.data.getGourmets();
+                        gourmets = baseDto.data.getGourmets(mContext);
                     } else
                     {
                         throw new BaseException(baseDto.msgCode, baseDto.msg);

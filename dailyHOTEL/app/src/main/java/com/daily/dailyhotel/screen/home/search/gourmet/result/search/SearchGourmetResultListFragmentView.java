@@ -4,6 +4,7 @@ package com.daily.dailyhotel.screen.home.search.gourmet.result.search;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -16,7 +17,6 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurFragmentView;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.list.map.GourmetMapFragment;
 import com.daily.dailyhotel.screen.home.gourmet.list.map.GourmetMapViewPagerAdapter;
@@ -26,7 +26,6 @@ import com.daily.dailyhotel.view.DailyGourmetMapCardView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentSearchGourmetResultDataBinding;
-import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.List;
@@ -66,12 +65,132 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
 
         initListLayout(viewDataBinding);
         initMapLayout(viewDataBinding);
+        initLocationProgressBarLayout(viewDataBinding);
+    }
+
+    private void initListLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                getEventListener().onSwipeRefreshing();
+            }
+        });
+
+        viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (getViewDataBinding().swipeRefreshLayout.isRefreshing() == true)
+                {
+                    return;
+                }
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                // SwipeRefreshLayout
+                if (dy <= 0)
+                {
+                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (firstVisibleItem == 0)
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
+                    } else
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
+                    }
+                } else
+                {
+                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    int itemCount = linearLayoutManager.getItemCount();
+
+                    if (lastVisibleItemPosition > itemCount * 2 / 3)
+                    {
+                        getEventListener().onMoreRefreshing();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+            }
+        });
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
+    }
+
+    private void initMapLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.mapViewPager.setOffscreenPageLimit(2);
+        viewDataBinding.mapViewPager.setClipToPadding(false);
+        viewDataBinding.mapViewPager.setPageMargin(ScreenUtils.dpToPx(getContext(), VIEWPAGER_PAGE_MARGIN_DP));
+        viewDataBinding.mapViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        viewDataBinding.mapViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+                if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
+                {
+                    return;
+                }
+
+                Gourmet gourmet = mViewPagerAdapter.getItem(position);
+
+                if (gourmet != null)
+                {
+                    mMapFragment.setSelectedMarker(gourmet);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+
+            }
+        });
+
+        viewDataBinding.mapViewPager.setVisibility(View.GONE);
+    }
+
+    private void initLocationProgressBarLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
+
+        setLocationProgressBarVisible(false);
     }
 
     @Override
     public void setSearchResultCount(int count, int maxCount)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -355,6 +474,7 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
         }
 
         getViewDataBinding().swipeRefreshLayout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        getViewDataBinding().countTextView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -369,7 +489,18 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
     }
 
     @Override
-    public void showMapLayout(FragmentManager fragmentManager, boolean hide)
+    public void setLocationProgressBarVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().progressBarLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showMapLayout(FragmentManager fragmentManager)
     {
         if (getViewDataBinding() == null || fragmentManager == null)
         {
@@ -377,7 +508,6 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
         }
 
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
-        getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
         if (mMapFragment == null)
         {
@@ -423,28 +553,6 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
         }
 
         fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mMapFragment).commitAllowingStateLoss();
-
-        //        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
-        //        {
-        //            @Override
-        //            public boolean onTouch(View v, MotionEvent event)
-        //            {
-        //                switch (event.getAction())
-        //                {
-        //                    case MotionEvent.ACTION_DOWN:
-        //                        mPossibleLoadingListByMap = false;
-        //
-        //                        getEventListener().onClearChangedLocation();
-        //                        break;
-        //
-        //                    case MotionEvent.ACTION_UP:
-        //                        mPossibleLoadingListByMap = true;
-        //                        break;
-        //                }
-        //
-        //                return false;
-        //            }
-        //        });
     }
 
     @Override
@@ -477,14 +585,12 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
     }
 
     @Override
-    public void setMapList(List<Gourmet> gourmetList, boolean moveCameraBounds, boolean clear, boolean hide)
+    public void setMapList(List<Gourmet> gourmetList, boolean moveCameraBounds, boolean clear)
     {
         if (getViewDataBinding() == null || mMapFragment == null)
         {
             return;
         }
-
-        getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
         mMapFragment.setList(gourmetList, moveCameraBounds, clear);
 
@@ -582,113 +688,6 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
         }
 
         mFloatingActionView.setViewOptionMapEnabled(enabled);
-    }
-
-    private void initListLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                getEventListener().onSwipeRefreshing();
-            }
-        });
-
-        viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (getViewDataBinding().swipeRefreshLayout.isRefreshing() == true)
-                {
-                    return;
-                }
-
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                // SwipeRefreshLayout
-                if (dy <= 0)
-                {
-                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-
-                    if (firstVisibleItem == 0)
-                    {
-                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
-                    } else
-                    {
-                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
-                    }
-                } else
-                {
-                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                    int itemCount = linearLayoutManager.getItemCount();
-
-                    if (lastVisibleItemPosition > itemCount * 2 / 3)
-                    {
-                        getEventListener().onMoreRefreshing();
-                    }
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-            }
-        });
-
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
-    }
-
-    private void initMapLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.mapViewPager.setOffscreenPageLimit(2);
-        viewDataBinding.mapViewPager.setClipToPadding(false);
-        viewDataBinding.mapViewPager.setPageMargin(ScreenUtils.dpToPx(getContext(), VIEWPAGER_PAGE_MARGIN_DP));
-        viewDataBinding.mapViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        viewDataBinding.mapViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-                if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
-                {
-                    return;
-                }
-
-                Gourmet gourmet = mViewPagerAdapter.getItem(position);
-
-                if (gourmet != null)
-                {
-                    mMapFragment.setSelectedMarker(gourmet);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-
-            }
-        });
-
-        viewDataBinding.mapViewPager.setVisibility(View.GONE);
     }
 
     private void showViewPagerAnimation()

@@ -16,7 +16,7 @@ public class Gourmet
     public double longitude;
     public boolean dailyChoice;
     public boolean soldOut;
-    public int satisfaction;
+    public int rating;
     public String districtName;
     public int entryPosition;
     public boolean trueVR;
@@ -32,7 +32,6 @@ public class Gourmet
 
     public String dBenefitText;
     public double distance;
-    public int categoryCode;
     public String category;
     public String subCategory;
     public int persons;
@@ -88,24 +87,20 @@ public class Gourmet
         gourmet.longitude = longitude;
         gourmet.isDailyChoice = dailyChoice;
         gourmet.isSoldOut = soldOut;
-        gourmet.satisfaction = satisfaction;
+        gourmet.satisfaction = rating;
         gourmet.districtName = districtName;
         gourmet.entryPosition = entryPosition;
         gourmet.truevr = trueVR;
         gourmet.stickerUrl = stickerUrl;
         gourmet.stickerIndex = stickerIndex;
-
-        // 신규 추가
         gourmet.reviewCount = reviewCount;
         gourmet.discountRate = discountRate;
         gourmet.newItem = newItem;
         gourmet.myWish = myWish;
         gourmet.couponDiscountText = couponDiscountText;
-
         gourmet.dBenefitText = dBenefitText;
         gourmet.persons = persons;
         gourmet.category = category;
-        gourmet.categoryCode = categoryCode;
         gourmet.subCategory = subCategory;
         gourmet.distance = distance;
         gourmet.regionName = regionName;

@@ -47,12 +47,14 @@ public interface SearchGourmetResultListFragmentInterface
 
         void setMapLayoutVisible(boolean visible);
 
+        void setLocationProgressBarVisible(boolean visible);
+
         // 원래 Fragment는 Activity에서 등록이 되어야 하는데 SupportMapFragment는 View로 취급하기로 한다.
-        void showMapLayout(FragmentManager fragmentManager, boolean hide);
+        void showMapLayout(FragmentManager fragmentManager);
 
         void hideMapLayout(FragmentManager fragmentManager);
 
-        void setMapList(List<Gourmet> gourmetList, boolean moveCameraBounds, boolean clear, boolean hide);
+        void setMapList(List<Gourmet> gourmetList, boolean moveCameraBounds, boolean clear);
 
         void setWish(int position, boolean wish);
 
@@ -67,6 +69,7 @@ public interface SearchGourmetResultListFragmentInterface
         void setFloatingActionViewVisible(boolean visible);
 
         void setFloatingActionViewTypeMapEnabled(boolean enabled);
+
     }
 
     interface OnEventListener extends OnBaseEventListener

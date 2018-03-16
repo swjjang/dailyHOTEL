@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.search.gourmet.result;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.campaign.SearchGourmetCampaignTagListFragment;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.search.SearchGourmetResultListFragment;
+import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.daily.dailyhotel.view.DailySearchResultEmptyView;
 import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.twoheart.dailyhotel.R;
@@ -25,6 +28,7 @@ import io.reactivex.functions.Function;
 
 public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResultTabInterface.OnEventListener, ActivitySearchGourmetResultTabDataBinding> implements SearchGourmetResultTabInterface.ViewInterface
 {
+    private BaseFragmentPagerAdapter<BasePagerFragment> mFragmentPagerAdapter;
     private RadiusArrayAdapter mRadiusArrayAdapter;
 
     public SearchGourmetResultTabView(BaseActivity baseActivity, SearchGourmetResultTabInterface.OnEventListener listener)
@@ -42,6 +46,11 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
 
         initToolbar(viewDataBinding);
         initEmptyView(viewDataBinding);
+
+        getViewDataBinding().viewPager.setOffscreenPageLimit(1);
+
+        viewDataBinding.floatingActionView.setOnViewOptionClickListener(v -> getEventListener().onViewTypeClick());
+        viewDataBinding.floatingActionView.setOnFilterOptionClickListener(v -> getEventListener().onFilterClick());
     }
 
     @Override
@@ -162,7 +171,21 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     @Override
     public void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        switch (viewType)
+        {
+            case LIST:
+                getViewDataBinding().floatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
+                break;
+
+            case MAP:
+                getViewDataBinding().floatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
+                break;
+        }
     }
 
     @Override
@@ -188,13 +211,22 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     }
 
     @Override
+    public void setOptionFilterSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().floatingActionView.setFilterOptionSelected(selected);
+    }
+
+    @Override
     public Observable<BasePagerFragment> setCampaignTagFragment()
     {
-        getViewDataBinding().viewPager.setOffscreenPageLimit(1);
-        getViewDataBinding().viewPager.setAdapter(null);
-        getViewDataBinding().viewPager.removeAllViews();
+        clearViewPager();
 
-        BaseFragmentPagerAdapter fragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
+        mFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
         BasePagerFragment basePagerFragment = new SearchGourmetCampaignTagListFragment();
         basePagerFragment.setOnFragmentEventListener(new SearchGourmetCampaignTagListFragment.OnEventListener()
         {
@@ -217,8 +249,8 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
             }
         });
 
-        fragmentPagerAdapter.addFragment(basePagerFragment);
-        getViewDataBinding().viewPager.setAdapter(fragmentPagerAdapter);
+        mFragmentPagerAdapter.addFragment(basePagerFragment);
+        getViewDataBinding().viewPager.setAdapter(mFragmentPagerAdapter);
 
         return basePagerFragment.getCompleteCreatedObservable().map(new Function()
         {
@@ -231,9 +263,61 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     }
 
     @Override
-    public Observable<Boolean> setSearchResultFragment()
+    public Observable<BasePagerFragment> setSearchResultFragment()
     {
-        return null;
+        clearViewPager();
+
+        mFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
+        BasePagerFragment basePagerFragment = new SearchGourmetResultListFragment();
+        basePagerFragment.setOnFragmentEventListener(new SearchGourmetResultListFragment.OnEventListener()
+        {
+            @Override
+            public void setEmptyViewVisible(boolean visible)
+            {
+                getEventListener().setEmptyViewVisible(visible);
+            }
+
+            @Override
+            public void onResearchClick()
+            {
+                getEventListener().onResearchClick();
+            }
+
+            @Override
+            public void onFilterClick()
+            {
+                getEventListener().onFilterClick();
+            }
+        });
+
+        mFragmentPagerAdapter.addFragment(basePagerFragment);
+        getViewDataBinding().viewPager.setAdapter(mFragmentPagerAdapter);
+
+        return basePagerFragment.getCompleteCreatedObservable().map(new Function()
+        {
+            @Override
+            public BasePagerFragment apply(Object o) throws Exception
+            {
+                return basePagerFragment;
+            }
+        });
+    }
+
+    private void clearViewPager()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().viewPager.setAdapter(null);
+        getViewDataBinding().viewPager.removeAllViews();
+
+        if (mFragmentPagerAdapter != null)
+        {
+            mFragmentPagerAdapter.removeAll();
+            mFragmentPagerAdapter = null;
+        }
     }
 
     @Override
@@ -267,6 +351,28 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         }
 
         getViewDataBinding().emptyView.setCampaignTag(title, campaignTagList);
+    }
+
+    @Override
+    public boolean onFragmentBackPressed()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return false;
+        }
+
+        return mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onBackPressed();
+    }
+
+    @Override
+    public void refreshCurrentFragment()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return;
+        }
+
+        mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onRefresh();
     }
 
     private class RadiusArrayAdapter extends ArrayAdapter<CharSequence>
