@@ -3,6 +3,7 @@ package com.daily.dailyhotel.entity;
 import android.support.annotation.NonNull;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.repository.local.model.GourmetSuggestData;
 
 import java.io.Serializable;
 
@@ -40,17 +41,11 @@ public class GourmetSuggestV2
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
     private SuggestItem suggestItem;
-    //    public int suggestType; // 카테고리 비교 용
-    //    public String text1;
-    //    public String text2;
 
     public GourmetSuggestV2(MenuType menuType, @NonNull SuggestItem suggestItem)
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;
-        //                this.suggestType = getSuggestType();
-        //        this.text1 = getText1();
-        //        this.text2 = getText2();
     }
 
     /**
@@ -202,6 +197,14 @@ public class GourmetSuggestV2
         {
             this.name = name;
         }
+
+        public GourmetSuggestData.SuggestItemData getSuggestItemData()
+        {
+            GourmetSuggestData.SuggestItemData data = new GourmetSuggestData.SuggestItemData();
+            data.name = name;
+
+            return data;
+        }
     }
 
     public static class Gourmet extends SuggestItem
@@ -216,6 +219,18 @@ public class GourmetSuggestV2
         {
             return areaGroup == null ? null : areaGroup.name;
         }
+
+        public GourmetSuggestData.GourmetData getGourmetData()
+        {
+            GourmetSuggestData.GourmetData data = new GourmetSuggestData.GourmetData();
+            data.name = name;
+            data.index = index;
+            data.discount = discount;
+            data.available = available;
+            data.areaGroup = areaGroup == null ? null : areaGroup.getAreaGroupData();
+
+            return data;
+        }
     }
 
     public static class AreaGroup extends SuggestItem
@@ -228,12 +243,31 @@ public class GourmetSuggestV2
         {
             return area == null ? name : area.name;
         }
+
+        public GourmetSuggestData.AreaGroupData getAreaGroupData()
+        {
+            GourmetSuggestData.AreaGroupData data = new GourmetSuggestData.AreaGroupData();
+            data.name = name;
+            data.index = index;
+            data.area = area == null ? null : area.getAreaData();
+
+            return data;
+        }
     }
 
     public static class Area extends SuggestItem
     {
         public int index;
         //        public int name;
+
+        public GourmetSuggestData.AreaData getAreaData()
+        {
+            GourmetSuggestData.AreaData data = new GourmetSuggestData.AreaData();
+            data.name = name;
+            data.index = index;
+
+            return data;
+        }
     }
 
     public static class Direct extends SuggestItem
@@ -244,6 +278,14 @@ public class GourmetSuggestV2
         {
             super(name);
         }
+
+        public GourmetSuggestData.DirectData getDirectData()
+        {
+            GourmetSuggestData.DirectData data = new GourmetSuggestData.DirectData();
+            data.name = name;
+
+            return data;
+        }
     }
 
     public static class Location extends SuggestItem
@@ -252,6 +294,17 @@ public class GourmetSuggestV2
         public double longitude;
         public String address;
         //        public String name;
+
+        public GourmetSuggestData.LocationData getLocationData()
+        {
+            GourmetSuggestData.LocationData data = new GourmetSuggestData.LocationData();
+            data.name = name;
+            data.address = address;
+            data.latitude = latitude;
+            data.longitude = longitude;
+
+            return data;
+        }
     }
 
     public static class CampaignTag extends SuggestItem
@@ -261,6 +314,18 @@ public class GourmetSuggestV2
         public String endDate; // ISO-8601
         //        public String campaignTag; // 이 항목은 name 으로 대체
         public String serviceType;
+
+        public GourmetSuggestData.CampaignTagData getCampaignTagData()
+        {
+            GourmetSuggestData.CampaignTagData data = new GourmetSuggestData.CampaignTagData();
+            data.name = name;
+            data.index = index;
+            data.startDate = startDate;
+            data.endDate = endDate;
+            data.serviceType = serviceType;
+
+            return data;
+        }
     }
 
     // 서버에서 받은 타입이 아님, 리스트 노출용 섹션
@@ -271,5 +336,66 @@ public class GourmetSuggestV2
         {
             super(title);
         }
+
+        public GourmetSuggestData.SectionData getSectionData()
+        {
+            GourmetSuggestData.SectionData data = new GourmetSuggestData.SectionData();
+            data.name = name;
+
+            return data;
+        }
+    }
+
+    public GourmetSuggestData getSuggestData()
+    {
+        GourmetSuggestData data = new GourmetSuggestData();
+        data.menuType = menuType.name();
+
+        switch (getSuggestType())
+        {
+            case GOURMET:
+            {
+                data.gourmetData = ((Gourmet) suggestItem).getGourmetData();
+                break;
+            }
+
+            case AREA_GROUP:
+            {
+                data.areaGroupData = ((AreaGroup) suggestItem).getAreaGroupData();
+                break;
+            }
+
+            case LOCATION:
+            {
+                data.locationData = ((Location) suggestItem).getLocationData();
+                break;
+            }
+
+            case DIRECT:
+            {
+                data.directData = ((Direct) suggestItem).getDirectData();
+                break;
+            }
+
+            case CAMPAIGN_TAG:
+            {
+                data.campaignTagData = ((CampaignTag) suggestItem).getCampaignTagData();
+                break;
+            }
+
+            case SECTION:
+            {
+                data.sectionData = ((Section) suggestItem).getSectionData();
+                break;
+            }
+
+            default:
+            {
+                data.suggestItemData = suggestItem.getSuggestItemData();
+                break;
+            }
+        }
+
+        return data;
     }
 }

@@ -134,8 +134,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     private static final String CREATE_T_SEARCH_RESULT_HISTORY = "CREATE TABLE IF NOT EXISTS " + T_SEARCH_RESULT_HISTORY + " (" //
         + SearchResultHistoryList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + SearchResultHistoryList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
+        + SearchResultHistoryList.DISPLAY_NAME + " TEXT NOT NULL, " //
         + SearchResultHistoryList.START_DATE + " TEXT NOT NULL, " //
-        + SearchResultHistoryList.END_DATE + " TEXT NOT NULL, " //
+        + SearchResultHistoryList.END_DATE + " TEXT NULL, " //
         + SearchResultHistoryList.SUGGEST + " TEXT NULL, " // StaySuggestV2, GourmetSuggestV2, StayOutboundSuggest - json String 예정
         + SearchResultHistoryList.ADULT_COUNT + " INTEGER NOT NULL DEFAULT 0, " //
         + SearchResultHistoryList.CHILD_AGE_LIST + " TEXT NULL " + ");";
@@ -1721,6 +1722,133 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
         mContext.getContentResolver().notifyChange(StayIbRecentlySuggestList.NOTIFICATION_URI, null);
     }
+
+//    public Cursor getSearchResultHistory(String serviceType, String displayName, String startDate)
+//    {
+//        if (DailyTextUtils.isTextEmpty(serviceType, displayName, startDate))
+//        {
+//            return null;
+//        }
+//
+//        SQLiteDatabase db = getDb();
+//        if (db == null)
+//        {
+//            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+//            return null;
+//        }
+//
+//        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+//        sqlBuilder.append(T_SEARCH_RESULT_HISTORY);
+//        sqlBuilder.append(" WHERE ").append(SearchResultHistoryList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
+//        sqlBuilder.append(" AND ").append(SearchResultHistoryList.DISPLAY_NAME).append("=\"").append(displayName).append("\"");
+//
+//        Cursor cursor = rawQuery(sqlBuilder.toString());
+//
+//        return cursor;
+//    }
+
+//    public void addSearchResultHistory(String serviceType, String displayName, String startDate //
+//        , String endDate, String suggest, int adultCount, String childList)
+//    {
+//        if (DailyTextUtils.isTextEmpty(serviceType, displayName, startDate, suggest))
+//        {
+//            return;
+//        }
+//
+//        SQLiteDatabase db = getDb();
+//        if (db == null)
+//        {
+//            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+//            return;
+//        }
+//
+//        try
+//        {
+//            long savingTime = -1;
+//            long oldId = -1;
+//            Cursor cursor = null;
+//
+//            try
+//            {
+//                cursor = getStayIbRecentlySuggest(type, display);
+//
+//                if (cursor != null)
+//                {
+//                    cursor.moveToFirst();
+//
+//                    int idColumnIndex = cursor.getColumnIndex(StayIbRecentlySuggestList._ID);
+//                    oldId = cursor.getLong(idColumnIndex);
+//                }
+//
+//            } catch (Exception e)
+//            {
+//                oldId = -1;
+//            } finally
+//            {
+//                try
+//                {
+//                    if (cursor != null)
+//                    {
+//                        cursor.close();
+//                    }
+//                } catch (Exception e)
+//                {
+//                    // do nothing!
+//                }
+//            }
+//
+//            Calendar calendar = DailyCalendar.getInstance();
+//            savingTime = calendar.getTimeInMillis();
+//
+//            ContentValues contentValues = new ContentValues();
+//
+//            if (oldId > 0)
+//            {
+//                contentValues.put(StayIbRecentlySuggestList._ID, oldId);
+//            }
+//
+//            contentValues.put(StayIbRecentlySuggestList.TYPE, type);
+//            contentValues.put(StayIbRecentlySuggestList.DISPLAY, display);
+//            contentValues.put(StayIbRecentlySuggestList.STATION_INDEX, stationIndex);
+//            contentValues.put(StayIbRecentlySuggestList.STATION_NAME, stationName);
+//            contentValues.put(StayIbRecentlySuggestList.STATION_REGION, stationRegion);
+//            contentValues.put(StayIbRecentlySuggestList.STATION_LINE, stationLine);
+//            contentValues.put(StayIbRecentlySuggestList.STAY_INDEX, stayIndex);
+//            contentValues.put(StayIbRecentlySuggestList.STAY_NAME, stayName);
+//            contentValues.put(StayIbRecentlySuggestList.AREA_GROUP_INDEX, areaGroupIndex);
+//            contentValues.put(StayIbRecentlySuggestList.AREA_GROUP_NAME, areaGroupName);
+//            contentValues.put(StayIbRecentlySuggestList.AREA_INDEX, areaIndex);
+//            contentValues.put(StayIbRecentlySuggestList.AREA_NAME, areaName);
+//            contentValues.put(StayIbRecentlySuggestList.LOCATION_NAME, locationName);
+//            contentValues.put(StayIbRecentlySuggestList.ADDRESS, address);
+//            contentValues.put(StayIbRecentlySuggestList.LATITUDE, latitude);
+//            contentValues.put(StayIbRecentlySuggestList.LONGITUDE, longitude);
+//            contentValues.put(StayIbRecentlySuggestList.DIRECT_NAME, directName);
+//            contentValues.put(StayIbRecentlySuggestList.SAVING_TIME, savingTime);
+//            contentValues.put(StayIbRecentlySuggestList.KEYWORD, keyword);
+//
+//            db.beginTransaction();
+//
+//            insertOrUpdate(T_STAY_IB_RECENTLY_SUGGEST, StayIbRecentlySuggestList._ID, contentValues);
+//
+//            db.setTransactionSuccessful();
+//
+//        } catch (Exception e)
+//        {
+//            ExLog.w("add fail : " + e.toString());
+//        } finally
+//        {
+//            try
+//            {
+//                db.endTransaction();
+//            } catch (IllegalStateException e)
+//            {
+//                // ignore
+//            }
+//        }
+//
+//        mContext.getContentResolver().notifyChange(StayIbRecentlySuggestList.NOTIFICATION_URI, null);
+//    }
 
     //    public void exportDatabase(String databaseName)
     //    {

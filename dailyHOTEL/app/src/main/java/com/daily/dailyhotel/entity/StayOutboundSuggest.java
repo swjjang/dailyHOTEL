@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.entity;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundSuggestData;
 
 public class StayOutboundSuggest
 {
@@ -97,5 +98,21 @@ public class StayOutboundSuggest
         stayOutboundSuggest.menuType = menuType;
 
         return stayOutboundSuggest;
+    }
+
+    public StayOutboundSuggestData getSuggestData()
+    {
+        StayOutboundSuggestData data = new StayOutboundSuggestData();
+        data.id = id;
+        data.name = name;
+        data.city = city;
+        data.country = country;
+        data.countryCode = countryCode;
+        data.categoryKey = categoryKey;
+        data.display = display;
+        data.lat = latitude;
+        data.lng = longitude;
+
+        return data;
     }
 }

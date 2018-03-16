@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 public interface SearchResultHistoryColumns extends BaseColumns
 {
     String SERVICE_TYPE = "service_type"; // stay, gourmet, stay outbound
+    String DISPLAY_NAME = "display_name";
     String START_DATE = "start_date"; // Check in date, visit date
     String END_DATE = "end_date"; // check out date, gourmet 는 empty
     String SUGGEST = "suggest"; // StaySuggestV2, GourmetSuggestV2, StayOutboundSuggest - json String 예정
