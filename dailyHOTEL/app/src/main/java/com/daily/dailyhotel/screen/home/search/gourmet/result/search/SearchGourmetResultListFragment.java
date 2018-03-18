@@ -21,6 +21,8 @@ public class SearchGourmetResultListFragment extends BasePagerFragment<SearchGou
         void onFilterClick();
 
         void onCalendarClick();
+
+        void onRadiusClick();
     }
 
     @NonNull

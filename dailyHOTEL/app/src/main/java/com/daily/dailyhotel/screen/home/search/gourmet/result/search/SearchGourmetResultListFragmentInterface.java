@@ -43,7 +43,9 @@ public interface SearchGourmetResultListFragmentInterface
 
         void hideEmptyViewVisible();
 
-        void showEmptyViewVisible(boolean applyFilter, boolean distanceSortType);
+        void showDefaultEmptyViewVisible();
+
+        void showLocationEmptyViewVisible(boolean applyFilter);
 
         void setListLayoutVisible(boolean visible);
 
@@ -98,6 +100,10 @@ public interface SearchGourmetResultListFragmentInterface
         void onCallClick();
 
         void onFilterClick();
+
+        void onRadiusClick();
+
+        void onResearchClick();
 
         void onCalendarClick();
 

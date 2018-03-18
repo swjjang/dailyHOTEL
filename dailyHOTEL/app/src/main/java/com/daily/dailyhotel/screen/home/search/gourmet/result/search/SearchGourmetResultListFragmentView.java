@@ -421,7 +421,33 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
     }
 
     @Override
-    public void showEmptyViewVisible(boolean applyFilter, boolean distanceSortType)
+    public void showDefaultEmptyViewVisible()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
+        getViewDataBinding().mapLayout.setVisibility(View.GONE);
+        getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+
+        getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_gourmet_filter_empty_message01), getString(R.string.message_changing_filter_option));
+        getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onFilterClick();
+            }
+        });
+
+        getViewDataBinding().emptyView.setButton02(false, null, null);
+        getViewDataBinding().emptyView.setBottomMessageVisible(false);
+    }
+
+    @Override
+    public void showLocationEmptyViewVisible(boolean applyFilter)
     {
         if (getViewDataBinding() == null)
         {
@@ -434,13 +460,13 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
 
         if (applyFilter == true)
         {
-            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_gourmet_filter_empty_message01), getString(R.string.message_changing_filter_option));
-            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
+            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_gourmet_filter_empty_message01), getString(R.string.message_searchresult_gourmet_filter_empty_message02));
+            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_searchresult_change_radius), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    getEventListener().onFilterClick();
+                    getEventListener().onRadiusClick();
                 }
             });
 
@@ -448,24 +474,17 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
             getViewDataBinding().emptyView.setBottomMessageVisible(false);
         } else
         {
-            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_gourmet_empty_message01), getString(R.string.message_gourmet_empty_message02));
-            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_stay_category_change_region), new View.OnClickListener()
+            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_gourmet_empty_message01), getString(R.string.message_searchresult_gourmet_empty_message02));
+            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_searchresult_research), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
+                    getEventListener().onResearchClick();
                 }
             });
 
-            getViewDataBinding().emptyView.setButton02(true, getString(R.string.label_stay_category_change_date), new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onCalendarClick();
-                }
-            });
-
+            getViewDataBinding().emptyView.setButton02(false, null, null);
             getViewDataBinding().emptyView.setBottomMessageVisible(true);
             getViewDataBinding().emptyView.setOnCallClickListener(v -> getEventListener().onCallClick());
         }

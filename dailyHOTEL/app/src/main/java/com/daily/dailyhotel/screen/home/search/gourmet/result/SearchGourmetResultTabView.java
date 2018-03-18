@@ -348,6 +348,12 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
             {
                 getEventListener().onCalendarClick();
             }
+
+            @Override
+            public void onRadiusClick()
+            {
+                getViewDataBinding().toolbarView.showRadiusSpinnerPopup();
+            }
         });
 
         mFragmentPagerAdapter.addFragment(basePagerFragment);

@@ -45,7 +45,6 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.maps.MapView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -574,20 +573,19 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     mEmptyList = true;
                     mPage = PAGE_NONE;
 
-                    if (applyFilter == true)
-                    {
-                        getViewInterface().setFloatingActionViewVisible(applyFilter);
-                        getViewInterface().setFloatingActionViewTypeMapEnabled(false);
+                    getViewInterface().setFloatingActionViewVisible(applyFilter);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
-                        getViewInterface().showEmptyViewVisible(true, mViewModel.isDistanceSort());
+                    if (mViewModel.getSuggest().isLocationSuggestType() == true)
+                    {
+                        boolean notDefaultRadius = mViewModel.searchViewModel.radius != SearchGourmetResultTabPresenter.DEFAULT_RADIUS;
+
+                        getViewInterface().showLocationEmptyViewVisible(applyFilter || notDefaultRadius);
                     } else
                     {
-                        getViewInterface().setFloatingActionViewVisible(false);
-                        getViewInterface().setFloatingActionViewTypeMapEnabled(false);
-
-                        if (mViewModel.isDistanceSort() == true)
+                        if (applyFilter == true)
                         {
-                            getViewInterface().showEmptyViewVisible(false, true);
+                            getViewInterface().showDefaultEmptyViewVisible();
                         } else
                         {
                             getFragment().getFragmentEventListener().setEmptyViewVisible(true);
@@ -876,7 +874,14 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setFloatingActionViewVisible(applyFilter);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
-                    getViewInterface().showEmptyViewVisible(applyFilter, mViewModel.isDistanceSort());
+                    if (mViewModel.getSuggest().isLocationSuggestType() == true)
+                    {
+                        boolean notDefaultRadius = mViewModel.searchViewModel.radius != SearchGourmetResultTabPresenter.DEFAULT_RADIUS;
+                        getViewInterface().showLocationEmptyViewVisible(applyFilter || notDefaultRadius);
+                    } else
+                    {
+                        getViewInterface().showDefaultEmptyViewVisible();
+                    }
 
                     unLockAll();
                 } else
@@ -1025,6 +1030,28 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }
 
         getFragment().getFragmentEventListener().onFilterClick();
+    }
+
+    @Override
+    public void onRadiusClick()
+    {
+        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onRadiusClick();
+    }
+
+    @Override
+    public void onResearchClick()
+    {
+        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onResearchClick();
     }
 
     @Override
