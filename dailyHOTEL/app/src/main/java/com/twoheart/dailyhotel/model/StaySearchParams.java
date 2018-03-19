@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -74,23 +74,28 @@ public class StaySearchParams extends StayParams
 
         setSortType(mSort);
 
-        if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(staySearchCuration.getSuggest().categoryKey) == true)
-        {
-            term = null;
-        } else
-        {
-            term = staySearchCuration.getSuggest() == null ? null : staySearchCuration.getSuggest().displayName;
-        }
+        StaySuggestV2 suggest = staySearchCuration.getSuggest();
 
-        if (Constants.SortType.DISTANCE == mSort || StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(staySearchCuration.getSuggest().categoryKey) == true)
+        if (suggest != null)
         {
-            radius = staySearchCuration.getRadius();
-
-            Location location = staySearchCuration.getLocation();
-            if (location != null)
+            if (suggest.isLocationSuggestType() == true)
             {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
+                term = null;
+            } else
+            {
+                term = suggest.getSuggestItem().name;
+            }
+
+            if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
+            {
+                radius = staySearchCuration.getRadius();
+
+                Location location = staySearchCuration.getLocation();
+                if (location != null)
+                {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
             }
         }
     }

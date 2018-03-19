@@ -2,13 +2,14 @@ package com.daily.dailyhotel.screen.home.search;
 
 
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 
 /**
  * Created by sheldon
@@ -17,7 +18,7 @@ import com.daily.dailyhotel.parcel.StaySuggestParcel;
 public class SearchStayViewModel extends ViewModel
 {
     public MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
-    public MutableLiveData<StaySuggest> suggest = new MutableLiveData<>();
+    private MutableLiveData<StaySuggestV2> suggest = new MutableLiveData<>();
     public String inputKeyword;
 
     public static class SearchStayViewModelFactory implements ViewModelProvider.Factory
@@ -55,18 +56,23 @@ public class SearchStayViewModel extends ViewModel
         return bookDateTime.getValue();
     }
 
-    public void setSuggest(StaySuggest suggest)
+    public void setSuggest(StaySuggestV2 suggest)
     {
         this.suggest.setValue(suggest);
     }
 
-    public void setSuggest(StaySuggestParcel suggestParcel)
+    public StaySuggestV2 getSuggest()
     {
-        if (suggestParcel == null)
-        {
-            return;
-        }
+        return suggest.getValue();
+    }
 
-        setSuggest(suggestParcel.getSuggest());
+    public void setSuggestObserver(BaseActivity activity, Observer<StaySuggestV2> observer)
+    {
+        suggest.observe(activity, observer);
+    }
+
+    public void removeSuggestObserver(Observer<StaySuggestV2> observer)
+    {
+        suggest.removeObserver(observer);
     }
 }

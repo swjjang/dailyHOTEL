@@ -106,7 +106,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
 
         if (suggestParcel != null)
         {
-            mSearchModel.suggest.setValue(suggestParcel.getSuggest());
+            mSearchModel.setSuggest(suggestParcel.getSuggest());
         }
 
         return true;
@@ -123,9 +123,10 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_search_search_gourmet));
 
-        String displayName = mSearchModel.suggest.getValue().getText1();
+        GourmetSuggestV2 suggest = mSearchModel.getSuggest();
+        String displayName = suggest == null ? null : suggest.getText1();
 
-        if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(displayName) == true)
+        if (DailyTextUtils.isTextEmpty(displayName) == true)
         {
             getViewInterface().setSearchSuggestText(null);
             getViewInterface().setSearchButtonEnabled(false);
@@ -215,7 +216,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
                     try
                     {
                         GourmetSuggestParcelV2 gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                        mSearchModel.suggest.setValue(gourmetSuggestParcel.getSuggest());
+                        mSearchModel.setSuggest(gourmetSuggestParcel.getSuggest());
                         mSearchModel.inputKeyword = data.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
                     {
@@ -303,7 +304,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         try
         {
             GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
-            GourmetSuggestV2 suggest = mSearchModel.suggest.getValue();
+            GourmetSuggestV2 suggest = mSearchModel.getSuggest();
 
             Intent intent = new Intent();
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
@@ -362,7 +363,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
         GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
 
-        mSearchModel.suggest.setValue(gourmetSuggest);
+        mSearchModel.setSuggest(gourmetSuggest);
 
         addCompositeDisposable(getViewInterface().getSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
         {
@@ -372,15 +373,6 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
                 unLockAll();
             }
         }));
-
-        //        GourmetBookDateTime gourmetBookDateTime = mSearchModel.getBookDateTime();
-        //
-        //        startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
-        //            , campaignTag.index, campaignTag.campaignTag//
-        //            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) //
-        //            , ResearchGourmetActivity.REQUEST_CODE_SEARCH_RESULT);
-        //
-        //        onBackClick();
     }
 
     private void initViewModel(BaseActivity activity)
@@ -393,7 +385,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         mSearchModel = ViewModelProviders.of(activity, new SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetViewModel.class);
 
         // Gourmet
-        mSearchModel.suggest.observe(activity, new Observer<GourmetSuggestV2>()
+        mSearchModel.setSuggestObserver(activity, new Observer<GourmetSuggestV2>()
         {
             @Override
             public void onChanged(@Nullable GourmetSuggestV2 gourmetSuggest)

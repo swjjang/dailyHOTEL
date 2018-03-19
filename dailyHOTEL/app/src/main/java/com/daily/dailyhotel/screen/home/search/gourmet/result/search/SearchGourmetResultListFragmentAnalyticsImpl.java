@@ -140,6 +140,7 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
             switch (suggest.menuType)
             {
                 case LOCATION:
+                case REGION_LOCATION:
                     AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                         , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
                     break;

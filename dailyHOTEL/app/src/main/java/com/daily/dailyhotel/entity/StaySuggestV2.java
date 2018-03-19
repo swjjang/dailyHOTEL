@@ -33,7 +33,8 @@ public class StaySuggestV2
         RECENTLY_SEARCH,
         RECENTLY_STAY,
         SUGGEST,
-        CAMPAIGN_TAG
+        CAMPAIGN_TAG,
+        REGION_LOCATION // 지역목록에서 내 주변으로 검색 할 경우
     }
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
@@ -85,6 +86,21 @@ public class StaySuggestV2
         return SuggestType.UNKNOWN;
     }
 
+    public boolean isLocationSuggestType()
+    {
+        return suggestItem == null ? false : suggestItem instanceof StaySuggestV2.Location;
+    }
+
+    public boolean isStaySuggestType()
+    {
+        return suggestItem == null ? false : suggestItem instanceof StaySuggestV2.Stay;
+    }
+
+    public boolean isCampaignTagSuggestType()
+    {
+        return suggestItem == null ? false : suggestItem instanceof StaySuggestV2.CampaignTag;
+    }
+
     public String getText1()
     {
         if (suggestItem == null)
@@ -122,7 +138,7 @@ public class StaySuggestV2
             return suggestItem.name;
         } else if (suggestItem instanceof CampaignTag)
         {
-            return suggestItem.name;
+            return DailyTextUtils.isTextEmpty(suggestItem.name) ? "" : "#" + suggestItem.name;
         } else if (suggestItem instanceof Section)
         {
             return suggestItem.name;

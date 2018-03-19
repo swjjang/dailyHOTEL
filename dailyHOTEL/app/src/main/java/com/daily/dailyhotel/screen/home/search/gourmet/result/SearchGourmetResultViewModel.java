@@ -127,12 +127,12 @@ public class SearchGourmetResultViewModel extends ViewModel
             throw new NullPointerException("suggest == null");
         }
 
-        searchViewModel.suggest.setValue(suggest);
+        searchViewModel.setSuggest(suggest);
     }
 
     public GourmetSuggestV2 getSuggest()
     {
-        return searchViewModel == null ? null : searchViewModel.suggest.getValue();
+        return searchViewModel == null ? null : searchViewModel.getSuggest();
     }
 
     public void setInputKeyword(String inputKeyword)

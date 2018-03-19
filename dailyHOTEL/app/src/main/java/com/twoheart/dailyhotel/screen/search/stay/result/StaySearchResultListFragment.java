@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -75,8 +75,10 @@ public class StaySearchResultListFragment extends StayListFragment
 
         super.setPlaceCuration(curation);
 
-        ((StaySearchResultListLayout) mPlaceListLayout).setLocationSearchType(StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) curation).getSuggest().categoryKey));
-        ((StaySearchResultListLayout) mPlaceListLayout).setEmptyType(((StaySearchCuration) curation).getSuggest().categoryKey);
+        StaySuggestV2 suggest = ((StaySearchCuration) curation).getSuggest();
+
+        ((StaySearchResultListLayout) mPlaceListLayout).setLocationSearchType(suggest.isLocationSuggestType());
+        ((StaySearchResultListLayout) mPlaceListLayout).setEmptyType(suggest);
     }
 
     @Override
@@ -159,8 +161,9 @@ public class StaySearchResultListFragment extends StayListFragment
                 }
 
                 Category category = mStayCuration.getCategory();
+                StaySuggestV2 suggest = ((StaySearchCuration) mStayCuration).getSuggest();
 
-                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
+                if (suggest.isLocationSuggestType() == true)
                 {
                     mEventListener.onShowActivityEmptyView(false);
                 } else
@@ -188,8 +191,9 @@ public class StaySearchResultListFragment extends StayListFragment
                 }
 
                 Category category = mStayCuration.getCategory();
+                StaySuggestV2 suggest = ((StaySearchCuration) mStayCuration).getSuggest();
 
-                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
+                if (suggest.isLocationSuggestType() == true)
                 {
                     mEventListener.onShowActivityEmptyView(mapSize == 0);
                 } else
