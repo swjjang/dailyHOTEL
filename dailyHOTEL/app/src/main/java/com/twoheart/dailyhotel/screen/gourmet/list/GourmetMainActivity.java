@@ -813,7 +813,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-                        setPreferenceRegion(DailyCategoryType.GOURMET_ALL, province);
+                        setPreferenceRegion(DailyCategoryType.GOURMET_ALL, selectedProvince);
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
