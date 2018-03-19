@@ -1093,7 +1093,7 @@
     <string name="label_search_stay_title">국내스테이를\n검색하시겠어요?</string>
     <string name="label_search_stayoutbound_title">해외스테이를\n검색하시겠어요?</string>
     <string name="label_search_gourmet_title">고메를\n검색하시겠어요?</string>
-    <string name="label_search_recently_search_result">최근 확인한 업장</string>
+    <string name="label_search_recently_search_result">최근 검색결과</string>
 
     <string name="label_search_stay">국내스테이</string>
     <string name="label_search_search_stay">국내스테이 검색</string>

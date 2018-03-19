@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 
 /**
@@ -68,5 +69,10 @@ public class SearchStayViewModel extends ViewModel
         }
 
         setSuggest(suggestParcel.getSuggest());
+    }
+
+    public StaySuggestV2 getSuggest()
+    {
+
     }
 }
