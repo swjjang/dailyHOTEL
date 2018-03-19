@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,11 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
@@ -424,10 +427,10 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
-        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).map(new Function<GourmetCampaignTags, List<ObjectItem>>()
+        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).map(new Function<GourmetCampaignTags, Pair<CampaignTag, List<ObjectItem>>>()
         {
             @Override
-            public List<ObjectItem> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags gourmetCampaignTags) throws Exception
+            public Pair<CampaignTag, List<ObjectItem>> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags gourmetCampaignTags) throws Exception
             {
                 List<ObjectItem> objectItemList = new ArrayList<>();
                 List<Gourmet> gourmetList = gourmetCampaignTags.getGourmetList();
@@ -440,13 +443,22 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     }
                 }
 
-                return objectItemList;
+                return new Pair(gourmetCampaignTags.getCampaignTag(), objectItemList);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<CampaignTag, List<ObjectItem>>>()
         {
             @Override
-            public void accept(List<ObjectItem> objectItemList) throws Exception
+            public void accept(Pair<CampaignTag, List<ObjectItem>> pair) throws Exception
             {
+                CampaignTag campaignTag = pair.first;
+                List<ObjectItem> objectItemList = pair.second;
+
+                if (DailyTextUtils.isTextEmpty(mViewModel.getSuggest().getSuggestItem().name) == true)
+                {
+                    mViewModel.getSuggest().getSuggestItem().name = campaignTag.campaignTag;
+                    mViewModel.setSuggest(mViewModel.getSuggest());
+                }
+
                 int size = objectItemList.size();
 
                 if (objectItemList.size() == 0)
@@ -473,7 +485,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     getViewInterface().setListLayoutVisible(true);
 
                     getViewInterface().setSearchResultCount(size);
-                    getViewInterface().setList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                    getViewInterface().setList(objectItemList, mViewModel.getSuggest().isLocationSuggestType() || mViewModel.isDistanceSort()//
+                        , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 
                 mMoreRefreshing = false;

@@ -615,7 +615,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setListLayoutVisible(true);
 
                     getViewInterface().setSearchResultCount(size, MAXIMUM_NUMBER_PER_PAGE);
-                    getViewInterface().setList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                    getViewInterface().setList(objectItemList, mViewModel.getSuggest().isLocationSuggestType() || mViewModel.isDistanceSort()//
+                        , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 
                 mMoreRefreshing = false;
@@ -724,7 +725,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                 }
 
-                getViewInterface().addList(objectItemList, mViewModel.isDistanceSort(), DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                getViewInterface().addList(objectItemList);
 
                 mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);

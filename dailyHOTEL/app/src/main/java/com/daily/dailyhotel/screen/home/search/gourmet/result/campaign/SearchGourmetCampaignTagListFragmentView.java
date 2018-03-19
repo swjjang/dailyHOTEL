@@ -277,7 +277,7 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
     }
 
     @Override
-    public void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR)
+    public void addList(List<ObjectItem> objectItemList)
     {
         if (getViewDataBinding() == null || objectItemList == null || objectItemList.size() == 0)
         {
@@ -298,8 +298,6 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
             mListAdapter.remove(itemCount - 1);
         }
 
-        mListAdapter.setDistanceEnabled(isSortByDistance);
-        mListAdapter.setTrueVREnabled(supportTrueVR);
         mListAdapter.addAll(objectItemList);
         mListAdapter.notifyDataSetChanged();
     }

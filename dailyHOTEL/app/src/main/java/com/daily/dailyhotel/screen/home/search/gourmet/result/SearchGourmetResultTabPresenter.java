@@ -282,7 +282,22 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onPostCreate()
     {
+        if (mDailyDeepLink != null)
+        {
+            return;
+        }
+
         GourmetSuggestV2 suggest = mViewModel.getSuggest();
+
+        initView(suggest);
+    }
+
+    private void initView(GourmetSuggestV2 suggest)
+    {
+        if (suggest == null)
+        {
+            return;
+        }
 
         getViewInterface().setFloatingActionViewVisible(suggest.isCampaignTagSuggestType() == false);
 
@@ -294,12 +309,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             getViewInterface().setToolbarTitleImageResource(R.drawable.search_ic_01_search);
         }
 
-        getViewInterface().setToolbarRadiusSpinnerVisible(needRadiusView(suggest));
-    }
-
-    private boolean needRadiusView(GourmetSuggestV2 suggest)
-    {
-        return suggest == null ? false : suggest.menuType == GourmetSuggestV2.MenuType.REGION_LOCATION || suggest.menuType == GourmetSuggestV2.MenuType.LOCATION;
+        getViewInterface().setToolbarRadiusSpinnerVisible(suggest.isLocationSuggestType());
     }
 
     @Override
@@ -548,6 +558,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                     }
 
                     clearDeepLink();
+
+                    initView(mViewModel.getSuggest());
                 }
 
                 GourmetSuggestV2 suggest = mViewModel.getSuggest();
@@ -658,7 +670,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
 
         mViewModel.getFilter().sortType = GourmetFilter.SortType.valueOf(sortType.name());
-
 
         mViewModel.setBookDateTime(gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
         mViewModel.setSuggest(suggest);
@@ -817,8 +828,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         gourmetSearchCuration.setCurationOption(gourmetCurationOption);
 
         // 내 주변 검색
-        if (suggest.menuType == GourmetSuggestV2.MenuType.LOCATION//
-            || suggest.menuType == GourmetSuggestV2.MenuType.REGION_LOCATION)
+        if (suggest.isLocationSuggestType() == true)
         {
             GourmetSuggestV2.Location locationSuggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
             Location location = new Location("provider");

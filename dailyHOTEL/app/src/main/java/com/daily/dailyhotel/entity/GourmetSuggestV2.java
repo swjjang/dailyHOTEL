@@ -2,7 +2,6 @@ package com.daily.dailyhotel.entity;
 
 import android.support.annotation.NonNull;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.daily.base.util.DailyTextUtils;
 
 import java.io.Serializable;
@@ -144,7 +143,7 @@ public class GourmetSuggestV2
             return suggestItem.name;
         } else if (suggestItem instanceof CampaignTag)
         {
-            return suggestItem.name;
+            return DailyTextUtils.isTextEmpty(suggestItem.name) ? "" : "#" + suggestItem.name;
         } else if (suggestItem instanceof Section)
         {
             return suggestItem.name;

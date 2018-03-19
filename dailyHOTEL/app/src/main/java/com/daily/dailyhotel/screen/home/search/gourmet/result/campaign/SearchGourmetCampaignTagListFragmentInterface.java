@@ -31,7 +31,7 @@ public interface SearchGourmetCampaignTagListFragmentInterface
 
         void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR);
 
-        void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean supportTrueVR);
+        void addList(List<ObjectItem> objectItemList);
 
         void setMapViewPagerList(Context context, List<Gourmet> gourmetList);
 
