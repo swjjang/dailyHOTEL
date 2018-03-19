@@ -1130,8 +1130,10 @@
     <string name="message_searchresult_stay_filter_empty_message02">반경 범위를 변경하거나\n필터 설정 조건을 변경하여 검색해보세요.</string>
 
     <string name="message_searchresult_gourmet_filter_empty_message01">해당 조건에 일치하는 고메가 없습니다.</string>
+    <string name="message_searchresult_gourmet_filter_empty_message02">반경 범위를 변경하거나\n필터 설정 조건을 변경하여 검색해보세요.</string>
 
     <string name="message_searchresult_gourmet_empty_message01">내 주변 고메가 없습니다.</string>
+    <string name="message_searchresult_gourmet_empty_message02">검색조건을 변경해서 다시 검색해보세요.</string>
 
     <string name="message_searchresult_stay_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예. 수영장 있는 호텔, 파티룸)</string>
     <string name="message_searchresult_stay_outbound_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n한글, 영문 둘다 검색이 가능해요.\n(예. 도시, 지역, 역, 호텔 등)</string>

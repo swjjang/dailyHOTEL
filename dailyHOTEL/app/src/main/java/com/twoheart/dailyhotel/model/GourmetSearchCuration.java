@@ -2,12 +2,12 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-import com.daily.dailyhotel.entity.GourmetSuggest;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 
 public class GourmetSearchCuration extends GourmetCuration
 {
-    private GourmetSuggest mSuggest;
+    private GourmetSuggestV2 mSuggest;
     private double mRadius;
 
     public GourmetSearchCuration()
@@ -23,12 +23,12 @@ public class GourmetSearchCuration extends GourmetCuration
         return mGourmetCurationOption;
     }
 
-    public GourmetSuggest getSuggest()
+    public GourmetSuggestV2 getSuggest()
     {
         return mSuggest;
     }
 
-    public void setSuggest(GourmetSuggest suggest)
+    public void setSuggest(GourmetSuggestV2 suggest)
     {
         mSuggest = suggest;
     }
@@ -77,7 +77,7 @@ public class GourmetSearchCuration extends GourmetCuration
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeParcelable(new GourmetSuggestParcel(mSuggest), flags);
+        dest.writeParcelable(new GourmetSuggestParcelV2(mSuggest), flags);
         dest.writeDouble(mRadius);
     }
 
@@ -85,7 +85,7 @@ public class GourmetSearchCuration extends GourmetCuration
     {
         super.readFromParcel(in);
 
-        GourmetSuggestParcel gourmetSuggestParcel = in.readParcelable(GourmetSuggestParcel.class.getClassLoader());
+        GourmetSuggestParcelV2 gourmetSuggestParcel = in.readParcelable(GourmetSuggestParcelV2.class.getClassLoader());
 
         if (gourmetSuggestParcel != null)
         {

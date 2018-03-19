@@ -70,6 +70,8 @@ public class GourmetCurationOption extends PlaceCurationOption
 
         setSortType(gourmetCurationOption.getSortType());
         setFilterMap(gourmetCurationOption.getFilterMap());
+        setCategoryCoderMap(gourmetCurationOption.getCategoryCoderMap());
+        setCategorySequenceMap(gourmetCurationOption.getCategorySequenceMap());
         flagTimeFilter = gourmetCurationOption.flagTimeFilter;
         flagAmenitiesFilters = gourmetCurationOption.flagAmenitiesFilters;
     }

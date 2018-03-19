@@ -52,7 +52,7 @@ public class StayFilter
         SATISFACTION
     }
 
-    public boolean isDefaultFilter()
+    public boolean isDefault()
     {
         return (sortType == SortType.DEFAULT//
             && person == PERSON_COUNT_OF_DEFAULT//
@@ -61,7 +61,7 @@ public class StayFilter
             && flagRoomAmenitiesFilters == FLAG_ROOM_AMENITIES_NONE);
     }
 
-    public StayFilter resetFilter()
+    public StayFilter reset()
     {
         person = PERSON_COUNT_OF_DEFAULT;
         flagBedTypeFilters = FLAG_BED_NONE;

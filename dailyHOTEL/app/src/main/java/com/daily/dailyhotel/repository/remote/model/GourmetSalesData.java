@@ -21,6 +21,9 @@ public class GourmetSalesData
     @JsonField(name = "availableTicketNumbers")
     public int availableTicketNumbers;
 
+    @JsonField(name = "minimumOrderQuantity")
+    public int minimumOrderQuantity;
+
     @JsonField(name = "benefit")
     public String benefit;
 
@@ -59,6 +62,9 @@ public class GourmetSalesData
 
     @JsonField(name = "isSoldOut")
     public boolean isSoldOut;
+
+    @JsonField(name = "isExpired")
+    public boolean isExpired;
 
     @JsonField(name = "lastOrderTime")
     public String lastOrderTime;
@@ -196,7 +202,61 @@ public class GourmetSalesData
         gourmet.pricePerPerson = pricePerPerson;
         gourmet.startEatingTime = startEatingTime;
         gourmet.ticketIdx = ticketIdx;
+        gourmet.reviewCount = reviewCount;
+        gourmet.discountRate = discountRate;
+        gourmet.newItem = newItem;
+        gourmet.myWish = myWish;
+        gourmet.couponDiscountText = couponDiscountText;
 
+        return gourmet;
+    }
+
+    public com.daily.dailyhotel.entity.Gourmet getEntityGourmet()
+    {
+        com.daily.dailyhotel.entity.Gourmet gourmet = new com.daily.dailyhotel.entity.Gourmet();
+
+        gourmet.index = index;
+
+        if (DailyTextUtils.isTextEmpty(restaurantName) == false)
+        {
+            gourmet.name = restaurantName;
+        } else if (DailyTextUtils.isTextEmpty(name) == false)
+        {
+            gourmet.name = name;
+        }
+
+        gourmet.price = price;
+        gourmet.discountPrice = discount;
+
+        // 인트라넷에서 값을 잘못 넣는 경우가 있다.
+        if (DailyTextUtils.isTextEmpty(addrSummary) == false)
+        {
+            if (addrSummary.indexOf('|') >= 0)
+            {
+                addrSummary = addrSummary.replace(" | ", "ㅣ");
+            } else if (addrSummary.indexOf('l') >= 0)
+            {
+                addrSummary = addrSummary.replace(" l ", "ㅣ");
+            }
+        }
+
+        gourmet.addressSummary = addrSummary;
+        gourmet.grade = com.daily.dailyhotel.entity.Gourmet.Grade.gourmet;
+        gourmet.districtName = districtName;
+        gourmet.latitude = latitude;
+        gourmet.longitude = longitude;
+        gourmet.dailyChoice = isDailychoice;
+        gourmet.soldOut = availableTicketNumbers == 0 || availableTicketNumbers < minimumOrderQuantity || isExpired;
+        gourmet.persons = persons;
+        gourmet.category = category;
+        gourmet.subCategory = subCategory;
+        gourmet.rating = rating;
+        gourmet.distance = distance;
+        gourmet.trueVR = isTrueVr;
+        gourmet.stickerIndex = stickerIdx;
+        gourmet.imageUrl = getImageUrl(imgPathMain);
+        gourmet.dBenefitText = benefit;
+        gourmet.regionName = regionName;
         gourmet.reviewCount = reviewCount;
         gourmet.discountRate = discountRate;
         gourmet.newItem = newItem;

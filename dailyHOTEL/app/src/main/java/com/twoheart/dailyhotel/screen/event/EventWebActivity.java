@@ -18,13 +18,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
@@ -35,7 +35,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -44,7 +43,6 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -440,45 +438,17 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
-    boolean moveDeepLinkGourmetSearchResult(Context context, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
+    boolean moveDeepLinkGourmetSearchResult(Context context, DailyExternalDeepLink externalDeepLink)
     {
-        if (todayDateTime == null || dailyDeepLink == null)
+        if (context == null || externalDeepLink == null)
         {
             return false;
         }
 
-        try
-        {
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(context, externalDeepLink.getDeepLink())//
+            , CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
 
-                String word = externalDeepLink.getSearchWord();
-                GourmetBookingDay gourmetBookingDay = externalDeepLink.getGourmetBookDateTime(todayDateTime.getCommonDateTime(), externalDeepLink).getGourmetBookingDay();
-                SortType sortType = externalDeepLink.getSorting();
-
-                if (DailyTextUtils.isTextEmpty(word) == false)
-                {
-                    GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, word);
-
-                    Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, gourmetSuggest, sortType, null);
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                } else
-                {
-                    return false;
-                }
-            } else
-            {
-
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return false;
-        } finally
-        {
-            dailyDeepLink.clear();
-        }
+        externalDeepLink.clear();
 
         return true;
     }
@@ -995,7 +965,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                 }
                             } else if (externalDeepLink.isGourmetSearchResultView() == true)
                             {
-                                if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mTodayDateTime, externalDeepLink) == true)
+                                if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, externalDeepLink) == true)
                                 {
                                     return;
                                 }

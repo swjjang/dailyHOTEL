@@ -214,6 +214,11 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
         return mLock.lock();
     }
 
+    protected boolean hasLock()
+    {
+        return isLock() || isScreenLock();
+    }
+
     protected void unLock()
     {
         mLock.unLock();

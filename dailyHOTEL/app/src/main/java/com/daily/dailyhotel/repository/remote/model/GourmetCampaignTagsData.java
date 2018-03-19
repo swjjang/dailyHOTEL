@@ -5,8 +5,8 @@ import android.content.Context;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.network.model.Sticker;
 
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ public class GourmetCampaignTagsData
         return stickerArrayList;
     }
 
-    private ArrayList<Gourmet> getGourmetList(Context context)
+    private List<Gourmet> getGourmetList(Context context)
     {
-        ArrayList<Gourmet> gourmetList = new ArrayList<>();
+        List<Gourmet> gourmetList = new ArrayList<>();
         if (context == null)
         {
             return gourmetList;
@@ -72,7 +72,7 @@ public class GourmetCampaignTagsData
 
         for (GourmetSalesData gourmetSalesData : saleRecords)
         {
-            Gourmet gourmet = gourmetSalesData.getGourmet();
+            Gourmet gourmet = gourmetSalesData.getEntityGourmet();
 
             gourmet.imageUrl = imageUrl + gourmet.imageUrl;
 

@@ -198,6 +198,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 {
                     hideBottomLayout(true);
                 }
+
+                getViewDataBinding().fakeVRImageView.setEnabled(scrollY <= TOOLBAR_HEIGHT);
             }
         });
 

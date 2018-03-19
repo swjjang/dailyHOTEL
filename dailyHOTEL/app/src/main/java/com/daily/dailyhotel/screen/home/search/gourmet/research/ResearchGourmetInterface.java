@@ -6,6 +6,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public interface ResearchGourmetInterface
@@ -19,6 +20,8 @@ public interface ResearchGourmetInterface
         void setSearchCalendarText(String text);
 
         void setSearchButtonEnabled(boolean enabled);
+
+        Completable getSuggestAnimation();
 
         Observable getCompleteCreatedFragment();
     }

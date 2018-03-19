@@ -190,6 +190,8 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 {
                     getViewDataBinding().toolbarView.showAnimation();
                 }
+
+                getViewDataBinding().fakeVRImageView.setEnabled(scrollY <= TOOLBAR_HEIGHT);
             }
         });
 

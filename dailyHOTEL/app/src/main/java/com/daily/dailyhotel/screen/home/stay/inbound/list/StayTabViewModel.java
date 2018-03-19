@@ -49,7 +49,7 @@ public class StayTabViewModel extends ViewModel
         {
             StayTabViewModel stayTabViewModel = new StayTabViewModel();
 
-            stayTabViewModel.stayFilter.setValue(new StayFilter().resetFilter());
+            stayTabViewModel.stayFilter.setValue(new StayFilter().reset());
             stayTabViewModel.viewType.setValue(StayTabPresenter.ViewType.LIST);
 
             if (mContext == null)
