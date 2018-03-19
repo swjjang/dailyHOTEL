@@ -381,6 +381,7 @@ public class StaySuggestV2
             case STATION:
             {
                 data.stationData = ((Station) suggestItem).getStationData();
+                break;
             }
 
             case STAY:

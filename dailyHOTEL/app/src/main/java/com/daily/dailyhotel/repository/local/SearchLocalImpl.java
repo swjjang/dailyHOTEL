@@ -7,6 +7,7 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.SearchLocalInterface;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.People;
@@ -17,6 +18,7 @@ import com.daily.dailyhotel.repository.local.model.SearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.SearchResultHistoryList;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -42,14 +44,14 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<Boolean> addStayIbSearchResultHistory(StayBookDateTime stayBookDateTime, StaySuggestV2 suggest)
+    public Observable<Boolean> addStayIbSearchResultHistory(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime, StaySuggestV2 suggest)
     {
         return Observable.defer(new Callable<ObservableSource<? extends Boolean>>()
         {
             @Override
             public ObservableSource<? extends Boolean> call() throws Exception
             {
-                if (stayBookDateTime == null || suggest == null)
+                if (commonDateTime == null || stayBookDateTime == null || suggest == null)
                 {
                     return Observable.just(false);
                 }
@@ -71,11 +73,13 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.HOTEL.name();
-                String displayName = suggest.getText1();
+                String displayName = suggest.getSuggestType() == StaySuggestV2.SuggestType.LOCATION //
+                    ? mContext.getString(R.string.label_search_suggest_type_location_item_format, suggest.getText1()) //
+                    : suggest.getText1();
                 String startDate = stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
                 String endDate = stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
 
-                dailyDb.addSearchResultHistory(serviceType, displayName, startDate, endDate, suggestString, 0, null);
+                dailyDb.addSearchResultHistory(serviceType, displayName, commonDateTime.dailyDateTime, startDate, endDate, suggestString, 0, null);
 
                 DailyDbHelper.getInstance().close();
 
@@ -85,14 +89,14 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<List<SearchResultHistory>> getStayIbSearchResultHistory(StayBookDateTime stayBookDateTime, int maxCount)
+    public Observable<List<SearchResultHistory>> getStayIbSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
     {
         return Observable.defer(new Callable<ObservableSource<List<SearchResultHistory>>>()
         {
             @Override
             public ObservableSource<List<SearchResultHistory>> call() throws Exception
             {
-                if (stayBookDateTime == null)
+                if (commonDateTime == null)
                 {
                     return Observable.just(new ArrayList<>());
                 }
@@ -102,20 +106,19 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.HOTEL.name();
-                String checkStartDate = stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
 
                 Cursor cursor = null;
 
                 try
                 {
-                    cursor = dailyDb.getSearchResultHistoryList(serviceType, checkStartDate, maxCount);
+                    cursor = dailyDb.getSearchResultHistoryList(serviceType, commonDateTime.dailyDateTime, maxCount);
 
                     if (cursor == null)
                     {
                         return Observable.just(new ArrayList<>());
                     }
 
-                    for (int i = 0 ; i < cursor.getCount() ; i++)
+                    for (int i = 0; i < cursor.getCount(); i++)
                     {
                         cursor.moveToPosition(i);
 
@@ -167,9 +170,11 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.HOTEL.name();
-                String displayName = suggest.getText1();
+                String displayName = suggest.getSuggestType() == StaySuggestV2.SuggestType.LOCATION //
+                    ? mContext.getString(R.string.label_search_suggest_type_location_item_format, suggest.getText1()) //
+                    : suggest.getText1();
 
-                dailyDb.deleteStayIbRecentlySuggest(serviceType, displayName);
+                dailyDb.deleteSearchResultHistory(serviceType, displayName);
 
                 DailyDbHelper.getInstance().close();
 
@@ -179,14 +184,14 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<Boolean> addGourmetSearchResultHistory(GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest)
+    public Observable<Boolean> addGourmetSearchResultHistory(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest)
     {
         return Observable.defer(new Callable<ObservableSource<? extends Boolean>>()
         {
             @Override
             public ObservableSource<? extends Boolean> call() throws Exception
             {
-                if (gourmetBookDateTime == null || suggest == null)
+                if (commonDateTime == null || gourmetBookDateTime == null || suggest == null)
                 {
                     return Observable.just(false);
                 }
@@ -208,10 +213,12 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.GOURMET.name();
-                String displayName = suggest.getText1();
+                String displayName = suggest.getSuggestType() == GourmetSuggestV2.SuggestType.LOCATION //
+                    ? mContext.getString(R.string.label_search_suggest_type_location_item_format, suggest.getText1()) //
+                    : suggest.getText1();
                 String startDate = gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT);
 
-                dailyDb.addSearchResultHistory(serviceType, displayName, startDate, null, suggestString, 0, null);
+                dailyDb.addSearchResultHistory(serviceType, displayName, commonDateTime.dailyDateTime, startDate, null, suggestString, 0, null);
 
                 DailyDbHelper.getInstance().close();
 
@@ -221,14 +228,14 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<List<SearchResultHistory>> getGourmetSearchResultHistory(GourmetBookDateTime gourmetBookDateTime, int maxCount)
+    public Observable<List<SearchResultHistory>> getGourmetSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
     {
         return Observable.defer(new Callable<ObservableSource<List<SearchResultHistory>>>()
         {
             @Override
             public ObservableSource<List<SearchResultHistory>> call() throws Exception
             {
-                if (gourmetBookDateTime == null)
+                if (commonDateTime == null)
                 {
                     return Observable.just(new ArrayList<>());
                 }
@@ -238,20 +245,19 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.GOURMET.name();
-                String checkStartDate = gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT);
 
                 Cursor cursor = null;
 
                 try
                 {
-                    cursor = dailyDb.getSearchResultHistoryList(serviceType, checkStartDate, maxCount);
+                    cursor = dailyDb.getSearchResultHistoryList(serviceType, commonDateTime.dailyDateTime, maxCount);
 
                     if (cursor == null)
                     {
                         return Observable.just(new ArrayList<>());
                     }
 
-                    for (int i = 0 ; i < cursor.getCount() ; i++)
+                    for (int i = 0; i < cursor.getCount(); i++)
                     {
                         cursor.moveToPosition(i);
 
@@ -303,9 +309,11 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.GOURMET.name();
-                String displayName = suggest.getText1();
+                String displayName = suggest.getSuggestType() == GourmetSuggestV2.SuggestType.LOCATION //
+                    ? mContext.getString(R.string.label_search_suggest_type_location_item_format, suggest.getText1()) //
+                    : suggest.getText1();
 
-                dailyDb.deleteStayIbRecentlySuggest(serviceType, displayName);
+                dailyDb.deleteSearchResultHistory(serviceType, displayName);
 
                 DailyDbHelper.getInstance().close();
 
@@ -315,14 +323,14 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<Boolean> addStayObSearchResultHistory(StayBookDateTime stayBookDateTime, StayOutboundSuggest suggest, People people)
+    public Observable<Boolean> addStayObSearchResultHistory(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime, StayOutboundSuggest suggest, People people)
     {
         return Observable.defer(new Callable<ObservableSource<? extends Boolean>>()
         {
             @Override
             public ObservableSource<? extends Boolean> call() throws Exception
             {
-                if (stayBookDateTime == null || suggest == null)
+                if (commonDateTime == null || stayBookDateTime == null || suggest == null)
                 {
                     return Observable.just(false);
                 }
@@ -344,13 +352,15 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.OB_STAY.name();
-                String displayName = suggest.display;
+                String displayName = suggest.latitude != 0 && suggest.longitude != 0 //
+                    ? mContext.getString(R.string.label_search_suggest_type_location_item_format, suggest.display) //
+                    : suggest.display;
                 String startDate = stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
                 String endDate = stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
                 int adultCount = people.numberOfAdults;
-                String childList = people.getChildAgeList().toString();
+                String childList = people.getChildAgeList() == null ? null : people.getChildAgeList().toString();
 
-                dailyDb.addSearchResultHistory(serviceType, displayName, startDate, endDate, suggestString, adultCount, childList);
+                dailyDb.addSearchResultHistory(serviceType, displayName, commonDateTime.dailyDateTime, startDate, endDate, suggestString, adultCount, childList);
 
                 DailyDbHelper.getInstance().close();
 
@@ -360,14 +370,14 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<List<SearchResultHistory>> getStayObSearchResultHistory(StayBookDateTime stayBookDateTime, int maxCount)
+    public Observable<List<SearchResultHistory>> getStayObSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
     {
         return Observable.defer(new Callable<ObservableSource<List<SearchResultHistory>>>()
         {
             @Override
             public ObservableSource<List<SearchResultHistory>> call() throws Exception
             {
-                if (stayBookDateTime == null)
+                if (commonDateTime == null)
                 {
                     return Observable.just(new ArrayList<>());
                 }
@@ -377,20 +387,19 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.OB_STAY.name();
-                String checkStartDate = stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
 
                 Cursor cursor = null;
 
                 try
                 {
-                    cursor = dailyDb.getSearchResultHistoryList(serviceType, checkStartDate, maxCount);
+                    cursor = dailyDb.getSearchResultHistoryList(serviceType, commonDateTime.dailyDateTime, maxCount);
 
                     if (cursor == null)
                     {
                         return Observable.just(new ArrayList<>());
                     }
 
-                    for (int i = 0 ; i < cursor.getCount() ; i++)
+                    for (int i = 0; i < cursor.getCount(); i++)
                     {
                         cursor.moveToPosition(i);
 
@@ -442,9 +451,11 @@ public class SearchLocalImpl implements SearchLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 String serviceType = Constants.ServiceType.OB_STAY.name();
-                String displayName = suggest.display;
+                String displayName = suggest.latitude != 0 && suggest.longitude != 0 //
+                    ? mContext.getString(R.string.label_search_suggest_type_location_item_format, suggest.display) //
+                    : suggest.display;
 
-                dailyDb.deleteStayIbRecentlySuggest(serviceType, displayName);
+                dailyDb.deleteSearchResultHistory(serviceType, displayName);
 
                 DailyDbHelper.getInstance().close();
 

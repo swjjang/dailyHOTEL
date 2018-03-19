@@ -139,7 +139,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + SearchResultHistoryList.END_DATE + " TEXT NULL, " //
         + SearchResultHistoryList.SUGGEST + " TEXT NULL, " // StaySuggestV2, GourmetSuggestV2, StayOutboundSuggest - json String 예정
         + SearchResultHistoryList.ADULT_COUNT + " INTEGER NOT NULL DEFAULT 0, " //
-        + SearchResultHistoryList.CHILD_AGE_LIST + " TEXT NULL " + ");" + SearchResultHistoryList.START_DATE_TIME + " LONG NOT NULL DEFAULT 0 " + ");";
+        + SearchResultHistoryList.START_DATE_TIME + " INTEGER NOT NULL DEFAULT 0, " //
+        + SearchResultHistoryList.SAVING_TIME + " INTEGER NOT NULL DEFAULT 0, " //
+        + SearchResultHistoryList.CHILD_AGE_LIST + " TEXT NULL " + ");";
 
     public DailyDb(Context context)
     {
@@ -1742,15 +1744,16 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         sqlBuilder.append(" WHERE ").append(SearchResultHistoryList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
         sqlBuilder.append(" AND ").append(SearchResultHistoryList.DISPLAY_NAME).append("=\"").append(displayName).append("\"");
         sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.START_DATE_TIME).append(" DESC");
+        sqlBuilder.append(" , ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
 
         Cursor cursor = rawQuery(sqlBuilder.toString());
 
         return cursor;
     }
 
-    private void maintainSearchResultHistory(String serviceType, String startDate)
+    private void maintainSearchResultHistory(String serviceType, String checkDate)
     {
-        if (DailyTextUtils.isTextEmpty(serviceType, startDate))
+        if (DailyTextUtils.isTextEmpty(serviceType, checkDate))
         {
             return;
         }
@@ -1758,7 +1761,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         long checkTime = -1;
         try
         {
-            checkTime = DailyCalendar.getInstance(startDate, true).getTimeInMillis();
+            checkTime = DailyCalendar.getInstance(checkDate, true).getTimeInMillis();
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1796,10 +1799,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         }
     }
 
-    public void addSearchResultHistory(String serviceType, String displayName, String startDate //
+    public void addSearchResultHistory(String serviceType, String displayName, String currentDate, String startDate //
         , String endDate, String suggest, int adultCount, String childList)
     {
-        if (DailyTextUtils.isTextEmpty(serviceType, displayName, startDate, suggest))
+        if (DailyTextUtils.isTextEmpty(serviceType, displayName, currentDate, startDate, suggest))
         {
             return;
         }
@@ -1820,7 +1823,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             {
                 cursor = getSearchResultHistory(serviceType, displayName);
 
-                if (cursor != null)
+                if (cursor != null && cursor.getCount() > 0)
                 {
                     cursor.moveToFirst();
 
@@ -1845,6 +1848,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                 }
             }
 
+            long startDateTime = DailyCalendar.getInstance(startDate, DailyCalendar.ISO_8601_FORMAT).getTimeInMillis();
+
             ContentValues contentValues = new ContentValues();
 
             if (oldId > 0)
@@ -1859,6 +1864,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             contentValues.put(SearchResultHistoryList.SUGGEST, suggest);
             contentValues.put(SearchResultHistoryList.ADULT_COUNT, adultCount);
             contentValues.put(SearchResultHistoryList.CHILD_AGE_LIST, childList);
+            contentValues.put(SearchResultHistoryList.START_DATE_TIME, startDateTime);
+
+            long savingTime = DailyCalendar.getInstance().getTimeInMillis();
+            contentValues.put(SearchResultHistoryList.SAVING_TIME, savingTime);
 
             db.beginTransaction();
 
@@ -1880,14 +1889,14 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             }
         }
 
-        maintainSearchResultHistory(serviceType, startDate);
+        maintainSearchResultHistory(serviceType, currentDate);
 
         mContext.getContentResolver().notifyChange(StayIbRecentlySuggestList.NOTIFICATION_URI, null);
     }
 
-    public Cursor getSearchResultHistoryList(String serviceType, String startDate, int maxCount)
+    public Cursor getSearchResultHistoryList(String serviceType, String checkDate, int maxCount)
     {
-        if (DailyTextUtils.isTextEmpty(serviceType, startDate))
+        if (DailyTextUtils.isTextEmpty(serviceType, checkDate))
         {
             return null;
         }
@@ -1903,7 +1912,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
         try
         {
-            checkTime = DailyCalendar.getInstance(startDate, true).getTimeInMillis();
+            checkTime = DailyCalendar.getInstance(checkDate, true).getTimeInMillis();
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1914,6 +1923,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         sqlBuilder.append(" WHERE ").append(SearchResultHistoryList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
         sqlBuilder.append(" AND ").append(SearchResultHistoryList.START_DATE_TIME).append(">=").append(checkTime).append("");
         sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.START_DATE_TIME).append(" DESC");
+        sqlBuilder.append(" , ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
 
         if (maxCount > 0)
         {
@@ -1925,7 +1935,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public void deletSearchResultHistory(String serviceType, String displayName)
+    public void deleteSearchResultHistory(String serviceType, String displayName)
     {
         if (DailyTextUtils.isTextEmpty(serviceType, displayName))
         {

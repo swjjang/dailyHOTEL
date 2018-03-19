@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.domain;
 
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.People;
@@ -18,21 +19,21 @@ import io.reactivex.Observable;
 
 public interface SearchLocalInterface
 {
-    Observable<Boolean> addStayIbSearchResultHistory(StayBookDateTime stayBookDateTime, StaySuggestV2 suggest);
+    Observable<Boolean> addStayIbSearchResultHistory(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime, StaySuggestV2 suggest);
 
-    Observable<List<SearchResultHistory>> getStayIbSearchResultHistory(StayBookDateTime stayBookDateTime, int maxCount);
+    Observable<List<SearchResultHistory>> getStayIbSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount);
 
     Observable<Boolean> deleteStayIbSearchResultHistory(StaySuggestV2 suggest);
 
-    Observable<Boolean> addGourmetSearchResultHistory(GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest);
+    Observable<Boolean> addGourmetSearchResultHistory(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest);
 
-    Observable<List<SearchResultHistory>> getGourmetSearchResultHistory(GourmetBookDateTime gourmetBookDateTime, int maxCount);
+    Observable<List<SearchResultHistory>> getGourmetSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount);
 
     Observable<Boolean> deleteGourmetSearchResultHistory(GourmetSuggestV2 suggest);
 
-    Observable<Boolean> addStayObSearchResultHistory(StayBookDateTime stayBookDateTime, StayOutboundSuggest suggest, People people);
+    Observable<Boolean> addStayObSearchResultHistory(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime, StayOutboundSuggest suggest, People people);
 
-    Observable<List<SearchResultHistory>> getStayObSearchResultHistory(StayBookDateTime stayBookDateTime, int maxCount);
+    Observable<List<SearchResultHistory>> getStayObSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount);
 
     Observable<Boolean> deleteStayObSearchResultHistory(StayOutboundSuggest suggest);
 }

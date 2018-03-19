@@ -59,7 +59,7 @@ public class SearchResultHistory
         this.endDate = endDate;
         this.adultCount = adultCount;
 
-        if (DailyTextUtils.isTextEmpty(childAgeList))
+        if (DailyTextUtils.isTextEmpty(childAgeList) == false)
         {
             String[] array = childAgeList.replaceAll("\\[|\\]| ", "").split(",");
             mChildAgeList = new ArrayList<>();
