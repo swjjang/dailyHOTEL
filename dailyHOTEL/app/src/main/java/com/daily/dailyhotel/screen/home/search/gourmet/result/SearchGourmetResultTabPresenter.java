@@ -124,6 +124,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                         getViewInterface().setViewType(ViewType.LIST);
                         break;
                 }
+
+                mAnalytics.onEventChangedViewType(getActivity(), viewType);
             }
         });
 
@@ -352,7 +354,14 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     {
         setResultCode(Activity.RESULT_CANCELED);
 
-        return getViewInterface().onFragmentBackPressed();
+        boolean backPressed = getViewInterface().onFragmentBackPressed();
+
+        if (backPressed == true)
+        {
+            mAnalytics.onEventBackClick(getActivity());
+        }
+
+        return backPressed;
     }
 
     @Override
@@ -678,7 +687,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+        mAnalytics.onEventCancelClick(getActivity());
+        finish();
     }
 
     private void setResultCode(int resultCode)
@@ -704,6 +714,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 , commonDateTime.currentDateTime, commonDateTime.dailyDateTime//
                 , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , suggest), SearchGourmetResultTabActivity.REQUEST_CODE_RESEARCH);
+
+            mAnalytics.onEventResearchClick(getActivity(), suggest);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -767,6 +779,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 com.twoheart.dailyhotel.util.Constants.ViewType.valueOf(mViewModel.getViewType().name())//
                 , gourmetSearchCuration, gourmetSearchCuration.getLocation() != null);
             startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_FILTER);
+
+            mAnalytics.onEventFilterClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -788,6 +802,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
             , AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, true, true), SearchGourmetResultTabActivity.REQUEST_CODE_CALENDAR);
 
+        mAnalytics.onEventCalendarClick(getActivity());
     }
 
     private GourmetSearchCuration toGourmetSearchCuration() throws Exception
@@ -855,6 +870,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         mViewModel.searchViewModel.radius = radius;
 
         getViewInterface().refreshCurrentFragment();
+
+        mAnalytics.onEventChangedRadius(getActivity(), mViewModel.getSuggest(), radius);
     }
 
     @Override
@@ -899,6 +916,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             return;
         }
 
+        mAnalytics.onEventStayClick(getActivity());
+
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
         finish();
     }
@@ -911,6 +930,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             return;
         }
 
+        mAnalytics.onEventStayOutboundClick(getActivity());
+
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND);
         finish();
     }
@@ -918,7 +939,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onCampaignTagClick(CampaignTag campaignTag)
     {
-        if (lock() == true)
+        if (campaignTag == null || lock() == true)
         {
             return;
         }
@@ -931,5 +952,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         setRefresh(true);
         onRefresh(true);
+
+        mAnalytics.onEventCampaignTagClick(getActivity(), campaignTag.index);
     }
 }

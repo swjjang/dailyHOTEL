@@ -12,6 +12,7 @@ import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 
@@ -112,12 +113,21 @@ public interface SearchGourmetResultListFragmentInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, GourmetBookDateTime gourmetBookDateTime, GourmetFilter gourmetFilter);
+        void onScreen(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, GourmetBookDateTime gourmetBookDateTime, boolean empty);
 
         void onEventStayClick(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, Gourmet gourmet);
 
         void onEventWishClick(Activity activity, boolean wish);
 
         void onEventMarkerClick(Activity activity, String name);
+
+        void onEventLocation(Activity activity, GourmetBookDateTime gourmetBookDateTime, String suggest, int searchCount, int searchMaxCount);
+
+        void onEventCallClick(Activity activity);
+
+        void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggestV2 suggest);
+
+        void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest, String inputKeyword//
+            , int searchCount, int searchMaxCount);
     }
 }

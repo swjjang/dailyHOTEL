@@ -492,6 +492,9 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                 mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
                 unLockAll();
+
+                mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
+                    , campaignTag, size);
             }
         }, new Consumer<Throwable>()
         {
@@ -649,6 +652,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmet.toGourmet());
 
         startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_PREVIEW);
+
+        mAnalytics.onEventGourmetClick(getActivity(), gourmet, mViewModel.getSuggest());
     }
 
     @Override
@@ -825,6 +830,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         }
 
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), SearchGourmetResultTabActivity.REQUEST_CODE_CALL);
+
+        mAnalytics.onEventCallClick(getActivity());
     }
 
     @Override
@@ -846,6 +853,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
             , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
+
+        mAnalytics.onEventWishClick(getActivity(), !currentWish);
     }
 
     void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)

@@ -622,6 +622,11 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                 mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
                 unLockAll();
+
+                mAnalytics.onScreen(getActivity(), mViewModel.getViewType(), mViewModel.getBookDateTime(), size == 0);
+                mAnalytics.onEventLocation(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest().getText1(), size, MAXIMUM_NUMBER_PER_PAGE);
+                mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
+                    , mViewModel.getInputKeyword(), size, MAXIMUM_NUMBER_PER_PAGE);
             }
         }, new Consumer<Throwable>()
         {
@@ -809,6 +814,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
+
+        mAnalytics.onEventGourmetClick(getActivity(), gourmet, mViewModel.getSuggest());
     }
 
     @Override
@@ -1020,6 +1027,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }
 
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), SearchGourmetResultTabActivity.REQUEST_CODE_CALL);
+
+        mAnalytics.onEventCallClick(getActivity());
     }
 
     @Override
@@ -1085,6 +1094,8 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
             , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
+
+        mAnalytics.onEventWishClick(getActivity(), !currentWish);
     }
 
     void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)

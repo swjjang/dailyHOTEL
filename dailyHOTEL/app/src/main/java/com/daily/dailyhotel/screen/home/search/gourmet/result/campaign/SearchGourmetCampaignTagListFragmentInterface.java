@@ -9,9 +9,11 @@ import android.support.v4.app.FragmentManager;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 
@@ -104,5 +106,12 @@ public interface SearchGourmetCampaignTagListFragmentInterface
         void onEventWishClick(Activity activity, boolean wish);
 
         void onEventMarkerClick(Activity activity, String name);
+
+        void onEventCallClick(Activity activity);
+
+        void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggestV2 suggest);
+
+        void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest//
+            , CampaignTag campaignTag, int searchCount);
     }
 }

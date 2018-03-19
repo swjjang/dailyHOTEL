@@ -1,10 +1,13 @@
 package com.daily.dailyhotel.screen.home.search.gourmet.result;
 
+import android.app.Activity;
+
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 
 import java.util.List;
 
@@ -68,5 +71,24 @@ public interface SearchGourmetResultTabInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onEventChangedViewType(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType);
+
+        void onEventCalendarClick(Activity activity);
+
+        void onEventFilterClick(Activity activity);
+
+        void onEventBackClick(Activity activity);
+
+        void onEventCancelClick(Activity activity);
+
+        void onEventResearchClick(Activity activity, GourmetSuggestV2 suggest);
+
+        void onEventChangedRadius(Activity activity, GourmetSuggestV2 suggest, float radius);
+
+        void onEventStayClick(Activity activity);
+
+        void onEventStayOutboundClick(Activity activity);
+
+        void onEventCampaignTagClick(Activity activity, int index);
     }
 }
