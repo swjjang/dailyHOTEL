@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="44dp"
+            android:scaleType="centerCrop"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/messageTextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="@string/message_searchresult_empty_title"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="18dp"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/messageTextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="44dp"
+            android:layout_marginTop="13dp"
+            android:gravity="center"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="14dp"/>
+
+        <LinearLayout
+            android:id="@+id/popularSearchTagLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/popularSearchTagTextView"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="13dp"/>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/tagFlexboxLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="20dp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="17dp"
+            android:background="@drawable/layerlist_divider"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/searchOtherCategoryTextView"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/message_searchresult_search_other_category"
+            android:textColor="@color/default_text_cc5c5c5"
+            android:textSize="13dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/searchLeftLayout"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/searchLeftTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/vector_search_shortcut_02_ob"
+                    dailyFont:style="Medium"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/searchRightLayout"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/searchRightTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/vector_search_shortcut_03_gourmet"
+                    dailyFont:style="Medium"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:background="@color/default_background"/>
+    </LinearLayout>
+</layout>

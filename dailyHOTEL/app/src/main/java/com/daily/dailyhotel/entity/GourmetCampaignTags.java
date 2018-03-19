@@ -1,9 +1,9 @@
 package com.daily.dailyhotel.entity;
 
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.network.model.Sticker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by android_sam on 2017. 8. 8..
@@ -14,8 +14,8 @@ public class GourmetCampaignTags
     public int msgCode;
     private CampaignTag mCampaignTag;
     public String imageUrl;
-    private ArrayList<Gourmet> mGourmetList;
-    private ArrayList<Sticker> mStickerList;
+    private List<Gourmet> mGourmetList;
+    private List<Sticker> mStickerList;
 
     public void setCampaignTag(CampaignTag campaignTag)
     {
@@ -27,22 +27,22 @@ public class GourmetCampaignTags
         return mCampaignTag;
     }
 
-    public void setStickerList(ArrayList<Sticker> list)
+    public void setStickerList(List<Sticker> list)
     {
         mStickerList = list;
     }
 
-    public ArrayList<Sticker> getStickerList()
+    public List<Sticker> getStickerList()
     {
         return mStickerList;
     }
 
-    public void setGourmetList(ArrayList<Gourmet> list)
+    public void setGourmetList(List<Gourmet> list)
     {
         mGourmetList = list;
     }
 
-    public ArrayList<Gourmet> getGourmetList()
+    public List<Gourmet> getGourmetList()
     {
         return mGourmetList;
     }

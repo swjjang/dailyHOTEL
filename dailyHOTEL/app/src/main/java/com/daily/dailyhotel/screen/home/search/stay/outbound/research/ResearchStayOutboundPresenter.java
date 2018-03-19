@@ -244,7 +244,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
                     {
                         StayOutboundSuggestParcel suggestParcel = intent.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchModel.suggest.setValue(suggestParcel.getSuggest());
-                        mSearchModel.inputString = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        mSearchModel.inputKeyword = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                         mSearchModel.clickType = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
                     } catch (Exception e)
                     {
@@ -399,7 +399,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mSearchModel.suggest.getValue()));
             intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mSearchModel.people.getValue().numberOfAdults);
             intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CHILD_LIST, mSearchModel.people.getValue().getChildAgeList());
-            intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
+            intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputKeyword);
             intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CLICK_TYPE, mSearchModel.clickType);
 
             setResult(Activity.RESULT_OK, intent);

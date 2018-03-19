@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.util.Constants;
  */
 public class SearchViewModel extends ViewModel
 {
-    public MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
+    public CommonDateTime commonDateTime;
     public MutableLiveData<Constants.ServiceType> serviceType = new MutableLiveData<>();
 
     public SearchStayViewModel stayViewModel;

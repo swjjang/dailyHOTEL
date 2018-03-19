@@ -10,7 +10,7 @@
         android:shortcutShortLabel="@string/label_shortcut_search_stay">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="dailyhotel://dailyhotel.co.kr?vc=8&amp;v=hs"
+            android:data="dailyhotel://dailyhotel.co.kr?vc=23&amp;v=searchHome&amp;pt=stay"
             android:targetClass="com.twoheart.dailyhotel.LauncherActivity"
             android:targetPackage="com.twoheart.dailyhotel"
             />
@@ -26,7 +26,7 @@
         android:shortcutShortLabel="@string/label_shortcut_search_gourmet">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="dailyhotel://dailyhotel.co.kr?vc=8&amp;v=gs"
+            android:data="dailyhotel://dailyhotel.co.kr?vc=23&amp;v=searchHome&amp;pt=gourmet"
             android:targetClass="com.twoheart.dailyhotel.LauncherActivity"
             android:targetPackage="com.twoheart.dailyhotel"
             />

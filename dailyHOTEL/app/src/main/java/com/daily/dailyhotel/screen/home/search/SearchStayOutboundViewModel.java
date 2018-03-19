@@ -19,7 +19,7 @@ public class SearchStayOutboundViewModel extends ViewModel
     public MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
     public MutableLiveData<StayOutboundSuggest> suggest = new MutableLiveData<>();
     public MutableLiveData<People> people = new MutableLiveData<>();
-    public String inputString;
+    public String inputKeyword;
     public String clickType;
 
     public static class SearchStayOutboundViewModelFactory implements ViewModelProvider.Factory

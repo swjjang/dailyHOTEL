@@ -9,6 +9,7 @@ import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchGourmetDataBinding;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public class ResearchGourmetView extends BaseDialogView<ResearchGourmetInterface.OnEventListener, ActivityResearchGourmetDataBinding> implements ResearchGourmetInterface.ViewInterface
@@ -132,6 +133,12 @@ public class ResearchGourmetView extends BaseDialogView<ResearchGourmetInterface
         }
 
         getViewDataBinding().gourmetFilterView.setSearchEnabled(enabled);
+    }
+
+    @Override
+    public Completable getSuggestAnimation()
+    {
+        return getViewDataBinding().gourmetFilterView.getSuggestTextViewAnimation();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.daily.dailyhotel.screen.home.search;
 
 import android.app.Activity;
 
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -195,9 +195,9 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
     }
 
     @Override
-    public void onEventGourmetDoSearch(Activity activity, GourmetSuggest suggest)
+    public void onEventGourmetDoSearch(Activity activity, GourmetSuggestV2 suggest)
     {
-        if (activity == null)
+        if (activity == null || suggest == null || suggest.getSuggestItem() == null)
         {
             return;
         }
@@ -206,28 +206,32 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         switch (suggest.menuType)
         {
-            case GourmetSuggest.MENU_TYPE_DIRECT:
+            case DIRECT:
                 action += "direct";
                 break;
 
-            case GourmetSuggest.MENU_TYPE_LOCATION:
+            case LOCATION:
                 action += "around";
                 break;
 
-            case GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH:
+            case RECENTLY_SEARCH:
                 action += "recent";
                 break;
 
-            case GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET:
+            case RECENTLY_GOURMET:
                 action += "recent_checked";
                 break;
 
-            case GourmetSuggest.MENU_TYPE_SUGGEST:
+            case SUGGEST:
                 action += "auto";
+                break;
+
+            case CAMPAIGN_TAG:
+                action += "";
                 break;
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, suggest.displayName, null);
+            , action, suggest.getSuggestItem().name, null);
     }
 }

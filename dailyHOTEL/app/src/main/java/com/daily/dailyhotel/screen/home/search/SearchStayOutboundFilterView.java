@@ -165,7 +165,6 @@ public class SearchStayOutboundFilterView extends ConstraintLayout implements Vi
         };
     }
 
-
     @Override
     public void onClick(View v)
     {

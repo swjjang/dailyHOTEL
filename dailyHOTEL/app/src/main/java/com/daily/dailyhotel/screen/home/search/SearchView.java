@@ -466,6 +466,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     }
 
     @Override
+    public Completable getStaySuggestAnimation()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return null;
+        }
+
+        return getViewDataBinding().stayFilterView.getSuggestTextViewAnimation();
+    }
+
+    @Override
     public void showSearchStayOutbound()
     {
         if (getViewDataBinding() == null)
@@ -615,6 +626,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         getViewDataBinding().gourmetFilterView.setSearchEnabled(enabled);
+    }
+
+    @Override
+    public Completable getGourmetSuggestAnimation()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return null;
+        }
+
+        return getViewDataBinding().gourmetFilterView.getSuggestTextViewAnimation();
     }
 
     @Override

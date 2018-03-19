@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 
 /**
  * Created by sheldon
@@ -16,8 +16,9 @@ import com.daily.dailyhotel.entity.GourmetSuggest;
 public class SearchGourmetViewModel extends ViewModel
 {
     public MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
-    public MutableLiveData<GourmetSuggest> suggest = new MutableLiveData<>();
-    public String inputString;
+    public MutableLiveData<GourmetSuggestV2> suggest = new MutableLiveData<>();
+    public String inputKeyword;
+    public float radius;
 
     public static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
     {

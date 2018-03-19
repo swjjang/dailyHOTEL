@@ -35,7 +35,8 @@ public class GourmetSuggestV2
         RECENTLY_SEARCH,
         RECENTLY_GOURMET,
         SUGGEST,
-        CAMPAIGN_TAG
+        CAMPAIGN_TAG,
+        REGION_LOCATION // 지역목록에서 내 주변으로 검색 할 경우
     }
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
@@ -90,6 +91,21 @@ public class GourmetSuggestV2
         return SuggestType.UNKNOWN;
     }
 
+    public boolean isLocationSuggestType()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Location;
+    }
+
+    public boolean isGourmetSuggestType()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Gourmet;
+    }
+
+    public boolean isCampaignTagSuggestType()
+    {
+        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.CampaignTag;
+    }
+
     public String getText1()
     {
         if (suggestItem == null)
@@ -127,7 +143,7 @@ public class GourmetSuggestV2
             return suggestItem.name;
         } else if (suggestItem instanceof CampaignTag)
         {
-            return suggestItem.name;
+            return DailyTextUtils.isTextEmpty(suggestItem.name) ? "" : "#" + suggestItem.name;
         } else if (suggestItem instanceof Section)
         {
             return suggestItem.name;
@@ -261,6 +277,18 @@ public class GourmetSuggestV2
         public String endDate; // ISO-8601
         //        public String campaignTag; // 이 항목은 name 으로 대체
         public String serviceType;
+
+        public static CampaignTag getSuggestItem(com.daily.dailyhotel.entity.CampaignTag campaignTag)
+        {
+            GourmetSuggestV2.CampaignTag suggestItem = new GourmetSuggestV2.CampaignTag();
+            suggestItem.index = campaignTag.index;
+            suggestItem.name = campaignTag.campaignTag;
+            suggestItem.startDate = campaignTag.startDate;
+            suggestItem.endDate = campaignTag.endDate;
+            suggestItem.serviceType = campaignTag.serviceType;
+
+            return suggestItem;
+        }
     }
 
     // 서버에서 받은 타입이 아님, 리스트 노출용 섹션
