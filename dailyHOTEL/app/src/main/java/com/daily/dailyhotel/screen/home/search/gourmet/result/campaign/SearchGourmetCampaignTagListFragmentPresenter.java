@@ -628,6 +628,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
+
+        mAnalytics.onEventGourmetClick(getActivity(), gourmet, mViewModel.getSuggest());
     }
 
     @Override
@@ -652,8 +654,6 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmet.toGourmet());
 
         startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_PREVIEW);
-
-        mAnalytics.onEventGourmetClick(getActivity(), gourmet, mViewModel.getSuggest());
     }
 
     @Override
