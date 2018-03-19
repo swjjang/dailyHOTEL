@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.home.search.gourmet.research;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetFilterView;
 import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
@@ -56,9 +57,9 @@ public class ResearchGourmetView extends BaseDialogView<ResearchGourmetInterface
         mSearchGourmetFragment.setOnFragmentEventListener(new SearchGourmetFragment.OnEventListener()
         {
             @Override
-            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            public void onRecentlySearchResultClick(GourmetSearchResultHistory recentlyHistory)
             {
-                getEventListener().onRecentlySearchResultClick(recentlyDbPlace);
+                getEventListener().onRecentlyHistoryClick(recentlyHistory);
             }
 
             @Override

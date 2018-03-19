@@ -17,7 +17,7 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
  */
 public class SearchGourmetViewModel extends ViewModel
 {
-    public MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
+    private MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
     private MutableLiveData<GourmetSuggestV2> suggest = new MutableLiveData<>();
     public String inputKeyword;
     public float radius;
@@ -66,5 +66,15 @@ public class SearchGourmetViewModel extends ViewModel
     public void removeSuggestObserver(Observer<GourmetSuggestV2> observer)
     {
         suggest.removeObserver(observer);
+    }
+
+    public void setBookDateTimeObserver(BaseActivity activity, Observer<GourmetBookDateTime> observer)
+    {
+        bookDateTime.observe(activity, observer);
+    }
+
+    public void removeBookDateTimeObserver(Observer<GourmetBookDateTime> observer)
+    {
+        bookDateTime.removeObserver(observer);
     }
 }

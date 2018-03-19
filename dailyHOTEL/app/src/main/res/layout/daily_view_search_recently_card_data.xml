@@ -42,7 +42,6 @@
             android:layout_marginTop="1px"
             android:textColor="@color/default_text_c929292"
             android:textSize="12dp"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/iconImageView"
             app:layout_constraintRight_toLeftOf="@+id/deleteImageView"

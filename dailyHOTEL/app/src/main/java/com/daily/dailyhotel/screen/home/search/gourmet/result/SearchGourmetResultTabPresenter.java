@@ -22,6 +22,7 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
@@ -61,6 +62,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
+    private SearchLocalImpl mSearchLocalImpl;
 
     SearchGourmetResultViewModel mViewModel;
 
@@ -93,6 +95,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
+        mSearchLocalImpl = new SearchLocalImpl(activity);
 
         initViewModel(activity);
 
@@ -129,7 +132,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             }
         });
 
-        mViewModel.searchViewModel.bookDateTime.observe(activity, new Observer<GourmetBookDateTime>()
+        mViewModel.searchViewModel.setBookDateTimeObserver(activity, new Observer<GourmetBookDateTime>()
         {
             @Override
             public void onChanged(@Nullable GourmetBookDateTime gourmetBookDateTime)
@@ -905,6 +908,10 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                     getViewInterface().setEmptyViewCampaignTagVisible(false);
                 }
             }));
+        } else
+        {
+            addCompositeDisposable(mSearchLocalImpl.addGourmetSearchResultHistory(mViewModel.getCommonDateTime()//
+                , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
         }
     }
 
