@@ -15,4 +15,5 @@ public interface SearchResultHistoryColumns extends BaseColumns
     String SUGGEST = "suggest"; // StaySuggestV2, GourmetSuggestV2, StayOutboundSuggest - json String 예정
     String ADULT_COUNT = "adult_count"; // 성인 수
     String CHILD_AGE_LIST = "child_age_list"; // 아이 나이 리스트
+    String START_DATE_TIME = "start_date_time"; // start_date 의 long 값
 }

@@ -229,23 +229,6 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 } else
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmetSuggest));
-//
-//                    GourmetSuggestData data = gourmetSuggest.getSuggestData();
-//
-//                    try
-//                    {
-//                        String json = LoganSquare.serialize(data);
-//                        ExLog.d("sam : logan = " + json);
-//
-//                        GourmetSuggestData newData = LoganSquare.parse(json, GourmetSuggestData.class);
-//                        ExLog.d("sam logan 2 = " + newData);
-//
-//                        GourmetSuggestV2 re2 = newData.getSuggest();
-//                        ExLog.d("sam logan 3 = " + re2);
-//                    } catch (Exception e)
-//                    {
-//                        ExLog.d(e.toString());
-//                    }
                 }
             }
 
