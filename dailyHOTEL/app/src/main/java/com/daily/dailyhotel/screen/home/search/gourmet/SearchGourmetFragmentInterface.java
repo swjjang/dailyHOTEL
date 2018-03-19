@@ -7,6 +7,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import java.util.List;
@@ -19,28 +20,28 @@ public interface SearchGourmetFragmentInterface
 {
     interface ViewInterface extends BaseFragmentDialogViewInterface
     {
-        void setRecentlySearchResultList(List<RecentlyDbPlace> recentlyList);
+        void setRecentlyHistory(List<GourmetSearchResultHistory> recentlyHistoryList);
 
         void setPopularSearchTagList(List<CampaignTag> tagList);
 
         void setPopularSearchTagVisible(boolean visible);
 
-        void setRecentlySearchResultVisible(boolean visible);
+        void setRecentlyHistoryVisible(boolean visible);
     }
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onRecentlySearchResultDeleteClick(int index, String gourmetName);
+        void onRecentlyHistoryDeleteClick(GourmetSearchResultHistory recentlyHistory);
 
-        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onRecentlyHistoryClick(GourmetSearchResultHistory recentlyHistory);
 
         void onPopularTagClick(CampaignTag campaignTag);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onEventRecentlyList(Activity activity, boolean empty);
+        void onEventRecentlyHistory(Activity activity, boolean empty);
 
-        void onEventRecentlyDeleteClick(Activity activity, String gourmetName);
+        void onEventRecentlyHistoryDeleteClick(Activity activity, String gourmetName);
     }
 }

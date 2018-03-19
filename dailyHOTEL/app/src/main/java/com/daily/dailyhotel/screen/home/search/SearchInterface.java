@@ -9,6 +9,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Completable;
@@ -100,7 +101,7 @@ public interface SearchInterface
 
         void onGourmetDoSearchClick();
 
-        void onGourmetRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onGourmetRecentlyHistoryClick(GourmetSearchResultHistory recentlyHistory);
 
         void onGourmetPopularTagClick(CampaignTag campaignTag);
     }

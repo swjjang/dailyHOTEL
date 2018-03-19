@@ -19,6 +19,7 @@ import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchStayOutboundViewModel;
 import com.twoheart.dailyhotel.R;
@@ -45,7 +46,8 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     SuggestRemoteImpl mSuggestRemoteImpl;
     SuggestLocalImpl mSuggestLocalImpl;
 
-    SearchStayOutboundViewModel mSearchModel;
+    SearchStayOutboundViewModel mSearchViewModel;
+    CommonDateTimeViewModel mCommonDateTimeViewModel;
 
     boolean mHasPopularArea;
 
@@ -57,7 +59,6 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-
         return getViewInterface().getContentView(inflater, R.layout.fragment_search_stay_outbound_data, container);
     }
 
@@ -275,7 +276,8 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
             return;
         }
 
-        mSearchModel = ViewModelProviders.of(activity).get(SearchStayOutboundViewModel.class);
+        mCommonDateTimeViewModel = ViewModelProviders.of(activity).get(CommonDateTimeViewModel.class);
+        mSearchViewModel = ViewModelProviders.of(activity).get(SearchStayOutboundViewModel.class);
     }
 
     void onRecentlyRefresh()

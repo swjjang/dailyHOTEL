@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 public class SearchGourmetFragmentAnalyticsImpl implements SearchGourmetFragmentInterface.AnalyticsInterface
 {
     @Override
-    public void onEventRecentlyList(Activity activity, boolean empty)
+    public void onEventRecentlyHistory(Activity activity, boolean empty)
     {
         if (activity == null)
         {
@@ -19,7 +19,7 @@ public class SearchGourmetFragmentAnalyticsImpl implements SearchGourmetFragment
     }
 
     @Override
-    public void onEventRecentlyDeleteClick(Activity activity, String gourmetName)
+    public void onEventRecentlyHistoryDeleteClick(Activity activity, String gourmetName)
     {
         if (activity == null)
         {

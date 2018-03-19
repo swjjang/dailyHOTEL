@@ -11,7 +11,8 @@ import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.view.DailySearchRecentlyCardView;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -36,19 +37,19 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
     @Override
     protected void setContentView(FragmentSearchGourmetDataBinding viewDataBinding)
     {
-        setRecentlySearchResultVisible(false);
+        setRecentlyHistoryVisible(false);
         setPopularSearchTagVisible(false);
 
         getViewDataBinding().tagFlexboxLayout.setFlexDirection(FlexDirection.ROW);
         getViewDataBinding().tagFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
 
-        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
-        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
-        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
+        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlyHistoryClick((GourmetSearchResultHistory) v.getTag()));
+        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlyHistoryClick((GourmetSearchResultHistory) v.getTag()));
+        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlyHistoryClick((GourmetSearchResultHistory) v.getTag()));
     }
 
     @Override
-    public void setRecentlySearchResultList(List<RecentlyDbPlace> recentlyList)
+    public void setRecentlyHistory(List<GourmetSearchResultHistory> recentlyHistoryList)
     {
         if (getViewDataBinding() == null)
         {
@@ -62,18 +63,18 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
         // 총 3개의 목록만 보여준다
         for (int i = 0; i < MAX_COUNT; i++)
         {
-            if (recentlyList != null && recentlyList.size() > i)
+            if (recentlyHistoryList != null && recentlyHistoryList.size() > i)
             {
                 recentlyCardView[i].setVisibility(View.VISIBLE);
                 recentlyCardView[i].setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
 
-                RecentlyDbPlace recentlyDbPlace = recentlyList.get(i);
+                GourmetSearchResultHistory recentlyHistory = recentlyHistoryList.get(i);
 
-                recentlyCardView[i].setTag(recentlyDbPlace);
+                recentlyCardView[i].setTag(recentlyHistory);
                 recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
-                recentlyCardView[i].setNameText(recentlyDbPlace.name);
-                recentlyCardView[i].setDateText(null);
-                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClick(recentlyDbPlace.index, recentlyDbPlace.name));
+                recentlyCardView[i].setNameText(recentlyHistory.gourmetSuggest.getText1());
+                recentlyCardView[i].setDateText(recentlyHistory.gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
+                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlyHistoryDeleteClick(recentlyHistory));
             } else
             {
                 recentlyCardView[i].setVisibility(View.GONE);
@@ -117,7 +118,7 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
     }
 
     @Override
-    public void setRecentlySearchResultVisible(boolean visible)
+    public void setRecentlyHistoryVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
         {
