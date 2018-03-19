@@ -14,8 +14,10 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.repository.local.model.SearchResultHistory;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.SearchResultHistoryList;
+import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.twoheart.dailyhotel.R;
@@ -89,19 +91,19 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<List<SearchResultHistory>> getStayIbSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
+    public Observable<List<StaySearchResultHistory>> getStayIbSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
     {
-        return Observable.defer(new Callable<ObservableSource<List<SearchResultHistory>>>()
+        return Observable.defer(new Callable<ObservableSource<List<StaySearchResultHistory>>>()
         {
             @Override
-            public ObservableSource<List<SearchResultHistory>> call() throws Exception
+            public ObservableSource<List<StaySearchResultHistory>> call() throws Exception
             {
                 if (commonDateTime == null)
                 {
                     return Observable.just(new ArrayList<>());
                 }
 
-                List<SearchResultHistory> list = new ArrayList<>();
+                List<StaySearchResultHistory> list = new ArrayList<>();
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
@@ -125,10 +127,8 @@ public class SearchLocalImpl implements SearchLocalInterface
                         String startDate = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.START_DATE));
                         String endDate = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.END_DATE));
                         String suggest = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.SUGGEST));
-                        int adultCount = cursor.getInt(cursor.getColumnIndex(SearchResultHistoryList.ADULT_COUNT));
-                        String childAgeList = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.CHILD_AGE_LIST));
 
-                        SearchResultHistory searchResultHistory = new SearchResultHistory(serviceType, startDate, endDate, suggest, adultCount, childAgeList);
+                        StaySearchResultHistory searchResultHistory = new StaySearchResultHistory(startDate, endDate, suggest);
                         list.add(searchResultHistory);
                     }
                 } catch (Exception e)
@@ -228,19 +228,19 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<List<SearchResultHistory>> getGourmetSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
+    public Observable<List<GourmetSearchResultHistory>> getGourmetSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
     {
-        return Observable.defer(new Callable<ObservableSource<List<SearchResultHistory>>>()
+        return Observable.defer(new Callable<ObservableSource<List<GourmetSearchResultHistory>>>()
         {
             @Override
-            public ObservableSource<List<SearchResultHistory>> call() throws Exception
+            public ObservableSource<List<GourmetSearchResultHistory>> call() throws Exception
             {
                 if (commonDateTime == null)
                 {
                     return Observable.just(new ArrayList<>());
                 }
 
-                List<SearchResultHistory> list = new ArrayList<>();
+                List<GourmetSearchResultHistory> list = new ArrayList<>();
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
@@ -262,12 +262,9 @@ public class SearchLocalImpl implements SearchLocalInterface
                         cursor.moveToPosition(i);
 
                         String startDate = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.START_DATE));
-                        String endDate = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.END_DATE));
                         String suggest = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.SUGGEST));
-                        int adultCount = cursor.getInt(cursor.getColumnIndex(SearchResultHistoryList.ADULT_COUNT));
-                        String childAgeList = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.CHILD_AGE_LIST));
 
-                        SearchResultHistory searchResultHistory = new SearchResultHistory(serviceType, startDate, endDate, suggest, adultCount, childAgeList);
+                        GourmetSearchResultHistory searchResultHistory = new GourmetSearchResultHistory(startDate, suggest);
                         list.add(searchResultHistory);
                     }
                 } catch (Exception e)
@@ -370,19 +367,19 @@ public class SearchLocalImpl implements SearchLocalInterface
     }
 
     @Override
-    public Observable<List<SearchResultHistory>> getStayObSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
+    public Observable<List<StayObSearchResultHistory>> getStayObSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount)
     {
-        return Observable.defer(new Callable<ObservableSource<List<SearchResultHistory>>>()
+        return Observable.defer(new Callable<ObservableSource<List<StayObSearchResultHistory>>>()
         {
             @Override
-            public ObservableSource<List<SearchResultHistory>> call() throws Exception
+            public ObservableSource<List<StayObSearchResultHistory>> call() throws Exception
             {
                 if (commonDateTime == null)
                 {
                     return Observable.just(new ArrayList<>());
                 }
 
-                List<SearchResultHistory> list = new ArrayList<>();
+                List<StayObSearchResultHistory> list = new ArrayList<>();
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
@@ -409,7 +406,7 @@ public class SearchLocalImpl implements SearchLocalInterface
                         int adultCount = cursor.getInt(cursor.getColumnIndex(SearchResultHistoryList.ADULT_COUNT));
                         String childAgeList = cursor.getString(cursor.getColumnIndex(SearchResultHistoryList.CHILD_AGE_LIST));
 
-                        SearchResultHistory searchResultHistory = new SearchResultHistory(serviceType, startDate, endDate, suggest, adultCount, childAgeList);
+                        StayObSearchResultHistory searchResultHistory = new StayObSearchResultHistory(startDate, endDate, suggest, adultCount, childAgeList);
                         list.add(searchResultHistory);
                     }
                 } catch (Exception e)
