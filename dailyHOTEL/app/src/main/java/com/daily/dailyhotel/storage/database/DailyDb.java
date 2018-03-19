@@ -134,10 +134,13 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     private static final String CREATE_T_SEARCH_RESULT_HISTORY = "CREATE TABLE IF NOT EXISTS " + T_SEARCH_RESULT_HISTORY + " (" //
         + SearchResultHistoryList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + SearchResultHistoryList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
+        + SearchResultHistoryList.DISPLAY_NAME + " TEXT NOT NULL, " //
         + SearchResultHistoryList.START_DATE + " TEXT NOT NULL, " //
-        + SearchResultHistoryList.END_DATE + " TEXT NOT NULL, " //
+        + SearchResultHistoryList.END_DATE + " TEXT NULL, " //
         + SearchResultHistoryList.SUGGEST + " TEXT NULL, " // StaySuggestV2, GourmetSuggestV2, StayOutboundSuggest - json String 예정
         + SearchResultHistoryList.ADULT_COUNT + " INTEGER NOT NULL DEFAULT 0, " //
+        + SearchResultHistoryList.START_DATE_TIME + " INTEGER NOT NULL DEFAULT 0, " //
+        + SearchResultHistoryList.SAVING_TIME + " INTEGER NOT NULL DEFAULT 0, " //
         + SearchResultHistoryList.CHILD_AGE_LIST + " TEXT NULL " + ");";
 
     public DailyDb(Context context)
@@ -1720,6 +1723,252 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         }
 
         mContext.getContentResolver().notifyChange(StayIbRecentlySuggestList.NOTIFICATION_URI, null);
+    }
+
+    public Cursor getSearchResultHistory(String serviceType, String displayName)
+    {
+        if (DailyTextUtils.isTextEmpty(serviceType, displayName))
+        {
+            return null;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_SEARCH_RESULT_HISTORY);
+        sqlBuilder.append(" WHERE ").append(SearchResultHistoryList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
+        sqlBuilder.append(" AND ").append(SearchResultHistoryList.DISPLAY_NAME).append("=\"").append(displayName).append("\"");
+        sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.START_DATE_TIME).append(" DESC");
+        sqlBuilder.append(" , ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
+    private void maintainSearchResultHistory(String serviceType, String checkDate)
+    {
+        if (DailyTextUtils.isTextEmpty(serviceType, checkDate))
+        {
+            return;
+        }
+
+        long checkTime = -1;
+        try
+        {
+            checkTime = DailyCalendar.getInstance(checkDate, true).getTimeInMillis();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        if (checkTime <= 0)
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_SEARCH_RESULT_HISTORY, SearchResultHistoryList.SERVICE_TYPE + " = '" + serviceType + "'" //
+                + " AND " + SearchResultHistoryList.START_DATE_TIME + " < '" + checkTime + "'", null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+    }
+
+    public void addSearchResultHistory(String serviceType, String displayName, String currentDate, String startDate //
+        , String endDate, String suggest, int adultCount, String childList)
+    {
+        if (DailyTextUtils.isTextEmpty(serviceType, displayName, currentDate, startDate, suggest))
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            long oldId = -1;
+            Cursor cursor = null;
+
+            try
+            {
+                cursor = getSearchResultHistory(serviceType, displayName);
+
+                if (cursor != null && cursor.getCount() > 0)
+                {
+                    cursor.moveToFirst();
+
+                    int idColumnIndex = cursor.getColumnIndex(SearchResultHistoryList._ID);
+                    oldId = cursor.getLong(idColumnIndex);
+                }
+
+            } catch (Exception e)
+            {
+                oldId = -1;
+            } finally
+            {
+                try
+                {
+                    if (cursor != null)
+                    {
+                        cursor.close();
+                    }
+                } catch (Exception e)
+                {
+                    // do nothing!
+                }
+            }
+
+            long startDateTime = DailyCalendar.getInstance(startDate, DailyCalendar.ISO_8601_FORMAT).getTimeInMillis();
+
+            ContentValues contentValues = new ContentValues();
+
+            if (oldId > 0)
+            {
+                contentValues.put(SearchResultHistoryList._ID, oldId);
+            }
+
+            contentValues.put(SearchResultHistoryList.SERVICE_TYPE, serviceType);
+            contentValues.put(SearchResultHistoryList.DISPLAY_NAME, displayName);
+            contentValues.put(SearchResultHistoryList.START_DATE, startDate);
+            contentValues.put(SearchResultHistoryList.END_DATE, endDate);
+            contentValues.put(SearchResultHistoryList.SUGGEST, suggest);
+            contentValues.put(SearchResultHistoryList.ADULT_COUNT, adultCount);
+            contentValues.put(SearchResultHistoryList.CHILD_AGE_LIST, childList);
+            contentValues.put(SearchResultHistoryList.START_DATE_TIME, startDateTime);
+
+            long savingTime = DailyCalendar.getInstance().getTimeInMillis();
+            contentValues.put(SearchResultHistoryList.SAVING_TIME, savingTime);
+
+            db.beginTransaction();
+
+            insertOrUpdate(T_SEARCH_RESULT_HISTORY, SearchResultHistoryList._ID, contentValues);
+
+            db.setTransactionSuccessful();
+
+        } catch (Exception e)
+        {
+            ExLog.w("add fail : " + e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (IllegalStateException e)
+            {
+                // ignore
+            }
+        }
+
+        maintainSearchResultHistory(serviceType, currentDate);
+
+        mContext.getContentResolver().notifyChange(StayIbRecentlySuggestList.NOTIFICATION_URI, null);
+    }
+
+    public Cursor getSearchResultHistoryList(String serviceType, String checkDate, int maxCount)
+    {
+        if (DailyTextUtils.isTextEmpty(serviceType, checkDate))
+        {
+            return null;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return null;
+        }
+
+        long checkTime = -1;
+
+        try
+        {
+            checkTime = DailyCalendar.getInstance(checkDate, true).getTimeInMillis();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_SEARCH_RESULT_HISTORY);
+        sqlBuilder.append(" WHERE ").append(SearchResultHistoryList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
+        sqlBuilder.append(" AND ").append(SearchResultHistoryList.START_DATE_TIME).append(">=").append(checkTime).append("");
+        sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.START_DATE_TIME).append(" DESC");
+        sqlBuilder.append(" , ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
+
+        if (maxCount > 0)
+        {
+            sqlBuilder.append(" limit ").append(maxCount);
+        }
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
+    public void deleteSearchResultHistory(String serviceType, String displayName)
+    {
+        if (DailyTextUtils.isTextEmpty(serviceType, displayName))
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_SEARCH_RESULT_HISTORY, SearchResultHistoryList.SERVICE_TYPE + " = '" + serviceType + "'" //
+                + " AND " + SearchResultHistoryList.DISPLAY_NAME + " = '" + displayName + "'", null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(SearchResultHistoryList.NOTIFICATION_URI, null);
     }
 
     //    public void exportDatabase(String databaseName)

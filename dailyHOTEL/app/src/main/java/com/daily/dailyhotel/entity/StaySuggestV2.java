@@ -3,6 +3,7 @@ package com.daily.dailyhotel.entity;
 import android.support.annotation.NonNull;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.repository.local.model.StaySuggestData;
 
 import java.io.Serializable;
 
@@ -196,6 +197,14 @@ public class StaySuggestV2
         {
             this.name = name;
         }
+
+        public StaySuggestData.SuggestItemData getSuggestItemData()
+        {
+            StaySuggestData.SuggestItemData data = new StaySuggestData.SuggestItemData();
+            data.name = name;
+
+            return data;
+        }
     }
 
     public static class Station extends SuggestItem
@@ -209,6 +218,17 @@ public class StaySuggestV2
         {
             return name + "(" + line + ")";
             //            return "[" + line + "] " + name;
+        }
+
+        public StaySuggestData.StationData getStationData()
+        {
+            StaySuggestData.StationData data = new StaySuggestData.StationData();
+            data.name = name;
+            data.index = index;
+            data.region = region;
+            data.line = line;
+
+            return data;
         }
     }
 
@@ -224,6 +244,18 @@ public class StaySuggestV2
         {
             return areaGroup == null ? null : areaGroup.name;
         }
+
+        public StaySuggestData.StayData getStayData()
+        {
+            StaySuggestData.StayData data = new StaySuggestData.StayData();
+            data.name = name;
+            data.index = index;
+            data.discountAvg = discountAvg;
+            data.available = available;
+            data.areaGroup = areaGroup == null ? null : areaGroup.getAreaGroupData();
+
+            return data;
+        }
     }
 
     public static class AreaGroup extends SuggestItem
@@ -236,12 +268,31 @@ public class StaySuggestV2
         {
             return area == null ? name : area.name;
         }
+
+        public StaySuggestData.AreaGroupData getAreaGroupData()
+        {
+            StaySuggestData.AreaGroupData data = new StaySuggestData.AreaGroupData();
+            data.name = name;
+            data.index = index;
+            data.area = area == null ? null : area.getAreaData();
+
+            return data;
+        }
     }
 
     public static class Area extends SuggestItem
     {
         public int index;
-        //        public int name;
+        //        public String name;
+
+        public StaySuggestData.AreaData getAreaData()
+        {
+            StaySuggestData.AreaData data = new StaySuggestData.AreaData();
+            data.name = name;
+            data.index = index;
+
+            return data;
+        }
     }
 
     public static class Direct extends SuggestItem
@@ -252,6 +303,14 @@ public class StaySuggestV2
         {
             super(name);
         }
+
+        public StaySuggestData.DirectData getDirectData()
+        {
+            StaySuggestData.DirectData data = new StaySuggestData.DirectData();
+            data.name = name;
+
+            return data;
+        }
     }
 
     public static class Location extends SuggestItem
@@ -260,6 +319,17 @@ public class StaySuggestV2
         public double longitude;
         public String address;
         //        public String name;
+
+        public StaySuggestData.LocationData getLocationData()
+        {
+            StaySuggestData.LocationData data = new StaySuggestData.LocationData();
+            data.name = name;
+            data.address = address;
+            data.latitude = latitude;
+            data.longitude = longitude;
+
+            return data;
+        }
     }
 
     public static class CampaignTag extends SuggestItem
@@ -269,6 +339,18 @@ public class StaySuggestV2
         public String endDate; // ISO-8601
         //        public String campaignTag; // 이 항목은 name 으로 대체
         public String serviceType;
+
+        public StaySuggestData.CampaignTagData getCampaignTagData()
+        {
+            StaySuggestData.CampaignTagData data = new StaySuggestData.CampaignTagData();
+            data.name = name;
+            data.index = index;
+            data.startDate = startDate;
+            data.endDate = endDate;
+            data.serviceType = serviceType;
+
+            return data;
+        }
     }
 
     // 서버에서 받은 타입이 아님, 리스트 노출용 섹션
@@ -279,5 +361,72 @@ public class StaySuggestV2
         {
             super(title);
         }
+
+        public StaySuggestData.SectionData getSectionData()
+        {
+            StaySuggestData.SectionData data = new StaySuggestData.SectionData();
+            data.name = name;
+
+            return data;
+        }
+    }
+
+    public StaySuggestData getSuggestData()
+    {
+        StaySuggestData data = new StaySuggestData();
+        data.menuType = menuType.name();
+
+        switch (getSuggestType())
+        {
+            case STATION:
+            {
+                data.stationData = ((Station) suggestItem).getStationData();
+                break;
+            }
+
+            case STAY:
+            {
+                data.stayData = ((Stay) suggestItem).getStayData();
+                break;
+            }
+
+            case AREA_GROUP:
+            {
+                data.areaGroupData = ((AreaGroup) suggestItem).getAreaGroupData();
+                break;
+            }
+
+            case LOCATION:
+            {
+                data.locationData = ((Location) suggestItem).getLocationData();
+                break;
+            }
+
+            case DIRECT:
+            {
+                data.directData = ((Direct) suggestItem).getDirectData();
+                break;
+            }
+
+            case CAMPAIGN_TAG:
+            {
+                data.campaignTagData = ((CampaignTag) suggestItem).getCampaignTagData();
+                break;
+            }
+
+            case SECTION:
+            {
+                data.sectionData = ((Section) suggestItem).getSectionData();
+                break;
+            }
+
+            default:
+            {
+                data.suggestItemData = suggestItem.getSuggestItemData();
+                break;
+            }
+        }
+
+        return data;
     }
 }
