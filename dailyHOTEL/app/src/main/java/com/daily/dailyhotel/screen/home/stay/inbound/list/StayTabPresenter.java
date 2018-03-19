@@ -30,7 +30,7 @@ import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySubwayArea;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -1089,7 +1089,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     try
                     {
-                        StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
+                        StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
+                        StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, suggestItem);
 
                         startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
                             , mStayViewModel.commonDateTime.getValue().getTodayDateTime()//

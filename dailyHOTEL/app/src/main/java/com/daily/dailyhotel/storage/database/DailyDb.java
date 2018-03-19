@@ -1743,8 +1743,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         sqlBuilder.append(T_SEARCH_RESULT_HISTORY);
         sqlBuilder.append(" WHERE ").append(SearchResultHistoryList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
         sqlBuilder.append(" AND ").append(SearchResultHistoryList.DISPLAY_NAME).append("=\"").append(displayName).append("\"");
-        sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.START_DATE_TIME).append(" DESC");
-        sqlBuilder.append(" , ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
+        sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
 
         Cursor cursor = rawQuery(sqlBuilder.toString());
 
@@ -1922,8 +1921,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         sqlBuilder.append(T_SEARCH_RESULT_HISTORY);
         sqlBuilder.append(" WHERE ").append(SearchResultHistoryList.SERVICE_TYPE).append("=\"").append(serviceType).append("\"");
         sqlBuilder.append(" AND ").append(SearchResultHistoryList.START_DATE_TIME).append(">=").append(checkTime).append("");
-        sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.START_DATE_TIME).append(" DESC");
-        sqlBuilder.append(" , ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
+        sqlBuilder.append(" ORDER BY ").append(SearchResultHistoryList.SAVING_TIME).append(" DESC");
 
         if (maxCount > 0)
         {

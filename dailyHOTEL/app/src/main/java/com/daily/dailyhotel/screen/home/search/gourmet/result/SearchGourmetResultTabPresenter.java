@@ -140,7 +140,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             }
         });
 
-        mViewModel.searchViewModel.suggest.observe(activity, new Observer<GourmetSuggestV2>()
+        mViewModel.searchViewModel.setSuggestObserver(activity, new Observer<GourmetSuggestV2>()
         {
             @Override
             public void onChanged(@Nullable GourmetSuggestV2 suggest)

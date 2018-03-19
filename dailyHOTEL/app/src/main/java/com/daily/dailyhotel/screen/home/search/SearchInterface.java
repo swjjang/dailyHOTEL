@@ -8,7 +8,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Completable;
@@ -118,7 +118,7 @@ public interface SearchInterface
 
         void onEventStaySuggestClick(Activity activity);
 
-        void onEventStayDoSearch(Activity activity, StaySuggest suggest);
+        void onEventStayDoSearch(Activity activity, StaySuggestV2 suggest);
 
         void onEventStayCalendarClick(Activity activity);
 

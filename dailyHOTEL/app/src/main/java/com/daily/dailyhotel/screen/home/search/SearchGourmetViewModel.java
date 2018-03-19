@@ -2,10 +2,12 @@ package com.daily.dailyhotel.screen.home.search;
 
 
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 
@@ -16,7 +18,7 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
 public class SearchGourmetViewModel extends ViewModel
 {
     public MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
-    public MutableLiveData<GourmetSuggestV2> suggest = new MutableLiveData<>();
+    private MutableLiveData<GourmetSuggestV2> suggest = new MutableLiveData<>();
     public String inputKeyword;
     public float radius;
 
@@ -44,5 +46,25 @@ public class SearchGourmetViewModel extends ViewModel
     public GourmetBookDateTime getBookDateTime()
     {
         return bookDateTime.getValue();
+    }
+
+    public void setSuggest(GourmetSuggestV2 suggest)
+    {
+        this.suggest.setValue(suggest);
+    }
+
+    public GourmetSuggestV2 getSuggest()
+    {
+        return suggest.getValue();
+    }
+
+    public void setSuggestObserver(BaseActivity activity, Observer<GourmetSuggestV2> observer)
+    {
+        suggest.observe(activity, observer);
+    }
+
+    public void removeSuggestObserver(Observer<GourmetSuggestV2> observer)
+    {
+        suggest.removeObserver(observer);
     }
 }

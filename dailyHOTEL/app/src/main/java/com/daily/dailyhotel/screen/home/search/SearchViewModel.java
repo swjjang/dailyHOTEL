@@ -8,8 +8,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -88,19 +87,9 @@ public class SearchViewModel extends ViewModel
         stayViewModel.setBookDateTime(checkInDateTime, afterCheckInDay, checkOutDateTime, afterCheckOutDay);
     }
 
-    public void setStaySuggest(StaySuggest suggest)
+    public void setStaySuggest(StaySuggestV2 suggest)
     {
         stayViewModel.setSuggest(suggest);
-    }
-
-    public void setStaySuggest(StaySuggestParcel suggestParcel)
-    {
-        if (suggestParcel == null)
-        {
-            return;
-        }
-
-        setStaySuggest(suggestParcel.getSuggest());
     }
 
     public void setStayOutboundBookDateTime(Intent intent, String checkInDateTimeExtraName, String checkOutDateTimeExtraName) throws Exception
