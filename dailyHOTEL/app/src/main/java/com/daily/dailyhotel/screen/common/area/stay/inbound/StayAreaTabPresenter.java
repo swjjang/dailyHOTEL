@@ -713,7 +713,8 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         final String areaName = area.name;
 
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
-        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroup) == true)
+        if (equalsAreaGroupName(mStayAreaViewModel.previousArea.getValue(), areaGroup) == true//
+            && getPreferenceRegion(mStayAreaViewModel.categoryType) != null)
         {
             setResult(Activity.RESULT_OK, mStayAreaViewModel.categoryType, areaGroup, area);
             finish();

@@ -989,6 +989,12 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         mAnalytics.onEventWishClick(getActivity(), mStayViewModel.categoryType, !currentWish);
     }
 
+    @Override
+    public void showActionBar()
+    {
+        getFragment().getFragmentEventListener().showActionBar();
+    }
+
     private void initViewModel(BaseActivity activity)
     {
         if (activity == null)

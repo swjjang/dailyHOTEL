@@ -98,6 +98,8 @@ public interface StayListFragmentInterface
         void onCalendarClick();
 
         void onWishClick(int position, Stay stay);
+
+        void showActionBar();
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
