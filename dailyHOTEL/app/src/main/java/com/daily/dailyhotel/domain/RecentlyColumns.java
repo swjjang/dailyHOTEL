@@ -16,4 +16,5 @@ public interface RecentlyColumns extends BaseColumns
     String ENGLISH_NAME = "english_name";
     String IMAGE_URL = "image_url";
     String SAVING_TIME = "saving_time";
+    String AREA_GROUP_NAME = "area_group_name";
 }

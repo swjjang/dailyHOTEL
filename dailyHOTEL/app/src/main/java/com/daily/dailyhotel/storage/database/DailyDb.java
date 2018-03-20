@@ -53,7 +53,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     public static final String T_GOURMET_IB_RECENTLY_SUGGEST = "gourmet_ib_recently_suggest";
     public static final String T_SEARCH_RESULT_HISTORY = "search_result_history";
 
-    // added database version 1
+    // added database version 1 and change version 5 (added field Province name, Province index)
     private static final String CREATE_T_RECENTLY = "CREATE TABLE IF NOT EXISTS " + T_RECENTLY + " (" //
         + RecentlyList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + RecentlyList.PLACE_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
@@ -61,7 +61,11 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + RecentlyList.ENGLISH_NAME + " TEXT NULL, " //
         + RecentlyList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
         + RecentlyList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
+        + RecentlyList.AREA_GROUP_NAME + " TEXT NULL, " //
         + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
+
+    // change database version 5
+    private static final String ALTER_T_RECENTLY_DB_VER_5 = "ALTER TABLE " + T_RECENTLY + " ADD COLUMN " + RecentlyList.AREA_GROUP_NAME + " TEXT NULL;";
 
     // added database version 3
     private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
@@ -181,6 +185,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             upGradeGourmetRecentlySuggestDb(db);
             upGradeStayIbRecentlySuggestDb(db);
             upGradeSearchResultHistoryDb(db);
+            alterRecentlyPlace(db);
         }
 
         if (oldVersion <= 3)
@@ -239,6 +244,17 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         db.execSQL("drop table if exists " + T_SEARCH_RESULT_HISTORY);
         db.execSQL(CREATE_T_SEARCH_RESULT_HISTORY);
+    }
+
+    public void alterRecentlyPlace(SQLiteDatabase db)
+    {
+        try
+        {
+            db.execSQL(ALTER_T_RECENTLY_DB_VER_5);
+        } catch (Exception e)
+        {
+            ExLog.d("sam : error = " + e.toString());
+        }
     }
 
     private SQLiteDatabase getDb()
@@ -500,7 +516,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     }
 
     public void addRecentlyPlace(final Constants.ServiceType serviceType, int index, String name //
-        , String englishName, String imageUrl, boolean isUpdateDate)
+        , String englishName, String imageUrl, String areaGroupName, boolean isUpdateDate)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -535,6 +551,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             contentValues.put(RecentlyColumns.SERVICE_TYPE, serviceType == null ? "" : serviceType.name());
             contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
             contentValues.put(RecentlyColumns.IMAGE_URL, imageUrl);
+            contentValues.put(RecentlyColumns.AREA_GROUP_NAME, areaGroupName);
 
             db.beginTransaction();
 

@@ -5,6 +5,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.PlaceDetailProvince;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.twoheart.dailyhotel.model.Stay;
@@ -127,6 +128,9 @@ public class StayDetailData
 
     @JsonField(name = "awards")
     public TrueAwardsData awards;
+
+    @JsonField(name = "province")
+    public ProvinceData province;
 
     public StayDetailData()
     {
@@ -308,6 +312,11 @@ public class StayDetailData
             stayDetail.awards = awards.getTrueAwards();
         }
 
+        if (province != null)
+        {
+            stayDetail.province = province.getProvince();
+        }
+
         return stayDetail;
     }
 
@@ -415,6 +424,25 @@ public class StayDetailData
             stayRoom.provideRewardSticker = provideRewardSticker;
 
             return stayRoom;
+        }
+    }
+
+    @JsonObject
+    static class ProvinceData
+    {
+        @JsonField(name = "id")
+        public int index;
+
+        @JsonField(name = "name")
+        public String name;
+
+        public PlaceDetailProvince getProvince()
+        {
+            PlaceDetailProvince province = new PlaceDetailProvince();
+            province.index = index;
+            province.name = name;
+
+            return province;
         }
     }
 }

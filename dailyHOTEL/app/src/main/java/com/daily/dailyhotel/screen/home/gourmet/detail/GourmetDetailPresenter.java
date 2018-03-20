@@ -380,7 +380,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.GOURMET, mGourmetIndex, mGourmetName, null, mImageUrl, true) //
+            Constants.ServiceType.GOURMET, mGourmetIndex, mGourmetName, null, mImageUrl, null, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
@@ -1623,6 +1623,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         {
             ExLog.e(e.toString());
         }
+
+        String areaGroupName = mGourmetDetail.province == null ? null : mGourmetDetail.province.name;
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.GOURMET, mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, areaGroupName, true) //
+            .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);

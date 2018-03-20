@@ -371,7 +371,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }
 
         addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.HOTEL, mStayIndex, mStayName, null, mImageUrl, true) //
+            Constants.ServiceType.HOTEL, mStayIndex, mStayName, null, mImageUrl, null, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
@@ -1551,8 +1551,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             ExLog.e(e.toString());
         }
 
+        String areaGroupName = mStayDetail.province == null ? null : mStayDetail.province.name;
         addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, false) //
+            Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, areaGroupName,  false) //
             .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
