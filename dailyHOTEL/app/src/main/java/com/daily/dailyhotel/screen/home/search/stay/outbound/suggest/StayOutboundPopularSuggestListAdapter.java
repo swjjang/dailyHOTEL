@@ -187,6 +187,7 @@ public class StayOutboundPopularSuggestListAdapter extends RecyclerView.Adapter<
                 StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
                 stayOutboundSuggest.display = nearByStayOutboundSuggest != null ? nearByStayOutboundSuggest.display : descriptionText;
+                stayOutboundSuggest.displayText = nearByStayOutboundSuggest != null ? nearByStayOutboundSuggest.displayText : descriptionText;
                 stayOutboundSuggest.latitude = nearByStayOutboundSuggest.latitude;
                 stayOutboundSuggest.longitude = nearByStayOutboundSuggest.longitude;
                 stayOutboundSuggest.categoryKey = nearByStayOutboundSuggest.categoryKey;
@@ -217,9 +218,9 @@ public class StayOutboundPopularSuggestListAdapter extends RecyclerView.Adapter<
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(stayOutboundSuggest.display);
+        holder.dataBinding.descriptionTextView.setText(stayOutboundSuggest.displayText);
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.displayText) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else
@@ -232,7 +233,7 @@ public class StayOutboundPopularSuggestListAdapter extends RecyclerView.Adapter<
     {
         StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.displayText) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
         } else
@@ -240,7 +241,7 @@ public class StayOutboundPopularSuggestListAdapter extends RecyclerView.Adapter<
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
         }
 
-        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
+        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.displayText);
     }
 
     private void onBindViewHolder(FooterViewHolder holder)
@@ -268,9 +269,18 @@ public class StayOutboundPopularSuggestListAdapter extends RecyclerView.Adapter<
             }
         });
 
-        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
+        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.displayText);
 
-        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.country))
+        {
+            holder.dataBinding.descriptionTextView.setText(null);
+            holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        } else
+        {
+            holder.dataBinding.descriptionTextView.setText(stayOutboundSuggest.country);
+            holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
+        }
+
         holder.dataBinding.priceTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);

@@ -512,7 +512,7 @@ public class SearchStayOutboundSuggestView //
             getViewDataBinding().nearbyDataBinding.nearbyLayout.setTag(locationSuggest);
             getViewDataBinding().nearbyDataBinding.descriptionTextView.setText(locationSuggest.display);
             getViewDataBinding().nearbyDataBinding.descriptionTextView.setVisibility( //
-                DailyTextUtils.isTextEmpty(locationSuggest.display) ? View.GONE : View.VISIBLE);
+                DailyTextUtils.isTextEmpty(locationSuggest.displayText) ? View.GONE : View.VISIBLE);
             getViewDataBinding().nearbyDataBinding.bottomDivider.setVisibility(View.VISIBLE);
         }
     }
