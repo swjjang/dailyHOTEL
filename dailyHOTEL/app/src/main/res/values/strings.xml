@@ -869,7 +869,7 @@
     <string name="message_changing_option">검색조건을 변경해서 다시 검색해보세요.</string>
     <string name="message_stay_empty_message01">조건에 맞는 스테이가 없습니다.</string>
     <string name="message_stay_empty_message02">지역이나 날짜를 변경해보세요.</string>
-    <string name="message_gourmet_empty_message01">조건에 맞는 레스토랑이 없습니다.</string>
+    <string name="message_gourmet_empty_message01">조건에 맞는 고메가 없습니다.</string>
     <string name="message_gourmet_empty_message02">지역이나 날짜를 변경해보세요.</string>
 
     <!-- Wait Payment Activity -->

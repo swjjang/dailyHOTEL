@@ -558,7 +558,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         {
             rewardCardView.setOptionVisible(true);
             rewardCardView.setOptionText(optionText);
-            rewardCardView.setOnClickListener(v -> getEventListener().onLoginClick());
+            rewardCardView.setOnOptionClickListener(v -> getEventListener().onLoginClick());
         } else
         {
             rewardCardView.setOptionVisible(false);
