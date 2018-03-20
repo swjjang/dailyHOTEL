@@ -6,6 +6,8 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,6 +72,7 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -1551,9 +1554,34 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             ExLog.e(e.toString());
         }
 
-        String areaGroupName = mStayDetail.province == null ? null : mStayDetail.province.name;
+        String regionName = mStayDetail.province == null ? null : mStayDetail.province.name;
+
+        if (DailyTextUtils.isTextEmpty(regionName))
+        {
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.KOREA);
+
+            try
+            {
+                List<Address> list = geocoder.getFromLocation(mStayDetail.latitude, mStayDetail.longitude, 10);
+                if (list != null && list.size() > 0)
+                {
+                    for (Address address : list)
+                    {
+                        if (DailyTextUtils.isTextEmpty(address.getLocality()) == false)
+                        {
+                            regionName = address.getLocality();
+                            break;
+                        }
+                    }
+                }
+            } catch (IOException e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
         addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, areaGroupName,  false) //
+            Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, regionName, false) //
             .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
