@@ -12,7 +12,7 @@ public class SearchGourmetFragment extends BasePagerFragment<SearchGourmetFragme
 {
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
-        void onRecentlySearchResultClick(GourmetSearchResultHistory recentlyHistory);
+        void onRecentlyHistoryClick(GourmetSearchResultHistory recentlyHistory);
 
         void onPopularTagClick(CampaignTag campaignTag);
     }

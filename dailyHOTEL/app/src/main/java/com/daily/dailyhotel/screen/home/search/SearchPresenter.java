@@ -26,10 +26,10 @@ import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
-import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
@@ -37,7 +37,6 @@ import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResul
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -945,26 +944,47 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     }
 
     @Override
-    public void onStayRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    public void onStayRecentlyHistoryClick(StaySearchResultHistory recentlyHistory)
     {
-        if (recentlyDbPlace == null || lock() == true)
+        if (recentlyHistory == null || lock() == true)
         {
             return;
         }
 
-        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+        try
+        {
+            StayBookDateTime stayBookDateTime = recentlyHistory.stayBookDateTime;
 
-        StayBookDateTime stayBookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
+            mSearchViewModel.stayViewModel.inputKeyword = null;
+            mSearchViewModel.stayViewModel.setBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+            mSearchViewModel.stayViewModel.setSuggest(recentlyHistory.staySuggest);
 
-        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
-            , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
-            , StayDetailActivity.NONE_PRICE//
-            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
-            , SearchActivity.REQUEST_CODE_STAY_DETAIL);
+            addCompositeDisposable(getViewInterface().getGourmetSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+            {
+                @Override
+                public void run() throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
 
-        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        //        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+        //
+        //        StayBookDateTime stayBookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
+        //
+        //        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
+        //            , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
+        //            , StayDetailActivity.NONE_PRICE//
+        //            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+        //            , SearchActivity.REQUEST_CODE_STAY_DETAIL);
+        //
+        //        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
     @Override
@@ -974,6 +994,25 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             return;
         }
+
+        if (campaignTag == null || lock() == true)
+        {
+            return;
+        }
+
+        StaySuggestV2.CampaignTag suggestItem = StaySuggestV2.CampaignTag.getSuggestItem(campaignTag);
+        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+
+        mSearchViewModel.stayViewModel.setSuggest(suggest);
+
+        addCompositeDisposable(getViewInterface().getStaySuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                unLockAll();
+            }
+        }));
 
         //        StaySuggestV2 staySuggest = new StaySuggestV2();
         //
@@ -1247,9 +1286,9 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
 
-        mSearchViewModel.gourmetViewModel.setSuggest(gourmetSuggest);
+        mSearchViewModel.gourmetViewModel.setSuggest(suggest);
 
         addCompositeDisposable(getViewInterface().getGourmetSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
         {

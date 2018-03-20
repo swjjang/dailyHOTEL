@@ -356,6 +356,18 @@ public class StaySuggestV2
         //        public String campaignTag; // 이 항목은 name 으로 대체
         public String serviceType;
 
+        public static CampaignTag getSuggestItem(com.daily.dailyhotel.entity.CampaignTag campaignTag)
+        {
+            StaySuggestV2.CampaignTag suggestItem = new StaySuggestV2.CampaignTag();
+            suggestItem.index = campaignTag.index;
+            suggestItem.name = campaignTag.campaignTag;
+            suggestItem.startDate = campaignTag.startDate;
+            suggestItem.endDate = campaignTag.endDate;
+            suggestItem.serviceType = campaignTag.serviceType;
+
+            return suggestItem;
+        }
+
         public StaySuggestData.CampaignTagData getCampaignTagData()
         {
             StaySuggestData.CampaignTagData data = new StaySuggestData.CampaignTagData();

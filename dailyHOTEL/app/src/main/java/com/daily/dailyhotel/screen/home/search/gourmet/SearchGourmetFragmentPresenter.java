@@ -258,7 +258,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     @Override
     public void onRecentlyHistoryClick(GourmetSearchResultHistory recentlyHistory)
     {
-        getFragment().getFragmentEventListener().onRecentlySearchResultClick(recentlyHistory);
+        getFragment().getFragmentEventListener().onRecentlyHistoryClick(recentlyHistory);
     }
 
     @Override

@@ -4,8 +4,9 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public interface ResearchStayInterface
@@ -20,6 +21,8 @@ public interface ResearchStayInterface
 
         void setSearchButtonEnabled(boolean enabled);
 
+        Completable getSuggestAnimation();
+
         Observable getCompleteCreatedFragment();
     }
 
@@ -31,7 +34,7 @@ public interface ResearchStayInterface
 
         void onDoSearchClick();
 
-        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onRecentlyHistoryClick(StaySearchResultHistory recentlyHistory);
 
         void onPopularTagClick(CampaignTag campaignTag);
     }
