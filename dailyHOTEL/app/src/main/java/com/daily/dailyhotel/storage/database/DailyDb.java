@@ -82,8 +82,6 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
 
-    private static final String ALTER_T_STAY_OB_RECENTLY_SUGGEST = "ALTER TABLE " + T_STAY_OB_RECENTLY_SUGGEST + " ADD COLUMN " + StayObRecentlySuggestList.DISPLAY_TEXT + " TEXT NULL;";
-
     // added database version 4
     private static final String CREATE_T_TEMP_REVIEW = "CREATE TABLE IF NOT EXISTS " + T_TEMP_REVIEW + " (" //
         + TempReviewList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
@@ -188,7 +186,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             upGradeGourmetRecentlySuggestDb(db);
             upGradeStayIbRecentlySuggestDb(db);
             upGradeSearchResultHistoryDb(db);
-            alterStayObRecentlySuggestDb(db);
+            upGradeStayObRecentlySuggestDb(db);
             alterRecentlyPlace(db);
         }
 
@@ -255,17 +253,6 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         try
         {
             db.execSQL(ALTER_T_RECENTLY_DB_VER_5);
-        } catch (Exception e)
-        {
-            ExLog.d("sam : error = " + e.toString());
-        }
-    }
-
-    public void alterStayObRecentlySuggestDb(SQLiteDatabase db)
-    {
-        try
-        {
-            db.execSQL(ALTER_T_STAY_OB_RECENTLY_SUGGEST);
         } catch (Exception e)
         {
             ExLog.d("sam : error = " + e.toString());
