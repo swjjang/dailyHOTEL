@@ -1080,7 +1080,7 @@
     <string name="label_searchresult_cancelsearch">검색종료</string>
     <string name="label_searchresult_empty">검색 결과가 없습니다.</string>
     <string name="label_searchresult_text01">날짜나 검색어를 변경하여 검색해 보세요.</string>
-    <string name="label_searchresult_text02">찾으시는 스테이 또는 레스토랑이 없으신가요?\n데일리 고객센터로 알려주세요!</string>
+    <string name="label_searchresult_text02">찾으시는 스테이 또는 고메가 없으신가요?\n데일리 고객센터로 알려주세요!</string>
     <string name="label_searchresult_research">다시 검색하기</string>
     <string name="label_searchresult_change_date">날짜 변경하여 확인하기</string>
     <string name="label_searchresult_change_region">다른 지역 검색하기</string>
