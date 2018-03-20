@@ -402,6 +402,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
                 {
                     title += " " + mContext.getString(R.string.label_all);
                 }
+                break;
             }
 
             default:
