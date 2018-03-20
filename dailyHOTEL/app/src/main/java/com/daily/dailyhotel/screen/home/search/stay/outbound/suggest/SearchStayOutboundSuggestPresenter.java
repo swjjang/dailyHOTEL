@@ -130,6 +130,7 @@ public class SearchStayOutboundSuggestPresenter //
 
         mLocationSuggest = new StayOutboundSuggest(0, null);
         mLocationSuggest.display = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
+        mLocationSuggest.displayText = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
         mLocationSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
         mLocationSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
 
@@ -397,10 +398,11 @@ public class SearchStayOutboundSuggestPresenter //
                 stayOutboundSuggest.id = stayOutbound.index;
                 stayOutboundSuggest.name = stayOutbound.name;
                 stayOutboundSuggest.city = stayOutbound.city;
-                //                            stayOutboundSuggest.country = stayOutbound.country;
+//                                            stayOutboundSuggest.country = stayOutbound.country;
                 //                            stayOutboundSuggest.countryCode = stayOutbound.countryCode;
                 stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_HOTEL;
                 stayOutboundSuggest.display = stayOutbound.name;
+                stayOutboundSuggest.displayText = stayOutbound.name;
                 stayOutboundSuggest.latitude = stayOutbound.latitude;
                 stayOutboundSuggest.longitude = stayOutbound.longitude;
                 stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
@@ -895,6 +897,7 @@ public class SearchStayOutboundSuggestPresenter //
             {
                 //                mLocationSuggest.display = null;
                 mLocationSuggest.display = getString(R.string.label_search_nearby_empty_address);
+                mLocationSuggest.displayText = getString(R.string.label_search_nearby_empty_address);
                 mLocationSuggest.latitude = location.getLatitude();
                 mLocationSuggest.longitude = location.getLongitude();
 
@@ -905,6 +908,7 @@ public class SearchStayOutboundSuggestPresenter //
                         public void accept(GoogleAddress address) throws Exception
                         {
                             mLocationSuggest.display = address.address;
+                            mLocationSuggest.displayText = address.address;
                             mLocationSuggest.city = address.shortAddress;
 
                             getViewInterface().setNearbyStaySuggest(mLocationSuggest);
@@ -913,10 +917,6 @@ public class SearchStayOutboundSuggestPresenter //
                             {
                                 return;
                             }
-
-                            unLockAll();
-
-                            getViewInterface().setSuggest(mLocationSuggest.display);
 
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
@@ -927,10 +927,35 @@ public class SearchStayOutboundSuggestPresenter //
                                 itemLocation.longitude = mLocationSuggest.longitude;
 
                                 StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, itemLocation);
+
+                                unLockAll();
+
+                                getViewInterface().setSuggest(itemLocation.address);
                                 startFinishAction(staySuggest, mKeyword);
                             } else
                             {
-                                startFinishAction(mLocationSuggest, mKeyword, null);
+                                addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(mLocationSuggest, mKeyword) //
+                                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        getViewInterface().setSuggest(mLocationSuggest.display);
+                                        startFinishAction(mLocationSuggest, mKeyword, null);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        getViewInterface().setSuggest(mLocationSuggest.display);
+                                        startFinishAction(mLocationSuggest, mKeyword, null);
+                                    }
+                                }));
                             }
                         }
                     }, new Consumer<Throwable>()
@@ -947,7 +972,7 @@ public class SearchStayOutboundSuggestPresenter //
 
                             unLockAll();
 
-                            getViewInterface().setSuggest(mLocationSuggest.display);
+                            getViewInterface().setSuggest(mLocationSuggest.displayText);
 
                             try
                             {
@@ -974,6 +999,7 @@ public class SearchStayOutboundSuggestPresenter //
                 }
 
                 mLocationSuggest.display = displayName;
+                mLocationSuggest.displayText = displayName;
 
                 getViewInterface().setNearbyStaySuggest(mLocationSuggest);
 

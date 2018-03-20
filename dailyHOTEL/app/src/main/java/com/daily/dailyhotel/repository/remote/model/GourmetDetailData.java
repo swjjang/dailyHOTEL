@@ -9,6 +9,7 @@ import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.PlaceDetailProvince;
 import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.ArrayList;
@@ -105,6 +106,9 @@ public class GourmetDetailData
 
     @JsonField(name = "awards")
     public TrueAwardsData awards;
+
+    @JsonField(name = "province")
+    public ProvinceData province;
 
     public GourmetDetailData()
     {
@@ -220,6 +224,11 @@ public class GourmetDetailData
         if (awards != null)
         {
             gourmetDetail.awards = awards.getTrueAwards();
+        }
+
+        if (province != null)
+        {
+            gourmetDetail.province = province.getProvince();
         }
 
         return gourmetDetail;
@@ -464,4 +473,22 @@ public class GourmetDetailData
         }
     }
 
+    @JsonObject
+    static class ProvinceData
+    {
+        @JsonField(name = "id")
+        public int index;
+
+        @JsonField(name = "name")
+        public String name;
+
+        public PlaceDetailProvince getProvince()
+        {
+            PlaceDetailProvince province = new PlaceDetailProvince();
+            province.index = index;
+            province.name = name;
+
+            return province;
+        }
+    }
 }

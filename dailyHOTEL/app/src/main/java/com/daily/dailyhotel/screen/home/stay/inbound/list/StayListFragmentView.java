@@ -623,6 +623,38 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState)
             {
+                switch (newState)
+                {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                    {
+                        if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
+                        {
+                            StayListAdapter listAdapter = (StayListAdapter) recyclerView.getAdapter();
+
+                            if (listAdapter != null)
+                            {
+                                int count = listAdapter.getItemCount();
+
+                                if (count > 0)
+                                {
+                                    ObjectItem objectItem = listAdapter.getItem(listAdapter.getItemCount() - 1);
+
+                                    if (objectItem != null && objectItem.mType == objectItem.TYPE_FOOTER_VIEW)
+                                    {
+                                        getEventListener().showActionBar();
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        break;
+
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+                }
             }
         });
 

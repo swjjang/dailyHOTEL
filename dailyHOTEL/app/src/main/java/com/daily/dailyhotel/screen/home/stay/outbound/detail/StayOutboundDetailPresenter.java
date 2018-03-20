@@ -347,7 +347,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true) //
+            Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, null, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
@@ -1549,7 +1549,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         try
         {
             addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-                Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, false) //
+                Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, null, false) //
                 .observeOn(Schedulers.io()).subscribe());
         } catch (Exception e)
         {

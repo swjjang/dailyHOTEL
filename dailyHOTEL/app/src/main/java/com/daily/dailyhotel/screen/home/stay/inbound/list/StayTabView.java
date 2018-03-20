@@ -504,6 +504,12 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
 
                     getEventListener().onFilterClick();
                 }
+
+                @Override
+                public void showActionBar()
+                {
+                    expandedToolbar();
+                }
             });
 
             fragmentList.add(stayListFragment);

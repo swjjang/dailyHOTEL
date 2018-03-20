@@ -46,6 +46,16 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
         gourmetMapCardView.setNameText(gourmet.name);
         gourmetMapCardView.setBenefitText(gourmet.dBenefitText);
 
+        // 인원
+        if (gourmet.persons > 0)
+        {
+            gourmetMapCardView.setPersonVisible(true);
+            gourmetMapCardView.setPerson(gourmet.persons);
+        } else
+        {
+            gourmetMapCardView.setPersonVisible(false);
+        }
+
         if (gourmet.soldOut == true)
         {
             gourmetMapCardView.setPriceText(0, 0, 0, null);

@@ -598,7 +598,18 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     getViewInterface().setSearchResultCount(gourmets.totalCount, gourmets.searchMaxCount);
 
                     getViewInterface().setFloatingActionViewVisible(true);
-                    getViewInterface().setFloatingActionViewTypeMapEnabled(true);
+
+                    boolean allSoldOut = true;
+                    for (Gourmet gourmet : gourmets.getGourmetList())
+                    {
+                        if (gourmet.soldOut == false)
+                        {
+                            allSoldOut = false;
+                            break;
+                        }
+                    }
+
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(allSoldOut == false);
 
                     if (size < MAXIMUM_NUMBER_PER_PAGE)
                     {
@@ -1308,12 +1319,12 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                 break;
 
             case LOW_PRICE:
-                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortProperty", "PricePerPerson");
                 queryMap.put("sortDirection", "Asc");
                 break;
 
             case HIGH_PRICE:
-                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortProperty", "PricePerPerson");
                 queryMap.put("sortDirection", "Desc");
                 break;
 

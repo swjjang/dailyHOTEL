@@ -531,6 +531,11 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
 
                 for (Gourmet gourmet : gourmetArrangeList)
                 {
+                    if (gourmet.soldOut == true)
+                    {
+                        continue;
+                    }
+
                     // 기존에 이미 있는 좌표는 더하지 않는다.
                     if (refreshAll == false && currentClusterItemList != null && currentClusterItemList.size() > 0)
                     {

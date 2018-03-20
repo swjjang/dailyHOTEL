@@ -17,7 +17,7 @@ import io.reactivex.Observable;
 public interface RecentlyLocalInterface
 {
     Observable addRecentlyItem(Constants.ServiceType serviceType, int index //
-        , String name, String englishName, String imageUrl, boolean isUpdateDate);
+        , String name, String englishName, String imageUrl, String areaGroupName, boolean isUpdateDate);
 
     Observable<Boolean> deleteRecentlyItem(Constants.ServiceType serviceType, int index);
 
