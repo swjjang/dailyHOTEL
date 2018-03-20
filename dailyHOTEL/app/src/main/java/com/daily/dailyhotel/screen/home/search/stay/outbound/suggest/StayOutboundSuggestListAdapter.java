@@ -166,12 +166,12 @@ public class StayOutboundSuggestListAdapter extends RecyclerView.Adapter<Recycle
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.displayText) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, stayOutboundSuggest.display);
+            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, stayOutboundSuggest.displayText);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
@@ -202,7 +202,7 @@ public class StayOutboundSuggestListAdapter extends RecyclerView.Adapter<Recycle
     {
         StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.displayText) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
         } else
@@ -210,7 +210,7 @@ public class StayOutboundSuggestListAdapter extends RecyclerView.Adapter<Recycle
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
         }
 
-        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
+        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.displayText);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
@@ -219,21 +219,30 @@ public class StayOutboundSuggestListAdapter extends RecyclerView.Adapter<Recycle
 
         holder.itemView.getRootView().setTag(stayOutboundSuggest);
 
-        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.country))
+        {
+            holder.dataBinding.descriptionTextView.setText(null);
+            holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        } else
+        {
+            holder.dataBinding.descriptionTextView.setText(stayOutboundSuggest.country);
+            holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
+        }
+
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.displayText) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stayOutboundSuggest.display);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stayOutboundSuggest.displayText);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
             {
                 String keywordUpperCase = mKeyword.toUpperCase();
-                String displayNameUpperCase = DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) ? "" : stayOutboundSuggest.display.toUpperCase();
+                String displayNameUpperCase = DailyTextUtils.isTextEmpty(stayOutboundSuggest.displayText) ? "" : stayOutboundSuggest.displayText.toUpperCase();
 
                 int fromIndex = 0;
                 do

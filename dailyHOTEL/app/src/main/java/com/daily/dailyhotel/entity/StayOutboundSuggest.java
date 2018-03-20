@@ -42,6 +42,7 @@ public class StayOutboundSuggest
         this.id = id;
         this.name = name;
         this.display = name;
+        this.displayText = name;
     }
 
     public StayOutboundSuggest(long id, String name, String city, String country, String countryCode //

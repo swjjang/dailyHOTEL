@@ -821,7 +821,7 @@ public class SearchStaySuggestPresenter //
                     @Override
                     public void accept(Boolean aBoolean) throws Exception
                     {
-                        getViewInterface().setSuggest(stayOutboundSuggest.display);
+                        getViewInterface().setSuggest(staySuggest.getText1());
                         startFinishAction(staySuggest, mKeyword);
                     }
                 }, new Consumer<Throwable>()
@@ -829,14 +829,14 @@ public class SearchStaySuggestPresenter //
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        getViewInterface().setSuggest(stayOutboundSuggest.display);
+                        getViewInterface().setSuggest(staySuggest.getText1());
                         startFinishAction(staySuggest, mKeyword);
                     }
                 }));
             return;
         }
 
-        getViewInterface().setSuggest(stayOutboundSuggest.display);
+        getViewInterface().setSuggest(stayOutboundSuggest.displayText);
 
         try
         {
