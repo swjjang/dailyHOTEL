@@ -32,6 +32,7 @@ public class StayDetail extends Configurations
     public boolean provideRewardSticker;
     public int rewardStickerCount;
     public TrueAwards awards;
+    public PlaceDetailProvince province;
 
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<LinkedHashMap<String, List<String>>> mDescriptionMap;
