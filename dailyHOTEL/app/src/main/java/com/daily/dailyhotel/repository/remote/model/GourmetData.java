@@ -74,7 +74,7 @@ public class GourmetData
     public boolean isSoldOut;
 
     @JsonField(name = "distance")
-    public int distance;
+    public double distance;
 
     @JsonField(name = "addrSummary")
     public String addrSummary;
