@@ -40,6 +40,7 @@ public class StayOutboundSuggestParcel implements Parcelable
         dest.writeString(mStayOutboundSuggest.countryCode);
         dest.writeString(mStayOutboundSuggest.categoryKey);
         dest.writeString(mStayOutboundSuggest.display);
+        dest.writeString(mStayOutboundSuggest.displayText);
         dest.writeDouble(mStayOutboundSuggest.latitude);
         dest.writeDouble(mStayOutboundSuggest.longitude);
         dest.writeInt(mStayOutboundSuggest.menuType);
@@ -56,6 +57,7 @@ public class StayOutboundSuggestParcel implements Parcelable
         mStayOutboundSuggest.countryCode = in.readString();
         mStayOutboundSuggest.categoryKey = in.readString();
         mStayOutboundSuggest.display = in.readString();
+        mStayOutboundSuggest.displayText = in.readString();
         mStayOutboundSuggest.latitude = in.readDouble();
         mStayOutboundSuggest.longitude = in.readDouble();
         mStayOutboundSuggest.menuType = in.readInt();

@@ -27,6 +27,7 @@ public class StayOutboundSuggest
     public String countryCode;
     public String categoryKey;
     public String display;
+    public String displayText;
     public double latitude;
     public double longitude;
     public int menuType;
@@ -44,7 +45,7 @@ public class StayOutboundSuggest
     }
 
     public StayOutboundSuggest(long id, String name, String city, String country, String countryCode //
-        , String categoryKey, String display, double latitude, double longitude)
+        , String categoryKey, String display, String displayText, double latitude, double longitude)
     {
         this.id = id;
         this.name = name;
@@ -53,6 +54,7 @@ public class StayOutboundSuggest
         this.countryCode = countryCode;
         this.categoryKey = categoryKey;
         this.display = display;
+        this.displayText = displayText;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -93,6 +95,11 @@ public class StayOutboundSuggest
             stayOutboundSuggest.display = display;
         }
 
+        if (DailyTextUtils.isTextEmpty(displayText) == false)
+        {
+            stayOutboundSuggest.displayText = displayText;
+        }
+
         stayOutboundSuggest.latitude = latitude;
         stayOutboundSuggest.longitude = longitude;
         stayOutboundSuggest.menuType = menuType;
@@ -110,6 +117,7 @@ public class StayOutboundSuggest
         data.countryCode = countryCode;
         data.categoryKey = categoryKey;
         data.display = display;
+        data.displayText = displayText;
         data.lat = latitude;
         data.lng = longitude;
 

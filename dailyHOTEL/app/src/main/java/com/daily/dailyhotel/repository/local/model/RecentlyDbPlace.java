@@ -15,5 +15,5 @@ public class RecentlyDbPlace
     public String englishName;
     //    public Province province;
     public String imageUrl;
-    public String areaGroupName;
+    public String regionName;
 }

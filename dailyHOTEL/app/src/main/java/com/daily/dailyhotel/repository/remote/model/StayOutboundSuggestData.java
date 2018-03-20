@@ -19,6 +19,9 @@ public class StayOutboundSuggestData
     @JsonField(name = "display")
     public String display;
 
+    @JsonField(name = "displayText")
+    public String displayText;
+
     @JsonField(name = "city")
     public String city;
 
@@ -52,6 +55,7 @@ public class StayOutboundSuggestData
         stayOutboundSuggest.countryCode = countryCode;
         stayOutboundSuggest.categoryKey = categoryKey;
         stayOutboundSuggest.display = display;
+        stayOutboundSuggest.displayText = displayText;
         stayOutboundSuggest.latitude = lat;
         stayOutboundSuggest.longitude = lng;
 
