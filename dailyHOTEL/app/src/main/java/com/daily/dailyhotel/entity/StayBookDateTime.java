@@ -99,6 +99,13 @@ public class StayBookDateTime extends PlaceBookDateTime
         return stayBookingDay;
     }
 
+    public String getDateFullFormat()
+    {
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
+        return String.format("%s - %s, %d박", getCheckInDateTime(DATE_FORMAT), getCheckInDateTime(DATE_FORMAT), getNights());
+    }
+
     //    public void verifyCommonDateTime(@NonNull CommonDateTime commonDateTime) throws Exception
     //    {
     //        if (commonDateTime == null)

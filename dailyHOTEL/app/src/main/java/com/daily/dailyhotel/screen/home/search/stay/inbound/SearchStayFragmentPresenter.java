@@ -15,8 +15,10 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.repository.local.SearchLocalImpl;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
@@ -25,6 +27,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,7 +43,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
 {
     SearchStayFragmentInterface.AnalyticsInterface mAnalytics;
 
-    RecentlyLocalImpl mRecentlyLocalImpl;
+    SearchLocalImpl mSearchLocalImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     SearchStayViewModel mSearchViewModel;
@@ -71,7 +74,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     {
         setAnalytics(new SearchStayFragmentAnalyticsImpl());
 
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mSearchLocalImpl = new SearchLocalImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
 
         initViewModel(activity);
@@ -99,7 +102,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
         switch (requestCode)
         {
             case SearchActivity.REQUEST_CODE_STAY_DETAIL:
-                onRecentlyRefresh();
+                onRecentlyHistoryRefresh();
                 break;
         }
     }
@@ -192,7 +195,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
         setRefresh(false);
 
         // 최근 검색결과
-        onRecentlyRefresh();
+        onRecentlyHistoryRefresh();
 
         // 국내스테이 인기검색 태그
         if (mHasPopularTag == false)
@@ -204,34 +207,38 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     }
 
     @Override
-    public void onRecentlySearchResultDeleteClick(int index, String stayName)
+    public void onRecentlyHistoryDeleteClick(StaySearchResultHistory recentlyHistory)
     {
         if (lock() == true)
         {
             return;
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, index).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
-        {
-            @Override
-            public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
-            {
-                mAnalytics.onEventRecentlyDeleteClick(getActivity(), stayName);
+        StaySuggestV2 suggest = recentlyHistory.staySuggest;
 
-                return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL);
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+        addCompositeDisposable(mSearchLocalImpl.deleteStayIbSearchResultHistory(suggest).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<List<StaySearchResultHistory>>>()
         {
             @Override
-            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+            public ObservableSource<List<StaySearchResultHistory>> apply(Boolean aBoolean) throws Exception
             {
-                if (recentlyDbPlaces.size() == 0)
+                final int RECENTLY_HISTORY_MAX_COUNT = 3;
+
+                mAnalytics.onEventRecentlyHistoryDeleteClick(getActivity(), suggest.getText1());
+
+                return mSearchLocalImpl.getStayIbSearchResultHistoryList(mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StaySearchResultHistory>>()
+        {
+            @Override
+            public void accept(List<StaySearchResultHistory> recentlyHistoryList) throws Exception
+            {
+                if (recentlyHistoryList.size() == 0)
                 {
-                    getViewInterface().setRecentlySearchResultVisible(false);
+                    getViewInterface().setRecentlyHistoryVisible(false);
                 } else
                 {
-                    getViewInterface().setRecentlySearchResultVisible(true);
-                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                    getViewInterface().setRecentlyHistoryVisible(true);
+                    getViewInterface().setRecentlyHistory(recentlyHistoryList);
                 }
 
                 unLockAll();
@@ -241,7 +248,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                getViewInterface().setRecentlySearchResultVisible(false);
+                getViewInterface().setRecentlyHistoryVisible(false);
 
                 unLockAll();
             }
@@ -249,9 +256,9 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     }
 
     @Override
-    public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    public void onRecentlyHistoryClick(StaySearchResultHistory recentlyHistory)
     {
-        getFragment().getFragmentEventListener().onRecentlySearchResultClick(recentlyDbPlace);
+        getFragment().getFragmentEventListener().onRecentlyHistoryClick(recentlyHistory);
     }
 
     @Override
@@ -271,36 +278,40 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
         mSearchViewModel = ViewModelProviders.of(activity).get(SearchStayViewModel.class);
     }
 
-    void onRecentlyRefresh()
+    void onRecentlyHistoryRefresh()
     {
-        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
-        {
-            @Override
-            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+        final int RECENTLY_HISTORY_MAX_COUNT = 3;
+        CommonDateTime commonDateTime = mCommonDateTimeViewModel.commonDateTime;
+
+        addCompositeDisposable(mSearchLocalImpl.getStayIbSearchResultHistoryList(commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StaySearchResultHistory>>()
             {
-                if (recentlyDbPlaces.size() == 0)
+                @Override
+                public void accept(List<StaySearchResultHistory> recentlyHistoryList) throws Exception
                 {
-                    getViewInterface().setRecentlySearchResultVisible(false);
-                } else
-                {
-                    getViewInterface().setRecentlySearchResultVisible(true);
-                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                    if (recentlyHistoryList.size() == 0)
+                    {
+                        getViewInterface().setRecentlyHistoryVisible(false);
+                    } else
+                    {
+                        getViewInterface().setRecentlyHistoryVisible(true);
+                        getViewInterface().setRecentlyHistory(recentlyHistoryList);
+                    }
+
+                    mAnalytics.onEventRecentlyHistory(getActivity(), recentlyHistoryList.size() == 0);
                 }
-
-                mAnalytics.onEventRecentlyList(getActivity(), recentlyDbPlaces.size() == 0);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+            }, new Consumer<Throwable>()
             {
-                getViewInterface().setRecentlySearchResultVisible(false);
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setRecentlyHistoryVisible(false);
 
-                mAnalytics.onEventRecentlyList(getActivity(), true);
+                    mAnalytics.onEventRecentlyHistory(getActivity(), true);
 
-                ExLog.e(throwable.toString());
-            }
-        }));
+                    ExLog.e(throwable.toString());
+                }
+            }));
     }
 
     void onCampaignTagRefresh()

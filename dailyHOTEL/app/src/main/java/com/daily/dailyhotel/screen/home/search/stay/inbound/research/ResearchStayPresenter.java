@@ -20,22 +20,18 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
-import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -348,33 +344,55 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     }
 
     @Override
-    public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    public void onRecentlyHistoryClick(StaySearchResultHistory recentlyHistory)
     {
-        if (recentlyDbPlace == null || lock() == true)
+        if (recentlyHistory == null || lock() == true)
         {
             return;
         }
 
-        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
-        StayBookDateTime stayBookDateTime = mSearchModel.getBookDateTime();
-
-        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
-            , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
-            , StayDetailActivity.NONE_PRICE//
-            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
-            , ResearchStayActivity.REQUEST_CODE_DETAIL);
-
-        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        addCompositeDisposable(Completable.complete().delay(300, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        try
         {
-            @Override
-            public void run() throws Exception
+            StayBookDateTime stayBookDateTime = recentlyHistory.stayBookDateTime;
+
+            mSearchModel.inputKeyword = null;
+            mSearchModel.setBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+            mSearchModel.setSuggest(recentlyHistory.staySuggest);
+
+            addCompositeDisposable(getViewInterface().getSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
             {
-                finish();
-            }
-        }));
+                @Override
+                public void run() throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+
+        //        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+        //        StayBookDateTime stayBookDateTime = mSearchModel.getBookDateTime();
+        //
+        //        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
+        //            , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
+        //            , StayDetailActivity.NONE_PRICE//
+        //            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+        //            , ResearchStayActivity.REQUEST_CODE_DETAIL);
+        //
+        //        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        //        addCompositeDisposable(Completable.complete().delay(300, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        //        {
+        //            @Override
+        //            public void run() throws Exception
+        //            {
+        //                finish();
+        //            }
+        //        }));
     }
 
     @Override

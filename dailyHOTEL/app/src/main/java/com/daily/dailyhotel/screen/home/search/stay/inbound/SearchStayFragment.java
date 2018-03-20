@@ -5,13 +5,13 @@ import android.support.annotation.NonNull;
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 
 public class SearchStayFragment extends BasePagerFragment<SearchStayFragmentPresenter, SearchStayFragment.OnEventListener>
 {
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
-        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onRecentlyHistoryClick(StaySearchResultHistory recentlyHistory);
 
         void onPopularTagClick(CampaignTag campaignTag);
     }

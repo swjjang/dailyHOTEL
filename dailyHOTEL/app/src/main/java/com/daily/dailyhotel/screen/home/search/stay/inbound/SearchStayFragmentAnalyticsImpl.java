@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 public class SearchStayFragmentAnalyticsImpl implements SearchStayFragmentInterface.AnalyticsInterface
 {
     @Override
-    public void onEventRecentlyList(Activity activity, boolean empty)
+    public void onEventRecentlyHistory(Activity activity, boolean empty)
     {
         if (activity == null)
         {
@@ -19,7 +19,7 @@ public class SearchStayFragmentAnalyticsImpl implements SearchStayFragmentInterf
     }
 
     @Override
-    public void onEventRecentlyDeleteClick(Activity activity, String stayName)
+    public void onEventRecentlyHistoryDeleteClick(Activity activity, String stayName)
     {
         if (activity == null)
         {
