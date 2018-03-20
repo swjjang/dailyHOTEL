@@ -12,7 +12,6 @@ import android.view.View;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewGourmetMapCardDataBinding;
-import com.twoheart.dailyhotel.databinding.DailyViewStayMapCardDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 
 public class DailyGourmetMapCardView extends ConstraintLayout
@@ -163,6 +162,26 @@ public class DailyGourmetMapCardView extends ConstraintLayout
             mViewDataBinding.priceTextView.setVisibility(VISIBLE);
             mViewDataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), price, false));
         }
+    }
+
+    public void setPersonVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.personsTextView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void setPerson(int persons)
+    {
+        if (mViewDataBinding == null || persons <= 0)
+        {
+            return;
+        }
+
+        mViewDataBinding.personsTextView.setText(getContext().getString(R.string.label_persons, persons));
     }
 
     public Pair[] getOptionsCompat()
