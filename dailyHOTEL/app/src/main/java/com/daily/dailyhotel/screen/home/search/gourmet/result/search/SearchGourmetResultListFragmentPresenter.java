@@ -1308,12 +1308,12 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                 break;
 
             case LOW_PRICE:
-                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortProperty", "PricePerPerson");
                 queryMap.put("sortDirection", "Asc");
                 break;
 
             case HIGH_PRICE:
-                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortProperty", "PricePerPerson");
                 queryMap.put("sortDirection", "Desc");
                 break;
 
