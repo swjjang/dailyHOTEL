@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCuration;
@@ -130,7 +130,9 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
+            StaySuggestV2 suggest = ((StaySearchCuration) mStayCuration).getSuggest();
+
+            if (suggest.isLocationSuggestType() == true)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

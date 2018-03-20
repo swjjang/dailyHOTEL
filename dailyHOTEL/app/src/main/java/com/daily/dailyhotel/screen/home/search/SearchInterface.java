@@ -8,8 +8,10 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -72,7 +74,7 @@ public interface SearchInterface
 
         void onStayDoSearchClick();
 
-        void onStayRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onStayRecentlyHistoryClick(StaySearchResultHistory recentlyHistory);
 
         void onStayPopularTagClick(CampaignTag campaignTag);
 
@@ -100,7 +102,7 @@ public interface SearchInterface
 
         void onGourmetDoSearchClick();
 
-        void onGourmetRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onGourmetRecentlyHistoryClick(GourmetSearchResultHistory recentlyHistory);
 
         void onGourmetPopularTagClick(CampaignTag campaignTag);
     }
@@ -118,7 +120,7 @@ public interface SearchInterface
 
         void onEventStaySuggestClick(Activity activity);
 
-        void onEventStayDoSearch(Activity activity, StaySuggest suggest);
+        void onEventStayDoSearch(Activity activity, StaySuggestV2 suggest);
 
         void onEventStayCalendarClick(Activity activity);
 

@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
@@ -69,7 +69,7 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
     }
 
     @Override
-    public void onEventStayDoSearch(Activity activity, StaySuggest suggest)
+    public void onEventStayDoSearch(Activity activity, StaySuggestV2 suggest)
     {
         if (activity == null)
         {
@@ -80,29 +80,29 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         switch (suggest.menuType)
         {
-            case StaySuggest.MENU_TYPE_DIRECT:
+            case DIRECT:
                 action += "direct";
                 break;
 
-            case StaySuggest.MENU_TYPE_LOCATION:
+            case LOCATION:
                 action += "around";
                 break;
 
-            case StaySuggest.MENU_TYPE_RECENTLY_SEARCH:
+            case RECENTLY_SEARCH:
                 action += "recent";
                 break;
 
-            case StaySuggest.MENU_TYPE_RECENTLY_STAY:
+            case RECENTLY_STAY:
                 action += "recent_checked";
                 break;
 
-            case StaySuggest.MENU_TYPE_SUGGEST:
+            case SUGGEST:
                 action += "auto";
                 break;
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, suggest.displayName, null);
+            , action, suggest.getSuggestItem().name, null);
     }
 
     @Override

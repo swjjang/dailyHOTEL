@@ -4,6 +4,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Completable;
@@ -34,7 +35,7 @@ public interface ResearchGourmetInterface
 
         void onDoSearchClick();
 
-        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onRecentlyHistoryClick(GourmetSearchResultHistory recentlyHistory);
 
         void onPopularTagClick(CampaignTag campaignTag);
     }

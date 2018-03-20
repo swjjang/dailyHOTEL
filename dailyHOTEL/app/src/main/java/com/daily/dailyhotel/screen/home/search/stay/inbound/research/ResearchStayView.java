@@ -4,11 +4,13 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.home.search.SearchStayFilterView;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchStayDataBinding;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEventListener, ActivityResearchStayDataBinding> implements ResearchStayInterface.ViewInterface
@@ -55,9 +57,9 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
         mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
         {
             @Override
-            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            public void onRecentlyHistoryClick(StaySearchResultHistory recentlyHistory)
             {
-                getEventListener().onRecentlySearchResultClick(recentlyDbPlace);
+                getEventListener().onRecentlyHistoryClick(recentlyHistory);
             }
 
             @Override
@@ -132,6 +134,12 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
         }
 
         getViewDataBinding().stayFilterView.setSearchEnabled(enabled);
+    }
+
+    @Override
+    public Completable getSuggestAnimation()
+    {
+        return getViewDataBinding().stayFilterView.getSuggestTextViewAnimation();
     }
 
     @Override

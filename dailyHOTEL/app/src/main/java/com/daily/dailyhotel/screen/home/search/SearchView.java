@@ -11,7 +11,9 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundFragment;
@@ -248,9 +250,9 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
             {
                 @Override
-                public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+                public void onRecentlyHistoryClick(StaySearchResultHistory recentlyHistory)
                 {
-                    getEventListener().onStayRecentlySearchResultClick(recentlyDbPlace);
+                    getEventListener().onStayRecentlyHistoryClick(recentlyHistory);
                 }
 
                 @Override
@@ -296,9 +298,9 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             mSearchGourmetFragment.setOnFragmentEventListener(new SearchGourmetFragment.OnEventListener()
             {
                 @Override
-                public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+                public void onRecentlyHistoryClick(GourmetSearchResultHistory recentlyHistory)
                 {
-                    getEventListener().onGourmetRecentlySearchResultClick(recentlyDbPlace);
+                    getEventListener().onGourmetRecentlyHistoryClick(recentlyHistory);
                 }
 
                 @Override
