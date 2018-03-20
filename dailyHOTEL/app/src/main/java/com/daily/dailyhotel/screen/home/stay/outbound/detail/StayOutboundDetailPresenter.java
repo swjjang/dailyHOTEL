@@ -1555,23 +1555,17 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             String regionName = null;
             Geocoder geocoder = new Geocoder(getActivity(), Locale.KOREA);
 
-            try
+            List<Address> list = geocoder.getFromLocation(stayOutboundDetail.latitude, stayOutboundDetail.longitude, 10);
+            if (list != null && list.size() > 0)
             {
-                List<Address> list = geocoder.getFromLocation(stayOutboundDetail.latitude, stayOutboundDetail.longitude, 10);
-                if (list != null && list.size() > 0)
+                for (Address address : list)
                 {
-                    for (Address address : list)
+                    if (DailyTextUtils.isTextEmpty(address.getCountryName()) == false)
                     {
-                        if (DailyTextUtils.isTextEmpty(address.getCountryName()) == false)
-                        {
-                            regionName = address.getCountryName();
-                            break;
-                        }
+                        regionName = address.getCountryName();
+                        break;
                     }
                 }
-            } catch (IOException e)
-            {
-                ExLog.d(e.toString());
             }
 
             addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //

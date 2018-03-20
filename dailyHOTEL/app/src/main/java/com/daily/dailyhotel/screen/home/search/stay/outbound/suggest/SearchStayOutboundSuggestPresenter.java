@@ -21,14 +21,13 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
-import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -56,7 +55,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -298,26 +296,18 @@ public class SearchStayOutboundSuggestPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        // 최근 본 업장
-        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices( //
-            Constants.ServiceType.OB_STAY, SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT) //
-            .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
-            {
-                @Override
-                public ObservableSource<StayOutbounds> apply(@io.reactivex.annotations.NonNull String targetIndices) throws Exception
-                {
-                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT);
-                }
-            });
-
         // 최근 검색어, 인기 지역 , 최근 본 업장 순
-        addCompositeDisposable(Observable.zip(mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT) //
+        addCompositeDisposable(Observable.zip( //
+            mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT) //
             , mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound() //
-            , obObservable, new Function3<List<StayOutboundSuggest>, List<StayOutboundSuggest>, StayOutbounds, List<StayOutboundSuggest>>()
+            , mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY) //
+            , new Function3<List<StayOutboundSuggest>, List<StayOutboundSuggest>, ArrayList<RecentlyDbPlace>, List<StayOutboundSuggest>>()
             {
+
                 @Override
                 public List<StayOutboundSuggest> apply(List<StayOutboundSuggest> stayOutboundRecentlySuggestList //
-                    , List<StayOutboundSuggest> stayOutboundPopularList, StayOutbounds stayOutbounds) throws Exception
+                    , List<StayOutboundSuggest> stayOutboundPopularList //
+                    , ArrayList<RecentlyDbPlace> recentlyDbPlaceList) throws Exception
                 {
                     if (stayOutboundPopularList != null && stayOutboundPopularList.size() > 0)
                     {
@@ -330,15 +320,13 @@ public class SearchStayOutboundSuggestPresenter //
                     setPopularAreaList(stayOutboundPopularList);
 
                     // 최근 본업장, 최근 검색어
-                    List<StayOutboundSuggest> mergeList = getRecentlySuggestList(stayOutbounds, stayOutboundRecentlySuggestList);
+                    List<StayOutboundSuggest> mergeList = getRecentlySuggestList(recentlyDbPlaceList, stayOutboundRecentlySuggestList);
                     setRecentlySuggestList(mergeList);
 
                     try
                     {
                         mAnalytics.onRecentlySearchList(getActivity(), stayOutboundRecentlySuggestList != null && stayOutboundRecentlySuggestList.size() > 0);
-
-                        List<StayOutbound> stayOutboundList = stayOutbounds == null ? null : stayOutbounds.getStayOutbound();
-                        mAnalytics.onRecentlyStayOutboundList(getActivity(), stayOutboundList != null && stayOutboundList.size() > 0);
+                        mAnalytics.onRecentlyStayOutboundList(getActivity(), recentlyDbPlaceList != null && recentlyDbPlaceList.size() > 0);
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -376,45 +364,7 @@ public class SearchStayOutboundSuggestPresenter //
         mPopularAreaList = popularAreaList;
     }
 
-    private List<StayOutboundSuggest> getRecentlySuggestList(StayOutbounds stayOutbounds)
-    {
-        if (stayOutbounds == null)
-        {
-            return new ArrayList<>();
-        }
-
-        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-        List<StayOutboundSuggest> stayOutboundSuggestList = new ArrayList<>();
-
-        if (stayOutboundList != null && stayOutboundList.size() > 0)
-        {
-            StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, getString(R.string.label_recently_stay));
-            stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
-            stayOutboundSuggestList.add(stayOutboundSuggest);
-
-            for (StayOutbound stayOutbound : stayOutboundList)
-            {
-                stayOutboundSuggest = new StayOutboundSuggest();
-                stayOutboundSuggest.id = stayOutbound.index;
-                stayOutboundSuggest.name = stayOutbound.name;
-                stayOutboundSuggest.city = stayOutbound.city;
-//                                            stayOutboundSuggest.country = stayOutbound.country;
-                //                            stayOutboundSuggest.countryCode = stayOutbound.countryCode;
-                stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_HOTEL;
-                stayOutboundSuggest.display = stayOutbound.name;
-                stayOutboundSuggest.displayText = stayOutbound.name;
-                stayOutboundSuggest.latitude = stayOutbound.latitude;
-                stayOutboundSuggest.longitude = stayOutbound.longitude;
-                stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
-
-                stayOutboundSuggestList.add(stayOutboundSuggest);
-            }
-        }
-
-        return stayOutboundSuggestList;
-    }
-
-    List<StayOutboundSuggest> getRecentlySuggestList(StayOutbounds stayOutbounds, List<StayOutboundSuggest> recentlySuggestList)
+    List<StayOutboundSuggest> getRecentlySuggestList(ArrayList<RecentlyDbPlace> recentlyDbPlaceList, List<StayOutboundSuggest> recentlySuggestList)
     {
         List<StayOutboundSuggest> mergeList = new ArrayList<>();
 
@@ -427,10 +377,26 @@ public class SearchStayOutboundSuggestPresenter //
             mergeList.addAll(recentlySuggestList);
         }
 
-        List<StayOutboundSuggest> recentlyStayList = getRecentlySuggestList(stayOutbounds);
-        if (recentlyStayList != null && recentlyStayList.size() > 0)
+        // 최근 본 업장
+        if (recentlyDbPlaceList != null && recentlyDbPlaceList.size() > 0)
         {
-            mergeList.addAll(recentlyStayList);
+            StayOutboundSuggest headerSuggest = new StayOutboundSuggest(0, getString(R.string.label_recently_stay));
+            headerSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
+            mergeList.add(headerSuggest);
+
+            int maxSize = Math.min(10, recentlyDbPlaceList.size());
+
+            for (int i = 0; i < maxSize; i++)
+            {
+                RecentlyDbPlace recentlyPlace = recentlyDbPlaceList.get(i);
+
+                StayOutboundSuggest suggest = new StayOutboundSuggest(recentlyPlace.index, recentlyPlace.name);
+                suggest.categoryKey = StayOutboundSuggest.CATEGORY_HOTEL;
+                suggest.country = recentlyPlace.regionName;
+                suggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
+
+                mergeList.add(suggest);
+            }
         }
 
         return mergeList;
@@ -936,26 +902,26 @@ public class SearchStayOutboundSuggestPresenter //
                             {
                                 addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(mLocationSuggest, mKeyword) //
                                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                                {
-                                    @Override
-                                    public void accept(Boolean aBoolean) throws Exception
                                     {
-                                        unLockAll();
+                                        @Override
+                                        public void accept(Boolean aBoolean) throws Exception
+                                        {
+                                            unLockAll();
 
-                                        getViewInterface().setSuggest(mLocationSuggest.display);
-                                        startFinishAction(mLocationSuggest, mKeyword, null);
-                                    }
-                                }, new Consumer<Throwable>()
-                                {
-                                    @Override
-                                    public void accept(Throwable throwable) throws Exception
+                                            getViewInterface().setSuggest(mLocationSuggest.display);
+                                            startFinishAction(mLocationSuggest, mKeyword, null);
+                                        }
+                                    }, new Consumer<Throwable>()
                                     {
-                                        unLockAll();
+                                        @Override
+                                        public void accept(Throwable throwable) throws Exception
+                                        {
+                                            unLockAll();
 
-                                        getViewInterface().setSuggest(mLocationSuggest.display);
-                                        startFinishAction(mLocationSuggest, mKeyword, null);
-                                    }
-                                }));
+                                            getViewInterface().setSuggest(mLocationSuggest.display);
+                                            startFinishAction(mLocationSuggest, mKeyword, null);
+                                        }
+                                    }));
                             }
                         }
                     }, new Consumer<Throwable>()
