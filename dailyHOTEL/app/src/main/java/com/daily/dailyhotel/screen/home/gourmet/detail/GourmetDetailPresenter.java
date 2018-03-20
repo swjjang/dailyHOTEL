@@ -6,6 +6,8 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -73,6 +75,7 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -1624,9 +1627,34 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             ExLog.e(e.toString());
         }
 
-        String areaGroupName = mGourmetDetail.province == null ? null : mGourmetDetail.province.name;
+        String regionName = mGourmetDetail.province == null ? null : mGourmetDetail.province.name;
+
+        if (DailyTextUtils.isTextEmpty(regionName))
+        {
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.KOREA);
+
+            try
+            {
+                List<Address> list = geocoder.getFromLocation(mGourmetDetail.latitude, mGourmetDetail.longitude, 10);
+                if (list != null && list.size() > 0)
+                {
+                    for (Address address : list)
+                    {
+                        if (DailyTextUtils.isTextEmpty(address.getLocality()) == false)
+                        {
+                            regionName = address.getLocality();
+                            break;
+                        }
+                    }
+                }
+            } catch (IOException e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
         addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.GOURMET, mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, areaGroupName, true) //
+            Constants.ServiceType.GOURMET, mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, regionName, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
