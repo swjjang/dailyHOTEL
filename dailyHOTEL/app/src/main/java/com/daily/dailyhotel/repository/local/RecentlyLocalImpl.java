@@ -152,7 +152,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
                             recentlyDbPlace.name = cursor.getString(cursor.getColumnIndex(RecentlyList.NAME));
                             recentlyDbPlace.englishName = cursor.getString(cursor.getColumnIndex(RecentlyList.ENGLISH_NAME));
                             recentlyDbPlace.savingTime = cursor.getLong(cursor.getColumnIndex(RecentlyList.SAVING_TIME));
-                            recentlyDbPlace.areaGroupName = cursor.getString(cursor.getColumnIndex(RecentlyList.AREA_GROUP_NAME));
+                            recentlyDbPlace.regionName = cursor.getString(cursor.getColumnIndex(RecentlyList.REGION_NAME));
 
                             Constants.ServiceType serviceType;
 

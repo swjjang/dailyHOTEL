@@ -52,8 +52,8 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
                 dailyDb.addStayObRecentlySuggest(stayOutboundSuggest.id, stayOutboundSuggest.name, stayOutboundSuggest.city, stayOutboundSuggest.country //
-                    , stayOutboundSuggest.countryCode, stayOutboundSuggest.categoryKey, stayOutboundSuggest.display, stayOutboundSuggest.latitude //
-                    , stayOutboundSuggest.longitude, keyword, true);
+                    , stayOutboundSuggest.countryCode, stayOutboundSuggest.categoryKey, stayOutboundSuggest.display, stayOutboundSuggest.displayText //
+                    , stayOutboundSuggest.latitude, stayOutboundSuggest.longitude, keyword, true);
 
                 DailyDbHelper.getInstance().close();
 
@@ -90,10 +90,11 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
                         String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
                         String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
+                        String displayText = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY_TEXT));
                         double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
                         double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
 
-                        stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+                        stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, displayText, latitude, longitude);
                         stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
                     }
 
@@ -164,10 +165,11 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
                         String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
                         String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
+                        String displayText = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY_TEXT));
                         double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
                         double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
 
-                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, displayText, latitude, longitude);
                         stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
 
                         stayOutboundSuggestList.add(stayOutboundSuggest);

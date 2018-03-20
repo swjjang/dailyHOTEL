@@ -53,7 +53,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     public static final String T_GOURMET_IB_RECENTLY_SUGGEST = "gourmet_ib_recently_suggest";
     public static final String T_SEARCH_RESULT_HISTORY = "search_result_history";
 
-    // added database version 1 and change version 5 (added field Province name, Province index)
+    // added database version 1 and change version 5 (added field REGION_NAME)
     private static final String CREATE_T_RECENTLY = "CREATE TABLE IF NOT EXISTS " + T_RECENTLY + " (" //
         + RecentlyList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + RecentlyList.PLACE_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
@@ -61,13 +61,13 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + RecentlyList.ENGLISH_NAME + " TEXT NULL, " //
         + RecentlyList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
         + RecentlyList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
-        + RecentlyList.AREA_GROUP_NAME + " TEXT NULL, " //
+        + RecentlyList.REGION_NAME + " TEXT NULL, " //
         + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
 
     // change database version 5
-    private static final String ALTER_T_RECENTLY_DB_VER_5 = "ALTER TABLE " + T_RECENTLY + " ADD COLUMN " + RecentlyList.AREA_GROUP_NAME + " TEXT NULL;";
+    private static final String ALTER_T_RECENTLY_DB_VER_5 = "ALTER TABLE " + T_RECENTLY + " ADD COLUMN " + RecentlyList.REGION_NAME + " TEXT NULL;";
 
-    // added database version 3
+    // added database version 3 and change version 5 (added field DISPLAY_TEXT) drop and create
     private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
         + StayObRecentlySuggestList._ID + " INTEGER  PRIMARY KEY NOT NULL, " //
         + StayObRecentlySuggestList.NAME + " TEXT NULL, " //
@@ -76,10 +76,13 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayObRecentlySuggestList.COUNTRY_CODE + " TEXT NULL, " //
         + StayObRecentlySuggestList.CATEGORY_KEY + " TEXT NULL, " //
         + StayObRecentlySuggestList.DISPLAY + " TEXT NULL, " //
+        + StayObRecentlySuggestList.DISPLAY_TEXT + " TEXT NULL, " //
         + StayObRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
+
+    private static final String ALTER_T_STAY_OB_RECENTLY_SUGGEST = "ALTER TABLE " + T_STAY_OB_RECENTLY_SUGGEST + " ADD COLUMN " + StayObRecentlySuggestList.DISPLAY_TEXT + " TEXT NULL;";
 
     // added database version 4
     private static final String CREATE_T_TEMP_REVIEW = "CREATE TABLE IF NOT EXISTS " + T_TEMP_REVIEW + " (" //
@@ -185,6 +188,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             upGradeGourmetRecentlySuggestDb(db);
             upGradeStayIbRecentlySuggestDb(db);
             upGradeSearchResultHistoryDb(db);
+            alterStayObRecentlySuggestDb(db);
             alterRecentlyPlace(db);
         }
 
@@ -216,7 +220,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         db.execSQL(CREATE_T_RECENTLY);
     }
 
-    private void upGradeStayObRecentlySuggestDb(SQLiteDatabase db)
+    public void upGradeStayObRecentlySuggestDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_STAY_OB_RECENTLY_SUGGEST);
         db.execSQL(CREATE_T_STAY_OB_RECENTLY_SUGGEST);
@@ -251,6 +255,17 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         try
         {
             db.execSQL(ALTER_T_RECENTLY_DB_VER_5);
+        } catch (Exception e)
+        {
+            ExLog.d("sam : error = " + e.toString());
+        }
+    }
+
+    public void alterStayObRecentlySuggestDb(SQLiteDatabase db)
+    {
+        try
+        {
+            db.execSQL(ALTER_T_STAY_OB_RECENTLY_SUGGEST);
         } catch (Exception e)
         {
             ExLog.d("sam : error = " + e.toString());
@@ -516,7 +531,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     }
 
     public void addRecentlyPlace(final Constants.ServiceType serviceType, int index, String name //
-        , String englishName, String imageUrl, String areaGroupName, boolean isUpdateDate)
+        , String englishName, String imageUrl, String regionName, boolean isUpdateDate)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -551,7 +566,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             contentValues.put(RecentlyColumns.SERVICE_TYPE, serviceType == null ? "" : serviceType.name());
             contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
             contentValues.put(RecentlyColumns.IMAGE_URL, imageUrl);
-            contentValues.put(RecentlyColumns.AREA_GROUP_NAME, areaGroupName);
+            contentValues.put(RecentlyColumns.REGION_NAME, regionName);
 
             db.beginTransaction();
 
@@ -985,7 +1000,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     }
 
     public void addStayObRecentlySuggest(long _id, String name, String city, String country //
-        , String countryCode, String categoryKey, String display //
+        , String countryCode, String categoryKey, String display, String displayText //
         , double latitude, double longitude, String keyword, boolean isUpdateDate)
     {
         SQLiteDatabase db = getDb();
@@ -1022,6 +1037,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             contentValues.put(StayObRecentlySuggestColumns.COUNTRY_CODE, countryCode);
             contentValues.put(StayObRecentlySuggestColumns.CATEGORY_KEY, categoryKey);
             contentValues.put(StayObRecentlySuggestColumns.DISPLAY, display);
+            contentValues.put(StayObRecentlySuggestColumns.DISPLAY_TEXT, displayText);
             contentValues.put(StayObRecentlySuggestColumns.LATITUDE, latitude);
             contentValues.put(StayObRecentlySuggestColumns.LONGITUDE, longitude);
             contentValues.put(StayObRecentlySuggestColumns.SAVING_TIME, savingTime);
