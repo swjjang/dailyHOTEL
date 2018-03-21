@@ -358,8 +358,6 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
             }
         });
 
-        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.displayText);
-
         if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.country))
         {
             holder.dataBinding.descriptionTextView.setText(null);
@@ -388,6 +386,8 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
             }
         });
 
+        String title = stayOutboundSuggest.displayText;
+
         switch (stayOutboundSuggest.categoryKey)
         {
             case StayOutboundSuggest.CATEGORY_AIRPORT:
@@ -400,6 +400,8 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
 
             case StayOutboundSuggest.CATEGORY_LOCATION:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
+
+                title = mContext.getString(R.string.label_search_suggest_type_location_item_format, title);
                 break;
 
             case StayOutboundSuggest.CATEGORY_POINT:
@@ -418,6 +420,8 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
                 break;
         }
+
+        holder.dataBinding.titleTextView.setText(title);
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder
