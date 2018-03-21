@@ -81,7 +81,7 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
             @Override
             public void onTitleClick()
             {
-                getEventListener().onResearchClick();
+                getEventListener().onToolbarTitleClick();
             }
 
             @Override
@@ -332,9 +332,9 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
             }
 
             @Override
-            public void onResearchClick()
+            public void onEmptyStayResearchClick()
             {
-                getEventListener().onResearchClick();
+                getEventListener().onEmptyStayResearchClick();
             }
 
             @Override

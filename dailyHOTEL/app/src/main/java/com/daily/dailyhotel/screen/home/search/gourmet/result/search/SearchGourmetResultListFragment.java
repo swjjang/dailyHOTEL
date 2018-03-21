@@ -16,7 +16,7 @@ public class SearchGourmetResultListFragment extends BasePagerFragment<SearchGou
     {
         void setEmptyViewVisible(boolean visible);
 
-        void onResearchClick();
+        void onEmptyStayResearchClick();
 
         void onFilterClick();
 

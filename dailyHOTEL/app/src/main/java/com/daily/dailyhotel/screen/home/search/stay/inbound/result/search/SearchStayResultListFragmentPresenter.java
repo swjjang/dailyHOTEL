@@ -592,16 +592,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public Pair<Stays, List<ObjectItem>> apply(Stays stays) throws Exception
             {
-                List<ObjectItem> objectItemList = new ArrayList<>();
-                List<Stay> stayList = stays.getStayList();
-
-                if (stayList != null && stayList.size() > 0)
-                {
-                    for (Stay stay : stayList)
-                    {
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stay));
-                    }
-                }
+                List<ObjectItem> objectItemList = toObjectItemList(stays.getStayList());
 
                 return new Pair(stays, objectItemList);
             }
@@ -620,66 +611,12 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
                 if (size == 0)
                 {
-                    mEmptyList = true;
-                    mPage = PAGE_NONE;
-
-                    getViewInterface().setFloatingActionViewVisible(applyFilter);
-                    getViewInterface().setFloatingActionViewTypeMapEnabled(false);
-
-                    if (mViewModel.getSuggest().isLocationSuggestType() == true)
-                    {
-                        boolean notDefaultRadius = mViewModel.searchViewModel.radius != SearchStayResultTabPresenter.DEFAULT_RADIUS;
-
-                        getViewInterface().showLocationEmptyViewVisible(applyFilter || notDefaultRadius);
-                    } else
-                    {
-                        if (applyFilter == true)
-                        {
-                            getViewInterface().showDefaultEmptyViewVisible();
-                        } else
-                        {
-                            getFragment().getFragmentEventListener().setEmptyViewVisible(true);
-                        }
-                    }
+                    setEmptyResultList(applyFilter);
 
                     fragmentObservable = Observable.just(true);
                 } else
                 {
-                    mEmptyList = false;
-
-                    getViewInterface().setSearchResultCount(stays.totalCount, stays.searchMaxCount);
-
-                    getViewInterface().setFloatingActionViewVisible(true);
-
-                    boolean allSoldOut = true;
-                    for (Stay stay : stays.getStayList())
-                    {
-                        if (stay.soldOut == false)
-                        {
-                            allSoldOut = false;
-                            break;
-                        }
-                    }
-
-                    getViewInterface().setFloatingActionViewTypeMapEnabled(allSoldOut == false);
-
-                    if (size < MAXIMUM_NUMBER_PER_PAGE)
-                    {
-                        mPage = PAGE_FINISH;
-
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
-                    } else
-                    {
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
-                    }
-
-                    getFragment().getFragmentEventListener().setEmptyViewVisible(false);
-                    getViewInterface().hideEmptyViewVisible();
-                    getViewInterface().setListLayoutVisible(true);
-
-                    getViewInterface().setSearchResultCount(size, MAXIMUM_NUMBER_PER_PAGE);
-                    getViewInterface().setList(objectItemList, mViewModel.getSuggest().isLocationSuggestType() || mViewModel.isDistanceSort()//
-                        , mViewModel.getBookDateTime().getNights() > 1, stays.activeReward, DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                    setResultList(stays, objectItemList, applyFilter);
 
                     if (mViewModel.getCategory() == Category.ALL)
                     {
@@ -723,6 +660,103 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                 onHandleErrorAndFinish(throwable);
             }
         }));
+    }
+
+    private List<ObjectItem> toObjectItemList(List<Stay> stayList)
+    {
+        List<ObjectItem> objectItemList = new ArrayList<>();
+
+        if (stayList != null && stayList.size() > 0)
+        {
+            for (Stay stay : stayList)
+            {
+                objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stay));
+            }
+        }
+
+        return objectItemList;
+    }
+
+    private void setEmptyResultList(boolean applyFilter)
+    {
+        mEmptyList = true;
+        mPage = PAGE_NONE;
+
+        getViewInterface().setFloatingActionViewVisible(applyFilter);
+        getViewInterface().setFloatingActionViewTypeMapEnabled(false);
+
+        if (mViewModel.getSuggest().isLocationSuggestType() == true)
+        {
+            boolean notDefaultRadius = mViewModel.searchViewModel.radius != SearchStayResultTabPresenter.DEFAULT_RADIUS;
+
+            getViewInterface().showLocationEmptyViewVisible(applyFilter || notDefaultRadius);
+        } else
+        {
+            if (applyFilter == true)
+            {
+                getViewInterface().showDefaultEmptyViewVisible();
+            } else
+            {
+                getFragment().getFragmentEventListener().setEmptyViewVisible(true);
+            }
+        }
+    }
+
+    private void setResultList(Stays stays, List<ObjectItem> objectItemList, boolean applyFilter)
+    {
+        if (stays == null || objectItemList == null)
+        {
+            return;
+        }
+
+        int size = objectItemList.size();
+
+        mEmptyList = false;
+
+        getViewInterface().setSearchResultCount(stays.totalCount, stays.searchMaxCount);
+
+        getViewInterface().setFloatingActionViewVisible(true);
+
+        boolean allSoldOut = isAllSoldOut(stays.getStayList());
+
+        getViewInterface().setFloatingActionViewTypeMapEnabled(allSoldOut == false);
+
+        if (size < MAXIMUM_NUMBER_PER_PAGE)
+        {
+            mPage = PAGE_FINISH;
+
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+        } else
+        {
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+        }
+
+        getFragment().getFragmentEventListener().setEmptyViewVisible(false);
+        getViewInterface().hideEmptyViewVisible();
+        getViewInterface().setListLayoutVisible(true);
+
+        getViewInterface().setSearchResultCount(size, MAXIMUM_NUMBER_PER_PAGE);
+        getViewInterface().setList(objectItemList, mViewModel.getSuggest().isLocationSuggestType() || mViewModel.isDistanceSort()//
+            , mViewModel.getBookDateTime().getNights() > 1, stays.activeReward, DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+
+    }
+
+    private boolean isAllSoldOut(List<Stay> stayList)
+    {
+        if (stayList == null)
+        {
+            return true;
+        }
+
+        for (Stay stay : stayList)
+        {
+            if (stay.soldOut == false)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean hasLocationDataInSuggest(@NonNull StaySuggestV2 suggest)
@@ -784,18 +818,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public List<ObjectItem> apply(Stays stays) throws Exception
             {
-                List<ObjectItem> objectItemList = new ArrayList<>();
-                List<Stay> staysList = stays.getStayList();
-
-                if (staysList != null && staysList.size() > 0)
-                {
-                    for (Stay stay : staysList)
-                    {
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stay));
-                    }
-                }
-
-                return objectItemList;
+                return toObjectItemList(stays.getStayList());
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
         {

@@ -1078,7 +1078,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             return;
         }
 
-        getFragment().getFragmentEventListener().onResearchClick();
+        getFragment().getFragmentEventListener().onEmptyStayResearchClick();
     }
 
     @Override

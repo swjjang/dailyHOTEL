@@ -712,6 +712,34 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     }
 
     @Override
+    public void onEmptyStayResearchClick()
+    {
+        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+
+        if (suggest.menuType == GourmetSuggestV2.MenuType.REGION_LOCATION)
+        {
+            onCalendarClick();
+        } else
+        {
+            onResearchClick();
+        }
+    }
+
+    @Override
+    public void onToolbarTitleClick()
+    {
+        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+
+        if (suggest.menuType == GourmetSuggestV2.MenuType.REGION_LOCATION)
+        {
+            onCalendarClick();
+        } else
+        {
+            onResearchClick();
+        }
+    }
+
+    @Override
     public void onResearchClick()
     {
         try
