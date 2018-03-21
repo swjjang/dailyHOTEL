@@ -386,7 +386,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 {
                     try
                     {
-                        mSearchViewModel.setStayOutboundBookDateTime(data, StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME, StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                        mSearchViewModel.setStayOutboundBookDateTime(data, StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME, StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
@@ -648,7 +648,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             case Activity.RESULT_OK:
                 try
                 {
-                    mSearchViewModel.setStayBookDateTime(intent, StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME, StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                    mSearchViewModel.setStayBookDateTime(intent, StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME, StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());

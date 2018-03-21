@@ -239,8 +239,8 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
                 {
                     try
                     {
-                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME);
+                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
 
                         mSearchViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
                     } catch (Exception e)

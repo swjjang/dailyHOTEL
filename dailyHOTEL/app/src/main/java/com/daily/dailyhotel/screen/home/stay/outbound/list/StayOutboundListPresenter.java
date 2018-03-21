@@ -666,8 +666,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             case Activity.RESULT_OK:
                 if (intent != null)
                 {
-                    String checkInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                    String checkOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                    String checkInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME);
+                    String checkOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
 
                     if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
                     {

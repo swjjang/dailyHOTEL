@@ -263,8 +263,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 {
                     try
                     {
-                        String checkInDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                        String checkInDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME);
+                        String checkOutDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
 
                         mStayBookDateTime.setCheckInDateTime(checkInDate);
                         mStayBookDateTime.setCheckOutDateTime(checkOutDate);

@@ -350,8 +350,8 @@ public class StayCategoryNearByActivity extends BaseActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-            String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+            String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME);
+            String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
 
             if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
             {

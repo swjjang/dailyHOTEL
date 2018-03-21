@@ -275,8 +275,8 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         {
             try
             {
-                String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME);
+                String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
                 stayBookingDay.setCheckInDay(checkInDateTime);

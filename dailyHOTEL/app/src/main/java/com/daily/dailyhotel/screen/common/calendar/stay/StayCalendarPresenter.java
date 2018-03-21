@@ -110,8 +110,8 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
         try
         {
-            mCheckInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-            mCheckOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+            mCheckInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME);
+            mCheckOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
 
             mAnalytics.setCheckInOutDateTime(mCheckInDateTime, mCheckOutDateTime);
 
@@ -400,8 +400,8 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         }
 
         Intent intent = new Intent();
-        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME, mCheckInDateTime);
-        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME, mCheckOutDateTime);
+        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME, mCheckInDateTime);
+        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME, mCheckOutDateTime);
 
         setResult(Activity.RESULT_OK, intent);
 

@@ -602,11 +602,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             case Activity.RESULT_OK:
             {
-                if (data != null && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
-                    && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                if (data != null && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME) == true//
+                    && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME) == true)
                 {
-                    String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                    String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                    String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME);
+                    String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME);
 
                     if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
                     {

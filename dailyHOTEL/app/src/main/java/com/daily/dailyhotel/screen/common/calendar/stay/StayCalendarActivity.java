@@ -9,8 +9,8 @@ import com.daily.base.BaseActivity;
 
 public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
 {
-    public static final String INTENT_EXTRA_DATA_CHECKIN_DATETIME = "checkInDateTime";
-    public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
+    public static final String INTENT_EXTRA_DATA_CHECK_IN_DATETIME = "checkInDateTime";
+    public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATETIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_START_DATETIME = "startDateTime";
     static final String INTENT_EXTRA_DATA_END_DATETIME = "endDateTime";
     static final String INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT = "nightsOfMaxCount";
@@ -30,8 +30,8 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_START_DATETIME, startDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_DATETIME, endDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, nightsOfMaxCount);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_DATETIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_DATETIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATETIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATETIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
         intent.putExtra(INTENT_EXTRA_DATA_IS_SELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_MARGIN_TOP, marginTop);
@@ -49,8 +49,8 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_START_DATETIME, startDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_DATETIME, endDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, nightsOfMaxCount);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_DATETIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_DATETIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATETIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATETIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SOLD_OUT_DAYS, soldOutDays);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
