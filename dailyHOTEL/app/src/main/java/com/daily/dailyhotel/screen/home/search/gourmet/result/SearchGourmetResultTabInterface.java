@@ -50,7 +50,11 @@ public interface SearchGourmetResultTabInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
+        void onToolbarTitleClick();
+
         void onResearchClick();
+
+        void onEmptyStayResearchClick();
 
         void onFinishAndRefresh();
 

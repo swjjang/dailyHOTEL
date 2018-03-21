@@ -1121,7 +1121,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     try
                     {
                         StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
-                        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, suggestItem);
+                        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
                         SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
                         analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
                         StayBookDateTime bookDateTime = mStayViewModel.getBookDateTime();
