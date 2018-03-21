@@ -22,7 +22,7 @@ public class SearchStayResultListFragment extends BasePagerFragment<SearchStayRe
     {
         void setEmptyViewVisible(boolean visible);
 
-        void onResearchClick();
+        void onEmptyStayResearchClick();
 
         void onFilterClick();
 

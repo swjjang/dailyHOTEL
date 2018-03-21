@@ -64,7 +64,11 @@ public interface SearchStayResultTabInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
+        void onToolbarTitleClick();
+
         void onResearchClick();
+
+        void onEmptyStayResearchClick();
 
         void onFinishAndRefresh();
 

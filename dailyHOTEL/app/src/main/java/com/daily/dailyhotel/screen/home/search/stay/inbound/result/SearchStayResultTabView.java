@@ -86,7 +86,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
             @Override
             public void onTitleClick()
             {
-                getEventListener().onResearchClick();
+                getEventListener().onToolbarTitleClick();
             }
 
             @Override
@@ -343,9 +343,9 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
             }
 
             @Override
-            public void onResearchClick()
+            public void onEmptyStayResearchClick()
             {
-                getEventListener().onResearchClick();
+                getEventListener().onEmptyStayResearchClick();
             }
 
             @Override
@@ -537,9 +537,9 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
             }
 
             @Override
-            public void onResearchClick()
+            public void onEmptyStayResearchClick()
             {
-                getEventListener().onResearchClick();
+                getEventListener().onEmptyStayResearchClick();
             }
 
             @Override

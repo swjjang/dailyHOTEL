@@ -1143,14 +1143,14 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     }
 
     @Override
-    public void onResearchClick()
+    public void onEmptyStayResearchClick()
     {
         if (getFragment() == null || getFragment().getFragmentEventListener() == null)
         {
             return;
         }
 
-        getFragment().getFragmentEventListener().onResearchClick();
+        getFragment().getFragmentEventListener().onEmptyStayResearchClick();
     }
 
     @Override

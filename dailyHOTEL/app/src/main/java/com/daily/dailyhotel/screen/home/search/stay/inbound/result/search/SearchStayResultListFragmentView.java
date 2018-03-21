@@ -480,7 +480,7 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
                 @Override
                 public void onClick(View v)
                 {
-                    getEventListener().onResearchClick();
+                    getEventListener().onEmptyStayResearchClick();
                 }
             });
 

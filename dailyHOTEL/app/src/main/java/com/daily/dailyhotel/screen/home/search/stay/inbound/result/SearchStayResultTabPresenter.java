@@ -21,7 +21,6 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayCategory;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
@@ -739,6 +738,11 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     @Override
     public void onResearchClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         try
         {
             CommonDateTime commonDateTime = mViewModel.getCommonDateTime();
@@ -756,6 +760,34 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             ExLog.e(e.toString());
 
             unLockAll();
+        }
+    }
+
+    @Override
+    public void onEmptyStayResearchClick()
+    {
+        StaySuggestV2 suggest = mViewModel.getSuggest();
+
+        if (suggest.menuType == StaySuggestV2.MenuType.REGION_LOCATION)
+        {
+            onCalendarClick();
+        } else
+        {
+            onResearchClick();
+        }
+    }
+
+    @Override
+    public void onToolbarTitleClick()
+    {
+        StaySuggestV2 suggest = mViewModel.getSuggest();
+
+        if (suggest.menuType == StaySuggestV2.MenuType.REGION_LOCATION)
+        {
+            onCalendarClick();
+        } else
+        {
+            onResearchClick();
         }
     }
 

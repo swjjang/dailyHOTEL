@@ -104,7 +104,7 @@ public interface SearchStayResultListFragmentInterface
 
         void onRadiusClick();
 
-        void onResearchClick();
+        void onEmptyStayResearchClick();
 
         void onCalendarClick();
 
