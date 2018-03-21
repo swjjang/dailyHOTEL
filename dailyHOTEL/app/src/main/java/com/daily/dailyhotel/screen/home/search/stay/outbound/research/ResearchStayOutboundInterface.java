@@ -5,6 +5,7 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -38,7 +39,7 @@ public interface ResearchStayOutboundInterface
 
         void onDoSearchClick();
 
-        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onRecentlyHistoryClick(StayObSearchResultHistory recentlyHistory);
 
         void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
     }

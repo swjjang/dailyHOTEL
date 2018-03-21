@@ -8,6 +8,7 @@ import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 
 import java.util.List;
 
@@ -19,28 +20,28 @@ public interface SearchStayOutboundFragmentInterface
 {
     interface ViewInterface extends BaseFragmentDialogViewInterface
     {
-        void setRecentlySearchResultList(List<RecentlyDbPlace> recentlyList);
+        void setRecentlyHistory(List<StayObSearchResultHistory> recentlyHistoryList);
 
         void setPopularAreaList(List<StayOutboundSuggest> popularAreaList);
 
         void setPopularAreaVisible(boolean visible);
 
-        void setRecentlySearchResultVisible(boolean visible);
+        void setRecentlyHistoryVisible(boolean visible);
     }
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onRecentlySearchResultDeleteClick(int index, String stayName);
+        void onRecentlyHistoryDeleteClick(StayObSearchResultHistory recentlyHistory);
 
-        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onRecentlyHistoryClick(StayObSearchResultHistory recentlyHistory);
 
         void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onEventRecentlyList(Activity activity, boolean empty);
+        void onEventRecentlyHistory(Activity activity, boolean empty);
 
-        void onEventRecentlyDeleteClick(Activity activity, String stayName);
+        void onEventRecentlyHistoryDeleteClick(Activity activity, String stayName);
     }
 }

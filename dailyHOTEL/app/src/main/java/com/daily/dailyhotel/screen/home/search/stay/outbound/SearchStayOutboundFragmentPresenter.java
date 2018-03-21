@@ -14,18 +14,17 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
+import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchStayOutboundViewModel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.ObservableSource;
@@ -42,7 +41,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
 {
     SearchStayOutboundFragmentInterface.AnalyticsInterface mAnalytics;
 
-    RecentlyLocalImpl mRecentlyLocalImpl;
+    SearchLocalImpl mSearchLocalImpl;
     SuggestRemoteImpl mSuggestRemoteImpl;
     SuggestLocalImpl mSuggestLocalImpl;
 
@@ -74,7 +73,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     {
         setAnalytics(new SearchStayOutboundFragmentAnalyticsImpl());
 
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mSearchLocalImpl = new SearchLocalImpl(activity);
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
 
@@ -103,7 +102,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
         switch (requestCode)
         {
             case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_DETAIL:
-                onRecentlyRefresh();
+                onRecentlyHistoryRefresh();
                 break;
         }
     }
@@ -194,7 +193,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
         setRefresh(false);
 
         // 최근 검색결과
-        onRecentlyRefresh();
+        onRecentlyHistoryRefresh();
 
         // 해외 인기지역
         if (mHasPopularArea == false)
@@ -206,54 +205,58 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     }
 
     @Override
-    public void onRecentlySearchResultDeleteClick(int index, String stayName)
+    public void onRecentlyHistoryDeleteClick(StayObSearchResultHistory recentlyHistory)
     {
         if (lock() == true)
         {
             return;
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.OB_STAY, index).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
-        {
-            @Override
-            public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
-            {
-                mAnalytics.onEventRecentlyDeleteClick(getActivity(), stayName);
+        StayOutboundSuggest suggest = recentlyHistory.stayOutboundSuggest;
 
-                return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY);
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
-        {
-            @Override
-            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+        addCompositeDisposable(mSearchLocalImpl.deleteStayObSearchResultHistory(suggest).observeOn(AndroidSchedulers.mainThread())//
+            .flatMap(new Function<Boolean, ObservableSource<List<StayObSearchResultHistory>>>()
             {
-                if (recentlyDbPlaces.size() == 0)
+                @Override
+                public ObservableSource<List<StayObSearchResultHistory>> apply(Boolean aBoolean) throws Exception
                 {
-                    getViewInterface().setRecentlySearchResultVisible(false);
-                } else
-                {
-                    getViewInterface().setRecentlySearchResultVisible(true);
-                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                    final int RECENTLY_HISTORY_MAX_COUNT = 3;
+
+                    mAnalytics.onEventRecentlyHistoryDeleteClick(getActivity(), suggest.display);
+
+                    return mSearchLocalImpl.getStayObSearchResultHistoryList(mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
                 }
-
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayObSearchResultHistory>>()
             {
-                getViewInterface().setRecentlySearchResultVisible(false);
+                @Override
+                public void accept(List<StayObSearchResultHistory> recentlyHistoryList) throws Exception
+                {
+                    if (recentlyHistoryList.size() == 0)
+                    {
+                        getViewInterface().setRecentlyHistoryVisible(false);
+                    } else
+                    {
+                        getViewInterface().setRecentlyHistoryVisible(true);
+                        getViewInterface().setRecentlyHistory(recentlyHistoryList);
+                    }
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setRecentlyHistoryVisible(false);
 
-                unLockAll();
-            }
-        }));
+                    unLockAll();
+                }
+            }));
     }
 
     @Override
-    public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    public void onRecentlyHistoryClick(StayObSearchResultHistory recentlyHistory)
     {
-        getFragment().getFragmentEventListener().onRecentlySearchResultClick(recentlyDbPlace);
+        getFragment().getFragmentEventListener().onRecentlyHistoryClick(recentlyHistory);
     }
 
     @Override
@@ -261,13 +264,13 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     {
         addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, stayOutboundSuggest.display) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-        {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception
             {
-                getFragment().getFragmentEventListener().onPopularAreaClick(stayOutboundSuggest);
-            }
-        }));
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    getFragment().getFragmentEventListener().onPopularAreaClick(stayOutboundSuggest);
+                }
+            }));
     }
 
     private void initViewModel(BaseActivity activity)
@@ -281,36 +284,40 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
         mSearchViewModel = ViewModelProviders.of(activity).get(SearchStayOutboundViewModel.class);
     }
 
-    void onRecentlyRefresh()
+    void onRecentlyHistoryRefresh()
     {
-        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
-        {
-            @Override
-            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+        final int RECENTLY_HISTORY_MAX_COUNT = 3;
+        CommonDateTime commonDateTime = mCommonDateTimeViewModel.commonDateTime;
+
+        addCompositeDisposable(mSearchLocalImpl.getStayObSearchResultHistoryList(commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayObSearchResultHistory>>()
             {
-                if (recentlyDbPlaces.size() == 0)
+                @Override
+                public void accept(List<StayObSearchResultHistory> recentlyHistoryList) throws Exception
                 {
-                    getViewInterface().setRecentlySearchResultVisible(false);
-                } else
-                {
-                    getViewInterface().setRecentlySearchResultVisible(true);
-                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                    if (recentlyHistoryList.size() == 0)
+                    {
+                        getViewInterface().setRecentlyHistoryVisible(false);
+                    } else
+                    {
+                        getViewInterface().setRecentlyHistoryVisible(true);
+                        getViewInterface().setRecentlyHistory(recentlyHistoryList);
+                    }
+
+                    mAnalytics.onEventRecentlyHistory(getActivity(), recentlyHistoryList.size() == 0);
                 }
-
-                mAnalytics.onEventRecentlyList(getActivity(), recentlyDbPlaces.size() == 0);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+            }, new Consumer<Throwable>()
             {
-                getViewInterface().setRecentlySearchResultVisible(false);
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setRecentlyHistoryVisible(false);
 
-                mAnalytics.onEventRecentlyList(getActivity(), true);
+                    mAnalytics.onEventRecentlyHistory(getActivity(), true);
 
-                ExLog.e(throwable.toString());
-            }
-        }));
+                    ExLog.e(throwable.toString());
+                }
+            }));
     }
 
     void onPopularAreaRefresh()

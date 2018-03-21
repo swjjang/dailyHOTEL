@@ -86,18 +86,39 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
 
         try
         {
-            String category = mAnalyticsParam.analyticsClickType;
             String keyword = DailyTextUtils.isTextEmpty(mAnalyticsParam.keyword) ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.keyword;
 
             AnalyticsManager.getInstance(activity).recordEvent(size == 0 ? AnalyticsManager.Category.OB_SEARCH_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RESULT//
                 , suggest.display, keyword, null);
 
-            if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
-                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
-                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND.equalsIgnoreCase(category) == false)
+            String category;
+
+            switch (suggest.menuType)
             {
-                category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
+                case StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH:
+                case StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY:
+                    category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT;
+                    break;
+
+                case StayOutboundSuggest.MENU_TYPE_POPULAR_AREA:
+                    category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND;
+                    break;
+
+                case StayOutboundSuggest.MENU_TYPE_SUGGEST:
+                    category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO;
+                    break;
+
+                default:
+                    category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
+                    break;
             }
+
+//            if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
+//                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
+//                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND.equalsIgnoreCase(category) == false)
+//            {
+//                category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
+//            }
 
             AnalyticsManager.getInstance(activity).recordEvent(category, suggest.display, keyword, null);
 

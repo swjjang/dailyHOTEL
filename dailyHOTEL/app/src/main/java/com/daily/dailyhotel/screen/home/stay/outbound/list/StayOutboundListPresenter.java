@@ -38,6 +38,7 @@ import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
+import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -101,6 +102,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     StayOutboundRemoteImpl mStayOutboundRemoteImpl;
     CommonRemoteImpl mCommonRemoteImpl;
     SuggestRemoteImpl mSuggestRemoteImpl;
+    SearchLocalImpl mSearchLocalImpl;
 
     private CommonDateTime mCommonDateTime;
     StayBookDateTime mStayBookDateTime;
@@ -205,6 +207,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
+        mSearchLocalImpl = new SearchLocalImpl(activity);
 
         setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
 
@@ -612,7 +615,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         if (analyticsParam != null)
                         {
                             analyticsParam.keyword = data.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_KEYWORD);
-                            analyticsParam.analyticsClickType = data.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
                         }
                     } catch (Exception e)
                     {
@@ -789,14 +791,22 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return stayOutbounds;
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
         {
-            mAnalytics.onScreen(getActivity(), stayOutbounds.getStayOutbound().size() == 0);
+            int size = stayOutbounds.getStayOutbound().size();
 
-            mAnalytics.onEventList(getActivity(), mStayBookDateTime, mStayOutboundSuggest, stayOutbounds.getStayOutbound().size());
+            mAnalytics.onScreen(getActivity(), size == 0);
+
+            mAnalytics.onEventList(getActivity(), mStayBookDateTime, mStayOutboundSuggest, size);
 
             onStayOutbounds(stayOutbounds);
 
             getViewInterface().setRefreshing(false);
             unLockAll();
+
+            if (size > 0)
+            {
+                addCompositeDisposable(mSearchLocalImpl.addStayObSearchResultHistory(mCommonDateTime//
+                    , mStayBookDateTime, mStayOutboundSuggest, mPeople).observeOn(AndroidSchedulers.mainThread()).subscribe());
+            }
         }, new Consumer<Throwable>()
         {
             @Override

@@ -17,8 +17,8 @@ import com.daily.dailyhotel.entity.StaySuggestV2;
  */
 public class SearchStayViewModel extends ViewModel
 {
-    private MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
-    private MutableLiveData<StaySuggestV2> suggest = new MutableLiveData<>();
+    private MutableLiveData<StayBookDateTime> mBookDateTime = new MutableLiveData<>();
+    private MutableLiveData<StaySuggestV2> mSuggest = new MutableLiveData<>();
     public String inputKeyword;
     public float radius;
 
@@ -40,7 +40,7 @@ public class SearchStayViewModel extends ViewModel
 
     public void setBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
     {
-        bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+        mBookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
     }
 
     public void setBookDateTime(String checkInDateTime, int afterCheckInDay, String checkOutDateTime, int afterCheckOutDay) throws Exception
@@ -49,41 +49,41 @@ public class SearchStayViewModel extends ViewModel
         stayBookDateTime.setCheckInDateTime(checkInDateTime, afterCheckInDay);
         stayBookDateTime.setCheckOutDateTime(checkOutDateTime, afterCheckOutDay);
 
-        bookDateTime.setValue(stayBookDateTime);
+        mBookDateTime.setValue(stayBookDateTime);
     }
 
     public StayBookDateTime getBookDateTime()
     {
-        return bookDateTime.getValue();
-    }
-
-    public void setSuggest(StaySuggestV2 suggest)
-    {
-        this.suggest.setValue(suggest);
-    }
-
-    public StaySuggestV2 getSuggest()
-    {
-        return suggest.getValue();
-    }
-
-    public void setSuggestObserver(BaseActivity activity, Observer<StaySuggestV2> observer)
-    {
-        suggest.observe(activity, observer);
-    }
-
-    public void removeSuggestObserver(Observer<StaySuggestV2> observer)
-    {
-        suggest.removeObserver(observer);
+        return mBookDateTime.getValue();
     }
 
     public void setBookDateTimeObserver(BaseActivity activity, Observer<StayBookDateTime> observer)
     {
-        bookDateTime.observe(activity, observer);
+        mBookDateTime.observe(activity, observer);
     }
 
     public void removeBookDateTimeObserver(Observer<StayBookDateTime> observer)
     {
-        bookDateTime.removeObserver(observer);
+        mBookDateTime.removeObserver(observer);
+    }
+
+    public void setSuggest(StaySuggestV2 suggest)
+    {
+        this.mSuggest.setValue(suggest);
+    }
+
+    public StaySuggestV2 getSuggest()
+    {
+        return mSuggest.getValue();
+    }
+
+    public void setSuggestObserver(BaseActivity activity, Observer<StaySuggestV2> observer)
+    {
+        mSuggest.observe(activity, observer);
+    }
+
+    public void removeSuggestObserver(Observer<StaySuggestV2> observer)
+    {
+        mSuggest.removeObserver(observer);
     }
 }

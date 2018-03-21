@@ -8,10 +8,13 @@ import android.widget.LinearLayout;
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.view.DailySearchRecentlyCardView;
 import com.daily.dailyhotel.view.DailySearchStayOutboundAreaCardView;
+import com.daily.dailyhotel.view.DailySearchStayOutboundRecentlyCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentSearchStayOutboundDataBinding;
 
@@ -32,17 +35,17 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
     @Override
     protected void setContentView(FragmentSearchStayOutboundDataBinding viewDataBinding)
     {
-        setRecentlySearchResultVisible(false);
+        setRecentlyHistoryVisible(false);
         setPopularAreaVisible(false);
 
-        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
-        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
-        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
+        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlyHistoryClick((StayObSearchResultHistory) v.getTag()));
+        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlyHistoryClick((StayObSearchResultHistory) v.getTag()));
+        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlyHistoryClick((StayObSearchResultHistory) v.getTag()));
 
     }
 
     @Override
-    public void setRecentlySearchResultList(List<RecentlyDbPlace> recentlyList)
+    public void setRecentlyHistory(List<StayObSearchResultHistory> recentlyHistoryList)
     {
         if (getViewDataBinding() == null)
         {
@@ -51,23 +54,37 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
 
         final int MAX_COUNT = 3;
 
-        DailySearchRecentlyCardView[] recentlyCardView = {getViewDataBinding().recently01View, getViewDataBinding().recently02View, getViewDataBinding().recently03View};
+        DailySearchStayOutboundRecentlyCardView[] recentlyCardView = {getViewDataBinding().recently01View, getViewDataBinding().recently02View, getViewDataBinding().recently03View};
 
         // 총 3개의 목록만 보여준다
         for (int i = 0; i < MAX_COUNT; i++)
         {
-            if (recentlyList != null && recentlyList.size() > i)
+            if (recentlyHistoryList != null && recentlyHistoryList.size() > i)
             {
                 recentlyCardView[i].setVisibility(View.VISIBLE);
                 recentlyCardView[i].setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
 
-                RecentlyDbPlace recentlyDbPlace = recentlyList.get(i);
+                StayObSearchResultHistory recentlyHistory = recentlyHistoryList.get(i);
+                StayOutboundSuggest suggest = recentlyHistory.stayOutboundSuggest;
 
-                recentlyCardView[i].setTag(recentlyDbPlace);
+                recentlyCardView[i].setTag(recentlyHistory);
                 recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
-                recentlyCardView[i].setNameText(recentlyDbPlace.name);
-                recentlyCardView[i].setDateText(null);
-                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClick(recentlyDbPlace.index, recentlyDbPlace.name));
+                recentlyCardView[i].setNameText(suggest.display);
+
+                if (suggest.categoryKey == StayOutboundSuggest.CATEGORY_LOCATION)
+                {
+                    recentlyCardView[i].setNameText(getString(R.string.label_search_suggest_type_location_item_format, suggest.display));
+                } else
+                {
+                    recentlyCardView[i].setNameText(suggest.display);
+                }
+
+                StayBookDateTime stayBookDateTime = recentlyHistory.stayBookDateTime;
+                recentlyCardView[i].setDateText(stayBookDateTime.getToYearDateFullFormat());
+
+                recentlyCardView[i].setPeopleText(new People(recentlyHistory.adultCount, recentlyHistory.getChildAgeList()).toShortString(getContext()));
+
+                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlyHistoryDeleteClick(recentlyHistory));
             } else
             {
                 recentlyCardView[i].setVisibility(View.GONE);
@@ -116,7 +133,7 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
     }
 
     @Override
-    public void setRecentlySearchResultVisible(boolean visible)
+    public void setRecentlyHistoryVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
         {

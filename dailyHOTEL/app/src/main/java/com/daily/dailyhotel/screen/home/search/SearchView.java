@@ -13,6 +13,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
@@ -274,9 +275,9 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             mSearchStayOutboundFragment.setOnFragmentEventListener(new SearchStayOutboundFragment.OnEventListener()
             {
                 @Override
-                public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+                public void onRecentlyHistoryClick(StayObSearchResultHistory recentlyHistory)
                 {
-                    getEventListener().onStayOutboundRecentlySearchResultClick(recentlyDbPlace);
+                    getEventListener().onStayOutboundRecentlyHistoryClick(recentlyHistory);
                 }
 
                 @Override

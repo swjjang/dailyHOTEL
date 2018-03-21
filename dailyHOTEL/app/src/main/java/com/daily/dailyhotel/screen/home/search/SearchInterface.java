@@ -11,6 +11,7 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 
 import io.reactivex.Completable;
@@ -89,9 +90,9 @@ public interface SearchInterface
 
         void onStayOutboundDoSearchClick();
 
-        void onStayOutboundRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+        void onStayOutboundRecentlyHistoryClick(StayObSearchResultHistory recentlyHistory);
 
-        void onStayOutboundPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
+        void onStayOutboundPopularAreaClick(StayOutboundSuggest suggest);
 
 
         void onGourmetClick();
