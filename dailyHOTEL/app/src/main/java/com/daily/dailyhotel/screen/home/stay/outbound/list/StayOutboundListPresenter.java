@@ -352,14 +352,24 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (mDailyDeepLink == null)
         {
-            if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
-            {
-                getViewInterface().setRadiusVisible(false);
-            } else
-            {
-                getViewInterface().setRadiusVisible(true);
-                getViewInterface().setRadius(mRadius);
-            }
+            initView(mStayOutboundSuggest);
+        }
+    }
+
+    private void initView(StayOutboundSuggest suggest)
+    {
+        if (suggest == null)
+        {
+            return;
+        }
+
+        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(suggest.categoryKey) == false)
+        {
+            getViewInterface().setRadiusVisible(false);
+        } else
+        {
+            getViewInterface().setRadiusVisible(true);
+            getViewInterface().setRadius(mRadius);
         }
     }
 
@@ -625,6 +635,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                        initView(mStayOutboundSuggest);
+
                         if (mViewState == ViewState.MAP)
                         {
                             onViewTypeClick();

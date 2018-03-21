@@ -453,6 +453,9 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
                         mViewModel.getFilter().reset();
                         mViewModel.setViewType(ViewType.LIST);
+
+                        initView(mViewModel.getSuggest());
+
                         setRefresh(true);
                     } catch (Exception e)
                     {

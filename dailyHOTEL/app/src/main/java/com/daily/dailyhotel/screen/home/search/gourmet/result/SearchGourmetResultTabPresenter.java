@@ -435,6 +435,9 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
                         mViewModel.getFilter().reset();
                         mViewModel.setViewType(ViewType.LIST);
+
+                        initView(mViewModel.getSuggest());
+
                         setRefresh(true);
                     } catch (Exception e)
                     {
