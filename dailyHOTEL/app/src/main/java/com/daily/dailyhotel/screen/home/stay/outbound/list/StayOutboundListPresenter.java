@@ -259,6 +259,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         stayOutboundSuggest.id = Long.parseLong(externalDeepLink.getIndex());
                         stayOutboundSuggest.categoryKey = externalDeepLink.getCategoryKey();
                         stayOutboundSuggest.display = externalDeepLink.getTitle();
+                        stayOutboundSuggest.displayText = externalDeepLink.getTitle();
                         setSuggest(stayOutboundSuggest);
 
                         StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
@@ -443,14 +444,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public boolean onBackPressed()
     {
-        Intent intent = new Intent();
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mStayOutboundSuggest));
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mPeople.numberOfAdults);
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST, mPeople.getChildAgeList());
-
-        setResult(Activity.RESULT_CANCELED, intent);
+        setResultCode(Activity.RESULT_CANCELED);
 
         // 빈 리스트인 경우 종료한다.
         if (mStayOutboundList == null || mStayOutboundList.size() == 0)
@@ -480,6 +474,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         return super.onBackPressed();
+    }
+
+    private void setResultCode(int resultCode)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mStayOutboundSuggest));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mPeople.numberOfAdults);
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST, mPeople.getChildAgeList());
+
+        setResult(resultCode, intent);
     }
 
     @Override
@@ -837,7 +843,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+        setResultCode(Activity.RESULT_CANCELED);
+        finish();
     }
 
     @Override
@@ -1399,7 +1406,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        setResultData(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+        setResultCode(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
         finish();
 
         mAnalytics.onEventStayClick(getActivity());
@@ -1413,7 +1420,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        setResultData(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+        setResultCode(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
         finish();
 
         mAnalytics.onEventGourmetClick(getActivity());
@@ -1434,18 +1441,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         onRefreshAll(true);
 
         mAnalytics.onEventPopularAreaClick(getActivity(), stayOutboundSuggest.name);
-    }
-
-    private void setResultData(int resultCode)
-    {
-        Intent intent = new Intent();
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mStayOutboundSuggest));
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mPeople.numberOfAdults);
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST, mPeople.getChildAgeList());
-
-        setResult(resultCode, intent);
     }
 
     void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
@@ -1788,7 +1783,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        String title = mStayOutboundSuggest.id == 0 ? DailyTextUtils.isTextEmpty(mStayOutboundSuggest.city) == true ? mStayOutboundSuggest.display : mStayOutboundSuggest.city : mStayOutboundSuggest.display;
+        String title = mStayOutboundSuggest.id == 0 ? (DailyTextUtils.isTextEmpty(mStayOutboundSuggest.city) == true ? mStayOutboundSuggest.displayText : mStayOutboundSuggest.city) : mStayOutboundSuggest.displayText;
 
         if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true && DailyTextUtils.isTextEmpty(title) == true)
         {

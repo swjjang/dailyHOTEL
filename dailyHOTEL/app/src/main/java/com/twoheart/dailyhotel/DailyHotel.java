@@ -21,8 +21,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailA
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
-import com.daily.dailyhotel.storage.database.DailyDb;
-import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -66,16 +64,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
         // URL 만들때 사용
         //        com.twoheart.dailyhotel.util.Crypto.getUrlEncoder("");
-
-        // TODO : 고메, 스테이 검색어 DB 삭제 - 추후 릴리즈시 빼야 함
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(this);
-        dailyDb.upGradeGourmetRecentlySuggestDb(dailyDb.getWritableDatabase());
-        dailyDb.upGradeStayIbRecentlySuggestDb(dailyDb.getWritableDatabase());
-        dailyDb.upGradeSearchResultHistoryDb(dailyDb.getWritableDatabase());
-        dailyDb.upGradeStayObRecentlySuggestDb(dailyDb.getWritableDatabase());
-        dailyDb.upGradeRecentlyPlaceDb(dailyDb.getWritableDatabase());
-        DailyDbHelper.getInstance().close();
-
 
         final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 

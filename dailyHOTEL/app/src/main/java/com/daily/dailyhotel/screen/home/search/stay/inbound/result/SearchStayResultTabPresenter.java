@@ -426,6 +426,16 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                             return;
                         }
 
+                        String checkInDateTime = intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+                        String checkOutDateTime = intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                        {
+                            return;
+                        }
+
+                        getViewInterface().removeAllFragment();
+
                         StaySuggestV2 suggest = suggestParcel.getSuggest();
 
                         mViewModel.setSuggest(suggest);
@@ -441,20 +451,12 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                             mViewModel.searchViewModel.radius = 0.0f;
                         }
 
-                        String checkInDateTime = intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
-                        String checkOutDateTime = intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
-
-                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-                        {
-                            return;
-                        }
-
                         mViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
+
+                        initView(mViewModel.getSuggest());
 
                         mViewModel.getFilter().reset();
                         mViewModel.setViewType(ViewType.LIST);
-
-                        initView(mViewModel.getSuggest());
 
                         setRefresh(true);
                     } catch (Exception e)
@@ -715,6 +717,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     public void onBackClick()
     {
         mAnalytics.onEventCancelClick(getActivity());
+
+        setResultCode(Activity.RESULT_CANCELED);
         finish();
     }
 

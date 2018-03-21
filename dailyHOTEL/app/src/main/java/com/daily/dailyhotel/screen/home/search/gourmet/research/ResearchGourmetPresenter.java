@@ -43,7 +43,6 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     SearchGourmetViewModel mSearchViewModel;
     CommonDateTimeViewModel mCommonDateTimeViewModel;
 
-
     public ResearchGourmetPresenter(@NonNull ResearchGourmetActivity activity)
     {
         super(activity);

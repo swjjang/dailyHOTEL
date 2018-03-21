@@ -69,14 +69,13 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
 
                 recentlyCardView[i].setTag(recentlyHistory);
                 recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
-                recentlyCardView[i].setNameText(suggest.display);
 
                 if (suggest.categoryKey == StayOutboundSuggest.CATEGORY_LOCATION)
                 {
-                    recentlyCardView[i].setNameText(getString(R.string.label_search_suggest_type_location_item_format, suggest.display));
+                    recentlyCardView[i].setNameText(getString(R.string.label_search_suggest_type_location_item_format, suggest.displayText));
                 } else
                 {
-                    recentlyCardView[i].setNameText(suggest.display);
+                    recentlyCardView[i].setNameText(suggest.displayText);
                 }
 
                 StayBookDateTime stayBookDateTime = recentlyHistory.stayBookDateTime;
@@ -162,7 +161,7 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
         DailySearchStayOutboundAreaCardView areaCardView = new DailySearchStayOutboundAreaCardView(getContext());
         areaCardView.setPadding(DP_15, 0, DP_15, 0);
         areaCardView.setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
-        areaCardView.setTitleText(stayOutboundSuggest.display);
+        areaCardView.setTitleText(stayOutboundSuggest.displayText);
 
         if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.country) == true)
         {

@@ -441,6 +441,17 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onRefresh();
     }
 
+    @Override
+    public void removeAllFragment()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        clearViewPager();
+    }
+
     private class RadiusArrayAdapter extends ArrayAdapter<CharSequence>
     {
         private int mSelectedPosition;

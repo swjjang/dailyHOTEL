@@ -45,6 +45,8 @@ public interface SearchStayResultTabInterface
         boolean onFragmentBackPressed();
 
         void refreshCurrentFragment();
+
+        void removeAllFragment();
     }
 
     interface OnEventListener extends OnBaseEventListener

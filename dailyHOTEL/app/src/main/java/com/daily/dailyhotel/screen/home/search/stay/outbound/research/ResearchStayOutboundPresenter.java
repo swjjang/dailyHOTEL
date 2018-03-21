@@ -22,6 +22,7 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
+import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchStayOutboundViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -46,8 +47,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
     private ResearchStayOutboundInterface.AnalyticsInterface mAnalytics;
 
     SearchStayOutboundViewModel mSearchModel;
-
-    CommonDateTime mCommonDateTime;
+    CommonDateTimeViewModel mCommonDateTimeViewModel;
 
     public ResearchStayOutboundPresenter(@NonNull ResearchStayOutboundActivity activity)
     {
@@ -87,10 +87,12 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             return true;
         }
 
-        mCommonDateTime = new CommonDateTime(intent.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_OPEN_DATE_TIME)//
+        CommonDateTime commonDateTime = new CommonDateTime(intent.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_OPEN_DATE_TIME)//
             , intent.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CLOSE_DATE_TIME)//
             , intent.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CURRENT_DATE_TIME)//
             , intent.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_DAILY_DATE_TIME));
+
+        mCommonDateTimeViewModel.commonDateTime = commonDateTime;
 
         try
         {
@@ -341,7 +343,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
 
         try
         {
-            Calendar startCalendar = DailyCalendar.getInstance(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT);
+            Calendar startCalendar = DailyCalendar.getInstance(mCommonDateTimeViewModel.commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT);
             startCalendar.add(Calendar.DAY_OF_MONTH, -1);
             String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
             startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
@@ -425,7 +427,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             mSearchModel.inputKeyword = null;
             mSearchModel.setBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
             mSearchModel.setSuggest(recentlyHistory.stayOutboundSuggest);
-            mSearchModel.setPeople(recentlyHistory.adultCount, recentlyHistory.getChildAgeList());
+            setPeople(recentlyHistory.adultCount, recentlyHistory.getChildAgeList());
 
             addCompositeDisposable(getViewInterface().getSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
             {
@@ -468,6 +470,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             return;
         }
 
+        mCommonDateTimeViewModel = ViewModelProviders.of(activity, new CommonDateTimeViewModel.CommonDateTimeViewModelFactory()).get(CommonDateTimeViewModel.class);
         mSearchModel = ViewModelProviders.of(activity, new SearchStayOutboundViewModel.SearchStayOutboundViewModelFactory()).get(SearchStayOutboundViewModel.class);
 
         // StayOutbound
@@ -476,9 +479,11 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             @Override
             public void onChanged(@Nullable StayOutboundSuggest stayOutboundSuggest)
             {
-                getViewInterface().setSearchSuggestText(stayOutboundSuggest.display);
+                String displayName = stayOutboundSuggest.displayText;
 
-                getViewInterface().setSearchButtonEnabled(DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == false);
+                getViewInterface().setSearchSuggestText(displayName);
+
+                getViewInterface().setSearchButtonEnabled(DailyTextUtils.isTextEmpty(displayName) == false);
             }
         });
 
@@ -503,11 +508,11 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             }
         });
 
-        mSearchModel.setPeople(People.DEFAULT_ADULTS, null);
+        setPeople(People.DEFAULT_ADULTS, null);
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
-        mSearchModel.setPeople(People.DEFAULT_ADULTS, null);
+        mSearchModel.setPeople(numberOfAdults, childAgeList);
     }
 }
