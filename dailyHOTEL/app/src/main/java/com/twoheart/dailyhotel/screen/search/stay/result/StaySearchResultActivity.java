@@ -81,37 +81,37 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
-        , String inputText, StaySuggestV2 suggest, SortType sortType, String callByScreen)
-    {
-        Intent intent = new Intent(context, StaySearchResultActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
-
-        if (sortType != null)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
-        }
-
-        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
-        , StaySuggestV2 suggest, double radius, boolean isDeepLink)
-    {
-        Intent intent = new Intent(context, StaySearchResultActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
-        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
-
-        return intent;
-    }
+//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
+//        , String inputText, StaySuggestV2 suggest, SortType sortType, String callByScreen)
+//    {
+//        Intent intent = new Intent(context, StaySearchResultActivity.class);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+//        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+//        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+//
+//        if (sortType != null)
+//        {
+//            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
+//        }
+//
+//        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+//
+//        return intent;
+//    }
+//
+//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
+//        , StaySuggestV2 suggest, double radius, boolean isDeepLink)
+//    {
+//        Intent intent = new Intent(context, StaySearchResultActivity.class);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+//        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+//        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
+//        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
+//
+//        return intent;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

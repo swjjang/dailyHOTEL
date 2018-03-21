@@ -885,7 +885,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(mPage)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Gourmets>()
+        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(-1)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Gourmets>()
         {
             @Override
             public void accept(Gourmets gourmets) throws Exception

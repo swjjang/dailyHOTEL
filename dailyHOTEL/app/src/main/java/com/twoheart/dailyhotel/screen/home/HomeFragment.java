@@ -29,6 +29,7 @@ import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -43,6 +44,7 @@ import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
@@ -1718,15 +1720,26 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         try
         {
-            StayBookingDay stayBookingDay = new StayBookingDay();
-            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+            StayBookDateTime bookDateTime = new StayBookDateTime();
+            bookDateTime.setCheckInDateTime(mTodayDateTime.dailyDateTime);
+            bookDateTime.setCheckOutDateTime(mTodayDateTime.dailyDateTime, 1);
 
             StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
             StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
+            SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
+            analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, suggest, null, AnalyticsManager.Screen.HOME);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+            startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
+                , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , suggest, null, analyticsParam)//
+                , Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+
+//            StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
+//            StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
+//
+//            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, suggest, null, AnalyticsManager.Screen.HOME);
+//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

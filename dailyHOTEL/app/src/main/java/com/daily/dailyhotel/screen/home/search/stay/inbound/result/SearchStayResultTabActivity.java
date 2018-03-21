@@ -8,10 +8,11 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
-import com.daily.dailyhotel.parcel.SearchStayAnalyticsParam;
+import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
+import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
  * Created by sheldon
@@ -29,18 +30,19 @@ public class SearchStayResultTabActivity extends BaseActivity<SearchStayResultTa
     public static final int REQUEST_CODE_WISH_DIALOG = 10009;
     public static final int REQUEST_CODE_CALL = 10010;
 
+    public static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
 
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
-        , GourmetSuggestV2 suggest, String inputKeyWord, SearchStayAnalyticsParam analyticsParam)
+        , StaySuggestV2 suggest, String inputKeyWord, SearchStayResultAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, SearchStayResultTabActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_INPUT_KEYWORD, inputKeyWord);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 

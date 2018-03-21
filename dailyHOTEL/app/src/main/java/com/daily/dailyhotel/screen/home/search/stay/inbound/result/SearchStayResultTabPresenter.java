@@ -22,7 +22,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.parcel.SearchStayAnalyticsParam;
+import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.local.SearchLocalImpl;
@@ -156,6 +156,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                 getViewInterface().setOptionFilterSelected(filter != null && filter.isDefault() == false);
             }
         });
+
+        mViewModel.setCategory(Category.ALL);
     }
 
     @Override
@@ -179,7 +181,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                 mDailyDeepLink = DailyIntentUtils.getDeepLink(intent);
                 parseDeepLink(mDailyDeepLink);
 
-                mAnalytics.setAnalyticsParam(new SearchStayAnalyticsParam());
+                mAnalytics.setAnalyticsParam(new SearchStayResultAnalyticsParam());
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

@@ -3,15 +3,15 @@ package com.daily.dailyhotel.parcel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SearchStayAnalyticsParam implements Parcelable
+public class SearchStayResultAnalyticsParam implements Parcelable
 {
     public String mCallByScreen;
 
-    public SearchStayAnalyticsParam()
+    public SearchStayResultAnalyticsParam()
     {
     }
 
-    public SearchStayAnalyticsParam(Parcel in)
+    public SearchStayResultAnalyticsParam(Parcel in)
     {
         readFromParcel(in);
     }
@@ -35,15 +35,15 @@ public class SearchStayAnalyticsParam implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public SearchStayAnalyticsParam createFromParcel(Parcel in)
+        public SearchStayResultAnalyticsParam createFromParcel(Parcel in)
         {
-            return new SearchStayAnalyticsParam(in);
+            return new SearchStayResultAnalyticsParam(in);
         }
 
         @Override
-        public SearchStayAnalyticsParam[] newArray(int size)
+        public SearchStayResultAnalyticsParam[] newArray(int size)
         {
-            return new SearchStayAnalyticsParam[size];
+            return new SearchStayResultAnalyticsParam[size];
         }
 
     };

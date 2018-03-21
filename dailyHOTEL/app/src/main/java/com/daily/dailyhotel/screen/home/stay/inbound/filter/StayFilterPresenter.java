@@ -164,7 +164,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_SUGGEST);
 
-        if (suggestParcel != null)
+        if (suggestParcel == null)
         {
             return false;
         }

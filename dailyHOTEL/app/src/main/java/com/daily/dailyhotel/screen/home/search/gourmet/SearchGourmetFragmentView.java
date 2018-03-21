@@ -69,10 +69,19 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
                 recentlyCardView[i].setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
 
                 GourmetSearchResultHistory recentlyHistory = recentlyHistoryList.get(i);
+                GourmetSuggestV2 suggest = recentlyHistory.gourmetSuggest;
 
                 recentlyCardView[i].setTag(recentlyHistory);
                 recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
-                recentlyCardView[i].setNameText(recentlyHistory.gourmetSuggest.getText1());
+
+                if (suggest.isLocationSuggestType() == true)
+                {
+                    recentlyCardView[i].setNameText(getString(R.string.label_search_suggest_type_location_item_format, suggest.getText1()));
+                } else
+                {
+                    recentlyCardView[i].setNameText(suggest.getText1());
+                }
+
                 recentlyCardView[i].setDateText(recentlyHistory.gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
                 recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlyHistoryDeleteClick(recentlyHistory));
             } else

@@ -12,6 +12,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.view.DailySearchRecentlyCardView;
 import com.google.android.flexbox.FlexDirection;
@@ -69,9 +70,19 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
                 recentlyCardView[i].setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
 
                 StaySearchResultHistory recentlyHistory = recentlyHistoryList.get(i);
+                StaySuggestV2 suggest = recentlyHistory.staySuggest;
 
                 recentlyCardView[i].setTag(recentlyHistory);
                 recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
+
+                if (suggest.isLocationSuggestType() == true)
+                {
+                    recentlyCardView[i].setNameText(getString(R.string.label_search_suggest_type_location_item_format, suggest.getText1()));
+                } else
+                {
+                    recentlyCardView[i].setNameText(suggest.getText1());
+                }
+
                 recentlyCardView[i].setNameText(recentlyHistory.staySuggest.getText1());
 
                 StayBookDateTime stayBookDateTime = recentlyHistory.stayBookDateTime;

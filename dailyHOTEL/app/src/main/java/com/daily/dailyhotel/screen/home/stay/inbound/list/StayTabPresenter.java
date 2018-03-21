@@ -31,6 +31,7 @@ import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySubwayArea;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -39,6 +40,7 @@ import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -46,7 +48,6 @@ import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
-import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -1120,12 +1121,15 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     try
                     {
                         StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
-                        StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, suggestItem);
+                        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, suggestItem);
+                        SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
+                        analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
+                        StayBookDateTime bookDateTime = mStayViewModel.getBookDateTime();
 
-                        startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
-                            , mStayViewModel.commonDateTime.getValue().getTodayDateTime()//
-                            , mStayViewModel.bookDateTime.getValue().getStayBookingDay()//
-                            , null, staySuggest, null, AnalyticsManager.Screen.HOME)//
+                        startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
+                            , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                            , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                            , suggest, null, analyticsParam)//
                             , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                     } catch (Exception e)
                     {

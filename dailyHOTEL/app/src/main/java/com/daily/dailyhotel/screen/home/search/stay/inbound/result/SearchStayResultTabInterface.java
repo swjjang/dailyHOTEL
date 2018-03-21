@@ -7,9 +7,8 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.parcel.SearchStayAnalyticsParam;
+import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 
 import java.util.List;
 
@@ -73,9 +72,9 @@ public interface SearchStayResultTabInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void setAnalyticsParam(SearchStayAnalyticsParam analyticsParam);
+        void setAnalyticsParam(SearchStayResultAnalyticsParam analyticsParam);
 
-        SearchStayAnalyticsParam getAnalyticsParam();
+        SearchStayResultAnalyticsParam getAnalyticsParam();
 
         void onEventChangedViewType(Activity activity, SearchStayResultTabPresenter.ViewType viewType);
 

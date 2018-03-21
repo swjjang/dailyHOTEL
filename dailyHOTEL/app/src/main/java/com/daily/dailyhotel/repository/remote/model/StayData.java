@@ -9,9 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by android_sam on 2017. 6. 15..
- */
 @JsonObject
 public class StayData
 {
@@ -70,7 +67,7 @@ public class StayData
     public String benefit;
 
     @JsonField(name = "distance")
-    public int distance;
+    public double distance;
 
     @JsonField(name = "overseas")
     public boolean overseas;

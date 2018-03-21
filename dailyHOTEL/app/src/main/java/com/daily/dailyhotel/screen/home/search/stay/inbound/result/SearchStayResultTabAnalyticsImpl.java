@@ -4,21 +4,21 @@ import android.app.Activity;
 
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.parcel.SearchStayAnalyticsParam;
+import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInterface.AnalyticsInterface
 {
-    private SearchStayAnalyticsParam mAnalyticsParam;
+    private SearchStayResultAnalyticsParam mAnalyticsParam;
 
     @Override
-    public void setAnalyticsParam(SearchStayAnalyticsParam analyticsParam)
+    public void setAnalyticsParam(SearchStayResultAnalyticsParam analyticsParam)
     {
         mAnalyticsParam = analyticsParam;
     }
 
     @Override
-    public SearchStayAnalyticsParam getAnalyticsParam()
+    public SearchStayResultAnalyticsParam getAnalyticsParam()
     {
         return mAnalyticsParam;
     }
