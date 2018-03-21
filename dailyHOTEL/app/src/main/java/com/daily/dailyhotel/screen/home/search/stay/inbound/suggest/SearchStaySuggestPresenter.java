@@ -22,7 +22,6 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
@@ -31,6 +30,7 @@ import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -45,11 +45,8 @@ import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -63,7 +60,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -372,46 +368,14 @@ public class SearchStaySuggestPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        // 최근 본 업장
-        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject( //
-            SearchStaySuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT, Constants.ServiceType.HOTEL) //
-            .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
-            {
-                @Override
-                public ObservableSource<ArrayList<RecentlyPlace>> apply(JSONObject jsonObject) throws Exception
-                {
-                    if (jsonObject == null || jsonObject.has("keys") == false)
-                    {
-                        return Observable.just(new ArrayList<>());
-                    }
 
-                    return mRecentlyRemoteImpl.getInboundRecentlyList(jsonObject);
-                }
-            });
-
-        addCompositeDisposable(Observable.zip(ibObservable //
-            , mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.HOTEL) //
+        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL) //
             , mSuggestLocalImpl.getRecentlyStaySuggestList(10) //
-            , new Function3<ArrayList<RecentlyPlace>, ArrayList<Integer>, List<StaySuggestV2>, List<StaySuggestV2>>()
+            , new BiFunction<ArrayList<RecentlyDbPlace>, List<StaySuggestV2>, List<StaySuggestV2>>()
             {
                 @Override
-                public List<StaySuggestV2> apply(ArrayList<RecentlyPlace> placeList, ArrayList<Integer> indexList, List<StaySuggestV2> searchList) throws Exception
+                public List<StaySuggestV2> apply(ArrayList<RecentlyDbPlace> placeList, List<StaySuggestV2> searchList) throws Exception
                 {
-                    if (indexList != null && indexList.size() > 0)
-                    {
-                        Collections.sort(placeList, new Comparator<RecentlyPlace>()
-                        {
-                            @Override
-                            public int compare(RecentlyPlace o1, RecentlyPlace o2)
-                            {
-                                Integer position1 = indexList.indexOf(o1.index);
-                                Integer position2 = indexList.indexOf(o2.index);
-
-                                return position1.compareTo(position2);
-                            }
-                        });
-                    }
-
                     List<StaySuggestV2> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
                     setRecentlySuggestList(recentlySuggestList);
 
@@ -456,7 +420,7 @@ public class SearchStaySuggestPresenter //
         mPopularAreaList = popularAreaList;
     }
 
-    List<StaySuggestV2> getRecentlySuggestList(List<StaySuggestV2> recentlySearchList, List<RecentlyPlace> recentlyPlaceList)
+    List<StaySuggestV2> getRecentlySuggestList(List<StaySuggestV2> recentlySearchList, List<RecentlyDbPlace> recentlyPlaceList)
     {
         // 최근 검색어
         ArrayList<StaySuggestV2> recentlySuggestList = new ArrayList<>();
@@ -475,15 +439,19 @@ public class SearchStaySuggestPresenter //
             recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_STAY //
                 , new StaySuggestV2.Section(getString(R.string.label_recently_stay))));
 
-            for (RecentlyPlace recentlyPlace : recentlyPlaceList)
+            int maxSize = Math.min(10, recentlyPlaceList.size());
+
+            for (int i = 0; i < maxSize; i++)
             {
+                RecentlyDbPlace recentlyPlace = recentlyPlaceList.get(i);
+
                 StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
                 StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
 
                 areaGroup.name = recentlyPlace.regionName;
 
                 stay.index = recentlyPlace.index;
-                stay.name = recentlyPlace.title;
+                stay.name = recentlyPlace.name;
                 stay.areaGroup = areaGroup;
 
                 recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_STAY, stay));

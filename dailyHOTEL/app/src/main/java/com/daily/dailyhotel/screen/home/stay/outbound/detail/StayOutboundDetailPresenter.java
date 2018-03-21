@@ -7,6 +7,8 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -77,9 +79,11 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -1548,8 +1552,24 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         try
         {
+            String regionName = null;
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.KOREA);
+
+            List<Address> list = geocoder.getFromLocation(stayOutboundDetail.latitude, stayOutboundDetail.longitude, 10);
+            if (list != null && list.size() > 0)
+            {
+                for (Address address : list)
+                {
+                    if (DailyTextUtils.isTextEmpty(address.getCountryName()) == false)
+                    {
+                        regionName = address.getCountryName();
+                        break;
+                    }
+                }
+            }
+
             addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-                Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, null, false) //
+                Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, regionName, false) //
                 .observeOn(Schedulers.io()).subscribe());
         } catch (Exception e)
         {

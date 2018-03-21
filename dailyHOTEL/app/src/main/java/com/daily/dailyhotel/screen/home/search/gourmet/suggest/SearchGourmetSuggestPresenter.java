@@ -23,10 +23,10 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -39,11 +39,7 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -54,10 +50,8 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -327,45 +321,12 @@ public class SearchGourmetSuggestPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject( //
-            SearchGourmetSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT, Constants.ServiceType.GOURMET) //
-            .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
+        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET) //
+            , mSuggestLocalImpl.getRecentlyGourmetSuggestList(10), new BiFunction<ArrayList<RecentlyDbPlace>, List<GourmetSuggestV2>, List<GourmetSuggestV2>>()
             {
                 @Override
-                public ObservableSource<ArrayList<RecentlyPlace>> apply(JSONObject jsonObject) throws Exception
+                public List<GourmetSuggestV2> apply(ArrayList<RecentlyDbPlace> placeList, List<GourmetSuggestV2> searchList) throws Exception
                 {
-                    if (jsonObject == null || jsonObject.has("keys") == false)
-                    {
-                        return Observable.just(new ArrayList<>());
-                    }
-
-                    return mRecentlyRemoteImpl.getInboundRecentlyList(jsonObject);
-                }
-            });
-
-        addCompositeDisposable(Observable.zip(ibObservable //
-            , mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.GOURMET) //
-            , mSuggestLocalImpl.getRecentlyGourmetSuggestList(10) //
-            , new Function3<ArrayList<RecentlyPlace>, ArrayList<Integer>, List<GourmetSuggestV2>, List<GourmetSuggestV2>>()
-            {
-                @Override
-                public List<GourmetSuggestV2> apply(ArrayList<RecentlyPlace> placeList, ArrayList<Integer> indexList, List<GourmetSuggestV2> searchList) throws Exception
-                {
-                    if (indexList != null && indexList.size() > 0)
-                    {
-                        Collections.sort(placeList, new Comparator<RecentlyPlace>()
-                        {
-                            @Override
-                            public int compare(RecentlyPlace o1, RecentlyPlace o2)
-                            {
-                                Integer position1 = indexList.indexOf(o1.index);
-                                Integer position2 = indexList.indexOf(o2.index);
-
-                                return position1.compareTo(position2);
-                            }
-                        });
-                    }
-
                     List<GourmetSuggestV2> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
                     setRecentlySuggestList(recentlySuggestList);
 
@@ -410,7 +371,7 @@ public class SearchGourmetSuggestPresenter //
         mPopularAreaList = popularAreaList;
     }
 
-    List<GourmetSuggestV2> getRecentlySuggestList(List<GourmetSuggestV2> recentlySearchList, List<RecentlyPlace> recentlyPlaceList)
+    List<GourmetSuggestV2> getRecentlySuggestList(List<GourmetSuggestV2> recentlySearchList, List<RecentlyDbPlace> recentlyPlaceList)
     {
         // 최근 검색어
         ArrayList<GourmetSuggestV2> recentlySuggestList = new ArrayList<>();
@@ -429,14 +390,19 @@ public class SearchGourmetSuggestPresenter //
             recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_GOURMET //
                 , new GourmetSuggestV2.Section(getString(R.string.label_recently_gourmet))));
 
-            for (RecentlyPlace recentlyPlace : recentlyPlaceList)
+            int maxSize = Math.min(10, recentlyPlaceList.size());
+
+            for (int i = 0; i < maxSize; i++)
             {
+                RecentlyDbPlace recentlyPlace = recentlyPlaceList.get(i);
+
                 GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
                 GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
+
                 areaGroup.name = recentlyPlace.regionName;
 
                 gourmet.index = recentlyPlace.index;
-                gourmet.name = recentlyPlace.title;
+                gourmet.name = recentlyPlace.name;
                 gourmet.areaGroup = areaGroup;
 
                 recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_GOURMET, gourmet));

@@ -50,7 +50,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
 
     @Override
     public Observable<Boolean> addRecentlyItem(Constants.ServiceType serviceType, int index //
-        , String name, String englishName, String imageUrl, String areaGroupName, boolean isUpdateDate)
+        , String name, String englishName, String imageUrl, String regionName, boolean isUpdateDate)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -63,7 +63,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
                 }
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
-                dailyDb.addRecentlyPlace(serviceType, index, name, englishName, imageUrl, areaGroupName, isUpdateDate);
+                dailyDb.addRecentlyPlace(serviceType, index, name, englishName, imageUrl, regionName, isUpdateDate);
 
                 DailyDbHelper.getInstance().close();
 

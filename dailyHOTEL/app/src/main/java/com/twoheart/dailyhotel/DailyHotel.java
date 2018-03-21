@@ -72,8 +72,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         dailyDb.upGradeGourmetRecentlySuggestDb(dailyDb.getWritableDatabase());
         dailyDb.upGradeStayIbRecentlySuggestDb(dailyDb.getWritableDatabase());
         dailyDb.upGradeSearchResultHistoryDb(dailyDb.getWritableDatabase());
-        dailyDb.alterStayObRecentlySuggestDb(dailyDb.getWritableDatabase());
-        dailyDb.alterRecentlyPlace(dailyDb.getWritableDatabase());
+        dailyDb.upGradeStayObRecentlySuggestDb(dailyDb.getWritableDatabase());
+        dailyDb.upGradeRecentlyPlaceDb(dailyDb.getWritableDatabase());
         DailyDbHelper.getInstance().close();
 
 

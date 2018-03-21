@@ -64,9 +64,6 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + RecentlyList.REGION_NAME + " TEXT NULL, " //
         + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
 
-    // change database version 5
-    private static final String ALTER_T_RECENTLY_DB_VER_5 = "ALTER TABLE " + T_RECENTLY + " ADD COLUMN " + RecentlyList.REGION_NAME + " TEXT NULL;";
-
     // added database version 3 and change version 5 (added field DISPLAY_TEXT) drop and create
     private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
         + StayObRecentlySuggestList._ID + " INTEGER  PRIMARY KEY NOT NULL, " //
@@ -81,8 +78,6 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayObRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
-
-    private static final String ALTER_T_STAY_OB_RECENTLY_SUGGEST = "ALTER TABLE " + T_STAY_OB_RECENTLY_SUGGEST + " ADD COLUMN " + StayObRecentlySuggestList.DISPLAY_TEXT + " TEXT NULL;";
 
     // added database version 4
     private static final String CREATE_T_TEMP_REVIEW = "CREATE TABLE IF NOT EXISTS " + T_TEMP_REVIEW + " (" //
@@ -188,19 +183,13 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             upGradeGourmetRecentlySuggestDb(db);
             upGradeStayIbRecentlySuggestDb(db);
             upGradeSearchResultHistoryDb(db);
-            alterStayObRecentlySuggestDb(db);
-            alterRecentlyPlace(db);
+            upGradeStayObRecentlySuggestDb(db);
+            upGradeRecentlyPlaceDb(db);
         }
 
         if (oldVersion <= 3)
         {
             upGradeTempReviewDb(db);
-        }
-
-        if (oldVersion <= 2)
-        {
-            upGradeStayObRecentlySuggestDb(db);
-            upGradeRecentlyPlaceDb(db);
         }
     }
 
@@ -214,7 +203,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         upGradeSearchResultHistoryDb(db);
     }
 
-    private void upGradeRecentlyPlaceDb(SQLiteDatabase db)
+    public void upGradeRecentlyPlaceDb(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + T_RECENTLY);
         db.execSQL(CREATE_T_RECENTLY);
@@ -248,28 +237,6 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         db.execSQL("drop table if exists " + T_SEARCH_RESULT_HISTORY);
         db.execSQL(CREATE_T_SEARCH_RESULT_HISTORY);
-    }
-
-    public void alterRecentlyPlace(SQLiteDatabase db)
-    {
-        try
-        {
-            db.execSQL(ALTER_T_RECENTLY_DB_VER_5);
-        } catch (Exception e)
-        {
-            ExLog.d("sam : error = " + e.toString());
-        }
-    }
-
-    public void alterStayObRecentlySuggestDb(SQLiteDatabase db)
-    {
-        try
-        {
-            db.execSQL(ALTER_T_STAY_OB_RECENTLY_SUGGEST);
-        } catch (Exception e)
-        {
-            ExLog.d("sam : error = " + e.toString());
-        }
     }
 
     private SQLiteDatabase getDb()
