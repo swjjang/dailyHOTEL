@@ -434,9 +434,9 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
         lockUI();
 
-        Intent intent = StayCategoryNearByActivity.newInstance(context, todayDateTime //
-            , stayBookingDay, location, mDailyCategoryType, callByScreen);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+//        Intent intent = StayCategoryNearByActivity.newInstance(context, todayDateTime //
+//            , stayBookingDay, location, mDailyCategoryType, callByScreen);
+//        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     @Override

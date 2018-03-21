@@ -36,10 +36,11 @@ public class SearchStayResultTabActivity extends BaseActivity<SearchStayResultTa
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
+    public static Intent newInstance(Context context, DailyCategoryType categoryType, String checkInDateTime, String checkOutDateTime//
         , StaySuggestV2 suggest, String inputKeyWord, SearchStayResultAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, SearchStayResultTabActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));

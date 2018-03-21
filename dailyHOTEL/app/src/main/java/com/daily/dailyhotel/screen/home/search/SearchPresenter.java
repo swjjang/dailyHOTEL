@@ -42,6 +42,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActiv
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -1445,7 +1446,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity() //
+        startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity(), DailyCategoryType.STAY_ALL//
             , checkInDateTime, checkOutDateTime, suggest, inputKeyWord, null)//
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }

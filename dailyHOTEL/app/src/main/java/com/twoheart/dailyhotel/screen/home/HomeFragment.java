@@ -417,21 +417,46 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
 
                         // 검색 결과 화면으로 이동한다.
-                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+                        DailyCategoryType categoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
 
                         try
                         {
-                            StayBookingDay stayBookingDay = new StayBookingDay();
-                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+                            StayBookDateTime bookDateTime = new StayBookDateTime();
+                            bookDateTime.setCheckInDateTime(mTodayDateTime.dailyDateTime);
+                            bookDateTime.setCheckOutDateTime(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
-                                , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
-                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                            StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
+                            StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
+                            SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
+                            analyticsParam.mCallByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+
+                            startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
+                                , categoryType
+                                , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                , suggest, null, analyticsParam)//
+                                , Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } catch (Exception e)
                         {
                             ExLog.e(e.toString());
                         }
+
+
+
+
+//                        try
+//                        {
+//                            StayBookingDay stayBookingDay = new StayBookingDay();
+//                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+//                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+//
+//                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
+//                                , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+//                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+//                        } catch (Exception e)
+//                        {
+//                            ExLog.e(e.toString());
+//                        }
                     }
                     break;
                 }
@@ -1730,21 +1755,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
             analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
 
             startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
+                , DailyCategoryType.STAY_ALL//
                 , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , suggest, null, analyticsParam)//
                 , Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-
-//            StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
-//            StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
-//
-//            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, suggest, null, AnalyticsManager.Screen.HOME);
-//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
-
     }
 
     void onSearchClick()

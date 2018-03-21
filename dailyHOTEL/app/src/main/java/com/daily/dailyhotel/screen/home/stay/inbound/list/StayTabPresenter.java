@@ -47,7 +47,6 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -1116,38 +1115,32 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
             {
+                StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
+                StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
+                StayBookDateTime bookDateTime = mStayViewModel.getBookDateTime();
+
                 if (mStayViewModel.categoryType == DailyCategoryType.STAY_ALL)
                 {
-                    try
-                    {
-                        StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
-                        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
-                        SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
-                        analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
-                        StayBookDateTime bookDateTime = mStayViewModel.getBookDateTime();
+                    SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
+                    analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
 
-                        startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
-                            , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                            , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                            , suggest, null, analyticsParam)//
-                            , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
-                    } catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
+                    startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
+                        , DailyCategoryType.STAY_ALL//
+                        , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , suggest, null, analyticsParam)//
+                        , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                 } else
                 {
-                    try
-                    {
-                        startActivityForResult(StayCategoryNearByActivity.newInstance(getActivity()//
-                            , mStayViewModel.commonDateTime.getValue().getTodayDateTime() //
-                            , mStayViewModel.bookDateTime.getValue().getStayBookingDay()//
-                            , null, mStayViewModel.categoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
-                            , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
-                    } catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
+                    SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
+                    analyticsParam.mCallByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+
+                    startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
+                        , mStayViewModel.categoryType//
+                        , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , suggest, null, analyticsParam)//
+                        , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                 }
 
                 break;

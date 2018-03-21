@@ -72,6 +72,7 @@ import retrofit2.Response;
  * Created by android_sam on 2017. 5. 19..
  */
 
+@Deprecated
 public class StayCategoryNearByActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
@@ -116,19 +117,19 @@ public class StayCategoryNearByActivity extends BaseActivity
         LIST
     }
 
-    public static Intent newInstance(Context context //
-        , TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
-        , Location location, DailyCategoryType dailyCategoryType, String callByScreen)
-    {
-        Intent intent = new Intent(context, StayCategoryNearByActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) dailyCategoryType);
-        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-
-        return intent;
-    }
+//    public static Intent newInstance(Context context //
+//        , TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
+//        , Location location, DailyCategoryType dailyCategoryType, String callByScreen)
+//    {
+//        Intent intent = new Intent(context, StayCategoryNearByActivity.class);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+//        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) dailyCategoryType);
+//        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+//
+//        return intent;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

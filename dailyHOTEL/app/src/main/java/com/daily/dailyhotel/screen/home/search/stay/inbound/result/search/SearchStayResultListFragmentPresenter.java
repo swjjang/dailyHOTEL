@@ -28,6 +28,7 @@ import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
+import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggestV2;
@@ -48,7 +49,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -585,7 +585,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public ObservableSource<Stays> apply(Boolean result) throws Exception
             {
-                return mStayRemoteImpl.getList(DailyCategoryType.STAY_ALL, getQueryMap(mPage), null);
+                return mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(mPage), null);
             }
         }).map(new Function<Stays, Pair<Stays, List<ObjectItem>>>()
         {
@@ -813,7 +813,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         mPage++;
 
-        addCompositeDisposable(mStayRemoteImpl.getList(DailyCategoryType.STAY_ALL, getQueryMap(mPage), null).map(new Function<Stays, List<ObjectItem>>()
+        addCompositeDisposable(mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(mPage), null).map(new Function<Stays, List<ObjectItem>>()
         {
             @Override
             public List<ObjectItem> apply(Stays stays) throws Exception
@@ -980,7 +980,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        addCompositeDisposable(mStayRemoteImpl.getList(DailyCategoryType.STAY_ALL, getQueryMap(-1), null).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
+        addCompositeDisposable(mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(-1), null).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
         {
             @Override
             public void accept(Stays stays) throws Exception
@@ -1346,7 +1346,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
                 StaySuggestV2.Area areaSuggestItem = areaGroupSuggestItem.area;
 
-                if (areaSuggestItem != null)
+                if (areaSuggestItem != null && areaSuggestItem.index > 0)
                 {
                     queryMap.put("areaIdx", areaSuggestItem.index);
                 }

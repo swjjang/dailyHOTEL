@@ -15,6 +15,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 /**
  * Created by sheldon
@@ -29,6 +30,7 @@ public class SearchStayResultViewModel extends ViewModel
     private MutableLiveData<Category> mCategory = new MutableLiveData<>();
     private MutableLiveData<StayFilter> mFilter = new MutableLiveData<>();
     public Location filterLocation;
+    public DailyCategoryType categoryType;
 
     static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {

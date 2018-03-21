@@ -159,6 +159,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         });
 
         mViewModel.setCategory(Category.ALL);
+        mViewModel.categoryType = DailyCategoryType.STAY_ALL;
     }
 
     @Override
@@ -250,6 +251,14 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         if (intent == null)
         {
             throw new NullPointerException("intent == null");
+        }
+
+        try
+        {
+            mViewModel.categoryType = DailyCategoryType.valueOf(intent.getStringExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
+        } catch (Exception e)
+        {
+            mViewModel.categoryType = DailyCategoryType.STAY_ALL;
         }
 
         String checkInDateTime = intent.getStringExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
