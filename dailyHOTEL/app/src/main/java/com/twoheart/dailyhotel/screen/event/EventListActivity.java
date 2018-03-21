@@ -143,7 +143,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
                 if (externalDeepLink.isEventDetailView() == true)
                 {
-                    startEventWeb(externalDeepLink.getUrl(), externalDeepLink.getTitle());
+                    startEventWeb(externalDeepLink.getUrl(), externalDeepLink.getTitle(), null, null);
                 }
             } else
             {
@@ -190,7 +190,8 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         Event event = mEventListAdapter.getItem(position);
 
-        startEventWeb(event.linkUrl, event.title);
+        String imageUrl = DailyTextUtils.isTextEmpty(event.lowResolutionImageUrl) ? event.defaultImageUrl : event.lowResolutionImageUrl;
+        startEventWeb(event.linkUrl, event.title, event.description, imageUrl);
 
         AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.EVENT_CLICKED, event.title, null);
@@ -217,14 +218,14 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
     }
 
-    void startEventWeb(String url, String eventName)
+    void startEventWeb(String url, String eventName, String eventDescription, String imageUrl)
     {
         if (DailyTextUtils.isTextEmpty(url) == true)
         {
             return;
         }
 
-        Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, url, eventName);
+        Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, url, eventName, eventDescription, imageUrl);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 

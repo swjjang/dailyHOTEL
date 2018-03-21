@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
@@ -661,6 +662,77 @@ public class KakaoLinkManager implements Constants
 
                 }
             });
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    public void shareEventWebView(String title, String description, String webUrl, String imageUrl)
+    {
+        try
+        {
+            if (DailyTextUtils.isTextEmpty(title, description, webUrl, imageUrl))
+            {
+                return;
+            }
+
+            if (DailyTextUtils.isTextEmpty(description))
+            {
+                description = webUrl;
+            } else {
+                description += "\n" + webUrl;
+            }
+
+            String schemeParams = String.format(Locale.KOREA, "vc=12&v=hed&t=%s&url=%s", title, webUrl);
+
+            final int width = ScreenUtils.getScreenWidth(mContext);
+            final int height = ScreenUtils.getRatioHeightType16x9(width);
+
+            String kakaoImageUrl = null;
+            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            {
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
+            }
+
+            FeedTemplate params = FeedTemplate //
+                .newBuilder(ContentObject.newBuilder(title, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(webUrl) //
+                        .setMobileWebUrl(webUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(description) //
+                    .setImageWidth(width)
+                    .setImageHeight(height)
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(webUrl) //
+                    .setMobileWebUrl(webUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .build();
+
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
+
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
+
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -31,6 +31,9 @@ public class Event implements Parcelable
     @JsonField(name = "title")
     public String title;
 
+    @JsonField(name = "description")
+    public String description;
+
     @JsonField(name = "idx")
     public int index;
 
@@ -63,6 +66,7 @@ public class Event implements Parcelable
         dest.writeString(lowResolutionImageUrl);
         dest.writeString(startedAt);
         dest.writeString(title);
+        dest.writeString(description);
         dest.writeInt(index);
     }
 
@@ -75,6 +79,7 @@ public class Event implements Parcelable
         lowResolutionImageUrl = in.readString();
         startedAt = in.readString();
         title = in.readString();
+        description = in.readString();
         index = in.readInt();
     }
 
