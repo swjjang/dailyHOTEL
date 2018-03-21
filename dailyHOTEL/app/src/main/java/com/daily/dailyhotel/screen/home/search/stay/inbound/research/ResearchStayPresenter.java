@@ -22,6 +22,7 @@ import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
+import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.twoheart.dailyhotel.R;
@@ -44,8 +45,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     private ResearchStayInterface.AnalyticsInterface mAnalytics;
 
     SearchStayViewModel mSearchViewModel;
-
-    CommonDateTime mCommonDateTime;
+    CommonDateTimeViewModel mCommonDateTimeViewModel;
 
     public ResearchStayPresenter(@NonNull ResearchStayActivity activity)
     {
@@ -85,10 +85,12 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             return true;
         }
 
-        mCommonDateTime = new CommonDateTime(intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_OPEN_DATE_TIME)//
+        CommonDateTime commonDateTime = new CommonDateTime(intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_OPEN_DATE_TIME)//
             , intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CLOSE_DATE_TIME)//
             , intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CURRENT_DATE_TIME)//
             , intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_DAILY_DATE_TIME));
+
+        mCommonDateTimeViewModel.commonDateTime = commonDateTime;
 
         try
         {
@@ -298,7 +300,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
         try
         {
-            Calendar calendar = DailyCalendar.getInstance(mCommonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            Calendar calendar = DailyCalendar.getInstance(mCommonDateTimeViewModel.commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
             String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
             calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
@@ -402,6 +404,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             return;
         }
 
+        mCommonDateTimeViewModel = ViewModelProviders.of(activity, new CommonDateTimeViewModel.CommonDateTimeViewModelFactory()).get(CommonDateTimeViewModel.class);
         mSearchViewModel = ViewModelProviders.of(activity, new SearchStayViewModel.SearchStayViewModelFactory()).get(SearchStayViewModel.class);
 
         // Stay
