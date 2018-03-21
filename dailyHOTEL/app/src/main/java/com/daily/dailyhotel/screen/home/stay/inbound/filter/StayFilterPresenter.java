@@ -18,10 +18,10 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Category;
+import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
-import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
@@ -573,7 +573,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
                 queryMap.put("provinceIdx", suggestItem.index);
 
-                if (suggestItem.area != null)
+                if (suggestItem.area != null && suggestItem.area.index > 0)
                 {
                     queryMap.put("areaIdx", suggestItem.area.index);
                 }

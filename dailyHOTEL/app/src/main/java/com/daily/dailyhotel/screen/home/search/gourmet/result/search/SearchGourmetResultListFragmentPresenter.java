@@ -31,6 +31,7 @@ import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
@@ -1245,7 +1246,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
                 GourmetSuggestV2.Area areaSuggestItem = areaGroupSuggestItem.area;
 
-                if (areaSuggestItem != null)
+                if (areaSuggestItem != null && areaSuggestItem.index > 0)
                 {
                     queryMap.put("areaIdx", areaSuggestItem.index);
                 }

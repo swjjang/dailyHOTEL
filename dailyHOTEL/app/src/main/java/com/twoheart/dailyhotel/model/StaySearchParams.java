@@ -113,7 +113,7 @@ public class StaySearchParams extends StayParams
             hashMap.put("provinceIdx", provinceIdx);
         }
 
-        if (areaIdx != 0)
+        if (areaIdx > 0)
         {
             hashMap.put("areaIdx", areaIdx);
         }

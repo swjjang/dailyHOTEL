@@ -1300,7 +1300,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 }
 
                 AreaElement areaElement = stayRegion.getAreaElement();
-                if (areaElement != null && areaElement.index != StayArea.ALL)
+                if (areaElement != null && areaElement.index > 0)
                 {
                     queryMap.put("areaIdx", areaElement.index);
                 }
