@@ -30,9 +30,19 @@ public class StayRegion
         return mAreaElement;
     }
 
+    public int getAreaGroupIndex()
+    {
+        return mAreaGroupElement == null ? 0 : mAreaGroupElement.index;
+    }
+
     public String getAreaGroupName()
     {
         return mAreaGroupElement == null ? null : mAreaGroupElement.name;
+    }
+
+    public int getAreaIndex()
+    {
+        return mAreaElement == null ? 0 : mAreaElement.index;
     }
 
     public String getAreaName()

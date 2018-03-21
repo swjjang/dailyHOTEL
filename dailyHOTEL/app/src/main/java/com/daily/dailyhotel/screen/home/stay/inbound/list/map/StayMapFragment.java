@@ -276,7 +276,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
         mOnEventListener = listener;
     }
 
-    public void setStayList(List<Stay> stayList, boolean moveCameraBounds, boolean clear)
+    public void setList(List<Stay> stayList, boolean moveCameraBounds, boolean clear)
     {
         if (mGoogleMap == null || stayList == null || stayList.size() == 0)
         {

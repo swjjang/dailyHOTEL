@@ -73,7 +73,7 @@ public class SearchGourmetCampaignTagListFragmentAnalyticsImpl implements Search
         if (DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false)
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                , AnalyticsManager.Action.COUPON_GOURMET, Integer.toString(gourmet.index), null);
+                , AnalyticsManager.Action.COUPON_STAY, Integer.toString(gourmet.index), null);
         }
 
         if (gourmet.reviewCount > 0)

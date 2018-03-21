@@ -17,15 +17,14 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.Category;
-import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StayRegionParcel;
+import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -60,7 +59,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     StayRemoteImpl mStayRemoteImpl;
 
     StayFilter mStayFilter;
-    StayRegion mStayRegion;
+    StaySuggestV2 mSuggest;
     StayBookDateTime mStayBookDateTime;
     List<String> mCategoryList;
     Location mLocation;
@@ -76,7 +75,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         void onScreen(Activity activity);
 
-        void onConfirmClick(Activity activity, StayRegion stayRegion, StayFilter stayFilter, int listCountByFilter);
+        void onConfirmClick(Activity activity, StaySuggestV2 suggest, StayFilter stayFilter, int listCountByFilter);
 
         void onBackClick(Activity activity);
 
@@ -163,12 +162,14 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mStayFilter = stayFilterParcel.getStayFilter();
 
-        StayRegionParcel stayRegionParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_REGION);
+        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_SUGGEST);
 
-        if (stayRegionParcel != null)
+        if (suggestParcel != null)
         {
-            mStayRegion = stayRegionParcel.getRegion();
+            return false;
         }
+
+        mSuggest = suggestParcel.getSuggest();
 
         mCategoryList = intent.getStringArrayListExtra(StayFilterActivity.INTENT_EXTRA_DATA_CATEGORIES);
 
@@ -369,7 +370,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         try
         {
-            mAnalytics.onConfirmClick(getActivity(), mStayRegion, mStayFilter, mStayFilterCount == null ? 0 : mStayFilterCount.searchCount);
+            mAnalytics.onConfirmClick(getActivity(), mSuggest, mStayFilter, mStayFilterCount == null ? 0 : mStayFilterCount.searchCount);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -564,37 +565,57 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         // stays
         queryMap.put("stays", mStayBookDateTime.getNights());
 
-        if (mStayRegion != null)
+        switch (mSuggest.getSuggestType())
         {
-            switch (mStayRegion.getAreaType())
+            case AREA_GROUP:
             {
-                case AREA:
-                {
-                    // provinceIdx
-                    AreaElement areaGroupElement = mStayRegion.getAreaGroupElement();
-                    if (areaGroupElement != null)
-                    {
-                        queryMap.put("provinceIdx", areaGroupElement.index);
-                    }
+                StaySuggestV2.AreaGroup suggestItem = (StaySuggestV2.AreaGroup) mSuggest.getSuggestItem();
 
-                    AreaElement areaElement = mStayRegion.getAreaElement();
-                    if (areaElement != null && areaElement.index != StayArea.ALL)
-                    {
-                        // areaIdx
-                        queryMap.put("areaIdx", areaElement.index);
-                    }
-                    break;
-                }
+                queryMap.put("provinceIdx", suggestItem.index);
 
-                case SUBWAY_AREA:
+                if (suggestItem.area != null)
                 {
-                    AreaElement areaElement = mStayRegion.getAreaElement();
-                    if (areaElement != null)
-                    {
-                        queryMap.put("subwayIdx", areaElement.index);
-                    }
-                    break;
+                    queryMap.put("areaIdx", suggestItem.area.index);
                 }
+                break;
+            }
+
+            case LOCATION:
+            {
+                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) mSuggest.getSuggestItem();
+
+                queryMap.put("latitude", suggestItem.latitude);
+                queryMap.put("longitude", suggestItem.longitude);
+
+                if (mRadius > 0)
+                {
+                    queryMap.put("radius", mRadius);
+                }
+                break;
+            }
+
+            case STATION:
+            {
+                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) mSuggest.getSuggestItem();
+
+                queryMap.put("subwayIdx", suggestItem.index);
+                break;
+            }
+
+            case DIRECT:
+            {
+                StaySuggestV2.Direct suggestItem = (StaySuggestV2.Direct) mSuggest.getSuggestItem();
+
+                queryMap.put("term", suggestItem.name);
+                break;
+            }
+
+            case STAY:
+            {
+                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) mSuggest.getSuggestItem();
+
+                queryMap.put("term", suggestItem.name);
+                break;
             }
         }
 
@@ -686,7 +707,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         // longitude
         // latitude
         // radius
-        if (mStayFilter.sortType == StayFilter.SortType.DISTANCE && mLocation != null)
+        if (mStayFilter.isDistanceSort() == true && mLocation != null)
         {
             queryMap.put("latitude", mLocation.getLatitude());
             queryMap.put("longitude", mLocation.getLongitude());

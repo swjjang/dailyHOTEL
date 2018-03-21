@@ -35,6 +35,20 @@ public class GourmetBookDateTime extends PlaceBookDateTime
         return getString(format);
     }
 
+    public String getToYearDateFullFormat()
+    {
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
+        return getVisitDateTime(DATE_FORMAT);
+    }
+
+    public String getToMonthDateFormat()
+    {
+        final String DATE_FORMAT = "MM.dd(EEE)";
+
+        return getVisitDateTime(DATE_FORMAT);
+    }
+
     public GourmetBookingDay getGourmetBookingDay() throws Exception
     {
         GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.result.campaign;
+package com.daily.dailyhotel.screen.home.search.stay.inbound.result.search;
 
 
 import android.support.annotation.NonNull;
@@ -10,7 +10,7 @@ import com.daily.dailyhotel.base.BasePagerFragment;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchStayCampaignTagListFragment extends BasePagerFragment<SearchStayCampaignTagListFragmentPresenter, SearchStayCampaignTagListFragment.OnEventListener>
+public class SearchStayResultListFragment extends BasePagerFragment<SearchStayResultListFragmentPresenter, SearchStayResultListFragment.OnEventListener>
 {
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
@@ -18,14 +18,18 @@ public class SearchStayCampaignTagListFragment extends BasePagerFragment<SearchS
 
         void onResearchClick();
 
-        void onFinishAndRefresh();
+        void onFilterClick();
+
+        void onCalendarClick();
+
+        void onRadiusClick();
     }
 
     @NonNull
     @Override
-    protected SearchStayCampaignTagListFragmentPresenter createInstancePresenter()
+    protected SearchStayResultListFragmentPresenter createInstancePresenter()
     {
-        return new SearchStayCampaignTagListFragmentPresenter(this);
+        return new SearchStayResultListFragmentPresenter(this);
     }
 
     @Override

@@ -160,10 +160,10 @@ public class SearchGourmetCampaignTagListAdapter extends RecyclerView.Adapter<Re
 
             case ObjectItem.TYPE_ENTRY:
             {
-                DailyGourmetCardView gourmetCardView = new DailyGourmetCardView(mContext);
-                gourmetCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                DailyGourmetCardView cardView = new DailyGourmetCardView(mContext);
+                cardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new GourmetViewHolder(gourmetCardView);
+                return new GourmetViewHolder(cardView);
             }
 
             case ObjectItem.TYPE_FOOTER_VIEW:

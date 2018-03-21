@@ -3,11 +3,9 @@ package com.daily.dailyhotel.screen.home.stay.inbound.filter;
 import android.app.Activity;
 
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.Area;
-import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -28,7 +26,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
     }
 
     @Override
-    public void onConfirmClick(Activity activity, StayRegion stayRegion, StayFilter stayFilter, int listCountByFilter)
+    public void onConfirmClick(Activity activity, StaySuggestV2 suggest, StayFilter stayFilter, int listCountByFilter)
     {
         if (activity == null)
         {
@@ -42,13 +40,20 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
             eventParams.put(AnalyticsManager.KeyType.SORTING, stayFilter.sortType.name());
             eventParams.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(listCountByFilter));
 
-            if (stayRegion != null)
+            if (suggest != null)
             {
                 eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, stayRegion.getAreaGroupName());
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, suggest.getSuggestItem().name);
 
-                AreaElement areaElement = stayRegion.getAreaElement();
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, areaElement == null || areaElement.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : areaElement.name);
+                if (suggest.getSuggestType() == StaySuggestV2.SuggestType.AREA_GROUP)
+                {
+                    StaySuggestV2.AreaGroup suggestItem = (StaySuggestV2.AreaGroup) suggest.getSuggestItem();
+                    StaySuggestV2.Area area = suggestItem.area;
+                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+                } else
+                {
+                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                }
             }
 
             StringBuilder stringBuilder = new StringBuilder();

@@ -115,8 +115,6 @@ public interface SearchGourmetResultListFragmentInterface
     {
         void onScreen(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, GourmetBookDateTime gourmetBookDateTime, boolean empty);
 
-        void onEventStayClick(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, Gourmet gourmet);
-
         void onEventWishClick(Activity activity, boolean wish);
 
         void onEventMarkerClick(Activity activity, String name);

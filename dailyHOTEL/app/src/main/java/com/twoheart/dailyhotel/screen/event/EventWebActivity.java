@@ -958,7 +958,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                 {
                                     return;
                                 }
-                            } else if (externalDeepLink.isHotelSearchResultView() == true)
+                            } else if (externalDeepLink.isStaySearchResultView() == true)
                             {
                                 if (moveDeepLinkStaySearchResult(EventWebActivity.this, mTodayDateTime, externalDeepLink) == true)
                                 {

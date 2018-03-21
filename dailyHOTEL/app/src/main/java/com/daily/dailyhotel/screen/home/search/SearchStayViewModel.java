@@ -17,9 +17,10 @@ import com.daily.dailyhotel.entity.StaySuggestV2;
  */
 public class SearchStayViewModel extends ViewModel
 {
-    public MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
+    private MutableLiveData<StayBookDateTime> bookDateTime = new MutableLiveData<>();
     private MutableLiveData<StaySuggestV2> suggest = new MutableLiveData<>();
     public String inputKeyword;
+    public float radius;
 
     public static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {
@@ -74,5 +75,15 @@ public class SearchStayViewModel extends ViewModel
     public void removeSuggestObserver(Observer<StaySuggestV2> observer)
     {
         suggest.removeObserver(observer);
+    }
+
+    public void setBookDateTimeObserver(BaseActivity activity, Observer<StayBookDateTime> observer)
+    {
+        bookDateTime.observe(activity, observer);
+    }
+
+    public void removeBookDateTimeObserver(Observer<StayBookDateTime> observer)
+    {
+        bookDateTime.removeObserver(observer);
     }
 }

@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.search.stay.inbound.result;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.screen.home.search.gourmet.result.campaign.SearchGourmetCampaignTagListFragment;
-import com.daily.dailyhotel.screen.home.search.gourmet.result.search.SearchGourmetResultListFragment;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.campaign.SearchStayCampaignTagListFragment;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.search.SearchStayResultListFragment;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.daily.dailyhotel.view.DailySearchResultEmptyView;
 import com.daily.dailyhotel.view.DailySearchToolbarView;
@@ -141,9 +142,9 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         }
 
         viewDataBinding.emptyView.setImage(R.drawable.no_gourmet_ic);
-        viewDataBinding.emptyView.setMessage(R.string.message_searchresult_gourmet_empty_subtitle);
-        viewDataBinding.emptyView.setBottomLeftButton(R.drawable.vector_search_shortcut_01_stay, R.string.label_searchresult_search_stay);
-        viewDataBinding.emptyView.setBottomRightButton(R.drawable.vector_search_shortcut_02_ob, R.string.label_searchresult_search_stayoutbound);
+        viewDataBinding.emptyView.setMessage(R.string.message_searchresult_stay_empty_subtitle);
+        viewDataBinding.emptyView.setBottomLeftButton(R.drawable.vector_search_shortcut_02_ob, R.string.label_searchresult_search_stayoutbound);
+        viewDataBinding.emptyView.setBottomRightButton(R.drawable.vector_search_shortcut_03_gourmet, R.string.label_searchresult_search_gourmet);
 
         viewDataBinding.emptyView.setOnEventListener(new DailySearchResultEmptyView.OnEventListener()
         {
@@ -156,13 +157,13 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
             @Override
             public void onBottomLeftButtonClick()
             {
-                getEventListener().onStayClick();
+                getEventListener().onStayOutboundClick();
             }
 
             @Override
             public void onBottomRightButtonClick()
             {
-                getEventListener().onStayOutboundClick();
+                getEventListener().onGourmetClick();
             }
         });
     }
@@ -281,8 +282,8 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         clearViewPager();
 
         mFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
-        BasePagerFragment basePagerFragment = new SearchGourmetCampaignTagListFragment();
-        basePagerFragment.setOnFragmentEventListener(new SearchGourmetCampaignTagListFragment.OnEventListener()
+        BasePagerFragment basePagerFragment = new SearchStayCampaignTagListFragment();
+        basePagerFragment.setOnFragmentEventListener(new SearchStayCampaignTagListFragment.OnEventListener()
         {
             @Override
             public void setEmptyViewVisible(boolean visible)
@@ -317,13 +318,18 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
     }
 
     @Override
-    public Observable<BasePagerFragment> setSearchResultFragment()
+    public Observable<BasePagerFragment> setSearchResultFragment(String callByScreen)
     {
         clearViewPager();
 
         mFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
-        BasePagerFragment basePagerFragment = new SearchGourmetResultListFragment();
-        basePagerFragment.setOnFragmentEventListener(new SearchGourmetResultListFragment.OnEventListener()
+        BasePagerFragment basePagerFragment = new SearchStayResultListFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("callByScreen", callByScreen);
+        basePagerFragment.setArguments(bundle);
+
+        basePagerFragment.setOnFragmentEventListener(new SearchStayResultListFragment.OnEventListener()
         {
             @Override
             public void setEmptyViewVisible(boolean visible)

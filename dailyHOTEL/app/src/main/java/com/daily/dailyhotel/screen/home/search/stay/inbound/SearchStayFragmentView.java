@@ -75,7 +75,7 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
                 recentlyCardView[i].setNameText(recentlyHistory.staySuggest.getText1());
 
                 StayBookDateTime stayBookDateTime = recentlyHistory.stayBookDateTime;
-                recentlyCardView[i].setDateText(stayBookDateTime.getDateFullFormat());
+                recentlyCardView[i].setDateText(stayBookDateTime.getToYearDateFullFormat());
                 recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlyHistoryDeleteClick(recentlyHistory));
             } else
             {

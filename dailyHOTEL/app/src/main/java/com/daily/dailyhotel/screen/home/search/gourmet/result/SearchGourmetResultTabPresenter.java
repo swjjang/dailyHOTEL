@@ -155,9 +155,9 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         mViewModel.setFilterObserver(activity, new Observer<GourmetFilter>()
         {
             @Override
-            public void onChanged(@Nullable GourmetFilter gourmetFilter)
+            public void onChanged(@Nullable GourmetFilter filter)
             {
-                getViewInterface().setOptionFilterSelected(gourmetFilter != null && gourmetFilter.isDefault() == false);
+                getViewInterface().setOptionFilterSelected(filter != null && filter.isDefault() == false);
             }
         });
     }
@@ -409,14 +409,14 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 {
                     try
                     {
-                        GourmetSuggestParcelV2 gourmetSuggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
 
-                        if (gourmetSuggestParcel == null || gourmetSuggestParcel.getSuggest() == null)
+                        if (suggestParcel == null || suggestParcel.getSuggest() == null)
                         {
                             return;
                         }
 
-                        GourmetSuggestV2 suggest = gourmetSuggestParcel.getSuggest();
+                        GourmetSuggestV2 suggest = suggestParcel.getSuggest();
 
                         mViewModel.setSuggest(suggest);
                         mViewModel.setInputKeyword(intent.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD));
@@ -460,7 +460,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                     }
 
                     GourmetCuration gourmetCuration = (GourmetCuration) placeCuration;
-                    GourmetFilter gourmetFilter = mergerCurationToFilter(gourmetCuration, mViewModel.getFilter());
+                    GourmetFilter gourmetFilter = mergeCurationToFilter(gourmetCuration, mViewModel.getFilter());
 
                     if (gourmetFilter.isDistanceSort() == true)
                     {
@@ -478,7 +478,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
     }
 
-    private GourmetFilter mergerCurationToFilter(GourmetCuration gourmetCuration, GourmetFilter gourmetFilter)
+    private GourmetFilter mergeCurationToFilter(GourmetCuration gourmetCuration, GourmetFilter gourmetFilter)
     {
         if (gourmetCuration == null || gourmetFilter == null)
         {

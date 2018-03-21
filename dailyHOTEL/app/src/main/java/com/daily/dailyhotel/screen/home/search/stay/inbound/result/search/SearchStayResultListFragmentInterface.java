@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.result.campaign;
+package com.daily.dailyhotel.screen.home.search.stay.inbound.result.search;
 
 
 import android.app.Activity;
@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
-import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -25,11 +24,11 @@ import io.reactivex.Observable;
  * Created by sheldon
  * Clean Architecture
  */
-public interface SearchStayCampaignTagListFragmentInterface
+public interface SearchStayResultListFragmentInterface
 {
     interface ViewInterface extends BaseBlurFragmentViewInterface
     {
-        void setSearchResultCount(int count);
+        void setSearchResultCount(int count, int maxCount);
 
         void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR);
 
@@ -43,18 +42,24 @@ public interface SearchStayCampaignTagListFragmentInterface
 
         void setSwipeRefreshing(boolean refreshing);
 
-        void setEmptyViewVisible(boolean visible, boolean applyFilter);
+        void hideEmptyViewVisible();
+
+        void showDefaultEmptyViewVisible();
+
+        void showLocationEmptyViewVisible(boolean applyFilter);
 
         void setListLayoutVisible(boolean visible);
 
         void setMapLayoutVisible(boolean visible);
 
+        void setLocationProgressBarVisible(boolean visible);
+
         // 원래 Fragment는 Activity에서 등록이 되어야 하는데 SupportMapFragment는 View로 취급하기로 한다.
-        void showMapLayout(FragmentManager fragmentManager, boolean hide);
+        void showMapLayout(FragmentManager fragmentManager);
 
         void hideMapLayout(FragmentManager fragmentManager);
 
-        void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide);
+        void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear);
 
         void setWish(int position, boolean wish);
 
@@ -69,6 +74,7 @@ public interface SearchStayCampaignTagListFragmentInterface
         void setFloatingActionViewVisible(boolean visible);
 
         void setFloatingActionViewTypeMapEnabled(boolean enabled);
+
     }
 
     interface OnEventListener extends OnBaseEventListener
@@ -94,24 +100,33 @@ public interface SearchStayCampaignTagListFragmentInterface
 
         void onCallClick();
 
+        void onFilterClick();
+
+        void onRadiusClick();
+
+        void onResearchClick();
+
+        void onCalendarClick();
+
         void onWishClick(int position, Stay stay);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, SearchStayResultTabPresenter.ViewType viewType, StayBookDateTime bookDateTime, StayFilter filter);
+        void onScreen(Activity activity, SearchStayResultTabPresenter.ViewType viewType, StayBookDateTime bookDateTime//
+            , StaySuggestV2 suggest, StayFilter stayFilter, boolean empty, String callbyScreen);
 
-        void onEventStayClick(Activity activity, SearchStayResultTabPresenter.ViewType viewType, Stay stay);
+        void onEventStayClick(Activity activity, Stay stay, StaySuggestV2 suggest);
 
         void onEventWishClick(Activity activity, boolean wish);
 
         void onEventMarkerClick(Activity activity, String name);
 
+        void onEventLocation(Activity activity, StayBookDateTime bookDateTime, String suggest, int searchCount, int searchMaxCount);
+
         void onEventCallClick(Activity activity);
 
-        void onEventStayClick(Activity activity, Stay stay, StaySuggestV2 suggest);
-
-        void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggestV2 suggest//
-            , CampaignTag campaignTag, int searchCount);
+        void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggestV2 suggest, String inputKeyword//
+            , int searchCount, int searchMaxCount);
     }
 }

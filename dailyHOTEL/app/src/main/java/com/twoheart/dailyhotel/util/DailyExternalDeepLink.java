@@ -488,7 +488,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 6
     ///////////////////////////////////////////////////////////////////////////////////
 
-    public boolean isHotelSearchResultView()
+    public boolean isStaySearchResultView()
     {
         return equalsView(6, HOTEL_V6_SEARCH_RESULT);
     }

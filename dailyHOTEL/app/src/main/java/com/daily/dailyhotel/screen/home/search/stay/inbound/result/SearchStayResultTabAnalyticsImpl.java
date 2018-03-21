@@ -3,11 +3,26 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.result;
 import android.app.Activity;
 
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.parcel.SearchStayAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInterface.AnalyticsInterface
 {
+    private SearchStayAnalyticsParam mAnalyticsParam;
+
+    @Override
+    public void setAnalyticsParam(SearchStayAnalyticsParam analyticsParam)
+    {
+        mAnalyticsParam = analyticsParam;
+    }
+
+    @Override
+    public SearchStayAnalyticsParam getAnalyticsParam()
+    {
+        return mAnalyticsParam;
+    }
+
     @Override
     public void onEventChangedViewType(Activity activity, SearchStayResultTabPresenter.ViewType viewType)
     {
@@ -81,7 +96,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
     }
 
     @Override
-    public void onEventResearchClick(Activity activity, GourmetSuggestV2 suggest)
+    public void onEventResearchClick(Activity activity, StaySuggestV2 suggest)
     {
         if (activity == null || suggest == null)
         {
@@ -91,16 +106,16 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
         if (suggest.isLocationSuggestType() == true)
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-                , "gourmet_around_result_research", suggest.getText1(), null);
+                , "stay_around_result_research", suggest.getText1(), null);
         } else
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-                , "gourmet_research", null, null);
+                , "stay_research", null, null);
         }
     }
 
     @Override
-    public void onEventChangedRadius(Activity activity, GourmetSuggestV2 suggest, float radius)
+    public void onEventChangedRadius(Activity activity, StaySuggestV2 suggest, float radius)
     {
         if (activity == null)
         {
@@ -131,7 +146,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
 
             if (suggest.isLocationSuggestType() == true)
             {
-                GourmetSuggestV2.Location suggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
 
                 label = suggestItem.address;
             } else
@@ -142,7 +157,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
 
             AnalyticsManager.getInstance(activity) //
-                .recordEvent(AnalyticsManager.Category.SEARCH_, "gourmet_around_result_range_change", suggest.getText1(), null);
+                .recordEvent(AnalyticsManager.Category.SEARCH_, "stay_around_result_range_change", suggest.getText1(), null);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -150,7 +165,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
     }
 
     @Override
-    public void onEventStayClick(Activity activity)
+    public void onEventGourmetClick(Activity activity)
     {
         if (activity == null)
         {
@@ -158,7 +173,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "no_result_switch_screen", "gourmet_stay", null);
+            , "no_result_switch_screen", "stay_gourmet", null);
     }
 
     @Override
@@ -170,7 +185,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "no_result_switch_screen", "gourmet_ob", null);
+            , "no_result_switch_screen", "stay_ob", null);
     }
 
     @Override
@@ -182,6 +197,6 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "no_result_switch_screen_location_gourmet", Integer.toString(index), null);
+            , "no_result_switch_screen_location_stay", Integer.toString(index), null);
     }
 }

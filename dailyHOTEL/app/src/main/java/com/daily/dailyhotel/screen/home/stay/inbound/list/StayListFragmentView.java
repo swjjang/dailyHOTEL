@@ -469,7 +469,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
 
         getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
-        mMapFragment.setStayList(stayList, moveCameraBounds, clear);
+        mMapFragment.setList(stayList, moveCameraBounds, clear);
 
     }
 

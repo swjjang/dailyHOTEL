@@ -437,7 +437,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             }
         });
 
-        mSearchModel.bookDateTime.observe(activity, new Observer<StayBookDateTime>()
+        mSearchModel.setBookDateTimeObserver(activity, new Observer<StayBookDateTime>()
         {
             @Override
             public void onChanged(@Nullable StayBookDateTime stayBookDateTime)

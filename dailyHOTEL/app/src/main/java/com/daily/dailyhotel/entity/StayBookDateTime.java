@@ -99,9 +99,16 @@ public class StayBookDateTime extends PlaceBookDateTime
         return stayBookingDay;
     }
 
-    public String getDateFullFormat()
+    public String getToYearDateFullFormat()
     {
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
+        return String.format("%s - %s, %d박", getCheckInDateTime(DATE_FORMAT), getCheckInDateTime(DATE_FORMAT), getNights());
+    }
+
+    public String getToMonthDateFormat()
+    {
+        final String DATE_FORMAT = "MM.dd(EEE)";
 
         return String.format("%s - %s, %d박", getCheckInDateTime(DATE_FORMAT), getCheckInDateTime(DATE_FORMAT), getNights());
     }

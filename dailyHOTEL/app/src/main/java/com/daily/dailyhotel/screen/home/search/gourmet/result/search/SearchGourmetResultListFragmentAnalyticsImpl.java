@@ -42,12 +42,6 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
     }
 
     @Override
-    public void onEventStayClick(Activity activity, SearchGourmetResultTabPresenter.ViewType viewType, Gourmet gourmet)
-    {
-
-    }
-
-    @Override
     public void onEventWishClick(Activity activity, boolean wish)
     {
         if (activity == null)

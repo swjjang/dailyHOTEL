@@ -779,12 +779,42 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             location = null;
         }
 
+        StaySuggestV2 suggest = toSuggest(mStayViewModel.stayRegion.getValue());
+
+        if (suggest == null)
+        {
+            unLockAll();
+            return;
+        }
+
         startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
-            , mStayViewModel.categoryType, mStayViewModel.viewType.getValue()//
-            , mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue()//
+            , mStayViewModel.categoryType, mStayViewModel.viewType.getValue().name()//
+            , mStayViewModel.stayFilter.getValue(), suggest//
             , categoryList, location, 0, null), StayTabActivity.REQUEST_CODE_FILTER);
 
         mAnalytics.onFilterClick(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue());
+    }
+
+    private StaySuggestV2 toSuggest(StayRegion region)
+    {
+        if (region == null)
+        {
+            return null;
+        }
+
+        StaySuggestV2.AreaGroup suggestItem = new StaySuggestV2.AreaGroup();
+        suggestItem.index = region.getAreaGroupIndex();
+        suggestItem.name = region.getAreaGroupName();
+
+        if (region.getAreaElement() != null)
+        {
+            StaySuggestV2.Area area = new StaySuggestV2.Area();
+            area.index = region.getAreaIndex();
+            area.name = region.getAreaName();
+            suggestItem.area = area;
+        }
+
+        return new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, suggestItem);
     }
 
     @Override

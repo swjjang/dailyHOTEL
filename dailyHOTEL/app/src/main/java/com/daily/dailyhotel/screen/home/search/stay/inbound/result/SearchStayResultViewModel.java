@@ -5,18 +5,16 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
-import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
+import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayFilter;
+import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
-import com.daily.dailyhotel.util.DailyIntentUtils;
 
 /**
  * Created by sheldon
@@ -28,13 +26,14 @@ public class SearchStayResultViewModel extends ViewModel
     private CommonDateTime mCommonDateTime;
 
     private MutableLiveData<SearchStayResultTabPresenter.ViewType> mViewType = new MutableLiveData<>();
-
-    private MutableLiveData<GourmetFilter> mFilter = new MutableLiveData<>();
+    private MutableLiveData<Category> mCategory = new MutableLiveData<>();
+    private MutableLiveData<StayFilter> mFilter = new MutableLiveData<>();
     public Location filterLocation;
 
-    static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
+
+    static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {
-        public SearchGourmetViewModelFactory()
+        public SearchStayViewModelFactory()
         {
         }
 
@@ -45,7 +44,7 @@ public class SearchStayResultViewModel extends ViewModel
             SearchStayResultViewModel searchViewModel = new SearchStayResultViewModel();
 
             searchViewModel.setViewType(SearchStayResultTabPresenter.ViewType.LIST);
-            searchViewModel.setFilter(new GourmetFilter().reset());
+            searchViewModel.setFilter(new StayFilter().reset());
 
             return searchViewModel;
         }
@@ -76,7 +75,7 @@ public class SearchStayResultViewModel extends ViewModel
         mViewType.removeObserver(observer);
     }
 
-    public GourmetBookDateTime getBookDateTime()
+    public StayBookDateTime getBookDateTime()
     {
         return searchViewModel == null ? null : searchViewModel.getBookDateTime();
     }
@@ -91,32 +90,17 @@ public class SearchStayResultViewModel extends ViewModel
         return mCommonDateTime;
     }
 
-    public void setBookDateTime(Intent intent, String bookDateTimeExtraName) throws Exception
-    {
-        if (intent == null || searchViewModel == null)
-        {
-            return;
-        }
-
-        if (DailyIntentUtils.hasIntentExtras(intent, bookDateTimeExtraName) == true)
-        {
-            String bookDateTime = intent.getStringExtra(bookDateTimeExtraName);
-
-            searchViewModel.setBookDateTime(bookDateTime);
-        }
-    }
-
-    public void setBookDateTime(String bookDateTime) throws Exception
+    public void setBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
     {
         if (searchViewModel == null)
         {
             return;
         }
 
-        searchViewModel.setBookDateTime(bookDateTime);
+        searchViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
     }
 
-    public void setSuggest(@NonNull GourmetSuggestV2 suggest)
+    public void setSuggest(@NonNull StaySuggestV2 suggest)
     {
         if (searchViewModel == null)
         {
@@ -128,12 +112,12 @@ public class SearchStayResultViewModel extends ViewModel
             throw new NullPointerException("suggest == null");
         }
 
-        searchViewModel.suggest.setValue(suggest);
+        searchViewModel.setSuggest(suggest);
     }
 
-    public GourmetSuggestV2 getSuggest()
+    public StaySuggestV2 getSuggest()
     {
-        return searchViewModel == null ? null : searchViewModel.suggest.getValue();
+        return searchViewModel == null ? null : searchViewModel.getSuggest();
     }
 
     public void setInputKeyword(String inputKeyword)
@@ -151,17 +135,42 @@ public class SearchStayResultViewModel extends ViewModel
         return searchViewModel == null ? null : searchViewModel.inputKeyword;
     }
 
+    public Category getCategory()
+    {
+        return mCategory.getValue();
+    }
+
+    public void setCategory(@NonNull Category category)
+    {
+        if (category == null)
+        {
+            throw new NullPointerException("filter == null");
+        }
+
+        mCategory.setValue(category);
+    }
+
+    public void setCategoryObserver(BaseActivity baseActivity, Observer<Category> observer)
+    {
+        mCategory.observe(baseActivity, observer);
+    }
+
+    public void removeCategoryObserver(Observer<Category> observer)
+    {
+        mCategory.removeObserver(observer);
+    }
+
     public boolean isDistanceSort()
     {
         return mFilter.getValue().isDistanceSort();
     }
 
-    public GourmetFilter getFilter()
+    public StayFilter getFilter()
     {
         return mFilter.getValue();
     }
 
-    public void setFilter(@NonNull GourmetFilter filter)
+    public void setFilter(@NonNull StayFilter filter)
     {
         if (filter == null)
         {
@@ -171,12 +180,12 @@ public class SearchStayResultViewModel extends ViewModel
         mFilter.setValue(filter);
     }
 
-    public void setFilterObserver(BaseActivity baseActivity, Observer<GourmetFilter> observer)
+    public void setFilterObserver(BaseActivity baseActivity, Observer<StayFilter> observer)
     {
         mFilter.observe(baseActivity, observer);
     }
 
-    public void removeFilterObserver(Observer<GourmetFilter> observer)
+    public void removeFilterObserver(Observer<StayFilter> observer)
     {
         mFilter.removeObserver(observer);
     }

@@ -70,7 +70,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -333,7 +332,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 || externalDeepLink.isHomeRecommendationPlaceListView() == true//
                 || externalDeepLink.isHotelListView() == true//
                 || externalDeepLink.isHotelDetailView() == true//
-                || externalDeepLink.isHotelSearchResultView() == true//
+                || externalDeepLink.isStaySearchResultView() == true//
                 || externalDeepLink.isGourmetListView() == true//
                 || externalDeepLink.isGourmetDetailView() == true//
                 || externalDeepLink.isGourmetSearchResultView() == true//

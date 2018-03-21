@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.result.campaign;
+package com.daily.dailyhotel.screen.home.search.stay.inbound.result.search;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SearchStayCampaignTagListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class SearchStayResultListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
     Context mContext;
     List<ObjectItem> mList;
@@ -40,7 +40,7 @@ public class SearchStayCampaignTagListAdapter extends RecyclerView.Adapter<Recyc
     View.OnClickListener mOnWishClickListener;
     View.OnLongClickListener mOnLongClickListener;
 
-    public SearchStayCampaignTagListAdapter(Context context, ArrayList<ObjectItem> arrayList)
+    public SearchStayResultListAdapter(Context context, ArrayList<ObjectItem> arrayList)
     {
         mContext = context;
 

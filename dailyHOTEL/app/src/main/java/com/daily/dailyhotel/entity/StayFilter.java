@@ -41,7 +41,8 @@ public class StayFilter
     public int flagAmenitiesFilters; // luxuries
     public int flagRoomAmenitiesFilters; // room luxuries
 
-    public SortType sortType = SortType.DEFAULT;
+    public SortType defaultSortType = SortType.DEFAULT;
+    public SortType sortType = defaultSortType;
 
     public enum SortType
     {
@@ -52,9 +53,14 @@ public class StayFilter
         SATISFACTION
     }
 
+    public boolean isDistanceSort()
+    {
+        return sortType == SortType.DISTANCE;
+    }
+
     public boolean isDefault()
     {
-        return (sortType == SortType.DEFAULT//
+        return (sortType == defaultSortType//
             && person == PERSON_COUNT_OF_DEFAULT//
             && flagBedTypeFilters == FLAG_BED_NONE//
             && flagAmenitiesFilters == FLAG_AMENITIES_NONE//
@@ -63,11 +69,11 @@ public class StayFilter
 
     public StayFilter reset()
     {
+        sortType = defaultSortType;
         person = PERSON_COUNT_OF_DEFAULT;
         flagBedTypeFilters = FLAG_BED_NONE;
         flagAmenitiesFilters = FLAG_AMENITIES_NONE;
         flagRoomAmenitiesFilters = FLAG_ROOM_AMENITIES_NONE;
-        sortType = SortType.DEFAULT;
 
         return this;
     }

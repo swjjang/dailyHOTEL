@@ -239,15 +239,11 @@ public class StayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(true);
         holder.stayCardView.setWish(stay.myWish);
-
         holder.stayCardView.setImage(stay.imageUrl);
-
         holder.stayCardView.setGradeText(stay.grade.getName(mContext));
         holder.stayCardView.setVRVisible(stay.trueVR && mTrueVREnabled);
         holder.stayCardView.setReviewText(stay.satisfaction, stay.reviewCount);
-
         holder.stayCardView.setNewVisible(stay.newStay);
-
         holder.stayCardView.setStayNameText(stay.name);
 
         if (mDistanceEnabled == true)

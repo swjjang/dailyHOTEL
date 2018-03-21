@@ -161,7 +161,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             } else if (externalDeepLink.isCampaignTagListView() == true)
             {
                 parseCampaignTagListView(externalDeepLink);
-            } else if (externalDeepLink.isHotelSearchResultView() == true)
+            } else if (externalDeepLink.isStaySearchResultView() == true)
             {
                 mEnterServiceType = Constants.ServiceType.HOTEL;
             } else if (externalDeepLink.isGourmetSearchResultView() == true)
@@ -764,7 +764,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;
-                    } else if (externalDeepLink.isHotelSearchResultView() == true)
+                    } else if (externalDeepLink.isStaySearchResultView() == true)
                     {
                         moveDeepLinkStaySearchResult(commonDateTime, externalDeepLink);
                     } else if (externalDeepLink.isGourmetSearchResultView() == true)
@@ -1352,7 +1352,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             }
         });
 
-        mSearchViewModel.stayViewModel.bookDateTime.observe(activity, new Observer<StayBookDateTime>()
+        mSearchViewModel.stayViewModel.setBookDateTimeObserver(activity, new Observer<StayBookDateTime>()
         {
             @Override
             public void onChanged(@Nullable StayBookDateTime stayBookDateTime)

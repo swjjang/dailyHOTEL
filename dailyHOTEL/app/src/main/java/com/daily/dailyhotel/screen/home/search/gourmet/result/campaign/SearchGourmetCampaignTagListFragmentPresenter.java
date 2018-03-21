@@ -427,13 +427,14 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
-        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).map(new Function<GourmetCampaignTags, Pair<CampaignTag, List<ObjectItem>>>()
+        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT))//
+            .map(new Function<GourmetCampaignTags, Pair<GourmetCampaignTags, List<ObjectItem>>>()
         {
             @Override
-            public Pair<CampaignTag, List<ObjectItem>> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags gourmetCampaignTags) throws Exception
+            public Pair<GourmetCampaignTags, List<ObjectItem>> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags campaignTags) throws Exception
             {
                 List<ObjectItem> objectItemList = new ArrayList<>();
-                List<Gourmet> gourmetList = gourmetCampaignTags.getGourmetList();
+                List<Gourmet> gourmetList = campaignTags.getGourmetList();
 
                 if (gourmetList != null && gourmetList.size() > 0)
                 {
@@ -443,14 +444,15 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                     }
                 }
 
-                return new Pair(gourmetCampaignTags.getCampaignTag(), objectItemList);
+                return new Pair(campaignTags, objectItemList);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<CampaignTag, List<ObjectItem>>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<GourmetCampaignTags, List<ObjectItem>>>()
         {
             @Override
-            public void accept(Pair<CampaignTag, List<ObjectItem>> pair) throws Exception
+            public void accept(Pair<GourmetCampaignTags, List<ObjectItem>> pair) throws Exception
             {
-                CampaignTag campaignTag = pair.first;
+                GourmetCampaignTags campaignTags = pair.first;
+                CampaignTag campaignTag = campaignTags.getCampaignTag();
                 List<ObjectItem> objectItemList = pair.second;
 
                 if (DailyTextUtils.isTextEmpty(mViewModel.getSuggest().getSuggestItem().name) == true)
@@ -686,9 +688,9 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTags>()
         {
             @Override
-            public void accept(GourmetCampaignTags gourmetCampaignTags) throws Exception
+            public void accept(GourmetCampaignTags campaignTags) throws Exception
             {
-                List<Gourmet> gourmetList = gourmetCampaignTags.getGourmetList();
+                List<Gourmet> gourmetList = campaignTags.getGourmetList();
 
                 if (gourmetList == null || gourmetList.size() == 0)
                 {

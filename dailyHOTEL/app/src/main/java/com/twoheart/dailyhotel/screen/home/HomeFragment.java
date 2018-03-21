@@ -615,7 +615,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             } else if (externalDeepLink.isSearchHomeView() == true//
                 || externalDeepLink.isStayOutboundSearchResultView() == true //
                 || externalDeepLink.isCampaignTagListView() == true//
-                || externalDeepLink.isHotelSearchResultView() == true//
+                || externalDeepLink.isStaySearchResultView() == true//
                 || externalDeepLink.isGourmetSearchResultView() == true)
             {
                 try

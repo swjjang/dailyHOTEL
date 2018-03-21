@@ -1,9 +1,10 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.result.campaign;
+package com.daily.dailyhotel.screen.home.search.stay.inbound.result.search;
 
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -35,14 +36,14 @@ import io.reactivex.Observable;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<SearchStayCampaignTagListFragmentInterface.OnEventListener, FragmentSearchGourmetResultDataBinding>//
-    implements SearchStayCampaignTagListFragmentInterface.ViewInterface
+public class SearchStayResultListFragmentView extends BaseBlurFragmentView<SearchStayResultListFragmentInterface.OnEventListener, FragmentSearchGourmetResultDataBinding>//
+    implements SearchStayResultListFragmentInterface.ViewInterface
 {
     private static final int ANIMATION_DELAY = 200;
     private static final int VIEWPAGER_HEIGHT_DP = 115;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    SearchStayCampaignTagListAdapter mListAdapter;
+    SearchStayResultListAdapter mListAdapter;
 
     StayMapFragment mMapFragment;
 
@@ -52,7 +53,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
 
     DailyFloatingActionView mFloatingActionView;
 
-    public SearchStayCampaignTagListFragmentView(SearchStayCampaignTagListFragmentInterface.OnEventListener listener)
+    public SearchStayResultListFragmentView(SearchStayResultListFragmentInterface.OnEventListener listener)
     {
         super(listener);
     }
@@ -64,6 +65,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
 
         initListLayout(viewDataBinding);
         initMapLayout(viewDataBinding);
+        initLocationProgressBarLayout(viewDataBinding);
     }
 
     private void initListLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
@@ -173,15 +175,39 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
         viewDataBinding.mapViewPager.setVisibility(View.GONE);
     }
 
-    @Override
-    public void setSearchResultCount(int count)
+    private void initLocationProgressBarLayout(FragmentSearchGourmetResultDataBinding viewDataBinding)
     {
-        if (getViewDataBinding() == null || count <= 0)
+        if (viewDataBinding == null)
         {
             return;
         }
 
-        getViewDataBinding().countTextView.setText(getString(R.string.label_searchresult_resultcount, count));
+        viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
+
+        setLocationProgressBarVisible(false);
+    }
+
+    @Override
+    public void setSearchResultCount(int count, int maxCount)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (count <= 0)
+        {
+            getViewDataBinding().countTextView.setVisibility(View.GONE);
+        } else
+        {
+            if (count >= maxCount)
+            {
+                getViewDataBinding().countTextView.setText(getString(R.string.label_searchresult_over_resultcount, maxCount));
+            } else
+            {
+                getViewDataBinding().countTextView.setText(getString(R.string.label_searchresult_resultcount, count));
+            }
+        }
     }
 
     @Override
@@ -194,7 +220,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
 
         if (mListAdapter == null)
         {
-            mListAdapter = new SearchStayCampaignTagListAdapter(getContext(), null);
+            mListAdapter = new SearchStayResultListAdapter(getContext(), null);
             mListAdapter.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -212,8 +238,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
-                            getEventListener().onStayClick(position, objectItem.getItem(), mListAdapter.getItemCount()//
-                                , ((DailyStayCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                            getEventListener().onStayClick(position, objectItem.getItem(), mListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                         } else
                         {
 
@@ -235,8 +260,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        getEventListener().onStayLongClick(position, objectItem.getItem(), mListAdapter.getItemCount()//
-                            , ((DailyStayCardView) view).getOptionsCompat());
+                        getEventListener().onStayLongClick(position, objectItem.getItem(), mListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat());
                     }
 
                     return true;
@@ -288,7 +312,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
 
         if (mListAdapter == null)
         {
-            mListAdapter = new SearchStayCampaignTagListAdapter(getContext(), null);
+            mListAdapter = new SearchStayResultListAdapter(getContext(), null);
 
             getViewDataBinding().recyclerView.setAdapter(mListAdapter);
         }
@@ -322,8 +346,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
                 {
                     if (view instanceof DailyStayMapCardView)
                     {
-                        getEventListener().onStayClick(-1, stay, getViewDataBinding().mapViewPager.getChildCount()//
-                            , ((DailyStayMapCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                        getEventListener().onStayClick(-1, stay, getViewDataBinding().mapViewPager.getChildCount(), ((DailyStayMapCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
                     }
                 }
 
@@ -387,21 +410,83 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
     }
 
     @Override
-    public void setEmptyViewVisible(boolean visible, boolean applyFilter)
+    public void hideEmptyViewVisible()
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (visible == false)
+        getViewDataBinding().emptyView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showDefaultEmptyViewVisible()
+    {
+        if (getViewDataBinding() == null)
         {
-            getViewDataBinding().emptyView.setVisibility(View.GONE);
+            return;
+        }
+
+        getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
+        getViewDataBinding().mapLayout.setVisibility(View.GONE);
+        getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+
+        getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_filter_empty_message01), getString(R.string.message_changing_filter_option));
+        getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onFilterClick();
+            }
+        });
+
+        getViewDataBinding().emptyView.setButton02(false, null, null);
+        getViewDataBinding().emptyView.setBottomMessageVisible(false);
+    }
+
+    @Override
+    public void showLocationEmptyViewVisible(boolean applyFilter)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
+        getViewDataBinding().mapLayout.setVisibility(View.GONE);
+        getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+
+        if (applyFilter == true)
+        {
+            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_filter_empty_message01), getString(R.string.message_searchresult_stay_filter_empty_message02));
+            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_searchresult_change_radius), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onRadiusClick();
+                }
+            });
+
+            getViewDataBinding().emptyView.setButton02(false, null, null);
+            getViewDataBinding().emptyView.setBottomMessageVisible(false);
         } else
         {
-            getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
-            getViewDataBinding().mapLayout.setVisibility(View.GONE);
-            getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_empty_message01), getString(R.string.message_searchresult_stay_empty_message02));
+            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_searchresult_research), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onResearchClick();
+                }
+            });
+
+            getViewDataBinding().emptyView.setButton02(false, null, null);
+            getViewDataBinding().emptyView.setBottomMessageVisible(true);
+            getViewDataBinding().emptyView.setOnCallClickListener(v -> getEventListener().onCallClick());
         }
     }
 
@@ -414,6 +499,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
         }
 
         getViewDataBinding().swipeRefreshLayout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        getViewDataBinding().countTextView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -428,7 +514,18 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
     }
 
     @Override
-    public void showMapLayout(FragmentManager fragmentManager, boolean hide)
+    public void setLocationProgressBarVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().progressBarLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showMapLayout(FragmentManager fragmentManager)
     {
         if (getViewDataBinding() == null || fragmentManager == null)
         {
@@ -436,7 +533,6 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
         }
 
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
-        getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
         if (mMapFragment == null)
         {
@@ -514,14 +610,12 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
     }
 
     @Override
-    public void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide)
+    public void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear)
     {
         if (getViewDataBinding() == null || mMapFragment == null)
         {
             return;
         }
-
-        getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
         mMapFragment.setList(stayList, moveCameraBounds, clear);
 
@@ -545,7 +639,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
             @Override
             public void run()
             {
-                SearchStayCampaignTagListAdapter.StayViewHolder viewHolder = (SearchStayCampaignTagListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+                SearchStayResultListAdapter.StayViewHolder viewHolder = (SearchStayResultListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
 
                 if (viewHolder != null)
                 {

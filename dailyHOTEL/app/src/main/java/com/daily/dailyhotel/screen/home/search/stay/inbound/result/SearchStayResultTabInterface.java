@@ -8,6 +8,8 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.parcel.SearchStayAnalyticsParam;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public interface SearchStayResultTabInterface
 
         Observable<BasePagerFragment> setCampaignTagFragment();
 
-        Observable<BasePagerFragment> setSearchResultFragment();
+        Observable<BasePagerFragment> setSearchResultFragment(String callByScreen);
 
         void setEmptyViewVisible(boolean visible);
 
@@ -62,7 +64,7 @@ public interface SearchStayResultTabInterface
 
         void setEmptyViewVisible(boolean visible);
 
-        void onStayClick();
+        void onGourmetClick();
 
         void onStayOutboundClick();
 
@@ -71,6 +73,10 @@ public interface SearchStayResultTabInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void setAnalyticsParam(SearchStayAnalyticsParam analyticsParam);
+
+        SearchStayAnalyticsParam getAnalyticsParam();
+
         void onEventChangedViewType(Activity activity, SearchStayResultTabPresenter.ViewType viewType);
 
         void onEventCalendarClick(Activity activity);
@@ -81,11 +87,11 @@ public interface SearchStayResultTabInterface
 
         void onEventCancelClick(Activity activity);
 
-        void onEventResearchClick(Activity activity, GourmetSuggestV2 suggest);
+        void onEventResearchClick(Activity activity, StaySuggestV2 suggest);
 
-        void onEventChangedRadius(Activity activity, GourmetSuggestV2 suggest, float radius);
+        void onEventChangedRadius(Activity activity, StaySuggestV2 suggest, float radius);
 
-        void onEventStayClick(Activity activity);
+        void onEventGourmetClick(Activity activity);
 
         void onEventStayOutboundClick(Activity activity);
 
