@@ -497,7 +497,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             if (externalDeepLink.isHomeEventDetailView() == true)
             {
-                startEventWebActivity(externalDeepLink.getUrl(), externalDeepLink.getTitle());
+                startEventWebActivity(externalDeepLink.getUrl(), externalDeepLink.getTitle(), null, null);
             } else if (externalDeepLink.isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = externalDeepLink.getPlaceType();
@@ -770,14 +770,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
         startActivityForResult(SignupStep1Activity.newInstance(baseActivity, null), CODE_REQEUST_ACTIVITY_SIGNUP);
     }
 
-    void startEventWebActivity(String url, String eventName)
+    void startEventWebActivity(String url, String eventName, String eventDescription, String imageUrl)
     {
         if (DailyTextUtils.isTextEmpty(url) == true)
         {
             return;
         }
 
-        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName, null, null);
+        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName, eventDescription, imageUrl);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
@@ -1915,7 +1915,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomeFragment.this.startEventWebActivity(event.linkUrl, event.title);
+            String imageUrl = DailyTextUtils.isTextEmpty(event.lowResolutionImageUrl) ? event.defaultImageUrl : event.lowResolutionImageUrl;
+
+            HomeFragment.this.startEventWebActivity(event.linkUrl, event.title, event.description, imageUrl);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_EVENT_BANNER_CLICK,//

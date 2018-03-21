@@ -197,7 +197,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         setWebView(mEventUrl);
 
-
         //        initLayout((DailyWebView) webView);
     }
 
@@ -220,7 +219,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
         });
 
-        if (DailyTextUtils.isTextEmpty(mImageUrl, mEventDescription) == false)
+        if (DailyTextUtils.isTextEmpty(mEventUrl, mEventName) == false)
         {
             dailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
             {
@@ -251,7 +250,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
             public void onClick(View v)
             {
                 hideSimpleDialog();
-
                 onShareKakaoClick();
             }
         });
@@ -263,7 +261,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
             public void onClick(View view)
             {
                 hideSimpleDialog();
-
                 onCopyClipboardClick();
             }
         });
@@ -274,7 +271,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
             public void onClick(View v)
             {
                 hideSimpleDialog();
-
                 onMoreShareClick();
             }
         });
@@ -289,21 +285,18 @@ public class EventWebActivity extends WebViewActivity implements Constants
         });
 
         showSimpleDialog(dataBinding.getRoot(), null, listener, true);
-
     }
 
     private void onShareKakaoClick()
     {
-//        String longUrl = mWebView.getUrl();
-        String longUrl = mEventUrl;
-        ExLog.d("sam : long url : " + longUrl);
-
         try
         {
+            lockUI();
+
+            String longUrl = mEventUrl;
+
             // 카카오톡 패키지 설치 여부
             getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
-            //            String urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_kakaotalk";
 
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
@@ -311,8 +304,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     @Override
                     public void accept(String shortUrl) throws Exception
                     {
-                        ExLog.d("sam : short url : " + shortUrl);
-
                         unLockUI();
 
                         KakaoLinkManager.newInstance(EventWebActivity.this).shareEventWebView(mEventName //
@@ -325,8 +316,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        ExLog.d("sam : build fail short url : " + throwable.toString());
-
                         unLockUI();
 
                         KakaoLinkManager.newInstance(EventWebActivity.this).shareEventWebView(mEventName //
@@ -354,99 +343,88 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private void onCopyClipboardClick()
     {
-        String url = mWebView.getUrl();
-        ExLog.d("sam : long url : " + url);
-
-        lockUI();
-
-        addCompositeDisposable(mCommonRemoteImpl.getShortUrl(url).subscribe(new Consumer<String>()
+        try
         {
-            @Override
-            public void accept(@NonNull String shortUrl) throws Exception
+            String longUrl = mEventUrl;
+
+            lockUI();
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
             {
-                unLockUI();
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockUI();
 
-                DailyTextUtils.clipText(EventWebActivity.this, shortUrl);
+                    DailyTextUtils.clipText(EventWebActivity.this, shortUrl);
 
-                DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
-            }
-        }, new Consumer<Throwable>()
+                    DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockUI();
+
+                    DailyTextUtils.clipText(EventWebActivity.this, longUrl);
+
+                    DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }));
+        } catch (Exception e)
         {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
-            {
-                unLockUI();
-
-                DailyTextUtils.clipText(EventWebActivity.this, url);
-
-                DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
-            }
-        }));
+            unLockUI();
+            ExLog.d(e.toString());
+        }
     }
 
     private void onMoreShareClick()
     {
-//        try
-//        {
-//            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_moretab"//
-//                , mGourmetDetail.index, mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
-//
-//            String name = DailyUserPreference.getInstance(getActivity()).getName();
-//
-//            if (DailyTextUtils.isTextEmpty(name) == true)
-//            {
-//                name = getString(R.string.label_friend) + "가";
-//            } else
-//            {
-//                name += "님이";
-//            }
-//
-//            final String message = getString(R.string.message_detail_gourmet_share_sms//
-//                , name, mGourmetDetail.name//
-//                , mGourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)")//
-//                , mGourmetDetail.address);
-//
-//            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
-//            {
-//                @Override
-//                public void accept(@NonNull String shortUrl) throws Exception
-//                {
-//                    unLockAll();
-//
-//                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-//                    intent.setType("text/plain");
-//
-//                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
-//                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
-//                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
-//                    startActivity(chooser);
-//                }
-//            }, new Consumer<Throwable>()
-//            {
-//                @Override
-//                public void accept(@NonNull Throwable throwable) throws Exception
-//                {
-//                    unLockAll();
-//
-//                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-//                    intent.setType("text/plain");
-//
-//                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
-//                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index);
-//                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
-//                    startActivity(chooser);
-//                }
-//            }));
-//
-//            mAnalytics.onEventMoreShareClick(getActivity());
-//        } catch (Exception e)
-//        {
-//            unLockAll();
-//
-//            ExLog.d(e.toString());
-//        }
-    }
+        try
+        {
+            lockUI();
 
+            String longUrl = mEventUrl;
+
+            String message = getString(R.string.message_detail_event_share_sms, mEventName, mEventDescription);
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockUI();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockUI();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + longUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+        } catch (Exception e)
+        {
+            unLockUI();
+            ExLog.d(e.toString());
+        }
+    }
 
     //    private void initLayout(final DailyWebView dailyWebView)
     //    {

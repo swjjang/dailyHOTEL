@@ -672,7 +672,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            if (DailyTextUtils.isTextEmpty(title, description, webUrl, imageUrl))
+            if (DailyTextUtils.isTextEmpty(title, webUrl))
             {
                 return;
             }
@@ -689,7 +689,7 @@ public class KakaoLinkManager implements Constants
             final int width = ScreenUtils.getScreenWidth(mContext);
             final int height = ScreenUtils.getRatioHeightType16x9(width);
 
-            String kakaoImageUrl = null;
+            String kakaoImageUrl = "";
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
