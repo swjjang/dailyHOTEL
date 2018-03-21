@@ -696,6 +696,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     public void onBackClick()
     {
         mAnalytics.onEventCancelClick(getActivity());
+
+        setResultCode(Activity.RESULT_CANCELED);
         finish();
     }
 

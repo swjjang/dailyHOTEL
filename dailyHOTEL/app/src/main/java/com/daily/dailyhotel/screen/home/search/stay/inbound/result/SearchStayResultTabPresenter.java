@@ -717,6 +717,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     public void onBackClick()
     {
         mAnalytics.onEventCancelClick(getActivity());
+
+        setResultCode(Activity.RESULT_CANCELED);
         finish();
     }
 

@@ -476,9 +476,11 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             @Override
             public void onChanged(@Nullable StayOutboundSuggest stayOutboundSuggest)
             {
-                getViewInterface().setSearchSuggestText(stayOutboundSuggest.display);
+                String displayName = stayOutboundSuggest.displayText;
 
-                getViewInterface().setSearchButtonEnabled(DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == false);
+                getViewInterface().setSearchSuggestText(displayName);
+
+                getViewInterface().setSearchButtonEnabled(DailyTextUtils.isTextEmpty(displayName) == false);
             }
         });
 
