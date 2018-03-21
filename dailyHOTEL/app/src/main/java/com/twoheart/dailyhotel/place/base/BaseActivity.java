@@ -1104,6 +1104,50 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
+    // EventWebActivity 공유 용
+    public void showSimpleDialog(View view, DialogInterface.OnCancelListener cancelListener//
+        , DialogInterface.OnDismissListener dismissListener, boolean cancelable)
+    {
+        if (isFinishing() == true | view == null)
+        {
+            return;
+        }
+
+        hideSimpleDialog();
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(cancelable);
+
+        if (cancelListener != null)
+        {
+            mDialog.setOnCancelListener(cancelListener);
+        }
+
+        if (dismissListener != null)
+        {
+            mDialog.setOnDismissListener(dismissListener);
+        }
+
+        try
+        {
+            mDialog.setContentView(view);
+
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
+
+            mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+
     public interface OnCheckDialogStateListener
     {
         void onState(View view, boolean checked);

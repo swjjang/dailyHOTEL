@@ -2,11 +2,16 @@ package com.twoheart.dailyhotel.screen.event;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -16,10 +21,11 @@ import android.webkit.WebView;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -36,7 +42,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -44,11 +50,11 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -62,20 +68,29 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
-    private static final String INTENT_EXTRA_DATA_EVENTNAME = "eventName";
+    private static final String INTENT_EXTRA_DATA_EVENT_NAME = "eventName";
+    private static final String INTENT_EXTRA_DATA_EVENT_DESCRIPTION = "eventDescription";
+    private static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
 
     SourceType mSourceType;
     TodayDateTime mTodayDateTime;
     private String mEventName;
+    private String mEventDescription;
+    private String mImageUrl;
+    private String mEventUrl;
 
     String mCouponCode;
     String mDeepLinkUrl;
     String mConfirmText;
+
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     JavaScriptExtention mJavaScriptExtention;
 
@@ -87,7 +102,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     Handler mHandler = new Handler();
 
-    public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName)
+    public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName, String eventDescription, String imageUrl)
     {
         if (sourceType == null || DailyTextUtils.isTextEmpty(url) == true)
         {
@@ -103,7 +118,21 @@ public class EventWebActivity extends WebViewActivity implements Constants
             eventName = "";
         }
 
-        intent.putExtra(INTENT_EXTRA_DATA_EVENTNAME, eventName);
+        intent.putExtra(INTENT_EXTRA_DATA_EVENT_NAME, eventName);
+
+        if (DailyTextUtils.isTextEmpty(eventDescription))
+        {
+            eventDescription = "";
+        }
+
+        intent.putExtra(INTENT_EXTRA_DATA_EVENT_DESCRIPTION, eventDescription);
+
+        if (DailyTextUtils.isTextEmpty(imageUrl))
+        {
+            imageUrl = "";
+        }
+
+        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
 
         return intent;
     }
@@ -114,9 +143,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         super.onCreate(savedInstanceState);
 
+        mCommonRemoteImpl = new CommonRemoteImpl(EventWebActivity.this);
+
         Intent intent = getIntent();
 
-        String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
+        mEventUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
 
         try
         {
@@ -127,15 +158,17 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(url) == true)
+        if (DailyTextUtils.isTextEmpty(mEventUrl) == true)
         {
             finish();
             return;
         }
 
-        requestCommonDatetime(url);
+        requestCommonDatetime(mEventUrl);
 
-        mEventName = intent.getStringExtra(INTENT_EXTRA_DATA_EVENTNAME);
+        mEventName = intent.getStringExtra(INTENT_EXTRA_DATA_EVENT_NAME);
+        mEventDescription = intent.getStringExtra(INTENT_EXTRA_DATA_EVENT_DESCRIPTION);
+        mImageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
 
         setContentView(R.layout.activity_event_web);
 
@@ -162,7 +195,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         webView.clearCache(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-        setWebView(url);
+        setWebView(mEventUrl);
 
         //        initLayout((DailyWebView) webView);
     }
@@ -185,6 +218,212 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             }
         });
+
+        if (DailyTextUtils.isTextEmpty(mEventUrl, mEventName) == false)
+        {
+            dailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    showShareDialog(new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface)
+                        {
+                            unLockUI();
+                        }
+                    });
+                }
+            });
+        }
+
+    }
+
+    private void showShareDialog(DialogInterface.OnDismissListener listener)
+    {
+        DialogShareDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(EventWebActivity.this), R.layout.dialog_share_data, null, false);
+
+        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+                onShareKakaoClick();
+            }
+        });
+
+        // 예약 내역의 경우 상세 링크로 인하여 혼선이 있을 것으로 보여 삭제하기로 함
+        dataBinding.copyLinkView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                hideSimpleDialog();
+                onCopyClipboardClick();
+            }
+        });
+
+        dataBinding.moreShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+                onMoreShareClick();
+            }
+        });
+
+        dataBinding.closeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
+
+    private void onShareKakaoClick()
+    {
+        try
+        {
+            lockUI();
+
+            String longUrl = mEventUrl;
+
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                {
+                    @Override
+                    public void accept(String shortUrl) throws Exception
+                    {
+                        unLockUI();
+
+                        KakaoLinkManager.newInstance(EventWebActivity.this).shareEventWebView(mEventName //
+                            , mEventDescription //
+                            , shortUrl //
+                            , mImageUrl);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        unLockUI();
+
+                        KakaoLinkManager.newInstance(EventWebActivity.this).shareEventWebView(mEventName //
+                            , mEventDescription //
+                            , longUrl //
+                            , mImageUrl);
+                    }
+                }));
+        } catch (Exception e)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(EventWebActivity.this, "com.kakao.talk");
+                    }
+                }, null);
+
+            unLockUI();
+        }
+    }
+
+    private void onCopyClipboardClick()
+    {
+        try
+        {
+            String longUrl = mEventUrl;
+
+            lockUI();
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockUI();
+
+                    DailyTextUtils.clipText(EventWebActivity.this, shortUrl);
+
+                    DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockUI();
+
+                    DailyTextUtils.clipText(EventWebActivity.this, longUrl);
+
+                    DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }));
+        } catch (Exception e)
+        {
+            unLockUI();
+            ExLog.d(e.toString());
+        }
+    }
+
+    private void onMoreShareClick()
+    {
+        try
+        {
+            lockUI();
+
+            String longUrl = mEventUrl;
+
+            String message = getString(R.string.message_detail_event_share_sms, mEventName, mEventDescription);
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockUI();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockUI();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + longUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+        } catch (Exception e)
+        {
+            unLockUI();
+            ExLog.d(e.toString());
+        }
     }
 
     //    private void initLayout(final DailyWebView dailyWebView)

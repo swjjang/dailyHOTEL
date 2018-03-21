@@ -832,6 +832,7 @@
     <string name="message_detail_stay_share_sms">[데일리호텔] %1$s 추천하는 근사한 스테이!\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s\n\n추천 스테이 확인\n</string>
     <string name="message_detail_gourmet_share_sms">[데일리호텔] %1$s 추천하는 근사한 고메!\n\n%2$s\n날짜: %3$s\n주소: %4$s\n\n추천 고메 확인\n</string>
     <string name="message_detail_stay_outbound_share_sms">[데일리호텔] %1$s 추천하는 근사한 스테이!\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s</string>
+    <string name="message_detail_event_share_sms">[데일리호텔] %1$s\n\n%2$s\n\n자세히보기\n</string>
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">서버와의 접속이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
