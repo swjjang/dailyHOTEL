@@ -473,20 +473,29 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
 
             if (view != null)
             {
-                TextView textView = (TextView) view;
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                textView.setSelected(mSelectedPosition == position);
-
-                if (mSelectedPosition == position)
-                {
-                    textView.setTextColor(getColor(R.color.default_text_cb70038));
-                } else
-                {
-                    textView.setTextColor(getColor(R.color.default_text_c323232));
-                }
+                setRadiusTextView(position, (TextView) view);
             }
 
             return view;
+        }
+
+        private void setRadiusTextView(int position, TextView textView)
+        {
+            if (textView == null)
+            {
+                return;
+            }
+
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+            textView.setSelected(mSelectedPosition == position);
+
+            if (mSelectedPosition == position)
+            {
+                textView.setTextColor(getColor(R.color.default_text_cb70038));
+            } else
+            {
+                textView.setTextColor(getColor(R.color.default_text_c323232));
+            }
         }
     }
 }

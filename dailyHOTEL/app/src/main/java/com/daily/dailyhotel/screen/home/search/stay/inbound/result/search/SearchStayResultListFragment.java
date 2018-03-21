@@ -3,8 +3,14 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.result.search;
 
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
+import com.daily.dailyhotel.entity.StayCategory;
+
+import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by sheldon
@@ -23,6 +29,8 @@ public class SearchStayResultListFragment extends BasePagerFragment<SearchStayRe
         void onCalendarClick();
 
         void onRadiusClick();
+
+        Observable<Boolean> addCategoryList(List<StayCategory> categoryList);
     }
 
     @NonNull

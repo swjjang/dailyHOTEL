@@ -30,7 +30,6 @@ public class SearchStayResultViewModel extends ViewModel
     private MutableLiveData<StayFilter> mFilter = new MutableLiveData<>();
     public Location filterLocation;
 
-
     static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {
         public SearchStayViewModelFactory()
@@ -78,6 +77,16 @@ public class SearchStayResultViewModel extends ViewModel
     public StayBookDateTime getBookDateTime()
     {
         return searchViewModel == null ? null : searchViewModel.getBookDateTime();
+    }
+
+    public void setBookDateTimeObserver(BaseActivity activity, Observer<StayBookDateTime> observer)
+    {
+        searchViewModel.setBookDateTimeObserver(activity, observer);
+    }
+
+    public void removeBookDateTimeObserver(Observer<StayBookDateTime> observer)
+    {
+        searchViewModel.removeBookDateTimeObserver(observer);
     }
 
     public void setCommonDateTime(CommonDateTime commonDateTime)
@@ -148,16 +157,6 @@ public class SearchStayResultViewModel extends ViewModel
         }
 
         mCategory.setValue(category);
-    }
-
-    public void setCategoryObserver(BaseActivity baseActivity, Observer<Category> observer)
-    {
-        mCategory.observe(baseActivity, observer);
-    }
-
-    public void removeCategoryObserver(Observer<Category> observer)
-    {
-        mCategory.removeObserver(observer);
     }
 
     public boolean isDistanceSort()

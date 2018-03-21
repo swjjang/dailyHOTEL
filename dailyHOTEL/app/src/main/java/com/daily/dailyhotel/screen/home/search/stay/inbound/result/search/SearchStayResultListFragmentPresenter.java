@@ -24,6 +24,7 @@ import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
+import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
@@ -95,6 +96,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
     Observer mViewTypeObserver;
     Observer mFilterObserver;
+    Observer mBookDateTimeObserver;
 
     int mPage = PAGE_NONE; // 리스트에서 페이지
     boolean mMoreRefreshing; // 특정 스크를 이상 내려가면 더보기로 목록을 요청하는데 lock()걸리면 안되지만 계속 요청되면 안되어서 해당 키로 락을 건다.
@@ -108,6 +110,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     android.support.v4.util.Pair[] mPairsByLongPress;
 
     //
+    Category mCategory;
     int mWishPosition;
     boolean mEmptyList; // 목록, 맵이 비어있는지 확인
     DailyLocationExFactory mDailyLocationFactory;
@@ -123,6 +126,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         Bundle bundle = getFragment().getArguments();
 
         mCallByScreen = bundle.getString("callByScreen");
+        mCategory = new Category(bundle.getString("categoryCode"), bundle.getString("categoryName"));
 
         return getViewInterface().getContentView(inflater, R.layout.fragment_search_gourmet_result_data, container);
     }
@@ -162,25 +166,61 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void onChanged(@Nullable SearchStayResultTabPresenter.ViewType viewType)
             {
-                getViewInterface().scrollStop();
-
-                // 이전 타입이 맵이고 리스트로 이동하는 경우 리스트를 재 호출 한다.
-                if (mViewType == SearchStayResultTabPresenter.ViewType.MAP && viewType == SearchStayResultTabPresenter.ViewType.LIST)
+                if (isCurrentFragment() == false)
                 {
-                    mNeedToRefresh = true;
-                }
+                } else
+                {
+                    getViewInterface().scrollStop();
 
-                setViewType(viewType);
+                    // 이전 타입이 맵이고 리스트로 이동하는 경우 리스트를 재 호출 한다.
+                    if (mViewType == SearchStayResultTabPresenter.ViewType.MAP && viewType == SearchStayResultTabPresenter.ViewType.LIST)
+                    {
+                        mNeedToRefresh = true;
+                    }
+
+                    setViewType(viewType);
+                }
             }
         };
 
         mViewModel.setViewTypeObserver(activity, mViewTypeObserver);
+
+        mBookDateTimeObserver = new Observer<StayBookDateTime>()
+        {
+            @Override
+            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
+            {
+                // 날짜가 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
+                if (isCurrentFragment() == false)
+                {
+                    mNeedToRefresh = true;
+                } else
+                {
+
+                }
+
+                if (mViewType == SearchStayResultTabPresenter.ViewType.MAP)
+                {
+                    getViewInterface().setMapViewPagerVisible(false);
+                }
+            }
+        };
+
+        mViewModel.setBookDateTimeObserver(activity, mBookDateTimeObserver);
 
         mFilterObserver = new Observer<StayFilter>()
         {
             @Override
             public void onChanged(@Nullable StayFilter filter)
             {
+                if (isCurrentFragment() == false)
+                {
+                    mNeedToRefresh = true;
+                } else
+                {
+
+                }
+
                 if (mViewType == SearchStayResultTabPresenter.ViewType.MAP)
                 {
                     getViewInterface().setMapViewPagerVisible(false);
@@ -189,6 +229,12 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         };
 
         mViewModel.setFilterObserver(activity, mFilterObserver);
+    }
+
+    boolean isCurrentFragment()
+    {
+        return (mViewModel.getCategory() != null && mCategory != null//
+            && mViewModel.getCategory().code.equalsIgnoreCase(mCategory.code) == true);
     }
 
     @Override
@@ -345,6 +391,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         {
             mViewModel.removeViewTypeObserver(mViewTypeObserver);
             mViewModel.removeFilterObserver(mFilterObserver);
+            mViewModel.removeBookDateTimeObserver(mBookDateTimeObserver);
 
             mViewModel = null;
         }
@@ -558,18 +605,16 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
                 return new Pair(stays, objectItemList);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Stays, List<ObjectItem>>>()
+        }).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Pair<Stays, List<ObjectItem>>, ObservableSource<Boolean>>()
         {
             @Override
-            public void accept(Pair<Stays, List<ObjectItem>> pair) throws Exception
+            public ObservableSource<Boolean> apply(Pair<Stays, List<ObjectItem>> pair) throws Exception
             {
                 getViewInterface().setLocationProgressBarVisible(false);
 
                 Stays stays = pair.first;
                 List<ObjectItem> objectItemList = pair.second;
-
-                // TODO : 해당 카테고리 리스트로 탭을 만든다.
-                stays.getStayCategoryList();
+                Observable<Boolean> fragmentObservable;
 
                 int size = objectItemList.size();
 
@@ -596,6 +641,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                             getFragment().getFragmentEventListener().setEmptyViewVisible(true);
                         }
                     }
+
+                    fragmentObservable = Observable.just(true);
                 } else
                 {
                     mEmptyList = false;
@@ -633,14 +680,20 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                     getViewInterface().setSearchResultCount(size, MAXIMUM_NUMBER_PER_PAGE);
                     getViewInterface().setList(objectItemList, mViewModel.getSuggest().isLocationSuggestType() || mViewModel.isDistanceSort()//
                         , mViewModel.getBookDateTime().getNights() > 1, stays.activeReward, DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+
+                    if (mViewModel.getCategory() == Category.ALL)
+                    {
+                        fragmentObservable = getFragment().getFragmentEventListener().addCategoryList(stays.getStayCategoryList());
+                    } else
+                    {
+                        fragmentObservable = Observable.just(true);
+                    }
                 }
 
                 mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
-                unLockAll();
 
-                mAnalytics.onScreen(getActivity(), mViewModel.getViewType(), mViewModel.getBookDateTime()
-                    , mViewModel.getSuggest(), mViewModel.getFilter(), size == 0, mCallByScreen);
+                mAnalytics.onScreen(getActivity(), mViewModel.getViewType(), mViewModel.getBookDateTime(), mViewModel.getSuggest(), mViewModel.getFilter(), size == 0, mCallByScreen);
 
                 if (mViewModel.getSuggest().isLocationSuggestType() == true)
                 {
@@ -649,6 +702,15 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
                 mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
                     , mViewModel.getInputKeyword(), size, MAXIMUM_NUMBER_PER_PAGE);
+
+                return fragmentObservable;
+            }
+        }).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean result) throws Exception
+            {
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -1176,6 +1238,11 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         if (bookDateTimeQueryMap != null)
         {
             queryMap.putAll(bookDateTimeQueryMap);
+        }
+
+        if (mCategory != null && Category.ALL.code.equalsIgnoreCase(mCategory.code) == false)
+        {
+            queryMap.put("category", mCategory.code);
         }
 
         Map<String, Object> suggestQueryMap = getSuggestQueryMap(mViewModel.getSuggest(), mViewModel.searchViewModel.radius);

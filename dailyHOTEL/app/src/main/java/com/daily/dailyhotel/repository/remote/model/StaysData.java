@@ -49,7 +49,10 @@ public class StaysData
 
             for (StayCategoryData stayCategoryData : stayCategoryDataList)
             {
-                stayCategoryList.add(stayCategoryData.getStayCategory());
+                if (stayCategoryData.count > 0)
+                {
+                    stayCategoryList.add(stayCategoryData.getStayCategory());
+                }
             }
 
             stays.setStayCategoryList(stayCategoryList);

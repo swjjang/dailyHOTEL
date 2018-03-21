@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -20,6 +21,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayCategory;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
@@ -87,7 +89,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     @Override
     public void constructorInitialize(SearchStayResultTabActivity activity)
     {
-        setContentView(R.layout.activity_search_gourmet_result_tab_data);
+        setContentView(R.layout.activity_search_stay_result_tab_data);
 
         setAnalytics(new SearchStayResultTabAnalyticsImpl());
 
@@ -325,6 +327,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         }
 
         getViewInterface().setToolbarRadiusSpinnerVisible(suggest.isLocationSuggestType());
+        getViewInterface().setCategoryVisible(false);
     }
 
     @Override
@@ -968,5 +971,28 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         onRefresh(true);
 
         mAnalytics.onEventCampaignTagClick(getActivity(), campaignTag.index);
+    }
+
+    @Override
+    public void onCategoryTabSelected(TabLayout.Tab tab)
+    {
+        if (tab == null)
+        {
+            return;
+        }
+
+        Category category = (Category) tab.getTag();
+
+        mViewModel.setCategory(category);
+
+        getViewInterface().setCategoryTabSelect(tab.getPosition());
+
+        getViewInterface().onSelectedCategory();
+    }
+
+    @Override
+    public void onCategoryTabReselected(TabLayout.Tab tab)
+    {
+        getViewInterface().scrollTopCurrentCategory();
     }
 }

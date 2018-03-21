@@ -1,12 +1,15 @@
 package com.daily.dailyhotel.screen.home.search.stay.inbound.result;
 
 import android.app.Activity;
+import android.support.design.widget.TabLayout;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.StayCategory;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 
@@ -47,6 +50,16 @@ public interface SearchStayResultTabInterface
         void refreshCurrentFragment();
 
         void removeAllFragment();
+
+        void setCategoryVisible(boolean visible);
+
+        void setCategoryTabSelect(int position);
+
+        void onSelectedCategory();
+
+        void refreshCurrentCategory();
+
+        void scrollTopCurrentCategory();
     }
 
     interface OnEventListener extends OnBaseEventListener
@@ -70,6 +83,10 @@ public interface SearchStayResultTabInterface
         void onStayOutboundClick();
 
         void onCampaignTagClick(CampaignTag campaignTag);
+
+        void onCategoryTabSelected(TabLayout.Tab tab);
+
+        void onCategoryTabReselected(TabLayout.Tab tab);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

@@ -2,6 +2,8 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.result;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,22 +13,27 @@ import android.widget.TextView;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
+import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.Category;
+import com.daily.dailyhotel.entity.StayCategory;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.campaign.SearchStayCampaignTagListFragment;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.search.SearchStayResultListFragment;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.daily.dailyhotel.view.DailySearchResultEmptyView;
 import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivitySearchGourmetResultTabDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivitySearchStayResultTabDataBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 
-public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabInterface.OnEventListener, ActivitySearchGourmetResultTabDataBinding> implements SearchStayResultTabInterface.ViewInterface
+public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabInterface.OnEventListener, ActivitySearchStayResultTabDataBinding> implements SearchStayResultTabInterface.ViewInterface
 {
     private BaseFragmentPagerAdapter<BasePagerFragment> mFragmentPagerAdapter;
     private RadiusArrayAdapter mRadiusArrayAdapter;
@@ -37,7 +44,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
     }
 
     @Override
-    protected void setContentView(final ActivitySearchGourmetResultTabDataBinding viewDataBinding)
+    protected void setContentView(final ActivitySearchStayResultTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -46,8 +53,6 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
 
         initToolbar(viewDataBinding);
         initEmptyView(viewDataBinding);
-
-        getViewDataBinding().viewPager.setOffscreenPageLimit(1);
 
         viewDataBinding.floatingActionView.setOnViewOptionClickListener(v -> getEventListener().onViewTypeClick());
         viewDataBinding.floatingActionView.setOnFilterOptionClickListener(v -> getEventListener().onFilterClick());
@@ -64,7 +69,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         getViewDataBinding().toolbarView.setTitleText(title);
     }
 
-    private void initToolbar(ActivitySearchGourmetResultTabDataBinding viewDataBinding)
+    private void initToolbar(ActivitySearchStayResultTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -76,7 +81,6 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         mRadiusArrayAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
 
         viewDataBinding.toolbarView.setRadiusSpinnerAdapter(mRadiusArrayAdapter);
-
         viewDataBinding.toolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
         {
             @Override
@@ -134,7 +138,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         });
     }
 
-    private void initEmptyView(ActivitySearchGourmetResultTabDataBinding viewDataBinding)
+    private void initEmptyView(ActivitySearchStayResultTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -145,7 +149,6 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         viewDataBinding.emptyView.setMessage(R.string.message_searchresult_stay_empty_subtitle);
         viewDataBinding.emptyView.setBottomLeftButton(R.drawable.vector_search_shortcut_02_ob, R.string.label_searchresult_search_stayoutbound);
         viewDataBinding.emptyView.setBottomRightButton(R.drawable.vector_search_shortcut_03_gourmet, R.string.label_searchresult_search_gourmet);
-
         viewDataBinding.emptyView.setOnEventListener(new DailySearchResultEmptyView.OnEventListener()
         {
             @Override
@@ -279,7 +282,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
     @Override
     public Observable<BasePagerFragment> setCampaignTagFragment()
     {
-        clearViewPager();
+        removeAllFragment();
 
         mFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
         BasePagerFragment basePagerFragment = new SearchStayCampaignTagListFragment();
@@ -320,13 +323,15 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
     @Override
     public Observable<BasePagerFragment> setSearchResultFragment(String callByScreen)
     {
-        clearViewPager();
+        removeAllFragment();
 
         mFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
         BasePagerFragment basePagerFragment = new SearchStayResultListFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString("callByScreen", callByScreen);
+        bundle.putString("categoryName", Category.ALL.name);
+        bundle.putString("categoryCode", Category.ALL.code);
         basePagerFragment.setArguments(bundle);
 
         basePagerFragment.setOnFragmentEventListener(new SearchStayResultListFragment.OnEventListener()
@@ -360,8 +365,61 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
             {
                 getViewDataBinding().toolbarView.showRadiusSpinnerPopup();
             }
+
+            @Override
+            public Observable<Boolean> addCategoryList(List<StayCategory> categoryList)
+            {
+                if (categoryList == null)
+                {
+                    getViewDataBinding().viewPager.setOffscreenPageLimit(1);
+
+                    return null;
+                }
+
+                int hasStayCategoryCount = getHasStayCategoryCount(categoryList);
+
+                if (hasStayCategoryCount < 2)
+                {
+                    getViewDataBinding().viewPager.setOffscreenPageLimit(1);
+
+                    return null;
+                }
+
+                getViewDataBinding().viewPager.setOffscreenPageLimit(hasStayCategoryCount + 1);
+
+                setCategoryVisible(true);
+
+                return addSearchResultFragment(callByScreen, categoryList);
+            }
+
+            private int getHasStayCategoryCount(List<StayCategory> categoryList)
+            {
+                if (categoryList == null)
+                {
+                    return 0;
+                }
+
+                int hasStayCategoryCount = 0;
+
+                for (StayCategory category : categoryList)
+                {
+                    if (category.count > 0)
+                    {
+                        hasStayCategoryCount++;
+                    }
+                }
+
+                return hasStayCategoryCount;
+            }
         });
 
+        List<StayCategory> categoryList = new ArrayList<>();
+        StayCategory stayCategory = new StayCategory();
+        stayCategory.code = Category.ALL.code;
+        stayCategory.name = Category.ALL.name;
+        categoryList.add(stayCategory);
+
+        addCategoryTab(categoryList);
         mFragmentPagerAdapter.addFragment(basePagerFragment);
         getViewDataBinding().viewPager.setAdapter(mFragmentPagerAdapter);
 
@@ -375,21 +433,150 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         });
     }
 
-    private void clearViewPager()
+    private Observable<Boolean> addSearchResultFragment(String callByScreen, List<StayCategory> categoryList)
     {
-        if (getViewDataBinding() == null)
+        if (mFragmentPagerAdapter == null || categoryList == null)
+        {
+            return null;
+        }
+
+        List<Observable<BasePagerFragment>> fragmentList = new ArrayList<>();
+
+        for (StayCategory category : categoryList)
+        {
+            fragmentList.add(addSearchResultFragment(callByScreen, category));
+        }
+
+        addCategoryTab(categoryList);
+        mFragmentPagerAdapter.notifyDataSetChanged();
+
+        return Observable.zip(fragmentList, new Function<Object[], Boolean>()
+        {
+            @Override
+            public Boolean apply(Object[] objects) throws Exception
+            {
+                initCategoryTabLayout();
+
+                return true;
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread());
+    }
+
+    private void initCategoryTabLayout()
+    {
+        getViewDataBinding().viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(getViewDataBinding().categoryTabLayout));
+
+        getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+        {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab)
+            {
+                getEventListener().onCategoryTabSelected(tab);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab)
+            {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab)
+            {
+                getEventListener().onCategoryTabReselected(tab);
+            }
+        });
+
+        FontManager.apply(getViewDataBinding().categoryTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
+    }
+
+    private void addCategoryTab(@NonNull List<StayCategory> categoryList)
+    {
+        if (categoryList == null)
         {
             return;
         }
 
-        getViewDataBinding().viewPager.setAdapter(null);
-        getViewDataBinding().viewPager.removeAllViews();
+        Category category;
+        TabLayout.Tab tab;
 
-        if (mFragmentPagerAdapter != null)
+        int size = categoryList.size();
+
+        for (StayCategory stayCategory : categoryList)
         {
-            mFragmentPagerAdapter.removeAll();
-            mFragmentPagerAdapter = null;
+            category = new Category(stayCategory.code, stayCategory.name);
+
+            tab = getViewDataBinding().categoryTabLayout.newTab();
+            tab.setText(category.name);
+            tab.setTag(category);
+            getViewDataBinding().categoryTabLayout.addTab(tab);
         }
+    }
+
+    private Observable<BasePagerFragment> addSearchResultFragment(String callByScreen, StayCategory category)
+    {
+        if (mFragmentPagerAdapter == null || category == null)
+        {
+            return null;
+        }
+
+        BasePagerFragment basePagerFragment = new SearchStayResultListFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("callByScreen", callByScreen);
+        bundle.putString("categoryName", category.name);
+        bundle.putString("categoryCode", category.code);
+        basePagerFragment.setArguments(bundle);
+
+        basePagerFragment.setOnFragmentEventListener(new SearchStayResultListFragment.OnEventListener()
+        {
+            @Override
+            public void setEmptyViewVisible(boolean visible)
+            {
+                getEventListener().setEmptyViewVisible(visible);
+            }
+
+            @Override
+            public void onResearchClick()
+            {
+                getEventListener().onResearchClick();
+            }
+
+            @Override
+            public void onFilterClick()
+            {
+                getEventListener().onFilterClick();
+            }
+
+            @Override
+            public void onCalendarClick()
+            {
+                getEventListener().onCalendarClick();
+            }
+
+            @Override
+            public void onRadiusClick()
+            {
+                getViewDataBinding().toolbarView.showRadiusSpinnerPopup();
+            }
+
+            @Override
+            public Observable<Boolean> addCategoryList(List<StayCategory> categoryList)
+            {
+                return null;
+            }
+        });
+
+        mFragmentPagerAdapter.addFragment(basePagerFragment);
+
+        return basePagerFragment.getCompleteCreatedObservable().map(new Function()
+        {
+            @Override
+            public BasePagerFragment apply(Object o) throws Exception
+            {
+                return basePagerFragment;
+            }
+        });
     }
 
     @Override
@@ -455,7 +642,84 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
             return;
         }
 
-        clearViewPager();
+        getViewDataBinding().categoryTabLayout.removeAllTabs();
+
+        getViewDataBinding().viewPager.clearOnPageChangeListeners();
+        getViewDataBinding().viewPager.setAdapter(null);
+        getViewDataBinding().viewPager.removeAllViews();
+
+        if (mFragmentPagerAdapter != null)
+        {
+            mFragmentPagerAdapter.removeAll();
+            mFragmentPagerAdapter = null;
+        }
+    }
+
+    @Override
+    public void setCategoryVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().categoryLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setCategoryTabSelect(int position)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().viewPager.setCurrentItem(position);
+    }
+
+    @Override
+    public void onSelectedCategory()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return;
+        }
+
+        int count = mFragmentPagerAdapter.getCount();
+        int selectedIndex = getViewDataBinding().viewPager.getCurrentItem();
+
+        for (int i = 0; i < count; i++)
+        {
+            if (i == selectedIndex)
+            {
+                mFragmentPagerAdapter.getItem(i).onSelected();
+            } else
+            {
+                mFragmentPagerAdapter.getItem(i).onUnselected();
+            }
+        }
+    }
+
+    @Override
+    public void refreshCurrentCategory()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return;
+        }
+
+        mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onRefresh();
+    }
+
+    @Override
+    public void scrollTopCurrentCategory()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return;
+        }
+
+        mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).scrollTop();
     }
 
     private class RadiusArrayAdapter extends ArrayAdapter<CharSequence>
@@ -479,20 +743,29 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
 
             if (view != null)
             {
-                TextView textView = (TextView) view;
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                textView.setSelected(mSelectedPosition == position);
-
-                if (mSelectedPosition == position)
-                {
-                    textView.setTextColor(getColor(R.color.default_text_cb70038));
-                } else
-                {
-                    textView.setTextColor(getColor(R.color.default_text_c323232));
-                }
+                setRadiusTextView(position, (TextView) view);
             }
 
             return view;
+        }
+
+        private void setRadiusTextView(int position, TextView textView)
+        {
+            if (textView == null)
+            {
+                return;
+            }
+
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+            textView.setSelected(mSelectedPosition == position);
+
+            if (mSelectedPosition == position)
+            {
+                textView.setTextColor(getColor(R.color.default_text_cb70038));
+            } else
+            {
+                textView.setTextColor(getColor(R.color.default_text_c323232));
+            }
         }
     }
 }
