@@ -259,6 +259,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         stayOutboundSuggest.id = Long.parseLong(externalDeepLink.getIndex());
                         stayOutboundSuggest.categoryKey = externalDeepLink.getCategoryKey();
                         stayOutboundSuggest.display = externalDeepLink.getTitle();
+                        stayOutboundSuggest.displayText = externalDeepLink.getTitle();
                         setSuggest(stayOutboundSuggest);
 
                         StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
@@ -1788,7 +1789,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        String title = mStayOutboundSuggest.id == 0 ? DailyTextUtils.isTextEmpty(mStayOutboundSuggest.city) == true ? mStayOutboundSuggest.display : mStayOutboundSuggest.city : mStayOutboundSuggest.display;
+        String title = mStayOutboundSuggest.id == 0 ? (DailyTextUtils.isTextEmpty(mStayOutboundSuggest.city) == true ? mStayOutboundSuggest.displayText : mStayOutboundSuggest.city) : mStayOutboundSuggest.displayText;
 
         if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true && DailyTextUtils.isTextEmpty(title) == true)
         {

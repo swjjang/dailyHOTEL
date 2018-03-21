@@ -416,6 +416,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                             return;
                         }
 
+                        getViewInterface().removeAllFragment();
+
                         GourmetSuggestV2 suggest = suggestParcel.getSuggest();
 
                         mViewModel.setSuggest(suggest);
@@ -433,10 +435,10 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
                         mViewModel.setBookDateTime(intent, ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
 
+                        initView(mViewModel.getSuggest());
+
                         mViewModel.getFilter().reset();
                         mViewModel.setViewType(ViewType.LIST);
-
-                        initView(mViewModel.getSuggest());
 
                         setRefresh(true);
                     } catch (Exception e)

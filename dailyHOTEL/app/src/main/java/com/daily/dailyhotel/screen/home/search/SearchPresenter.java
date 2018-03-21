@@ -1305,9 +1305,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             @Override
             public void onChanged(@Nullable StayOutboundSuggest stayOutboundSuggest)
             {
-                getViewInterface().setSearchStayOutboundSuggestText(stayOutboundSuggest.display);
+                String displayName = stayOutboundSuggest.displayText;
 
-                getViewInterface().setSearchStayOutboundButtonEnabled(DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == false);
+                getViewInterface().setSearchStayOutboundSuggestText(displayName);
+
+                getViewInterface().setSearchStayOutboundButtonEnabled(DailyTextUtils.isTextEmpty(displayName) == false);
             }
         });
 
