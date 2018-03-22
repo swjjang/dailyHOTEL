@@ -95,17 +95,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + GourmetRecentlySuggestList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + GourmetRecentlySuggestList.TYPE + " TEXT NOT NULL, " //
         + GourmetRecentlySuggestList.DISPLAY + " TEXT NOT NULL, " //
-        + GourmetRecentlySuggestList.GOURMET_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + GourmetRecentlySuggestList.GOURMET_NAME + " TEXT NULL, " //
-        + GourmetRecentlySuggestList.AREA_GROUP_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + GourmetRecentlySuggestList.AREA_GROUP_NAME + " TEXT NULL, " //
-        + GourmetRecentlySuggestList.AREA_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + GourmetRecentlySuggestList.AREA_NAME + " TEXT NULL, " //
-        + GourmetRecentlySuggestList.LOCATION_NAME + " TEXT NULL, " //
-        + GourmetRecentlySuggestList.ADDRESS + " TEXT NULL, " //
-        + GourmetRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
-        + GourmetRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
-        + GourmetRecentlySuggestList.DIRECT_NAME + " TEXT NULL, " //
+        + GourmetRecentlySuggestList.SUGGEST + " TEXT NOT NULL, " //
         + GourmetRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + GourmetRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
 
@@ -114,21 +104,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayIbRecentlySuggestList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + StayIbRecentlySuggestList.TYPE + " TEXT NOT NULL, " //
         + StayIbRecentlySuggestList.DISPLAY + " TEXT NOT NULL, " //
-        + StayIbRecentlySuggestList.STATION_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.STATION_NAME + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.STATION_REGION + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.STATION_LINE + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.STAY_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.STAY_NAME + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.AREA_GROUP_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.AREA_GROUP_NAME + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.AREA_INDEX + " INTEGER NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.AREA_NAME + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.LOCATION_NAME + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.ADDRESS + " TEXT NULL, " //
-        + StayIbRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.DIRECT_NAME + " TEXT NULL, " //
+        + StayIbRecentlySuggestList.SUGGEST + " TEXT NOT NULL, " //
         + StayIbRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + StayIbRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
 
@@ -1402,11 +1378,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public void addGourmetRecentlySuggest(String type, String display //
-        , int gourmetIndex, String gourmetName //
-        , int areaGroupIndex, String areaGroupName, int areaIndex, String areaName //
-        , String locationName, String address, double latitude, double longitude //
-        , String directName, String keyword)
+    public void addGourmetRecentlySuggest(String type, String display , String suggestString, String keyword)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -1469,17 +1441,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
             contentValues.put(GourmetRecentlySuggestList.TYPE, type);
             contentValues.put(GourmetRecentlySuggestList.DISPLAY, display);
-            contentValues.put(GourmetRecentlySuggestList.GOURMET_INDEX, gourmetIndex);
-            contentValues.put(GourmetRecentlySuggestList.GOURMET_NAME, gourmetName);
-            contentValues.put(GourmetRecentlySuggestList.AREA_GROUP_INDEX, areaGroupIndex);
-            contentValues.put(GourmetRecentlySuggestList.AREA_GROUP_NAME, areaGroupName);
-            contentValues.put(GourmetRecentlySuggestList.AREA_INDEX, areaIndex);
-            contentValues.put(GourmetRecentlySuggestList.AREA_NAME, areaName);
-            contentValues.put(GourmetRecentlySuggestList.LOCATION_NAME, locationName);
-            contentValues.put(GourmetRecentlySuggestList.ADDRESS, address);
-            contentValues.put(GourmetRecentlySuggestList.LATITUDE, latitude);
-            contentValues.put(GourmetRecentlySuggestList.LONGITUDE, longitude);
-            contentValues.put(GourmetRecentlySuggestList.DIRECT_NAME, directName);
+            contentValues.put(GourmetRecentlySuggestList.SUGGEST, suggestString);
             contentValues.put(GourmetRecentlySuggestList.SAVING_TIME, savingTime);
             contentValues.put(GourmetRecentlySuggestList.KEYWORD, keyword);
 
@@ -1587,12 +1549,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public void addStayIbRecentlySuggest(String type, String display //
-        , int stationIndex, String stationName, String stationRegion, String stationLine //
-        , int stayIndex, String stayName //
-        , int areaGroupIndex, String areaGroupName, int areaIndex, String areaName //
-        , String locationName, String address, double latitude, double longitude //
-        , String directName, String keyword)
+    public void addStayIbRecentlySuggest(String type, String display, String suggestString, String keyword)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -1648,21 +1605,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
             contentValues.put(StayIbRecentlySuggestList.TYPE, type);
             contentValues.put(StayIbRecentlySuggestList.DISPLAY, display);
-            contentValues.put(StayIbRecentlySuggestList.STATION_INDEX, stationIndex);
-            contentValues.put(StayIbRecentlySuggestList.STATION_NAME, stationName);
-            contentValues.put(StayIbRecentlySuggestList.STATION_REGION, stationRegion);
-            contentValues.put(StayIbRecentlySuggestList.STATION_LINE, stationLine);
-            contentValues.put(StayIbRecentlySuggestList.STAY_INDEX, stayIndex);
-            contentValues.put(StayIbRecentlySuggestList.STAY_NAME, stayName);
-            contentValues.put(StayIbRecentlySuggestList.AREA_GROUP_INDEX, areaGroupIndex);
-            contentValues.put(StayIbRecentlySuggestList.AREA_GROUP_NAME, areaGroupName);
-            contentValues.put(StayIbRecentlySuggestList.AREA_INDEX, areaIndex);
-            contentValues.put(StayIbRecentlySuggestList.AREA_NAME, areaName);
-            contentValues.put(StayIbRecentlySuggestList.LOCATION_NAME, locationName);
-            contentValues.put(StayIbRecentlySuggestList.ADDRESS, address);
-            contentValues.put(StayIbRecentlySuggestList.LATITUDE, latitude);
-            contentValues.put(StayIbRecentlySuggestList.LONGITUDE, longitude);
-            contentValues.put(StayIbRecentlySuggestList.DIRECT_NAME, directName);
+            contentValues.put(StayIbRecentlySuggestList.SUGGEST, suggestString);
             contentValues.put(StayIbRecentlySuggestList.SAVING_TIME, savingTime);
             contentValues.put(StayIbRecentlySuggestList.KEYWORD, keyword);
 
