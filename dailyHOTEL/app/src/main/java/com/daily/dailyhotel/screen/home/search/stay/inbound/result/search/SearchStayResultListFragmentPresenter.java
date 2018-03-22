@@ -684,6 +684,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         getViewInterface().setFloatingActionViewVisible(applyFilter);
         getViewInterface().setFloatingActionViewTypeMapEnabled(false);
+        getViewInterface().setListLayoutVisible(false);
 
         if (mViewModel.getSuggest().isLocationSuggestType() == true)
         {

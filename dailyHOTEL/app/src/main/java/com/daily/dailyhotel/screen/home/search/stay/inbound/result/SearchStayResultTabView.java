@@ -373,7 +373,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
                 {
                     getViewDataBinding().viewPager.setOffscreenPageLimit(1);
 
-                    return null;
+                    return Observable.just(true);
                 }
 
                 int hasStayCategoryCount = getHasStayCategoryCount(categoryList);
@@ -382,7 +382,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
                 {
                     getViewDataBinding().viewPager.setOffscreenPageLimit(1);
 
-                    return null;
+                    return Observable.just(true);
                 }
 
                 getViewDataBinding().viewPager.setOffscreenPageLimit(hasStayCategoryCount + 1);
