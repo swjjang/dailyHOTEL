@@ -35,12 +35,12 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
         {
             case LIST:
                 AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_LIST_, null);
+                    , AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._HOTEL_LIST, null);
                 break;
 
             case MAP:
                 AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_MAP, null);
+                    , AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._HOTEL_MAP, null);
                 break;
         }
     }
@@ -54,7 +54,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
         }
 
         AnalyticsManager.getInstance(activity).recordEvent( //
-            AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED,//
+            AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED,//
             AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
     }
 
@@ -67,12 +67,12 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
         }
 
         AnalyticsManager.getInstance(activity).recordEvent( //
-            AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED,//
+            AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
             AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
     }
 
     @Override
-    public void onEventBackClick(Activity activity)
+    public void onEventBackClick(Activity activity, boolean locationSuggestType)
     {
         if (activity == null)
         {
@@ -81,10 +81,20 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
             , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.BACK_BUTTON, null);
+
+        if (mAnalyticsParam != null)
+        {
+            if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mAnalyticsParam.mCallByScreen) == true && locationSuggestType == true)
+            {
+                AnalyticsManager.getInstance(activity).recordEvent( //
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK //
+                    , AnalyticsManager.Label.NEAR_BY, null);
+            }
+        }
     }
 
     @Override
-    public void onEventCancelClick(Activity activity)
+    public void onEventCancelClick(Activity activity, boolean locationSuggestType)
     {
         if (activity == null)
         {
@@ -93,6 +103,16 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
             , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CANCEL_, null);
+
+        if (mAnalyticsParam != null)
+        {
+            if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mAnalyticsParam.mCallByScreen) == true && locationSuggestType == true)
+            {
+                AnalyticsManager.getInstance(activity).recordEvent( //
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK //
+                    , AnalyticsManager.Label.NEAR_BY, null);
+            }
+        }
     }
 
     @Override

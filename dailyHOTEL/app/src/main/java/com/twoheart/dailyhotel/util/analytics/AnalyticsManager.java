@@ -1349,7 +1349,7 @@ public class AnalyticsManager
         //
         public static final String _HOTEL_LIST = "HotelList"; // Old Ver 로 앞에 _ 삽입
         public static final String _HOTEL_MAP = "HotelMap"; // Old Ver 로 앞에 _ 삽입
-        public static final String _GOURMET_LIST_ = "GourmetList"; // Old Ver 로 앞에 _ 삽입
+        public static final String _GOURMET_LIST = "GourmetList"; // Old Ver 로 앞에 _ 삽입
         public static final String _GOURMET_MAP = "GourmetMap"; // Old Ver 로 앞에 _ 삽입
         public static final String HOTEL_LIST = "hotel_list"; // 신규 버전
         public static final String BOUTIQUE_LIST = "boutique_list"; // 신규 버전

@@ -105,9 +105,9 @@ public interface SearchStayResultTabInterface
 
         void onEventFilterClick(Activity activity);
 
-        void onEventBackClick(Activity activity);
+        void onEventBackClick(Activity activity, boolean locationSuggestType);
 
-        void onEventCancelClick(Activity activity);
+        void onEventCancelClick(Activity activity, boolean locationSuggestType);
 
         void onEventResearchClick(Activity activity, StaySuggestV2 suggest);
 

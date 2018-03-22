@@ -11,12 +11,14 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResultListFragmentInterface.AnalyticsInterface
@@ -188,7 +190,6 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
 
-        // 할인 쿠폰이 보이는 경우
         if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
@@ -206,6 +207,22 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                 , AnalyticsManager.Action.DISCOUNT_STAY, Integer.toString(stay.index), null);
         }
+
+        if (stay.trueVR == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+        }
+
+        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled()//
+            && stay.provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(stay.index), null);
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", stay.entryPosition, stay.index), null);
 
         if (stay.soldOut == true)
         {

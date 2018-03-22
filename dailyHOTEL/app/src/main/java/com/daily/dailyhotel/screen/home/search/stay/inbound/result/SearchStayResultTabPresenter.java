@@ -382,7 +382,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
         if (backPressed == true)
         {
-            mAnalytics.onEventBackClick(getActivity());
+            mAnalytics.onEventBackClick(getActivity(), mViewModel.getSuggest().isLocationSuggestType());
         }
 
         return backPressed;
@@ -727,7 +727,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     @Override
     public void onBackClick()
     {
-        mAnalytics.onEventCancelClick(getActivity());
+        mAnalytics.onEventCancelClick(getActivity(), mViewModel.getSuggest().isLocationSuggestType());
 
         setResultCode(Activity.RESULT_CANCELED);
         finish();

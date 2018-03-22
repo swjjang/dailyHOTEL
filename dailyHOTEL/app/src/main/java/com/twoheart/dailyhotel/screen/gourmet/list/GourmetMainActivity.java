@@ -493,7 +493,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             {
                 mViewType = ViewType.LIST;
 
-                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_LIST_, null);
+                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_LIST, null);
                 break;
             }
         }
@@ -539,7 +539,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         switch (mViewType)
         {
             case LIST:
-                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._GOURMET_LIST_, null);
+                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._GOURMET_LIST, null);
                 break;
 
             case MAP:
