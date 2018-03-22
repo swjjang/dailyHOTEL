@@ -15,6 +15,7 @@ import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.repository.local.model.GourmetSuggestData;
 import com.daily.dailyhotel.repository.local.model.StayIbRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.StaySuggestData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundSuggestData;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 
@@ -51,11 +52,23 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
+                String suggestString;
+                try
+                {
+                    suggestString = LoganSquare.serialize(stayOutboundSuggest.getSuggestData());
+                } catch (Exception e)
+                {
+                    suggestString = null;
+                }
+
+                if (DailyTextUtils.isTextEmpty(suggestString))
+                {
+                    return Observable.just(false);
+                }
+
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
-                dailyDb.addStayObRecentlySuggest(stayOutboundSuggest.id, stayOutboundSuggest.name, stayOutboundSuggest.city, stayOutboundSuggest.country //
-                    , stayOutboundSuggest.countryCode, stayOutboundSuggest.categoryKey, stayOutboundSuggest.display, stayOutboundSuggest.displayText //
-                    , stayOutboundSuggest.latitude, stayOutboundSuggest.longitude, keyword, true);
+                dailyDb.addStayObRecentlySuggest(stayOutboundSuggest.id, suggestString, keyword, true);
 
                 DailyDbHelper.getInstance().close();
 
@@ -85,18 +98,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToFirst();
 
-                        long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
-                        String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
-                        String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
-                        String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
-                        String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
-                        String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
-                        String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
-                        String displayText = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY_TEXT));
-                        double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
-                        double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.SUGGEST));
 
-                        stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, displayText, latitude, longitude);
+                        StayOutboundSuggestData stayOutboundSuggestData = LoganSquare.parse(suggestString, StayOutboundSuggestData.class);
+                        stayOutboundSuggest = stayOutboundSuggestData.getSuggests();
                         stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
                     }
 
@@ -160,18 +165,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToPosition(i);
 
-                        long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
-                        String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
-                        String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
-                        String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
-                        String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
-                        String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
-                        String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
-                        String displayText = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY_TEXT));
-                        double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
-                        double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.SUGGEST));
 
-                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, displayText, latitude, longitude);
+                        StayOutboundSuggestData stayOutboundSuggestData = LoganSquare.parse(suggestString, StayOutboundSuggestData.class);
+                        StayOutboundSuggest stayOutboundSuggest = stayOutboundSuggestData.getSuggests();
                         stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
 
                         stayOutboundSuggestList.add(stayOutboundSuggest);
@@ -416,19 +413,13 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToPosition(i);
 
-                        try
-                        {
-                            String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
 
-                            GourmetSuggestData gourmetSuggestData = LoganSquare.parse(suggestString, GourmetSuggestData.class);
-                            GourmetSuggestV2 staySuggest = gourmetSuggestData.getSuggest();
-                            staySuggest.menuType = GourmetSuggestV2.MenuType.RECENTLY_SEARCH;
+                        GourmetSuggestData gourmetSuggestData = LoganSquare.parse(suggestString, GourmetSuggestData.class);
+                        GourmetSuggestV2 staySuggest = gourmetSuggestData.getSuggest();
+                        staySuggest.menuType = GourmetSuggestV2.MenuType.RECENTLY_SEARCH;
 
-                            gourmetSuggestList.add(staySuggest);
-                        } catch (Exception e)
-                        {
-                            ExLog.d("sam : " + e.toString());
-                        }
+                        gourmetSuggestList.add(staySuggest);
                     }
 
                 } catch (Exception e)
@@ -626,19 +617,13 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToPosition(i);
 
-                        try
-                        {
-                            String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
 
-                            StaySuggestData staySuggestData = LoganSquare.parse(suggestString, StaySuggestData.class);
-                            StaySuggestV2 staySuggest = staySuggestData.getSuggest();
-                            staySuggest.menuType = StaySuggestV2.MenuType.RECENTLY_SEARCH;
+                        StaySuggestData staySuggestData = LoganSquare.parse(suggestString, StaySuggestData.class);
+                        StaySuggestV2 staySuggest = staySuggestData.getSuggest();
+                        staySuggest.menuType = StaySuggestV2.MenuType.RECENTLY_SEARCH;
 
-                            staySuggestList.add(staySuggest);
-                        } catch (Exception e)
-                        {
-                            ExLog.d("sam : " + e.toString());
-                        }
+                        staySuggestList.add(staySuggest);
                     }
 
                 } catch (Exception e)

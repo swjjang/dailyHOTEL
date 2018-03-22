@@ -67,15 +67,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     // added database version 3 and change version 5 (added field DISPLAY_TEXT) drop and create
     private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
         + StayObRecentlySuggestList._ID + " INTEGER  PRIMARY KEY NOT NULL, " //
-        + StayObRecentlySuggestList.NAME + " TEXT NULL, " //
-        + StayObRecentlySuggestList.CITY + " TEXT NULL, " //
-        + StayObRecentlySuggestList.COUNTRY + " TEXT NULL, " //
-        + StayObRecentlySuggestList.COUNTRY_CODE + " TEXT NULL, " //
-        + StayObRecentlySuggestList.CATEGORY_KEY + " TEXT NULL, " //
-        + StayObRecentlySuggestList.DISPLAY + " TEXT NULL, " //
-        + StayObRecentlySuggestList.DISPLAY_TEXT + " TEXT NULL, " //
-        + StayObRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
-        + StayObRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
+        + StayObRecentlySuggestList.SUGGEST + " TEXT NOT NULL, " //
         + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
 
@@ -942,9 +934,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return savingTime;
     }
 
-    public void addStayObRecentlySuggest(long _id, String name, String city, String country //
-        , String countryCode, String categoryKey, String display, String displayText //
-        , double latitude, double longitude, String keyword, boolean isUpdateDate)
+    public void addStayObRecentlySuggest(long _id, String suggestString, String keyword, boolean isUpdateDate)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -974,15 +964,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
             ContentValues contentValues = new ContentValues();
             contentValues.put(StayObRecentlySuggestColumns._ID, _id);
-            contentValues.put(StayObRecentlySuggestColumns.NAME, name);
-            contentValues.put(StayObRecentlySuggestColumns.CITY, city);
-            contentValues.put(StayObRecentlySuggestColumns.COUNTRY, country);
-            contentValues.put(StayObRecentlySuggestColumns.COUNTRY_CODE, countryCode);
-            contentValues.put(StayObRecentlySuggestColumns.CATEGORY_KEY, categoryKey);
-            contentValues.put(StayObRecentlySuggestColumns.DISPLAY, display);
-            contentValues.put(StayObRecentlySuggestColumns.DISPLAY_TEXT, displayText);
-            contentValues.put(StayObRecentlySuggestColumns.LATITUDE, latitude);
-            contentValues.put(StayObRecentlySuggestColumns.LONGITUDE, longitude);
+            contentValues.put(StayObRecentlySuggestColumns.SUGGEST, suggestString);
             contentValues.put(StayObRecentlySuggestColumns.SAVING_TIME, savingTime);
             contentValues.put(StayObRecentlySuggestColumns.KEYWORD, keyword);
 
