@@ -140,7 +140,7 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
             return;
         }
 
-        viewDataBinding.emptyView.setImage(R.drawable.no_gourmet_ic);
+        viewDataBinding.emptyView.setImage(R.drawable.no_gourmet_search_ic);
         viewDataBinding.emptyView.setMessage(R.string.message_searchresult_gourmet_empty_subtitle);
         viewDataBinding.emptyView.setBottomLeftButton(R.drawable.vector_search_shortcut_01_stay, R.string.label_searchresult_search_stay);
         viewDataBinding.emptyView.setBottomRightButton(R.drawable.vector_search_shortcut_02_ob, R.string.label_searchresult_search_stayoutbound);

@@ -145,7 +145,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
             return;
         }
 
-        viewDataBinding.emptyView.setImage(R.drawable.no_gourmet_ic);
+        viewDataBinding.emptyView.setImage(R.drawable.no_hotel_search_ic);
         viewDataBinding.emptyView.setMessage(R.string.message_searchresult_stay_empty_subtitle);
         viewDataBinding.emptyView.setBottomLeftButton(R.drawable.vector_search_shortcut_02_ob, R.string.label_searchresult_search_stayoutbound);
         viewDataBinding.emptyView.setBottomRightButton(R.drawable.vector_search_shortcut_03_gourmet, R.string.label_searchresult_search_gourmet);
