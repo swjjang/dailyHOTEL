@@ -221,10 +221,8 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         valueAnimator.setDuration(duration);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
-
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
@@ -261,8 +259,6 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
                 valueAnimator.start();
             }
         };
-
-        return observable;
     }
 
     @Override

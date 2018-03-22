@@ -234,7 +234,7 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
 
                     ObjectItem objectItem = mListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
@@ -258,7 +258,7 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
 
                     ObjectItem objectItem = mListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         getEventListener().onStayLongClick(position, objectItem.getItem(), mListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat());
                     }

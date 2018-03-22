@@ -72,7 +72,7 @@ public class SearchStaySuggestPresenter //
     SearchStaySuggestAnalyticsInterface mAnalytics;
 
     private SuggestRemoteImpl mSuggestRemoteImpl;
-    private SuggestLocalImpl mSuggestLocalImpl;
+    SuggestLocalImpl mSuggestLocalImpl;
     RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
     GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;

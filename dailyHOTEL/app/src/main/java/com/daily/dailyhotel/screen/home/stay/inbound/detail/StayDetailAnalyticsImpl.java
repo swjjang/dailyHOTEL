@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAnalyticsInterface
 {
-    private StayDetailAnalyticsParam mAnalyticsParam;
+    StayDetailAnalyticsParam mAnalyticsParam;
 
     @Override
     public void setAnalyticsParam(StayDetailAnalyticsParam analyticsParam)

@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DailySearchResultEmptyView extends ScrollView
 {
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
     private DailyViewSearchResultEmptyDataBinding mViewDataBinding;
 
     public interface OnEventListener

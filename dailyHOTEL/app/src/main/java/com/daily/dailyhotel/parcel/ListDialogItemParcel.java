@@ -19,7 +19,7 @@ public class ListDialogItemParcel<T extends Parcelable> implements Parcelable
 
     public T getItem()
     {
-        return (T) mItem;
+        return mItem;
     }
 
     public ListDialogItemParcel(Parcel in)

@@ -433,7 +433,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         });
     }
 
-    private Observable<Boolean> addSearchResultFragment(String callByScreen, List<StayCategory> categoryList)
+    Observable<Boolean> addSearchResultFragment(String callByScreen, List<StayCategory> categoryList)
     {
         if (mFragmentPagerAdapter == null || categoryList == null)
         {
@@ -462,7 +462,7 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
         }).subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    private void initCategoryTabLayout()
+    void initCategoryTabLayout()
     {
         getViewDataBinding().viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(getViewDataBinding().categoryTabLayout));
 

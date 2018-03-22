@@ -31,7 +31,7 @@ public class PreferenceRegion
         this.areaType = areaType;
     }
 
-    public PreferenceRegion(Province province) throws Exception
+    public PreferenceRegion(Province province)
     {
         if (province == null)
         {

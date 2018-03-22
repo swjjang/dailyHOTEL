@@ -208,7 +208,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
 
                     ObjectItem objectItem = mListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
@@ -233,7 +233,7 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
 
                     ObjectItem objectItem = mListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         getEventListener().onStayLongClick(position, objectItem.getItem(), mListAdapter.getItemCount()//
                             , ((DailyStayCardView) view).getOptionsCompat());

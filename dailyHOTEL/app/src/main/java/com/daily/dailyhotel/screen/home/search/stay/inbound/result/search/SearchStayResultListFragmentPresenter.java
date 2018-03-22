@@ -662,7 +662,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         }));
     }
 
-    private List<ObjectItem> toObjectItemList(List<Stay> stayList)
+    List<ObjectItem> toObjectItemList(List<Stay> stayList)
     {
         List<ObjectItem> objectItemList = new ArrayList<>();
 
@@ -677,7 +677,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         return objectItemList;
     }
 
-    private void setEmptyResultList(boolean applyFilter)
+    void setEmptyResultList(boolean applyFilter)
     {
         mEmptyList = true;
         mPage = PAGE_NONE;
@@ -703,7 +703,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         }
     }
 
-    private void setResultList(Stays stays, List<ObjectItem> objectItemList, boolean applyFilter)
+    void setResultList(Stays stays, List<ObjectItem> objectItemList, boolean applyFilter)
     {
         if (stays == null || objectItemList == null)
         {
@@ -1336,6 +1336,14 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
                 queryMap.put("radius", radius);
+                break;
+            }
+
+            case STATION:
+            {
+                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) suggest.getSuggestItem();
+
+                queryMap.put("subwayIdx", suggestItem.index);
                 break;
             }
 

@@ -73,7 +73,7 @@
     <string name="label_nights">%1$d박</string>
     <string name="label_stay_detail_satisfaction">실제 투숙객 %1$d%%가 만족하였습니다. (%2$s명 평가)</string>
     <string name="label_gourmet_detail_satisfaction">실제 방문객 %1$d%%가 만족하였습니다. (%2$s명 평가)</string>
-    <string name="label_list_satisfaction">%1$d%% 만족</string>
+    <string name="label_list_satisfaction">%1$d%%</string>
     <string name="label_sender">보낸사람</string>
     <string name="label_send_mail">문의하기</string>
     <string name="label_daily_concierge_to_call">데일리 컨시어지 문의하기</string>

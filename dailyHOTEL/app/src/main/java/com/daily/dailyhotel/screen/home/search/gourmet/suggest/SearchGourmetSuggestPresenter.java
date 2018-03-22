@@ -63,8 +63,8 @@ public class SearchGourmetSuggestPresenter //
 {
     SearchGourmetSuggestAnalyticsInterface mAnalytics;
 
-    private SuggestRemoteImpl mSuggestRemoteImpl;
-    private SuggestLocalImpl mSuggestLocalImpl;
+    SuggestRemoteImpl mSuggestRemoteImpl;
+    SuggestLocalImpl mSuggestLocalImpl;
     RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
     GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;

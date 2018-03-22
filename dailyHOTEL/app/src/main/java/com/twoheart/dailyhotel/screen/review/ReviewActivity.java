@@ -72,7 +72,7 @@ public class ReviewActivity extends BaseActivity
     Review mReview;
     private Dialog mDialog;
     String mReviewGrade;
-    private String mReviewStatusType;
+    String mReviewStatusType;
 
     DailyEmoticonImageView[] mDailyEmoticonImageView;
     ReviewLayout mReviewLayout;
@@ -945,7 +945,7 @@ public class ReviewActivity extends BaseActivity
         }
     }
 
-    private void setTempReview(JSONArray scoreJsonArray, JSONArray pickJsonArray, String comment) throws JSONException
+    void setTempReview(JSONArray scoreJsonArray, JSONArray pickJsonArray, String comment) throws JSONException
     {
         Map<String, Integer> scoreMap = new HashMap<>();
         Map<String, String> pickMap = new HashMap<>();
@@ -1000,7 +1000,7 @@ public class ReviewActivity extends BaseActivity
         mReview.selectedComment = comment;
     }
 
-    private void saveTempReview()
+    void saveTempReview()
     {
         JSONArray scoreReviewJSONArray = null, pickReviewJSONArray = null;
         String comment = null;
@@ -1102,7 +1102,7 @@ public class ReviewActivity extends BaseActivity
         }
     }
 
-    private void deleteTempReview(Review review)
+    void deleteTempReview(Review review)
     {
         if (review == null)
         {

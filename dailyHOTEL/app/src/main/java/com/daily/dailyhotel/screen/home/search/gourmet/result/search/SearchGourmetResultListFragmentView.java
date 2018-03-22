@@ -234,7 +234,7 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
 
                     ObjectItem objectItem = mListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         if (view instanceof DailyGourmetCardView == true)
                         {
@@ -258,7 +258,7 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
 
                     ObjectItem objectItem = mListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         getEventListener().onGourmetLongClick(position, objectItem.getItem(), mListAdapter.getItemCount(), ((DailyGourmetCardView) view).getOptionsCompat());
                     }

@@ -69,7 +69,7 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
                 recentlyCardView[i].setTag(recentlyHistory);
                 recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
 
-                if (suggest.categoryKey == StayOutboundSuggest.CATEGORY_LOCATION)
+                if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(suggest.categoryKey) == true)
                 {
                     recentlyCardView[i].setNameText(getString(R.string.label_search_suggest_type_location_item_format, suggest.displayText));
                 } else

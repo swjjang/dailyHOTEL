@@ -57,7 +57,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 {
     public static final float DEFAULT_RADIUS = 10.0f;
 
-    private SearchStayResultTabInterface.AnalyticsInterface mAnalytics;
+    SearchStayResultTabInterface.AnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
@@ -235,7 +235,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         }
     }
 
-    private void clearDeepLink()
+    void clearDeepLink()
     {
         if (mDailyDeepLink == null)
         {
@@ -317,7 +317,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         initView(suggest);
     }
 
-    private void initView(StaySuggestV2 suggest)
+    void initView(StaySuggestV2 suggest)
     {
         if (suggest == null)
         {
@@ -456,6 +456,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                         {
                             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DISTANCE;
                             mViewModel.searchViewModel.radius = DEFAULT_RADIUS;
+
+                            getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
                         } else
                         {
                             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DEFAULT;
@@ -661,7 +663,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         }));
     }
 
-    private void parseCampaignTagListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
+    void parseCampaignTagListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
     {
         if (externalDeepLink == null || commonDateTime == null)
         {
@@ -693,7 +695,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         mViewModel.setSuggest(suggest);
     }
 
-    private void parseSearchStayResultListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
+    void parseSearchStayResultListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
     {
         if (externalDeepLink == null || commonDateTime == null)
         {
