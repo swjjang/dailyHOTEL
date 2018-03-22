@@ -20,7 +20,7 @@ public class SearchGourmetResultTabAnalyticsImpl implements SearchGourmetResultT
         {
             case LIST:
                 AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_LIST_, null);
+                    , AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_LIST, null);
                 break;
 
             case MAP:

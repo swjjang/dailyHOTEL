@@ -24,6 +24,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
@@ -1446,8 +1447,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
+        SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
+        analyticsParam.mCallByScreen = AnalyticsManager.Screen.SEARCH_MAIN;
+
         startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity(), DailyCategoryType.STAY_ALL//
-            , checkInDateTime, checkOutDateTime, suggest, inputKeyWord, null)//
+            , checkInDateTime, checkOutDateTime, suggest, inputKeyWord, analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
