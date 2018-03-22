@@ -91,8 +91,8 @@ public class StaySubwayTabView extends LinearLayout implements View.OnClickListe
             return;
         }
 
-        int dividerCount = position;
-        int childIndex = position + dividerCount;
+        final int DIVIDER_COUNT = position;
+        int childIndex = position + DIVIDER_COUNT;
         int childCount = getChildCount();
 
         if (childIndex >= childCount)

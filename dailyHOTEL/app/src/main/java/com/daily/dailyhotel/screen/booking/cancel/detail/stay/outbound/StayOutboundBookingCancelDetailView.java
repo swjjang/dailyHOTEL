@@ -303,7 +303,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
             return null;
         }
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -389,8 +389,6 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 300, null);
             }
         };
-
-        return observable;
     }
 
     @Override

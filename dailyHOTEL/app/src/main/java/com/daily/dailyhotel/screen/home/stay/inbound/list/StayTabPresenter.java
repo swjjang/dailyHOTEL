@@ -505,7 +505,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         }));
     }
 
-    private Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> processRegionCategoryDeepLink(@NonNull DailyDeepLink deepLink, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
+    Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> processRegionCategoryDeepLink(@NonNull DailyDeepLink deepLink, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
     {
         if (deepLink.isExternalDeepLink() == true)
         {
@@ -531,7 +531,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         return null;
     }
 
-    private Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> processRegionCategoryByPreferenceRegion(PreferenceRegion preferenceRegion, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
+    Pair<PreferenceRegion.AreaType, Pair<StayRegion, List<Category>>> processRegionCategoryByPreferenceRegion(PreferenceRegion preferenceRegion, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
     {
         if (preferenceRegion == null)
         {
@@ -552,7 +552,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         }
     }
 
-    private void setPreferenceRegion(PreferenceRegion.AreaType areaType, StayRegion stayRegion)
+    void setPreferenceRegion(PreferenceRegion.AreaType areaType, StayRegion stayRegion)
     {
         if (areaType == null || stayRegion == null)
         {

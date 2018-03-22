@@ -58,9 +58,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_nearby_data, parent, false);
 
-                LocationViewHolder locationViewHolder = new LocationViewHolder(dataBinding);
-
-                return locationViewHolder;
+                return new LocationViewHolder(dataBinding);
             }
 
             case ObjectItem.TYPE_SECTION:
@@ -69,9 +67,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_section_data, parent, false);
 
-                SectionViewHolder sectionViewHolder = new SectionViewHolder(dataBinding);
-
-                return sectionViewHolder;
+                return new SectionViewHolder(dataBinding);
             }
 
             case ObjectItem.TYPE_FOOTER_VIEW:
@@ -80,9 +76,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_delete_data, parent, false);
 
-                FooterViewHolder footerViewHolder = new FooterViewHolder(dataBinding);
-
-                return footerViewHolder;
+                return new FooterViewHolder(dataBinding);
             }
 
             case ObjectItem.TYPE_ENTRY:
@@ -91,9 +85,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_entry_data, parent, false);
 
-                EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
-
-                return entryViewHolder;
+                return new EntryViewHolder(dataBinding);
             }
         }
 

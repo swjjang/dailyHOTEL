@@ -118,8 +118,6 @@ public interface SearchGourmetResultListFragmentInterface
 
         void onEventMarkerClick(Activity activity, String name);
 
-        void onEventLocation(Activity activity, GourmetBookDateTime gourmetBookDateTime, String suggest, int searchCount, int searchMaxCount);
-
         void onEventCallClick(Activity activity);
 
         void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggestV2 suggest);

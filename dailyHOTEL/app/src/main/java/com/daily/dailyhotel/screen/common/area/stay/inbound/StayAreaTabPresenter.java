@@ -57,9 +57,9 @@ import io.reactivex.functions.Function;
  */
 public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActivity, StayAreaTabInterface.ViewInterface> implements StayAreaTabInterface.OnEventListener
 {
-    private StayAreaTabInterface.AnalyticsInterface mAnalytics;
+    StayAreaTabInterface.AnalyticsInterface mAnalytics;
 
-    private StayRemoteImpl mStayRemoteImpl;
+    StayRemoteImpl mStayRemoteImpl;
 
     StayAreaViewModel mStayAreaViewModel;
     String mCategoryCode;
@@ -317,7 +317,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         }));
     }
 
-    private StayRegion getRegionByPreferenceRegion(DailyCategoryType categoryType, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
+    StayRegion getRegionByPreferenceRegion(DailyCategoryType categoryType, List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaGroupMap)
     {
         StayRegion stayRegion = null;
         PreferenceRegion preferenceRegion = getPreferenceRegion(categoryType);
@@ -640,7 +640,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
         analyticsOnScreen(PreferenceRegion.AreaType.SUBWAY_AREA);
     }
 
-    private void analyticsOnScreen(PreferenceRegion.AreaType areaType)
+    void analyticsOnScreen(PreferenceRegion.AreaType areaType)
     {
         if (areaType == null)
         {

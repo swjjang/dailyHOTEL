@@ -122,8 +122,6 @@ public interface SearchStayResultListFragmentInterface
 
         void onEventMarkerClick(Activity activity, String name);
 
-        void onEventLocation(Activity activity, StayBookDateTime bookDateTime, String suggest, int searchCount, int searchMaxCount);
-
         void onEventCallClick(Activity activity);
 
         void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggestV2 suggest, String inputKeyword//

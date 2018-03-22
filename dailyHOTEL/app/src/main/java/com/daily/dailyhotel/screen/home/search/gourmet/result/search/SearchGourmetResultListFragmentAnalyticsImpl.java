@@ -59,34 +59,6 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
     }
 
     @Override
-    public void onEventLocation(Activity activity, GourmetBookDateTime gourmetBookDateTime, String suggest, int searchCount, int searchMaxCount)
-    {
-        if (activity == null || gourmetBookDateTime == null)
-        {
-            return;
-        }
-
-        Map<String, String> params = new HashMap<>();
-
-        try
-        {
-            params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
-            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
-            params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(searchCount > searchMaxCount ? searchMaxCount : searchCount));
-
-            params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
-
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-                , searchCount == 0 ? "AroundSearchNotFound_LocationList_gourmet" : "AroundSearchClicked_LocationList_gourmet"//
-                , suggest, params);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    @Override
     public void onEventCallClick(Activity activity)
     {
         if (activity == null)

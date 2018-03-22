@@ -629,7 +629,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         getWindow().setSharedElementReturnTransition(outTransitionSet);
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -667,8 +667,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
                 });
             }
         };
-
-        return observable;
     }
 
     @Override

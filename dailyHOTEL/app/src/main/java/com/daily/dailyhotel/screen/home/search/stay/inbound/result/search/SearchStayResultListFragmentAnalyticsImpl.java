@@ -72,20 +72,20 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             params.put(AnalyticsManager.KeyType.CATEGORY, Category.ALL.code);
 
 
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuffer.append("[sort:");
-            stringBuffer.append(getFilterSortString(stayFilter.sortType));
-            stringBuffer.append(",persons:");
-            stringBuffer.append(stayFilter.person);
-            stringBuffer.append(",type:");
-            stringBuffer.append(getFilterBedType(stayFilter.flagBedTypeFilters));
-            stringBuffer.append(",facility:");
-            stringBuffer.append(getFilterAmenityString(stayFilter.flagAmenitiesFilters));
-            stringBuffer.append(",Room facility:");
-            stringBuffer.append(getFilterRoomAmenityString(stayFilter.flagRoomAmenitiesFilters));
+            stringBuilder.append("[sort:");
+            stringBuilder.append(getFilterSortString(stayFilter.sortType));
+            stringBuilder.append(",persons:");
+            stringBuilder.append(stayFilter.person);
+            stringBuilder.append(",type:");
+            stringBuilder.append(getFilterBedType(stayFilter.flagBedTypeFilters));
+            stringBuilder.append(",facility:");
+            stringBuilder.append(getFilterAmenityString(stayFilter.flagAmenitiesFilters));
+            stringBuilder.append(",Room facility:");
+            stringBuilder.append(getFilterRoomAmenityString(stayFilter.flagRoomAmenitiesFilters));
 
-            params.put(AnalyticsManager.KeyType.FILTER, stringBuffer.toString());
+            params.put(AnalyticsManager.KeyType.FILTER, stringBuilder.toString());
             params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(activity).isBenefitAlarm() ? "on" : "off");
 
             params.put(AnalyticsManager.KeyType.VIEW_TYPE //
@@ -135,36 +135,6 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     public void onEventMarkerClick(Activity activity, String name)
     {
 
-    }
-
-    @Override
-    public void onEventLocation(Activity activity, StayBookDateTime bookDateTime, String suggest, int searchCount, int searchMaxCount)
-    {
-        if (activity == null || bookDateTime == null)
-        {
-            return;
-        }
-
-        Map<String, String> params = new HashMap<>();
-
-        try
-        {
-            params.put(AnalyticsManager.KeyType.CHECK_IN, bookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, bookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(bookDateTime.getNights()));
-            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(searchCount > searchMaxCount ? searchMaxCount : searchCount));
-
-            params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
-
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-                , searchCount == 0 ? "AroundSearchNotFound_LocationList_stay" : "AroundSearchClicked_LocationList_stay"//
-                , suggest, params);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
     }
 
     @Override
@@ -351,8 +321,6 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        StringBuffer sortStringBuffer = new StringBuffer();
-
         switch (sortType)
         {
             case DEFAULT:
@@ -383,29 +351,29 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             return AnalyticsManager.Label.SORTFILTER_NONE;
         } else
         {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
 
             if ((flagBedTypeFilters & StayFilter.FLAG_BED_DOUBLE) == StayFilter.FLAG_BED_DOUBLE)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append(',');
             }
 
             if ((flagBedTypeFilters & StayFilter.FLAG_BED_TWIN) == StayFilter.FLAG_BED_TWIN)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_TWIN).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TWIN).append(',');
             }
 
             if ((flagBedTypeFilters & StayFilter.FLAG_BED_HEATEDFLOORS) == StayFilter.FLAG_BED_HEATEDFLOORS)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(',');
             }
 
-            if (stringBuffer.charAt(stringBuffer.length() - 1) == ',')
+            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
             {
-                stringBuffer.setLength(stringBuffer.length() - 1);
+                stringBuilder.setLength(stringBuilder.length() - 1);
             }
 
-            return stringBuffer.toString();
+            return stringBuilder.toString();
         }
     }
 
@@ -417,54 +385,54 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             return AnalyticsManager.Label.SORTFILTER_NONE;
         } else
         {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PARKING) == StayFilter.FLAG_AMENITIES_PARKING)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_POOL) == StayFilter.FLAG_AMENITIES_POOL)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_POOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_POOL).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_FITNESS) == StayFilter.FLAG_AMENITIES_FITNESS)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SAUNA) == StayFilter.FLAG_AMENITIES_SAUNA)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_AMENITIES_BUSINESS_CENTER)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_AMENITIES_SHARED_BBQ)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(',');
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PET) == StayFilter.FLAG_AMENITIES_PET)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
             }
 
-            if (stringBuffer.charAt(stringBuffer.length() - 1) == ',')
+            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
             {
-                stringBuffer.setLength(stringBuffer.length() - 1);
+                stringBuilder.setLength(stringBuilder.length() - 1);
             }
 
-            return stringBuffer.toString();
+            return stringBuilder.toString();
         }
     }
 
@@ -476,64 +444,64 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             return AnalyticsManager.Label.SORTFILTER_NONE;
         } else
         {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_ROOM_AMENITIES_WIFI)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_ROOM_AMENITIES_BATHTUB)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM)
             {
-                stringBuffer.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(',');
             }
 
-            if (stringBuffer.charAt(stringBuffer.length() - 1) == ',')
+            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
             {
-                stringBuffer.setLength(stringBuffer.length() - 1);
+                stringBuilder.setLength(stringBuilder.length() - 1);
             }
 
-            return stringBuffer.toString();
+            return stringBuilder.toString();
         }
     }
 }

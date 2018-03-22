@@ -53,7 +53,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
     private CalendarImpl mCalendarImpl;
     private int mStayIndex;
-    private SparseIntArray mSoldOutDays;
+    SparseIntArray mSoldOutDays;
 
     public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -237,7 +237,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         }));
     }
 
-    private SparseIntArray getHolidayArray(String calendarHolidays)
+    SparseIntArray getHolidayArray(String calendarHolidays)
     {
         if (DailyTextUtils.isTextEmpty(calendarHolidays) == true)
         {
@@ -263,7 +263,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         return holidaySparseIntArray;
     }
 
-    private void selectCalendarBookDateTime(String checkInDateTime, String checkOutDateTime) throws ParseException
+    void selectCalendarBookDateTime(String checkInDateTime, String checkOutDateTime) throws ParseException
     {
         int checkInDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
         int checkOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
@@ -410,7 +410,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         onBackClick();
     }
 
-    private void reset()
+    void reset()
     {
         mCheckInDateTime = null;
         mCheckOutDateTime = null;

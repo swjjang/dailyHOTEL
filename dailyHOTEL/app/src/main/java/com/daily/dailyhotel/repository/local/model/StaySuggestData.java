@@ -45,8 +45,7 @@ public class StaySuggestData
 
         public StaySuggestV2.SuggestItem getSuggestItem()
         {
-            StaySuggestV2.SuggestItem suggestItem = new StaySuggestV2.SuggestItem(name);
-            return suggestItem;
+            return new StaySuggestV2.SuggestItem(name);
         }
     }
 
@@ -158,8 +157,7 @@ public class StaySuggestData
 
         public StaySuggestV2.Direct getDirect()
         {
-            StaySuggestV2.Direct direct = new StaySuggestV2.Direct(name);
-            return direct;
+            return new StaySuggestV2.Direct(name);
         }
     }
 
@@ -230,8 +228,7 @@ public class StaySuggestData
 
         public StaySuggestV2.Section getSection()
         {
-            StaySuggestV2.Section section = new StaySuggestV2.Section(name);
-            return section;
+            return new StaySuggestV2.Section(name);
         }
     }
 
