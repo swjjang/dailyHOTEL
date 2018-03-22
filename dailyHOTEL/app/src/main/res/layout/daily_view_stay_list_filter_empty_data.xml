@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="110dp"
+            android:scaleType="fitEnd"
+            app:srcCompat="@drawable/no_hotel_ic"/>
+
+        <LinearLayout
+            android:id="@+id/filterTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/filterMessageTextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message_not_exist_filters"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="18dp"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/filterMessageTextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:gravity="center"
+                android:text="@string/message_changing_filter_option"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="14dp"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:minHeight="100dp">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/filterTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:text="@string/label_hotel_list_changing_filter"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+        </FrameLayout>
+    </LinearLayout>
+</layout>
