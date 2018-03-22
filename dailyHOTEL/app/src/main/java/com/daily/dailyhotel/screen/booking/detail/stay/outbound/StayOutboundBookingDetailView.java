@@ -404,7 +404,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 300, null);
             }
         };
-
+    }
 
     @Override
     public void setBookingDate(SpannableString checkInDate, SpannableString checkOutDate, int nights)
