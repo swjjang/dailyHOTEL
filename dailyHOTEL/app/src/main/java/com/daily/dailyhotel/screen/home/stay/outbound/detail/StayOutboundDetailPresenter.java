@@ -111,6 +111,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
     public static final int STATUS_FINISH = 4;
+    public static final int STATUS_ROOM_LIST_LOADING = 5;
 
     public enum PriceType
     {

@@ -796,6 +796,15 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
                 break;
             }
 
+            case StayOutboundDetailPresenter.STATUS_ROOM_LIST_LOADING:
+            {
+                getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
+
+                getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_room_loading);
+                break;
+            }
+
             case StayOutboundDetailPresenter.STATUS_BOOKING:
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);

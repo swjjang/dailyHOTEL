@@ -846,6 +846,7 @@
     <string name="act_hotel_tab_btn">예약하기</string>
     <string name="act_hotel_search_ticket">상품 선택하기</string>
     <string name="act_hotel_search_room">객실 선택하기</string>
+    <string name="act_hotel_search_room_loading">객실 불러오는중...</string>
     <string name="act_hotel_booking">예약 진행하기</string>
     <string name="act_hotel_soldout">판매완료</string>
 
