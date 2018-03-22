@@ -286,13 +286,13 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         {
             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DISTANCE;
             mViewModel.getFilter().sortType = StayFilter.SortType.DISTANCE;
-            mViewModel.searchViewModel.radius = DEFAULT_RADIUS;
+            mViewModel.searchViewModel.setRadius(DEFAULT_RADIUS);
 
             getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
         } else
         {
             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DEFAULT;
-            mViewModel.searchViewModel.radius = 0.0f;
+            mViewModel.searchViewModel.setRadius(0.0f);
         }
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_ANALYTICS));
@@ -455,13 +455,13 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                         if (suggest.isLocationSuggestType() == true)
                         {
                             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DISTANCE;
-                            mViewModel.searchViewModel.radius = DEFAULT_RADIUS;
+                            mViewModel.searchViewModel.setRadius(DEFAULT_RADIUS);
 
                             getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
                         } else
                         {
                             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DEFAULT;
-                            mViewModel.searchViewModel.radius = 0.0f;
+                            mViewModel.searchViewModel.setRadius(0.0f);
                         }
 
                         mViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
@@ -565,7 +565,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                     mViewModel.resetCategory = true;
                     mViewModel.getFilter().reset();
 
-                    mViewModel.searchViewModel.radius = DEFAULT_RADIUS;
+                    mViewModel.searchViewModel.setRadius(DEFAULT_RADIUS);
                     getViewInterface().setOptionFilterSelected(false);
                     getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
 
@@ -862,7 +862,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             categoryList.add(mViewModel.getCategory().code);
 
             Location location = mViewModel.getFilter().isDistanceSort() ? mViewModel.filterLocation : null;
-            float radius = mViewModel.getSuggest().isLocationSuggestType() ? mViewModel.searchViewModel.radius : 0.0f;
+            float radius = mViewModel.getSuggest().isLocationSuggestType() ? mViewModel.searchViewModel.getRadius() : 0.0f;
 
             startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
                 , DailyCategoryType.STAY_ALL, mViewModel.getViewType().name()//
@@ -914,12 +914,12 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     @Override
     public void onChangedRadius(float radius)
     {
-        if (mViewModel.searchViewModel.radius == radius)
+        if (mViewModel.searchViewModel.getRadius() == radius)
         {
             return;
         }
 
-        mViewModel.searchViewModel.radius = radius;
+        mViewModel.searchViewModel.setRadius(radius);
 
         getViewInterface().refreshCurrentFragment();
 
