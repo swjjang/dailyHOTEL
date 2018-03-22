@@ -456,6 +456,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                         {
                             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DISTANCE;
                             mViewModel.searchViewModel.radius = DEFAULT_RADIUS;
+
+                            getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
                         } else
                         {
                             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DEFAULT;
