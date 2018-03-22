@@ -21,6 +21,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 8. 4..
  */
 
+@Deprecated
 public class StayCampaignTagListView //
     extends BaseBlurView<StayCampaignTagListView.OnEventListener, ActivityPlaceCampaignTagListDataBinding> //
     implements StayCampaignTagListInterface

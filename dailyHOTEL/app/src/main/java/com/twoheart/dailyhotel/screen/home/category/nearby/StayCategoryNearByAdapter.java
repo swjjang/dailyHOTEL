@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class StayCategoryNearByAdapter extends StayListAdapter
 {
     public StayCategoryNearByAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)

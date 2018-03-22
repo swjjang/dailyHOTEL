@@ -28,6 +28,7 @@ import java.util.List;
  * Created by android_sam on 2017. 8. 8..
  */
 
+@Deprecated
 public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     Context mContext;

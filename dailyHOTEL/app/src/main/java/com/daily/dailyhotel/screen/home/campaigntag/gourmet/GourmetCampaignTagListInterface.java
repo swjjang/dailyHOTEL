@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 8. 4..
  */
 
+@Deprecated
 public interface GourmetCampaignTagListInterface extends BaseBlurViewInterface
 {
     void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookDateTime gourmetBookDateTime);

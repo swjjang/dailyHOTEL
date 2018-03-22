@@ -24,19 +24,20 @@ import com.twoheart.dailyhotel.util.Constants;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
 
-    public static Intent newInstance(Context context, ViewType viewType, StaySearchCuration stayCuration, boolean isFixedLocation)
-    {
-        Intent intent = new Intent(context, StaySearchResultCurationActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCuration);
-        intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, ViewType viewType, StaySearchCuration stayCuration, boolean isFixedLocation)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultCurationActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCuration);
+    //        intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void initIntent(Intent intent)

@@ -28,7 +28,6 @@ import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;

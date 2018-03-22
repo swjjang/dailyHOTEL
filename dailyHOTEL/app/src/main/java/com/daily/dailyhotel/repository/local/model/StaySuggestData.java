@@ -84,7 +84,7 @@ public class StaySuggestData
         public int index;
 
         @JsonField
-                public String name;
+        public String name;
 
         @JsonField
         public int discountAvg;
@@ -115,7 +115,7 @@ public class StaySuggestData
         public int index;
 
         @JsonField
-                public String name;
+        public String name;
 
         @JsonField
         public AreaData area;
@@ -138,7 +138,7 @@ public class StaySuggestData
         public int index;
 
         @JsonField
-                public String name;
+        public String name;
 
         public StaySuggestV2.Area getArea()
         {

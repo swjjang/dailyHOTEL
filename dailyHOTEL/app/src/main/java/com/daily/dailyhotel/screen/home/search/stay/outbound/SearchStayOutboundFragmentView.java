@@ -12,7 +12,6 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
-import com.daily.dailyhotel.view.DailySearchRecentlyCardView;
 import com.daily.dailyhotel.view.DailySearchStayOutboundAreaCardView;
 import com.daily.dailyhotel.view.DailySearchStayOutboundRecentlyCardView;
 import com.twoheart.dailyhotel.R;

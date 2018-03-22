@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.search.stay.outbound.research;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.screen.home.search.SearchStayOutboundFilterView;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundFragment;

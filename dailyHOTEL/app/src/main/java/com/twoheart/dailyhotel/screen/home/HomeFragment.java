@@ -68,7 +68,6 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
-import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
@@ -80,7 +79,6 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
-import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -431,8 +429,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             analyticsParam.mCallByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
 
                             startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
-                                , categoryType
-                                , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                , categoryType, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , suggest, null, analyticsParam)//
                                 , Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -442,21 +439,19 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
 
 
-
-
-//                        try
-//                        {
-//                            StayBookingDay stayBookingDay = new StayBookingDay();
-//                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-//                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
-//
-//                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
-//                                , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
-//                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-//                        } catch (Exception e)
-//                        {
-//                            ExLog.e(e.toString());
-//                        }
+                        //                        try
+                        //                        {
+                        //                            StayBookingDay stayBookingDay = new StayBookingDay();
+                        //                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                        //                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+                        //
+                        //                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
+                        //                                , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                        //                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        //                        } catch (Exception e)
+                        //                        {
+                        //                            ExLog.e(e.toString());
+                        //                        }
                     }
                     break;
                 }

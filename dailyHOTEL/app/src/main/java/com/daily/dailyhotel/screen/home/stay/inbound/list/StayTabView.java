@@ -395,7 +395,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
     @Override
     public void expandedToolbar()
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }

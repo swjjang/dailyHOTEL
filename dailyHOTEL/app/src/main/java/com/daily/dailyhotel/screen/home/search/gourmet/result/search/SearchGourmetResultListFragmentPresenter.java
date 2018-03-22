@@ -31,7 +31,6 @@ import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;

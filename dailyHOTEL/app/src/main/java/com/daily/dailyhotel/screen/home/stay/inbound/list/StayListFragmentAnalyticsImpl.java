@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;

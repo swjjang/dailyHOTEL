@@ -25,6 +25,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 5. 19..
  */
 
+@Deprecated
 public class StayCategoryNearByListLayout extends StayListLayout
 {
     private TextView mResultTextView;

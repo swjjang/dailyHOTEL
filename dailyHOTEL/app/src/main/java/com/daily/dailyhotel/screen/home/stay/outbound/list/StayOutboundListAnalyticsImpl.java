@@ -113,12 +113,12 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
                     break;
             }
 
-//            if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
-//                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
-//                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND.equalsIgnoreCase(category) == false)
-//            {
-//                category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
-//            }
+            //            if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
+            //                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
+            //                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND.equalsIgnoreCase(category) == false)
+            //            {
+            //                category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
+            //            }
 
             AnalyticsManager.getInstance(activity).recordEvent(category, suggest.display, keyword, null);
 

@@ -12,7 +12,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCategoryCuration;
-import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
 import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
@@ -21,6 +20,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StayCategoryNearByCurationActivity extends StayCategoryCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
@@ -28,16 +28,16 @@ public class StayCategoryNearByCurationActivity extends StayCategoryCurationActi
 
     private SearchType mSearchType;
 
-    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, StayCategoryNearByCuration stayCategoryNearByCuration, boolean isFixedLocation)
-    {
-        Intent intent = new Intent(context, StayCategoryNearByCurationActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCategoryNearByCuration);
-        intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, StayCategoryNearByCuration stayCategoryNearByCuration, boolean isFixedLocation)
+    //    {
+    //        Intent intent = new Intent(context, StayCategoryNearByCurationActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCategoryNearByCuration);
+    //        intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void initIntent(Intent intent)

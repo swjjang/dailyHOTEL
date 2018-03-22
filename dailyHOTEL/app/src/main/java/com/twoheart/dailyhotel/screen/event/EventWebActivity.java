@@ -22,12 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
-import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
@@ -876,11 +871,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 switch (externalDeepLink.getPlaceType())
                 {
                     case DailyDeepLink.STAY:
-                        moveDeepLinkStayCampaignTag(todayDateTime.getCommonDateTime(), externalDeepLink);
+                        moveDeepLinkStayCampaignTag(externalDeepLink);
                         break;
 
                     case DailyDeepLink.GOURMET:
-                        moveDeepLinkGourmetCampaignTag(todayDateTime.getCommonDateTime(), externalDeepLink);
+                        moveDeepLinkGourmetCampaignTag(externalDeepLink);
                         break;
                 }
             } else
@@ -899,81 +894,26 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
-    void startStayCampaignTag(int index, String campaignTag, String checkInDateTime, String checkOutDateTime)
+    void moveDeepLinkStayCampaignTag(DailyExternalDeepLink externalDeepLink)
     {
-        if (index <= 0 || DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        if (externalDeepLink == null)
         {
             return;
         }
 
-        startActivityForResult(StayCampaignTagListActivity.newInstance(EventWebActivity.this //
-            , index, campaignTag, checkInDateTime, checkOutDateTime)//
+        startActivityForResult(SearchStayResultTabActivity.newInstance(EventWebActivity.this, externalDeepLink.getDeepLink())//
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
-    void startGourmetCampaignTag(int index, String campaignTag, String visitDateTime)
+    void moveDeepLinkGourmetCampaignTag(DailyExternalDeepLink externalDeepLink)
     {
-        if (index <= 0 || DailyTextUtils.isTextEmpty(visitDateTime) == true)
+        if (externalDeepLink == null)
         {
             return;
         }
 
-        startActivityForResult(GourmetCampaignTagListActivity.newInstance(EventWebActivity.this //
-            , index, campaignTag, visitDateTime)//
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(EventWebActivity.this, externalDeepLink.getDeepLink())//
             , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
-    }
-
-    void moveDeepLinkStayCampaignTag(CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)
-    {
-        if (commonDateTime == null || externalDeepLink == null)
-        {
-            return;
-        }
-
-        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
-
-        int index;
-        try
-        {
-            index = Integer.parseInt(externalDeepLink.getIndex());
-        } catch (Exception e)
-        {
-            index = -1;
-        }
-
-        if (stayBookDateTime == null || index < 0)
-        {
-            return;
-        }
-
-        startStayCampaignTag(index, null, stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-    }
-
-    void moveDeepLinkGourmetCampaignTag(CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)
-    {
-        if (commonDateTime == null || externalDeepLink == null)
-        {
-            return;
-        }
-
-        GourmetBookDateTime gourmetBookDateTime = externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink);
-
-        int index;
-        try
-        {
-            index = Integer.parseInt(externalDeepLink.getIndex());
-        } catch (Exception e)
-        {
-            index = -1;
-        }
-
-        if (gourmetBookDateTime == null || index < 0)
-        {
-            return;
-        }
-
-        startGourmetCampaignTag(index, null, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
     }
 
     void startLogin()

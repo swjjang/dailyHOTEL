@@ -28,6 +28,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StaySearchResultListFragment extends StayListFragment
 {
     boolean mResetCategory = true;

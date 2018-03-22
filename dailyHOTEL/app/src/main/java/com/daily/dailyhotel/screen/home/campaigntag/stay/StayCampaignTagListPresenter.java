@@ -58,6 +58,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by android_sam on 2017. 8. 4..
  */
 
+@Deprecated
 public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCampaignTagListActivity, StayCampaignTagListInterface> implements StayCampaignTagListView.OnEventListener
 {
     StayCampaignTagListAnalyticsImpl mAnalytics;

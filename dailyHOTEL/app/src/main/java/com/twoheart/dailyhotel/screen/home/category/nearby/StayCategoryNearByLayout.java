@@ -38,6 +38,7 @@ import java.util.Locale;
  * Created by android_sam on 2017. 5. 19..
  */
 
+@Deprecated
 public class StayCategoryNearByLayout extends BaseBlurLayout
 {
     DailySearchToolbarView mToolbarView;

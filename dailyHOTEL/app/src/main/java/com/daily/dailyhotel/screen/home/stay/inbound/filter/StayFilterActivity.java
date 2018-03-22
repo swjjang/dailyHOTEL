@@ -9,12 +9,9 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 

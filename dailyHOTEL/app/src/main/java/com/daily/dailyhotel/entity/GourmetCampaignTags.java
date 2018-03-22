@@ -2,7 +2,6 @@ package com.daily.dailyhotel.entity;
 
 import com.twoheart.dailyhotel.network.model.Sticker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

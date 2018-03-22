@@ -7,7 +7,6 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 
 import java.util.List;

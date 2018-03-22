@@ -58,6 +58,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by android_sam on 2017. 8. 4..
  */
 
+@Deprecated
 public class GourmetCampaignTagListPresenter //
     extends BaseExceptionPresenter<GourmetCampaignTagListActivity, GourmetCampaignTagListInterface> //
     implements GourmetCampaignTagListView.OnEventListener
@@ -398,7 +399,7 @@ public class GourmetCampaignTagListPresenter //
                     mGourmetCampaignTags = new GourmetCampaignTags();
                 }
 
-//                return makePlaceList(mGourmetCampaignTags.getGourmetList()); // 기존 코드
+                //                return makePlaceList(mGourmetCampaignTags.getGourmetList()); // 기존 코드
                 return new ArrayList<>();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()

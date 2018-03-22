@@ -1,8 +1,6 @@
 package com.daily.dailyhotel.screen.home.campaigntag.gourmet;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -13,6 +11,7 @@ import com.twoheart.dailyhotel.R;
  * Created by android_sam on 2017. 8. 4..
  */
 
+@Deprecated
 public class GourmetCampaignTagListActivity extends BaseActivity<GourmetCampaignTagListPresenter>
 {
     static final int REQUEST_CODE_WISH_DIALOG = 10000;
@@ -24,16 +23,16 @@ public class GourmetCampaignTagListActivity extends BaseActivity<GourmetCampaign
     protected static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
 
 
-    public static Intent newInstance(Context context, int index, String hashTag, String visitDate)
-    {
-        Intent intent = new Intent(context, GourmetCampaignTagListActivity.class);
-
-        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE, hashTag);
-        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, int index, String hashTag, String visitDate)
+    //    {
+    //        Intent intent = new Intent(context, GourmetCampaignTagListActivity.class);
+    //
+    //        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+    //        intent.putExtra(INTENT_EXTRA_DATA_TITLE, hashTag);
+    //        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

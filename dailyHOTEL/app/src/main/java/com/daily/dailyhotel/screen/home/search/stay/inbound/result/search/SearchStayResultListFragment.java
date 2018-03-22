@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.result.search;
 
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.StayCategory;

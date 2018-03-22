@@ -4,7 +4,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Gourmet;
-import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.Iterator;
 import java.util.List;
@@ -125,9 +124,9 @@ public class GourmetData
         gourmet.soldOut = availableTicketNumbers == 0 || availableTicketNumbers < minimumOrderQuantity || isExpired;
         gourmet.rating = rating;
         gourmet.districtName = districtName;
-//        gourmet.entryPosition;
+        //        gourmet.entryPosition;
         gourmet.trueVR = truevr;
-//        gourmet.stickerUrl;
+        //        gourmet.stickerUrl;
         gourmet.stickerIndex = stickerIdx;
         gourmet.reviewCount = reviewCount;
         gourmet.discountRate = discountRate;
@@ -139,9 +138,9 @@ public class GourmetData
         gourmet.category = category;
         gourmet.subCategory = categorySub;
         gourmet.persons = persons;
-        gourmet.grade =com.daily.dailyhotel.entity.Gourmet.Grade.gourmet;
+        gourmet.grade = com.daily.dailyhotel.entity.Gourmet.Grade.gourmet;
         gourmet.regionName = regionName;
-//        gourmet.createdWishDateTime; // ISO-8601 위시 등록 시간
+        //        gourmet.createdWishDateTime; // ISO-8601 위시 등록 시간
 
         return gourmet;
     }

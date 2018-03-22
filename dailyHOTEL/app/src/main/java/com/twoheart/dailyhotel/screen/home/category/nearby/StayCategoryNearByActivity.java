@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.home.category.nearby;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -46,7 +45,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.home.category.filter.StayCategoryNearByCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -117,19 +115,19 @@ public class StayCategoryNearByActivity extends BaseActivity
         LIST
     }
 
-//    public static Intent newInstance(Context context //
-//        , TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
-//        , Location location, DailyCategoryType dailyCategoryType, String callByScreen)
-//    {
-//        Intent intent = new Intent(context, StayCategoryNearByActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) dailyCategoryType);
-//        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-//
-//        return intent;
-//    }
+    //    public static Intent newInstance(Context context //
+    //        , TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
+    //        , Location location, DailyCategoryType dailyCategoryType, String callByScreen)
+    //    {
+    //        Intent intent = new Intent(context, StayCategoryNearByActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) dailyCategoryType);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -1019,9 +1017,9 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = StayCategoryNearByCurationActivity.newInstance(StayCategoryNearByActivity.this,//
-                mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+            //            Intent intent = StayCategoryNearByCurationActivity.newInstance(StayCategoryNearByActivity.this,//
+            //                mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
@@ -1520,9 +1518,9 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = StayCategoryNearByCurationActivity.newInstance(StayCategoryNearByActivity.this, //
-                mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+            //            Intent intent = StayCategoryNearByCurationActivity.newInstance(StayCategoryNearByActivity.this, //
+            //                mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 
         @Override

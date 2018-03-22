@@ -22,7 +22,6 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
-import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
@@ -61,6 +60,7 @@ import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 {
     int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
@@ -1005,9 +1005,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            startActivity(GourmetCampaignTagListActivity.newInstance(GourmetSearchResultActivity.this //
-                , campaignTag.index, campaignTag.campaignTag//
-                , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)));
+            //            startActivity(GourmetCampaignTagListActivity.newInstance(GourmetSearchResultActivity.this //
+            //                , campaignTag.index, campaignTag.campaignTag//
+            //                , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)));
 
             finish();
 

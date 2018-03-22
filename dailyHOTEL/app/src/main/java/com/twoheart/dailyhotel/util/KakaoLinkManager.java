@@ -680,7 +680,8 @@ public class KakaoLinkManager implements Constants
             if (DailyTextUtils.isTextEmpty(description))
             {
                 description = webUrl;
-            } else {
+            } else
+            {
                 description += "\n" + webUrl;
             }
 
@@ -707,9 +708,7 @@ public class KakaoLinkManager implements Constants
                         .setIosExecutionParams(schemeParams) //
                         .build()) //
                     .setDescrption(description) //
-                    .setImageWidth(width)
-                    .setImageHeight(height)
-                    .build()) //
+                    .setImageWidth(width).setImageHeight(height).build()) //
                 .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
                     .setWebUrl(webUrl) //
                     .setMobileWebUrl(webUrl) //

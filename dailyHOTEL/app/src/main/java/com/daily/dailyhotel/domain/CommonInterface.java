@@ -1,8 +1,8 @@
 package com.daily.dailyhotel.domain;
 
-import com.daily.dailyhotel.entity.NoticeAgreementMessage;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Configurations;
+import com.daily.dailyhotel.entity.NoticeAgreementMessage;
 import com.daily.dailyhotel.entity.NoticeAgreementResultMessage;
 import com.daily.dailyhotel.entity.Notification;
 

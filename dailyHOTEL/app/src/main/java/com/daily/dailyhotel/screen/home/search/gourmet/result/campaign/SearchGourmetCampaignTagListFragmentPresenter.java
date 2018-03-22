@@ -429,104 +429,104 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT))//
             .map(new Function<GourmetCampaignTags, Pair<GourmetCampaignTags, List<ObjectItem>>>()
-        {
-            @Override
-            public Pair<GourmetCampaignTags, List<ObjectItem>> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags campaignTags) throws Exception
             {
-                List<ObjectItem> objectItemList = new ArrayList<>();
-                List<Gourmet> gourmetList = campaignTags.getGourmetList();
-
-                if (gourmetList != null && gourmetList.size() > 0)
+                @Override
+                public Pair<GourmetCampaignTags, List<ObjectItem>> apply(@io.reactivex.annotations.NonNull GourmetCampaignTags campaignTags) throws Exception
                 {
-                    for (Gourmet gourmet : gourmetList)
+                    List<ObjectItem> objectItemList = new ArrayList<>();
+                    List<Gourmet> gourmetList = campaignTags.getGourmetList();
+
+                    if (gourmetList != null && gourmetList.size() > 0)
                     {
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmet));
+                        for (Gourmet gourmet : gourmetList)
+                        {
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmet));
+                        }
                     }
-                }
 
-                return new Pair(campaignTags, objectItemList);
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<GourmetCampaignTags, List<ObjectItem>>>()
-        {
-            @Override
-            public void accept(Pair<GourmetCampaignTags, List<ObjectItem>> pair) throws Exception
+                    return new Pair(campaignTags, objectItemList);
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<GourmetCampaignTags, List<ObjectItem>>>()
             {
-                GourmetCampaignTags campaignTags = pair.first;
-                CampaignTag campaignTag = campaignTags.getCampaignTag();
-                List<ObjectItem> objectItemList = pair.second;
-
-                if (DailyTextUtils.isTextEmpty(mViewModel.getSuggest().getSuggestItem().name) == true)
+                @Override
+                public void accept(Pair<GourmetCampaignTags, List<ObjectItem>> pair) throws Exception
                 {
-                    mViewModel.getSuggest().getSuggestItem().name = campaignTag.campaignTag;
-                    mViewModel.setSuggest(mViewModel.getSuggest());
-                }
+                    GourmetCampaignTags campaignTags = pair.first;
+                    CampaignTag campaignTag = campaignTags.getCampaignTag();
+                    List<ObjectItem> objectItemList = pair.second;
 
-                int size = objectItemList.size();
-
-                if (objectItemList.size() == 0)
-                {
-                    mEmptyList = true;
-                    mPage = PAGE_NONE;
-
-                    getFragment().getFragmentEventListener().setEmptyViewVisible(true);
-                } else
-                {
-                    mEmptyList = false;
-
-                    if (size < MAXIMUM_NUMBER_PER_PAGE)
+                    if (DailyTextUtils.isTextEmpty(mViewModel.getSuggest().getSuggestItem().name) == true)
                     {
-                        mPage = PAGE_FINISH;
+                        mViewModel.getSuggest().getSuggestItem().name = campaignTag.campaignTag;
+                        mViewModel.setSuggest(mViewModel.getSuggest());
+                    }
 
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                    int size = objectItemList.size();
+
+                    if (objectItemList.size() == 0)
+                    {
+                        mEmptyList = true;
+                        mPage = PAGE_NONE;
+
+                        getFragment().getFragmentEventListener().setEmptyViewVisible(true);
                     } else
                     {
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                        mEmptyList = false;
+
+                        if (size < MAXIMUM_NUMBER_PER_PAGE)
+                        {
+                            mPage = PAGE_FINISH;
+
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                        } else
+                        {
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                        }
+
+                        getFragment().getFragmentEventListener().setEmptyViewVisible(false);
+                        getViewInterface().setListLayoutVisible(true);
+
+                        getViewInterface().setSearchResultCount(size);
+                        getViewInterface().setList(objectItemList, mViewModel.getSuggest().isLocationSuggestType() || mViewModel.isDistanceSort()//
+                            , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                     }
 
-                    getFragment().getFragmentEventListener().setEmptyViewVisible(false);
-                    getViewInterface().setListLayoutVisible(true);
-
-                    getViewInterface().setSearchResultCount(size);
-                    getViewInterface().setList(objectItemList, mViewModel.getSuggest().isLocationSuggestType() || mViewModel.isDistanceSort()//
-                        , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
-                }
-
-                mMoreRefreshing = false;
-                getViewInterface().setSwipeRefreshing(false);
-                unLockAll();
-
-                mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
-                    , campaignTag, size);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                if (throwable instanceof BaseException)
-                {
+                    mMoreRefreshing = false;
+                    getViewInterface().setSwipeRefreshing(false);
                     unLockAll();
 
-                    BaseException baseException = (BaseException) throwable;
-
-                    switch (baseException.getCode())
-                    {
-                        case -101: // 조회된 데이터가 없을때
-                            mEmptyList = true;
-                            mPage = PAGE_NONE;
-
-                            getFragment().getFragmentEventListener().setEmptyViewVisible(true);
-                            return;
-
-                        case 200: // 종료된 캠페인 태그
-                            showExpireTagDialog();
-                            return;
-                    }
+                    mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
+                        , campaignTag, size);
                 }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    if (throwable instanceof BaseException)
+                    {
+                        unLockAll();
 
-                onHandleErrorAndFinish(throwable);
-            }
-        }));
+                        BaseException baseException = (BaseException) throwable;
+
+                        switch (baseException.getCode())
+                        {
+                            case -101: // 조회된 데이터가 없을때
+                                mEmptyList = true;
+                                mPage = PAGE_NONE;
+
+                                getFragment().getFragmentEventListener().setEmptyViewVisible(true);
+                                return;
+
+                            case 200: // 종료된 캠페인 태그
+                                showExpireTagDialog();
+                                return;
+                        }
+                    }
+
+                    onHandleErrorAndFinish(throwable);
+                }
+            }));
     }
 
     private void showExpireTagDialog()

@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 {
     private View mPopularSearchTagLayout;

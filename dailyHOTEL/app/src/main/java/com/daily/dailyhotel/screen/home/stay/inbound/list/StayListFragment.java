@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
-import com.daily.dailyhotel.entity.Category;
-
-import java.util.List;
 
 /**
  * Created by sheldon

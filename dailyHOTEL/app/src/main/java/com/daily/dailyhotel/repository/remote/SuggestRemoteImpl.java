@@ -163,7 +163,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
             : "NjgkNjYkMzMkMjQkMTQkMzAkNjkkMTExJDY4JDExOCQ5NiQxMDckODMkOTckMjQkMzIk$NDVFRUFBRTFFNTOQ0RTcwQUEO4CQThCXZMURFRZDY3NkEwN0VDMDY3Q0EwQUExOEY5RjAyMMTjAA3KOEZDMTVEGNjRDNUFCM0I0BQNjFEODc4NjPZEQ0JEHMkM3NUUEzODk1NTNDMjM5NDU4$";
 
 
-        return  mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), visitDate, keyword) //
+        return mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), visitDate, keyword) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetSuggestsData>, List<GourmetSuggestV2>>()
             {
                 @Override

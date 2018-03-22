@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 
 public class SearchStayOutboundFragment extends BasePagerFragment<SearchStayOutboundFragmentPresenter, SearchStayOutboundFragment.OnEventListener>

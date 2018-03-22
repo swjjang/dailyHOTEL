@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class GourmetSearchResultListAdapter extends GourmetListAdapter
 {
     public GourmetSearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)

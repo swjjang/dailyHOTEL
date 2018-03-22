@@ -31,6 +31,7 @@ import retrofit2.Response;
  * Created by android_sam on 2017. 5. 19..
  */
 
+@Deprecated
 public class StayCategoryNearByListFragment extends StayListFragment
 {
     boolean mIsOptimizeCategory;

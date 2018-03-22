@@ -3,7 +3,6 @@ package com.daily.dailyhotel.parcel.analytics;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;

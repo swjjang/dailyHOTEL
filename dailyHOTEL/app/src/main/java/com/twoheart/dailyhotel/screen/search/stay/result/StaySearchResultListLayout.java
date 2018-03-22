@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -24,6 +23,7 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class StaySearchResultListLayout extends StayListLayout
 {
     private TextView mResultTextView;
@@ -66,7 +66,7 @@ public class StaySearchResultListLayout extends StayListLayout
 
             StaySuggestV2 suggest = ((StaySearchCuration) mStayCuration).getSuggest();
 
-            if(suggest.isLocationSuggestType() == true)
+            if (suggest.isLocationSuggestType() == true)
             {
                 if ((stayCurationOption.isDefaultFilter() == true && ((StaySearchCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
                 {
@@ -223,7 +223,6 @@ public class StaySearchResultListLayout extends StayListLayout
 
     /**
      * 검색 방식에 따라서 빈화면의 내용이 다르다.
-     *
      */
     public void setEmptyType(StaySuggestV2 suggest)
     {
@@ -232,7 +231,7 @@ public class StaySearchResultListLayout extends StayListLayout
             return;
         }
 
-        if(suggest.isLocationSuggestType() == true)
+        if (suggest.isLocationSuggestType() == true)
         {
             if (mStayCuration.getCurationOption().isDefaultFilter() == true//
                 && ((StaySearchCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)

@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class GourmetSearchResultListLayout extends GourmetListLayout
 {
     private TextView mResultTextView;

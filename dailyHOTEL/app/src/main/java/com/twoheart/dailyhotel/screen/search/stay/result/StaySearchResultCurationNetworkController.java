@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StaySearchResultCurationNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener

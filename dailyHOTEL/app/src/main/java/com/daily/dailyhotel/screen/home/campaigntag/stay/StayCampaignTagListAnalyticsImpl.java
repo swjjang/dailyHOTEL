@@ -14,6 +14,7 @@ import java.util.Map;
  * Created by android_sam on 2017. 8. 15..
  */
 
+@Deprecated
 public class StayCampaignTagListAnalyticsImpl implements StayCampaignTagListPresenter.StayCampaignTagListAnalyticsInterface
 {
     @Override

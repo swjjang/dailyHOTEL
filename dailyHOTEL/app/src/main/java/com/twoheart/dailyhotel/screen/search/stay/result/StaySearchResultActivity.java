@@ -26,7 +26,6 @@ import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
-import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.research.ResearchStayActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -67,6 +66,7 @@ import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StaySearchResultActivity extends PlaceSearchResultActivity
 {
     int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
@@ -80,37 +80,37 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
-//        , String inputText, StaySuggestV2 suggest, SortType sortType, String callByScreen)
-//    {
-//        Intent intent = new Intent(context, StaySearchResultActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-//        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
-//
-//        if (sortType != null)
-//        {
-//            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
-//        }
-//
-//        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-//
-//        return intent;
-//    }
-//
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
-//        , StaySuggestV2 suggest, double radius, boolean isDeepLink)
-//    {
-//        Intent intent = new Intent(context, StaySearchResultActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
-//        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-//        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
-//
-//        return intent;
-//    }
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
+    //        , String inputText, StaySuggestV2 suggest, SortType sortType, String callByScreen)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+    //
+    //        if (sortType != null)
+    //        {
+    //            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
+    //        }
+    //
+    //        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
+    //        , StaySuggestV2 suggest, double radius, boolean isDeepLink)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+    //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
+    //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -915,9 +915,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this,//
-                mViewType, mStaySearchCuration, mIsFixedLocation);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+            //            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this,//
+            //                mViewType, mStaySearchCuration, mIsFixedLocation);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
@@ -1152,10 +1152,10 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            startActivity(StayCampaignTagListActivity.newInstance(StaySearchResultActivity.this //
-                , campaignTag.index, campaignTag.campaignTag//
-                , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT) //
-                , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)));
+            //            startActivity(StayCampaignTagListActivity.newInstance(StaySearchResultActivity.this //
+            //                , campaignTag.index, campaignTag.campaignTag//
+            //                , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT) //
+            //                , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)));
 
             finish();
 
@@ -1606,9 +1606,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, //
-                mViewType, mStaySearchCuration, mIsFixedLocation);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+            //            Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, //
+            //                mViewType, mStaySearchCuration, mIsFixedLocation);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 
         @Override

@@ -8,7 +8,6 @@ import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;

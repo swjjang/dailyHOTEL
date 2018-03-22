@@ -25,7 +25,7 @@ public class StayObSearchResultHistory extends SearchResultHistory
     public StayObSearchResultHistory(String startDate, String endDate //
         , String suggest, int adultCount, String childAgeList)
     {
-        super( startDate, endDate);
+        super(startDate, endDate);
 
         if (DailyTextUtils.isTextEmpty(suggest))
         {

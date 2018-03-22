@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.home.search.SearchStayFilterView;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;

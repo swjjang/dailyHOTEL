@@ -11,7 +11,6 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;

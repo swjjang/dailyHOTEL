@@ -27,6 +27,7 @@ import okhttp3.Response;
  * Created by android_sam on 2017. 5. 19..
  */
 
+@Deprecated
 public class StayCategoryNearByNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener

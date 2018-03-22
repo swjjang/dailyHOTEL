@@ -8,7 +8,6 @@ import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import java.util.List;
 

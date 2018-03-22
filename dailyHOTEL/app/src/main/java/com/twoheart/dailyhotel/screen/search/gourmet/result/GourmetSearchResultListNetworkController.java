@@ -22,6 +22,7 @@ import java.util.HashMap;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class GourmetSearchResultListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
