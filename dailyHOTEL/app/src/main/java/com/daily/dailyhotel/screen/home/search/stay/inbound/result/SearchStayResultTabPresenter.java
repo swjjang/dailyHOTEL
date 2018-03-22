@@ -721,6 +721,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         }
 
         mViewModel.getFilter().sortType = StayFilter.SortType.valueOf(sortType.name());
+        mViewModel.setFilter(mViewModel.getFilter());
 
         mViewModel.setBookDateTime(bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
         mViewModel.setSuggest(suggest);

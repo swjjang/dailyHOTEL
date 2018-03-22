@@ -687,6 +687,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
 
         mViewModel.getFilter().sortType = GourmetFilter.SortType.valueOf(sortType.name());
+        mViewModel.setFilter(mViewModel.getFilter());
 
         mViewModel.setBookDateTime(gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
         mViewModel.setSuggest(suggest);
