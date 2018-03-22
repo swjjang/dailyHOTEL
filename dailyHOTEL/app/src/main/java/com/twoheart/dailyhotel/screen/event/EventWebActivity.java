@@ -76,10 +76,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     SourceType mSourceType;
     TodayDateTime mTodayDateTime;
-    private String mEventName;
-    private String mEventDescription;
-    private String mImageUrl;
-    private String mEventUrl;
+    String mEventName;
+    String mEventDescription;
+    String mImageUrl;
+    String mEventUrl;
 
     String mCouponCode;
     String mDeepLinkUrl;
@@ -232,10 +232,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
             });
         }
-
     }
 
-    private void showShareDialog(DialogInterface.OnDismissListener listener)
+    void showShareDialog(DialogInterface.OnDismissListener listener)
     {
         DialogShareDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(EventWebActivity.this), R.layout.dialog_share_data, null, false);
 
@@ -282,7 +281,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         showSimpleDialog(dataBinding.getRoot(), null, listener, true);
     }
 
-    private void onShareKakaoClick()
+    void onShareKakaoClick()
     {
         try
         {
@@ -336,7 +335,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
     }
 
-    private void onCopyClipboardClick()
+    void onCopyClipboardClick()
     {
         try
         {
@@ -374,7 +373,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
     }
 
-    private void onMoreShareClick()
+    void onMoreShareClick()
     {
         try
         {

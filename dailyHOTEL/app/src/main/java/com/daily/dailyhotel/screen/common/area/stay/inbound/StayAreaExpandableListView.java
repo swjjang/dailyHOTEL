@@ -35,8 +35,8 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
     private LayoutAreaSubwayTabDataBinding mLayoutAreaSubwayTabDataBinding;
 
-    private StayAreaExpandableListAdapter mStayAreaListAdapter;
-    private OnStayAreaExpandableListener mAreaExpandableListener;
+    StayAreaExpandableListAdapter mStayAreaListAdapter;
+    OnStayAreaExpandableListener mAreaExpandableListener;
 
     public interface OnStayAreaExpandableListener
     {

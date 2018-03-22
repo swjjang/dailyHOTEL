@@ -40,7 +40,7 @@ import io.reactivex.functions.Function;
 public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<StaySubwayFragment, StaySubwayFragmentInterface.ViewInterface>//
     implements StaySubwayFragmentInterface.OnEventListener
 {
-    private StaySubwayFragmentInterface.AnalyticsInterface mAnalytics;
+    StaySubwayFragmentInterface.AnalyticsInterface mAnalytics;
 
     StayAreaViewModel mStayAreaViewModel;
     int mAreaGroupPosition = -1;
@@ -392,7 +392,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
         mAnalytics.onEventAreaClick(getActivity(), mCurrentRegion.name, areaGroup.name, area.name);
     }
 
-    private StaySubwayAreaGroup getAreaGroup(int position)
+    StaySubwayAreaGroup getAreaGroup(int position)
     {
         return mStayAreaViewModel.subwayMap.getValue().get(mCurrentRegion).get(position);
     }

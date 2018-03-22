@@ -529,7 +529,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
             }));
     }
 
-    private void showExpireTagDialog()
+    void showExpireTagDialog()
     {
         getViewInterface().showSimpleDialog(null //
             , getString(R.string.message_campaign_tag_finished) //

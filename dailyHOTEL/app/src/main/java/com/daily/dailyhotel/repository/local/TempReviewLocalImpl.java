@@ -23,7 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TempReviewLocalImpl implements TempReviewInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public TempReviewLocalImpl(Context context)
     {

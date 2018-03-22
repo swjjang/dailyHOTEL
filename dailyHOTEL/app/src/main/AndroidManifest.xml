@@ -736,18 +736,6 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-
-        <activity
             android:name="com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"

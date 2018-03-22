@@ -58,7 +58,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 {
     public static final float DEFAULT_RADIUS = 10.0f;
 
-    private SearchGourmetResultTabInterface.AnalyticsInterface mAnalytics;
+    SearchGourmetResultTabInterface.AnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
@@ -233,7 +233,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }
     }
 
-    private void clearDeepLink()
+    void clearDeepLink()
     {
         if (mDailyDeepLink == null)
         {
@@ -297,7 +297,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         initView(suggest);
     }
 
-    private void initView(GourmetSuggestV2 suggest)
+    void initView(GourmetSuggestV2 suggest)
     {
         if (suggest == null)
         {
@@ -627,7 +627,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         }));
     }
 
-    private void parseCampaignTagListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
+    void parseCampaignTagListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
     {
         if (externalDeepLink == null || commonDateTime == null)
         {
@@ -659,7 +659,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         mViewModel.setSuggest(suggest);
     }
 
-    private void parseSearchGourmetResultListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
+    void parseSearchGourmetResultListView(DailyExternalDeepLink externalDeepLink, CommonDateTime commonDateTime) throws Exception
     {
         if (externalDeepLink == null || commonDateTime == null)
         {

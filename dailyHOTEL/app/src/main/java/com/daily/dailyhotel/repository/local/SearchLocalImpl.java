@@ -38,7 +38,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SearchLocalImpl implements SearchLocalInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public SearchLocalImpl(Context context)
     {

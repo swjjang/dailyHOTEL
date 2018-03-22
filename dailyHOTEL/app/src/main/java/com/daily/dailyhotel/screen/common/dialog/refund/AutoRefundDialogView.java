@@ -131,7 +131,7 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 TextView selectedView = (TextView) ((View) getViewDataBinding().cancelRefundView01.getParent()).getTag();
                 if (selectedView != null)
                 {
-                    String cancelReason = cancelReason = selectedView.getText().toString();
+                    String cancelReason = selectedView.getText().toString();
                     String message;
 
                     if (selectedView.getId() == R.id.cancelRefundView07)

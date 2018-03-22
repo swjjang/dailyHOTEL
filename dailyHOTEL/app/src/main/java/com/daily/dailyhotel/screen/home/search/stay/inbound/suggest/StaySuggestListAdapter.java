@@ -51,9 +51,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_entry_data, parent, false);
 
-                DirectViewHolder entryViewHolder = new DirectViewHolder(dataBinding);
-
-                return entryViewHolder;
+                return new DirectViewHolder(dataBinding);
             }
 
             case ObjectItem.TYPE_SECTION:
@@ -62,9 +60,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_section_data, parent, false);
 
-                SectionViewHolder sectionViewHolder = new SectionViewHolder(dataBinding);
-
-                return sectionViewHolder;
+                return new SectionViewHolder(dataBinding);
             }
 
             case ObjectItem.TYPE_ENTRY:
@@ -73,9 +69,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_entry_data, parent, false);
 
-                EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
-
-                return entryViewHolder;
+                return new EntryViewHolder(dataBinding);
             }
         }
 

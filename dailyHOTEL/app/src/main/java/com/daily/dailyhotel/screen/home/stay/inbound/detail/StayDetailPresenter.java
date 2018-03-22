@@ -1778,7 +1778,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     private void startCalendar(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime//
-        , int stayIndex, int[] soldOutDays, boolean soldOut, boolean animation) throws Exception
+        , int stayIndex, int[] soldOutDays, boolean soldOut, boolean animation)
     {
         if (commonDateTime == null || stayBookDateTime == null)
         {
