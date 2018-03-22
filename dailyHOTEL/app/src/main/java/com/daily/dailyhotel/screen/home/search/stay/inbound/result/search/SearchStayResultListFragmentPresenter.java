@@ -632,11 +632,6 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
                 mAnalytics.onScreen(getActivity(), mViewModel.getViewType(), mViewModel.getBookDateTime(), mViewModel.getSuggest(), mViewModel.getFilter(), size == 0, mCallByScreen);
 
-                if (mViewModel.getSuggest().isLocationSuggestType() == true)
-                {
-                    mAnalytics.onEventLocation(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest().getText1(), size, MAXIMUM_NUMBER_PER_PAGE);
-                }
-
                 mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
                     , mViewModel.getInputKeyword(), size, MAXIMUM_NUMBER_PER_PAGE);
 
