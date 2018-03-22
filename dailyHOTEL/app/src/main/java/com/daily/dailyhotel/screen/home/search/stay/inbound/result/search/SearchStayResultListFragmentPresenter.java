@@ -28,7 +28,6 @@ import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggestV2;
@@ -618,8 +617,9 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                 {
                     setResultList(stays, objectItemList, applyFilter);
 
-                    if (mViewModel.getCategory() == Category.ALL)
+                    if (mViewModel.resetCategory == true && mViewModel.getCategory() == Category.ALL)
                     {
+                        mViewModel.resetCategory = false;
                         fragmentObservable = getFragment().getFragmentEventListener().addCategoryList(stays.getStayCategoryList());
                     } else
                     {

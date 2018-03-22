@@ -466,6 +466,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
                         initView(mViewModel.getSuggest());
 
+                        mViewModel.resetCategory = true;
                         mViewModel.getFilter().reset();
                         mViewModel.setViewType(ViewType.LIST);
 
@@ -559,6 +560,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                     }
 
                     mViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
+                    mViewModel.resetCategory = true;
                     mViewModel.getFilter().reset();
 
                     mViewModel.searchViewModel.radius = DEFAULT_RADIUS;

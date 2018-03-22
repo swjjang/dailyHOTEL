@@ -31,6 +31,7 @@ public class SearchStayResultViewModel extends ViewModel
     private MutableLiveData<StayFilter> mFilter = new MutableLiveData<>();
     public Location filterLocation;
     public DailyCategoryType categoryType;
+    public boolean resetCategory;
 
     static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {
@@ -46,6 +47,7 @@ public class SearchStayResultViewModel extends ViewModel
 
             searchViewModel.setViewType(SearchStayResultTabPresenter.ViewType.LIST);
             searchViewModel.setFilter(new StayFilter().reset());
+            searchViewModel.resetCategory = true;
 
             return searchViewModel;
         }
