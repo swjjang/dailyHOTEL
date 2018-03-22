@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
@@ -11,8 +12,10 @@ import com.daily.dailyhotel.domain.SuggestLocalInterface;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.repository.local.model.GourmetRecentlySuggestList;
+import com.daily.dailyhotel.repository.local.model.GourmetSuggestData;
 import com.daily.dailyhotel.repository.local.model.StayIbRecentlySuggestList;
+import com.daily.dailyhotel.repository.local.model.StaySuggestData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundSuggestData;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 
@@ -49,11 +52,23 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
+                String suggestString;
+                try
+                {
+                    suggestString = LoganSquare.serialize(stayOutboundSuggest.getSuggestData());
+                } catch (Exception e)
+                {
+                    suggestString = null;
+                }
+
+                if (DailyTextUtils.isTextEmpty(suggestString))
+                {
+                    return Observable.just(false);
+                }
+
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
-                dailyDb.addStayObRecentlySuggest(stayOutboundSuggest.id, stayOutboundSuggest.name, stayOutboundSuggest.city, stayOutboundSuggest.country //
-                    , stayOutboundSuggest.countryCode, stayOutboundSuggest.categoryKey, stayOutboundSuggest.display, stayOutboundSuggest.displayText //
-                    , stayOutboundSuggest.latitude, stayOutboundSuggest.longitude, keyword, true);
+                dailyDb.addStayObRecentlySuggest(stayOutboundSuggest.id, suggestString, keyword, true);
 
                 DailyDbHelper.getInstance().close();
 
@@ -83,18 +98,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToFirst();
 
-                        long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
-                        String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
-                        String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
-                        String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
-                        String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
-                        String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
-                        String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
-                        String displayText = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY_TEXT));
-                        double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
-                        double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.SUGGEST));
 
-                        stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, displayText, latitude, longitude);
+                        StayOutboundSuggestData stayOutboundSuggestData = LoganSquare.parse(suggestString, StayOutboundSuggestData.class);
+                        stayOutboundSuggest = stayOutboundSuggestData.getSuggests();
                         stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
                     }
 
@@ -158,18 +165,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToPosition(i);
 
-                        long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
-                        String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
-                        String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
-                        String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
-                        String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
-                        String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
-                        String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
-                        String displayText = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY_TEXT));
-                        double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
-                        double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.SUGGEST));
 
-                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, displayText, latitude, longitude);
+                        StayOutboundSuggestData stayOutboundSuggestData = LoganSquare.parse(suggestString, StayOutboundSuggestData.class);
+                        StayOutboundSuggest stayOutboundSuggest = stayOutboundSuggestData.getSuggests();
                         stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
 
                         stayOutboundSuggestList.add(stayOutboundSuggest);
@@ -308,7 +307,24 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
+                String suggestString;
+                try
+                {
+                    suggestString = LoganSquare.serialize(gourmetSuggest.getSuggestData());
+                } catch (Exception e)
+                {
+                    suggestString = null;
+                }
+
+                if (DailyTextUtils.isTextEmpty(suggestString))
+                {
+                    return Observable.just(false);
+                }
+
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                String type = null;
+                String displayName = null;
 
                 try
                 {
@@ -316,70 +332,41 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         case GOURMET:
                         {
+                            type = GourmetSuggestV2.SuggestType.GOURMET.name();
                             GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.getSuggestItem();
-                            GourmetSuggestV2.AreaGroup areaGroup = gourmet.areaGroup;
-                            GourmetSuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
-
-                            String type = GourmetSuggestV2.SuggestType.GOURMET.name();
-                            int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
-                            String areaGroupName = areaGroup == null ? null : areaGroup.name;
-                            int areaIndex = area == null ? 0 : area.index;
-                            String areaName = area == null ? null : area.name;
-
-                            dailyDb.addGourmetRecentlySuggest(type, gourmet.name //
-                                , gourmet.index, gourmet.name //
-                                , areaGroupIndex, areaGroupName, areaIndex, areaName //
-                                , null, null, 0, 0 //
-                                , null, keyword);
+                            displayName = gourmet.name;
                             break;
                         }
 
                         case AREA_GROUP:
                         {
+                            type = GourmetSuggestV2.SuggestType.AREA_GROUP.name();
                             GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) gourmetSuggest.getSuggestItem();
-                            GourmetSuggestV2.Area area = areaGroup.area;
-
-                            String type = GourmetSuggestV2.SuggestType.AREA_GROUP.name();
-                            int areaIndex = area == null ? 0 : area.index;
-                            String areaName = area == null ? null : area.name;
-
-                            dailyDb.addGourmetRecentlySuggest(type, areaGroup.getDisplayName() //
-                                , 0, null //
-                                , areaGroup.index, areaGroup.name, areaIndex, areaName //
-                                , null, null, 0, 0 //
-                                , null, keyword);
+                            displayName = areaGroup.getDisplayName();
                             break;
                         }
 
                         case LOCATION:
                         {
+                            type = GourmetSuggestV2.SuggestType.LOCATION.name();
                             GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.getSuggestItem();
-                            String type = GourmetSuggestV2.SuggestType.LOCATION.name();
-
-                            dailyDb.addGourmetRecentlySuggest(type, location.name //
-                                , 0, null //
-                                , 0, null, 0, null //
-                                , location.name, location.address, location.latitude, location.longitude //
-                                , null, keyword);
+                            displayName = location.name;
                             break;
                         }
 
                         case DIRECT:
                         {
+                            type = GourmetSuggestV2.SuggestType.DIRECT.name();
                             GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) gourmetSuggest.getSuggestItem();
-                            String type = GourmetSuggestV2.SuggestType.DIRECT.name();
-
-                            dailyDb.addGourmetRecentlySuggest(type, direct.name //
-                                , 0, null //
-                                , 0, null, 0, null //
-                                , null, null, 0, 0 //
-                                , direct.name, keyword);
+                            displayName = direct.name;
                             break;
                         }
 
                         default:
                             return Observable.just(false);
                     }
+
+                    dailyDb.addGourmetRecentlySuggest(type, displayName, suggestString, keyword);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -426,91 +413,13 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToPosition(i);
 
-                        String type = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.TYPE));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
 
-                        GourmetSuggestV2.SuggestType suggestType;
-                        try
-                        {
-                            suggestType = GourmetSuggestV2.SuggestType.valueOf(type);
-                        } catch (Exception e)
-                        {
-                            suggestType = GourmetSuggestV2.SuggestType.UNKNOWN;
-                        }
+                        GourmetSuggestData gourmetSuggestData = LoganSquare.parse(suggestString, GourmetSuggestData.class);
+                        GourmetSuggestV2 staySuggest = gourmetSuggestData.getSuggest();
+                        staySuggest.menuType = GourmetSuggestV2.MenuType.RECENTLY_SEARCH;
 
-                        switch (suggestType)
-                        {
-                            case GOURMET:
-                            {
-                                int gourmetIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.GOURMET_INDEX));
-                                String gourmetName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.GOURMET_NAME));
-                                int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_INDEX));
-                                String areaGroupName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_NAME));
-
-                                GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
-                                GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
-
-                                areaGroup.index = areaGroupIndex;
-                                areaGroup.name = areaGroupName;
-                                areaGroup.area = null;
-
-                                gourmet.index = gourmetIndex;
-                                gourmet.name = gourmetName;
-                                gourmet.areaGroup = areaGroup;
-
-                                gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, gourmet));
-                                break;
-                            }
-
-                            case AREA_GROUP:
-                            {
-                                int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_INDEX));
-                                String areaGroupName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_GROUP_NAME));
-                                int areaIndex = cursor.getInt(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_INDEX));
-                                String areaName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.AREA_NAME));
-
-                                GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
-                                GourmetSuggestV2.Area area = null;
-
-                                if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
-                                {
-                                    area = new GourmetSuggestV2.Area();
-                                    area.index = areaIndex;
-                                    area.name = areaName;
-                                }
-
-                                areaGroup.index = areaGroupIndex;
-                                areaGroup.name = areaGroupName;
-                                areaGroup.area = area;
-
-                                gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, areaGroup));
-                                break;
-                            }
-
-                            case DIRECT:
-                            {
-                                String directName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.DIRECT_NAME));
-                                GourmetSuggestV2.Direct direct = new GourmetSuggestV2.Direct(directName);
-                                gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, direct));
-                                break;
-                            }
-
-                            case LOCATION:
-                            {
-                                String locationName = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.LOCATION_NAME));
-                                String address = cursor.getString(cursor.getColumnIndex(GourmetRecentlySuggestList.ADDRESS));
-                                double latitude = cursor.getDouble(cursor.getColumnIndex(GourmetRecentlySuggestList.LATITUDE));
-                                double longitude = cursor.getDouble(cursor.getColumnIndex(GourmetRecentlySuggestList.LONGITUDE));
-
-                                GourmetSuggestV2.Location location = new GourmetSuggestV2.Location();
-                                location.name = locationName;
-                                location.address = address;
-                                location.latitude = latitude;
-                                location.longitude = longitude;
-
-                                gourmetSuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH, location));
-                                break;
-                            }
-                        }
+                        gourmetSuggestList.add(staySuggest);
                     }
 
                 } catch (Exception e)
@@ -593,7 +502,24 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
+                String suggestString;
+                try
+                {
+                    suggestString = LoganSquare.serialize(staySuggest.getSuggestData());
+                } catch (Exception e)
+                {
+                    suggestString = null;
+                }
+
+                if (DailyTextUtils.isTextEmpty(suggestString))
+                {
+                    return Observable.just(false);
+                }
+
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                String type = null;
+                String displayName = null;
 
                 try
                 {
@@ -601,89 +527,50 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         case STATION:
                         {
-                            StaySuggestV2.Station station = (StaySuggestV2.Station) staySuggest.getSuggestItem();
-                            String type = StaySuggestV2.SuggestType.STATION.name();
+                            type = StaySuggestV2.SuggestType.STATION.name();
 
-                            dailyDb.addStayIbRecentlySuggest(type, station.getDisplayName() //
-                                , station.index, station.name, station.region, station.line //
-                                , 0, null //
-                                , 0, null, 0, null //
-                                , null, null, 0, 0 //
-                                , null, keyword);
+                            StaySuggestV2.Station station = (StaySuggestV2.Station) staySuggest.getSuggestItem();
+                            displayName = station.getDisplayName();
                             break;
                         }
 
                         case STAY:
                         {
+                            type = StaySuggestV2.SuggestType.STAY.name();
                             StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.getSuggestItem();
-                            StaySuggestV2.AreaGroup areaGroup = stay.areaGroup;
-                            StaySuggestV2.Area area = areaGroup != null ? areaGroup.area : null;
-
-                            String type = StaySuggestV2.SuggestType.STAY.name();
-                            int areaGroupIndex = areaGroup == null ? 0 : areaGroup.index;
-                            String areaGroupName = areaGroup == null ? null : areaGroup.name;
-                            int areaIndex = area == null ? 0 : area.index;
-                            String areaName = area == null ? null : area.name;
-
-                            dailyDb.addStayIbRecentlySuggest(type, stay.name //
-                                , 0, null, null, null //
-                                , stay.index, stay.name //
-                                , areaGroupIndex, areaGroupName, areaIndex, areaName //
-                                , null, null, 0, 0 //
-                                , null, keyword);
+                            displayName = stay.name;
                             break;
                         }
 
                         case AREA_GROUP:
                         {
-
+                            type = StaySuggestV2.SuggestType.AREA_GROUP.name();
                             StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) staySuggest.getSuggestItem();
-                            StaySuggestV2.Area area = areaGroup.area;
-
-                            String type = StaySuggestV2.SuggestType.AREA_GROUP.name();
-                            int areaIndex = area == null ? 0 : area.index;
-                            String areaName = area == null ? null : area.name;
-
-                            dailyDb.addStayIbRecentlySuggest(type, areaGroup.getDisplayName() //
-                                , 0, null, null, null //
-                                , 0, null //
-                                , areaGroup.index, areaGroup.name, areaIndex, areaName //
-                                , null, null, 0, 0 //
-                                , null, keyword);
+                            displayName = areaGroup.getDisplayName();
                             break;
                         }
 
                         case LOCATION:
                         {
+                            type = StaySuggestV2.SuggestType.LOCATION.name();
                             StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.getSuggestItem();
-                            String type = StaySuggestV2.SuggestType.LOCATION.name();
-
-                            dailyDb.addStayIbRecentlySuggest(type, location.name //
-                                , 0, null, null, null //
-                                , 0, null //
-                                , 0, null, 0, null //
-                                , location.name, location.address, location.latitude, location.longitude //
-                                , null, keyword);
+                            displayName = location.name;
                             break;
                         }
 
                         case DIRECT:
                         {
+                            type = StaySuggestV2.SuggestType.DIRECT.name();
                             StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.getSuggestItem();
-                            String type = StaySuggestV2.SuggestType.DIRECT.name();
-
-                            dailyDb.addStayIbRecentlySuggest(type, direct.name //
-                                , 0, null, null, null //
-                                , 0, null //
-                                , 0, null, 0, null //
-                                , null, null, 0, 0 //
-                                , direct.name, keyword);
+                            displayName = direct.name;
                             break;
                         }
 
                         default:
                             return Observable.just(false);
                     }
+
+                    dailyDb.addStayIbRecentlySuggest(type, displayName, suggestString, keyword);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -730,108 +617,13 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         cursor.moveToPosition(i);
 
-                        String type = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.TYPE));
+                        String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
 
-                        StaySuggestV2.SuggestType suggestType;
-                        try
-                        {
-                            suggestType = StaySuggestV2.SuggestType.valueOf(type);
-                        } catch (Exception e)
-                        {
-                            suggestType = StaySuggestV2.SuggestType.UNKNOWN;
-                        }
+                        StaySuggestData staySuggestData = LoganSquare.parse(suggestString, StaySuggestData.class);
+                        StaySuggestV2 staySuggest = staySuggestData.getSuggest();
+                        staySuggest.menuType = StaySuggestV2.MenuType.RECENTLY_SEARCH;
 
-                        switch (suggestType)
-                        {
-                            case STATION:
-                            {
-                                int stationIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_INDEX));
-                                String stationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_NAME));
-                                String stationRegion = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_REGION));
-                                String stationLine = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STATION_LINE));
-
-                                StaySuggestV2.Station station = new StaySuggestV2.Station();
-                                station.index = stationIndex;
-                                station.name = stationName;
-                                station.region = stationRegion;
-                                station.line = stationLine;
-
-                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, station));
-                                break;
-                            }
-
-                            case STAY:
-                            {
-                                int stayIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_INDEX));
-                                String stayName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.STAY_NAME));
-                                int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
-                                String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
-
-                                StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
-                                StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
-
-                                areaGroup.index = areaGroupIndex;
-                                areaGroup.name = areaGroupName;
-                                areaGroup.area = null;
-
-                                stay.index = stayIndex;
-                                stay.name = stayName;
-                                stay.areaGroup = areaGroup;
-
-                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, stay));
-                                break;
-                            }
-
-                            case AREA_GROUP:
-                            {
-                                int areaGroupIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_INDEX));
-                                String areaGroupName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_GROUP_NAME));
-                                int areaIndex = cursor.getInt(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_INDEX));
-                                String areaName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.AREA_NAME));
-
-                                StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
-                                StaySuggestV2.Area area = null;
-
-                                if (areaIndex > 0 && DailyTextUtils.isTextEmpty(areaName) == false)
-                                {
-                                    area = new StaySuggestV2.Area();
-                                    area.index = areaIndex;
-                                    area.name = areaName;
-                                }
-
-                                areaGroup.index = areaGroupIndex;
-                                areaGroup.name = areaGroupName;
-                                areaGroup.area = area;
-
-                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, areaGroup));
-                                break;
-                            }
-
-                            case DIRECT:
-                            {
-                                String directName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.DIRECT_NAME));
-                                StaySuggestV2.Direct direct = new StaySuggestV2.Direct(directName);
-                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, direct));
-                                break;
-                            }
-
-                            case LOCATION:
-                            {
-                                String locationName = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.LOCATION_NAME));
-                                String address = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.ADDRESS));
-                                double latitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LATITUDE));
-                                double longitude = cursor.getDouble(cursor.getColumnIndex(StayIbRecentlySuggestList.LONGITUDE));
-
-                                StaySuggestV2.Location location = new StaySuggestV2.Location();
-                                location.name = locationName;
-                                location.address = address;
-                                location.latitude = latitude;
-                                location.longitude = longitude;
-
-                                staySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH, location));
-                                break;
-                            }
-                        }
+                        staySuggestList.add(staySuggest);
                     }
 
                 } catch (Exception e)

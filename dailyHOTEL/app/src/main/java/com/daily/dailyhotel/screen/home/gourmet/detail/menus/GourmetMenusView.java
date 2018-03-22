@@ -234,7 +234,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         objectAnimator.setInterpolator(new LinearInterpolator());
         objectAnimator.setDuration(300);
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -271,8 +271,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 objectAnimator.start();
             }
         };
-
-        return observable;
     }
 
     @Override
@@ -445,7 +443,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             }
         });
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -489,8 +487,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 transObjectAnimator.start();
             }
         };
-
-        return observable;
     }
 
     @Override
@@ -526,7 +522,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             }
         });
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -569,8 +565,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 transObjectAnimator.start();
             }
         };
-
-        return observable;
     }
 
     @Override
@@ -891,7 +885,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             }
         });
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -937,8 +931,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 transObjectAnimator.start();
             }
         };
-
-        return observable;
     }
 
     @Override
@@ -977,7 +969,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             }
         });
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -1023,8 +1015,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 transObjectAnimator.start();
             }
         };
-
-        return observable;
     }
 
     @Override

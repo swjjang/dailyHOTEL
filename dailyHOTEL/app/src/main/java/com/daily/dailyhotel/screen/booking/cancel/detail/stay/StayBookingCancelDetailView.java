@@ -201,7 +201,7 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
             return null;
         }
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -292,8 +292,6 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200, null);
             }
         };
-
-        return observable;
     }
 
     @Override
@@ -304,7 +302,7 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
             return null;
         }
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -390,8 +388,6 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 300, null);
             }
         };
-
-        return observable;
     }
 
     @Override

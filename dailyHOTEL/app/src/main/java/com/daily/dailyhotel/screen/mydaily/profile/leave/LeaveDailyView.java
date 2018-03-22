@@ -219,8 +219,7 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
             return false;
         }
 
-        boolean enabled = (boolean) getViewDataBinding().doLeaveView.getTag();
-        return enabled;
+        return (boolean) getViewDataBinding().doLeaveView.getTag();
     }
 
     private void setLeavePolicyList(List<String> policyList)

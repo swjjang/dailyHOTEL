@@ -88,17 +88,17 @@ public class GourmetSuggestV2
 
     public boolean isLocationSuggestType()
     {
-        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Location;
+        return suggestItem != null && suggestItem instanceof Location;
     }
 
     public boolean isGourmetSuggestType()
     {
-        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.Gourmet;
+        return suggestItem != null && suggestItem instanceof Gourmet;
     }
 
     public boolean isCampaignTagSuggestType()
     {
-        return suggestItem == null ? false : suggestItem instanceof GourmetSuggestV2.CampaignTag;
+        return suggestItem != null && suggestItem instanceof CampaignTag;
     }
 
     public String getText1()

@@ -88,9 +88,7 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
     {
         LayoutStayDetailRoomDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_stay_detail_room_data, parent, false);
 
-        SaleRoomInformationViewHolder viewHolder = new SaleRoomInformationViewHolder(dataBinding);
-
-        return viewHolder;
+        return new SaleRoomInformationViewHolder(dataBinding);
     }
 
     @Override

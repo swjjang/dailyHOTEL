@@ -8,15 +8,7 @@ import android.provider.BaseColumns;
 
 public interface StayObRecentlySuggestColumns extends BaseColumns
 {
-    String NAME = "name";
-    String CITY = "city";
-    String COUNTRY = "country";
-    String COUNTRY_CODE = "country_code";
-    String CATEGORY_KEY = "category_key";
-    String DISPLAY = "display";
-    String DISPLAY_TEXT = "display_text";
-    String LATITUDE = "latitude";
-    String LONGITUDE = "longitude";
+    String SUGGEST = "suggest";
     String SAVING_TIME = "saving_time";
     String KEYWORD = "keyword";
 }

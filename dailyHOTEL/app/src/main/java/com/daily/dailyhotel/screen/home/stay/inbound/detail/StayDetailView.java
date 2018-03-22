@@ -617,7 +617,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         getWindow().setSharedElementReturnTransition(outTransitionSet);
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -655,8 +655,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 });
             }
         };
-
-        return observable;
     }
 
     @Override

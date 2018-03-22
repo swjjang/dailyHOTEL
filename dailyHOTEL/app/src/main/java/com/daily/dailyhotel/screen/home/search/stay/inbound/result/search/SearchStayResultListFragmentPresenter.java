@@ -632,11 +632,6 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
                 mAnalytics.onScreen(getActivity(), mViewModel.getViewType(), mViewModel.getBookDateTime(), mViewModel.getSuggest(), mViewModel.getFilter(), size == 0, mCallByScreen);
 
-                if (mViewModel.getSuggest().isLocationSuggestType() == true)
-                {
-                    mAnalytics.onEventLocation(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest().getText1(), size, MAXIMUM_NUMBER_PER_PAGE);
-                }
-
                 mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
                     , mViewModel.getInputKeyword(), size, MAXIMUM_NUMBER_PER_PAGE);
 
@@ -1375,13 +1370,10 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         Map<String, Object> queryMap = new HashMap<>();
         List<String> bedTypeList = filter.getBedTypeList();
+
+        List<String> luxuryFilterList = new ArrayList<>();
         List<String> amenitiesFilterList = filter.getAmenitiesFilter();
         List<String> roomAmenitiesFilterList = filter.getRoomAmenitiesFilterList();
-
-        if (roomAmenitiesFilterList != null && roomAmenitiesFilterList.size() > 0)
-        {
-            amenitiesFilterList.addAll(roomAmenitiesFilterList);
-        }
 
         queryMap.put("persons", filter.person);
 
@@ -1392,7 +1384,17 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         if (amenitiesFilterList != null && amenitiesFilterList.size() > 0)
         {
-            queryMap.put("luxury", amenitiesFilterList);
+            luxuryFilterList.addAll(amenitiesFilterList);
+        }
+
+        if (roomAmenitiesFilterList != null && roomAmenitiesFilterList.size() > 0)
+        {
+            luxuryFilterList.addAll(roomAmenitiesFilterList);
+        }
+
+        if (luxuryFilterList.size() > 0)
+        {
+            queryMap.put("luxury", luxuryFilterList);
         }
 
         Map<String, Object> sortQueryMap = getSortQueryMap(filter.sortType, mViewModel.filterLocation);

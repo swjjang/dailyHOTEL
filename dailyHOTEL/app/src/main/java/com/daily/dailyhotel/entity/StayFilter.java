@@ -107,12 +107,12 @@ public class StayFilter
 
     public List<String> getAmenitiesFilter()
     {
+        List<String> amenitiesFilterList = new ArrayList();
+
         if (flagAmenitiesFilters == FLAG_AMENITIES_NONE)
         {
-            return null;
+            return amenitiesFilterList;
         }
-
-        List<String> amenitiesFilterList = new ArrayList();
 
         if ((flagAmenitiesFilters & FLAG_AMENITIES_PARKING) == FLAG_AMENITIES_PARKING)
         {
@@ -159,12 +159,12 @@ public class StayFilter
 
     public List<String> getRoomAmenitiesFilterList()
     {
+        List<String> roomAmenitiesFilterList = new ArrayList();
+
         if (flagRoomAmenitiesFilters == FLAG_ROOM_AMENITIES_NONE)
         {
-            return null;
+            return roomAmenitiesFilterList;
         }
-
-        List<String> roomAmenitiesFilterList = new ArrayList();
 
         if ((flagRoomAmenitiesFilters & FLAG_ROOM_AMENITIES_WIFI) == FLAG_ROOM_AMENITIES_WIFI)
         {

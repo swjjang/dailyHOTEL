@@ -350,7 +350,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
     boolean isNotificationEnabled()
     {
-        return VersionUtils.isOverAPI19() ? NotificationManagerCompat.from(getActivity()).areNotificationsEnabled() : true;
+        return VersionUtils.isOverAPI19() == false || NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
     }
 
     boolean isThankYouBenefitAlarmEnabled()

@@ -42,8 +42,7 @@ public class GourmetSuggestData
 
         public GourmetSuggestV2.SuggestItem getSuggestItem()
         {
-            GourmetSuggestV2.SuggestItem suggestItem = new GourmetSuggestV2.SuggestItem(name);
-            return suggestItem;
+            return new GourmetSuggestV2.SuggestItem(name);
         }
     }
 

@@ -990,8 +990,7 @@ public class ReviewActivity extends BaseActivity
         {
             if (scoreMap.containsKey(scoreQuestion.answerCode))
             {
-                int score = scoreMap.get(scoreQuestion.answerCode);
-                scoreQuestion.selectedScore = score;
+                scoreQuestion.selectedScore = scoreMap.get(scoreQuestion.answerCode);
             }
         }
 

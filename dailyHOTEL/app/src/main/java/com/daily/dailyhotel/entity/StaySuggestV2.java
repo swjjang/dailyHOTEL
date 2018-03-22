@@ -88,17 +88,17 @@ public class StaySuggestV2
 
     public boolean isLocationSuggestType()
     {
-        return suggestItem == null ? false : suggestItem instanceof StaySuggestV2.Location;
+        return suggestItem != null && suggestItem instanceof Location;
     }
 
     public boolean isStaySuggestType()
     {
-        return suggestItem == null ? false : suggestItem instanceof StaySuggestV2.Stay;
+        return suggestItem != null && suggestItem instanceof Stay;
     }
 
     public boolean isCampaignTagSuggestType()
     {
-        return suggestItem == null ? false : suggestItem instanceof StaySuggestV2.CampaignTag;
+        return suggestItem != null && suggestItem instanceof CampaignTag;
     }
 
     public String getText1()

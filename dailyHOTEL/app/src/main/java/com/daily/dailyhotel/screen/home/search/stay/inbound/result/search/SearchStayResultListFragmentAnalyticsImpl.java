@@ -138,36 +138,6 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     }
 
     @Override
-    public void onEventLocation(Activity activity, StayBookDateTime bookDateTime, String suggest, int searchCount, int searchMaxCount)
-    {
-        if (activity == null || bookDateTime == null)
-        {
-            return;
-        }
-
-        Map<String, String> params = new HashMap<>();
-
-        try
-        {
-            params.put(AnalyticsManager.KeyType.CHECK_IN, bookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, bookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(bookDateTime.getNights()));
-            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(searchCount > searchMaxCount ? searchMaxCount : searchCount));
-
-            params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
-
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-                , searchCount == 0 ? "AroundSearchNotFound_LocationList_stay" : "AroundSearchClicked_LocationList_stay"//
-                , suggest, params);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    @Override
     public void onEventCallClick(Activity activity)
     {
         if (activity == null)

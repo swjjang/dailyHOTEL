@@ -933,7 +933,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         valueAnimator.setDuration(200);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -979,8 +979,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 valueAnimator.start();
             }
         };
-
-        return observable;
     }
 
     @Override
