@@ -856,20 +856,13 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             ArrayList<String> categoryList = new ArrayList();
             categoryList.add(mViewModel.getCategory().code);
 
-            Location location;
-
-            if (mViewModel.getFilter().sortType == StayFilter.SortType.DISTANCE)
-            {
-                location = mViewModel.filterLocation;
-            } else
-            {
-                location = null;
-            }
+            Location location = mViewModel.getFilter().isDistanceSort() ? mViewModel.filterLocation : null;
+            float radius = mViewModel.getSuggest().isLocationSuggestType() ? mViewModel.searchViewModel.radius : 0.0f;
 
             startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
                 , DailyCategoryType.STAY_ALL, mViewModel.getViewType().name()//
                 , mViewModel.getFilter(), mViewModel.getSuggest()//
-                , categoryList, location, 0, null), SearchStayResultTabActivity.REQUEST_CODE_FILTER);
+                , categoryList, location, radius, null), SearchStayResultTabActivity.REQUEST_CODE_FILTER);
 
             mAnalytics.onEventFilterClick(getActivity());
         } catch (Exception e)

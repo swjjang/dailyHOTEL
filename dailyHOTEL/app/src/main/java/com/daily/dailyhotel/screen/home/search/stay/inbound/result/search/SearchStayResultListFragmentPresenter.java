@@ -1306,7 +1306,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         Map<String, Object> queryMap = new HashMap<>();
 
-        queryMap.put("dateCheckIn", bookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+        queryMap.put("dateCheckIn", bookDateTime.getCheckInDateTime("yyyy-MM-dd"));
         queryMap.put("stays", bookDateTime.getNights());
 
         return queryMap;
