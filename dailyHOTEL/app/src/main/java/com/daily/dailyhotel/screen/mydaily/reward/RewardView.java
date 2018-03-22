@@ -590,7 +590,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         mIssueCouponAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         mIssueCouponAnimatorSet.setDuration(150);
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -638,8 +638,6 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                 mIssueCouponAnimatorSet.start();
             }
         };
-
-        return observable;
     }
 
     @Override
@@ -666,7 +664,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         mIssueCouponAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         mIssueCouponAnimatorSet.setDuration(150);
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -717,8 +715,6 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                 mIssueCouponAnimatorSet.start();
             }
         };
-
-        return observable;
     }
 
     @Override

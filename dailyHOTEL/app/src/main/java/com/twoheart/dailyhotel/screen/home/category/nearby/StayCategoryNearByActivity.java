@@ -501,8 +501,6 @@ public class StayCategoryNearByActivity extends BaseActivity
             return;
         }
 
-        double radius = DEFAULT_SEARCH_RADIUS;
-
         mStayCategoryNearByCuration = new StayCategoryNearByCuration();
 
         Location location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
@@ -516,7 +514,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
         mStayCategoryNearByCuration.getCurationOption().setSortType(SortType.DISTANCE);
-        mStayCategoryNearByCuration.setRadius(radius);
+        mStayCategoryNearByCuration.setRadius(DEFAULT_SEARCH_RADIUS);
 
         mStayCategoryNearByCuration.setLocation(location);
         mStayCategoryNearByCuration.setStayBookingDay(stayBookingDay);

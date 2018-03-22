@@ -351,10 +351,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             {
                 mCommonDateTime = commonDateTime;
 
-                StayBookDateTime stayBookDateTime = mStayBookDateTime == null //
-                    ? getStayBookDateTime(mCommonDateTime) : mStayBookDateTime;
-
-                return stayBookDateTime;
+                return mStayBookDateTime == null ? getStayBookDateTime(mCommonDateTime) : mStayBookDateTime;
             }
         }).observeOn(Schedulers.io()).flatMap(new Function<StayBookDateTime, Observable<StayCampaignTags>>()
         {

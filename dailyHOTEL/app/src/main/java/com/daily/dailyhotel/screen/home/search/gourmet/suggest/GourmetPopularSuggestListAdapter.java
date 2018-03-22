@@ -52,9 +52,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_nearby_data, parent, false);
 
-                LocationViewHolder locationViewHolder = new LocationViewHolder(dataBinding);
-
-                return locationViewHolder;
+                return new LocationViewHolder(dataBinding);
             }
 
             case ObjectItem.TYPE_ENTRY:
@@ -63,9 +61,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
                     = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                     , R.layout.list_row_search_suggest_type_recommend_data, parent, false);
 
-                EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
-
-                return entryViewHolder;
+                return new EntryViewHolder(dataBinding);
             }
         }
 

@@ -474,7 +474,7 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(imageView, View.ROTATION, 0f, -180f);
         objectAnimator.setDuration(250);
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -513,8 +513,6 @@ public class StayAreaExpandableListView extends DailyAnimatedExpandableListView
                 objectAnimator.start();
             }
         };
-
-        return observable;
     }
 
     private Observable<Boolean> collapseArrowAnimation(View view, boolean animation)

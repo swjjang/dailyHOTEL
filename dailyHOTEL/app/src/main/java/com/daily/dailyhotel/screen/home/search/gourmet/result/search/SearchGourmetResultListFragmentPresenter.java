@@ -636,12 +636,6 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
                 mAnalytics.onScreen(getActivity(), mViewModel.getViewType(), mViewModel.getBookDateTime(), size == 0);
 
-
-                if (mViewModel.getSuggest().isLocationSuggestType() == true)
-                {
-                    mAnalytics.onEventLocation(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest().getText1(), size, MAXIMUM_NUMBER_PER_PAGE);
-                }
-
                 mAnalytics.onEventSearchResult(getActivity(), mViewModel.getBookDateTime(), mViewModel.getSuggest()//
                     , mViewModel.getInputKeyword(), size, MAXIMUM_NUMBER_PER_PAGE);
             }

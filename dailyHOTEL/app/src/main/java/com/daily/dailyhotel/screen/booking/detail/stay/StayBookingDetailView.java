@@ -1128,7 +1128,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
             return null;
         }
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -1219,8 +1219,6 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200, null);
             }
         };
-
-        return observable;
     }
 
     @Override
@@ -1231,7 +1229,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
             return null;
         }
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -1317,8 +1315,6 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 300, null);
             }
         };
-
-        return observable;
     }
 
     @Override
