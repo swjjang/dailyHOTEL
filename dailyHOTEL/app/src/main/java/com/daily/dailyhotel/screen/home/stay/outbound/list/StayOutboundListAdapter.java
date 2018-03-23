@@ -270,7 +270,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.stayOutboundCardView.setPriceText(stayOutbound.discountRate, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
         } else
         {
-            holder.stayOutboundCardView.setPriceText(stayOutbound.discountRate, stayOutbound.total, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
+            holder.stayOutboundCardView.setPriceText(stayOutbound.discountRate, stayOutbound.total, stayOutbound.nightlyBaseRate, stayOutbound.couponDiscountPriceText, mNightsEnabled);
         }
 
         holder.stayOutboundCardView.setBenefitText(null);

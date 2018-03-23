@@ -72,6 +72,9 @@ public class StayOutboundData
     @JsonField(name = "dailyChoice")
     public boolean dailyChoice; // 2.1.9 신규
 
+    @JsonField(name = "couponDiscountPriceText")
+    public String couponDiscountPriceText;
+
     public StayOutboundData()
     {
 
@@ -108,6 +111,7 @@ public class StayOutboundData
         stayOutbound.myWish = myWish;
         stayOutbound.createdWishDateTime = createdAt;
         stayOutbound.dailyChoice = dailyChoice;
+        stayOutbound.couponDiscountPriceText = couponDiscountPriceText;
 
         return stayOutbound;
     }
