@@ -11,18 +11,22 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
+import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.WishResult;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundRoomData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,7 +216,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
-    public Observable<StayOutboundDetail> getDetail(int index, StayBookDateTime stayBookDateTime, People people)
+    public Observable<StayOutboundDetail> getDetailInformation(int index, StayBookDateTime stayBookDateTime, People people)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -234,13 +238,13 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
 
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}"//
-            : "NTEkMjMkMTEyJDEwMyQ3MSQxMDIkMTA1JDQwJDExMyQ1NCQ5MiQyJDI3JDEwJDEyMSQ0JA==$NkJFKFNjg0MGjBFNDRBRkYxMjFPGORTVBREYyNEM1N0ZZBQjVERUMxRTNGIBNTEyOTM0NjhDODZGRWEFEMTY0N0JFQTkwQ0UU3MjVDQzE5QzBZBMGYDJBODWkxNMkJNBOTNBRTNBMTZFMTAw$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/hotels/{hotelId}/description"//
+            : "MzckODMkNzIkOTAkMTI3JDEyNiQxMDEkMTkkODUkOTkkMCQ5OSQxMDYkNDIkNjMkNzck$NMzc2RjI2N0M5RjY0MENJERDQ4NUE0QzA4NTMzROUYYxMTQyNTE2NkU0RDM1NUECxMTRBMTI4QThHPCRjY0MDJDNzICBENzIW0OUM0RMNjBCRROjAwOTk2NjI0QTEyQjA3OTQwQULMP3QkQ0$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{stayIndex}", Integer.toString(index));
+        urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutboundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+        return mDailyMobileService.getStayOutboundDetailInformation(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io()).map((stayOutboundDetailDataBaseDto) ->
         {
             StayOutboundDetail stayOutboundDetail;
@@ -260,7 +264,66 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             }
 
             return stayOutboundDetail;
-        }).observeOn(AndroidSchedulers.mainThread());
+        });
+    }
+
+    @Override
+    public Observable<List<StayOutboundRoom>> getDetailRoomList(int index, StayBookDateTime stayBookDateTime, People people)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        final int numberOfRooms = 1;
+
+        try
+        {
+            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+
+            jsonObject.put("numberOfRooms", numberOfRooms);
+            jsonObject.put("rooms", getRooms(new People[]{people}));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/hotels/{hotelId}/rooms"//
+            : "MTI0JDk3JDM1JDc1JDEyOCQ4MyQxNCQ4MiQxMDMkODckNjYkMTgkOTMkNzIkNjckNSQ=$QTM0NJUZCQzU1OUHJCRLTQzMzUxNTA4OTEzQURNDQzgxREE1NDY5RjFCQzlCM0MyNENBBNNkU0LQzQzQzABCMzIP1RBEWUxNYUNGNTNBM0NDOOGTMyNENGOUFBRjM0NTRBN0EzMjU5JZOUNB$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutboundDetailRoomList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<StayOutboundRoomData>, List<StayOutboundRoom>>()
+            {
+                @Override
+                public List<StayOutboundRoom> apply(BaseListDto<StayOutboundRoomData> stayOutboundRoomDataBaseListDto) throws Exception
+                {
+                    List<StayOutboundRoom> list = new ArrayList<>();
+
+                    if (stayOutboundRoomDataBaseListDto != null)
+                    {
+                        if (stayOutboundRoomDataBaseListDto.msgCode == 100 && stayOutboundRoomDataBaseListDto.data != null)
+                        {
+                            for (StayOutboundRoomData roomData : stayOutboundRoomDataBaseListDto.data)
+                            {
+                                list.add(roomData.getStayOutboundRoom());
+                            }
+                        } else
+                        {
+                            throw new BaseException(stayOutboundRoomDataBaseListDto.msgCode, stayOutboundRoomDataBaseListDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return list;
+                }
+            });
     }
 
     @Override

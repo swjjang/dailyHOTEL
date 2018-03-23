@@ -7,8 +7,10 @@ import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
+import com.daily.dailyhotel.entity.StayOutboundRoom;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -65,4 +67,8 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
     void startCampaignStickerAnimation();
 
     void stopCampaignStickerAnimation();
+
+    void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList);
+
+    void setRoomActiveReward(boolean activeReward);
 }
