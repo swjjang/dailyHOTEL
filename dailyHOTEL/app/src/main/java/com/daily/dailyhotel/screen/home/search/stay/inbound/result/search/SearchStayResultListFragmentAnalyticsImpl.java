@@ -264,8 +264,11 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
         switch (suggest.menuType)
         {
             case RECENTLY_SEARCH:
-            case RECENTLY_STAY:
                 recordEventSearchResultByRecentKeyword(activity, displayName, empty, params);
+                break;
+
+            case RECENTLY_STAY:
+                recordEventSearchResultByRecentStay(activity, displayName, empty, params);
                 break;
 
             case DIRECT:
@@ -273,7 +276,7 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
                 break;
 
             case SUGGEST:
-                recordEventSearchResultByAutoSearch(activity, displayName, inputKeyword, empty, params);
+                recordEventSearchResultByAutoSearch(activity, suggest, inputKeyword, empty, params);
                 break;
         }
     }
@@ -281,6 +284,18 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     private void recordEventSearchResultByRecentKeyword(Activity activity, String displayName, boolean empty, Map<String, String> params)
     {
         String action = empty ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+
+        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
+        params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , action + "_stay", displayName, params);
+    }
+
+    private void recordEventSearchResultByRecentStay(Activity activity, String displayName, boolean empty, Map<String, String> params)
+    {
+        String action = empty ? "RecentSearchPlaceNotFound" : "RecentSearchPlace";
 
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
@@ -302,16 +317,43 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             , action + "_stay", displayName, params);
     }
 
-    private void recordEventSearchResultByAutoSearch(Activity activity, String displayName, String inputKeyword, boolean empty, Map<String, String> params)
+    private void recordEventSearchResultByAutoSearch(Activity activity, StaySuggestV2 suggest, String inputKeyword, boolean empty, Map<String, String> params)
     {
+        if (activity == null || suggest == null || params == null)
+        {
+            return;
+        }
+
         String category = empty ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
+        String displayName = suggest.getText1();
 
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, inputKeyword);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
+        String suggestType;
+
+        switch (suggest.getSuggestType())
+        {
+            case STAY:
+                suggestType = "업장";
+                break;
+
+            case AREA_GROUP:
+                suggestType = "도시/지역";
+                break;
+
+            case STATION:
+                suggestType = "역";
+                break;
+
+            default:
+                suggestType = "";
+                break;
+        }
+
         AnalyticsManager.getInstance(activity).recordEvent(category//
-            , "stay_" + displayName, inputKeyword, params);
+            , "stay_" + suggestType + "_" + displayName, inputKeyword, params);
     }
 
     private String getFilterSortString(StayFilter.SortType sortType)

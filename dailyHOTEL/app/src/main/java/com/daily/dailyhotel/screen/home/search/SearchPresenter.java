@@ -927,20 +927,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        try
-        {
-            StayBookDateTime bookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
-            StaySuggestV2 suggest = mSearchViewModel.stayViewModel.getSuggest();
+        StayBookDateTime bookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
+        StaySuggestV2 suggest = mSearchViewModel.stayViewModel.getSuggest();
 
-            startSearchStayResultTab(suggest, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mSearchViewModel.gourmetViewModel.inputKeyword);
-
-            mAnalytics.onEventStayDoSearch(getActivity(), mSearchViewModel.stayViewModel.getSuggest());
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        startSearchStayResultTab(suggest, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchViewModel.stayViewModel.inputKeyword);
     }
 
     @Override
@@ -1081,8 +1073,6 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , people.numberOfAdults, people.getChildAgeList(), analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT);
-
-        mAnalytics.onEventStayOutboundDoSearch(getActivity(), suggest);
     }
 
     @Override
@@ -1178,19 +1168,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        try
-        {
-            GourmetBookDateTime gourmetBookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
-            GourmetSuggestV2 suggest = mSearchViewModel.gourmetViewModel.getSuggest();
+        GourmetBookDateTime gourmetBookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
+        GourmetSuggestV2 suggest = mSearchViewModel.gourmetViewModel.getSuggest();
 
-            startSearchGourmetResultTab(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mSearchViewModel.gourmetViewModel.inputKeyword);
-
-            mAnalytics.onEventGourmetDoSearch(getActivity(), mSearchViewModel.gourmetViewModel.getSuggest());
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        startSearchGourmetResultTab(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchViewModel.gourmetViewModel.inputKeyword);
     }
 
     @Override

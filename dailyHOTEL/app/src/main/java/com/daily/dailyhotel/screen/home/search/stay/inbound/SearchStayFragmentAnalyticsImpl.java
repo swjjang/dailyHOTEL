@@ -15,7 +15,7 @@ public class SearchStayFragmentAnalyticsImpl implements SearchStayFragmentInterf
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , empty ? "no_recent_checked_search" : "yes_recent_checked_search", null, null);
+            , empty ? "no_recent_search" : "yes_recent_search", "stay", null);
     }
 
     @Override
@@ -27,6 +27,6 @@ public class SearchStayFragmentAnalyticsImpl implements SearchStayFragmentInterf
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "recent_search_place_delete", stayName, null);
+            , "recent_search_delete", "stay", null);
     }
 }

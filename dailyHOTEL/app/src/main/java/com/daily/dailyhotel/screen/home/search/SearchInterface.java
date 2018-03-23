@@ -120,20 +120,14 @@ public interface SearchInterface
 
         void onEventStaySuggestClick(Activity activity);
 
-        void onEventStayDoSearch(Activity activity, StaySuggestV2 suggest);
-
         void onEventStayCalendarClick(Activity activity);
 
 
         void onEventStayOutboundSuggestClick(Activity activity);
 
-        void onEventStayOutboundDoSearch(Activity activity, StayOutboundSuggest suggest);
-
         void onEventStayOutboundPeopleClick(Activity activity);
 
 
         void onEventGourmetSuggestClick(Activity activity);
-
-        void onEventGourmetDoSearch(Activity activity, GourmetSuggestV2 suggest);
     }
 }

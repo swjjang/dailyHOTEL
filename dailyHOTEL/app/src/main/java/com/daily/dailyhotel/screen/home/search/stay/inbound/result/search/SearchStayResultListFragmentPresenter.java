@@ -1350,6 +1350,12 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         switch (suggest.getSuggestType())
         {
             case STAY:
+            {
+                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) suggest.getSuggestItem();
+                queryMap.put("targetIndices", suggestItem.index);
+                break;
+            }
+
             case DIRECT:
                 queryMap.put("term", suggest.getSuggestItem().name);
                 break;
