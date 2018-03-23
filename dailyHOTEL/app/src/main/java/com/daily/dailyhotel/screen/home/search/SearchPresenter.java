@@ -932,7 +932,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         startSearchStayResultTab(suggest, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchViewModel.gourmetViewModel.inputKeyword);
+            , mSearchViewModel.stayViewModel.inputKeyword);
     }
 
     @Override

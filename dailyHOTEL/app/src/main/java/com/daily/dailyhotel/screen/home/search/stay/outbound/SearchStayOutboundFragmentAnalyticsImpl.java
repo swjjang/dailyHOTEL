@@ -15,7 +15,7 @@ public class SearchStayOutboundFragmentAnalyticsImpl implements SearchStayOutbou
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , empty ? "no_recent_search" : "yes_recent_search", null, null);
+            , empty ? "no_recent_search" : "yes_recent_search", "ob", null);
     }
 
     @Override
@@ -27,6 +27,6 @@ public class SearchStayOutboundFragmentAnalyticsImpl implements SearchStayOutbou
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "recent_search_delete", stayName, null);
+            , "recent_search_delete", "ob", null);
     }
 }

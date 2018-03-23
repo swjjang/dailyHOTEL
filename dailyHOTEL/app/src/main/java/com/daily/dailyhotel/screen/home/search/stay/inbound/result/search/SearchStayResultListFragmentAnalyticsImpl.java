@@ -264,8 +264,11 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
         switch (suggest.menuType)
         {
             case RECENTLY_SEARCH:
-            case RECENTLY_STAY:
                 recordEventSearchResultByRecentKeyword(activity, displayName, empty, params);
+                break;
+
+            case RECENTLY_STAY:
+                recordEventSearchResultByRecentStay(activity, displayName, empty, params);
                 break;
 
             case DIRECT:
@@ -281,6 +284,18 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     private void recordEventSearchResultByRecentKeyword(Activity activity, String displayName, boolean empty, Map<String, String> params)
     {
         String action = empty ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+
+        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
+        params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , action + "_stay", displayName, params);
+    }
+
+    private void recordEventSearchResultByRecentStay(Activity activity, String displayName, boolean empty, Map<String, String> params)
+    {
+        String action = empty ? "RecentSearchPlaceNotFound" : "RecentSearchPlace";
 
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);

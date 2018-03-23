@@ -160,6 +160,17 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
                     break;
                 }
 
+                case StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY:
+                {
+                    params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
+
+                    String recentlyAction = size == 0 ? "RecentSearchPlaceNotFound" : "RecentSearchPlace";
+
+                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , recentlyAction + "_ob", suggest.display, params);
+                    break;
+                }
+
                 case StayOutboundSuggest.MENU_TYPE_SUGGEST:
                 {
                     params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
