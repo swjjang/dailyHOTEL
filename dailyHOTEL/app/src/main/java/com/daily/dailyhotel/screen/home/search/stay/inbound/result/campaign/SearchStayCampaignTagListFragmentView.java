@@ -144,6 +144,12 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
+
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
                 if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
                 {
                     return;
@@ -155,12 +161,6 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
                 {
                     mMapFragment.setSelectedMarker(stay);
                 }
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-
             }
 
             @Override
