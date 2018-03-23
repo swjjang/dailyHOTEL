@@ -613,7 +613,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             {
                 StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) mSuggest.getSuggestItem();
 
-                queryMap.put("term", suggestItem.name);
+                queryMap.put("targetIndices", suggestItem.index);
                 break;
             }
         }

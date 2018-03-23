@@ -677,6 +677,12 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
+
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
                 if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
                 {
                     return;
@@ -691,15 +697,8 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
             }
 
             @Override
-            public void onPageSelected(int position)
-            {
-
-            }
-
-            @Override
             public void onPageScrollStateChanged(int state)
             {
-
             }
         });
 
