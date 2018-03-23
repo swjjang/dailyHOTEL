@@ -53,32 +53,6 @@ public class SearchGourmetSuggestAnalyticsImpl implements SearchGourmetSuggestPr
     }
 
     @Override
-    public void onRecentlySearchList(Activity activity, boolean hasData)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        String action = hasData ? "yes_recent_search" : "no_recent_search";
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "gourmet", null);
-    }
-
-    @Override
-    public void onRecentlyGourmetList(Activity activity, boolean hasData)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        String action = hasData ? "yes_recent_checked_search" : "no_recent_checked_search";
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "gourmet", null);
-    }
-
-    @Override
     public void onDeleteRecentlyGourmet(Activity activity)
     {
         if (activity == null)

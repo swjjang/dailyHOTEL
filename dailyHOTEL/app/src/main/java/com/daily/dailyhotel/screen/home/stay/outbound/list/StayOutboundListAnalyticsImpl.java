@@ -166,8 +166,33 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
 
                     String suggestCategory = size == 0 ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
 
+                    String suggestType;
+
+                    switch (suggest.categoryKey)
+                    {
+                        case StayOutboundSuggest.CATEGORY_HOTEL:
+                            suggestType = "업장";
+                            break;
+
+                        case StayOutboundSuggest.CATEGORY_POINT:
+                            suggestType = "주요지점";
+                            break;
+
+                        case StayOutboundSuggest.CATEGORY_REGION:
+                            suggestType = "도시/지역";
+                            break;
+
+                        case StayOutboundSuggest.CATEGORY_STATION:
+                            suggestType = "역";
+                            break;
+
+                        default:
+                            suggestType = "";
+                            break;
+                    }
+
                     AnalyticsManager.getInstance(activity).recordEvent(suggestCategory//
-                        , "ob_" + suggest.display, mAnalyticsParam.keyword, params);
+                        , "ob_" + suggestType + "_" + suggest.display, mAnalyticsParam.keyword, params);
                     break;
                 }
 

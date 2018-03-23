@@ -75,32 +75,6 @@ public class SearchStaySuggestAnalyticsImpl implements SearchStaySuggestPresente
     }
 
     @Override
-    public void onRecentlySearchList(Activity activity, boolean hasData)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        String action = hasData ? "yes_recent_search" : "no_recent_search";
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "stay", null);
-    }
-
-    @Override
-    public void onRecentlyStayList(Activity activity, boolean hasData)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        String action = hasData ? "yes_recent_checked_search" : "no_recent_checked_search";
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "stay", null);
-    }
-
-    @Override
     public void onDeleteRecentlyStay(Activity activity)
     {
         if (activity == null)

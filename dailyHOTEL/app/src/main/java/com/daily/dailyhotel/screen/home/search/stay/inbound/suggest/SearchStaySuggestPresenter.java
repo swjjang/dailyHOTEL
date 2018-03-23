@@ -105,10 +105,6 @@ public class SearchStaySuggestPresenter //
 
         void onLocationSearchNoAddressClick(Activity activity);
 
-        void onRecentlySearchList(Activity activity, boolean hasData);
-
-        void onRecentlyStayList(Activity activity, boolean hasData);
-
         void onDeleteRecentlyStay(Activity activity);
 
         void onScreen(Activity activity);
@@ -376,15 +372,6 @@ public class SearchStaySuggestPresenter //
                 {
                     List<StaySuggestV2> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
                     setRecentlySuggestList(recentlySuggestList);
-
-                    try
-                    {
-                        mAnalytics.onRecentlySearchList(getActivity(), searchList != null && searchList.size() > 0);
-                        mAnalytics.onRecentlyStayList(getActivity(), placeList != null && placeList.size() > 0);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
 
                     return recentlySuggestList;
                 }

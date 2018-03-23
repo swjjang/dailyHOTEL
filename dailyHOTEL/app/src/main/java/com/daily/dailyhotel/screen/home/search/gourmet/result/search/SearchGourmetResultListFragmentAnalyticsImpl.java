@@ -177,7 +177,7 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
                 break;
 
             case SUGGEST:
-                recordEventSearchResultByAutoSearch(activity, displayName, inputKeyword, empty, params);
+                recordEventSearchResultByAutoSearch(activity, suggest, inputKeyword, empty, params);
                 break;
         }
     }
@@ -206,15 +206,38 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
             , action + "_gourmet", displayName, params);
     }
 
-    private void recordEventSearchResultByAutoSearch(Activity activity, String displayName, String inputKeyword, boolean empty, Map<String, String> params)
+    private void recordEventSearchResultByAutoSearch(Activity activity, GourmetSuggestV2 suggest, String inputKeyword, boolean empty, Map<String, String> params)
     {
+        if (activity == null || suggest == null || params == null)
+        {
+            return;
+        }
+
         String category = empty ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
+        String displayName = suggest.getText1();
 
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, inputKeyword);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
+        String suggestType;
+
+        switch (suggest.getSuggestType())
+        {
+            case GOURMET:
+                suggestType = "업장";
+                break;
+
+            case AREA_GROUP:
+                suggestType = "도시/지역";
+                break;
+
+            default:
+                suggestType = "";
+                break;
+        }
+
         AnalyticsManager.getInstance(activity).recordEvent(category//
-            , "gourmet_" + displayName, inputKeyword, params);
+            , "gourmet_" + suggestType + "_" + displayName, inputKeyword, params);
     }
 }

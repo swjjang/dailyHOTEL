@@ -89,10 +89,6 @@ public class SearchGourmetSuggestPresenter //
 
         void onLocationSearchNoAddressClick(Activity activity);
 
-        void onRecentlySearchList(Activity activity, boolean hasData);
-
-        void onRecentlyGourmetList(Activity activity, boolean hasData);
-
         void onDeleteRecentlyGourmet(Activity activity);
 
         void onScreen(Activity activity);
@@ -329,15 +325,6 @@ public class SearchGourmetSuggestPresenter //
                 {
                     List<GourmetSuggestV2> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
                     setRecentlySuggestList(recentlySuggestList);
-
-                    try
-                    {
-                        mAnalytics.onRecentlySearchList(getActivity(), searchList != null && searchList.size() > 0);
-                        mAnalytics.onRecentlyGourmetList(getActivity(), placeList != null && placeList.size() > 0);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
 
                     return recentlySuggestList;
                 }

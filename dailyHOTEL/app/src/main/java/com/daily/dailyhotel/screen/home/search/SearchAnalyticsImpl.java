@@ -69,43 +69,6 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
     }
 
     @Override
-    public void onEventStayDoSearch(Activity activity, StaySuggestV2 suggest)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        String action = "searching_stay_";
-
-        switch (suggest.menuType)
-        {
-            case DIRECT:
-                action += "direct";
-                break;
-
-            case LOCATION:
-                action += "around";
-                break;
-
-            case RECENTLY_SEARCH:
-                action += "recent";
-                break;
-
-            case RECENTLY_STAY:
-                action += "recent_checked";
-                break;
-
-            case SUGGEST:
-                action += "auto";
-                break;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, suggest.getSuggestItem().name, null);
-    }
-
-    @Override
     public void onEventStayCalendarClick(Activity activity)
     {
         if (activity == null)
@@ -130,47 +93,6 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
     }
 
     @Override
-    public void onEventStayOutboundDoSearch(Activity activity, StayOutboundSuggest suggest)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        String action = "searching_ob_";
-
-        switch (suggest.menuType)
-        {
-            case StayOutboundSuggest.MENU_TYPE_DIRECT:
-                action += "direct";
-                break;
-
-            case StayOutboundSuggest.MENU_TYPE_LOCATION:
-                action += "around";
-                break;
-
-            case StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH:
-                action += "recent";
-                break;
-
-            case StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY:
-                action += "recent_checked";
-                break;
-
-            case StayOutboundSuggest.MENU_TYPE_SUGGEST:
-                action += "auto";
-                break;
-
-            case StayOutboundSuggest.MENU_TYPE_POPULAR_AREA:
-                action += "recommend";
-                break;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, suggest.display, null);
-    }
-
-    @Override
     public void onEventStayOutboundPeopleClick(Activity activity)
     {
         if (activity == null)
@@ -192,46 +114,5 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
             , "search_try", AnalyticsManager.ValueType.GOURMET, null);
-    }
-
-    @Override
-    public void onEventGourmetDoSearch(Activity activity, GourmetSuggestV2 suggest)
-    {
-        if (activity == null || suggest == null || suggest.getSuggestItem() == null)
-        {
-            return;
-        }
-
-        String action = "searching_gourmet_";
-
-        switch (suggest.menuType)
-        {
-            case DIRECT:
-                action += "direct";
-                break;
-
-            case LOCATION:
-                action += "around";
-                break;
-
-            case RECENTLY_SEARCH:
-                action += "recent";
-                break;
-
-            case RECENTLY_GOURMET:
-                action += "recent_checked";
-                break;
-
-            case SUGGEST:
-                action += "auto";
-                break;
-
-            case CAMPAIGN_TAG:
-                action += "";
-                break;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, suggest.getSuggestItem().name, null);
     }
 }
