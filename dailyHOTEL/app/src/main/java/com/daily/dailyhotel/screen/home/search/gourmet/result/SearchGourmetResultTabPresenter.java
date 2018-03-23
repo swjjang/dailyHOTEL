@@ -957,8 +957,11 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             }));
         } else
         {
-            addCompositeDisposable(mSearchLocalImpl.addGourmetSearchResultHistory(mViewModel.getCommonDateTime()//
-                , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
+            if (mViewModel.getSuggest().menuType != GourmetSuggestV2.MenuType.REGION_LOCATION)
+            {
+                addCompositeDisposable(mSearchLocalImpl.addGourmetSearchResultHistory(mViewModel.getCommonDateTime()//
+                    , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
+            }
         }
     }
 

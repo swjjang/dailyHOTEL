@@ -963,8 +963,11 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             }));
         } else
         {
-            addCompositeDisposable(mSearchLocalImpl.addStayIbSearchResultHistory(mViewModel.getCommonDateTime()//
-                , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
+            if (mViewModel.getSuggest().menuType != StaySuggestV2.MenuType.REGION_LOCATION)
+            {
+                addCompositeDisposable(mSearchLocalImpl.addStayIbSearchResultHistory(mViewModel.getCommonDateTime()//
+                    , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
+            }
         }
     }
 
