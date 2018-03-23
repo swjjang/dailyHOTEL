@@ -4,6 +4,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class StayBookDateTime extends PlaceBookDateTime
 {
@@ -103,14 +104,14 @@ public class StayBookDateTime extends PlaceBookDateTime
     {
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
 
-        return String.format("%s - %s, %d박", getCheckInDateTime(DATE_FORMAT), getCheckOutDateTime(DATE_FORMAT), getNights());
+        return String.format(Locale.KOREA, "%s - %s, %d박", getCheckInDateTime(DATE_FORMAT), getCheckOutDateTime(DATE_FORMAT), getNights());
     }
 
     public String getToMonthDateFormat()
     {
         final String DATE_FORMAT = "MM.dd(EEE)";
 
-        return String.format("%s - %s, %d박", getCheckInDateTime(DATE_FORMAT), getCheckOutDateTime(DATE_FORMAT), getNights());
+        return String.format(Locale.KOREA, "%s - %s, %d박", getCheckInDateTime(DATE_FORMAT), getCheckOutDateTime(DATE_FORMAT), getNights());
     }
 
     //    public void verifyCommonDateTime(@NonNull CommonDateTime commonDateTime) throws Exception

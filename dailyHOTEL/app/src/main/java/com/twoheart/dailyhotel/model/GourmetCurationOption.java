@@ -50,15 +50,10 @@ public class GourmetCurationOption extends PlaceCurationOption
     @Override
     public boolean isDefaultFilter()
     {
-        if (isDefaultSortType() == false//
-            || mFilterMap.size() != 0//
-            || flagTimeFilter != GourmetFilter.Time.FLAG_NONE//
-            || flagAmenitiesFilters != GourmetFilter.Amenities.FLAG_NONE)
-        {
-            return false;
-        }
-
-        return true;
+        return isDefaultSortType() == true//
+            && mFilterMap.size() == 0//
+            && flagTimeFilter == GourmetFilter.Time.FLAG_NONE//
+            && flagAmenitiesFilters == GourmetFilter.Amenities.FLAG_NONE;
     }
 
     protected void setCurationOption(GourmetCurationOption gourmetCurationOption)

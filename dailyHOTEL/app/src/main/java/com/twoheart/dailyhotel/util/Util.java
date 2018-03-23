@@ -1369,12 +1369,7 @@ public class Util implements Constants
     {
         // 화면 사이즈가 작은 단말에서 지원하지 않는다. 실제 새로 길이는 안테나 영역과 하단에 소프트바 버튼 영역이
         // 있기 때문에 1024x720에서도 높이는 그보다 작다.
-        if (ScreenUtils.getScreenHeight(context) > 800)
-        {
-            return true;
-        }
-
-        return false;
+        return ScreenUtils.getScreenHeight(context) > 800;
     }
 
     public static Bundle getClassPublicFieldsBundle(Class bundleClass, Object objectClass) throws Exception

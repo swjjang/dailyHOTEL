@@ -83,16 +83,8 @@ public class StayProduct implements Parcelable
         roomName = DailyTextUtils.isTextEmpty(roomName) == true ? "" : roomName.trim();
         option = DailyTextUtils.isTextEmpty(option) == true ? "" : option.trim();
         amenities = DailyTextUtils.isTextEmpty(amenities) == true ? "" : amenities.trim();
-
         roomBenefit = DailyTextUtils.isTextEmpty(roomBenefit) == true ? "" : roomBenefit.trim();
-
-        if (DailyTextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true)
-        {
-            isNRD = true;
-        } else
-        {
-            isNRD = false;
-        }
+        isNRD = DailyTextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true;
     }
 
     @Override

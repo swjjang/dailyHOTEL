@@ -100,7 +100,6 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
         mRoomTypeCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_ROOM_TYPE_CODE);
         mVendorType = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_VENDOR_TYPE);
 
-
         if (DailyTextUtils.isTextEmpty(mRateCode, mRateKey, mRoomTypeCode) == true)
         {
             return false;

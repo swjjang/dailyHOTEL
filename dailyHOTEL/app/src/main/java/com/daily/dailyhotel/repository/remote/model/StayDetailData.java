@@ -412,15 +412,7 @@ public class StayDetailData
             stayRoom.description1 = description1;
             stayRoom.description2 = description2;
             stayRoom.refundType = refundType;
-
-            if (DailyTextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true)
-            {
-                stayRoom.nrd = true;
-            } else
-            {
-                stayRoom.nrd = false;
-            }
-
+            stayRoom.nrd = DailyTextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true;
             stayRoom.provideRewardSticker = provideRewardSticker;
 
             return stayRoom;
