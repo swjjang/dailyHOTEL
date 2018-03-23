@@ -146,6 +146,12 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
+
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
                 if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
                 {
                     return;
@@ -157,12 +163,6 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
                 {
                     mMapFragment.setSelectedMarker(gourmet);
                 }
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-
             }
 
             @Override
