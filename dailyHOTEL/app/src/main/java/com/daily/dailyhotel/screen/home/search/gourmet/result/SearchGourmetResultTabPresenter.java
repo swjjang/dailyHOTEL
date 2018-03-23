@@ -438,6 +438,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                         initView(mViewModel.getSuggest());
 
                         mViewModel.getFilter().reset();
+                        mViewModel.setFilter(mViewModel.getFilter());
                         mViewModel.setViewType(ViewType.LIST);
 
                         setRefresh(true);
@@ -528,13 +529,20 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                         }
 
                         mViewModel.setBookDateTime(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
+
+                        if (mViewModel.getSuggest().isLocationSuggestType() == true)
+                        {
+                            mViewModel.searchViewModel.radius = DEFAULT_RADIUS;
+                            getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
+                        }
+
+                        initView(mViewModel.getSuggest());
+
                         mViewModel.getFilter().reset();
+                        mViewModel.setFilter(mViewModel.getFilter());
+                        mViewModel.setViewType(ViewType.LIST);
 
-                        mViewModel.searchViewModel.radius = DEFAULT_RADIUS;
-                        getViewInterface().setOptionFilterSelected(false);
-                        getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
-
-                        getViewInterface().refreshCurrentFragment();
+                        setRefresh(true);
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());

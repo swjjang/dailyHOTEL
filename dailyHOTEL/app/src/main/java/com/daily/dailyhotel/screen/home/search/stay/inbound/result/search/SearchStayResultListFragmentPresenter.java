@@ -641,7 +641,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                 {
                     setResultList(stays, objectItemList, applyFilter);
 
-                    if (mViewModel.resetCategory == true && mViewModel.getCategory() == Category.ALL)
+                    if (mViewModel.resetCategory == true && Category.ALL.code.equalsIgnoreCase(mCategory.code) == true)
                     {
                         mViewModel.resetCategory = false;
                         fragmentObservable = getFragment().getFragmentEventListener().addCategoryList(stays.getStayCategoryList());

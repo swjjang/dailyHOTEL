@@ -470,7 +470,9 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
                         mViewModel.resetCategory = true;
                         mViewModel.getFilter().reset();
+                        mViewModel.setFilter(mViewModel.getFilter());
                         mViewModel.setViewType(ViewType.LIST);
+                        mViewModel.setCategory(Category.ALL);
 
                         setRefresh(true);
                     } catch (Exception e)
@@ -492,50 +494,40 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                     return;
                 }
 
-                try
+                StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+
+                if (stayFilterParcel == null)
                 {
-                    StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+                    return;
+                }
 
-                    if (stayFilterParcel == null)
+                StayFilter stayFilter = stayFilterParcel.getStayFilter();
+
+                if (stayFilter == null)
+                {
+                    return;
+                }
+
+                if (stayFilter.isDistanceSort() == true)
+                {
+                    Location location = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
+
+                    if (location != null)
                     {
-                        return;
-                    }
-
-                    StayFilter stayFilter = stayFilterParcel.getStayFilter();
-
-                    if (stayFilter == null)
-                    {
-                        return;
-                    }
-
-                    if (stayFilter.isDistanceSort() == true)
-                    {
-                        Location location = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
-
-                        if (location != null)
-                        {
-                            mViewModel.filterLocation = location;
-                        } else
-                        {
-                            mViewModel.getFilter().sortType = StayFilter.SortType.DEFAULT;
-                        }
-
-                        mViewModel.setFilter(stayFilter);
-
-                        getViewInterface().refreshCurrentFragment();
+                        mViewModel.filterLocation = location;
                     } else
                     {
-
-                        mViewModel.setFilter(stayFilter);
-
-                        getViewInterface().refreshCurrentFragment();
+                        mViewModel.getFilter().sortType = StayFilter.SortType.DEFAULT;
                     }
-                } catch (Exception e)
-                {
-                    mViewModel.setFilter(mViewModel.getFilter().reset());
-                    mViewModel.setCategory(Category.ALL);
 
-                    setRefresh(true);
+                    mViewModel.setFilter(stayFilter);
+
+                    getViewInterface().refreshCurrentFragment();
+                } else
+                {
+                    mViewModel.setFilter(stayFilter);
+
+                    getViewInterface().refreshCurrentFragment();
                 }
                 break;
         }
@@ -561,15 +553,25 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                         return;
                     }
 
+                    getViewInterface().removeAllFragment();
+
                     mViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
+
+                    if (mViewModel.getSuggest().isLocationSuggestType() == true)
+                    {
+                        mViewModel.searchViewModel.setRadius(DEFAULT_RADIUS);
+                        getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
+                    }
+
+                    initView(mViewModel.getSuggest());
+
                     mViewModel.resetCategory = true;
                     mViewModel.getFilter().reset();
+                    mViewModel.setFilter(mViewModel.getFilter());
+                    mViewModel.setViewType(ViewType.LIST);
+                    mViewModel.setCategory(Category.ALL);
 
-                    mViewModel.searchViewModel.setRadius(DEFAULT_RADIUS);
-                    getViewInterface().setOptionFilterSelected(false);
-                    getViewInterface().setRadiusSpinnerSelection(DEFAULT_RADIUS);
-
-                    getViewInterface().refreshCurrentFragment();
+                    setRefresh(true);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
