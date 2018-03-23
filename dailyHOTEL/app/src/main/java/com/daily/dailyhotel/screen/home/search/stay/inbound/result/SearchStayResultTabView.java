@@ -269,6 +269,17 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
     }
 
     @Override
+    public void resetFloatingActionViewTranslation()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().floatingActionView.setTranslationY(0);
+    }
+
+    @Override
     public void setOptionFilterSelected(boolean selected)
     {
         if (getViewDataBinding() == null)
@@ -698,17 +709,6 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
                 mFragmentPagerAdapter.getItem(i).onUnselected();
             }
         }
-    }
-
-    @Override
-    public void refreshCurrentCategory()
-    {
-        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
-        {
-            return;
-        }
-
-        mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onRefresh();
     }
 
     @Override

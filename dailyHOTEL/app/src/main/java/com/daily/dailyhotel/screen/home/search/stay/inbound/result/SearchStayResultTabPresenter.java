@@ -445,6 +445,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                             return;
                         }
 
+                        getViewInterface().resetFloatingActionViewTranslation();
                         getViewInterface().removeAllFragment();
 
                         StaySuggestV2 suggest = suggestParcel.getSuggest();
@@ -553,6 +554,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                         return;
                     }
 
+                    getViewInterface().resetFloatingActionViewTranslation();
                     getViewInterface().removeAllFragment();
 
                     mViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);

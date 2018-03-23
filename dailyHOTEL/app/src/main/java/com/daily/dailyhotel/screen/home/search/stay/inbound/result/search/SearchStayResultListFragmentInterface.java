@@ -34,7 +34,7 @@ public interface SearchStayResultListFragmentInterface
 
         void addList(List<ObjectItem> objectItemList);
 
-        void setMapViewPagerList(Context context, List<Stay> stayList);
+        void setMapViewPagerList(Context context, List<Stay> stayList, boolean nightsEnabled, boolean rewardEnabled);
 
         void setMapViewPagerVisible(boolean visible);
 

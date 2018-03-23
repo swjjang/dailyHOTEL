@@ -265,6 +265,17 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
     }
 
     @Override
+    public void resetFloatingActionViewTranslation()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().floatingActionView.setTranslationY(0);
+    }
+
+    @Override
     public void setOptionFilterSelected(boolean selected)
     {
         if (getViewDataBinding() == null)

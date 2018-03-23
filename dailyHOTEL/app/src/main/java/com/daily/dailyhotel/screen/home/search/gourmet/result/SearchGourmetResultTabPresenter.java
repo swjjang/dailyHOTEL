@@ -416,6 +416,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                             return;
                         }
 
+                        getViewInterface().resetFloatingActionViewTranslation();
                         getViewInterface().removeAllFragment();
 
                         GourmetSuggestV2 suggest = suggestParcel.getSuggest();
@@ -527,6 +528,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                         {
                             return;
                         }
+
+                        getViewInterface().resetFloatingActionViewTranslation();
 
                         mViewModel.setBookDateTime(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
 

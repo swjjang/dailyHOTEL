@@ -43,6 +43,7 @@ import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayRes
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultViewModel;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -615,6 +616,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public Pair<Stays, List<ObjectItem>> apply(Stays stays) throws Exception
             {
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+
                 List<ObjectItem> objectItemList = toObjectItemList(stays.getStayList());
 
                 return new Pair(stays, objectItemList);
@@ -1005,6 +1008,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void accept(Stays stays) throws Exception
             {
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+
                 List<Stay> stayList = stays.getStayList();
 
                 if (stayList == null || stayList.size() == 0)
@@ -1084,7 +1089,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void accept(@io.reactivex.annotations.NonNull List<Stay> stayList) throws Exception
             {
-                getViewInterface().setMapViewPagerList(getActivity(), stayList);
+                getViewInterface().setMapViewPagerList(getActivity(), stayList, mViewModel.getBookDateTime().getNights() > 1//
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
                 getViewInterface().setMapViewPagerVisible(true);
 
                 unLockAll();
