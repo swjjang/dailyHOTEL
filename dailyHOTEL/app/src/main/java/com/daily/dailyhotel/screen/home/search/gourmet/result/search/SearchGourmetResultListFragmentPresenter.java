@@ -1217,6 +1217,12 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         switch (suggest.getSuggestType())
         {
             case GOURMET:
+            {
+                GourmetSuggestV2.Gourmet suggestItem = (GourmetSuggestV2.Gourmet) suggest.getSuggestItem();
+                queryMap.put("targetIndices", suggestItem.index);
+                break;
+            }
+            
             case DIRECT:
                 queryMap.put("term", suggest.getSuggestItem().name);
                 break;
