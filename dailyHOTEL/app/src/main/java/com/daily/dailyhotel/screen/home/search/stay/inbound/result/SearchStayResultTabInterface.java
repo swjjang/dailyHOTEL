@@ -31,6 +31,8 @@ public interface SearchStayResultTabInterface
 
         void setFloatingActionViewVisible(boolean visible);
 
+        void resetFloatingActionViewTranslation();
+
         void setOptionFilterSelected(boolean selected);
 
         Observable<BasePagerFragment> setCampaignTagFragment();
@@ -54,8 +56,6 @@ public interface SearchStayResultTabInterface
         void setCategoryTabSelect(int position);
 
         void onSelectedCategory();
-
-        void refreshCurrentCategory();
 
         void scrollTopCurrentCategory();
     }

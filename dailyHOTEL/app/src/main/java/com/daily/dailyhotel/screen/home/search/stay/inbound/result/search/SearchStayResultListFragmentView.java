@@ -329,7 +329,7 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
     }
 
     @Override
-    public void setMapViewPagerList(Context context, List<Stay> stayList)
+    public void setMapViewPagerList(Context context, List<Stay> stayList, boolean nightsEnabled, boolean rewardEnabled)
     {
         if (context == null)
         {
@@ -362,6 +362,8 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
 
         mViewPagerAdapter.clear();
         mViewPagerAdapter.setData(stayList);
+        mViewPagerAdapter.setNightsEnabled(nightsEnabled);
+        mViewPagerAdapter.setRewardEnabled(rewardEnabled);
         mViewPagerAdapter.notifyDataSetChanged();
     }
 

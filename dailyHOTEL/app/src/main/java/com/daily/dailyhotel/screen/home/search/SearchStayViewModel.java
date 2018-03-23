@@ -20,7 +20,7 @@ public class SearchStayViewModel extends ViewModel
     private MutableLiveData<StayBookDateTime> mBookDateTime = new MutableLiveData<>();
     private MutableLiveData<StaySuggestV2> mSuggest = new MutableLiveData<>();
     public String inputKeyword;
-    public float radius;
+    private MutableLiveData<Float> mRadius = new MutableLiveData<>();
 
     public static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {
@@ -85,5 +85,25 @@ public class SearchStayViewModel extends ViewModel
     public void removeSuggestObserver(Observer<StaySuggestV2> observer)
     {
         mSuggest.removeObserver(observer);
+    }
+
+    public void setRadius(float radius)
+    {
+        mRadius.setValue(radius);
+    }
+
+    public float getRadius()
+    {
+        return mRadius.getValue();
+    }
+
+    public void setRadiusObserver(BaseActivity activity, Observer<Float> observer)
+    {
+        mRadius.observe(activity, observer);
+    }
+
+    public void removeRadiusObserver(Observer<Float> observer)
+    {
+        mRadius.removeObserver(observer);
     }
 }

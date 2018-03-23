@@ -43,6 +43,7 @@ import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayRes
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultViewModel;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -96,6 +97,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     Observer mViewTypeObserver;
     Observer mFilterObserver;
     Observer mBookDateTimeObserver;
+    Observer mRadiusObserver;
 
     int mPage = PAGE_NONE; // 리스트에서 페이지
     boolean mMoreRefreshing; // 특정 스크를 이상 내려가면 더보기로 목록을 요청하는데 lock()걸리면 안되지만 계속 요청되면 안되어서 해당 키로 락을 건다.
@@ -228,6 +230,28 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         };
 
         mViewModel.setFilterObserver(activity, mFilterObserver);
+
+        mRadiusObserver = new Observer<Float>()
+        {
+            @Override
+            public void onChanged(@Nullable Float radius)
+            {
+                if (isCurrentFragment() == false)
+                {
+                    mNeedToRefresh = true;
+                } else
+                {
+
+                }
+
+                if (mViewType == SearchStayResultTabPresenter.ViewType.MAP)
+                {
+                    getViewInterface().setMapViewPagerVisible(false);
+                }
+            }
+        };
+
+        mViewModel.setRadiusObserver(activity, mRadiusObserver);
     }
 
     boolean isCurrentFragment()
@@ -391,6 +415,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             mViewModel.removeViewTypeObserver(mViewTypeObserver);
             mViewModel.removeFilterObserver(mFilterObserver);
             mViewModel.removeBookDateTimeObserver(mBookDateTimeObserver);
+            mViewModel.removeRadiusObserver(mRadiusObserver);
 
             mViewModel = null;
         }
@@ -591,6 +616,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public Pair<Stays, List<ObjectItem>> apply(Stays stays) throws Exception
             {
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+
                 List<ObjectItem> objectItemList = toObjectItemList(stays.getStayList());
 
                 return new Pair(stays, objectItemList);
@@ -617,7 +644,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                 {
                     setResultList(stays, objectItemList, applyFilter);
 
-                    if (mViewModel.resetCategory == true && mViewModel.getCategory() == Category.ALL)
+                    if (mViewModel.resetCategory == true && Category.ALL.code.equalsIgnoreCase(mCategory.code) == true)
                     {
                         mViewModel.resetCategory = false;
                         fragmentObservable = getFragment().getFragmentEventListener().addCategoryList(stays.getStayCategoryList());
@@ -683,7 +710,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         if (mViewModel.getSuggest().isLocationSuggestType() == true)
         {
-            boolean notDefaultRadius = mViewModel.searchViewModel.radius != SearchStayResultTabPresenter.DEFAULT_RADIUS;
+            boolean notDefaultRadius = mViewModel.searchViewModel.getRadius() != SearchStayResultTabPresenter.DEFAULT_RADIUS;
 
             getViewInterface().showLocationEmptyViewVisible(applyFilter || notDefaultRadius);
         } else
@@ -981,6 +1008,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void accept(Stays stays) throws Exception
             {
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+
                 List<Stay> stayList = stays.getStayList();
 
                 if (stayList == null || stayList.size() == 0)
@@ -992,7 +1021,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
                     if (mViewModel.getSuggest().isLocationSuggestType() == true)
                     {
-                        boolean notDefaultRadius = mViewModel.searchViewModel.radius != SearchStayResultTabPresenter.DEFAULT_RADIUS;
+                        boolean notDefaultRadius = mViewModel.searchViewModel.getRadius() != SearchStayResultTabPresenter.DEFAULT_RADIUS;
                         getViewInterface().showLocationEmptyViewVisible(applyFilter || notDefaultRadius);
                     } else
                     {
@@ -1060,7 +1089,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void accept(@io.reactivex.annotations.NonNull List<Stay> stayList) throws Exception
             {
-                getViewInterface().setMapViewPagerList(getActivity(), stayList);
+                getViewInterface().setMapViewPagerList(getActivity(), stayList, mViewModel.getBookDateTime().getNights() > 1//
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
                 getViewInterface().setMapViewPagerVisible(true);
 
                 unLockAll();
@@ -1264,7 +1294,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             queryMap.put("category", mCategory.code);
         }
 
-        Map<String, Object> suggestQueryMap = getSuggestQueryMap(mViewModel.getSuggest(), mViewModel.searchViewModel.radius);
+        Map<String, Object> suggestQueryMap = getSuggestQueryMap(mViewModel.getSuggest(), mViewModel.searchViewModel.getRadius());
 
         if (suggestQueryMap != null)
         {

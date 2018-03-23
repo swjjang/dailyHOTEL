@@ -93,6 +93,16 @@ public class SearchStayResultViewModel extends ViewModel
         searchViewModel.removeBookDateTimeObserver(observer);
     }
 
+    public void setRadiusObserver(BaseActivity activity, Observer<Float> observer)
+    {
+        searchViewModel.setRadiusObserver(activity, observer);
+    }
+
+    public void removeRadiusObserver(Observer<Float> observer)
+    {
+        searchViewModel.removeRadiusObserver(observer);
+    }
+
     public void setCommonDateTime(CommonDateTime commonDateTime)
     {
         mCommonDateTime = commonDateTime;

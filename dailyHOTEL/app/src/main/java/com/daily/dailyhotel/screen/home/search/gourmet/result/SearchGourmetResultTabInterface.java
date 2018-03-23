@@ -29,6 +29,8 @@ public interface SearchGourmetResultTabInterface
 
         void setFloatingActionViewVisible(boolean visible);
 
+        void resetFloatingActionViewTranslation();
+
         void setOptionFilterSelected(boolean selected);
 
         Observable<BasePagerFragment> setCampaignTagFragment();
