@@ -802,19 +802,36 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return null;
         }
 
-        StaySuggestV2.AreaGroup suggestItem = new StaySuggestV2.AreaGroup();
-        suggestItem.index = region.getAreaGroupIndex();
-        suggestItem.name = region.getAreaGroupName();
-
-        if (region.getAreaElement() != null)
+        switch (region.getAreaType())
         {
-            StaySuggestV2.Area area = new StaySuggestV2.Area();
-            area.index = region.getAreaIndex();
-            area.name = region.getAreaName();
-            suggestItem.area = area;
+            case AREA:
+            {
+                StaySuggestV2.AreaGroup suggestItem = new StaySuggestV2.AreaGroup();
+                suggestItem.index = region.getAreaGroupIndex();
+                suggestItem.name = region.getAreaGroupName();
+
+                if (region.getAreaElement() != null)
+                {
+                    StaySuggestV2.Area area = new StaySuggestV2.Area();
+                    area.index = region.getAreaIndex();
+                    area.name = region.getAreaName();
+                    suggestItem.area = area;
+                }
+
+                return new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, suggestItem);
+            }
+
+            case SUBWAY_AREA:
+            {
+                StaySuggestV2.Station suggestItem = new StaySuggestV2.Station();
+                suggestItem.index = region.getAreaIndex();
+                suggestItem.name = region.getAreaName();
+
+                return new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, suggestItem);
+            }
         }
 
-        return new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, suggestItem);
+        return null;
     }
 
     @Override
