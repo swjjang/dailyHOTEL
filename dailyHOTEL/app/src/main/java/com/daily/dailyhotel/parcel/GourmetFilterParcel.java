@@ -5,13 +5,15 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StayFilter;
+import com.daily.dailyhotel.entity.GourmetFilter;
 
-public class StayFilterParcel implements Parcelable
+import java.util.HashMap;
+
+public class GourmetFilterParcel implements Parcelable
 {
-    private StayFilter mFilter;
+    private GourmetFilter mFilter;
 
-    public StayFilterParcel(@NonNull StayFilter filter)
+    public GourmetFilterParcel(@NonNull GourmetFilter filter)
     {
         if (filter == null)
         {
@@ -21,12 +23,12 @@ public class StayFilterParcel implements Parcelable
         mFilter = filter;
     }
 
-    public StayFilterParcel(Parcel in)
+    public GourmetFilterParcel(Parcel in)
     {
         readFromParcel(in);
     }
 
-    public StayFilter getFilter()
+    public GourmetFilter getFilter()
     {
         return mFilter;
     }
@@ -34,35 +36,35 @@ public class StayFilterParcel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(mFilter.person);
-        dest.writeInt(mFilter.flagBedTypeFilters);
+        dest.writeSerializable(mFilter.getCategoryFilterMap());
+        dest.writeSerializable(mFilter.getCategoryMap());
+        dest.writeInt(mFilter.flagTimeFilter);
         dest.writeInt(mFilter.flagAmenitiesFilters);
-        dest.writeInt(mFilter.flagRoomAmenitiesFilters);
         dest.writeString(mFilter.sortType == null ? null : mFilter.sortType.name());
         dest.writeString(mFilter.defaultSortType == null ? null : mFilter.defaultSortType.name());
     }
 
     private void readFromParcel(Parcel in)
     {
-        mFilter = new StayFilter();
+        mFilter = new GourmetFilter();
 
-        mFilter.person = in.readInt();
-        mFilter.flagBedTypeFilters = in.readInt();
+        mFilter.getCategoryFilterMap().putAll((HashMap) in.readSerializable());
+        mFilter.getCategoryMap().putAll((HashMap) in.readSerializable());
+        mFilter.flagTimeFilter = in.readInt();
         mFilter.flagAmenitiesFilters = in.readInt();
-        mFilter.flagRoomAmenitiesFilters = in.readInt();
 
         String sortType = in.readString();
 
         if (DailyTextUtils.isTextEmpty(sortType) == false)
         {
-            mFilter.sortType = StayFilter.SortType.valueOf(sortType);
+            mFilter.sortType = GourmetFilter.SortType.valueOf(sortType);
         }
 
         String defaultSortType = in.readString();
 
         if (DailyTextUtils.isTextEmpty(defaultSortType) == false)
         {
-            mFilter.defaultSortType = StayFilter.SortType.valueOf(defaultSortType);
+            mFilter.defaultSortType = GourmetFilter.SortType.valueOf(defaultSortType);
         }
     }
 
@@ -74,15 +76,15 @@ public class StayFilterParcel implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public StayFilterParcel createFromParcel(Parcel in)
+        public GourmetFilterParcel createFromParcel(Parcel in)
         {
-            return new StayFilterParcel(in);
+            return new GourmetFilterParcel(in);
         }
 
         @Override
-        public StayFilterParcel[] newArray(int size)
+        public GourmetFilterParcel[] newArray(int size)
         {
-            return new StayFilterParcel[size];
+            return new GourmetFilterParcel[size];
         }
 
     };

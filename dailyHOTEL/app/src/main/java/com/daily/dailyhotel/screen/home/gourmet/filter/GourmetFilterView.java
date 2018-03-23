@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.filter;
+package com.daily.dailyhotel.screen.home.gourmet.filter;
 
 import android.view.View;
 import android.widget.RadioButton;
@@ -13,28 +13,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayFilterDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
-public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListener, ActivityStayFilterDataBinding> implements StayFilterInterface, View.OnClickListener
+public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnEventListener, ActivityStayFilterDataBinding> implements GourmetFilterInterface.ViewInterface, View.OnClickListener
 {
-    public interface OnEventListener extends OnBaseEventListener
-    {
-        void onMinusPersonClick();
-
-        void onPlusPersonClick();
-
-        void onResetClick();
-
-        void onConfirmClick();
-
-        void onCheckedChangedSort(StayFilter.SortType sortType);
-
-        void onCheckedChangedBedType(int flag);
-
-        void onCheckedChangedAmenities(int flag);
-
-        void onCheckedChangedRoomAmenities(int flag);
-    }
-
-    public StayFilterView(BaseActivity baseActivity, StayFilterView.OnEventListener listener)
+    public GourmetFilterView(BaseActivity baseActivity, GourmetFilterInterface.OnEventListener listener)
     {
         super(baseActivity, listener);
     }

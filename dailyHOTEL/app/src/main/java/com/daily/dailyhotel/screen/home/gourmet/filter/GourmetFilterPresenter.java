@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.filter;
+package com.daily.dailyhotel.screen.home.gourmet.filter;
 
 
 import android.app.Activity;
@@ -18,12 +18,16 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Category;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetFilter;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -49,17 +53,17 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivity, StayFilterInterface> implements StayFilterView.OnEventListener
+public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilterActivity, GourmetFilterInterface.ViewInterface> implements GourmetFilterInterface.OnEventListener
 {
     private static final int CLICK_FILTER_DELAY_TIME = 500;
 
-    StayFilterAnalyticsInterface mAnalytics;
+    GourmetFilterInterface.AnalyticsInterface mAnalytics;
 
-    StayRemoteImpl mStayRemoteImpl;
+    GourmetRemoteImpl mGourmetRemoteImpl;
 
-    StayFilter mStayFilter;
-    StaySuggestV2 mSuggest;
-    StayBookDateTime mStayBookDateTime;
+    GourmetFilter mFilter;
+    GourmetSuggestV2 mSuggest;
+    GourmetBookDateTime mBookDateTime;
     List<String> mCategoryList;
     Location mLocation;
     double mRadius;
@@ -70,37 +74,24 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
     DailyLocationExFactory mDailyLocationExFactory;
 
-    public interface StayFilterAnalyticsInterface extends BaseAnalyticsInterface
-    {
-        void onScreen(Activity activity);
-
-        void onConfirmClick(Activity activity, StaySuggestV2 suggest, StayFilter stayFilter, int listCountByFilter);
-
-        void onBackClick(Activity activity);
-
-        void onResetClick(Activity activity);
-
-        void onEmptyResult(Activity activity, StayFilter stayFilter);
-    }
-
-    public StayFilterPresenter(@NonNull StayFilterActivity activity)
+    public GourmetFilterPresenter(@NonNull GourmetFilterActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected StayFilterInterface createInstanceViewInterface()
+    protected GourmetFilterInterface.ViewInterface createInstanceViewInterface()
     {
-        return new StayFilterView(getActivity(), this);
+        return new GourmetFilterView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(StayFilterActivity activity)
+    public void constructorInitialize(GourmetFilterActivity activity)
     {
         setContentView(R.layout.activity_stay_filter_data);
 
-        setAnalytics(new StayFilterAnalyticsImpl());
+        setAnalytics(new GourmetFilterAnalyticsImpl());
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
 
@@ -121,8 +112,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             return true;
         }
 
-        String checkInDateTime = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
-        String checkOutDateTime = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+        String visitDateTime = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
 
         try
         {
@@ -137,13 +127,13 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         try
         {
-            mCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
+            mCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
         } catch (Exception e)
         {
             mCategoryType = DailyCategoryType.STAY_ALL;
         }
 
-        String viewType = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_VIEW_TYPE);
+        String viewType = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_VIEW_TYPE);
 
         if (DailyTextUtils.isTextEmpty(viewType) == true)
         {
@@ -152,7 +142,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mViewType = Constants.ViewType.valueOf(viewType);
 
-        StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_FILTER);
+        StayFilterParcel stayFilterParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
 
         if (stayFilterParcel == null)
         {
@@ -161,7 +151,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mStayFilter = stayFilterParcel.getFilter();
 
-        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_SUGGEST);
+        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_STAY_SUGGEST);
 
         if (suggestParcel == null)
         {
@@ -170,11 +160,11 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mSuggest = suggestParcel.getSuggest();
 
-        mCategoryList = intent.getStringArrayListExtra(StayFilterActivity.INTENT_EXTRA_DATA_CATEGORIES);
+        mCategoryList = intent.getStringArrayListExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_CATEGORIES);
 
-        mLocation = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
-        mRadius = intent.getDoubleExtra(StayFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
-        mSearchWord = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
+        mLocation = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION);
+        mRadius = intent.getDoubleExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_RADIOUS, 0);
+        mSearchWord = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
 
         return true;
     }
@@ -260,7 +250,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         switch (requestCode)
         {
-            case StayFilterActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            case GourmetFilterActivity.REQUEST_CODE_PERMISSION_MANAGER:
             {
                 switch (resultCode)
                 {
@@ -277,7 +267,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 break;
             }
 
-            case StayFilterActivity.REQUEST_CODE_SETTING_LOCATION:
+            case GourmetFilterActivity.REQUEST_CODE_SETTING_LOCATION:
                 onCheckedChangedSort(StayFilter.SortType.DISTANCE);
                 break;
         }
@@ -357,11 +347,11 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         }
 
         Intent intent = new Intent();
-        intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_FILTER, new StayFilterParcel(mStayFilter));
+        intent.putExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(mStayFilter));
 
         if (mStayFilter.sortType == StayFilter.SortType.DISTANCE)
         {
-            intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION, mLocation);
+            intent.putExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION, mLocation);
         }
 
         setResult(Activity.RESULT_OK, intent);
@@ -817,7 +807,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 if (throwable instanceof PermissionException)
                 {
                     Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                    startActivityForResult(intent, StayFilterActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                    startActivityForResult(intent, GourmetFilterActivity.REQUEST_CODE_PERMISSION_MANAGER);
                 } else if (throwable instanceof ProviderException)
                 {
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
@@ -831,7 +821,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                             public void onClick(View v)
                             {
                                 Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, StayFilterActivity.REQUEST_CODE_SETTING_LOCATION);
+                                startActivityForResult(intent, GourmetFilterActivity.REQUEST_CODE_SETTING_LOCATION);
                             }
                         }, new View.OnClickListener()//
                         {
@@ -861,7 +851,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 {
                     try
                     {
-                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), StayFilterActivity.REQUEST_CODE_SETTING_LOCATION);
+                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), GourmetFilterActivity.REQUEST_CODE_SETTING_LOCATION);
                     } catch (Exception e)
                     {
                         DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

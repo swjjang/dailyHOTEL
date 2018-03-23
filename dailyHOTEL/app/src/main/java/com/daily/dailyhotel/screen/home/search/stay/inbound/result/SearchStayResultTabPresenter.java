@@ -502,7 +502,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                     return;
                 }
 
-                StayFilter stayFilter = stayFilterParcel.getStayFilter();
+                StayFilter stayFilter = stayFilterParcel.getFilter();
 
                 if (stayFilter == null)
                 {

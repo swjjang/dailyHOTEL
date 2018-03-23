@@ -22,8 +22,8 @@ public class GourmetFilter
     public static final int FLAG_AMENITIES_GROUPBOOKING = FLAG_AMENITIES_PRIVATEROOM << 1;
     public static final int FLAG_AMENITIES_CORKAGE = FLAG_AMENITIES_GROUPBOOKING << 1;
 
-    private Map<String, Integer> mFlagCategoryFilterMap; // 선택된 음식 종류
-    private Map<String, Category> mCategoryMap;
+    private HashMap<String, Integer> mFlagCategoryFilterMap; // 선택된 음식 종류
+    private HashMap<String, Category> mCategoryMap;
 
     public int flagTimeFilter;
     public int flagAmenitiesFilters;
@@ -88,12 +88,12 @@ public class GourmetFilter
         mFlagCategoryFilterMap.remove(category.name);
     }
 
-    public Map<String, Integer> getCategoryFilterMap()
+    public HashMap<String, Integer> getCategoryFilterMap()
     {
         return mFlagCategoryFilterMap;
     }
 
-    public Map<String, Category> getCategoryMap()
+    public HashMap<String, Category> getCategoryMap()
     {
         return mCategoryMap;
     }

@@ -1164,7 +1164,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                             return;
                         }
 
-                        StayFilter stayFilter = stayFilterParcel.getStayFilter();
+                        StayFilter stayFilter = stayFilterParcel.getFilter();
 
                         if (stayFilter == null)
                         {
