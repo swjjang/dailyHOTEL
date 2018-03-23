@@ -51,16 +51,11 @@ public class StayCurationOption extends PlaceCurationOption
     @Override
     public boolean isDefaultFilter()
     {
-        if (isDefaultSortType() == false//
-            || person != StayFilter.DEFAULT_PERSON//
-            || flagBedTypeFilters != StayFilter.FLAG_HOTEL_FILTER_BED_NONE//
-            || flagAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE//
-            || flagRoomAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE)
-        {
-            return false;
-        }
-
-        return true;
+        return isDefaultSortType() == true//
+            && person == StayFilter.DEFAULT_PERSON//
+            && flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE//
+            && flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE//
+            && flagRoomAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE;
     }
 
     public String toSortString()

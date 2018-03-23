@@ -1360,7 +1360,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public void addGourmetRecentlySuggest(String type, String display , String suggestString, String keyword)
+    public void addGourmetRecentlySuggest(String type, String display, String suggestString, String keyword)
     {
         SQLiteDatabase db = getDb();
         if (db == null)

@@ -10,6 +10,5 @@
     android:paddingRight="15dp"
     android:textColor="@color/selector_text_color_c323232_cb70038"
     android:textSize="15dp"
-    android:maxLines="1"
     android:singleLine="true"
     android:ellipsize="marquee"/>
