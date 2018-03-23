@@ -34,8 +34,6 @@ import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.RetrofitHttpClient;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
-import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
-import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -285,9 +283,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
             if (activity instanceof StayTabActivity//
                 || activity instanceof StayPaymentActivity//
-                || activity instanceof StayThankYouActivity//
-                || activity instanceof StayCategoryTabActivity//
-                || activity instanceof StayCategoryNearByActivity)
+                || activity instanceof StayThankYouActivity)
             {
                 mAppResearch.onResume("스테이", -1);
             } else if (activity instanceof GourmetMainActivity//
@@ -318,9 +314,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
             if (activity instanceof StayTabActivity//
                 || activity instanceof StayPaymentActivity//
-                || activity instanceof StayThankYouActivity//
-                || activity instanceof StayCategoryTabActivity//
-                || activity instanceof StayCategoryNearByActivity)
+                || activity instanceof StayThankYouActivity)
             {
                 mAppResearch.onPause("스테이", -1);
             } else if (activity instanceof GourmetMainActivity//

@@ -44,7 +44,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivit
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -665,14 +664,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
+                StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
                     mSearchViewModel.setStaySuggest(suggestParcel.getSuggest());
                 }
 
-                mSearchViewModel.setStayBookDateTime(intent, PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+                mSearchViewModel.setStayBookDateTime(intent, SearchStayResultTabActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, SearchStayResultTabActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
