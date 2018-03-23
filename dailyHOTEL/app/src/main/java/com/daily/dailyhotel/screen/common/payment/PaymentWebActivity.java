@@ -15,9 +15,10 @@ import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.activity.BasePaymentWebActivity;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
+
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -134,12 +135,14 @@ public class PaymentWebActivity extends BasePaymentWebActivity
 
             try
             {
-                if (DEBUG == true || Constants.DEBUG == true)
+                if (DEBUG == true)
                 {
                     ExLog.d("pinkred : " + mJSONString);
                 }
 
-                OkHttpClient okHttpClient = new OkHttpClient();
+                OkHttpClient okHttpClient = new OkHttpClient().newBuilder()//
+                    .readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
+
                 Request request = new Request.Builder()//
                     .url(mUrl)//
                     .addHeader("Os-Type", "android")//
