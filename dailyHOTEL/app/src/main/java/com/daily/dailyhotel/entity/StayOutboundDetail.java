@@ -19,14 +19,12 @@ public class StayOutboundDetail extends Configurations
     public double latitude;
     public double longitude;
     public int couponPrice;
-    public boolean provideRewardSticker;
     public int rewardStickerCount;
     public boolean myWish;
     public int wishCount;
 
     LinkedHashMap<String, List<String>> mInformationMap;
     List<DetailImageInformation> mImageList;
-    List<StayOutboundRoom> mRoomList;
     SparseArray<String> mAmenitySparseArray;
 
     public StayOutboundDetail()
@@ -52,16 +50,6 @@ public class StayOutboundDetail extends Configurations
     public List<DetailImageInformation> getImageList()
     {
         return mImageList;
-    }
-
-    public void setRoomList(List<StayOutboundRoom> roomList)
-    {
-        mRoomList = roomList;
-    }
-
-    public List<StayOutboundRoom> getRoomList()
-    {
-        return mRoomList;
     }
 
     public void setAmenityList(SparseArray<String> amenitySparseArray)

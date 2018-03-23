@@ -453,8 +453,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         setEmptyView();
 
         // 호텔 등급과 이름
-        setTitleView(stayOutboundDetail.rating, stayOutboundDetail.name, stayOutboundDetail.nameEng//
-            , stayOutboundDetail.activeReward && stayOutboundDetail.provideRewardSticker, stayOutboundDetail.couponPrice);
+        setTitleView(stayOutboundDetail.rating, stayOutboundDetail.name, stayOutboundDetail.nameEng, stayOutboundDetail.couponPrice);
 
         // 트루 리뷰
         setTrueReviewView(stayOutboundDetail.tripAdvisorRating);
@@ -494,9 +493,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             getViewDataBinding().roomsViewDataBinding.priceOptionLayout.setVisibility(View.GONE);
             getViewDataBinding().roomsViewDataBinding.priceRadioGroup.setOnCheckedChangeListener(null);
         }
-
-        // 객실 세팅
-        setRoomList(stayBookDateTime, stayOutboundDetail.getRoomList(), stayOutboundDetail.activeReward);
     }
 
     @Override
@@ -506,6 +502,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         {
             return;
         }
+
+        getViewDataBinding().titleInformationView.setRewardVisible(visible);
 
         if (visible == true)
         {
@@ -1310,7 +1308,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     /**
      * 호텔 등급 및 이름
      */
-    private void setTitleView(float rating, String name, String englishName, boolean hasProviderSticker, int couponPrice)
+    private void setTitleView(float rating, String name, String englishName, int couponPrice)
     {
         if (getViewDataBinding() == null)
         {
@@ -1332,9 +1330,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         {
             titleInformationView.setCategory(getString(R.string.label_stay_outbound_detail_grade, (int) rating), null);
         }
-
-        // 리워드 여부
-        titleInformationView.setRewardVisible(hasProviderSticker);
 
         // 쿠폰
         if (couponPrice > 0)
@@ -1743,7 +1738,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         });
     }
 
-    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList, boolean activeReward)
+    @Override
+    public void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
         {
@@ -1777,9 +1773,19 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             mRoomTypeListAdapter.setSelected(0);
         }
 
-        mRoomTypeListAdapter.setRewardEnabled(activeReward);
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);
+    }
+
+    @Override
+    public void setRoomActiveReward(boolean activeReward)
+    {
+        if (mRoomTypeListAdapter == null)
+        {
+            return;
+        }
+
+        mRoomTypeListAdapter.setRewardEnabled(activeReward);
     }
 
     /**

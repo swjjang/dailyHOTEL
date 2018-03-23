@@ -6,7 +6,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
-import com.daily.dailyhotel.entity.StayOutboundRoom;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -41,9 +40,6 @@ public class StayOutboundDetailData
 
     @JsonField(name = "details")
     public List<LinkedHashMap<String, List<String>>> detailList;
-
-    @JsonField(name = "rooms")
-    public List<RoomData> roomDataList;
 
     @JsonField(name = "amenities")
     public List<AmenityData> amenityDataList;
@@ -96,23 +92,6 @@ public class StayOutboundDetailData
         }
 
         stayOutboundDetail.setInformationMap(detailsMap);
-
-        if (roomDataList != null && roomDataList.size() > 0)
-        {
-            List<StayOutboundRoom> stayOutboundRoomList = new ArrayList<>(roomDataList.size());
-
-            for (RoomData roomData : roomDataList)
-            {
-                stayOutboundRoomList.add(roomData.getStayOutboundRoom());
-
-                if (roomData.provideRewardSticker == true)
-                {
-                    stayOutboundDetail.provideRewardSticker = true;
-                }
-            }
-
-            stayOutboundDetail.setRoomList(stayOutboundRoomList);
-        }
 
         if (amenityDataList != null && amenityDataList.size() > 0)
         {
@@ -173,94 +152,6 @@ public class StayOutboundDetailData
             detailImageInformation.setImageMap(imageMap.getImageMap());
 
             return detailImageInformation;
-        }
-    }
-
-    @JsonObject
-    static class RoomData
-    {
-        @JsonField(name = "rateKey")
-        public String rateKey;
-
-        @JsonField(name = "roomTypeCode")
-        public String roomTypeCode;
-
-        @JsonField(name = "rateCode")
-        public String rateCode;
-
-        @JsonField(name = "roomName")
-        public String roomName;
-
-        @JsonField(name = "roomBedTypeId")
-        public int roomBedTypeId;
-
-        @JsonField(name = "base")
-        public int base;
-
-        @JsonField(name = "total")
-        public int total;
-
-        @JsonField(name = "baseNightly")
-        public int baseNightly;
-
-        @JsonField(name = "nightly")
-        public int nightly;
-
-        @JsonField(name = "quotedOccupancy")
-        public int quotedOccupancy;
-
-        @JsonField(name = "rateOccupancyPerRoom")
-        public int rateOccupancyPerRoom;
-
-        @JsonField(name = "promotion")
-        public boolean promotion;
-
-        @JsonField(name = "promotionDescription")
-        public String promotionDescription;
-
-        @JsonField(name = "nonRefundable")
-        public boolean nonRefundable;
-
-        @JsonField(name = "nonRefundableDescription")
-        public String nonRefundableDescription;
-
-        @JsonField(name = "valueAddName")
-        public String valueAddName;
-
-        @JsonField(name = "vendorType")
-        public String vendorType;
-
-        @JsonField(name = "provideRewardSticker")
-        public boolean provideRewardSticker;
-
-        public RoomData()
-        {
-
-        }
-
-        public StayOutboundRoom getStayOutboundRoom()
-        {
-            StayOutboundRoom stayOutboundRoom = new StayOutboundRoom();
-            stayOutboundRoom.rateKey = rateKey;
-            stayOutboundRoom.roomTypeCode = roomTypeCode;
-            stayOutboundRoom.rateCode = rateCode;
-            stayOutboundRoom.roomName = roomName;
-            stayOutboundRoom.roomBedTypeId = roomBedTypeId;
-            stayOutboundRoom.base = base;
-            stayOutboundRoom.total = total;
-            stayOutboundRoom.baseNightly = baseNightly;
-            stayOutboundRoom.nightly = nightly;
-            stayOutboundRoom.quotedOccupancy = quotedOccupancy;
-            stayOutboundRoom.rateOccupancyPerRoom = rateOccupancyPerRoom;
-            stayOutboundRoom.promotion = promotion;
-            stayOutboundRoom.promotionDescription = promotionDescription;
-            stayOutboundRoom.nonRefundable = nonRefundable;
-            stayOutboundRoom.nonRefundableDescription = nonRefundableDescription;
-            stayOutboundRoom.valueAddName = valueAddName;
-            stayOutboundRoom.vendorType = vendorType;
-            stayOutboundRoom.provideRewardSticker = provideRewardSticker;
-
-            return stayOutboundRoom;
         }
     }
 
