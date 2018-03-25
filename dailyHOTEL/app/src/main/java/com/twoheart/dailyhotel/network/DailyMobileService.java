@@ -15,6 +15,7 @@ import com.daily.dailyhotel.repository.remote.model.GoogleAddressData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
+import com.daily.dailyhotel.repository.remote.model.GourmetFilterCountData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetMultiBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetOldWaitingDepositData;
@@ -726,6 +727,10 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
     Observable<BaseDto<GourmetsData>> getGourmetList(@Url String url);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<GourmetFilterCountData>> getGourmetListCountByFilter(@Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

@@ -12,7 +12,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GourmetFilterAnalyticsImpl implements GourmetFilterPresenter.StayFilterAnalyticsInterface
+public class GourmetFilterAnalyticsImpl implements GourmetFilterInterface.AnalyticsInterface
 {
     @Override
     public void onScreen(Activity activity)

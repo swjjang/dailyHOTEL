@@ -35,7 +35,7 @@ public class GourmetFilterActivity extends BaseActivity<GourmetFilterPresenter>
     protected double latitude;
 
     public static Intent newInstance(Context context, String visitDateTime, String viewType, GourmetFilter filter//
-        , GourmetSuggestV2 suggest, Location location, double radius, String searchWord)
+        , GourmetSuggestV2 suggest, Location location, float radius, String searchWord)
     {
         Intent intent = new Intent(context, GourmetFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);

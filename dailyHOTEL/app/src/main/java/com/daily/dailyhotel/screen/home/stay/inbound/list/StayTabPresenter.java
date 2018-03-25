@@ -1174,7 +1174,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 {
                     try
                     {
-                        StayFilterParcel stayFilterParcel = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+                        StayFilterParcel stayFilterParcel = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_FILTER);
 
                         if (stayFilterParcel == null)
                         {

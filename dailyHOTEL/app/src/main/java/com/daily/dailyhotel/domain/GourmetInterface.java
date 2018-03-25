@@ -2,6 +2,7 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
+import com.daily.dailyhotel.entity.GourmetFilterCount;
 import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.TrueReviews;
@@ -20,6 +21,8 @@ public interface GourmetInterface
     Observable<Gourmets> getList(Map<String, Object> queryMap);
 
     Observable<List<Gourmet>> getList(GourmetParams gourmetParams);
+
+    Observable<GourmetFilterCount> getListCountByFilter(Map<String, Object> queryMap);
 
     Observable<GourmetDetail> getDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime);
 

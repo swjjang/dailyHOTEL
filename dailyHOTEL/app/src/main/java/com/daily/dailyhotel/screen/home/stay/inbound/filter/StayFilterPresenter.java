@@ -62,7 +62,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     StayBookDateTime mStayBookDateTime;
     List<String> mCategoryList;
     Location mLocation;
-    double mRadius;
+    float mRadius;
     String mSearchWord;
     Constants.ViewType mViewType;
     StayFilterCount mStayFilterCount;
@@ -173,7 +173,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         mCategoryList = intent.getStringArrayListExtra(StayFilterActivity.INTENT_EXTRA_DATA_CATEGORIES);
 
         mLocation = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
-        mRadius = intent.getDoubleExtra(StayFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
+        mRadius = intent.getFloatExtra(StayFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
         mSearchWord = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
 
         return true;
@@ -558,68 +558,12 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         Map<String, Object> queryMap = new HashMap<>();
 
-        // dateCheckIn
-        queryMap.put("dateCheckIn", mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+        Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mStayBookDateTime);
 
-        // stays
-        queryMap.put("stays", mStayBookDateTime.getNights());
-
-        switch (mSuggest.getSuggestType())
+        if (bookDateTimeQueryMap != null)
         {
-            case AREA_GROUP:
-            {
-                StaySuggestV2.AreaGroup suggestItem = (StaySuggestV2.AreaGroup) mSuggest.getSuggestItem();
-
-                queryMap.put("provinceIdx", suggestItem.index);
-
-                if (suggestItem.area != null && suggestItem.area.index > 0)
-                {
-                    queryMap.put("areaIdx", suggestItem.area.index);
-                }
-                break;
-            }
-
-            case LOCATION:
-            {
-                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) mSuggest.getSuggestItem();
-
-                queryMap.put("latitude", suggestItem.latitude);
-                queryMap.put("longitude", suggestItem.longitude);
-
-                if (mRadius > 0)
-                {
-                    queryMap.put("radius", mRadius);
-                }
-                break;
-            }
-
-            case STATION:
-            {
-                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) mSuggest.getSuggestItem();
-
-                queryMap.put("subwayIdx", suggestItem.index);
-                break;
-            }
-
-            case DIRECT:
-            {
-                StaySuggestV2.Direct suggestItem = (StaySuggestV2.Direct) mSuggest.getSuggestItem();
-
-                queryMap.put("term", suggestItem.name);
-                break;
-            }
-
-            case STAY:
-            {
-                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) mSuggest.getSuggestItem();
-
-                queryMap.put("targetIndices", suggestItem.index);
-                break;
-            }
+            queryMap.putAll(bookDateTimeQueryMap);
         }
-
-        // persons
-        queryMap.put("persons", mStayFilter.person);
 
         // category [Hotel, Boutique, GuestHouse, Pension, Motel]
         if (mCategoryList != null && mCategoryList.size() > 0)
@@ -640,25 +584,120 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             }
         }
 
-        // term
-        if (DailyTextUtils.isTextEmpty(mSearchWord) == false)
+        Map<String, Object> suggestQueryMap = getSuggestQueryMap(mSuggest, mRadius);
+
+        if (suggestQueryMap != null)
         {
-            queryMap.put("term", mSearchWord);
+            queryMap.putAll(suggestQueryMap);
         }
 
-        // bedType [Double, Twin, Ondol, Etc]
-        List<String> flagBedTypeFilters = mStayFilter.getBedTypeList();
+        Map<String, Object> filterQueryMap = getFilterQueryMap(mStayFilter);
 
-        if (flagBedTypeFilters != null && flagBedTypeFilters.size() > 0)
+        if (filterQueryMap != null)
         {
-            queryMap.put("bedType", flagBedTypeFilters);
+            queryMap.putAll(filterQueryMap);
         }
 
-        // luxury [Breakfast, Cooking, Bath, Parking, Pool, Finess, WiFi, NoParking, Pet, ShareBbq, KidsPlayRoom
-        // , Sauna, BusinessCenter, Tv, Pc, SpaWallPool, Karaoke, PartyRoom, PrivateBbq
+        // details
+        queryMap.put("details", false);
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getBookDateTimeQueryMap(StayBookDateTime bookDateTime)
+    {
+        if (bookDateTime == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        queryMap.put("dateCheckIn", bookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+        queryMap.put("stays", bookDateTime.getNights());
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getSuggestQueryMap(StaySuggestV2 suggest, float radius)
+    {
+        if (suggest == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (suggest.getSuggestType())
+        {
+            case STAY:
+            {
+                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) suggest.getSuggestItem();
+                queryMap.put("targetIndices", suggestItem.index);
+                break;
+            }
+
+            case DIRECT:
+                queryMap.put("term", suggest.getSuggestItem().name);
+                break;
+
+            case LOCATION:
+            {
+                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+
+                queryMap.put("latitude", suggestItem.latitude);
+                queryMap.put("longitude", suggestItem.longitude);
+                queryMap.put("radius", radius);
+                break;
+            }
+
+            case STATION:
+            {
+                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) suggest.getSuggestItem();
+
+                queryMap.put("subwayIdx", suggestItem.index);
+                break;
+            }
+
+            case AREA_GROUP:
+            {
+                StaySuggestV2.AreaGroup areaGroupSuggestItem = (StaySuggestV2.AreaGroup) suggest.getSuggestItem();
+
+                queryMap.put("provinceIdx", areaGroupSuggestItem.index);
+
+                StaySuggestV2.Area areaSuggestItem = areaGroupSuggestItem.area;
+
+                if (areaSuggestItem != null && areaSuggestItem.index > 0)
+                {
+                    queryMap.put("areaIdx", areaSuggestItem.index);
+                }
+                break;
+            }
+        }
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getFilterQueryMap(StayFilter filter)
+    {
+        if (filter == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+        List<String> bedTypeList = filter.getBedTypeList();
+
         List<String> luxuryFilterList = new ArrayList<>();
-        List<String> amenitiesFilterList = mStayFilter.getAmenitiesFilter();
-        List<String> roomAmenitiesFilterList = mStayFilter.getRoomAmenitiesFilterList();
+        List<String> amenitiesFilterList = filter.getAmenitiesFilter();
+        List<String> roomAmenitiesFilterList = filter.getRoomAmenitiesFilterList();
+
+        queryMap.put("persons", filter.person);
+
+        if (bedTypeList != null && bedTypeList.size() > 0)
+        {
+            queryMap.put("bedType", bedTypeList);
+        }
 
         if (amenitiesFilterList != null && amenitiesFilterList.size() > 0)
         {
@@ -675,9 +714,26 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             queryMap.put("luxury", luxuryFilterList);
         }
 
-        // sortProperty
-        // sortDirection
-        switch (mStayFilter.sortType)
+        Map<String, Object> sortQueryMap = getSortQueryMap(filter.sortType, mLocation);
+
+        if (sortQueryMap != null)
+        {
+            queryMap.putAll(sortQueryMap);
+        }
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getSortQueryMap(StayFilter.SortType sortType, Location location)
+    {
+        if (sortType == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (sortType)
         {
             case DEFAULT:
                 break;
@@ -685,6 +741,12 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             case DISTANCE:
                 queryMap.put("sortProperty", "Distance");
                 queryMap.put("sortDirection", "Asc");
+
+                if (location != null)
+                {
+                    queryMap.put("latitude", location.getLatitude());
+                    queryMap.put("longitude", location.getLongitude());
+                }
                 break;
 
             case LOW_PRICE:
@@ -702,27 +764,6 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 queryMap.put("sortDirection", "Desc");
                 break;
         }
-
-        // longitude
-        // latitude
-        // radius
-        if (mStayFilter.isDistanceSort() == true && mLocation != null)
-        {
-            queryMap.put("latitude", mLocation.getLatitude());
-            queryMap.put("longitude", mLocation.getLongitude());
-
-            if (mRadius > 0)
-            {
-                queryMap.put("radius", mRadius);
-            }
-        }
-
-        // page
-        // limit
-        // 사용하지 않음
-
-        // details
-        queryMap.put("details", false);
 
         return queryMap;
     }

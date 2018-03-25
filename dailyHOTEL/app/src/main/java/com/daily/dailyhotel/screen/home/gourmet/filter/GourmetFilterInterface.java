@@ -5,24 +5,24 @@ import android.app.Activity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
-import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.GourmetFilter;
+import com.daily.dailyhotel.entity.GourmetSuggestV2;
+
+import java.util.HashMap;
 
 public interface GourmetFilterInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
     {
-        void setSortLayout(StayFilter.SortType sortType);
+        void setSortLayout(GourmetFilter.SortType sortType);
 
         void setSortLayoutEnabled(boolean enabled);
 
-        void setPerson(int person, int personCountOfMax, int personCountOfMin);
+        void setCategoriesCheck(HashMap<String, Integer> flagCategoryFilterMap);
 
-        void setBedTypeCheck(int flagBedTypeFilters);
+        void setTimesCheck(int flagBedTypeFilters);
 
         void setAmenitiesCheck(int flagAmenitiesFilters);
-
-        void setRoomAmenitiesCheck(int flagRoomAmenitiesFilters);
 
         void setConfirmText(String text);
 
@@ -31,33 +31,29 @@ public interface GourmetFilterInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onMinusPersonClick();
-
-        void onPlusPersonClick();
-
         void onResetClick();
 
         void onConfirmClick();
 
-        void onCheckedChangedSort(StayFilter.SortType sortType);
+        void onCheckedChangedSort(GourmetFilter.SortType sortType);
 
-        void onCheckedChangedBedType(int flag);
+        void onCheckedChangedCategories(int flag);
+
+        void onCheckedChangedTimes(int flag);
 
         void onCheckedChangedAmenities(int flag);
-
-        void onCheckedChangedRoomAmenities(int flag);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity);
 
-        void onConfirmClick(Activity activity, StaySuggestV2 suggest, StayFilter stayFilter, int listCountByFilter);
+        void onConfirmClick(Activity activity, GourmetSuggestV2 suggest, GourmetFilter filter, int listCountByFilter);
 
         void onBackClick(Activity activity);
 
         void onResetClick(Activity activity);
 
-        void onEmptyResult(Activity activity, StayFilter stayFilter);
+        void onEmptyResult(Activity activity, GourmetFilter filter);
     }
 }

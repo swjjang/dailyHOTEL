@@ -495,7 +495,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                     return;
                 }
 
-                StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+                StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_FILTER);
 
                 if (stayFilterParcel == null)
                 {

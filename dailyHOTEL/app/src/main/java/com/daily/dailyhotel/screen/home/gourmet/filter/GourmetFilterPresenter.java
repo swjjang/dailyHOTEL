@@ -20,11 +20,14 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
+import com.daily.dailyhotel.entity.GourmetFilterCount;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.parcel.GourmetFilterParcel;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
@@ -64,13 +67,11 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     GourmetFilter mFilter;
     GourmetSuggestV2 mSuggest;
     GourmetBookDateTime mBookDateTime;
-    List<String> mCategoryList;
     Location mLocation;
-    double mRadius;
+    float mRadius;
     String mSearchWord;
     Constants.ViewType mViewType;
-    StayFilterCount mStayFilterCount;
-    DailyCategoryType mCategoryType = DailyCategoryType.STAY_ALL;
+    GourmetFilterCount mFilterCount;
 
     DailyLocationExFactory mDailyLocationExFactory;
 
@@ -93,7 +94,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         setAnalytics(new GourmetFilterAnalyticsImpl());
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
+        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -101,7 +102,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayFilterAnalyticsInterface) analytics;
+        mAnalytics = (GourmetFilterInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -116,21 +117,11 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         try
         {
-            mStayBookDateTime = new StayBookDateTime();
-            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+            mBookDateTime = new GourmetBookDateTime(visitDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
             return false;
-        }
-
-        try
-        {
-            mCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_CATEGORY_TYPE));
-        } catch (Exception e)
-        {
-            mCategoryType = DailyCategoryType.STAY_ALL;
         }
 
         String viewType = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_VIEW_TYPE);
@@ -142,16 +133,16 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         mViewType = Constants.ViewType.valueOf(viewType);
 
-        StayFilterParcel stayFilterParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+        GourmetFilterParcel filterParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_FILTER);
 
-        if (stayFilterParcel == null)
+        if (filterParcel == null)
         {
             return false;
         }
 
-        mStayFilter = stayFilterParcel.getFilter();
+        mFilter = filterParcel.getFilter();
 
-        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_STAY_SUGGEST);
+        GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel == null)
         {
@@ -160,10 +151,8 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         mSuggest = suggestParcel.getSuggest();
 
-        mCategoryList = intent.getStringArrayListExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_CATEGORIES);
-
         mLocation = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION);
-        mRadius = intent.getDoubleExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_RADIOUS, 0);
+        mRadius = intent.getDoubleExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
         mSearchWord = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
 
         return true;
@@ -255,11 +244,11 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        onCheckedChangedSort(StayFilter.SortType.DISTANCE);
+                        onCheckedChangedSort(GourmetFilter.SortType.DISTANCE);
                         break;
 
                     default:
-                        mStayFilter.sortType = StayFilter.SortType.DEFAULT;
+                        mFilter.sortType = GourmetFilter.SortType.DEFAULT;
 
                         notifyFilterChanged();
                         break;
@@ -268,7 +257,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
             }
 
             case GourmetFilterActivity.REQUEST_CODE_SETTING_LOCATION:
-                onCheckedChangedSort(StayFilter.SortType.DISTANCE);
+                onCheckedChangedSort(GourmetFilter.SortType.DISTANCE);
                 break;
         }
     }
@@ -296,32 +285,6 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     }
 
     @Override
-    public void onMinusPersonClick()
-    {
-        if (--mStayFilter.person < StayFilter.PERSON_COUNT_OF_MIN)
-        {
-            mStayFilter.person = StayFilter.PERSON_COUNT_OF_MIN;
-        }
-
-        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
-
-        onRefresh(CLICK_FILTER_DELAY_TIME);
-    }
-
-    @Override
-    public void onPlusPersonClick()
-    {
-        if (++mStayFilter.person > StayFilter.PERSON_COUNT_OF_MAX)
-        {
-            mStayFilter.person = StayFilter.PERSON_COUNT_OF_MAX;
-        }
-
-        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
-
-        onRefresh(CLICK_FILTER_DELAY_TIME);
-    }
-
-    @Override
     public void onResetClick()
     {
         if (lock() == true)
@@ -329,7 +292,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
             return;
         }
 
-        mStayFilter.reset();
+        mFilter.reset();
 
         notifyFilterChanged();
 
@@ -347,9 +310,9 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
         }
 
         Intent intent = new Intent();
-        intent.putExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(mStayFilter));
+        intent.putExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_FILTER, new GourmetFilterParcel(mFilter));
 
-        if (mStayFilter.sortType == StayFilter.SortType.DISTANCE)
+        if (mFilter.sortType == GourmetFilter.SortType.DISTANCE)
         {
             intent.putExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION, mLocation);
         }
@@ -359,7 +322,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         try
         {
-            mAnalytics.onConfirmClick(getActivity(), mSuggest, mStayFilter, mStayFilterCount == null ? 0 : mStayFilterCount.searchCount);
+            mAnalytics.onConfirmClick(getActivity(), mSuggest, mFilter, mFilterCount == null ? 0 : mFilterCount.searchCount);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -367,14 +330,14 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     }
 
     @Override
-    public void onCheckedChangedSort(StayFilter.SortType sortType)
+    public void onCheckedChangedSort(GourmetFilter.SortType sortType)
     {
         if (sortType == null)
         {
             return;
         }
 
-        if (sortType == StayFilter.SortType.DISTANCE)
+        if (sortType == GourmetFilter.SortType.DISTANCE)
         {
             if (lock() == true)
             {
@@ -399,7 +362,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
                 {
-                    mStayFilter.sortType = sortType;
+                    mFilter.sortType = sortType;
 
                     mLocation = location;
 
@@ -418,53 +381,45 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
             }));
         } else
         {
-            mStayFilter.sortType = sortType;
+            mFilter.sortType = sortType;
         }
     }
 
     @Override
-    public void onCheckedChangedBedType(int flag)
+    public void onCheckedChangedCategories(int flag)
     {
-        mStayFilter.flagBedTypeFilters ^= flag;
 
-        getViewInterface().setBedTypeCheck(mStayFilter.flagBedTypeFilters);
+        onRefresh(CLICK_FILTER_DELAY_TIME);
+    }
 
+    @Override
+    public void onCheckedChangedTimes(int flag)
+    {
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
 
     @Override
     public void onCheckedChangedAmenities(int flag)
     {
-        mStayFilter.flagAmenitiesFilters ^= flag;
+        mFilter.flagAmenitiesFilters ^= flag;
 
-        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
-
-        onRefresh(CLICK_FILTER_DELAY_TIME);
-    }
-
-    @Override
-    public void onCheckedChangedRoomAmenities(int flag)
-    {
-        mStayFilter.flagRoomAmenitiesFilters ^= flag;
-
-        getViewInterface().setRoomAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+        getViewInterface().setAmenitiesCheck(mFilter.flagAmenitiesFilters);
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
 
     void notifyFilterChanged()
     {
-        if (mStayFilter == null)
+        if (mFilter == null)
         {
             return;
         }
 
-        getViewInterface().setSortLayout(mStayFilter.sortType);
+        getViewInterface().setSortLayout(mFilter.sortType);
         getViewInterface().setSortLayoutEnabled(mViewType == Constants.ViewType.LIST);
-        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
-        getViewInterface().setBedTypeCheck(mStayFilter.flagBedTypeFilters);
-        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
-        getViewInterface().setRoomAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+        getViewInterface().setCategoriesCheck(mFilter.getCategoryFilterMap());
+        getViewInterface().setTimesCheck(mFilter.flagTimeFilter);
+        getViewInterface().setAmenitiesCheck(mFilter.flagAmenitiesFilters);
     }
 
     void onRefresh(int delay)
@@ -473,37 +428,27 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
-        addCompositeDisposable(Observable.zip(getLocalPlusListCountByFilter(), mStayRemoteImpl.getListCountByFilter(mCategoryType, getQueryMap()//
-            , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<StayFilterCount, StayFilterCount, StayFilterCount>()
+        addCompositeDisposable(mGourmetRemoteImpl.getListCountByFilter(getQueryMap()).delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetFilterCount>()
         {
             @Override
-            public StayFilterCount apply(StayFilterCount stayBMFilterCount, StayFilterCount stayFilterCount) throws Exception
+            public void accept(GourmetFilterCount filterCount) throws Exception
             {
-                stayFilterCount.searchCount += stayBMFilterCount.searchCount;
+                mFilterCount = filterCount;
 
-                return stayFilterCount;
-            }
-        }).delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayFilterCount>()
-        {
-            @Override
-            public void accept(StayFilterCount stayFilterCount) throws Exception
-            {
-                mStayFilterCount = stayFilterCount;
-
-                if (stayFilterCount.searchCount <= 0)
+                if (filterCount.searchCount <= 0)
                 {
                     getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
                     getViewInterface().setConfirmEnabled(false);
 
-                    mAnalytics.onEmptyResult(getActivity(), mStayFilter);
+                    mAnalytics.onEmptyResult(getActivity(), mFilter);
 
-                } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
+                } else if (filterCount.searchCount < filterCount.searchCountOfMax)
                 {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, stayFilterCount.searchCount));
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, filterCount.searchCount));
                     getViewInterface().setConfirmEnabled(true);
                 } else
                 {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, stayFilterCount.searchCountOfMax));
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, filterCount.searchCountOfMax));
                     getViewInterface().setConfirmEnabled(true);
                 }
 
@@ -519,46 +464,65 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
         }));
     }
 
-    private Observable<StayFilterCount> getLocalPlusListCountByFilter()
-    {
-        if (isLocalPlusEnabled() == true)
-        {
-            Map<String, Object> queryMap = getQueryMap();
-            queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
-
-            return mStayRemoteImpl.getLocalPlusListCountByFilte(queryMap);
-        } else
-        {
-            return Observable.just(new StayFilterCount());
-        }
-    }
-
-    private boolean isLocalPlusEnabled()
-    {
-        if (mCategoryType == DailyCategoryType.STAY_BOUTIQUE && mStayFilter.sortType == StayFilter.SortType.DEFAULT)
-        {
-            return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
-        } else
-        {
-            return false;
-        }
-    }
-
     Map<String, Object> getQueryMap()
     {
         Map<String, Object> queryMap = new HashMap<>();
 
-        // dateCheckIn
-        queryMap.put("dateCheckIn", mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+        Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mBookDateTime);
 
-        // stays
-        queryMap.put("stays", mStayBookDateTime.getNights());
+        if (bookDateTimeQueryMap != null)
+        {
+            queryMap.putAll(bookDateTimeQueryMap);
+        }
 
-        switch (mSuggest.getSuggestType())
+        Map<String, Object> suggestQueryMap = getSuggestQueryMap(mSuggest, mRadius);
+
+        if (suggestQueryMap != null)
+        {
+            queryMap.putAll(suggestQueryMap);
+        }
+
+        Map<String, Object> filterQueryMap = getFilterQueryMap(mFilter);
+
+        if (filterQueryMap != null)
+        {
+            queryMap.putAll(filterQueryMap);
+        }
+
+        // details
+        queryMap.put("details", false);
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getBookDateTimeQueryMap(GourmetBookDateTime bookDateTime)
+    {
+        if (bookDateTime == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        queryMap.put("reserveDate", mBookDateTime.getVisitDateTime("yyyy-MM-dd"));
+
+        return queryMap;
+    }
+
+    private Map<String, Object> getSuggestQueryMap(GourmetSuggestV2 suggest, float radius)
+    {
+        if (suggest == null)
+        {
+            return null;
+        }
+
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (suggest.getSuggestType())
         {
             case AREA_GROUP:
             {
-                StaySuggestV2.AreaGroup suggestItem = (StaySuggestV2.AreaGroup) mSuggest.getSuggestItem();
+                GourmetSuggestV2.AreaGroup suggestItem = (GourmetSuggestV2.AreaGroup) suggest.getSuggestItem();
 
                 queryMap.put("provinceIdx", suggestItem.index);
 
@@ -571,7 +535,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
             case LOCATION:
             {
-                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) mSuggest.getSuggestItem();
+                GourmetSuggestV2.Location suggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
 
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
@@ -585,89 +549,76 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
             case STATION:
             {
-                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) mSuggest.getSuggestItem();
-
-                queryMap.put("subwayIdx", suggestItem.index);
                 break;
             }
 
             case DIRECT:
             {
-                StaySuggestV2.Direct suggestItem = (StaySuggestV2.Direct) mSuggest.getSuggestItem();
+                GourmetSuggestV2.Direct suggestItem = (GourmetSuggestV2.Direct) suggest.getSuggestItem();
 
                 queryMap.put("term", suggestItem.name);
                 break;
             }
 
-            case STAY:
+            case GOURMET:
             {
-                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) mSuggest.getSuggestItem();
+                GourmetSuggestV2.Gourmet suggestItem = (GourmetSuggestV2.Gourmet) suggest.getSuggestItem();
 
-                queryMap.put("term", suggestItem.name);
+                queryMap.put("targetIndices", suggestItem.index);
                 break;
             }
         }
 
-        // persons
-        queryMap.put("persons", mStayFilter.person);
+        return queryMap;
+    }
 
-        // category [Hotel, Boutique, GuestHouse, Pension, Motel]
-        if (mCategoryList != null && mCategoryList.size() > 0)
+    private Map<String, Object> getFilterQueryMap(GourmetFilter filter)
+    {
+        if (filter == null)
         {
-            List<String> categoryList = new ArrayList<>();
-
-            for (String category : mCategoryList)
-            {
-                if (Category.ALL.code.equalsIgnoreCase(category) == false)
-                {
-                    categoryList.add(category);
-                }
-            }
-
-            if (categoryList.size() > 0)
-            {
-                queryMap.put("category", categoryList);
-            }
+            return null;
         }
 
-        // term
-        if (DailyTextUtils.isTextEmpty(mSearchWord) == false)
+        Map<String, Object> queryMap = new HashMap<>();
+        List<String> categoryList = new ArrayList(filter.getCategoryFilterMap().values());
+        List<String> timesFilterList = filter.getTimeFilter();
+        List<String> amenitiesFilterList = filter.getAmenitiesFilter();
+
+        if (categoryList != null && categoryList.size() > 0)
         {
-            queryMap.put("term", mSearchWord);
+            queryMap.put("category", categoryList);
         }
 
-        // bedType [Double, Twin, Ondol, Etc]
-        List<String> flagBedTypeFilters = mStayFilter.getBedTypeList();
-
-        if (flagBedTypeFilters != null && flagBedTypeFilters.size() > 0)
+        if (timesFilterList != null && timesFilterList.size() > 0)
         {
-            queryMap.put("bedType", flagBedTypeFilters);
+            queryMap.put("timeFrame", timesFilterList);
         }
-
-        // luxury [Breakfast, Cooking, Bath, Parking, Pool, Finess, WiFi, NoParking, Pet, ShareBbq, KidsPlayRoom
-        // , Sauna, BusinessCenter, Tv, Pc, SpaWallPool, Karaoke, PartyRoom, PrivateBbq
-        List<String> luxuryFilterList = new ArrayList<>();
-        List<String> amenitiesFilterList = mStayFilter.getAmenitiesFilter();
-        List<String> roomAmenitiesFilterList = mStayFilter.getRoomAmenitiesFilterList();
 
         if (amenitiesFilterList != null && amenitiesFilterList.size() > 0)
         {
-            luxuryFilterList.addAll(amenitiesFilterList);
+            queryMap.put("luxury", amenitiesFilterList);
         }
 
-        if (roomAmenitiesFilterList != null && roomAmenitiesFilterList.size() > 0)
+        Map<String, Object> sortQueryMap = getSortQueryMap(filter.sortType, mLocation);
+
+        if (sortQueryMap != null)
         {
-            luxuryFilterList.addAll(roomAmenitiesFilterList);
+            queryMap.putAll(sortQueryMap);
         }
 
-        if (luxuryFilterList.size() > 0)
+        return queryMap;
+    }
+
+    private Map<String, Object> getSortQueryMap(GourmetFilter.SortType sortType, Location location)
+    {
+        if (sortType == null)
         {
-            queryMap.put("luxury", luxuryFilterList);
+            return null;
         }
 
-        // sortProperty
-        // sortDirection
-        switch (mStayFilter.sortType)
+        Map<String, Object> queryMap = new HashMap<>();
+
+        switch (sortType)
         {
             case DEFAULT:
                 break;
@@ -675,15 +626,21 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
             case DISTANCE:
                 queryMap.put("sortProperty", "Distance");
                 queryMap.put("sortDirection", "Asc");
+
+                if (location != null)
+                {
+                    queryMap.put("latitude", location.getLatitude());
+                    queryMap.put("longitude", location.getLongitude());
+                }
                 break;
 
             case LOW_PRICE:
-                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortProperty", "PricePerPerson");
                 queryMap.put("sortDirection", "Asc");
                 break;
 
             case HIGH_PRICE:
-                queryMap.put("sortProperty", "Price");
+                queryMap.put("sortProperty", "PricePerPerson");
                 queryMap.put("sortDirection", "Desc");
                 break;
 
@@ -692,27 +649,6 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                 queryMap.put("sortDirection", "Desc");
                 break;
         }
-
-        // longitude
-        // latitude
-        // radius
-        if (mStayFilter.isDistanceSort() == true && mLocation != null)
-        {
-            queryMap.put("latitude", mLocation.getLatitude());
-            queryMap.put("longitude", mLocation.getLongitude());
-
-            if (mRadius > 0)
-            {
-                queryMap.put("radius", mRadius);
-            }
-        }
-
-        // page
-        // limit
-        // 사용하지 않음
-
-        // details
-        queryMap.put("details", false);
 
         return queryMap;
     }

@@ -8,6 +8,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.GourmetInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
+import com.daily.dailyhotel.entity.GourmetFilterCount;
 import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.TrueReviews;
@@ -91,6 +92,35 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
                 }
 
                 return gourmets;
+            });
+    }
+
+    @Override
+    public Observable<GourmetFilterCount> getListCountByFilter(Map<String, Object> queryMap)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
+            : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
+
+        return mDailyMobileService.getGourmetListCountByFilter(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                GourmetFilterCount filterCount;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        filterCount = baseDto.data.getFilterCount();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return filterCount;
             });
     }
 
