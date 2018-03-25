@@ -51,6 +51,7 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundRoomData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundSuggestsData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundWishCountData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -705,7 +706,11 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(@Url String mobileAPI, @Body JSONObject jsonObject);
+    Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetailInformation(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseListDto<StayOutboundRoomData>> getStayOutboundDetailRoomList(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()

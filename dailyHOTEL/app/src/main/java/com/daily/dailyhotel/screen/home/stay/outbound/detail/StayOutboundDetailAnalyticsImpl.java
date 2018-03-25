@@ -57,7 +57,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
 
 
     @Override
-    public void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, int priceFromList)
+    public void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, List<StayOutboundRoom> roomList, int priceFromList)
     {
         if (activity == null || stayOutboundDetail == null || mAnalyticsParam == null)
         {
@@ -72,12 +72,12 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
             params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no"); // 3
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
 
-            if (stayOutboundDetail.getRoomList() == null || stayOutboundDetail.getRoomList().size() == 0)
+            if (roomList == null || roomList.size() == 0)
             {
                 params.put(AnalyticsManager.KeyType.PRICE, "0");
             } else
             {
-                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayOutboundDetail.getRoomList().get(0).nightly));
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(roomList.get(0).nightly));
             }
 
             int nights = stayBookDateTime.getNights();
@@ -113,7 +113,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
 
             boolean hasNRD = false;
 
-            for (StayOutboundRoom stayOutboundRoom : stayOutboundDetail.getRoomList())
+            for (StayOutboundRoom stayOutboundRoom : roomList)
             {
                 if (stayOutboundRoom.nonRefundable == true)
                 {

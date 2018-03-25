@@ -30,7 +30,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -47,6 +51,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     private String mStayName;
     private StayBookDateTime mStayBookDateTime;
     private StayOutboundDetail mStayOutboundDetail;
+    private List<StayOutboundRoom> mRoomList;
     private People mPeople;
     private int mPosition;
 
@@ -237,6 +242,16 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
+    private void setStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
+    {
+        mStayOutboundDetail = stayOutboundDetail;
+    }
+
+    private void setRoomList(List<StayOutboundRoom> roomList)
+    {
+        mRoomList = roomList;
+    }
+
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
@@ -248,19 +263,30 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
+        addCompositeDisposable(Observable.zip(mStayOutboundRemoteImpl.getDetailInformation(mStayIndex, mStayBookDateTime, mPeople) //
+            , mStayOutboundRemoteImpl.getDetailRoomList(mStayIndex, mStayBookDateTime, mPeople) //
+            , new BiFunction<StayOutboundDetail, List<StayOutboundRoom>, StayOutboundDetail>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+            public StayOutboundDetail apply(StayOutboundDetail stayOutboundDetail, List<StayOutboundRoom> stayOutboundRoomList) throws Exception
             {
-                onStayOutboundDetail(stayOutboundDetail);
+                setStayOutboundDetail(stayOutboundDetail);
+                setRoomList(stayOutboundRoomList);
 
+                return stayOutboundDetail;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutboundDetail>()
+        {
+            @Override
+            public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
+            {
+                notifyDataSetChanged();
                 unLockAll();
             }
         }, new Consumer<Throwable>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            public void accept(Throwable throwable) throws Exception
             {
                 onHandleError(throwable);
                 finish();
@@ -427,23 +453,19 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
+    void notifyDataSetChanged()
     {
-        if (stayOutboundDetail == null || mStayBookDateTime == null)
+        if (mStayOutboundDetail == null || mStayBookDateTime == null)
         {
             return;
         }
 
-        mStayOutboundDetail = stayOutboundDetail;
-
-        getViewInterface().setCategory(stayOutboundDetail.rating, stayOutboundDetail.activeReward && stayOutboundDetail.provideRewardSticker);
-        getViewInterface().setImages(stayOutboundDetail.getImageList());
-        getViewInterface().setWish(stayOutboundDetail.myWish, stayOutboundDetail.wishCount);
+        boolean provideRewardSticker = false;
 
         try
         {
             // 선택된 방이 없으면 처음 방으로 한다.
-            if (stayOutboundDetail.getRoomList() == null || stayOutboundDetail.getRoomList().size() == 0)
+            if (mRoomList == null || mRoomList.size() == 0)
             {
                 getViewInterface().setRoomInformation(true, 0, mStayBookDateTime.getNights(), 0, 0);
             } else
@@ -452,7 +474,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                 int minPrice = Integer.MAX_VALUE;
                 int maxPrice = Integer.MIN_VALUE;
 
-                for (StayOutboundRoom stayOutboundRoom : stayOutboundDetail.getRoomList())
+                for (StayOutboundRoom stayOutboundRoom : mRoomList)
                 {
                     if (minPrice > stayOutboundRoom.nightly)
                     {
@@ -463,13 +485,22 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                     {
                         maxPrice = stayOutboundRoom.nightly;
                     }
+
+                    if (stayOutboundRoom.provideRewardSticker)
+                    {
+                        provideRewardSticker = true;
+                    }
                 }
 
-                getViewInterface().setRoomInformation(false, stayOutboundDetail.getRoomList().size(), mStayBookDateTime.getNights(), minPrice, maxPrice);
+                getViewInterface().setRoomInformation(false, mRoomList.size(), mStayBookDateTime.getNights(), minPrice, maxPrice);
             }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
+
+        getViewInterface().setCategory(mStayOutboundDetail.rating, mStayOutboundDetail.activeReward && provideRewardSticker);
+        getViewInterface().setImages(mStayOutboundDetail.getImageList());
+        getViewInterface().setWish(mStayOutboundDetail.myWish, mStayOutboundDetail.wishCount);
     }
 }

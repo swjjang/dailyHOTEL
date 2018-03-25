@@ -113,6 +113,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public static final int STATUS_FINISH = 4;
     public static final int STATUS_ROOM_LIST_LOADING = 5;
 
+    private static final int IS_RUNNED_NONE = 0;
+    private static final int IS_RUNNED_DETAIL = 1 << 1;
+    private static final int IS_RUNNED_ROOM_LIST = 1 << 2;
+
     public enum PriceType
     {
         AVERAGE,
@@ -134,7 +138,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     StayOutboundDetail mStayOutboundDetail;
     People mPeople;
     StayOutboundRoom mSelectedRoom;
+    List<StayOutboundRoom> mRoomList;
     ArrayList<CarouselListItem> mRecommendAroundList;
+    private boolean mIsProvideRewardSticker;
+    int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 업장정보 완료 , Ox0100 : 객실정보 완료
     View mViewByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
     StayOutbound mStayOutboundByLongPress;
@@ -159,7 +166,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         StayOutboundDetailAnalyticsParam getAnalyticsParam(StayOutbound stayOutbound, String grade);
 
-        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, int priceFromList);
+        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, List<StayOutboundRoom> roomList, int priceFromList);
 
         void onScreenRoomList(Activity activity, int stayIndex, boolean provideRewardSticker);
 
@@ -941,7 +948,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , AnalyticsManager.ValueType.STAY, soldOut(mStayOutboundDetail) == false, 0, true);
+                , AnalyticsManager.ValueType.STAY, isSoldOut() == false, 0, true);
 
             startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
@@ -1169,6 +1176,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case STATUS_ROOM_LIST:
                 screenLock(false);
 
+                getViewInterface().setRoomActiveReward(mStayOutboundDetail.activeReward);
+
                 Observable<Boolean> observable = getViewInterface().showRoomList(true);
 
                 if (observable != null)
@@ -1185,7 +1194,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     }));
                 }
 
-                mAnalytics.onScreenRoomList(getActivity(), mStayOutboundDetail.index, mStayOutboundDetail.provideRewardSticker);
+                mAnalytics.onScreenRoomList(getActivity(), mStayOutboundDetail.index, mIsProvideRewardSticker);
                 break;
 
             default:
@@ -1530,26 +1539,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
-        // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListTotalPrice, mCheckChangedPrice == false);
-        mCheckChangedPrice = true;
-
-        // 선택된 방이 없으면 처음 방으로 한다.
-        if (soldOut(mStayOutboundDetail) == true)
-        {
-            setStatus(STATUS_SOLD_OUT);
-        } else
-        {
-            if (mSelectedRoom == null)
-            {
-                onRoomClick(stayOutboundDetail.getRoomList().get(0));
-            }
-
-            setStatus(STATUS_ROOM_LIST);
-        }
-
-        mIsDeepLink = false;
-
         try
         {
             String regionName = null;
@@ -1577,9 +1566,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    boolean soldOut(StayOutboundDetail stayOutboundDetail)
+    boolean isSoldOut()
     {
-        return stayOutboundDetail == null || stayOutboundDetail.getRoomList() == null || stayOutboundDetail.getRoomList().size() == 0;
+        return mRoomList == null || mRoomList.size() == 0;
     }
 
     /**
@@ -1683,7 +1672,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
-        getViewInterface().setRewardVisible(mStayOutboundDetail.activeReward == true && mStayOutboundDetail.provideRewardSticker == true, hasRecommendAroundList);
         getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
 
         if (hasRecommendAroundList == true)
@@ -1701,7 +1689,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
-        if (mStayOutboundDetail.activeReward == true && mStayOutboundDetail.provideRewardSticker == true)
+        if (mStayOutboundDetail.activeReward == true && mIsProvideRewardSticker == true)
         {
             getViewInterface().setRewardVisible(true, hasRecommendAroundList);
 
@@ -1733,16 +1721,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
+    private void checkChangedPrice(boolean isDeepLink, List<StayOutboundRoom> roomList, int listViewPrice, boolean compareListPrice)
     {
-        if (stayOutboundDetail == null)
-        {
-            return;
-        }
-
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
-        List<StayOutboundRoom> roomList = stayOutboundDetail.getRoomList();
-
         if (roomList == null || roomList.size() == 0)
         {
             setResult(BaseActivity.RESULT_CODE_REFRESH);
@@ -1781,6 +1762,81 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
+    private void onRoomList(List<StayOutboundRoom> roomList)
+    {
+        mRoomList = roomList;
+
+        setProvideRewardSticker(roomList);
+
+        // 리스트 가격 변동은 진입시 한번 만 한다.
+        checkChangedPrice(mIsDeepLink, mRoomList, mListTotalPrice, mCheckChangedPrice == false);
+        mCheckChangedPrice = true;
+
+        // 선택된 방이 없으면 처음 방으로 한다.
+        if (isSoldOut() == true)
+        {
+            setStatus(STATUS_SOLD_OUT);
+        } else
+        {
+            if (mSelectedRoom == null)
+            {
+                onRoomClick(mRoomList.get(0));
+            }
+
+            setStatus(STATUS_ROOM_LIST);
+        }
+
+        mIsDeepLink = false;
+
+        getViewInterface().setRoomList(mStayBookDateTime, roomList);
+
+        if (mStayOutboundDetail != null)
+        {
+            getViewInterface().setRoomActiveReward(mStayOutboundDetail.activeReward);
+        }
+    }
+
+    private void setProvideRewardSticker(List<StayOutboundRoom> roomList)
+    {
+        mIsProvideRewardSticker = false;
+
+        if (roomList == null || roomList.size() == 0)
+        {
+            return;
+        }
+
+        for (StayOutboundRoom room : mRoomList)
+        {
+            if (room.provideRewardSticker == true)
+            {
+                mIsProvideRewardSticker = true;
+                return;
+            }
+        }
+    }
+
+    private void sendScreenAnalytics()
+    {
+        boolean isRunDetail = (mNetworkRunState & IS_RUNNED_DETAIL) > 0;
+        boolean isRunRoomList = (mNetworkRunState & IS_RUNNED_ROOM_LIST) > 0;
+
+        if (mNetworkRunState != IS_RUNNED_NONE && isRunDetail == true && isRunRoomList == true)
+        {
+            try
+            {
+                mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayOutboundDetail, mRoomList, mListTotalPrice);
+
+                if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
+                {
+                    showWishTooltip();
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
+        }
+    }
+
     private void onRefresh(Observable<Boolean> observable, Disposable disposable)
     {
         if (observable == null)
@@ -1794,8 +1850,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        // 초기화!
+        mNetworkRunState = IS_RUNNED_NONE;
+
         addCompositeDisposable(Observable.zip(observable, mCommonRemoteImpl.getCommonDateTime() //
-            , mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople)//
+            , mStayOutboundRemoteImpl.getDetailInformation(mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread())//
             , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
             {
                 @Override
@@ -1812,22 +1871,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
             {
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_DETAIL;
+
                 onStayOutboundDetail(stayOutboundDetail);
                 notifyWishChanged();
                 notifyRewardChanged();
 
-                try
-                {
-                    mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayOutboundDetail, mListTotalPrice);
-
-                    if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
-                    {
-                        showWishTooltip();
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.getMessage());
-                }
+                sendScreenAnalytics();
 
                 if (disposable != null)
                 {
@@ -1841,6 +1891,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_DETAIL;
+
+                sendScreenAnalytics();
+
                 if (disposable != null)
                 {
                     disposable.dispose();
@@ -1850,6 +1904,36 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }
         }));
 
+        // 객실 정보 가져오기
+        setStatus(STATUS_ROOM_LIST_LOADING);
+
+        addCompositeDisposable(mStayOutboundRemoteImpl.getDetailRoomList(mStayIndex, mStayBookDateTime, mPeople) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundRoom>>()
+            {
+                @Override
+                public void accept(List<StayOutboundRoom> roomList) throws Exception
+                {
+                    mNetworkRunState = mNetworkRunState | IS_RUNNED_ROOM_LIST;
+
+                    onRoomList(roomList);
+                    notifyRewardChanged();
+
+                    sendScreenAnalytics();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    mNetworkRunState = mNetworkRunState | IS_RUNNED_ROOM_LIST;
+
+                    onRoomList(null);
+                    notifyRewardChanged();
+
+                    sendScreenAnalytics();
+                }
+            }));
+
         addCompositeDisposable(mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
         {
             @Override
@@ -1857,6 +1941,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 setRecommendAroundList(stayOutbounds);
                 notifyRecommendAroundList();
+                notifyRewardChanged();
 
                 boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
@@ -1883,6 +1968,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             public void accept(Throwable throwable) throws Exception
             {
                 ExLog.e(throwable.toString());
+                notifyRewardChanged();
             }
         }));
     }
