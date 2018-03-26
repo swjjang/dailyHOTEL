@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -44,7 +44,7 @@ public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_DAILY_DATE_TIME, dailyDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(suggest));
 
         return intent;
     }

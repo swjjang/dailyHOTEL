@@ -19,7 +19,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
@@ -103,7 +103,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             ExLog.e(e.toString());
         }
 
-        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
+        StaySuggestParcel suggestParcel = intent.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel != null)
         {
@@ -219,7 +219,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
                 {
                     try
                     {
-                        StaySuggestParcelV2 staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                         if (staySuggestParcel != null)
                         {
@@ -333,7 +333,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             Intent intent = new Intent();
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(mSearchViewModel.getSuggest()));
+            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mSearchViewModel.getSuggest()));
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchViewModel.inputKeyword);
 
             setResult(Activity.RESULT_OK, intent);

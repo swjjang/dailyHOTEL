@@ -11,7 +11,7 @@ import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
@@ -50,7 +50,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         intent.putExtra(INTENT_EXTRA_DATA_VIEW_TYPE, viewType);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(stayFilter));
-        intent.putExtra(INTENT_EXTRA_DATA_STAY_SUGGEST, new StaySuggestParcelV2(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_SUGGEST, new StaySuggestParcel(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORIES, categories);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_RADIOUS, radius);

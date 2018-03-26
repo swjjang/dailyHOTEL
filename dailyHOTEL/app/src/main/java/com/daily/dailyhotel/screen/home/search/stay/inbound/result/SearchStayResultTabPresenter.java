@@ -25,7 +25,7 @@ import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -270,7 +270,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         }
 
         mViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
-        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
+        StaySuggestParcel suggestParcel = intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel == null || suggestParcel.getSuggest() == null)
         {
@@ -430,7 +430,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                 {
                     try
                     {
-                        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        StaySuggestParcel suggestParcel = intent.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                         if (suggestParcel == null || suggestParcel.getSuggest() == null)
                         {
@@ -745,7 +745,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     private void setResultCode(int resultCode)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(mViewModel.getSuggest()));
+        intent.putExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mViewModel.getSuggest()));
         intent.putExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mViewModel.getBookDateTime().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
         intent.putExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mViewModel.getBookDateTime().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
         intent.putExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_INPUT_KEYWORD, mViewModel.getInputKeyword());

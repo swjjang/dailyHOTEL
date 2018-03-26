@@ -23,7 +23,7 @@ import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -161,7 +161,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mStayFilter = stayFilterParcel.getStayFilter();
 
-        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_SUGGEST);
+        StaySuggestParcel suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_SUGGEST);
 
         if (suggestParcel == null)
         {

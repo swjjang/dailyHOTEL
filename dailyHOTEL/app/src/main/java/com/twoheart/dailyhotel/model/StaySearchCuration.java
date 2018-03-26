@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 
 import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 
 public class StaySearchCuration extends StayCuration
 {
@@ -77,7 +77,7 @@ public class StaySearchCuration extends StayCuration
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeParcelable(new StaySuggestParcelV2(mSuggest), flags);
+        dest.writeParcelable(new StaySuggestParcel(mSuggest), flags);
         dest.writeDouble(mRadius);
     }
 
@@ -85,7 +85,7 @@ public class StaySearchCuration extends StayCuration
     {
         super.readFromParcel(in);
 
-        StaySuggestParcelV2 staySuggestParcel = in.readParcelable(StaySuggestParcelV2.class.getClassLoader());
+        StaySuggestParcel staySuggestParcel = in.readParcelable(StaySuggestParcel.class.getClassLoader());
 
         if (staySuggestParcel != null)
         {

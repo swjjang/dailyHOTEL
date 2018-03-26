@@ -23,7 +23,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
@@ -88,7 +88,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
     //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(suggest));
     //
     //        if (sortType != null)
     //        {
@@ -106,7 +106,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     //        Intent intent = new Intent(context, StaySearchResultActivity.class);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(suggest));
     //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
     //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
     //
@@ -267,7 +267,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 stayBookingDay.setCheckInDay(data.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME));
                 stayBookingDay.setCheckOutDay(data.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
 
-                StaySuggestParcelV2 staySuggestParcel = data.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
+                StaySuggestParcel staySuggestParcel = data.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
                 mInputText = data.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_KEYWORD);
 
                 if (staySuggestParcel == null)
@@ -457,7 +457,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         mStaySearchCuration.setStayBookingDay(stayBookingDay);
 
-        StaySuggestParcelV2 staySuggestParcel = intent.getParcelableExtra(INTENT_EXTRA_DATA_SUGGEST);
+        StaySuggestParcel staySuggestParcel = intent.getParcelableExtra(INTENT_EXTRA_DATA_SUGGEST);
 
         if (staySuggestParcel == null)
         {
@@ -595,7 +595,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     protected void finish(int resultCode)
     {
         Intent intent = new Intent();
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(mStaySearchCuration.getSuggest()));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mStaySearchCuration.getSuggest()));
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
 

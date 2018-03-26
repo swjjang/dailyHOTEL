@@ -26,7 +26,7 @@ import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
@@ -579,7 +579,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                StaySuggestParcel suggestParcel = intent.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
@@ -664,7 +664,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
+                StaySuggestParcel suggestParcel = intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
