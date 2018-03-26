@@ -8,6 +8,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.GourmetFilter;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class GourmetFilterParcel implements Parcelable
 {
@@ -49,7 +50,7 @@ public class GourmetFilterParcel implements Parcelable
         mFilter = new GourmetFilter();
 
         mFilter.getCategoryFilterMap().putAll((HashMap) in.readSerializable());
-        mFilter.getCategoryMap().putAll((HashMap) in.readSerializable());
+        mFilter.getCategoryMap().putAll((LinkedHashMap) in.readSerializable());
         mFilter.flagTimeFilter = in.readInt();
         mFilter.flagAmenitiesFilters = in.readInt();
 

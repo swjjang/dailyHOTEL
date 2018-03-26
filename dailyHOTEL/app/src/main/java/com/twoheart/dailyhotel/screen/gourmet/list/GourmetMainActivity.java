@@ -19,11 +19,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.filter.GourmetFilterActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
@@ -63,6 +65,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -662,6 +665,29 @@ public class GourmetMainActivity extends PlaceMainActivity
                 return;
             }
 
+            String visitDateTime = mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+
+            GourmetSuggestV2.AreaGroup suggestItem = new GourmetSuggestV2.AreaGroup();
+            suggestItem.index = province.index;
+            suggestItem.name = province.name;
+
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+
+                GourmetSuggestV2.Area areaSuggestItem = new GourmetSuggestV2.Area();
+                areaSuggestItem.index = area.index;
+                areaSuggestItem.name = area.name;
+                suggestItem.area = areaSuggestItem;
+            }
+
+            GourmetFilter gourmetFilter = toCuration();
+            GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, suggestItem);
+
+            Intent intent = GourmetFilterActivity.newInstance(GourmetMainActivity.this, visitDateTime, mViewType, GourmetFilter filter//
+                , GourmetSuggestV2 suggest, Location location, float radius, String searchWord)
+
+
             Intent intent = GourmetCurationActivity.newInstance(GourmetMainActivity.this, mViewType, mGourmetCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
@@ -680,6 +706,40 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, viewType, null);
+        }
+
+        private GourmetFilter curationToFilter(GourmetCurationOption curationOption)
+        {
+            GourmetFilter gourmetFilter = new GourmetFilter().reset();
+
+            if(curationOption == null)
+            {
+                return gourmetFilter;
+            }
+
+            gourmetFilter.getCategoryFilterMap().putAll();
+
+            LinkedHashMap<String, GourmetFilter.Category> categoryMap = new LinkedHashMap<>();
+
+            List<String> categoryKeyList = new ArrayList(curationOption.getCategoryCoderMap().keySet());
+
+            for(String key : categoryKeyList)
+            {
+                GourmetFilter.Category category = new GourmetFilter.Category();
+                category.name = key;
+                category.code = curationOption.getCategoryCoderMap().get(key);
+                category.sequence = curationOption.getCategorySequenceMap().get(key);
+
+                categoryMap.put(key, category);
+            }
+
+            gourmetFilter.setCategoryMap(categoryMap);
+
+            gourmetFilter.flagTimeFilter = curationOption.flagTimeFilter;
+            gourmetFilter.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
+            gourmetFilter.defaultSortType = GourmetFilter.SortType.valueOf(curationOption.getDefaultSortType().name());
+            gourmetFilter.sortType = GourmetFilter.SortType.valueOf(curationOption.getSortType().name());
+
         }
 
         @Override

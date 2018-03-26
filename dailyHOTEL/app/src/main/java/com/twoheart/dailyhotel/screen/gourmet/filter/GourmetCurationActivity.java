@@ -41,6 +41,7 @@ import java.util.TreeMap;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class GourmetCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";

@@ -17,26 +17,16 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetFilterCount;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StayFilterCount;
-import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.daily.dailyhotel.parcel.GourmetFilterParcel;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
-import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
-import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -49,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -90,7 +79,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     @Override
     public void constructorInitialize(GourmetFilterActivity activity)
     {
-        setContentView(R.layout.activity_stay_filter_data);
+        setContentView(R.layout.activity_gourmet_filter_data);
 
         setAnalytics(new GourmetFilterAnalyticsImpl());
 
@@ -152,7 +141,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
         mSuggest = suggestParcel.getSuggest();
 
         mLocation = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION);
-        mRadius = intent.getDoubleExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
+        mRadius = intent.getFloatExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
         mSearchWord = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
 
         return true;
@@ -346,7 +335,6 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
             screenLock(true);
 
-            // https://fabric.io/daily/android/apps/com.twoheart.dailyhotel/issues/5a5f14458cb3c2fa63ff8597?time=last-seven-days
             Observable<Location> observable = searchMyLocation();
 
             if (observable == null)
@@ -437,18 +425,18 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
                 if (filterCount.searchCount <= 0)
                 {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
+                    getViewInterface().setConfirmText(getString(R.string.label_gourmet_filter_result_empty));
                     getViewInterface().setConfirmEnabled(false);
 
                     mAnalytics.onEmptyResult(getActivity(), mFilter);
 
                 } else if (filterCount.searchCount < filterCount.searchCountOfMax)
                 {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, filterCount.searchCount));
+                    getViewInterface().setConfirmText(getString(R.string.label_gourmet_filter_result_count, filterCount.searchCount));
                     getViewInterface().setConfirmEnabled(true);
                 } else
                 {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, filterCount.searchCountOfMax));
+                    getViewInterface().setConfirmText(getString(R.string.label_gourmet_filter_result_over_count, filterCount.searchCountOfMax));
                     getViewInterface().setConfirmEnabled(true);
                 }
 
@@ -766,8 +754,8 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                             {
                                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
-                                onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                                getViewInterface().setSortLayout(mStayFilter.sortType);
+                                onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
+                                getViewInterface().setSortLayout(mFilter.sortType);
                             }
                         }, new DialogInterface.OnCancelListener()
                         {
@@ -776,8 +764,8 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                             {
                                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
-                                onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                                getViewInterface().setSortLayout(mStayFilter.sortType);
+                                onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
+                                getViewInterface().setSortLayout(mFilter.sortType);
                             }
                         }, null, true);
                 } else if (throwable instanceof DuplicateRunException)
@@ -792,15 +780,15 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                     {
                         DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
-                        onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                        getViewInterface().setSortLayout(mStayFilter.sortType);
+                        onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
+                        getViewInterface().setSortLayout(mFilter.sortType);
                     }
                 } else
                 {
                     DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
-                    onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                    getViewInterface().setSortLayout(mStayFilter.sortType);
+                    onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
+                    getViewInterface().setSortLayout(mFilter.sortType);
                 }
             }
         });

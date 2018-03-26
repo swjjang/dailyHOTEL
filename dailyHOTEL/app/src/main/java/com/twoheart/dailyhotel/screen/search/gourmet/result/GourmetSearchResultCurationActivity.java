@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";

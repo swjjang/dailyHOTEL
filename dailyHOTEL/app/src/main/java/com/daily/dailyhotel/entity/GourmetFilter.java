@@ -2,6 +2,7 @@ package com.daily.dailyhotel.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class GourmetFilter
     public static final int FLAG_AMENITIES_CORKAGE = FLAG_AMENITIES_GROUPBOOKING << 1;
 
     private HashMap<String, Integer> mFlagCategoryFilterMap; // 선택된 음식 종류
-    private HashMap<String, Category> mCategoryMap;
+    private LinkedHashMap<String, Category> mCategoryMap;
 
     public int flagTimeFilter;
     public int flagAmenitiesFilters;
@@ -50,7 +51,7 @@ public class GourmetFilter
     public GourmetFilter()
     {
         mFlagCategoryFilterMap = new HashMap<>();
-        mCategoryMap = new HashMap<>();
+        mCategoryMap = new LinkedHashMap<>();
     }
 
     public boolean isDistanceSort()
@@ -58,7 +59,7 @@ public class GourmetFilter
         return sortType == SortType.DISTANCE;
     }
 
-    public void setCategoryMap(Map<String, Category> categoryMap)
+    public void setCategoryMap(LinkedHashMap<String, Category> categoryMap)
     {
         if (categoryMap == null)
         {
@@ -93,7 +94,7 @@ public class GourmetFilter
         return mFlagCategoryFilterMap;
     }
 
-    public HashMap<String, Category> getCategoryMap()
+    public LinkedHashMap<String, Category> getCategoryMap()
     {
         return mCategoryMap;
     }

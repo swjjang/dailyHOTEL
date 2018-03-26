@@ -412,18 +412,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.gourmet.filter.GourmetCurationActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity
-            android:name=".screen.search.gourmet.result.GourmetSearchResultCurationActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity
             android:name=".screen.gourmet.filter.GourmetCalendarActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -502,6 +490,12 @@
             android:theme="@style/TransDialog"/>
 
         <!--  com.daily.dailyhotel.... -->
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.gourmet.filter.GourmetFilterActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name="com.daily.dailyhotel.screen.home.search.SearchActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

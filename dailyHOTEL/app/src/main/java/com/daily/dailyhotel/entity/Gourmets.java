@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.entity;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ public class Gourmets
     public int searchMaxCount;
 
     private List<Gourmet> mGourmetList;
-    private Map<String, GourmetFilter.Category> mCategoryMap;
+    private LinkedHashMap<String, GourmetFilter.Category> mCategoryMap;
 
     public void setGourmetList(List<Gourmet> gourmetList)
     {
@@ -21,12 +22,12 @@ public class Gourmets
         return mGourmetList;
     }
 
-    public void setCategoryMap(Map<String, GourmetFilter.Category> categoryMap)
+    public void setCategoryMap(LinkedHashMap<String, GourmetFilter.Category> categoryMap)
     {
         mCategoryMap = categoryMap;
     }
 
-    public Map<String, GourmetFilter.Category> getCategoryMap()
+    public LinkedHashMap<String, GourmetFilter.Category> getCategoryMap()
     {
         return mCategoryMap;
     }
