@@ -1,6 +1,6 @@
 package com.daily.dailyhotel.domain;
 
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
 
@@ -18,5 +18,5 @@ public interface SuggestInterface
 
     Observable<List<StaySuggest>> getSuggestByStay(String checkInDate, int stays, String keyword);
 
-    Observable<List<GourmetSuggestV2>> getSuggestsByGourmet(String reservationDate, String term);
+    Observable<List<GourmetSuggest>> getSuggestsByGourmet(String reservationDate, String term);
 }

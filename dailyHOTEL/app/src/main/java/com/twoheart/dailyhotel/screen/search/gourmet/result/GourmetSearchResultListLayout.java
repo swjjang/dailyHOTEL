@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
@@ -63,7 +63,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 ? new GourmetCurationOption() //
                 : (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
-            GourmetSuggestV2 suggest = ((GourmetSearchCuration) mGourmetCuration).getSuggest();
+            GourmetSuggest suggest = ((GourmetSearchCuration) mGourmetCuration).getSuggest();
 
             if (suggest.isCampaignTagSuggestType() == true)
             {

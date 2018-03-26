@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -19,7 +20,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.GourmetCart;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
@@ -383,11 +384,11 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         lockUI();
 
-        GourmetSuggestV2.Location suggestItem = new GourmetSuggestV2.Location();
+        GourmetSuggest.Location suggestItem = new GourmetSuggest.Location();
         suggestItem.name = getString(R.string.label_search_nearby_empty_address);
         suggestItem.address = getString(R.string.label_search_nearby_empty_address);
 
-        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.REGION_LOCATION, suggestItem);
+        GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.REGION_LOCATION, suggestItem);
 
         startActivityForResult(SearchGourmetResultTabActivity.newInstance(context, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
             , suggest, null), CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -986,6 +987,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
     GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
+        @SuppressLint("RestrictedApi")
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)

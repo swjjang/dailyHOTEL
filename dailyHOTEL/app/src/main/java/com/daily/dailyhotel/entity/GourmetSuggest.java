@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Created by android_sam on 2018. 2. 1..
  */
 
-public class GourmetSuggestV2
+public class GourmetSuggest
 {
     /**
      * SuggestType Name 변경 금지, DB에 해당 이름으로 Type field 에 저장 됨
@@ -43,7 +43,7 @@ public class GourmetSuggestV2
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
     private SuggestItem suggestItem;
 
-    public GourmetSuggestV2(MenuType menuType, @NonNull SuggestItem suggestItem)
+    public GourmetSuggest(MenuType menuType, @NonNull SuggestItem suggestItem)
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;
@@ -333,7 +333,7 @@ public class GourmetSuggestV2
 
         public static CampaignTag getSuggestItem(com.daily.dailyhotel.entity.CampaignTag campaignTag)
         {
-            GourmetSuggestV2.CampaignTag suggestItem = new GourmetSuggestV2.CampaignTag();
+            GourmetSuggest.CampaignTag suggestItem = new GourmetSuggest.CampaignTag();
             suggestItem.index = campaignTag.index;
             suggestItem.name = campaignTag.campaignTag;
             suggestItem.startDate = campaignTag.startDate;

@@ -7,7 +7,7 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 
 import java.util.List;
 
@@ -89,9 +89,9 @@ public interface SearchGourmetResultTabInterface
 
         void onEventCancelClick(Activity activity);
 
-        void onEventResearchClick(Activity activity, GourmetSuggestV2 suggest);
+        void onEventResearchClick(Activity activity, GourmetSuggest suggest);
 
-        void onEventChangedRadius(Activity activity, GourmetSuggestV2 suggest, float radius);
+        void onEventChangedRadius(Activity activity, GourmetSuggest suggest, float radius);
 
         void onEventStayClick(Activity activity);
 

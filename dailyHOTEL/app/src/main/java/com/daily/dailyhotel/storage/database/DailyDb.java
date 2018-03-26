@@ -107,7 +107,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + SearchResultHistoryList.DISPLAY_NAME + " TEXT NOT NULL, " //
         + SearchResultHistoryList.START_DATE + " TEXT NOT NULL, " //
         + SearchResultHistoryList.END_DATE + " TEXT NULL, " //
-        + SearchResultHistoryList.SUGGEST + " TEXT NULL, " // StaySuggest, GourmetSuggestV2, StayOutboundSuggest - json String 예정
+        + SearchResultHistoryList.SUGGEST + " TEXT NULL, " // StaySuggest, GourmetSuggest, StayOutboundSuggest - json String 예정
         + SearchResultHistoryList.ADULT_COUNT + " INTEGER NOT NULL DEFAULT 0, " //
         + SearchResultHistoryList.START_DATE_TIME + " INTEGER NOT NULL DEFAULT 0, " //
         + SearchResultHistoryList.SAVING_TIME + " INTEGER NOT NULL DEFAULT 0, " //

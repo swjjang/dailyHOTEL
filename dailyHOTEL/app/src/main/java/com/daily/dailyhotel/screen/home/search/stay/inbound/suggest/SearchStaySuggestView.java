@@ -17,7 +17,7 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
@@ -48,7 +48,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         void onSuggestClick(StaySuggest staySuggest);
 
-        void onSuggestClick(GourmetSuggestV2 gourmetSuggest);
+        void onSuggestClick(GourmetSuggest gourmetSuggest);
 
         void onSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
@@ -251,7 +251,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setGourmetSuggests(List<GourmetSuggestV2> gourmetSuggestList)
+    public void setGourmetSuggests(List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -265,7 +265,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 @Override
                 public void onClick(View v)
                 {
-                    GourmetSuggestV2 gourmetSuggest = (GourmetSuggestV2) v.getTag();
+                    GourmetSuggest gourmetSuggest = (GourmetSuggest) v.getTag();
 
                     if (gourmetSuggest != null)
                     {
@@ -284,23 +284,23 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, new GourmetSuggestV2.Direct(keyword))));
+                , new GourmetSuggest(GourmetSuggest.MenuType.DIRECT, new GourmetSuggest.Direct(keyword))));
         }
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            GourmetSuggestV2 sectionGourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
-                , new GourmetSuggestV2.Section(getString(R.string.label_search_suggest_check_gourmet)));
+            GourmetSuggest sectionGourmetSuggest = new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST //
+                , new GourmetSuggest.Section(getString(R.string.label_search_suggest_check_gourmet)));
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, sectionGourmetSuggest));
 
-            for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
+            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
             {
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.UNKNOWN)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.SECTION)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
@@ -311,7 +311,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, new GourmetSuggestV2.Section(null))));
+                , new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, new GourmetSuggest.Section(null))));
         }
 
         mGourmetSuggestListAdapter.setAll(keyword, objectItemList);

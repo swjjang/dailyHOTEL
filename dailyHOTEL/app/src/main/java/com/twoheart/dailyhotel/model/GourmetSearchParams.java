@@ -4,7 +4,7 @@ import android.location.Location;
 import android.os.Parcel;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -57,7 +57,7 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
-        GourmetSuggestV2 suggest = gourmetSearchCuration.getSuggest();
+        GourmetSuggest suggest = gourmetSearchCuration.getSuggest();
 
         if (suggest == null || suggest.isLocationSuggestType() == true)
         {

@@ -20,7 +20,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -672,11 +672,11 @@ public class GourmetCampaignTagListPresenter //
             TodayDateTime todayDateTime = mCommonDateTime.getTodayDateTime();
             GourmetBookingDay gourmetBookingDay = mGourmetBookDateTime.getGourmetBookingDay();
 
-            GourmetSuggestV2.CampaignTag suggestItem = new GourmetSuggestV2.CampaignTag();
+            GourmetSuggest.CampaignTag suggestItem = new GourmetSuggest.CampaignTag();
             suggestItem.index = mTagIndex;
             suggestItem.name = mTitle;
 
-            GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+            GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
             startActivityForResult(ResearchGourmetActivity.newInstance(getActivity(), todayDateTime.openDateTime, todayDateTime.closeDateTime//
                 , todayDateTime.currentDateTime, todayDateTime.dailyDateTime//

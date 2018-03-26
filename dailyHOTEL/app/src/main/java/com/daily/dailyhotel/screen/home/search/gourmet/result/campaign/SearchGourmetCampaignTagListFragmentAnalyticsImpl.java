@@ -7,7 +7,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -60,7 +60,7 @@ public class SearchGourmetCampaignTagListFragmentAnalyticsImpl implements Search
     }
 
     @Override
-    public void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggestV2 suggest)
+    public void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggest suggest)
     {
         if (activity == null || gourmet == null || suggest == null)
         {
@@ -118,7 +118,7 @@ public class SearchGourmetCampaignTagListFragmentAnalyticsImpl implements Search
     }
 
     @Override
-    public void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest//
+    public void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggest suggest//
         , CampaignTag campaignTag, int searchCount)
     {
         if (activity == null || campaignTag == null)

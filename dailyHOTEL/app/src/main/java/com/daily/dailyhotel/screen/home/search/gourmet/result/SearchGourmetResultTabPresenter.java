@@ -20,7 +20,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -143,10 +143,10 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             }
         });
 
-        mViewModel.searchViewModel.setSuggestObserver(activity, new Observer<GourmetSuggestV2>()
+        mViewModel.searchViewModel.setSuggestObserver(activity, new Observer<GourmetSuggest>()
         {
             @Override
-            public void onChanged(@Nullable GourmetSuggestV2 suggest)
+            public void onChanged(@Nullable GourmetSuggest suggest)
             {
                 getViewInterface().setToolbarTitle(suggest.getText1());
             }
@@ -259,7 +259,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             throw new NullPointerException("suggestParcel == null || suggestParcel.getSuggest() == null");
         }
 
-        GourmetSuggestV2 suggest = suggestParcel.getSuggest();
+        GourmetSuggest suggest = suggestParcel.getSuggest();
 
         mViewModel.setSuggest(suggest);
         mViewModel.setInputKeyword(intent.getStringExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_INPUT_KEYWORD));
@@ -292,12 +292,12 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             return;
         }
 
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+        GourmetSuggest suggest = mViewModel.getSuggest();
 
         initView(suggest);
     }
 
-    void initView(GourmetSuggestV2 suggest)
+    void initView(GourmetSuggest suggest)
     {
         if (suggest == null)
         {
@@ -306,7 +306,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         getViewInterface().setFloatingActionViewVisible(suggest.isCampaignTagSuggestType() == false);
 
-        if (suggest.menuType == GourmetSuggestV2.MenuType.REGION_LOCATION)
+        if (suggest.menuType == GourmetSuggest.MenuType.REGION_LOCATION)
         {
             getViewInterface().setToolbarTitleImageResource(R.drawable.search_ic_01_date);
         } else
@@ -419,7 +419,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                         getViewInterface().resetFloatingActionViewTranslation();
                         getViewInterface().removeAllFragment();
 
-                        GourmetSuggestV2 suggest = suggestParcel.getSuggest();
+                        GourmetSuggest suggest = suggestParcel.getSuggest();
 
                         mViewModel.setSuggest(suggest);
                         mViewModel.setInputKeyword(intent.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD));
@@ -590,7 +590,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                     initView(mViewModel.getSuggest());
                 }
 
-                GourmetSuggestV2 suggest = mViewModel.getSuggest();
+                GourmetSuggest suggest = mViewModel.getSuggest();
 
                 if (suggest.isCampaignTagSuggestType() == true)
                 {
@@ -661,11 +661,11 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             throw new RuntimeException("Invalid DeepLink : " + externalDeepLink.getDeepLink());
         }
 
-        GourmetSuggestV2.CampaignTag suggestItem = new GourmetSuggestV2.CampaignTag();
+        GourmetSuggest.CampaignTag suggestItem = new GourmetSuggest.CampaignTag();
         suggestItem.index = index;
 
         mViewModel.setBookDateTime(gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
-        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mViewModel.setSuggest(suggest);
     }
@@ -685,8 +685,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             throw new RuntimeException("Invalid DeepLink : " + externalDeepLink.getDeepLink());
         }
 
-        GourmetSuggestV2.Direct suggestItem = new GourmetSuggestV2.Direct(word);
-        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, suggestItem);
+        GourmetSuggest.Direct suggestItem = new GourmetSuggest.Direct(word);
+        GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.DIRECT, suggestItem);
         Constants.SortType sortType = externalDeepLink.getSorting();
 
         if (sortType == Constants.SortType.DISTANCE)
@@ -726,9 +726,9 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onEmptyStayResearchClick()
     {
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+        GourmetSuggest suggest = mViewModel.getSuggest();
 
-        if (suggest.menuType == GourmetSuggestV2.MenuType.REGION_LOCATION)
+        if (suggest.menuType == GourmetSuggest.MenuType.REGION_LOCATION)
         {
             onCalendarClick();
         } else
@@ -740,9 +740,9 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     @Override
     public void onToolbarTitleClick()
     {
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+        GourmetSuggest suggest = mViewModel.getSuggest();
 
-        if (suggest.menuType == GourmetSuggestV2.MenuType.REGION_LOCATION)
+        if (suggest.menuType == GourmetSuggest.MenuType.REGION_LOCATION)
         {
             onCalendarClick();
         } else
@@ -758,7 +758,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         {
             CommonDateTime commonDateTime = mViewModel.getCommonDateTime();
             GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
-            GourmetSuggestV2 suggest = mViewModel.getSuggest();
+            GourmetSuggest suggest = mViewModel.getSuggest();
 
             startActivityForResult(ResearchGourmetActivity.newInstance(getActivity(), commonDateTime.openDateTime, commonDateTime.closeDateTime//
                 , commonDateTime.currentDateTime, commonDateTime.dailyDateTime//
@@ -857,7 +857,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
     private GourmetSearchCuration toGourmetSearchCuration() throws Exception
     {
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+        GourmetSuggest suggest = mViewModel.getSuggest();
 
         GourmetSearchCuration gourmetSearchCuration = new GourmetSearchCuration();
         gourmetSearchCuration.setSuggest(suggest);
@@ -895,7 +895,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         // 내 주변 검색
         if (suggest.isLocationSuggestType() == true)
         {
-            GourmetSuggestV2.Location locationSuggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+            GourmetSuggest.Location locationSuggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
             Location location = new Location("provider");
             location.setLatitude(locationSuggestItem.latitude);
             location.setLongitude(locationSuggestItem.longitude);
@@ -957,7 +957,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             }));
         } else
         {
-            if (mViewModel.getSuggest().menuType != GourmetSuggestV2.MenuType.REGION_LOCATION)
+            if (mViewModel.getSuggest().menuType != GourmetSuggest.MenuType.REGION_LOCATION)
             {
                 addCompositeDisposable(mSearchLocalImpl.addGourmetSearchResultHistory(mViewModel.getCommonDateTime()//
                     , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
@@ -1001,8 +1001,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             return;
         }
 
-        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG//
-            , GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag));
+        GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.CAMPAIGN_TAG//
+            , GourmetSuggest.CampaignTag.getSuggestItem(campaignTag));
 
         mViewModel.setInputKeyword(null);
         mViewModel.setSuggest(suggest);

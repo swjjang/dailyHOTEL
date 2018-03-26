@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -73,7 +73,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
         super.setPlaceCuration(curation);
 
-        GourmetSuggestV2 suggest = ((GourmetSearchCuration) curation).getSuggest();
+        GourmetSuggest suggest = ((GourmetSearchCuration) curation).getSuggest();
 
         boolean locationSearchType = suggest.isLocationSuggestType();
 
@@ -147,7 +147,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
         ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, sortType, hasSection);
 
-        GourmetSuggestV2 suggest = ((GourmetSearchCuration) mGourmetCuration).getSuggest();
+        GourmetSuggest suggest = ((GourmetSearchCuration) mGourmetCuration).getSuggest();
         boolean locationSearchType = suggest.isLocationSuggestType();
 
         switch (mViewType)

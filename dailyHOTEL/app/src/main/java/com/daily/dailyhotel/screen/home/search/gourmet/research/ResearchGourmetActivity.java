@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.twoheart.dailyhotel.R;
 
@@ -33,7 +33,7 @@ public class ResearchGourmetActivity extends BaseActivity<ResearchGourmetPresent
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
 
     public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime//
-        , String visitDateTime, GourmetSuggestV2 suggest)
+        , String visitDateTime, GourmetSuggest suggest)
     {
         Intent intent = new Intent(context, ResearchGourmetActivity.class);
 

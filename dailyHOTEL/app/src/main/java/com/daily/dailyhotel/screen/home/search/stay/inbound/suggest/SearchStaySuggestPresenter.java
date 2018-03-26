@@ -21,7 +21,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
@@ -82,7 +82,7 @@ public class SearchStaySuggestPresenter //
     private List<StaySuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<StaySuggest> mRecentlySuggestList;
     private List<StaySuggest> mSuggestList;
-    private List<GourmetSuggestV2> mGourmetSuggestList;
+    private List<GourmetSuggest> mGourmetSuggestList;
     private List<StayOutboundSuggest> mStayOutboundSuggestList;
     ArrayList<String> mStayOutboundKeywordList;
     ArrayList<String> mGourmetKeywordList;
@@ -456,7 +456,7 @@ public class SearchStaySuggestPresenter //
         mSuggestList = suggestList;
     }
 
-    void setGourmetSuggestList(List<GourmetSuggestV2> suggestList)
+    void setGourmetSuggestList(List<GourmetSuggest> suggestList)
     {
         mGourmetSuggestList = suggestList;
     }
@@ -601,7 +601,7 @@ public class SearchStaySuggestPresenter //
                             if (list.get(0) instanceof StayOutboundSuggest)
                             {
                                 setStayOutboundSuggestList(list);
-                            } else if (list.get(0) instanceof GourmetSuggestV2)
+                            } else if (list.get(0) instanceof GourmetSuggest)
                             {
                                 setGourmetSuggestList(list);
                             } else
@@ -696,7 +696,7 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onSuggestClick(GourmetSuggestV2 gourmetSuggest)
+    public void onSuggestClick(GourmetSuggest gourmetSuggest)
     {
         if (gourmetSuggest == null)
         {
@@ -713,7 +713,7 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        if (GourmetSuggestV2.MenuType.DIRECT == gourmetSuggest.menuType)
+        if (GourmetSuggest.MenuType.DIRECT == gourmetSuggest.menuType)
         {
             StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.DIRECT, new StaySuggest.Direct(gourmetSuggest.getText1()));
 
@@ -845,7 +845,7 @@ public class SearchStaySuggestPresenter //
         finish();
     }
 
-    private void startFinishAction(GourmetSuggestV2 gourmetSuggest, String keyword)
+    private void startFinishAction(GourmetSuggest gourmetSuggest, String keyword)
     {
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));

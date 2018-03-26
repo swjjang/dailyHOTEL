@@ -3,7 +3,7 @@ package com.daily.dailyhotel.screen.home.search.gourmet.result;
 import android.app.Activity;
 
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class SearchGourmetResultTabAnalyticsImpl implements SearchGourmetResultTabInterface.AnalyticsInterface
@@ -81,7 +81,7 @@ public class SearchGourmetResultTabAnalyticsImpl implements SearchGourmetResultT
     }
 
     @Override
-    public void onEventResearchClick(Activity activity, GourmetSuggestV2 suggest)
+    public void onEventResearchClick(Activity activity, GourmetSuggest suggest)
     {
         if (activity == null || suggest == null)
         {
@@ -100,7 +100,7 @@ public class SearchGourmetResultTabAnalyticsImpl implements SearchGourmetResultT
     }
 
     @Override
-    public void onEventChangedRadius(Activity activity, GourmetSuggestV2 suggest, float radius)
+    public void onEventChangedRadius(Activity activity, GourmetSuggest suggest, float radius)
     {
         if (activity == null)
         {
@@ -131,7 +131,7 @@ public class SearchGourmetResultTabAnalyticsImpl implements SearchGourmetResultT
 
             if (suggest.isLocationSuggestType() == true)
             {
-                GourmetSuggestV2.Location suggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+                GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
 
                 label = suggestItem.address;
             } else

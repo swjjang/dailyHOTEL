@@ -18,7 +18,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
@@ -1168,7 +1168,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         GourmetBookDateTime gourmetBookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
-        GourmetSuggestV2 suggest = mSearchViewModel.gourmetViewModel.getSuggest();
+        GourmetSuggest suggest = mSearchViewModel.gourmetViewModel.getSuggest();
 
         startSearchGourmetResultTab(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchViewModel.gourmetViewModel.inputKeyword);
@@ -1185,7 +1185,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         try
         {
             GourmetBookDateTime gourmetBookDateTime = recentlyHistory.gourmetBookDateTime;
-            GourmetSuggestV2 suggest = recentlyHistory.gourmetSuggest;
+            GourmetSuggest suggest = recentlyHistory.gourmetSuggest;
 
             startSearchGourmetResultTab(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , null);
@@ -1203,8 +1203,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        GourmetSuggest.CampaignTag suggestItem = GourmetSuggest.CampaignTag.getSuggestItem(campaignTag);
+        GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchViewModel.gourmetViewModel.setSuggest(suggest);
 
@@ -1326,10 +1326,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         mSearchViewModel.stayOutboundViewModel.setPeople(People.DEFAULT_ADULTS, null);
 
         // Gourmet
-        mSearchViewModel.gourmetViewModel.setSuggestObserver(activity, new Observer<GourmetSuggestV2>()
+        mSearchViewModel.gourmetViewModel.setSuggestObserver(activity, new Observer<GourmetSuggest>()
         {
             @Override
-            public void onChanged(@Nullable GourmetSuggestV2 suggest)
+            public void onChanged(@Nullable GourmetSuggest suggest)
             {
                 String displayName = suggest.getText1();
 
@@ -1406,7 +1406,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void showSearchGourmet()
     {
-        GourmetSuggestV2 suggest = mSearchViewModel.gourmetViewModel.getSuggest();
+        GourmetSuggest suggest = mSearchViewModel.gourmetViewModel.getSuggest();
 
         if (suggest == null || DailyTextUtils.isTextEmpty(suggest.getText1()) == true)
         {
@@ -1442,7 +1442,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
-    void startSearchGourmetResultTab(GourmetSuggestV2 suggest, String visitDateTime, String inputKeyword)
+    void startSearchGourmetResultTab(GourmetSuggest suggest, String visitDateTime, String inputKeyword)
     {
         if (suggest == null || DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {

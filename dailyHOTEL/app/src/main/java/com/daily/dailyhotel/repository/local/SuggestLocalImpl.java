@@ -9,7 +9,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.domain.SuggestLocalInterface;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.repository.local.model.GourmetSuggestData;
@@ -290,7 +290,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> addRecentlyGourmetSuggest(GourmetSuggestV2 gourmetSuggest, String keyword)
+    public Observable<Boolean> addRecentlyGourmetSuggest(GourmetSuggest gourmetSuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -302,7 +302,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.UNKNOWN)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.UNKNOWN)
                 {
                     return Observable.just(false);
                 }
@@ -332,32 +332,32 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         case GOURMET:
                         {
-                            type = GourmetSuggestV2.SuggestType.GOURMET.name();
-                            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.getSuggestItem();
+                            type = GourmetSuggest.SuggestType.GOURMET.name();
+                            GourmetSuggest.Gourmet gourmet = (GourmetSuggest.Gourmet) gourmetSuggest.getSuggestItem();
                             displayName = gourmet.name;
                             break;
                         }
 
                         case AREA_GROUP:
                         {
-                            type = GourmetSuggestV2.SuggestType.AREA_GROUP.name();
-                            GourmetSuggestV2.AreaGroup areaGroup = (GourmetSuggestV2.AreaGroup) gourmetSuggest.getSuggestItem();
+                            type = GourmetSuggest.SuggestType.AREA_GROUP.name();
+                            GourmetSuggest.AreaGroup areaGroup = (GourmetSuggest.AreaGroup) gourmetSuggest.getSuggestItem();
                             displayName = areaGroup.getDisplayName();
                             break;
                         }
 
                         case LOCATION:
                         {
-                            type = GourmetSuggestV2.SuggestType.LOCATION.name();
-                            GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.getSuggestItem();
+                            type = GourmetSuggest.SuggestType.LOCATION.name();
+                            GourmetSuggest.Location location = (GourmetSuggest.Location) gourmetSuggest.getSuggestItem();
                             displayName = location.name;
                             break;
                         }
 
                         case DIRECT:
                         {
-                            type = GourmetSuggestV2.SuggestType.DIRECT.name();
-                            GourmetSuggestV2.Direct direct = (GourmetSuggestV2.Direct) gourmetSuggest.getSuggestItem();
+                            type = GourmetSuggest.SuggestType.DIRECT.name();
+                            GourmetSuggest.Direct direct = (GourmetSuggest.Direct) gourmetSuggest.getSuggestItem();
                             displayName = direct.name;
                             break;
                         }
@@ -381,16 +381,16 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<List<GourmetSuggestV2>> getRecentlyGourmetSuggestList(int maxCount)
+    public Observable<List<GourmetSuggest>> getRecentlyGourmetSuggestList(int maxCount)
     {
-        return Observable.defer(new Callable<ObservableSource<List<GourmetSuggestV2>>>()
+        return Observable.defer(new Callable<ObservableSource<List<GourmetSuggest>>>()
         {
             @Override
-            public ObservableSource<List<GourmetSuggestV2>> call() throws Exception
+            public ObservableSource<List<GourmetSuggest>> call() throws Exception
             {
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
-                ArrayList<GourmetSuggestV2> gourmetSuggestList = null;
+                ArrayList<GourmetSuggest> gourmetSuggestList = null;
                 Cursor cursor = null;
                 try
                 {
@@ -416,8 +416,8 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
 
                         GourmetSuggestData gourmetSuggestData = LoganSquare.parse(suggestString, GourmetSuggestData.class);
-                        GourmetSuggestV2 staySuggest = gourmetSuggestData.getSuggest();
-                        staySuggest.menuType = GourmetSuggestV2.MenuType.RECENTLY_SEARCH;
+                        GourmetSuggest staySuggest = gourmetSuggestData.getSuggest();
+                        staySuggest.menuType = GourmetSuggest.MenuType.RECENTLY_SEARCH;
 
                         gourmetSuggestList.add(staySuggest);
                     }
@@ -451,7 +451,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> deleteRecentlyGourmetSuggest(GourmetSuggestV2 gourmetSuggest)
+    public Observable<Boolean> deleteRecentlyGourmetSuggest(GourmetSuggest gourmetSuggest)
     {
         return Observable.defer(new Callable<Observable<Boolean>>()
         {
