@@ -690,13 +690,14 @@ public class KakaoLinkManager implements Constants
             final int width = ScreenUtils.getScreenWidth(mContext);
             final int height = ScreenUtils.getRatioHeightType16x9(width);
 
-            String kakaoImageUrl = "";
-            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            if (DailyTextUtils.isTextEmpty(imageUrl))
             {
-                int lastSlash = imageUrl.lastIndexOf('/');
-                String fileName = imageUrl.substring(lastSlash + 1);
-                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
+                imageUrl = "http://img.dailyhotel.me/app_static/share_event_no_img.jpg";
             }
+
+            int lastSlash = imageUrl.lastIndexOf('/');
+            String fileName = imageUrl.substring(lastSlash + 1);
+            String kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
 
             FeedTemplate params = FeedTemplate //
                 .newBuilder(ContentObject.newBuilder(title, //
