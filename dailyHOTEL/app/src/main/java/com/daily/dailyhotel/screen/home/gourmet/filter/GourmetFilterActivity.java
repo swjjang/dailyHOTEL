@@ -9,9 +9,9 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.GourmetFilterParcel;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -35,13 +35,13 @@ public class GourmetFilterActivity extends BaseActivity<GourmetFilterPresenter>
     protected double latitude;
 
     public static Intent newInstance(Context context, String visitDateTime, String viewType, GourmetFilter filter//
-        , GourmetSuggestV2 suggest, Location location, float radius, String searchWord)
+        , GourmetSuggest suggest, Location location, float radius, String searchWord)
     {
         Intent intent = new Intent(context, GourmetFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_VIEW_TYPE, viewType);
         intent.putExtra(INTENT_EXTRA_DATA_FILTER, new GourmetFilterParcel(filter));
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCH_WORD, searchWord);

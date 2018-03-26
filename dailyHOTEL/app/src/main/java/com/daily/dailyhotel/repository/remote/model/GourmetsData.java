@@ -87,19 +87,18 @@ public class GourmetsData
         {
             LinkedHashMap<String, GourmetFilter.Category> categoryMap = new LinkedHashMap<>();
 
-
             Comparator<Category> comparator = new Comparator<Category>()
             {
                 public int compare(Category category1, Category category2)
                 {
-                    return category2.sequence - category1.sequence;
+                    return category1.sequence - category2.sequence;
                 }
             };
 
-            Collections.sort(categoryList, comparator);
-
             if (categoryList != null)
             {
+                Collections.sort(categoryList, comparator);
+
                 for (Category category : categoryList)
                 {
                     categoryMap.put(category.name, category.getCategory());

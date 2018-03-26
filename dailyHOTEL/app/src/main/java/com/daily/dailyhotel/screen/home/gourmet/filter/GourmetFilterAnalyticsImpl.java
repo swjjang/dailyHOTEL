@@ -3,7 +3,7 @@ package com.daily.dailyhotel.screen.home.gourmet.filter;
 import android.app.Activity;
 
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class GourmetFilterAnalyticsImpl implements GourmetFilterInterface.AnalyticsInterface
@@ -20,7 +20,7 @@ public class GourmetFilterAnalyticsImpl implements GourmetFilterInterface.Analyt
     }
 
     @Override
-    public void onConfirmClick(Activity activity, GourmetSuggestV2 suggest, GourmetFilter filter, int listCountByFilter)
+    public void onConfirmClick(Activity activity, GourmetSuggest suggest, GourmetFilter filter, int listCountByFilter)
     {
         if (activity == null)
         {

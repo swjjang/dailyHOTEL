@@ -20,9 +20,9 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetFilterCount;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.GourmetFilterParcel;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -54,7 +54,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     GourmetRemoteImpl mGourmetRemoteImpl;
 
     GourmetFilter mFilter;
-    GourmetSuggestV2 mSuggest;
+    GourmetSuggest mSuggest;
     GourmetBookDateTime mBookDateTime;
     Location mLocation;
     float mRadius;
@@ -131,7 +131,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         mFilter = filterParcel.getFilter();
 
-        GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_SUGGEST);
+        GourmetSuggestParcel suggestParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel == null)
         {
@@ -403,7 +403,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
             return;
         }
 
-        getViewInterface().setSortLayout(mFilter.sortType);
+        getViewInterface().setSortCheck(mFilter.sortType);
         getViewInterface().setSortLayoutEnabled(mViewType == Constants.ViewType.LIST);
         getViewInterface().setCategoriesCheck(mFilter.getCategoryFilterMap());
         getViewInterface().setTimesCheck(mFilter.flagTimeFilter);
@@ -497,7 +497,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
         return queryMap;
     }
 
-    private Map<String, Object> getSuggestQueryMap(GourmetSuggestV2 suggest, float radius)
+    private Map<String, Object> getSuggestQueryMap(GourmetSuggest suggest, float radius)
     {
         if (suggest == null)
         {
@@ -510,7 +510,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
         {
             case AREA_GROUP:
             {
-                GourmetSuggestV2.AreaGroup suggestItem = (GourmetSuggestV2.AreaGroup) suggest.getSuggestItem();
+                GourmetSuggest.AreaGroup suggestItem = (GourmetSuggest.AreaGroup) suggest.getSuggestItem();
 
                 queryMap.put("provinceIdx", suggestItem.index);
 
@@ -523,7 +523,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
             case LOCATION:
             {
-                GourmetSuggestV2.Location suggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+                GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
 
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
@@ -542,7 +542,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
             case DIRECT:
             {
-                GourmetSuggestV2.Direct suggestItem = (GourmetSuggestV2.Direct) suggest.getSuggestItem();
+                GourmetSuggest.Direct suggestItem = (GourmetSuggest.Direct) suggest.getSuggestItem();
 
                 queryMap.put("term", suggestItem.name);
                 break;
@@ -550,7 +550,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
             case GOURMET:
             {
-                GourmetSuggestV2.Gourmet suggestItem = (GourmetSuggestV2.Gourmet) suggest.getSuggestItem();
+                GourmetSuggest.Gourmet suggestItem = (GourmetSuggest.Gourmet) suggest.getSuggestItem();
 
                 queryMap.put("targetIndices", suggestItem.index);
                 break;
@@ -755,7 +755,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                                 onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
-                                getViewInterface().setSortLayout(mFilter.sortType);
+                                getViewInterface().setSortCheck(mFilter.sortType);
                             }
                         }, new DialogInterface.OnCancelListener()
                         {
@@ -765,7 +765,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                                 onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
-                                getViewInterface().setSortLayout(mFilter.sortType);
+                                getViewInterface().setSortCheck(mFilter.sortType);
                             }
                         }, null, true);
                 } else if (throwable instanceof DuplicateRunException)
@@ -781,14 +781,14 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
                         DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                         onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
-                        getViewInterface().setSortLayout(mFilter.sortType);
+                        getViewInterface().setSortCheck(mFilter.sortType);
                     }
                 } else
                 {
                     DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                     onCheckedChangedSort(GourmetFilter.SortType.DEFAULT);
-                    getViewInterface().setSortLayout(mFilter.sortType);
+                    getViewInterface().setSortCheck(mFilter.sortType);
                 }
             }
         });

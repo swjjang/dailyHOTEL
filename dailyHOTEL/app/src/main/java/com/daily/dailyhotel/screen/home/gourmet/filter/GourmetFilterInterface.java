@@ -6,15 +6,18 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public interface GourmetFilterInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
     {
-        void setSortLayout(GourmetFilter.SortType sortType);
+        void setCategory(LinkedHashMap<String, GourmetFilter.Category> categoryMap);
+
+        void setSortCheck(GourmetFilter.SortType sortType);
 
         void setSortLayoutEnabled(boolean enabled);
 
@@ -48,7 +51,7 @@ public interface GourmetFilterInterface
     {
         void onScreen(Activity activity);
 
-        void onConfirmClick(Activity activity, GourmetSuggestV2 suggest, GourmetFilter filter, int listCountByFilter);
+        void onConfirmClick(Activity activity, GourmetSuggest suggest, GourmetFilter filter, int listCountByFilter);
 
         void onBackClick(Activity activity);
 

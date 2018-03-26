@@ -53,7 +53,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -65,6 +64,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -682,15 +683,16 @@ public class GourmetMainActivity extends PlaceMainActivity
                 suggestItem.area = areaSuggestItem;
             }
 
-            GourmetFilter gourmetFilter = toCuration();
+            GourmetFilter gourmetFilter = curationToFilter((GourmetCurationOption) mGourmetCuration.getCurationOption());
             GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, suggestItem);
+            Location location = mGourmetCuration.getLocation();
 
-            Intent intent = GourmetFilterActivity.newInstance(GourmetMainActivity.this, visitDateTime, mViewType, GourmetFilter filter//
-                , GourmetSuggest suggest, Location location, float radius, String searchWord)
+            Intent intent = GourmetFilterActivity.newInstance(GourmetMainActivity.this, visitDateTime, mViewType.name(), gourmetFilter//
+                , suggest, location, 0, null);
 
-
-            Intent intent = GourmetCurationActivity.newInstance(GourmetMainActivity.this, mViewType, mGourmetCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
+            //            Intent intent = GourmetCurationActivity.newInstance(GourmetMainActivity.this, mViewType, mGourmetCuration);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
@@ -713,34 +715,61 @@ public class GourmetMainActivity extends PlaceMainActivity
         {
             GourmetFilter gourmetFilter = new GourmetFilter().reset();
 
-            if(curationOption == null)
+            if (curationOption == null)
             {
                 return gourmetFilter;
             }
 
-            gourmetFilter.getCategoryFilterMap().putAll();
-
-            LinkedHashMap<String, GourmetFilter.Category> categoryMap = new LinkedHashMap<>();
-
-            List<String> categoryKeyList = new ArrayList(curationOption.getCategoryCoderMap().keySet());
-
-            for(String key : categoryKeyList)
-            {
-                GourmetFilter.Category category = new GourmetFilter.Category();
-                category.name = key;
-                category.code = curationOption.getCategoryCoderMap().get(key);
-                category.sequence = curationOption.getCategorySequenceMap().get(key);
-
-                categoryMap.put(key, category);
-            }
-
-            gourmetFilter.setCategoryMap(categoryMap);
-
+            gourmetFilter.getCategoryFilterMap().putAll(curationOption.getFilterMap());
+            gourmetFilter.setCategoryMap(getCategoryMap(curationOption.getCategoryCoderMap(), curationOption.getCategorySequenceMap()));
             gourmetFilter.flagTimeFilter = curationOption.flagTimeFilter;
             gourmetFilter.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
             gourmetFilter.defaultSortType = GourmetFilter.SortType.valueOf(curationOption.getDefaultSortType().name());
             gourmetFilter.sortType = GourmetFilter.SortType.valueOf(curationOption.getSortType().name());
 
+            return gourmetFilter;
+        }
+
+        private LinkedHashMap<String, GourmetFilter.Category> getCategoryMap(HashMap<String, Integer> categoryCodeMap//
+            , HashMap<String, Integer> categorySequenceMap)
+        {
+            if (categoryCodeMap == null || categorySequenceMap == null)
+            {
+                return null;
+            }
+
+            List<GourmetFilter.Category> categoryList = new ArrayList<>();
+
+            List<String> categoryKeyList = new ArrayList(categoryCodeMap.keySet());
+
+            for (String key : categoryKeyList)
+            {
+                GourmetFilter.Category category = new GourmetFilter.Category();
+                category.name = key;
+                category.code = categoryCodeMap.get(key);
+                category.sequence = categorySequenceMap.get(key);
+
+                categoryList.add(category);
+            }
+
+            Comparator<GourmetFilter.Category> comparator = new Comparator<GourmetFilter.Category>()
+            {
+                public int compare(GourmetFilter.Category category1, GourmetFilter.Category category2)
+                {
+                    return category1.sequence - category2.sequence;
+                }
+            };
+
+            Collections.sort(categoryList, comparator);
+
+            LinkedHashMap<String, GourmetFilter.Category> categoryMap = new LinkedHashMap<>();
+
+            for (GourmetFilter.Category category : categoryList)
+            {
+                categoryMap.put(category.name, category);
+            }
+
+            return categoryMap;
         }
 
         @Override

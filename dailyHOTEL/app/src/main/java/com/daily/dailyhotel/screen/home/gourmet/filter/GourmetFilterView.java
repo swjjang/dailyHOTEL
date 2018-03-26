@@ -1,18 +1,26 @@
 package com.daily.dailyhotel.screen.home.gourmet.filter;
 
+import android.content.Context;
+import android.graphics.Typeface;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.GourmetFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetFilterDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnEventListener, ActivityGourmetFilterDataBinding> implements GourmetFilterInterface.ViewInterface, View.OnClickListener
 {
@@ -54,7 +62,65 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
     }
 
     @Override
-    public void setSortLayout(GourmetFilter.SortType sortType)
+    public void setCategory(LinkedHashMap<String, GourmetFilter.Category> categoryMap)
+    {
+        if (getViewDataBinding() == null || categoryMap == null)
+        {
+            return;
+        }
+
+        List<GourmetFilter.Category> categoryList = new ArrayList<>(categoryMap.values());
+
+        for (GourmetFilter.Category category : categoryList)
+        {
+            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categoryCodeMap.get(key)));
+            categoryView.setOnClickListener(mOnCategoryClickListener);
+
+            if (filterMap.containsKey(key) == true)
+            {
+                categoryView.setSelected(true);
+            }
+
+            mGridLayout.addView(categoryView);
+        }
+
+        // 음식 종류가 COLUMN 개수보다 작으면 위치가 맞지 않는 경우가 발생해서 추가 개수를 넣어준다.
+        if (keyList.size() < GOURMET_CATEGORY_COLUMN)
+        {
+            int addViewCount = GOURMET_CATEGORY_COLUMN - keyList.size();
+
+            for (int i = 0; i < addViewCount; i++)
+            {
+                DailyTextView categoryView = getGridLayoutItemView(null, 0);
+
+                mGridLayout.addView(categoryView);
+            }
+        }
+    }
+
+    protected DailyTextView getGridLayoutItemView(Context context, String text)
+    {
+        DailyTextView dailyTextView = new DailyTextView(context);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
+        dailyTextView.setTextColor(getColorStateList(R.color.selector_curation_textcolor));
+        dailyTextView.setText(text);
+        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, resId, 0, 0);
+
+        android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
+        layoutParams.width = 0;
+        layoutParams.height = text == null ? 1 : ScreenUtils.dpToPx(context, 74d);
+        layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+
+        dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 12), 0, 0);
+        dailyTextView.setLayoutParams(layoutParams);
+
+        return dailyTextView;
+    }
+
+    @Override
+    public void setSortCheck(GourmetFilter.SortType sortType)
     {
         if (getViewDataBinding() == null || sortType == null)
         {
@@ -110,6 +176,8 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
         {
             return;
         }
+
+
     }
 
     @Override

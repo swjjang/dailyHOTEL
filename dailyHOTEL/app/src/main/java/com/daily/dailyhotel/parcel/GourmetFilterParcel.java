@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.GourmetFilter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class GourmetFilterParcel implements Parcelable
 {
@@ -38,7 +40,17 @@ public class GourmetFilterParcel implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeSerializable(mFilter.getCategoryFilterMap());
-        dest.writeSerializable(mFilter.getCategoryMap());
+
+        LinkedHashMap<String, GourmetFilter.Category> categoryMap = mFilter.getCategoryMap();
+        List<GourmetFilter.Category> categoryList = new ArrayList<>(categoryMap.values());
+        List<CategoryParcel> categoryParcelList = new ArrayList<>();
+
+        for (GourmetFilter.Category category : categoryList)
+        {
+            categoryParcelList.add(new CategoryParcel(category));
+        }
+
+        dest.writeTypedList(categoryParcelList);
         dest.writeInt(mFilter.flagTimeFilter);
         dest.writeInt(mFilter.flagAmenitiesFilters);
         dest.writeString(mFilter.sortType == null ? null : mFilter.sortType.name());
@@ -50,7 +62,16 @@ public class GourmetFilterParcel implements Parcelable
         mFilter = new GourmetFilter();
 
         mFilter.getCategoryFilterMap().putAll((HashMap) in.readSerializable());
-        mFilter.getCategoryMap().putAll((LinkedHashMap) in.readSerializable());
+
+        List<CategoryParcel> categoryParcelList = in.createTypedArrayList(CategoryParcel.CREATOR);
+        LinkedHashMap<String, GourmetFilter.Category> categoryMap = new LinkedHashMap<>();
+
+        for (CategoryParcel categoryParcel : categoryParcelList)
+        {
+            GourmetFilter.Category category = categoryParcel.getCategory();
+            categoryMap.put(category.name, category);
+        }
+
         mFilter.flagTimeFilter = in.readInt();
         mFilter.flagAmenitiesFilters = in.readInt();
 
@@ -89,4 +110,66 @@ public class GourmetFilterParcel implements Parcelable
         }
 
     };
+
+    private static class CategoryParcel implements Parcelable
+    {
+        private GourmetFilter.Category mCategory;
+
+        public CategoryParcel(@NonNull GourmetFilter.Category category)
+        {
+            if (category == null)
+            {
+                throw new NullPointerException("stayFilter == null");
+            }
+
+            mCategory = category;
+        }
+
+        public CategoryParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public GourmetFilter.Category getCategory()
+        {
+            return mCategory;
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            mCategory = new GourmetFilter.Category();
+
+            mCategory.name = in.readString();
+            mCategory.code = in.readInt();
+            mCategory.sequence = in.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(mCategory.name);
+            dest.writeInt(mCategory.code);
+            dest.writeInt(mCategory.sequence);
+        }
+
+        public static final Creator CREATOR = new Creator()
+        {
+            public CategoryParcel createFromParcel(Parcel in)
+            {
+                return new CategoryParcel(in);
+            }
+
+            @Override
+            public CategoryParcel[] newArray(int size)
+            {
+                return new CategoryParcel[size];
+            }
+        };
+    }
 }
