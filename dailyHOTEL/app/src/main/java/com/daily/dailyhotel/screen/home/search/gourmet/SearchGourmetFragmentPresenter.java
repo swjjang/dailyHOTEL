@@ -16,7 +16,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -214,7 +214,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
             return;
         }
 
-        GourmetSuggestV2 suggest = recentlyHistory.gourmetSuggest;
+        GourmetSuggest suggest = recentlyHistory.gourmetSuggest;
 
         addCompositeDisposable(mSearchLocalImpl.deleteGourmetSearchResultHistory(suggest).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<List<GourmetSearchResultHistory>>>()
         {

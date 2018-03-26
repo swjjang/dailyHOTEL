@@ -9,9 +9,9 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
@@ -42,7 +42,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
 
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
         , DailyCategoryType categoryType, String viewType//
-        , StayFilter stayFilter, StaySuggestV2 suggest, ArrayList<String> categories, Location location, double radius, String searchWord)
+        , StayFilter stayFilter, StaySuggest suggest, ArrayList<String> categories, Location location, double radius, String searchWord)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
@@ -50,7 +50,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         intent.putExtra(INTENT_EXTRA_DATA_VIEW_TYPE, viewType);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(stayFilter));
-        intent.putExtra(INTENT_EXTRA_DATA_STAY_SUGGEST, new StaySuggestParcelV2(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_SUGGEST, new StaySuggestParcel(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORIES, categories);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_RADIOUS, radius);

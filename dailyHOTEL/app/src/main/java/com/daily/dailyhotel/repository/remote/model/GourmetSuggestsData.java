@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -40,9 +40,9 @@ public class GourmetSuggestsData
         @JsonField(name = "province")
         public AreaGroupData areaGroupData;
 
-        public GourmetSuggestV2.Gourmet getGourmet()
+        public GourmetSuggest.Gourmet getGourmet()
         {
-            GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
+            GourmetSuggest.Gourmet gourmet = new GourmetSuggest.Gourmet();
             gourmet.index = index;
             gourmet.name = name;
             gourmet.discount = discount;
@@ -65,9 +65,9 @@ public class GourmetSuggestsData
         @JsonField(name = "area")
         public AreaData area;
 
-        public GourmetSuggestV2.AreaGroup getAreaGroup()
+        public GourmetSuggest.AreaGroup getAreaGroup()
         {
-            GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
+            GourmetSuggest.AreaGroup areaGroup = new GourmetSuggest.AreaGroup();
             areaGroup.index = index;
             areaGroup.name = name;
             areaGroup.area = area == null ? null : area.getArea();
@@ -85,9 +85,9 @@ public class GourmetSuggestsData
         @JsonField(name = "name")
         public String name;
 
-        public GourmetSuggestV2.Area getArea()
+        public GourmetSuggest.Area getArea()
         {
-            GourmetSuggestV2.Area area = new GourmetSuggestV2.Area();
+            GourmetSuggest.Area area = new GourmetSuggest.Area();
             area.index = index;
             area.name = name;
 
@@ -95,9 +95,9 @@ public class GourmetSuggestsData
         }
     }
 
-    public List<GourmetSuggestV2> getSuggestList(Context context)
+    public List<GourmetSuggest> getSuggestList(Context context)
     {
-        List<GourmetSuggestV2> list = new ArrayList<>();
+        List<GourmetSuggest> list = new ArrayList<>();
 
         if (context == null)
         {
@@ -106,27 +106,27 @@ public class GourmetSuggestsData
 
         if (gourmetList != null && gourmetList.size() > 0)
         {
-            list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
-                , new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_gourmet))));
+            list.add(new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST //
+                , new GourmetSuggest.Section(context.getString(R.string.label_search_suggest_type_gourmet))));
 
             for (GourmetData gourmetData : gourmetList)
             {
-                GourmetSuggestV2.Gourmet gourmet = gourmetData.getGourmet();
+                GourmetSuggest.Gourmet gourmet = gourmetData.getGourmet();
 
-                list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, gourmet));
+                list.add(new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, gourmet));
             }
         }
 
         if (areaGroupList != null && areaGroupList.size() > 0)
         {
-            list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
-                , new GourmetSuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
+            list.add(new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST //
+                , new GourmetSuggest.Section(context.getString(R.string.label_search_suggest_type_region))));
 
             for (AreaGroupData areaGroupData : areaGroupList)
             {
-                GourmetSuggestV2.AreaGroup areaGroup = areaGroupData.getAreaGroup();
+                GourmetSuggest.AreaGroup areaGroup = areaGroupData.getAreaGroup();
 
-                list.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, areaGroup));
+                list.add(new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, areaGroup));
             }
         }
 

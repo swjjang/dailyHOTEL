@@ -17,8 +17,8 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
@@ -98,7 +98,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             ExLog.e(e.toString());
         }
 
-        GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+        GourmetSuggestParcel suggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel != null)
         {
@@ -119,7 +119,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_search_search_gourmet));
 
-        GourmetSuggestV2 suggest = mSearchViewModel.getSuggest();
+        GourmetSuggest suggest = mSearchViewModel.getSuggest();
         String displayName = suggest == null ? null : suggest.getText1();
 
         if (DailyTextUtils.isTextEmpty(displayName) == true)
@@ -211,7 +211,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
                 {
                     try
                     {
-                        GourmetSuggestParcelV2 gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        GourmetSuggestParcel gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchViewModel.setSuggest(gourmetSuggestParcel.getSuggest());
                         mSearchViewModel.inputKeyword = data.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
@@ -301,11 +301,11 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         try
         {
             GourmetBookDateTime gourmetBookDateTime = mSearchViewModel.getBookDateTime();
-            GourmetSuggestV2 suggest = mSearchViewModel.getSuggest();
+            GourmetSuggest suggest = mSearchViewModel.getSuggest();
 
             Intent intent = new Intent();
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
-            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(suggest));
+            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(suggest));
 
             if (suggest.isCampaignTagSuggestType() == false)
             {
@@ -377,8 +377,8 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             return;
         }
 
-        GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        GourmetSuggestV2 gourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        GourmetSuggest.CampaignTag suggestItem = GourmetSuggest.CampaignTag.getSuggestItem(campaignTag);
+        GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchViewModel.setSuggest(gourmetSuggest);
 
@@ -403,10 +403,10 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
         mSearchViewModel = ViewModelProviders.of(activity, new SearchGourmetViewModel.SearchGourmetViewModelFactory()).get(SearchGourmetViewModel.class);
 
         // Gourmet
-        mSearchViewModel.setSuggestObserver(activity, new Observer<GourmetSuggestV2>()
+        mSearchViewModel.setSuggestObserver(activity, new Observer<GourmetSuggest>()
         {
             @Override
-            public void onChanged(@Nullable GourmetSuggestV2 gourmetSuggest)
+            public void onChanged(@Nullable GourmetSuggest gourmetSuggest)
             {
                 String displayName = gourmetSuggest.getText1();
 

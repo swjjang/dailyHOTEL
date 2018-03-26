@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
@@ -37,13 +37,13 @@ public class SearchStayResultTabActivity extends BaseActivity<SearchStayResultTa
     public static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
 
     public static Intent newInstance(Context context, DailyCategoryType categoryType, String checkInDateTime, String checkOutDateTime//
-        , StaySuggestV2 suggest, String inputKeyWord, SearchStayResultAnalyticsParam analyticsParam)
+        , StaySuggest suggest, String inputKeyWord, SearchStayResultAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, SearchStayResultTabActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_INPUT_KEYWORD, inputKeyWord);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 

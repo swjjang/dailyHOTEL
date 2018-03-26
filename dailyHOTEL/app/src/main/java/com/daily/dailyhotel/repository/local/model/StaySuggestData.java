@@ -2,7 +2,7 @@ package com.daily.dailyhotel.repository.local.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 
 /**
  * Created by android_sam on 2018. 3. 16..
@@ -43,9 +43,9 @@ public class StaySuggestData
         @JsonField
         public String name;
 
-        public StaySuggestV2.SuggestItem getSuggestItem()
+        public StaySuggest.SuggestItem getSuggestItem()
         {
-            return new StaySuggestV2.SuggestItem(name);
+            return new StaySuggest.SuggestItem(name);
         }
     }
 
@@ -64,9 +64,9 @@ public class StaySuggestData
         @JsonField
         public String name;
 
-        public StaySuggestV2.Station getStation()
+        public StaySuggest.Station getStation()
         {
-            StaySuggestV2.Station station = new StaySuggestV2.Station();
+            StaySuggest.Station station = new StaySuggest.Station();
             station.index = index;
             station.name = name;
             station.line = line;
@@ -94,9 +94,9 @@ public class StaySuggestData
         @JsonField
         public AreaGroupData areaGroup;
 
-        public StaySuggestV2.Stay getStay()
+        public StaySuggest.Stay getStay()
         {
-            StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
+            StaySuggest.Stay stay = new StaySuggest.Stay();
             stay.index = index;
             stay.name = name;
             stay.discountAvg = discountAvg;
@@ -119,9 +119,9 @@ public class StaySuggestData
         @JsonField
         public AreaData area;
 
-        public StaySuggestV2.AreaGroup getAreaGroup()
+        public StaySuggest.AreaGroup getAreaGroup()
         {
-            StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
+            StaySuggest.AreaGroup areaGroup = new StaySuggest.AreaGroup();
             areaGroup.index = index;
             areaGroup.name = name;
             areaGroup.area = area == null ? null : area.getArea();
@@ -139,9 +139,9 @@ public class StaySuggestData
         @JsonField
         public String name;
 
-        public StaySuggestV2.Area getArea()
+        public StaySuggest.Area getArea()
         {
-            StaySuggestV2.Area area = new StaySuggestV2.Area();
+            StaySuggest.Area area = new StaySuggest.Area();
             area.index = index;
             area.name = name;
 
@@ -155,9 +155,9 @@ public class StaySuggestData
         @JsonField
         public String name;
 
-        public StaySuggestV2.Direct getDirect()
+        public StaySuggest.Direct getDirect()
         {
-            return new StaySuggestV2.Direct(name);
+            return new StaySuggest.Direct(name);
         }
     }
 
@@ -176,9 +176,9 @@ public class StaySuggestData
         @JsonField
         public String name;
 
-        public StaySuggestV2.Location getLocation()
+        public StaySuggest.Location getLocation()
         {
-            StaySuggestV2.Location location = new StaySuggestV2.Location();
+            StaySuggest.Location location = new StaySuggest.Location();
             location.name = name;
             location.address = address;
             location.latitude = latitude;
@@ -206,9 +206,9 @@ public class StaySuggestData
         @JsonField
         public String name;
 
-        public StaySuggestV2.CampaignTag getCampaignTag()
+        public StaySuggest.CampaignTag getCampaignTag()
         {
-            StaySuggestV2.CampaignTag campaignTag = new StaySuggestV2.CampaignTag();
+            StaySuggest.CampaignTag campaignTag = new StaySuggest.CampaignTag();
             campaignTag.index = index;
             campaignTag.startDate = startDate;
             campaignTag.endDate = endDate;
@@ -226,15 +226,15 @@ public class StaySuggestData
         @JsonField
         public String name;
 
-        public StaySuggestV2.Section getSection()
+        public StaySuggest.Section getSection()
         {
-            return new StaySuggestV2.Section(name);
+            return new StaySuggest.Section(name);
         }
     }
 
-    public StaySuggestV2 getSuggest()
+    public StaySuggest getSuggest()
     {
-        StaySuggestV2.SuggestItem suggestItem;
+        StaySuggest.SuggestItem suggestItem;
 
         if (stationData != null)
         {
@@ -262,15 +262,15 @@ public class StaySuggestData
             suggestItem = suggestItemData.getSuggestItem();
         }
 
-        StaySuggestV2.MenuType menuType1;
+        StaySuggest.MenuType menuType1;
         try
         {
-            menuType1 = StaySuggestV2.MenuType.valueOf(menuType);
+            menuType1 = StaySuggest.MenuType.valueOf(menuType);
         } catch (Exception e)
         {
-            menuType1 = StaySuggestV2.MenuType.UNKNOWN;
+            menuType1 = StaySuggest.MenuType.UNKNOWN;
         }
 
-        return new StaySuggestV2(menuType1, suggestItem);
+        return new StaySuggest(menuType1, suggestItem);
     }
 }

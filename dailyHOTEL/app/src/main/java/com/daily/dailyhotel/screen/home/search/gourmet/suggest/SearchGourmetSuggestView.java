@@ -17,7 +17,7 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchGourmetSuggestDataBinding;
@@ -40,17 +40,17 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     {
         void onSearchSuggest(String keyword);
 
-        void onSuggestClick(GourmetSuggestV2 gourmetSuggest);
+        void onSuggestClick(GourmetSuggest gourmetSuggest);
 
-        void onRecentlySuggestClick(GourmetSuggestV2 gourmetSuggest);
+        void onRecentlySuggestClick(GourmetSuggest gourmetSuggest);
 
-        void onDeleteRecentlySuggest(int position, GourmetSuggestV2 gourmetSuggest);
+        void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest);
 
         void onVoiceSearchClick();
 
         void setCheckVoiceSearchEnabled();
 
-        void onNearbyClick(GourmetSuggestV2 gourmetSuggest);
+        void onNearbyClick(GourmetSuggest gourmetSuggest);
     }
 
     public SearchGourmetSuggestView(BaseActivity baseActivity, SearchGourmetSuggestView.OnEventListener listener)
@@ -178,7 +178,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setSuggests(List<GourmetSuggestV2> gourmetSuggestList)
+    public void setSuggests(List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -192,7 +192,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 @Override
                 public void onClick(View v)
                 {
-                    GourmetSuggestV2 gourmetSuggest = (GourmetSuggestV2) v.getTag();
+                    GourmetSuggest gourmetSuggest = (GourmetSuggest) v.getTag();
 
                     if (gourmetSuggest != null)
                     {
@@ -211,19 +211,19 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, new GourmetSuggestV2.Direct(keyword))));
+                , new GourmetSuggest(GourmetSuggest.MenuType.DIRECT, new GourmetSuggest.Direct(keyword))));
         }
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
+            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
             {
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.UNKNOWN)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.SECTION)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
@@ -234,7 +234,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, new GourmetSuggestV2.Section(null))));
+                , new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, new GourmetSuggest.Section(null))));
         }
 
         mSuggestListAdapter.setAll(keyword, objectItemList);
@@ -307,7 +307,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList)
+    public void setRecentlySuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -319,19 +319,19 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
             mRecentlySuggestListAdapter = new GourmetRecentlySuggestListAdapter(getContext(), new GourmetRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
-                public void onItemClick(int position, GourmetSuggestV2 gourmetSuggest)
+                public void onItemClick(int position, GourmetSuggest gourmetSuggest)
                 {
                     getEventListener().onRecentlySuggestClick(gourmetSuggest);
                 }
 
                 @Override
-                public void onDeleteClick(int position, GourmetSuggestV2 gourmetSuggest)
+                public void onDeleteClick(int position, GourmetSuggest gourmetSuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, gourmetSuggest);
                 }
 
                 @Override
-                public void onNearbyClick(GourmetSuggestV2 gourmetSuggest)
+                public void onNearbyClick(GourmetSuggest gourmetSuggest)
                 {
                     getEventListener().onNearbyClick(gourmetSuggest);
                 }
@@ -349,9 +349,9 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
+            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
             {
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.SECTION)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
@@ -368,7 +368,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setPopularAreaSuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList)
+    public void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -380,7 +380,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
             mPopularSuggestListAdapter = new GourmetPopularSuggestListAdapter(getContext(), new GourmetPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
-                public void onNearbyClick(GourmetSuggestV2 gourmetSuggest)
+                public void onNearbyClick(GourmetSuggest gourmetSuggest)
                 {
                     getEventListener().onNearbyClick(gourmetSuggest);
                 }
@@ -399,7 +399,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
+            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
             {
                 objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmetSuggest));
             }
@@ -467,7 +467,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setNearbyGourmetSuggest(GourmetSuggestV2 locationSuggest)
+    public void setNearbyGourmetSuggest(GourmetSuggest locationSuggest)
     {
         if (locationSuggest == null)
         {
@@ -500,12 +500,12 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
             case R.id.textView:
                 Object object = view.getTag();
 
-                if (object == null || object instanceof GourmetSuggestV2 == false)
+                if (object == null || object instanceof GourmetSuggest == false)
                 {
                     return;
                 }
 
-                GourmetSuggestV2 gourmetSuggest = (GourmetSuggestV2) object;
+                GourmetSuggest gourmetSuggest = (GourmetSuggest) object;
                 getEventListener().onSuggestClick(gourmetSuggest);
                 break;
 

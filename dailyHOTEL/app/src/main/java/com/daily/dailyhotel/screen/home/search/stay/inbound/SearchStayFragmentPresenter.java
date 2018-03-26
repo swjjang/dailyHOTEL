@@ -16,7 +16,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -214,7 +214,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             return;
         }
 
-        StaySuggestV2 suggest = recentlyHistory.staySuggest;
+        StaySuggest suggest = recentlyHistory.staySuggest;
 
         addCompositeDisposable(mSearchLocalImpl.deleteStayIbSearchResultHistory(suggest).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<List<StaySearchResultHistory>>>()
         {

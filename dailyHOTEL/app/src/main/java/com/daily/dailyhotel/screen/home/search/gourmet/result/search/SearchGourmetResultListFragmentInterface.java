@@ -11,7 +11,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 
@@ -120,9 +120,9 @@ public interface SearchGourmetResultListFragmentInterface
 
         void onEventCallClick(Activity activity);
 
-        void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggestV2 suggest);
+        void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggest suggest);
 
-        void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest, String inputKeyword//
+        void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggest suggest, String inputKeyword//
             , int searchCount, int searchMaxCount);
     }
 }

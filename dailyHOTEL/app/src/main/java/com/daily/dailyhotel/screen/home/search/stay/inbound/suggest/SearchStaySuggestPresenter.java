@@ -21,13 +21,13 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
@@ -79,14 +79,14 @@ public class SearchStaySuggestPresenter //
     private Disposable mSuggestDisposable;
 
     private StayBookDateTime mStayBookDateTime;
-    private List<StaySuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
-    private List<StaySuggestV2> mRecentlySuggestList;
-    private List<StaySuggestV2> mSuggestList;
-    private List<GourmetSuggestV2> mGourmetSuggestList;
+    private List<StaySuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
+    private List<StaySuggest> mRecentlySuggestList;
+    private List<StaySuggest> mSuggestList;
+    private List<GourmetSuggest> mGourmetSuggestList;
     private List<StayOutboundSuggest> mStayOutboundSuggestList;
     ArrayList<String> mStayOutboundKeywordList;
     ArrayList<String> mGourmetKeywordList;
-    StaySuggestV2 mLocationSuggest;
+    StaySuggest mLocationSuggest;
     String mKeyword;
 
     DailyLocationExFactory mDailyLocationExFactory;
@@ -137,13 +137,13 @@ public class SearchStaySuggestPresenter //
 
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
-        StaySuggestV2.Location location = new StaySuggestV2.Location();
+        StaySuggest.Location location = new StaySuggest.Location();
         location.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
-        mLocationSuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, location);
+        mLocationSuggest = new StaySuggest(StaySuggest.MenuType.LOCATION, location);
 
-        List<StaySuggestV2> popularList = new ArrayList<>();
-        popularList.add(new StaySuggestV2(StaySuggestV2.MenuType.UNKNOWN //
-            , new StaySuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_stay))));
+        List<StaySuggest> popularList = new ArrayList<>();
+        popularList.add(new StaySuggest(StaySuggest.MenuType.UNKNOWN //
+            , new StaySuggest.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_stay))));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
 
@@ -365,20 +365,20 @@ public class SearchStaySuggestPresenter //
 
         addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL) //
             , mSuggestLocalImpl.getRecentlyStaySuggestList(10) //
-            , new BiFunction<ArrayList<RecentlyDbPlace>, List<StaySuggestV2>, List<StaySuggestV2>>()
+            , new BiFunction<ArrayList<RecentlyDbPlace>, List<StaySuggest>, List<StaySuggest>>()
             {
                 @Override
-                public List<StaySuggestV2> apply(ArrayList<RecentlyDbPlace> placeList, List<StaySuggestV2> searchList) throws Exception
+                public List<StaySuggest> apply(ArrayList<RecentlyDbPlace> placeList, List<StaySuggest> searchList) throws Exception
                 {
-                    List<StaySuggestV2> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
+                    List<StaySuggest> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
                     setRecentlySuggestList(recentlySuggestList);
 
                     return recentlySuggestList;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StaySuggestV2>>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StaySuggest>>()
         {
             @Override
-            public void accept(List<StaySuggestV2> staySuggestV2s) throws Exception
+            public void accept(List<StaySuggest> staySuggests) throws Exception
             {
                 notifyDataSetChanged();
 
@@ -400,20 +400,20 @@ public class SearchStaySuggestPresenter //
         }));
     }
 
-    private void setPopularAreaList(List<StaySuggestV2> popularAreaList)
+    private void setPopularAreaList(List<StaySuggest> popularAreaList)
     {
         mPopularAreaList = popularAreaList;
     }
 
-    List<StaySuggestV2> getRecentlySuggestList(List<StaySuggestV2> recentlySearchList, List<RecentlyDbPlace> recentlyPlaceList)
+    List<StaySuggest> getRecentlySuggestList(List<StaySuggest> recentlySearchList, List<RecentlyDbPlace> recentlyPlaceList)
     {
         // 최근 검색어
-        ArrayList<StaySuggestV2> recentlySuggestList = new ArrayList<>();
+        ArrayList<StaySuggest> recentlySuggestList = new ArrayList<>();
 
         if (recentlySearchList != null && recentlySearchList.size() > 0)
         {
-            recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_SEARCH //
-                , new StaySuggestV2.Section(getString(R.string.label_search_suggest_recently_search))));
+            recentlySuggestList.add(new StaySuggest(StaySuggest.MenuType.RECENTLY_SEARCH //
+                , new StaySuggest.Section(getString(R.string.label_search_suggest_recently_search))));
 
             recentlySuggestList.addAll(recentlySearchList);
         }
@@ -421,8 +421,8 @@ public class SearchStaySuggestPresenter //
         // 최근 본 업장
         if (recentlyPlaceList != null && recentlyPlaceList.size() > 0)
         {
-            recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_STAY //
-                , new StaySuggestV2.Section(getString(R.string.label_recently_stay))));
+            recentlySuggestList.add(new StaySuggest(StaySuggest.MenuType.RECENTLY_STAY //
+                , new StaySuggest.Section(getString(R.string.label_recently_stay))));
 
             int maxSize = Math.min(10, recentlyPlaceList.size());
 
@@ -430,8 +430,8 @@ public class SearchStaySuggestPresenter //
             {
                 RecentlyDbPlace recentlyPlace = recentlyPlaceList.get(i);
 
-                StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
-                StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
+                StaySuggest.Stay stay = new StaySuggest.Stay();
+                StaySuggest.AreaGroup areaGroup = new StaySuggest.AreaGroup();
 
                 areaGroup.name = recentlyPlace.regionName;
 
@@ -439,24 +439,24 @@ public class SearchStaySuggestPresenter //
                 stay.name = recentlyPlace.name;
                 stay.areaGroup = areaGroup;
 
-                recentlySuggestList.add(new StaySuggestV2(StaySuggestV2.MenuType.RECENTLY_STAY, stay));
+                recentlySuggestList.add(new StaySuggest(StaySuggest.MenuType.RECENTLY_STAY, stay));
             }
         }
 
         return recentlySuggestList;
     }
 
-    void setRecentlySuggestList(List<StaySuggestV2> recentlySuggestList)
+    void setRecentlySuggestList(List<StaySuggest> recentlySuggestList)
     {
         mRecentlySuggestList = recentlySuggestList;
     }
 
-    void setSuggestList(List<StaySuggestV2> suggestList)
+    void setSuggestList(List<StaySuggest> suggestList)
     {
         mSuggestList = suggestList;
     }
 
-    void setGourmetSuggestList(List<GourmetSuggestV2> suggestList)
+    void setGourmetSuggestList(List<GourmetSuggest> suggestList)
     {
         mGourmetSuggestList = suggestList;
     }
@@ -569,10 +569,10 @@ public class SearchStaySuggestPresenter //
         } else
         {
             mSuggestDisposable = mSuggestRemoteImpl.getSuggestByStay(checkInDate, nights, keyword) //
-                .delaySubscription(500, TimeUnit.MILLISECONDS).flatMap(new Function<List<StaySuggestV2>, ObservableSource<List>>()
+                .delaySubscription(500, TimeUnit.MILLISECONDS).flatMap(new Function<List<StaySuggest>, ObservableSource<List>>()
                 {
                     @Override
-                    public ObservableSource<List> apply(List<StaySuggestV2> staySuggestList) throws Exception
+                    public ObservableSource<List> apply(List<StaySuggest> staySuggestList) throws Exception
                     {
                         if (staySuggestList == null || staySuggestList.size() == 0)
                         {
@@ -601,7 +601,7 @@ public class SearchStaySuggestPresenter //
                             if (list.get(0) instanceof StayOutboundSuggest)
                             {
                                 setStayOutboundSuggestList(list);
-                            } else if (list.get(0) instanceof GourmetSuggestV2)
+                            } else if (list.get(0) instanceof GourmetSuggest)
                             {
                                 setGourmetSuggestList(list);
                             } else
@@ -663,7 +663,7 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onSuggestClick(StaySuggestV2 staySuggest)
+    public void onSuggestClick(StaySuggest staySuggest)
     {
         if (staySuggest == null)
         {
@@ -696,7 +696,7 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onSuggestClick(GourmetSuggestV2 gourmetSuggest)
+    public void onSuggestClick(GourmetSuggest gourmetSuggest)
     {
         if (gourmetSuggest == null)
         {
@@ -713,9 +713,9 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        if (GourmetSuggestV2.MenuType.DIRECT == gourmetSuggest.menuType)
+        if (GourmetSuggest.MenuType.DIRECT == gourmetSuggest.menuType)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(gourmetSuggest.getText1()));
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.DIRECT, new StaySuggest.Direct(gourmetSuggest.getText1()));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -766,7 +766,7 @@ public class SearchStaySuggestPresenter //
 
         if (StayOutboundSuggest.MENU_TYPE_DIRECT == stayOutboundSuggest.menuType)
         {
-            StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(stayOutboundSuggest.display));
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.DIRECT, new StaySuggest.Direct(stayOutboundSuggest.display));
 
             addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -803,7 +803,7 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onRecentlySuggestClick(StaySuggestV2 staySuggest)
+    public void onRecentlySuggestClick(StaySuggest staySuggest)
     {
         if (staySuggest == null)
         {
@@ -835,20 +835,20 @@ public class SearchStaySuggestPresenter //
             }));
     }
 
-    void startFinishAction(StaySuggestV2 staySuggest, String keyword)
+    void startFinishAction(StaySuggest staySuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(staySuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
 
-    private void startFinishAction(GourmetSuggestV2 gourmetSuggest, String keyword)
+    private void startFinishAction(GourmetSuggest gourmetSuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, intent);
@@ -866,14 +866,14 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onDeleteRecentlySuggest(int position, StaySuggestV2 staySuggest)
+    public void onDeleteRecentlySuggest(int position, StaySuggest staySuggest)
     {
         if (getViewInterface() == null || staySuggest == null || position < 0)
         {
             return;
         }
 
-        StaySuggestV2.SuggestItem suggestItem = staySuggest.getSuggestItem();
+        StaySuggest.SuggestItem suggestItem = staySuggest.getSuggestItem();
         if (suggestItem == null)
         {
             return;
@@ -892,9 +892,9 @@ public class SearchStaySuggestPresenter //
             notifyDataSetChanged();
         }
 
-        if (StaySuggestV2.MenuType.RECENTLY_STAY == staySuggest.menuType)
+        if (StaySuggest.MenuType.RECENTLY_STAY == staySuggest.menuType)
         {
-            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) suggestItem;
+            StaySuggest.Stay stay = (StaySuggest.Stay) suggestItem;
 
             addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, stay.index) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -995,7 +995,7 @@ public class SearchStaySuggestPresenter //
     }
 
     @Override
-    public void onNearbyClick(StaySuggestV2 staySuggest)
+    public void onNearbyClick(StaySuggest staySuggest)
     {
         startSearchMyLocation(true);
     }
@@ -1092,7 +1092,7 @@ public class SearchStaySuggestPresenter //
             screenLock(true);
         }
 
-        StaySuggestV2.Location itemLocation = (StaySuggestV2.Location) mLocationSuggest.getSuggestItem();
+        StaySuggest.Location itemLocation = (StaySuggest.Location) mLocationSuggest.getSuggestItem();
 
         addCompositeDisposable(observable.subscribe(new Consumer<Location>()
         {

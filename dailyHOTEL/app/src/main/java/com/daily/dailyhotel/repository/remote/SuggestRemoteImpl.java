@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.SuggestInterface;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.repository.remote.model.GourmetSuggestsData;
 import com.daily.dailyhotel.repository.remote.model.StaySuggestsData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -124,18 +124,18 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<StaySuggestV2>> getSuggestByStay(String checkInDate, int stays, String keyword)
+    public Observable<List<StaySuggest>> getSuggestByStay(String checkInDate, int stays, String keyword)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/hotels/sales/search/suggest"//
             : "MTIzJDEyJDEyNSQxJDIwJDEkODckMTYkODckNDkkOTMkNTMkODkkNTYkODEkOSQ=$OSYDg0RjMF1RkI2HOYTVGMkEQ3NjE1NzU3NjA3N0ZFOUNFN0I2GQjECwNHUQxQUNEQUM0NDc0MDUxMjREQDzM1NzREOEJCETzRCjYyMjk4NEJBQTJFQjJEQTIwMkZGRTZBMDE5NjkBWwOTk4$";
 
         return mDailyMobileService.getSuggestsByStayInbound(Crypto.getUrlDecoderEx(URL), checkInDate, stays, keyword) //
-            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StaySuggestsData>, List<StaySuggestV2>>()
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StaySuggestsData>, List<StaySuggest>>()
             {
                 @Override
-                public List<StaySuggestV2> apply(BaseDto<StaySuggestsData> staySuggestsDataBaseDto) throws Exception
+                public List<StaySuggest> apply(BaseDto<StaySuggestsData> staySuggestsDataBaseDto) throws Exception
                 {
-                    List<StaySuggestV2> list;
+                    List<StaySuggest> list;
 
                     if (staySuggestsDataBaseDto != null)
                     {
@@ -157,19 +157,19 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<GourmetSuggestV2>> getSuggestsByGourmet(String visitDate, String keyword)
+    public Observable<List<GourmetSuggest>> getSuggestsByGourmet(String visitDate, String keyword)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/gourmet/sales/search/suggest"//
             : "NjgkNjYkMzMkMjQkMTQkMzAkNjkkMTExJDY4JDExOCQ5NiQxMDckODMkOTckMjQkMzIk$NDVFRUFBRTFFNTOQ0RTcwQUEO4CQThCXZMURFRZDY3NkEwN0VDMDY3Q0EwQUExOEY5RjAyMMTjAA3KOEZDMTVEGNjRDNUFCM0I0BQNjFEODc4NjPZEQ0JEHMkM3NUUEzODk1NTNDMjM5NDU4$";
 
 
         return mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), visitDate, keyword) //
-            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetSuggestsData>, List<GourmetSuggestV2>>()
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetSuggestsData>, List<GourmetSuggest>>()
             {
                 @Override
-                public List<GourmetSuggestV2> apply(BaseDto<GourmetSuggestsData> gourmetSuggestsDataBaseDto) throws Exception
+                public List<GourmetSuggest> apply(BaseDto<GourmetSuggestsData> gourmetSuggestsDataBaseDto) throws Exception
                 {
-                    List<GourmetSuggestV2> list;
+                    List<GourmetSuggest> list;
 
                     if (gourmetSuggestsDataBaseDto != null)
                     {

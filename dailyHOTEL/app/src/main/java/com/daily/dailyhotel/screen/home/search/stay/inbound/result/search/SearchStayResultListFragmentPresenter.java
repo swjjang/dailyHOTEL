@@ -30,7 +30,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -566,7 +566,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         getViewInterface().hideEmptyViewVisible();
 
-        StaySuggestV2 suggest = mViewModel.getSuggest();
+        StaySuggest suggest = mViewModel.getSuggest();
 
         Observable<Boolean> observable;
 
@@ -574,7 +574,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         {
             getViewInterface().setLocationProgressBarVisible(true);
 
-            StaySuggestV2.Location locationSuggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+            StaySuggest.Location locationSuggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
             observable = searchMyLocation(null).flatMap(new Function<Location, ObservableSource<GoogleAddress>>()
             {
@@ -782,7 +782,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         return true;
     }
 
-    private boolean hasLocationDataInSuggest(@NonNull StaySuggestV2 suggest)
+    private boolean hasLocationDataInSuggest(@NonNull StaySuggest suggest)
     {
         if (suggest == null)
         {
@@ -791,7 +791,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         if (suggest.isLocationSuggestType() == true)
         {
-            StaySuggestV2.Location locationSuggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+            StaySuggest.Location locationSuggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
             return locationSuggestItem.latitude != 0.0d && locationSuggestItem.longitude != 0.0d;
         }
@@ -1338,7 +1338,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         return queryMap;
     }
 
-    private Map<String, Object> getSuggestQueryMap(StaySuggestV2 suggest, float radius)
+    private Map<String, Object> getSuggestQueryMap(StaySuggest suggest, float radius)
     {
         if (suggest == null)
         {
@@ -1351,7 +1351,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         {
             case STAY:
             {
-                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) suggest.getSuggestItem();
+                StaySuggest.Stay suggestItem = (StaySuggest.Stay) suggest.getSuggestItem();
                 queryMap.put("targetIndices", suggestItem.index);
                 break;
             }
@@ -1362,7 +1362,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
             case LOCATION:
             {
-                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+                StaySuggest.Location suggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
@@ -1372,7 +1372,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
             case STATION:
             {
-                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) suggest.getSuggestItem();
+                StaySuggest.Station suggestItem = (StaySuggest.Station) suggest.getSuggestItem();
 
                 queryMap.put("subwayIdx", suggestItem.index);
                 break;
@@ -1380,11 +1380,11 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
             case AREA_GROUP:
             {
-                StaySuggestV2.AreaGroup areaGroupSuggestItem = (StaySuggestV2.AreaGroup) suggest.getSuggestItem();
+                StaySuggest.AreaGroup areaGroupSuggestItem = (StaySuggest.AreaGroup) suggest.getSuggestItem();
 
                 queryMap.put("provinceIdx", areaGroupSuggestItem.index);
 
-                StaySuggestV2.Area areaSuggestItem = areaGroupSuggestItem.area;
+                StaySuggest.Area areaSuggestItem = areaGroupSuggestItem.area;
 
                 if (areaSuggestItem != null && areaSuggestItem.index > 0)
                 {

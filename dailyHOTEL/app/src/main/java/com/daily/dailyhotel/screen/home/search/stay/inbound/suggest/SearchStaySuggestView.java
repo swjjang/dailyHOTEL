@@ -17,10 +17,10 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.GourmetSuggestListAdapter;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.StayOutboundSuggestListAdapter;
 import com.twoheart.dailyhotel.R;
@@ -46,21 +46,21 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     {
         void onSearchSuggest(String keyword);
 
-        void onSuggestClick(StaySuggestV2 staySuggest);
+        void onSuggestClick(StaySuggest staySuggest);
 
-        void onSuggestClick(GourmetSuggestV2 gourmetSuggest);
+        void onSuggestClick(GourmetSuggest gourmetSuggest);
 
         void onSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
-        void onRecentlySuggestClick(StaySuggestV2 staySuggest);
+        void onRecentlySuggestClick(StaySuggest staySuggest);
 
-        void onDeleteRecentlySuggest(int position, StaySuggestV2 staySuggest);
+        void onDeleteRecentlySuggest(int position, StaySuggest staySuggest);
 
         void onVoiceSearchClick();
 
         void setCheckVoiceSearchEnabled();
 
-        void onNearbyClick(StaySuggestV2 staySuggest);
+        void onNearbyClick(StaySuggest staySuggest);
     }
 
     public SearchStaySuggestView(BaseActivity baseActivity, SearchStaySuggestView.OnEventListener listener)
@@ -187,7 +187,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setStaySuggests(List<StaySuggestV2> staySuggestList)
+    public void setStaySuggests(List<StaySuggest> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -201,7 +201,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 @Override
                 public void onClick(View v)
                 {
-                    StaySuggestV2 staySuggest = (StaySuggestV2) v.getTag();
+                    StaySuggest staySuggest = (StaySuggest) v.getTag();
 
                     if (staySuggest != null)
                     {
@@ -220,19 +220,19 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
-                , new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, new StaySuggestV2.Direct(keyword))));
+                , new StaySuggest(StaySuggest.MenuType.DIRECT, new StaySuggest.Direct(keyword))));
         }
 
         if (staySuggestList != null && staySuggestList.size() > 0)
         {
-            for (StaySuggestV2 staySuggest : staySuggestList)
+            for (StaySuggest staySuggest : staySuggestList)
             {
-                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.UNKNOWN)
+                if (staySuggest.getSuggestType() == StaySuggest.SuggestType.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.SECTION)
+                if (staySuggest.getSuggestType() == StaySuggest.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else
@@ -243,7 +243,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(null))));
+                , new StaySuggest(StaySuggest.MenuType.SUGGEST, new StaySuggest.Section(null))));
         }
 
         mStaySuggestListAdapter.setAll(keyword, objectItemList);
@@ -251,7 +251,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setGourmetSuggests(List<GourmetSuggestV2> gourmetSuggestList)
+    public void setGourmetSuggests(List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -265,7 +265,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 @Override
                 public void onClick(View v)
                 {
-                    GourmetSuggestV2 gourmetSuggest = (GourmetSuggestV2) v.getTag();
+                    GourmetSuggest gourmetSuggest = (GourmetSuggest) v.getTag();
 
                     if (gourmetSuggest != null)
                     {
@@ -284,23 +284,23 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.DIRECT, new GourmetSuggestV2.Direct(keyword))));
+                , new GourmetSuggest(GourmetSuggest.MenuType.DIRECT, new GourmetSuggest.Direct(keyword))));
         }
 
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            GourmetSuggestV2 sectionGourmetSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST //
-                , new GourmetSuggestV2.Section(getString(R.string.label_search_suggest_check_gourmet)));
+            GourmetSuggest sectionGourmetSuggest = new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST //
+                , new GourmetSuggest.Section(getString(R.string.label_search_suggest_check_gourmet)));
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, sectionGourmetSuggest));
 
-            for (GourmetSuggestV2 gourmetSuggest : gourmetSuggestList)
+            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
             {
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.UNKNOWN)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.UNKNOWN)
                 {
                     continue;
                 }
 
-                if (gourmetSuggest.getSuggestType() == GourmetSuggestV2.SuggestType.SECTION)
+                if (gourmetSuggest.getSuggestType() == GourmetSuggest.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
                 } else
@@ -311,7 +311,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
-                , new GourmetSuggestV2(GourmetSuggestV2.MenuType.SUGGEST, new GourmetSuggestV2.Section(null))));
+                , new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, new GourmetSuggest.Section(null))));
         }
 
         mGourmetSuggestListAdapter.setAll(keyword, objectItemList);
@@ -447,7 +447,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setRecentlySuggests(StaySuggestV2 locationSuggest, List<StaySuggestV2> staySuggestList)
+    public void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -459,19 +459,19 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             mRecentlySuggestListAdapter = new StayRecentlySuggestListAdapter(getContext(), new StayRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
-                public void onItemClick(int position, StaySuggestV2 staySuggest)
+                public void onItemClick(int position, StaySuggest staySuggest)
                 {
                     getEventListener().onRecentlySuggestClick(staySuggest);
                 }
 
                 @Override
-                public void onDeleteClick(int position, StaySuggestV2 staySuggest)
+                public void onDeleteClick(int position, StaySuggest staySuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, staySuggest);
                 }
 
                 @Override
-                public void onNearbyClick(StaySuggestV2 staySuggest)
+                public void onNearbyClick(StaySuggest staySuggest)
                 {
                     getEventListener().onNearbyClick(staySuggest);
                 }
@@ -489,9 +489,9 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (staySuggestList != null && staySuggestList.size() > 0)
         {
-            for (StaySuggestV2 staySuggest : staySuggestList)
+            for (StaySuggest staySuggest : staySuggestList)
             {
-                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.SECTION)
+                if (staySuggest.getSuggestType() == StaySuggest.SuggestType.SECTION)
                 {
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, staySuggest));
                 } else
@@ -508,7 +508,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setPopularAreaSuggests(StaySuggestV2 locationSuggest, List<StaySuggestV2> staySuggestList)
+    public void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -520,7 +520,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             mPopularSuggestListAdapter = new StayPopularSuggestListAdapter(getContext(), new StayPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
-                public void onNearbyClick(StaySuggestV2 staySuggest)
+                public void onNearbyClick(StaySuggest staySuggest)
                 {
                     getEventListener().onNearbyClick(staySuggest);
                 }
@@ -539,7 +539,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (staySuggestList != null && staySuggestList.size() > 0)
         {
-            for (StaySuggestV2 staySuggest : staySuggestList)
+            for (StaySuggest staySuggest : staySuggestList)
             {
                 objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, staySuggest));
             }
@@ -607,7 +607,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setNearbyStaySuggest(StaySuggestV2 locationSuggest)
+    public void setNearbyStaySuggest(StaySuggest locationSuggest)
     {
         if (locationSuggest == null)
         {
@@ -640,12 +640,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             case R.id.textView:
                 Object object = view.getTag();
 
-                if (object == null || object instanceof StaySuggestV2 == false)
+                if (object == null || object instanceof StaySuggest == false)
                 {
                     return;
                 }
 
-                StaySuggestV2 staySuggest = (StaySuggestV2) object;
+                StaySuggest staySuggest = (StaySuggest) object;
                 getEventListener().onSuggestClick(staySuggest);
                 break;
 

@@ -3,21 +3,24 @@ package com.daily.dailyhotel.entity;
 import android.support.annotation.NonNull;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.repository.local.model.StaySuggestData;
+import com.daily.dailyhotel.repository.local.model.GourmetSuggestData;
 
 import java.io.Serializable;
 
 /**
- * Created by android_sam on 2018. 3. 5..
+ * Created by android_sam on 2018. 2. 1..
  */
 
-public class StaySuggestV2
+public class GourmetSuggest
 {
+    /**
+     * SuggestType Name 변경 금지, DB에 해당 이름으로 Type field 에 저장 됨
+     */
     public enum SuggestType
     {
         UNKNOWN,
         STATION,
-        STAY,
+        GOURMET,
         AREA_GROUP,
         DIRECT,
         LOCATION,
@@ -31,7 +34,7 @@ public class StaySuggestV2
         DIRECT,
         LOCATION,
         RECENTLY_SEARCH,
-        RECENTLY_STAY,
+        RECENTLY_GOURMET,
         SUGGEST,
         CAMPAIGN_TAG,
         REGION_LOCATION // 지역목록에서 내 주변으로 검색 할 경우
@@ -39,19 +42,16 @@ public class StaySuggestV2
 
     public MenuType menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
     private SuggestItem suggestItem;
-    //    public int suggestType; // 카테고리 비교 용
-    //    public String text1;
-    //    public String text2;
 
-    public StaySuggestV2(MenuType menuType, @NonNull SuggestItem suggestItem)
+    public GourmetSuggest(MenuType menuType, @NonNull SuggestItem suggestItem)
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;
-        //        this.suggestType = getSuggestType();
-        //        this.text1 = getText1();
-        //        this.text2 = getText2();
     }
 
+    /**
+     * @return
+     */
     public SuggestType getSuggestType()
     {
         if (suggestItem == null)
@@ -59,13 +59,13 @@ public class StaySuggestV2
             return SuggestType.UNKNOWN;
         }
 
-        if (suggestItem instanceof Stay)
+        if (suggestItem instanceof Gourmet)
         {
-            return SuggestType.STAY;
-        } else if (suggestItem instanceof Station)
-        {
-            return SuggestType.STATION;
-
+            return SuggestType.GOURMET;
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return SuggestType.STATION;
+            //
         } else if (suggestItem instanceof AreaGroup)
         {
             return SuggestType.AREA_GROUP;
@@ -91,9 +91,9 @@ public class StaySuggestV2
         return suggestItem != null && suggestItem instanceof Location;
     }
 
-    public boolean isStaySuggestType()
+    public boolean isGourmetSuggestType()
     {
-        return suggestItem != null && suggestItem instanceof Stay;
+        return suggestItem != null && suggestItem instanceof Gourmet;
     }
 
     public boolean isCampaignTagSuggestType()
@@ -108,12 +108,12 @@ public class StaySuggestV2
             return null;
         }
 
-        if (suggestItem instanceof Stay)
+        if (suggestItem instanceof Gourmet)
         {
             return suggestItem.name;
-        } else if (suggestItem instanceof Station)
-        {
-            return ((Station) suggestItem).getDisplayName();
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return ((Station) suggestItem).getDisplayName();
         } else if (suggestItem instanceof AreaGroup)
         {
             AreaGroup areaGroup = (AreaGroup) suggestItem;
@@ -154,13 +154,13 @@ public class StaySuggestV2
             return null;
         }
 
-        if (suggestItem instanceof Stay)
+        if (suggestItem instanceof Gourmet)
         {
-            AreaGroup areaGroup = ((Stay) suggestItem).areaGroup;
+            AreaGroup areaGroup = ((Gourmet) suggestItem).areaGroup;
             return areaGroup.name;
-        } else if (suggestItem instanceof Station)
-        {
-            return ((Station) suggestItem).region;
+            //        } else if (suggestItem instanceof Station)
+            //        {
+            //            return ((Station) suggestItem).region;
         } else if (suggestItem instanceof AreaGroup)
         {
             AreaGroup areaGroup = (AreaGroup) suggestItem;
@@ -214,45 +214,20 @@ public class StaySuggestV2
             this.name = name;
         }
 
-        public StaySuggestData.SuggestItemData getSuggestItemData()
+        public GourmetSuggestData.SuggestItemData getSuggestItemData()
         {
-            StaySuggestData.SuggestItemData data = new StaySuggestData.SuggestItemData();
+            GourmetSuggestData.SuggestItemData data = new GourmetSuggestData.SuggestItemData();
             data.name = name;
 
             return data;
         }
     }
 
-    public static class Station extends SuggestItem
-    {
-        public int index;
-        public String region;
-        public String line;
-        //        public String name;
-
-        public String getDisplayName()
-        {
-            return name + "(" + line + ")";
-            //            return "[" + line + "] " + name;
-        }
-
-        public StaySuggestData.StationData getStationData()
-        {
-            StaySuggestData.StationData data = new StaySuggestData.StationData();
-            data.name = name;
-            data.index = index;
-            data.region = region;
-            data.line = line;
-
-            return data;
-        }
-    }
-
-    public static class Stay extends SuggestItem
+    public static class Gourmet extends SuggestItem
     {
         public int index;
         //        public String name;
-        public int discountAvg;
+        public int discount;
         public boolean available;
         public AreaGroup areaGroup;
 
@@ -261,12 +236,12 @@ public class StaySuggestV2
             return areaGroup == null ? null : areaGroup.name;
         }
 
-        public StaySuggestData.StayData getStayData()
+        public GourmetSuggestData.GourmetData getGourmetData()
         {
-            StaySuggestData.StayData data = new StaySuggestData.StayData();
+            GourmetSuggestData.GourmetData data = new GourmetSuggestData.GourmetData();
             data.name = name;
             data.index = index;
-            data.discountAvg = discountAvg;
+            data.discount = discount;
             data.available = available;
             data.areaGroup = areaGroup == null ? null : areaGroup.getAreaGroupData();
 
@@ -285,9 +260,9 @@ public class StaySuggestV2
             return area == null ? name : area.name;
         }
 
-        public StaySuggestData.AreaGroupData getAreaGroupData()
+        public GourmetSuggestData.AreaGroupData getAreaGroupData()
         {
-            StaySuggestData.AreaGroupData data = new StaySuggestData.AreaGroupData();
+            GourmetSuggestData.AreaGroupData data = new GourmetSuggestData.AreaGroupData();
             data.name = name;
             data.index = index;
             data.area = area == null ? null : area.getAreaData();
@@ -299,11 +274,11 @@ public class StaySuggestV2
     public static class Area extends SuggestItem
     {
         public int index;
-        //        public String name;
+        //        public int name;
 
-        public StaySuggestData.AreaData getAreaData()
+        public GourmetSuggestData.AreaData getAreaData()
         {
-            StaySuggestData.AreaData data = new StaySuggestData.AreaData();
+            GourmetSuggestData.AreaData data = new GourmetSuggestData.AreaData();
             data.name = name;
             data.index = index;
 
@@ -320,9 +295,9 @@ public class StaySuggestV2
             super(name);
         }
 
-        public StaySuggestData.DirectData getDirectData()
+        public GourmetSuggestData.DirectData getDirectData()
         {
-            StaySuggestData.DirectData data = new StaySuggestData.DirectData();
+            GourmetSuggestData.DirectData data = new GourmetSuggestData.DirectData();
             data.name = name;
 
             return data;
@@ -336,9 +311,9 @@ public class StaySuggestV2
         public String address;
         //        public String name;
 
-        public StaySuggestData.LocationData getLocationData()
+        public GourmetSuggestData.LocationData getLocationData()
         {
-            StaySuggestData.LocationData data = new StaySuggestData.LocationData();
+            GourmetSuggestData.LocationData data = new GourmetSuggestData.LocationData();
             data.name = name;
             data.address = address;
             data.latitude = latitude;
@@ -358,7 +333,7 @@ public class StaySuggestV2
 
         public static CampaignTag getSuggestItem(com.daily.dailyhotel.entity.CampaignTag campaignTag)
         {
-            StaySuggestV2.CampaignTag suggestItem = new StaySuggestV2.CampaignTag();
+            GourmetSuggest.CampaignTag suggestItem = new GourmetSuggest.CampaignTag();
             suggestItem.index = campaignTag.index;
             suggestItem.name = campaignTag.campaignTag;
             suggestItem.startDate = campaignTag.startDate;
@@ -368,9 +343,9 @@ public class StaySuggestV2
             return suggestItem;
         }
 
-        public StaySuggestData.CampaignTagData getCampaignTagData()
+        public GourmetSuggestData.CampaignTagData getCampaignTagData()
         {
-            StaySuggestData.CampaignTagData data = new StaySuggestData.CampaignTagData();
+            GourmetSuggestData.CampaignTagData data = new GourmetSuggestData.CampaignTagData();
             data.name = name;
             data.index = index;
             data.startDate = startDate;
@@ -390,31 +365,25 @@ public class StaySuggestV2
             super(title);
         }
 
-        public StaySuggestData.SectionData getSectionData()
+        public GourmetSuggestData.SectionData getSectionData()
         {
-            StaySuggestData.SectionData data = new StaySuggestData.SectionData();
+            GourmetSuggestData.SectionData data = new GourmetSuggestData.SectionData();
             data.name = name;
 
             return data;
         }
     }
 
-    public StaySuggestData getSuggestData()
+    public GourmetSuggestData getSuggestData()
     {
-        StaySuggestData data = new StaySuggestData();
+        GourmetSuggestData data = new GourmetSuggestData();
         data.menuType = menuType.name();
 
         switch (getSuggestType())
         {
-            case STATION:
+            case GOURMET:
             {
-                data.stationData = ((Station) suggestItem).getStationData();
-                break;
-            }
-
-            case STAY:
-            {
-                data.stayData = ((Stay) suggestItem).getStayData();
+                data.gourmetData = ((Gourmet) suggestItem).getGourmetData();
                 break;
             }
 

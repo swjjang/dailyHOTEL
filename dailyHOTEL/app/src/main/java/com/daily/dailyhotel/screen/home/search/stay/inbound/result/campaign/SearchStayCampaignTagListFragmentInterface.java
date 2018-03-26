@@ -14,7 +14,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 
 import java.util.List;
@@ -109,9 +109,9 @@ public interface SearchStayCampaignTagListFragmentInterface
 
         void onEventCallClick(Activity activity);
 
-        void onEventStayClick(Activity activity, Stay stay, StaySuggestV2 suggest);
+        void onEventStayClick(Activity activity, Stay stay, StaySuggest suggest);
 
-        void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggestV2 suggest//
+        void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggest suggest//
             , CampaignTag campaignTag, int searchCount);
     }
 }

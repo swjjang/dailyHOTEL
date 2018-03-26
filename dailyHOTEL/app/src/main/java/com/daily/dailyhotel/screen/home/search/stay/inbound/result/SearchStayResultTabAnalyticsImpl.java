@@ -3,7 +3,7 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.result;
 import android.app.Activity;
 
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -116,7 +116,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
     }
 
     @Override
-    public void onEventResearchClick(Activity activity, StaySuggestV2 suggest)
+    public void onEventResearchClick(Activity activity, StaySuggest suggest)
     {
         if (activity == null || suggest == null)
         {
@@ -135,7 +135,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
     }
 
     @Override
-    public void onEventChangedRadius(Activity activity, StaySuggestV2 suggest, float radius)
+    public void onEventChangedRadius(Activity activity, StaySuggest suggest, float radius)
     {
         if (activity == null)
         {
@@ -166,7 +166,7 @@ public class SearchStayResultTabAnalyticsImpl implements SearchStayResultTabInte
 
             if (suggest.isLocationSuggestType() == true)
             {
-                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+                StaySuggest.Location suggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
                 label = suggestItem.address;
             } else

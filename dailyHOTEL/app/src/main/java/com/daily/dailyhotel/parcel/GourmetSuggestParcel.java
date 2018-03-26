@@ -4,17 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 
 /**
  * Created by android_sam on 2018. 3. 7..
  */
 
-public class GourmetSuggestParcelV2 implements Parcelable
+public class GourmetSuggestParcel implements Parcelable
 {
-    private GourmetSuggestV2 mGourmetSuggest;
+    private GourmetSuggest mGourmetSuggest;
 
-    public GourmetSuggestParcelV2(@NonNull GourmetSuggestV2 gourmetSuggest)
+    public GourmetSuggestParcel(@NonNull GourmetSuggest gourmetSuggest)
     {
         if (gourmetSuggest == null)
         {
@@ -24,12 +24,12 @@ public class GourmetSuggestParcelV2 implements Parcelable
         mGourmetSuggest = gourmetSuggest;
     }
 
-    public GourmetSuggestParcelV2(Parcel in)
+    public GourmetSuggestParcel(Parcel in)
     {
         readFromParcel(in);
     }
 
-    public GourmetSuggestV2 getSuggest()
+    public GourmetSuggest getSuggest()
     {
         return mGourmetSuggest;
     }
@@ -43,20 +43,20 @@ public class GourmetSuggestParcelV2 implements Parcelable
 
     private void readFromParcel(Parcel in)
     {
-        GourmetSuggestV2.MenuType menuType;
-        GourmetSuggestV2.SuggestItem suggestItem;
+        GourmetSuggest.MenuType menuType;
+        GourmetSuggest.SuggestItem suggestItem;
 
         try
         {
-            menuType = GourmetSuggestV2.MenuType.valueOf(in.readString());
+            menuType = GourmetSuggest.MenuType.valueOf(in.readString());
         } catch (Exception e)
         {
-            menuType = GourmetSuggestV2.MenuType.UNKNOWN;
+            menuType = GourmetSuggest.MenuType.UNKNOWN;
         }
 
-        suggestItem = (GourmetSuggestV2.SuggestItem) in.readSerializable();
+        suggestItem = (GourmetSuggest.SuggestItem) in.readSerializable();
 
-        mGourmetSuggest = new GourmetSuggestV2(menuType, suggestItem);
+        mGourmetSuggest = new GourmetSuggest(menuType, suggestItem);
     }
 
     @Override
@@ -67,15 +67,15 @@ public class GourmetSuggestParcelV2 implements Parcelable
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public GourmetSuggestParcelV2 createFromParcel(Parcel in)
+        public GourmetSuggestParcel createFromParcel(Parcel in)
         {
-            return new GourmetSuggestParcelV2(in);
+            return new GourmetSuggestParcel(in);
         }
 
         @Override
-        public GourmetSuggestParcelV2[] newArray(int size)
+        public GourmetSuggestParcel[] newArray(int size)
         {
-            return new GourmetSuggestParcelV2[size];
+            return new GourmetSuggestParcel[size];
         }
 
     };

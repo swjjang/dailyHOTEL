@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeDeleteDataBinding;
@@ -27,11 +27,11 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 {
     public interface OnRecentlySuggestListener
     {
-        void onItemClick(int position, GourmetSuggestV2 gourmetSuggest);
+        void onItemClick(int position, GourmetSuggest gourmetSuggest);
 
-        void onDeleteClick(int position, GourmetSuggestV2 gourmetSuggest);
+        void onDeleteClick(int position, GourmetSuggest gourmetSuggest);
 
-        void onNearbyClick(GourmetSuggestV2 gourmetSuggest);
+        void onNearbyClick(GourmetSuggest gourmetSuggest);
     }
 
     private Context mContext;
@@ -184,7 +184,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         return mSuggestList.get(position);
     }
 
-    public GourmetSuggestV2 removeItem(int position)
+    public GourmetSuggest removeItem(int position)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
@@ -197,7 +197,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         }
 
         ObjectItem removeItem = mSuggestList.remove(position);
-        GourmetSuggestV2 gourmetSuggest = removeItem.getItem();
+        GourmetSuggest gourmetSuggest = removeItem.getItem();
 
         if (gourmetSuggest != null)
         {
@@ -216,7 +216,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         return gourmetSuggest;
     }
 
-    private void checkAndRemoveSection(GourmetSuggestV2.MenuType menuType)
+    private void checkAndRemoveSection(GourmetSuggest.MenuType menuType)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
@@ -229,7 +229,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         for (int i = 0; i < mSuggestList.size(); i++)
         {
             ObjectItem item = mSuggestList.get(i);
-            GourmetSuggestV2 gourmetSuggest = item.getItem();
+            GourmetSuggest gourmetSuggest = item.getItem();
 
             if (gourmetSuggest == null || gourmetSuggest.menuType != menuType)
             {
@@ -252,14 +252,14 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         }
     }
 
-    public void setNearByGourmetSuggest(GourmetSuggestV2 nearByGourmetSuggest)
+    public void setNearByGourmetSuggest(GourmetSuggest nearByGourmetSuggest)
     {
         if (mSuggestList == null || mSuggestList.size() == 0 || nearByGourmetSuggest == null)
         {
             return;
         }
 
-        GourmetSuggestV2.Location nearByLocation = (GourmetSuggestV2.Location) nearByGourmetSuggest.getSuggestItem();
+        GourmetSuggest.Location nearByLocation = (GourmetSuggest.Location) nearByGourmetSuggest.getSuggestItem();
         if (nearByLocation == null)
         {
             return;
@@ -269,8 +269,8 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         {
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
-                GourmetSuggestV2 gourmetSuggest = item.getItem();
-                GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.getSuggestItem();
+                GourmetSuggest gourmetSuggest = item.getItem();
+                GourmetSuggest.Location location = (GourmetSuggest.Location) gourmetSuggest.getSuggestItem();
 
                 location.name = nearByLocation.name;
                 location.address = nearByLocation.address;
@@ -284,7 +284,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -310,7 +310,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         if (DailyTextUtils.isTextEmpty(gourmetSuggest.getText1()) == true)
         {
@@ -331,7 +331,7 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()

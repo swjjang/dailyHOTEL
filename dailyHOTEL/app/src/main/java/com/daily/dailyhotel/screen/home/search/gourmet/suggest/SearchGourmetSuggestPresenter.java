@@ -22,8 +22,8 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
@@ -71,10 +71,10 @@ public class SearchGourmetSuggestPresenter //
     private Disposable mSuggestDisposable;
 
     private GourmetBookDateTime mGourmetBookDateTime;
-    private List<GourmetSuggestV2> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
-    private List<GourmetSuggestV2> mRecentlySuggestList;
-    private List<GourmetSuggestV2> mSuggestList;
-    GourmetSuggestV2 mLocationSuggest;
+    private List<GourmetSuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
+    private List<GourmetSuggest> mRecentlySuggestList;
+    private List<GourmetSuggest> mSuggestList;
+    GourmetSuggest mLocationSuggest;
     String mKeyword;
 
     DailyLocationExFactory mDailyLocationExFactory;
@@ -121,13 +121,13 @@ public class SearchGourmetSuggestPresenter //
 
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
-        GourmetSuggestV2.Location location = new GourmetSuggestV2.Location();
+        GourmetSuggest.Location location = new GourmetSuggest.Location();
         location.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
-        mLocationSuggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.LOCATION, location);
+        mLocationSuggest = new GourmetSuggest(GourmetSuggest.MenuType.LOCATION, location);
 
-        List<GourmetSuggestV2> popularList = new ArrayList<>();
-        popularList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.UNKNOWN //
-            , new GourmetSuggestV2.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
+        List<GourmetSuggest> popularList = new ArrayList<>();
+        popularList.add(new GourmetSuggest(GourmetSuggest.MenuType.UNKNOWN //
+            , new GourmetSuggest.SuggestItem(getString(R.string.label_search_suggest_recently_empty_description_type_gourmet))));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
 
@@ -318,20 +318,20 @@ public class SearchGourmetSuggestPresenter //
         screenLock(showProgress);
 
         addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET) //
-            , mSuggestLocalImpl.getRecentlyGourmetSuggestList(10), new BiFunction<ArrayList<RecentlyDbPlace>, List<GourmetSuggestV2>, List<GourmetSuggestV2>>()
+            , mSuggestLocalImpl.getRecentlyGourmetSuggestList(10), new BiFunction<ArrayList<RecentlyDbPlace>, List<GourmetSuggest>, List<GourmetSuggest>>()
             {
                 @Override
-                public List<GourmetSuggestV2> apply(ArrayList<RecentlyDbPlace> placeList, List<GourmetSuggestV2> searchList) throws Exception
+                public List<GourmetSuggest> apply(ArrayList<RecentlyDbPlace> placeList, List<GourmetSuggest> searchList) throws Exception
                 {
-                    List<GourmetSuggestV2> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
+                    List<GourmetSuggest> recentlySuggestList = getRecentlySuggestList(searchList, placeList);
                     setRecentlySuggestList(recentlySuggestList);
 
                     return recentlySuggestList;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<GourmetSuggestV2>>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<GourmetSuggest>>()
         {
             @Override
-            public void accept(List<GourmetSuggestV2> gourmetSuggests) throws Exception
+            public void accept(List<GourmetSuggest> gourmetSuggests) throws Exception
             {
                 notifyDataSetChanged();
 
@@ -353,20 +353,20 @@ public class SearchGourmetSuggestPresenter //
         }));
     }
 
-    private void setPopularAreaList(List<GourmetSuggestV2> popularAreaList)
+    private void setPopularAreaList(List<GourmetSuggest> popularAreaList)
     {
         mPopularAreaList = popularAreaList;
     }
 
-    List<GourmetSuggestV2> getRecentlySuggestList(List<GourmetSuggestV2> recentlySearchList, List<RecentlyDbPlace> recentlyPlaceList)
+    List<GourmetSuggest> getRecentlySuggestList(List<GourmetSuggest> recentlySearchList, List<RecentlyDbPlace> recentlyPlaceList)
     {
         // 최근 검색어
-        ArrayList<GourmetSuggestV2> recentlySuggestList = new ArrayList<>();
+        ArrayList<GourmetSuggest> recentlySuggestList = new ArrayList<>();
 
         if (recentlySearchList != null && recentlySearchList.size() > 0)
         {
-            recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_SEARCH //
-                , new GourmetSuggestV2.Section(getString(R.string.label_search_suggest_recently_search))));
+            recentlySuggestList.add(new GourmetSuggest(GourmetSuggest.MenuType.RECENTLY_SEARCH //
+                , new GourmetSuggest.Section(getString(R.string.label_search_suggest_recently_search))));
 
             recentlySuggestList.addAll(recentlySearchList);
         }
@@ -374,8 +374,8 @@ public class SearchGourmetSuggestPresenter //
         // 최근 본 업장
         if (recentlyPlaceList != null && recentlyPlaceList.size() > 0)
         {
-            recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_GOURMET //
-                , new GourmetSuggestV2.Section(getString(R.string.label_recently_gourmet))));
+            recentlySuggestList.add(new GourmetSuggest(GourmetSuggest.MenuType.RECENTLY_GOURMET //
+                , new GourmetSuggest.Section(getString(R.string.label_recently_gourmet))));
 
             int maxSize = Math.min(10, recentlyPlaceList.size());
 
@@ -383,8 +383,8 @@ public class SearchGourmetSuggestPresenter //
             {
                 RecentlyDbPlace recentlyPlace = recentlyPlaceList.get(i);
 
-                GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
-                GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
+                GourmetSuggest.Gourmet gourmet = new GourmetSuggest.Gourmet();
+                GourmetSuggest.AreaGroup areaGroup = new GourmetSuggest.AreaGroup();
 
                 areaGroup.name = recentlyPlace.regionName;
 
@@ -392,19 +392,19 @@ public class SearchGourmetSuggestPresenter //
                 gourmet.name = recentlyPlace.name;
                 gourmet.areaGroup = areaGroup;
 
-                recentlySuggestList.add(new GourmetSuggestV2(GourmetSuggestV2.MenuType.RECENTLY_GOURMET, gourmet));
+                recentlySuggestList.add(new GourmetSuggest(GourmetSuggest.MenuType.RECENTLY_GOURMET, gourmet));
             }
         }
 
         return recentlySuggestList;
     }
 
-    void setRecentlySuggestList(List<GourmetSuggestV2> recentlySuggestList)
+    void setRecentlySuggestList(List<GourmetSuggest> recentlySuggestList)
     {
         mRecentlySuggestList = recentlySuggestList;
     }
 
-    void setSuggestList(List<GourmetSuggestV2> suggestList)
+    void setSuggestList(List<GourmetSuggest> suggestList)
     {
         mSuggestList = suggestList;
     }
@@ -494,10 +494,10 @@ public class SearchGourmetSuggestPresenter //
         {
             mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()) //
-                .subscribe(new Consumer<List<GourmetSuggestV2>>()
+                .subscribe(new Consumer<List<GourmetSuggest>>()
                 {
                     @Override
-                    public void accept(List<GourmetSuggestV2> gourmetSuggestList) throws Exception
+                    public void accept(List<GourmetSuggest> gourmetSuggestList) throws Exception
                     {
                         setSuggestList(gourmetSuggestList);
                         notifyDataSetChanged();
@@ -538,7 +538,7 @@ public class SearchGourmetSuggestPresenter //
     }
 
     @Override
-    public void onSuggestClick(GourmetSuggestV2 gourmetSuggest)
+    public void onSuggestClick(GourmetSuggest gourmetSuggest)
     {
         if (gourmetSuggest == null)
         {
@@ -576,7 +576,7 @@ public class SearchGourmetSuggestPresenter //
     }
 
     @Override
-    public void onRecentlySuggestClick(GourmetSuggestV2 gourmetSuggest)
+    public void onRecentlySuggestClick(GourmetSuggest gourmetSuggest)
     {
         if (gourmetSuggest == null)
         {
@@ -613,10 +613,10 @@ public class SearchGourmetSuggestPresenter //
             }));
     }
 
-    void startFinishAction(GourmetSuggestV2 gourmetSuggest, String keyword)
+    void startFinishAction(GourmetSuggest gourmetSuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
         intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Activity.RESULT_OK, intent);
@@ -624,14 +624,14 @@ public class SearchGourmetSuggestPresenter //
     }
 
     @Override
-    public void onDeleteRecentlySuggest(int position, GourmetSuggestV2 gourmetSuggest)
+    public void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest)
     {
         if (getViewInterface() == null || gourmetSuggest == null || position < 0)
         {
             return;
         }
 
-        GourmetSuggestV2.SuggestItem suggestItem = gourmetSuggest.getSuggestItem();
+        GourmetSuggest.SuggestItem suggestItem = gourmetSuggest.getSuggestItem();
         if (suggestItem == null)
         {
             return;
@@ -650,9 +650,9 @@ public class SearchGourmetSuggestPresenter //
             notifyDataSetChanged();
         }
 
-        if (GourmetSuggestV2.MenuType.RECENTLY_GOURMET == gourmetSuggest.menuType)
+        if (GourmetSuggest.MenuType.RECENTLY_GOURMET == gourmetSuggest.menuType)
         {
-            GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) suggestItem;
+            GourmetSuggest.Gourmet gourmet = (GourmetSuggest.Gourmet) suggestItem;
 
             addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.GOURMET, gourmet.index) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -753,7 +753,7 @@ public class SearchGourmetSuggestPresenter //
     }
 
     @Override
-    public void onNearbyClick(GourmetSuggestV2 gourmetSuggest)
+    public void onNearbyClick(GourmetSuggest gourmetSuggest)
     {
         startSearchMyLocation(true);
     }
@@ -788,7 +788,7 @@ public class SearchGourmetSuggestPresenter //
             screenLock(true);
         }
 
-        GourmetSuggestV2.Location itemLocation = (GourmetSuggestV2.Location) mLocationSuggest.getSuggestItem();
+        GourmetSuggest.Location itemLocation = (GourmetSuggest.Location) mLocationSuggest.getSuggestItem();
 
         addCompositeDisposable(observable.subscribe(new Consumer<Location>()
         {

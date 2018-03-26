@@ -8,7 +8,7 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 
 import java.util.List;
@@ -107,9 +107,9 @@ public interface SearchStayResultTabInterface
 
         void onEventCancelClick(Activity activity, boolean locationSuggestType);
 
-        void onEventResearchClick(Activity activity, StaySuggestV2 suggest);
+        void onEventResearchClick(Activity activity, StaySuggest suggest);
 
-        void onEventChangedRadius(Activity activity, StaySuggestV2 suggest, float radius);
+        void onEventChangedRadius(Activity activity, StaySuggest suggest, float radius);
 
         void onEventGourmetClick(Activity activity);
 

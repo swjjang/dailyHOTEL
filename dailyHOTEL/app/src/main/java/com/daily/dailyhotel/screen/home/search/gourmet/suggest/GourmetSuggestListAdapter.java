@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
@@ -155,7 +155,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(DirectViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 
@@ -200,7 +200,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         if (DailyTextUtils.isTextEmpty(gourmetSuggest.getText1()) == true)
         {
@@ -215,7 +215,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 
@@ -232,7 +232,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
                 holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
 
-                GourmetSuggestV2.Gourmet gourmet = (GourmetSuggestV2.Gourmet) gourmetSuggest.getSuggestItem();
+                GourmetSuggest.Gourmet gourmet = (GourmetSuggest.Gourmet) gourmetSuggest.getSuggestItem();
 
                 if (gourmet.available == false)
                 {

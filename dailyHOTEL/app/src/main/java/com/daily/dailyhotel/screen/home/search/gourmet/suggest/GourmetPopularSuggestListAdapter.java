@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
@@ -25,7 +25,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 {
     public interface OnPopularSuggestListener
     {
-        void onNearbyClick(GourmetSuggestV2 gourmetSuggest);
+        void onNearbyClick(GourmetSuggest gourmetSuggest);
     }
 
     private Context mContext;
@@ -133,14 +133,14 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
         return mSuggestList.get(position);
     }
 
-    public void setNearByGourmetSuggest(GourmetSuggestV2 nearByGourmetSuggest)
+    public void setNearByGourmetSuggest(GourmetSuggest nearByGourmetSuggest)
     {
         if (mSuggestList == null || mSuggestList.size() == 0 || nearByGourmetSuggest == null)
         {
             return;
         }
 
-        GourmetSuggestV2.Location nearByLocation = (GourmetSuggestV2.Location) nearByGourmetSuggest.getSuggestItem();
+        GourmetSuggest.Location nearByLocation = (GourmetSuggest.Location) nearByGourmetSuggest.getSuggestItem();
         if (nearByLocation == null)
         {
             return;
@@ -150,8 +150,8 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
         {
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
-                GourmetSuggestV2 gourmetSuggest = item.getItem();
-                GourmetSuggestV2.Location location = (GourmetSuggestV2.Location) gourmetSuggest.getSuggestItem();
+                GourmetSuggest gourmetSuggest = item.getItem();
+                GourmetSuggest.Location location = (GourmetSuggest.Location) gourmetSuggest.getSuggestItem();
 
                 location.name = nearByLocation.name;
                 location.address = nearByLocation.address;
@@ -165,7 +165,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -197,7 +197,7 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggestV2 gourmetSuggest = item.getItem();
+        GourmetSuggest gourmetSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(gourmetSuggest);
 

@@ -4,7 +4,7 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 
 /**
  * Created by android_sam on 2018. 3. 16..
@@ -13,7 +13,7 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
 public class GourmetSearchResultHistory extends SearchResultHistory
 {
     public GourmetBookDateTime gourmetBookDateTime;
-    public GourmetSuggestV2 gourmetSuggest;
+    public GourmetSuggest gourmetSuggest;
 
     public GourmetSearchResultHistory(String visitDate, String suggest)
     {

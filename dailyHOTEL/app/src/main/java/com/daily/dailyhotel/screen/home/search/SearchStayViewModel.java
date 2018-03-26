@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 
 /**
  * Created by sheldon
@@ -18,7 +18,7 @@ import com.daily.dailyhotel.entity.StaySuggestV2;
 public class SearchStayViewModel extends ViewModel
 {
     private MutableLiveData<StayBookDateTime> mBookDateTime = new MutableLiveData<>();
-    private MutableLiveData<StaySuggestV2> mSuggest = new MutableLiveData<>();
+    private MutableLiveData<StaySuggest> mSuggest = new MutableLiveData<>();
     public String inputKeyword;
     private MutableLiveData<Float> mRadius = new MutableLiveData<>();
 
@@ -67,22 +67,22 @@ public class SearchStayViewModel extends ViewModel
         mBookDateTime.removeObserver(observer);
     }
 
-    public void setSuggest(StaySuggestV2 suggest)
+    public void setSuggest(StaySuggest suggest)
     {
         this.mSuggest.setValue(suggest);
     }
 
-    public StaySuggestV2 getSuggest()
+    public StaySuggest getSuggest()
     {
         return mSuggest.getValue();
     }
 
-    public void setSuggestObserver(BaseActivity activity, Observer<StaySuggestV2> observer)
+    public void setSuggestObserver(BaseActivity activity, Observer<StaySuggest> observer)
     {
         mSuggest.observe(activity, observer);
     }
 
-    public void removeSuggestObserver(Observer<StaySuggestV2> observer)
+    public void removeSuggestObserver(Observer<StaySuggest> observer)
     {
         mSuggest.removeObserver(observer);
     }
