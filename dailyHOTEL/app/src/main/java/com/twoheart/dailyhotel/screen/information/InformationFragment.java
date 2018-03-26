@@ -322,8 +322,11 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
+            String lowImageUrl = "http://img.dailyhotel.me/resources/images/home_event/180110_dailytureawards_sm.jpg";
+
             baseActivity.startActivityForResult(EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOME_EVENT//
-                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards(), getString(R.string.label_daily_true_awards), null, null) //
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards() //
+                , getString(R.string.label_daily_true_awards), getString(R.string.label_daily_true_awards_share_description), lowImageUrl) //
                 , Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.TRUE_AWARDS //

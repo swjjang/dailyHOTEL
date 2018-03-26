@@ -1740,6 +1740,7 @@
     <!-- 데일리 트루 어워즈 -->
     <string name="label_daily_true_awards">데일리 트루어워즈</string>
     <string name="label_daily_true_awards_popup_title_formet">데일리 트루어워즈\n\'%1$s\' 부문 선정</string>
+    <string name="label_daily_true_awards_share_description">150만개의 트루리뷰로 2017년 BEST를 찾다</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

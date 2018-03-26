@@ -143,7 +143,8 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
                 if (externalDeepLink.isEventDetailView() == true)
                 {
-                    startEventWeb(externalDeepLink.getUrl(), externalDeepLink.getTitle(), null, null);
+                    startEventWeb(externalDeepLink.getUrl(), externalDeepLink.getTitle() //
+                        , externalDeepLink.getDescription(), externalDeepLink.getImageUrl());
                 }
             } else
             {
