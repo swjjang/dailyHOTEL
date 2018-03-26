@@ -22,9 +22,9 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
@@ -677,10 +677,10 @@ public class SearchStayOutboundSuggestPresenter //
         finish();
     }
 
-    void startFinishAction(StaySuggestV2 staySuggest, String keyword)
+    void startFinishAction(StaySuggest staySuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcelV2(staySuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY, intent);
@@ -873,13 +873,13 @@ public class SearchStayOutboundSuggestPresenter //
 
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
-                                StaySuggestV2.Location itemLocation = new StaySuggestV2.Location();
+                                StaySuggest.Location itemLocation = new StaySuggest.Location();
                                 itemLocation.address = address.address;
                                 itemLocation.name = address.shortAddress;
                                 itemLocation.latitude = mLocationSuggest.latitude;
                                 itemLocation.longitude = mLocationSuggest.longitude;
 
-                                StaySuggestV2 staySuggest = new StaySuggestV2(StaySuggestV2.MenuType.LOCATION, itemLocation);
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.LOCATION, itemLocation);
 
                                 unLockAll();
 

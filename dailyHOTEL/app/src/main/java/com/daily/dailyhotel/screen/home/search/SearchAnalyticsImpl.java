@@ -2,9 +2,6 @@ package com.daily.dailyhotel.screen.home.search;
 
 import android.app.Activity;
 
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface

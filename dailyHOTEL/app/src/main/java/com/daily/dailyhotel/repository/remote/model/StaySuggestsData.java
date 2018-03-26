@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -40,9 +40,9 @@ public class StaySuggestsData
         @JsonField(name = "name")
         public String name;
 
-        public StaySuggestV2.Station getStation()
+        public StaySuggest.Station getStation()
         {
-            StaySuggestV2.Station station = new StaySuggestV2.Station();
+            StaySuggest.Station station = new StaySuggest.Station();
             station.index = index;
             station.region = region;
             station.line = line;
@@ -70,9 +70,9 @@ public class StaySuggestsData
         @JsonField(name = "province")
         public AreaGroupData areaGroup;
 
-        public StaySuggestV2.Stay getStay()
+        public StaySuggest.Stay getStay()
         {
-            StaySuggestV2.Stay stay = new StaySuggestV2.Stay();
+            StaySuggest.Stay stay = new StaySuggest.Stay();
             stay.index = index;
             stay.name = name;
             stay.discountAvg = discountAvg;
@@ -95,9 +95,9 @@ public class StaySuggestsData
         @JsonField(name = "area")
         public AreaData area;
 
-        public StaySuggestV2.AreaGroup getAreaGroup()
+        public StaySuggest.AreaGroup getAreaGroup()
         {
-            StaySuggestV2.AreaGroup areaGroup = new StaySuggestV2.AreaGroup();
+            StaySuggest.AreaGroup areaGroup = new StaySuggest.AreaGroup();
             areaGroup.index = index;
             areaGroup.name = name;
             areaGroup.area = area == null ? null : area.getArea();
@@ -115,9 +115,9 @@ public class StaySuggestsData
         @JsonField(name = "name")
         public String name;
 
-        public StaySuggestV2.Area getArea()
+        public StaySuggest.Area getArea()
         {
-            StaySuggestV2.Area area = new StaySuggestV2.Area();
+            StaySuggest.Area area = new StaySuggest.Area();
             area.index = index;
             area.name = name;
 
@@ -125,9 +125,9 @@ public class StaySuggestsData
         }
     }
 
-    public List<StaySuggestV2> getSuggestList(Context context)
+    public List<StaySuggest> getSuggestList(Context context)
     {
-        List<StaySuggestV2> list = new ArrayList<>();
+        List<StaySuggest> list = new ArrayList<>();
 
         if (context == null)
         {
@@ -136,37 +136,37 @@ public class StaySuggestsData
 
         if (stayList != null && stayList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_stay))));
+            list.add(new StaySuggest(StaySuggest.MenuType.SUGGEST, new StaySuggest.Section(context.getString(R.string.label_search_suggest_type_stay))));
 
             for (StayData stayData : stayList)
             {
-                StaySuggestV2.Stay stay = stayData.getStay();
+                StaySuggest.Stay stay = stayData.getStay();
 
-                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, stay));
+                list.add(new StaySuggest(StaySuggest.MenuType.SUGGEST, stay));
             }
         }
 
         if (areaGroupList != null && areaGroupList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_region))));
+            list.add(new StaySuggest(StaySuggest.MenuType.SUGGEST, new StaySuggest.Section(context.getString(R.string.label_search_suggest_type_region))));
 
             for (AreaGroupData areaGroupData : areaGroupList)
             {
-                StaySuggestV2.AreaGroup areaGroup = areaGroupData.getAreaGroup();
+                StaySuggest.AreaGroup areaGroup = areaGroupData.getAreaGroup();
 
-                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, areaGroup));
+                list.add(new StaySuggest(StaySuggest.MenuType.SUGGEST, areaGroup));
             }
         }
 
         if (stationList != null && stationList.size() > 0)
         {
-            list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, new StaySuggestV2.Section(context.getString(R.string.label_search_suggest_type_station))));
+            list.add(new StaySuggest(StaySuggest.MenuType.SUGGEST, new StaySuggest.Section(context.getString(R.string.label_search_suggest_type_station))));
 
             for (StationData stationData : stationList)
             {
-                StaySuggestV2.Station station = stationData.getStation();
+                StaySuggest.Station station = stationData.getStation();
 
-                list.add(new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, station));
+                list.add(new StaySuggest(StaySuggest.MenuType.SUGGEST, station));
             }
         }
 

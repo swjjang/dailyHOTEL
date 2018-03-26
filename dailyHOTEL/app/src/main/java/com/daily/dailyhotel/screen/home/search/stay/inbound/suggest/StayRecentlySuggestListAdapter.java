@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeDeleteDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
@@ -27,11 +27,11 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
 {
     public interface OnRecentlySuggestListener
     {
-        void onItemClick(int position, StaySuggestV2 staySuggest);
+        void onItemClick(int position, StaySuggest staySuggest);
 
-        void onDeleteClick(int position, StaySuggestV2 staySuggest);
+        void onDeleteClick(int position, StaySuggest staySuggest);
 
-        void onNearbyClick(StaySuggestV2 staySuggest);
+        void onNearbyClick(StaySuggest staySuggest);
     }
 
     private Context mContext;
@@ -184,7 +184,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         return mSuggestList.get(position);
     }
 
-    public StaySuggestV2 removeItem(int position)
+    public StaySuggest removeItem(int position)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
@@ -197,7 +197,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         }
 
         ObjectItem removeItem = mSuggestList.remove(position);
-        StaySuggestV2 staySuggest = removeItem.getItem();
+        StaySuggest staySuggest = removeItem.getItem();
 
         if (staySuggest != null)
         {
@@ -216,7 +216,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         return staySuggest;
     }
 
-    private void checkAndRemoveSection(StaySuggestV2.MenuType menuType)
+    private void checkAndRemoveSection(StaySuggest.MenuType menuType)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
@@ -229,7 +229,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         for (int i = 0; i < mSuggestList.size(); i++)
         {
             ObjectItem item = mSuggestList.get(i);
-            StaySuggestV2 staySuggest = item.getItem();
+            StaySuggest staySuggest = item.getItem();
 
             if (staySuggest == null || staySuggest.menuType != menuType)
             {
@@ -252,14 +252,14 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
-    public void setNearByStaySuggest(StaySuggestV2 nearByStaySuggest)
+    public void setNearByStaySuggest(StaySuggest nearByStaySuggest)
     {
         if (mSuggestList == null || mSuggestList.size() == 0 || nearByStaySuggest == null)
         {
             return;
         }
 
-        StaySuggestV2.Location nearByLocation = (StaySuggestV2.Location) nearByStaySuggest.getSuggestItem();
+        StaySuggest.Location nearByLocation = (StaySuggest.Location) nearByStaySuggest.getSuggestItem();
         if (nearByLocation == null)
         {
             return;
@@ -269,8 +269,8 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         {
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
-                StaySuggestV2 staySuggest = item.getItem();
-                StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.getSuggestItem();
+                StaySuggest staySuggest = item.getItem();
+                StaySuggest.Location location = (StaySuggest.Location) staySuggest.getSuggestItem();
 
                 location.name = nearByLocation.name;
                 location.address = nearByLocation.address;
@@ -284,7 +284,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
 
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
-        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
@@ -310,7 +310,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
         if (DailyTextUtils.isTextEmpty(staySuggest.getText1()) == true)
         {
@@ -331,7 +331,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()

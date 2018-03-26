@@ -2,7 +2,7 @@ package com.daily.dailyhotel.repository.local.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 
 /**
  * Created by android_sam on 2018. 3. 15..
@@ -40,9 +40,9 @@ public class GourmetSuggestData
         @JsonField
         public String name;
 
-        public GourmetSuggestV2.SuggestItem getSuggestItem()
+        public GourmetSuggest.SuggestItem getSuggestItem()
         {
-            return new GourmetSuggestV2.SuggestItem(name);
+            return new GourmetSuggest.SuggestItem(name);
         }
     }
 
@@ -64,9 +64,9 @@ public class GourmetSuggestData
         @JsonField
         public AreaGroupData areaGroup;
 
-        public GourmetSuggestV2.Gourmet getGourmet()
+        public GourmetSuggest.Gourmet getGourmet()
         {
-            GourmetSuggestV2.Gourmet gourmet = new GourmetSuggestV2.Gourmet();
+            GourmetSuggest.Gourmet gourmet = new GourmetSuggest.Gourmet();
             gourmet.index = index;
             gourmet.name = name;
             gourmet.discount = discount;
@@ -89,9 +89,9 @@ public class GourmetSuggestData
         @JsonField
         public AreaData area;
 
-        public GourmetSuggestV2.AreaGroup getAreaGroup()
+        public GourmetSuggest.AreaGroup getAreaGroup()
         {
-            GourmetSuggestV2.AreaGroup areaGroup = new GourmetSuggestV2.AreaGroup();
+            GourmetSuggest.AreaGroup areaGroup = new GourmetSuggest.AreaGroup();
             areaGroup.index = index;
             areaGroup.name = name;
             areaGroup.area = area == null ? null : area.getArea();
@@ -109,9 +109,9 @@ public class GourmetSuggestData
         @JsonField
         public String name;
 
-        public GourmetSuggestV2.Area getArea()
+        public GourmetSuggest.Area getArea()
         {
-            GourmetSuggestV2.Area area = new GourmetSuggestV2.Area();
+            GourmetSuggest.Area area = new GourmetSuggest.Area();
             area.index = index;
             area.name = name;
 
@@ -125,9 +125,9 @@ public class GourmetSuggestData
         @JsonField
         public String name;
 
-        public GourmetSuggestV2.Direct getDirect()
+        public GourmetSuggest.Direct getDirect()
         {
-            GourmetSuggestV2.Direct direct = new GourmetSuggestV2.Direct(name);
+            GourmetSuggest.Direct direct = new GourmetSuggest.Direct(name);
             return direct;
         }
     }
@@ -147,9 +147,9 @@ public class GourmetSuggestData
         @JsonField
         public String name;
 
-        public GourmetSuggestV2.Location getLocation()
+        public GourmetSuggest.Location getLocation()
         {
-            GourmetSuggestV2.Location location = new GourmetSuggestV2.Location();
+            GourmetSuggest.Location location = new GourmetSuggest.Location();
             location.name = name;
             location.address = address;
             location.latitude = latitude;
@@ -177,9 +177,9 @@ public class GourmetSuggestData
         @JsonField
         public String name;
 
-        public GourmetSuggestV2.CampaignTag getCampaignTag()
+        public GourmetSuggest.CampaignTag getCampaignTag()
         {
-            GourmetSuggestV2.CampaignTag campaignTag = new GourmetSuggestV2.CampaignTag();
+            GourmetSuggest.CampaignTag campaignTag = new GourmetSuggest.CampaignTag();
             campaignTag.index = index;
             campaignTag.startDate = startDate;
             campaignTag.endDate = endDate;
@@ -197,16 +197,16 @@ public class GourmetSuggestData
         @JsonField
         public String name;
 
-        public GourmetSuggestV2.Section getSection()
+        public GourmetSuggest.Section getSection()
         {
-            GourmetSuggestV2.Section section = new GourmetSuggestV2.Section(name);
+            GourmetSuggest.Section section = new GourmetSuggest.Section(name);
             return section;
         }
     }
 
-    public GourmetSuggestV2 getSuggest()
+    public GourmetSuggest getSuggest()
     {
-        GourmetSuggestV2.SuggestItem suggestItem;
+        GourmetSuggest.SuggestItem suggestItem;
 
         if (gourmetData != null)
         {
@@ -231,16 +231,16 @@ public class GourmetSuggestData
             suggestItem = suggestItemData.getSuggestItem();
         }
 
-        GourmetSuggestV2.MenuType menuType1;
+        GourmetSuggest.MenuType menuType1;
         try
         {
-            menuType1 = GourmetSuggestV2.MenuType.valueOf(menuType);
+            menuType1 = GourmetSuggest.MenuType.valueOf(menuType);
         } catch (Exception e)
         {
-            menuType1 = GourmetSuggestV2.MenuType.UNKNOWN;
+            menuType1 = GourmetSuggest.MenuType.UNKNOWN;
         }
 
-        return new GourmetSuggestV2(menuType1, suggestItem);
+        return new GourmetSuggest(menuType1, suggestItem);
     }
 }
 

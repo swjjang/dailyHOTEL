@@ -21,9 +21,9 @@ import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -58,7 +58,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     StayRemoteImpl mStayRemoteImpl;
 
     StayFilter mStayFilter;
-    StaySuggestV2 mSuggest;
+    StaySuggest mSuggest;
     StayBookDateTime mStayBookDateTime;
     List<String> mCategoryList;
     Location mLocation;
@@ -74,7 +74,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         void onScreen(Activity activity);
 
-        void onConfirmClick(Activity activity, StaySuggestV2 suggest, StayFilter stayFilter, int listCountByFilter);
+        void onConfirmClick(Activity activity, StaySuggest suggest, StayFilter stayFilter, int listCountByFilter);
 
         void onBackClick(Activity activity);
 
@@ -161,7 +161,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mStayFilter = stayFilterParcel.getFilter();
 
-        StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_SUGGEST);
+        StaySuggestParcel suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel == null)
         {
@@ -619,7 +619,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         return queryMap;
     }
 
-    private Map<String, Object> getSuggestQueryMap(StaySuggestV2 suggest, float radius)
+    private Map<String, Object> getSuggestQueryMap(StaySuggest suggest, float radius)
     {
         if (suggest == null)
         {
@@ -632,7 +632,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         {
             case STAY:
             {
-                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) suggest.getSuggestItem();
+                StaySuggest.Stay suggestItem = (StaySuggest.Stay) suggest.getSuggestItem();
                 queryMap.put("targetIndices", suggestItem.index);
                 break;
             }
@@ -643,7 +643,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             case LOCATION:
             {
-                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+                StaySuggest.Location suggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
@@ -653,7 +653,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             case STATION:
             {
-                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) suggest.getSuggestItem();
+                StaySuggest.Station suggestItem = (StaySuggest.Station) suggest.getSuggestItem();
 
                 queryMap.put("subwayIdx", suggestItem.index);
                 break;
@@ -661,11 +661,11 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             case AREA_GROUP:
             {
-                StaySuggestV2.AreaGroup areaGroupSuggestItem = (StaySuggestV2.AreaGroup) suggest.getSuggestItem();
+                StaySuggest.AreaGroup areaGroupSuggestItem = (StaySuggest.AreaGroup) suggest.getSuggestItem();
 
                 queryMap.put("provinceIdx", areaGroupSuggestItem.index);
 
-                StaySuggestV2.Area areaSuggestItem = areaGroupSuggestItem.area;
+                StaySuggest.Area areaSuggestItem = areaGroupSuggestItem.area;
 
                 if (areaSuggestItem != null && areaSuggestItem.index > 0)
                 {

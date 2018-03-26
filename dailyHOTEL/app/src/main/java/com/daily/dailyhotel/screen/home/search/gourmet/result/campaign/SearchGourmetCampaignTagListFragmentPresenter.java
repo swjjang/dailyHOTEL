@@ -30,7 +30,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -423,8 +423,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         getViewInterface().setEmptyViewVisible(false, mViewModel.getFilter().isDefault() == false);
 
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
-        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
+        GourmetSuggest suggest = mViewModel.getSuggest();
+        GourmetSuggest.CampaignTag suggestItem = (GourmetSuggest.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT))//
@@ -681,8 +681,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
-        GourmetSuggestV2.CampaignTag suggestItem = (GourmetSuggestV2.CampaignTag) suggest.getSuggestItem();
+        GourmetSuggest suggest = mViewModel.getSuggest();
+        GourmetSuggest.CampaignTag suggestItem = (GourmetSuggest.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTags>()

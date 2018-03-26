@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -26,7 +26,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
     }
 
     @Override
-    public void onConfirmClick(Activity activity, StaySuggestV2 suggest, StayFilter stayFilter, int listCountByFilter)
+    public void onConfirmClick(Activity activity, StaySuggest suggest, StayFilter stayFilter, int listCountByFilter)
     {
         if (activity == null)
         {
@@ -45,10 +45,10 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 eventParams.put(AnalyticsManager.KeyType.PROVINCE, suggest.getSuggestItem().name);
 
-                if (suggest.getSuggestType() == StaySuggestV2.SuggestType.AREA_GROUP)
+                if (suggest.getSuggestType() == StaySuggest.SuggestType.AREA_GROUP)
                 {
-                    StaySuggestV2.AreaGroup suggestItem = (StaySuggestV2.AreaGroup) suggest.getSuggestItem();
-                    StaySuggestV2.Area area = suggestItem.area;
+                    StaySuggest.AreaGroup suggestItem = (StaySuggest.AreaGroup) suggest.getSuggestItem();
+                    StaySuggest.Area area = suggestItem.area;
                     eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                 } else
                 {

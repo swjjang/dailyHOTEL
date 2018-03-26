@@ -13,7 +13,7 @@ import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 
@@ -115,7 +115,7 @@ public class SearchGourmetResultViewModel extends ViewModel
         searchViewModel.setBookDateTime(bookDateTime);
     }
 
-    public void setSuggest(@NonNull GourmetSuggestV2 suggest)
+    public void setSuggest(@NonNull GourmetSuggest suggest)
     {
         if (searchViewModel == null)
         {
@@ -130,7 +130,7 @@ public class SearchGourmetResultViewModel extends ViewModel
         searchViewModel.setSuggest(suggest);
     }
 
-    public GourmetSuggestV2 getSuggest()
+    public GourmetSuggest getSuggest()
     {
         return searchViewModel == null ? null : searchViewModel.getSuggest();
     }

@@ -6,7 +6,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -71,7 +71,7 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
     }
 
     @Override
-    public void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggestV2 suggest)
+    public void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggest suggest)
     {
         if (activity == null || gourmet == null || suggest == null)
         {
@@ -130,7 +130,7 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
     }
 
     @Override
-    public void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest, String inputKeyword//
+    public void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggest suggest, String inputKeyword//
         , int searchCount, int searchMaxCount)
     {
         if (activity == null || gourmetBookDateTime == null || suggest == null)
@@ -221,7 +221,7 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
             , action + "_gourmet", displayName, params);
     }
 
-    private void recordEventSearchResultByAutoSearch(Activity activity, GourmetSuggestV2 suggest, String inputKeyword, boolean empty, Map<String, String> params)
+    private void recordEventSearchResultByAutoSearch(Activity activity, GourmetSuggest suggest, String inputKeyword, boolean empty, Map<String, String> params)
     {
         if (activity == null || suggest == null || params == null)
         {

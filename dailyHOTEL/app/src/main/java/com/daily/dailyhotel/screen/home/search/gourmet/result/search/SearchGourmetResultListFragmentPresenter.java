@@ -28,7 +28,7 @@ import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
@@ -491,7 +491,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         getViewInterface().hideEmptyViewVisible();
 
-        GourmetSuggestV2 suggest = mViewModel.getSuggest();
+        GourmetSuggest suggest = mViewModel.getSuggest();
 
         Observable<Boolean> observable;
 
@@ -499,7 +499,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         {
             getViewInterface().setLocationProgressBarVisible(true);
 
-            GourmetSuggestV2.Location locationSuggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+            GourmetSuggest.Location locationSuggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
 
             observable = searchMyLocation(null).flatMap(new Function<Location, ObservableSource<GoogleAddress>>()
             {
@@ -652,7 +652,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }));
     }
 
-    private boolean hasLocationDataInSuggest(@NonNull GourmetSuggestV2 suggest)
+    private boolean hasLocationDataInSuggest(@NonNull GourmetSuggest suggest)
     {
         if (suggest == null)
         {
@@ -661,7 +661,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         if (suggest.isLocationSuggestType() == true)
         {
-            GourmetSuggestV2.Location locationSuggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+            GourmetSuggest.Location locationSuggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
 
             return locationSuggestItem.latitude != 0.0d && locationSuggestItem.longitude != 0.0d;
         }
@@ -1205,7 +1205,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         return queryMap;
     }
 
-    private Map<String, Object> getSuggestQueryMap(GourmetSuggestV2 suggest, float radius)
+    private Map<String, Object> getSuggestQueryMap(GourmetSuggest suggest, float radius)
     {
         if (suggest == null)
         {
@@ -1218,7 +1218,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         {
             case GOURMET:
             {
-                GourmetSuggestV2.Gourmet suggestItem = (GourmetSuggestV2.Gourmet) suggest.getSuggestItem();
+                GourmetSuggest.Gourmet suggestItem = (GourmetSuggest.Gourmet) suggest.getSuggestItem();
                 queryMap.put("targetIndices", suggestItem.index);
                 break;
             }
@@ -1229,7 +1229,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
             case LOCATION:
             {
-                GourmetSuggestV2.Location suggestItem = (GourmetSuggestV2.Location) suggest.getSuggestItem();
+                GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
 
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
@@ -1239,11 +1239,11 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
             case AREA_GROUP:
             {
-                GourmetSuggestV2.AreaGroup areaGroupSuggestItem = (GourmetSuggestV2.AreaGroup) suggest.getSuggestItem();
+                GourmetSuggest.AreaGroup areaGroupSuggestItem = (GourmetSuggest.AreaGroup) suggest.getSuggestItem();
 
                 queryMap.put("provinceIdx", areaGroupSuggestItem.index);
 
-                GourmetSuggestV2.Area areaSuggestItem = areaGroupSuggestItem.area;
+                GourmetSuggest.Area areaSuggestItem = areaGroupSuggestItem.area;
 
                 if (areaSuggestItem != null && areaSuggestItem.index > 0)
                 {

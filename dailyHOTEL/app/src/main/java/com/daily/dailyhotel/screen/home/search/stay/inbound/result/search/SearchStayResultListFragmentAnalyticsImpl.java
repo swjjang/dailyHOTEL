@@ -9,7 +9,7 @@ import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -25,7 +25,7 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
 {
     @Override
     public void onScreen(Activity activity, SearchStayResultTabPresenter.ViewType viewType, StayBookDateTime bookDateTime//
-        , StaySuggestV2 suggest, StayFilter stayFilter, boolean empty, String callByScreen)
+        , StaySuggest suggest, StayFilter stayFilter, boolean empty, String callByScreen)
     {
         if (activity == null || bookDateTime == null || suggest == null || stayFilter == null)
         {
@@ -96,9 +96,9 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             params.put(AnalyticsManager.KeyType.PROVINCE, suggest.getSuggestItem().name);
 
 
-            if (suggest.getSuggestType() == StaySuggestV2.SuggestType.AREA_GROUP)
+            if (suggest.getSuggestType() == StaySuggest.SuggestType.AREA_GROUP)
             {
-                StaySuggestV2.Area area = ((StaySuggestV2.AreaGroup) suggest.getSuggestItem()).area;
+                StaySuggest.Area area = ((StaySuggest.AreaGroup) suggest.getSuggestItem()).area;
 
                 params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
@@ -150,7 +150,7 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     }
 
     @Override
-    public void onEventStayClick(Activity activity, Stay stay, StaySuggestV2 suggest)
+    public void onEventStayClick(Activity activity, Stay stay, StaySuggest suggest)
     {
         if (activity == null || stay == null || suggest == null)
         {
@@ -224,7 +224,7 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     }
 
     @Override
-    public void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggestV2 suggest, String inputKeyword//
+    public void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggest suggest, String inputKeyword//
         , int searchCount, int searchMaxCount)
     {
         if (activity == null || bookDateTime == null || suggest == null)
@@ -317,7 +317,7 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             , action + "_stay", displayName, params);
     }
 
-    private void recordEventSearchResultByAutoSearch(Activity activity, StaySuggestV2 suggest, String inputKeyword, boolean empty, Map<String, String> params)
+    private void recordEventSearchResultByAutoSearch(Activity activity, StaySuggest suggest, String inputKeyword, boolean empty, Map<String, String> params)
     {
         if (activity == null || suggest == null || params == null)
         {

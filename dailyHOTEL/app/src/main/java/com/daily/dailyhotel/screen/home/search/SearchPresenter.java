@@ -18,15 +18,15 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
@@ -522,7 +522,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
+                GourmetSuggestParcel suggestParcel = intent.getParcelableExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
@@ -579,7 +579,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                StaySuggestParcel suggestParcel = intent.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
@@ -623,7 +623,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                GourmetSuggestParcel suggestParcel = intent.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
@@ -664,7 +664,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             try
             {
-                StaySuggestParcelV2 suggestParcel = intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
+                StaySuggestParcel suggestParcel = intent.getParcelableExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_SUGGEST);
 
                 if (suggestParcel != null)
                 {
@@ -927,7 +927,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         StayBookDateTime bookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
-        StaySuggestV2 suggest = mSearchViewModel.stayViewModel.getSuggest();
+        StaySuggest suggest = mSearchViewModel.stayViewModel.getSuggest();
 
         startSearchStayResultTab(suggest, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -945,7 +945,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         try
         {
             StayBookDateTime bookDateTime = recentlyHistory.stayBookDateTime;
-            StaySuggestV2 suggest = recentlyHistory.staySuggest;
+            StaySuggest suggest = recentlyHistory.staySuggest;
 
             startSearchStayResultTab(suggest, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -964,8 +964,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        StaySuggestV2.CampaignTag suggestItem = StaySuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        StaySuggest.CampaignTag suggestItem = StaySuggest.CampaignTag.getSuggestItem(campaignTag);
+        StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchViewModel.stayViewModel.setSuggest(suggest);
 
@@ -1168,7 +1168,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         GourmetBookDateTime gourmetBookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
-        GourmetSuggestV2 suggest = mSearchViewModel.gourmetViewModel.getSuggest();
+        GourmetSuggest suggest = mSearchViewModel.gourmetViewModel.getSuggest();
 
         startSearchGourmetResultTab(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchViewModel.gourmetViewModel.inputKeyword);
@@ -1185,7 +1185,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         try
         {
             GourmetBookDateTime gourmetBookDateTime = recentlyHistory.gourmetBookDateTime;
-            GourmetSuggestV2 suggest = recentlyHistory.gourmetSuggest;
+            GourmetSuggest suggest = recentlyHistory.gourmetSuggest;
 
             startSearchGourmetResultTab(suggest, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , null);
@@ -1203,8 +1203,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        GourmetSuggestV2.CampaignTag suggestItem = GourmetSuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        GourmetSuggestV2 suggest = new GourmetSuggestV2(GourmetSuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        GourmetSuggest.CampaignTag suggestItem = GourmetSuggest.CampaignTag.getSuggestItem(campaignTag);
+        GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchViewModel.gourmetViewModel.setSuggest(suggest);
 
@@ -1257,10 +1257,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         });
 
         // Stay
-        mSearchViewModel.stayViewModel.setSuggestObserver(activity, new Observer<StaySuggestV2>()
+        mSearchViewModel.stayViewModel.setSuggestObserver(activity, new Observer<StaySuggest>()
         {
             @Override
-            public void onChanged(@Nullable StaySuggestV2 suggest)
+            public void onChanged(@Nullable StaySuggest suggest)
             {
                 String displayName = suggest.getText1();
 
@@ -1326,10 +1326,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         mSearchViewModel.stayOutboundViewModel.setPeople(People.DEFAULT_ADULTS, null);
 
         // Gourmet
-        mSearchViewModel.gourmetViewModel.setSuggestObserver(activity, new Observer<GourmetSuggestV2>()
+        mSearchViewModel.gourmetViewModel.setSuggestObserver(activity, new Observer<GourmetSuggest>()
         {
             @Override
-            public void onChanged(@Nullable GourmetSuggestV2 suggest)
+            public void onChanged(@Nullable GourmetSuggest suggest)
             {
                 String displayName = suggest.getText1();
 
@@ -1356,7 +1356,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void showSearchStay()
     {
-        StaySuggestV2 suggest = mSearchViewModel.stayViewModel.getSuggest();
+        StaySuggest suggest = mSearchViewModel.stayViewModel.getSuggest();
 
         if (suggest == null || DailyTextUtils.isTextEmpty(suggest.getText1()) == true)
         {
@@ -1406,7 +1406,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void showSearchGourmet()
     {
-        GourmetSuggestV2 suggest = mSearchViewModel.gourmetViewModel.getSuggest();
+        GourmetSuggest suggest = mSearchViewModel.gourmetViewModel.getSuggest();
 
         if (suggest == null || DailyTextUtils.isTextEmpty(suggest.getText1()) == true)
         {
@@ -1427,7 +1427,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         getViewInterface().showSearchGourmet();
     }
 
-    void startSearchStayResultTab(StaySuggestV2 suggest, String checkInDateTime, String checkOutDateTime, String inputKeyWord)
+    void startSearchStayResultTab(StaySuggest suggest, String checkInDateTime, String checkOutDateTime, String inputKeyWord)
     {
         if (suggest == null || DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
@@ -1442,7 +1442,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
-    void startSearchGourmetResultTab(GourmetSuggestV2 suggest, String visitDateTime, String inputKeyword)
+    void startSearchGourmetResultTab(GourmetSuggest suggest, String visitDateTime, String inputKeyword)
     {
         if (suggest == null || DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {

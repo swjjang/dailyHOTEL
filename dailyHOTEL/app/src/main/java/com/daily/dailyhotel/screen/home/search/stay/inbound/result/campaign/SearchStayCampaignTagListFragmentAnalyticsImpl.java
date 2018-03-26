@@ -7,7 +7,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -60,7 +60,7 @@ public class SearchStayCampaignTagListFragmentAnalyticsImpl implements SearchSta
     }
 
     @Override
-    public void onEventStayClick(Activity activity, Stay stay, StaySuggestV2 suggest)
+    public void onEventStayClick(Activity activity, Stay stay, StaySuggest suggest)
     {
         if (activity == null || stay == null || suggest == null)
         {
@@ -118,7 +118,7 @@ public class SearchStayCampaignTagListFragmentAnalyticsImpl implements SearchSta
     }
 
     @Override
-    public void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggestV2 suggest//
+    public void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggest suggest//
         , CampaignTag campaignTag, int searchCount)
     {
         if (activity == null || campaignTag == null)

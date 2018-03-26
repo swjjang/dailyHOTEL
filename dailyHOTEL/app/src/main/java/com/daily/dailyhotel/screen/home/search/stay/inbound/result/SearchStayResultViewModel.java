@@ -13,7 +13,7 @@ import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
@@ -123,7 +123,7 @@ public class SearchStayResultViewModel extends ViewModel
         searchViewModel.setBookDateTime(checkInDateTime, checkOutDateTime);
     }
 
-    public void setSuggest(@NonNull StaySuggestV2 suggest)
+    public void setSuggest(@NonNull StaySuggest suggest)
     {
         if (searchViewModel == null)
         {
@@ -138,7 +138,7 @@ public class SearchStayResultViewModel extends ViewModel
         searchViewModel.setSuggest(suggest);
     }
 
-    public StaySuggestV2 getSuggest()
+    public StaySuggest getSuggest()
     {
         return searchViewModel == null ? null : searchViewModel.getSuggest();
     }

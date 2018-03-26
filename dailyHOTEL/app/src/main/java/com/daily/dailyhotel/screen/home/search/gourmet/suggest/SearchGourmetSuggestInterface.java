@@ -1,13 +1,13 @@
 package com.daily.dailyhotel.screen.home.search.gourmet.suggest;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 
 import java.util.List;
 
 public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 {
-    void setSuggests(List<GourmetSuggestV2> gourmetSuggestList);
+    void setSuggests(List<GourmetSuggest> gourmetSuggestList);
 
     void setSuggest(String suggest);
 
@@ -17,9 +17,9 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList);
+    void setRecentlySuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
-    void setPopularAreaSuggests(GourmetSuggestV2 locationSuggest, List<GourmetSuggestV2> gourmetSuggestList);
+    void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
     int getRecentlySuggestAllEntryCount();
 
@@ -31,5 +31,5 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void removeRecentlyItem(int position);
 
-    void setNearbyGourmetSuggest(GourmetSuggestV2 nearbyGourmetSuggest);
+    void setNearbyGourmetSuggest(GourmetSuggest nearbyGourmetSuggest);
 }

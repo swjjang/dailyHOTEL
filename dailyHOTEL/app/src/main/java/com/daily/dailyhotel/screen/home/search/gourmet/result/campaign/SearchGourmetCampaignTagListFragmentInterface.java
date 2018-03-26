@@ -13,7 +13,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.Gourmet;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
-import com.daily.dailyhotel.entity.GourmetSuggestV2;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 
@@ -109,9 +109,9 @@ public interface SearchGourmetCampaignTagListFragmentInterface
 
         void onEventCallClick(Activity activity);
 
-        void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggestV2 suggest);
+        void onEventGourmetClick(Activity activity, Gourmet gourmet, GourmetSuggest suggest);
 
-        void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest//
+        void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggest suggest//
             , CampaignTag campaignTag, int searchCount);
     }
 }
