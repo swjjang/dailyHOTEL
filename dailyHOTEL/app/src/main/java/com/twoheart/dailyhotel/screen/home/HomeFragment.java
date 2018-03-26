@@ -518,7 +518,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             if (externalDeepLink.isHomeEventDetailView() == true)
             {
-                startEventWebActivity(externalDeepLink.getUrl(), externalDeepLink.getTitle(), null, null);
+                startEventWebActivity(externalDeepLink.getUrl(), externalDeepLink.getTitle() //
+                    , externalDeepLink.getDescription(), externalDeepLink.getImageUrl());
             } else if (externalDeepLink.isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = externalDeepLink.getPlaceType();

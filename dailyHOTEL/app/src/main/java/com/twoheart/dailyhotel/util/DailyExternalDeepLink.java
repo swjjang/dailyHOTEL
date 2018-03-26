@@ -139,10 +139,13 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V22_WEEK = "week";
     private static final String PARAM_V24_STATION_INDEX = "si";
 
+    private static final String PARAM_V25_DESCRIPTION = "desc";
+    private static final String PARAM_V25_IMAGE_URL = "iurl";
+
 
     // Version
     private static final int MINIMUM_VERSION_CODE = 3;
-    private static final int MAXIMUM_VERSION_CODE = 24;
+    private static final int MAXIMUM_VERSION_CODE = 25;
 
     private int mVersionCode;
 
@@ -258,6 +261,19 @@ public class DailyExternalDeepLink extends DailyDeepLink
         }
 
         return mParamsMap.containsKey(paramName);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 25 - 최소 동작 버전은 기존 hed(홈 이벤트 딥링크) 와 같음
+    ///////////////////////////////////////////////////////////////////////////////////
+    public String getDescription()
+    {
+        return getStringValue(12, PARAM_V25_DESCRIPTION);
+    }
+
+    public String getImageUrl()
+    {
+        return getStringValue(12, PARAM_V25_IMAGE_URL);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
