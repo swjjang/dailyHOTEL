@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
@@ -150,7 +151,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     private boolean mIsUsedMultiTransition;
     private boolean mIsDeepLink;
-    private boolean mCheckChangedPrice;
     private int mGradientType;
     boolean mShowCalendar;
     boolean mShowTrueVR;
@@ -1721,60 +1721,19 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void checkChangedPrice(boolean isDeepLink, List<StayOutboundRoom> roomList, int listViewPrice, boolean compareListPrice)
-    {
-        // 판매 완료 혹은 가격이 변동되었는지 조사한다
-        if (roomList == null || roomList.size() == 0)
-        {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
-
-            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_sold_out)//
-                , getString(R.string.dialog_btn_text_confirm), null);
-        } else
-        {
-            if (isDeepLink == false && compareListPrice == true)
-            {
-                boolean hasPrice = false;
-
-                if (listViewPrice == StayOutboundDetailActivity.NONE_PRICE)
-                {
-                    hasPrice = true;
-                } else
-                {
-                    for (StayOutboundRoom room : roomList)
-                    {
-                        if (listViewPrice == room.total)
-                        {
-                            hasPrice = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (hasPrice == false)
-                {
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
-
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null);
-                }
-            }
-        }
-    }
-
     private void onRoomList(List<StayOutboundRoom> roomList)
     {
         mRoomList = roomList;
 
         setProvideRewardSticker(roomList);
 
-        // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, mRoomList, mListTotalPrice, mCheckChangedPrice == false);
-        mCheckChangedPrice = true;
-
         // 선택된 방이 없으면 처음 방으로 한다.
         if (isSoldOut() == true)
         {
+            setResult(BaseActivity.RESULT_CODE_REFRESH);
+
+            DailyToast.showToast(getActivity(), getString(R.string.message_stay_outbound_detail_sold_out), Toast.LENGTH_SHORT);
+
             setStatus(STATUS_SOLD_OUT);
         } else
         {
