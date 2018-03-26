@@ -57,7 +57,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
     StayRemoteImpl mStayRemoteImpl;
 
-    StayFilter mStayFilter;
+    StayFilter mFilter;
     StaySuggest mSuggest;
     StayBookDateTime mStayBookDateTime;
     List<String> mCategoryList;
@@ -65,7 +65,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     float mRadius;
     String mSearchWord;
     Constants.ViewType mViewType;
-    StayFilterCount mStayFilterCount;
+    StayFilterCount milterCount;
     DailyCategoryType mCategoryType = DailyCategoryType.STAY_ALL;
 
     DailyLocationExFactory mDailyLocationExFactory;
@@ -159,7 +159,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             return false;
         }
 
-        mStayFilter = stayFilterParcel.getFilter();
+        mFilter = stayFilterParcel.getFilter();
 
         StaySuggestParcel suggestParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_SUGGEST);
 
@@ -269,7 +269,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                         break;
 
                     default:
-                        mStayFilter.sortType = StayFilter.SortType.DEFAULT;
+                        mFilter.sortType = StayFilter.SortType.DEFAULT;
 
                         notifyFilterChanged();
                         break;
@@ -308,12 +308,12 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     @Override
     public void onMinusPersonClick()
     {
-        if (--mStayFilter.person < StayFilter.PERSON_COUNT_OF_MIN)
+        if (--mFilter.person < StayFilter.PERSON_COUNT_OF_MIN)
         {
-            mStayFilter.person = StayFilter.PERSON_COUNT_OF_MIN;
+            mFilter.person = StayFilter.PERSON_COUNT_OF_MIN;
         }
 
-        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
+        getViewInterface().setPerson(mFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
@@ -321,12 +321,12 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     @Override
     public void onPlusPersonClick()
     {
-        if (++mStayFilter.person > StayFilter.PERSON_COUNT_OF_MAX)
+        if (++mFilter.person > StayFilter.PERSON_COUNT_OF_MAX)
         {
-            mStayFilter.person = StayFilter.PERSON_COUNT_OF_MAX;
+            mFilter.person = StayFilter.PERSON_COUNT_OF_MAX;
         }
 
-        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
+        getViewInterface().setPerson(mFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
@@ -339,7 +339,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             return;
         }
 
-        mStayFilter.reset();
+        mFilter.reset();
 
         notifyFilterChanged();
 
@@ -351,15 +351,15 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     @Override
     public void onConfirmClick()
     {
-        if (lock() == true)
+        if (milterCount == null || lock() == true)
         {
             return;
         }
 
         Intent intent = new Intent();
-        intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_FILTER, new StayFilterParcel(mStayFilter));
+        intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_FILTER, new StayFilterParcel(mFilter));
 
-        if (mStayFilter.sortType == StayFilter.SortType.DISTANCE)
+        if (mFilter.sortType == StayFilter.SortType.DISTANCE)
         {
             intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION, mLocation);
         }
@@ -369,7 +369,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         try
         {
-            mAnalytics.onConfirmClick(getActivity(), mSuggest, mStayFilter, mStayFilterCount == null ? 0 : mStayFilterCount.searchCount);
+            mAnalytics.onConfirmClick(getActivity(), mSuggest, mFilter, milterCount == null ? 0 : milterCount.searchCount);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -409,7 +409,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
                 {
-                    mStayFilter.sortType = sortType;
+                    mFilter.sortType = sortType;
 
                     mLocation = location;
 
@@ -428,16 +428,16 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             }));
         } else
         {
-            mStayFilter.sortType = sortType;
+            mFilter.sortType = sortType;
         }
     }
 
     @Override
     public void onCheckedChangedBedType(int flag)
     {
-        mStayFilter.flagBedTypeFilters ^= flag;
+        mFilter.flagBedTypeFilters ^= flag;
 
-        getViewInterface().setBedTypeCheck(mStayFilter.flagBedTypeFilters);
+        getViewInterface().setBedTypeCheck(mFilter.flagBedTypeFilters);
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
@@ -445,9 +445,9 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     @Override
     public void onCheckedChangedAmenities(int flag)
     {
-        mStayFilter.flagAmenitiesFilters ^= flag;
+        mFilter.flagAmenitiesFilters ^= flag;
 
-        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
+        getViewInterface().setAmenitiesCheck(mFilter.flagAmenitiesFilters);
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
@@ -455,31 +455,33 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     @Override
     public void onCheckedChangedRoomAmenities(int flag)
     {
-        mStayFilter.flagRoomAmenitiesFilters ^= flag;
+        mFilter.flagRoomAmenitiesFilters ^= flag;
 
-        getViewInterface().setRoomAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+        getViewInterface().setRoomAmenitiesCheck(mFilter.flagRoomAmenitiesFilters);
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
 
     void notifyFilterChanged()
     {
-        if (mStayFilter == null)
+        if (mFilter == null)
         {
             return;
         }
 
-        getViewInterface().setSortLayout(mStayFilter.sortType);
+        getViewInterface().setSortLayout(mFilter.sortType);
         getViewInterface().setSortLayoutEnabled(mViewType == Constants.ViewType.LIST);
-        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
-        getViewInterface().setBedTypeCheck(mStayFilter.flagBedTypeFilters);
-        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
-        getViewInterface().setRoomAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+        getViewInterface().setPerson(mFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
+        getViewInterface().setBedTypeCheck(mFilter.flagBedTypeFilters);
+        getViewInterface().setAmenitiesCheck(mFilter.flagAmenitiesFilters);
+        getViewInterface().setRoomAmenitiesCheck(mFilter.flagRoomAmenitiesFilters);
     }
 
     void onRefresh(int delay)
     {
         clearCompositeDisposable();
+
+        milterCount = null;
 
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
@@ -498,14 +500,14 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             @Override
             public void accept(StayFilterCount stayFilterCount) throws Exception
             {
-                mStayFilterCount = stayFilterCount;
+                milterCount = stayFilterCount;
 
                 if (stayFilterCount.searchCount <= 0)
                 {
                     getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
                     getViewInterface().setConfirmEnabled(false);
 
-                    mAnalytics.onEmptyResult(getActivity(), mStayFilter);
+                    mAnalytics.onEmptyResult(getActivity(), mFilter);
 
                 } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
                 {
@@ -545,7 +547,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
     private boolean isLocalPlusEnabled()
     {
-        if (mCategoryType == DailyCategoryType.STAY_BOUTIQUE && mStayFilter.sortType == StayFilter.SortType.DEFAULT)
+        if (mCategoryType == DailyCategoryType.STAY_BOUTIQUE && mFilter.sortType == StayFilter.SortType.DEFAULT)
         {
             return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigBoutiqueBMEnabled();
         } else
@@ -591,7 +593,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             queryMap.putAll(suggestQueryMap);
         }
 
-        Map<String, Object> filterQueryMap = getFilterQueryMap(mStayFilter);
+        Map<String, Object> filterQueryMap = getFilterQueryMap(mFilter);
 
         if (filterQueryMap != null)
         {
@@ -882,7 +884,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                                 onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                                getViewInterface().setSortLayout(mStayFilter.sortType);
+                                getViewInterface().setSortLayout(mFilter.sortType);
                             }
                         }, new DialogInterface.OnCancelListener()
                         {
@@ -892,7 +894,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                                 onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                                getViewInterface().setSortLayout(mStayFilter.sortType);
+                                getViewInterface().setSortLayout(mFilter.sortType);
                             }
                         }, null, true);
                 } else if (throwable instanceof DuplicateRunException)
@@ -908,14 +910,14 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                         DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                         onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                        getViewInterface().setSortLayout(mStayFilter.sortType);
+                        getViewInterface().setSortLayout(mFilter.sortType);
                     }
                 } else
                 {
                     DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
 
                     onCheckedChangedSort(StayFilter.SortType.DEFAULT);
-                    getViewInterface().setSortLayout(mStayFilter.sortType);
+                    getViewInterface().setSortLayout(mFilter.sortType);
                 }
             }
         });

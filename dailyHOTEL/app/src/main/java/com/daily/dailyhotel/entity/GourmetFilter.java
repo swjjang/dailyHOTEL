@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GourmetFilter
 {
@@ -67,6 +66,16 @@ public class GourmetFilter
         }
 
         mCategoryMap.putAll(categoryMap);
+    }
+
+    public boolean hasCategory(Category category)
+    {
+        if (category == null)
+        {
+            return false;
+        }
+
+        return mFlagCategoryFilterMap.containsKey(category.name);
     }
 
     public void addCategory(Category category)

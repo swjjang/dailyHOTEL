@@ -21,6 +21,8 @@ public interface GourmetFilterInterface
 
         void setSortLayoutEnabled(boolean enabled);
 
+        void setCategoriesCheck(GourmetFilter.Category category);
+
         void setCategoriesCheck(HashMap<String, Integer> flagCategoryFilterMap);
 
         void setTimesCheck(int flagBedTypeFilters);
@@ -40,7 +42,7 @@ public interface GourmetFilterInterface
 
         void onCheckedChangedSort(GourmetFilter.SortType sortType);
 
-        void onCheckedChangedCategories(int flag);
+        void onCheckedChangedCategories(GourmetFilter.Category category);
 
         void onCheckedChangedTimes(int flag);
 

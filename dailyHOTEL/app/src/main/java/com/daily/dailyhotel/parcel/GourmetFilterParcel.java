@@ -59,7 +59,7 @@ public class GourmetFilterParcel implements Parcelable
 
     private void readFromParcel(Parcel in)
     {
-        mFilter = new GourmetFilter();
+        mFilter = new GourmetFilter().reset();
 
         mFilter.getCategoryFilterMap().putAll((HashMap) in.readSerializable());
 
@@ -71,6 +71,8 @@ public class GourmetFilterParcel implements Parcelable
             GourmetFilter.Category category = categoryParcel.getCategory();
             categoryMap.put(category.name, category);
         }
+
+        mFilter.setCategoryMap(categoryMap);
 
         mFilter.flagTimeFilter = in.readInt();
         mFilter.flagAmenitiesFilters = in.readInt();

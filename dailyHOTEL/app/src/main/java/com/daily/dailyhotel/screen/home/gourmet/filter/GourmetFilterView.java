@@ -69,54 +69,102 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
+        getViewDataBinding().foodGridLayout.removeAllViews();
+
         List<GourmetFilter.Category> categoryList = new ArrayList<>(categoryMap.values());
 
         for (GourmetFilter.Category category : categoryList)
         {
-            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categoryCodeMap.get(key)));
-            categoryView.setOnClickListener(mOnCategoryClickListener);
+            DailyTextView categoryView = getGridLayoutItemView(getContext(), category);
 
-            if (filterMap.containsKey(key) == true)
+            if (categoryView == null)
             {
-                categoryView.setSelected(true);
+                continue;
             }
 
-            mGridLayout.addView(categoryView);
+            categoryView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onCheckedChangedCategories(category);
+                }
+            });
+
+            getViewDataBinding().foodGridLayout.addView(categoryView);
         }
 
+        final int GOURMET_CATEGORY_COLUMN = 5;
+        int categoryCount = categoryList.size();
+
         // 음식 종류가 COLUMN 개수보다 작으면 위치가 맞지 않는 경우가 발생해서 추가 개수를 넣어준다.
-        if (keyList.size() < GOURMET_CATEGORY_COLUMN)
+        if (categoryCount < GOURMET_CATEGORY_COLUMN)
         {
-            int addViewCount = GOURMET_CATEGORY_COLUMN - keyList.size();
+            int addViewCount = GOURMET_CATEGORY_COLUMN - categoryCount;
 
             for (int i = 0; i < addViewCount; i++)
             {
-                DailyTextView categoryView = getGridLayoutItemView(null, 0);
+                DailyTextView categoryView = getGridLayoutItemView(null, null);
 
-                mGridLayout.addView(categoryView);
+                if (categoryView == null)
+                {
+                    continue;
+                }
+
+                getViewDataBinding().foodGridLayout.addView(categoryView);
             }
         }
     }
 
-    protected DailyTextView getGridLayoutItemView(Context context, String text)
+    protected DailyTextView getGridLayoutItemView(Context context, GourmetFilter.Category category)
     {
+        if (context == null)
+        {
+            return null;
+        }
+
         DailyTextView dailyTextView = new DailyTextView(context);
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
         dailyTextView.setTextColor(getColorStateList(R.color.selector_curation_textcolor));
-        dailyTextView.setText(text);
-        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, resId, 0, 0);
+
+        if (category != null)
+        {
+            dailyTextView.setTag(category);
+            dailyTextView.setText(category.name);
+            dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, getCategoryResourceId(category.code), 0, 0);
+        }
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = text == null ? 1 : ScreenUtils.dpToPx(context, 74d);
+        layoutParams.height = category == null ? 1 : ScreenUtils.dpToPx(context, 74d);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
         dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 12), 0, 0);
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;
+    }
+
+    private int getCategoryResourceId(int code)
+    {
+        final int[] resourceIndex = new int[]{0//
+            , R.drawable.f_ic_gourmet_02_food_01//
+            , R.drawable.f_ic_gourmet_02_food_02//
+            , R.drawable.f_ic_gourmet_02_food_03//
+            , R.drawable.f_ic_gourmet_02_food_04//
+            , R.drawable.f_ic_gourmet_02_food_05//
+            , R.drawable.f_ic_gourmet_02_food_06//
+            , R.drawable.f_ic_gourmet_02_food_07//
+            , R.drawable.f_ic_gourmet_02_food_08};
+
+        if (code < 1 || code >= resourceIndex.length)
+        {
+            code = 0;
+        }
+
+        return resourceIndex[code];
     }
 
     @Override
@@ -170,6 +218,32 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
     }
 
     @Override
+    public void setCategoriesCheck(GourmetFilter.Category category)
+    {
+        if (getViewDataBinding() == null || category == null)
+        {
+            return;
+        }
+
+        int count = getViewDataBinding().foodGridLayout.getChildCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            View view = getViewDataBinding().foodGridLayout.getChildAt(i);
+            Object tag = view.getTag();
+
+            if (tag != null && tag instanceof GourmetFilter.Category)
+            {
+                if (category.code == ((GourmetFilter.Category) tag).code)
+                {
+                    view.setSelected(view.isSelected() == false);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
     public void setCategoriesCheck(HashMap<String, Integer> flagCategoryFilterMap)
     {
         if (getViewDataBinding() == null)
@@ -177,7 +251,21 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
+        int count = getViewDataBinding().foodGridLayout.getChildCount();
 
+        for (int i = 0; i < count; i++)
+        {
+            View view = getViewDataBinding().foodGridLayout.getChildAt(i);
+            Object tag = view.getTag();
+
+            if (tag != null && tag instanceof GourmetFilter.Category)
+            {
+                view.setSelected(flagCategoryFilterMap != null && flagCategoryFilterMap.containsKey(((GourmetFilter.Category) tag).name) == true);
+            } else
+            {
+                view.setSelected(false);
+            }
+        }
     }
 
     @Override
@@ -188,6 +276,11 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
+        getViewDataBinding().timeInclude.time0611View.setSelected((flagBedTypeFilters & GourmetFilter.FLAG_TIME_06_11) == GourmetFilter.FLAG_TIME_06_11);
+        getViewDataBinding().timeInclude.time1115View.setSelected((flagBedTypeFilters & GourmetFilter.FLAG_TIME_11_15) == GourmetFilter.FLAG_TIME_11_15);
+        getViewDataBinding().timeInclude.time1517View.setSelected((flagBedTypeFilters & GourmetFilter.FLAG_TIME_15_17) == GourmetFilter.FLAG_TIME_15_17);
+        getViewDataBinding().timeInclude.time1721View.setSelected((flagBedTypeFilters & GourmetFilter.FLAG_TIME_17_21) == GourmetFilter.FLAG_TIME_17_21);
+        getViewDataBinding().timeInclude.time2106View.setSelected((flagBedTypeFilters & GourmetFilter.FLAG_TIME_21_06) == GourmetFilter.FLAG_TIME_21_06);
     }
 
     @Override
@@ -233,6 +326,23 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
     {
         switch (view.getId())
         {
+            // Time //
+            case R.id.time0611View:
+                getEventListener().onCheckedChangedTimes(GourmetFilter.FLAG_TIME_06_11);
+                break;
+            case R.id.time1115View:
+                getEventListener().onCheckedChangedTimes(GourmetFilter.FLAG_TIME_11_15);
+                break;
+            case R.id.time1517View:
+                getEventListener().onCheckedChangedTimes(GourmetFilter.FLAG_TIME_15_17);
+                break;
+            case R.id.time1721View:
+                getEventListener().onCheckedChangedTimes(GourmetFilter.FLAG_TIME_17_21);
+                break;
+            case R.id.time2106View:
+                getEventListener().onCheckedChangedTimes(GourmetFilter.FLAG_TIME_21_06);
+                break;
+
             // Amenity
             case R.id.parkingTextView:
                 getEventListener().onCheckedChangedAmenities(GourmetFilter.FLAG_AMENITIES_PARKING);
@@ -334,6 +444,23 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
         if (viewDataBinding == null)
         {
             return;
+        }
+
+        int count = viewDataBinding.timeInclude.timeRangeLayout.getChildCount();
+
+        View view;
+
+        for (int i = 0; i < count; i++)
+        {
+            view = viewDataBinding.timeInclude.timeRangeLayout.getChildAt(i);
+
+            if (view instanceof DailyTextView)
+            {
+                view.setOnClickListener(this);
+            } else
+            {
+                view.setEnabled(false);
+            }
         }
     }
 

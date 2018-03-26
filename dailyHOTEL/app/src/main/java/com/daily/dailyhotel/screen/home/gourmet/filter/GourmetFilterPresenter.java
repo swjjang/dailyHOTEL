@@ -158,6 +158,8 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
 
+        getViewInterface().setCategory(mFilter.getCategoryMap());
+
         notifyFilterChanged();
     }
 
@@ -293,7 +295,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     @Override
     public void onConfirmClick()
     {
-        if (lock() == true)
+        if (mFilterCount == null || lock() == true)
         {
             return;
         }
@@ -374,8 +376,17 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     }
 
     @Override
-    public void onCheckedChangedCategories(int flag)
+    public void onCheckedChangedCategories(GourmetFilter.Category category)
     {
+        if (mFilter.hasCategory(category) == true)
+        {
+            mFilter.removeCategory(category);
+        } else
+        {
+            mFilter.addCategory(category);
+        }
+
+        getViewInterface().setCategoriesCheck(category);
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
@@ -383,6 +394,10 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     @Override
     public void onCheckedChangedTimes(int flag)
     {
+        mFilter.flagTimeFilter ^= flag;
+
+        getViewInterface().setTimesCheck(mFilter.flagTimeFilter);
+
         onRefresh(CLICK_FILTER_DELAY_TIME);
     }
 
@@ -414,6 +429,8 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     {
         clearCompositeDisposable();
 
+        mFilterCount = null;
+
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
         addCompositeDisposable(mGourmetRemoteImpl.getListCountByFilter(getQueryMap()).delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetFilterCount>()
@@ -430,13 +447,9 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
                     mAnalytics.onEmptyResult(getActivity(), mFilter);
 
-                } else if (filterCount.searchCount < filterCount.searchCountOfMax)
-                {
-                    getViewInterface().setConfirmText(getString(R.string.label_gourmet_filter_result_count, filterCount.searchCount));
-                    getViewInterface().setConfirmEnabled(true);
                 } else
                 {
-                    getViewInterface().setConfirmText(getString(R.string.label_gourmet_filter_result_over_count, filterCount.searchCountOfMax));
+                    getViewInterface().setConfirmText(getString(R.string.label_gourmet_filter_result_count, filterCount.searchCount));
                     getViewInterface().setConfirmEnabled(true);
                 }
 
