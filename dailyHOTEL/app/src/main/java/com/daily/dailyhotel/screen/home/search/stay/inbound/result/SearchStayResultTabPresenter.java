@@ -22,7 +22,7 @@ import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
@@ -140,10 +140,10 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             }
         });
 
-        mViewModel.searchViewModel.setSuggestObserver(activity, new Observer<StaySuggestV2>()
+        mViewModel.searchViewModel.setSuggestObserver(activity, new Observer<StaySuggest>()
         {
             @Override
-            public void onChanged(@Nullable StaySuggestV2 suggest)
+            public void onChanged(@Nullable StaySuggest suggest)
             {
                 getViewInterface().setToolbarTitle(suggest.getText1());
             }
@@ -277,7 +277,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             throw new NullPointerException("suggestParcel == null || suggestParcel.getSuggest() == null");
         }
 
-        StaySuggestV2 suggest = suggestParcel.getSuggest();
+        StaySuggest suggest = suggestParcel.getSuggest();
 
         mViewModel.setSuggest(suggest);
         mViewModel.setInputKeyword(intent.getStringExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_INPUT_KEYWORD));
@@ -312,12 +312,12 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             return;
         }
 
-        StaySuggestV2 suggest = mViewModel.getSuggest();
+        StaySuggest suggest = mViewModel.getSuggest();
 
         initView(suggest);
     }
 
-    void initView(StaySuggestV2 suggest)
+    void initView(StaySuggest suggest)
     {
         if (suggest == null)
         {
@@ -326,7 +326,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
         getViewInterface().setFloatingActionViewVisible(suggest.isCampaignTagSuggestType() == false);
 
-        if (suggest.menuType == StaySuggestV2.MenuType.REGION_LOCATION)
+        if (suggest.menuType == StaySuggest.MenuType.REGION_LOCATION)
         {
             getViewInterface().setToolbarTitleImageResource(R.drawable.search_ic_01_date);
         } else
@@ -448,7 +448,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                         getViewInterface().resetFloatingActionViewTranslation();
                         getViewInterface().removeAllFragment();
 
-                        StaySuggestV2 suggest = suggestParcel.getSuggest();
+                        StaySuggest suggest = suggestParcel.getSuggest();
 
                         mViewModel.setSuggest(suggest);
                         mViewModel.setInputKeyword(intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_KEYWORD));
@@ -617,7 +617,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                     initView(mViewModel.getSuggest());
                 }
 
-                StaySuggestV2 suggest = mViewModel.getSuggest();
+                StaySuggest suggest = mViewModel.getSuggest();
 
                 if (suggest.isCampaignTagSuggestType() == true)
                 {
@@ -690,11 +690,11 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             throw new RuntimeException("Invalid DeepLink : " + externalDeepLink.getDeepLink());
         }
 
-        StaySuggestV2.CampaignTag suggestItem = new StaySuggestV2.CampaignTag();
+        StaySuggest.CampaignTag suggestItem = new StaySuggest.CampaignTag();
         suggestItem.index = index;
 
         mViewModel.setBookDateTime(bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mViewModel.setSuggest(suggest);
     }
@@ -714,8 +714,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             throw new RuntimeException("Invalid DeepLink : " + externalDeepLink.getDeepLink());
         }
 
-        StaySuggestV2.Direct suggestItem = new StaySuggestV2.Direct(word);
-        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.DIRECT, suggestItem);
+        StaySuggest.Direct suggestItem = new StaySuggest.Direct(word);
+        StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.DIRECT, suggestItem);
         Constants.SortType sortType = externalDeepLink.getSorting();
 
         if (sortType == Constants.SortType.DISTANCE)
@@ -765,7 +765,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         {
             CommonDateTime commonDateTime = mViewModel.getCommonDateTime();
             StayBookDateTime bookDateTime = mViewModel.getBookDateTime();
-            StaySuggestV2 suggest = mViewModel.getSuggest();
+            StaySuggest suggest = mViewModel.getSuggest();
 
             startActivityForResult(ResearchStayActivity.newInstance(getActivity(), commonDateTime.openDateTime, commonDateTime.closeDateTime//
                 , commonDateTime.currentDateTime, commonDateTime.dailyDateTime//
@@ -784,9 +784,9 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     @Override
     public void onEmptyStayResearchClick()
     {
-        StaySuggestV2 suggest = mViewModel.getSuggest();
+        StaySuggest suggest = mViewModel.getSuggest();
 
-        if (suggest.menuType == StaySuggestV2.MenuType.REGION_LOCATION)
+        if (suggest.menuType == StaySuggest.MenuType.REGION_LOCATION)
         {
             onCalendarClick();
         } else
@@ -798,9 +798,9 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     @Override
     public void onToolbarTitleClick()
     {
-        StaySuggestV2 suggest = mViewModel.getSuggest();
+        StaySuggest suggest = mViewModel.getSuggest();
 
-        if (suggest.menuType == StaySuggestV2.MenuType.REGION_LOCATION)
+        if (suggest.menuType == StaySuggest.MenuType.REGION_LOCATION)
         {
             onCalendarClick();
         } else
@@ -963,7 +963,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             }));
         } else
         {
-            if (mViewModel.getSuggest().menuType != StaySuggestV2.MenuType.REGION_LOCATION)
+            if (mViewModel.getSuggest().menuType != StaySuggest.MenuType.REGION_LOCATION)
             {
                 addCompositeDisposable(mSearchLocalImpl.addStayIbSearchResultHistory(mViewModel.getCommonDateTime()//
                     , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
@@ -1007,8 +1007,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             return;
         }
 
-        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.CAMPAIGN_TAG//
-            , StaySuggestV2.CampaignTag.getSuggestItem(campaignTag));
+        StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.CAMPAIGN_TAG//
+            , StaySuggest.CampaignTag.getSuggestItem(campaignTag));
 
         mViewModel.setInputKeyword(null);
         mViewModel.setSuggest(suggest);

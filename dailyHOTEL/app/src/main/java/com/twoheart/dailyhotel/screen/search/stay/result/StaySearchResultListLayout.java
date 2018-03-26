@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCurationOption;
@@ -64,7 +64,7 @@ public class StaySearchResultListLayout extends StayListLayout
                 ? new StayCurationOption() //
                 : (StayCurationOption) mStayCuration.getCurationOption();
 
-            StaySuggestV2 suggest = ((StaySearchCuration) mStayCuration).getSuggest();
+            StaySuggest suggest = ((StaySearchCuration) mStayCuration).getSuggest();
 
             if (suggest.isLocationSuggestType() == true)
             {
@@ -224,7 +224,7 @@ public class StaySearchResultListLayout extends StayListLayout
     /**
      * 검색 방식에 따라서 빈화면의 내용이 다르다.
      */
-    public void setEmptyType(StaySuggestV2 suggest)
+    public void setEmptyType(StaySuggest suggest)
     {
         if (suggest == null || mEmptyView == null || mFilterEmptyView == null)
         {

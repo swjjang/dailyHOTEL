@@ -2,7 +2,7 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 
 import java.util.List;
 
@@ -32,9 +32,9 @@ public interface SuggestLocalInterface
 
     Observable<Boolean> deleteRecentlyGourmetSuggest(GourmetSuggestV2 gourmetSuggest);
 
-    Observable<Boolean> addRecentlyStaySuggest(StaySuggestV2 staySuggest, String keyword);
+    Observable<Boolean> addRecentlyStaySuggest(StaySuggest staySuggest, String keyword);
 
-    Observable<List<StaySuggestV2>> getRecentlyStaySuggestList(int maxCount);
+    Observable<List<StaySuggest>> getRecentlyStaySuggestList(int maxCount);
 
-    Observable<Boolean> deleteRecentlyStaySuggest(StaySuggestV2 staySuggest);
+    Observable<Boolean> deleteRecentlyStaySuggest(StaySuggest staySuggest);
 }

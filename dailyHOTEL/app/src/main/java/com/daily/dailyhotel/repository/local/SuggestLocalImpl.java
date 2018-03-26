@@ -11,7 +11,7 @@ import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.domain.SuggestLocalInterface;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.repository.local.model.GourmetSuggestData;
 import com.daily.dailyhotel.repository.local.model.StayIbRecentlySuggestList;
 import com.daily.dailyhotel.repository.local.model.StaySuggestData;
@@ -485,7 +485,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> addRecentlyStaySuggest(StaySuggestV2 staySuggest, String keyword)
+    public Observable<Boolean> addRecentlyStaySuggest(StaySuggest staySuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -497,7 +497,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                if (staySuggest.getSuggestType() == StaySuggestV2.SuggestType.UNKNOWN)
+                if (staySuggest.getSuggestType() == StaySuggest.SuggestType.UNKNOWN)
                 {
                     return Observable.just(false);
                 }
@@ -527,41 +527,41 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     {
                         case STATION:
                         {
-                            type = StaySuggestV2.SuggestType.STATION.name();
+                            type = StaySuggest.SuggestType.STATION.name();
 
-                            StaySuggestV2.Station station = (StaySuggestV2.Station) staySuggest.getSuggestItem();
+                            StaySuggest.Station station = (StaySuggest.Station) staySuggest.getSuggestItem();
                             displayName = station.getDisplayName();
                             break;
                         }
 
                         case STAY:
                         {
-                            type = StaySuggestV2.SuggestType.STAY.name();
-                            StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.getSuggestItem();
+                            type = StaySuggest.SuggestType.STAY.name();
+                            StaySuggest.Stay stay = (StaySuggest.Stay) staySuggest.getSuggestItem();
                             displayName = stay.name;
                             break;
                         }
 
                         case AREA_GROUP:
                         {
-                            type = StaySuggestV2.SuggestType.AREA_GROUP.name();
-                            StaySuggestV2.AreaGroup areaGroup = (StaySuggestV2.AreaGroup) staySuggest.getSuggestItem();
+                            type = StaySuggest.SuggestType.AREA_GROUP.name();
+                            StaySuggest.AreaGroup areaGroup = (StaySuggest.AreaGroup) staySuggest.getSuggestItem();
                             displayName = areaGroup.getDisplayName();
                             break;
                         }
 
                         case LOCATION:
                         {
-                            type = StaySuggestV2.SuggestType.LOCATION.name();
-                            StaySuggestV2.Location location = (StaySuggestV2.Location) staySuggest.getSuggestItem();
+                            type = StaySuggest.SuggestType.LOCATION.name();
+                            StaySuggest.Location location = (StaySuggest.Location) staySuggest.getSuggestItem();
                             displayName = location.name;
                             break;
                         }
 
                         case DIRECT:
                         {
-                            type = StaySuggestV2.SuggestType.DIRECT.name();
-                            StaySuggestV2.Direct direct = (StaySuggestV2.Direct) staySuggest.getSuggestItem();
+                            type = StaySuggest.SuggestType.DIRECT.name();
+                            StaySuggest.Direct direct = (StaySuggest.Direct) staySuggest.getSuggestItem();
                             displayName = direct.name;
                             break;
                         }
@@ -585,16 +585,16 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<List<StaySuggestV2>> getRecentlyStaySuggestList(int maxCount)
+    public Observable<List<StaySuggest>> getRecentlyStaySuggestList(int maxCount)
     {
-        return Observable.defer(new Callable<ObservableSource<List<StaySuggestV2>>>()
+        return Observable.defer(new Callable<ObservableSource<List<StaySuggest>>>()
         {
             @Override
-            public ObservableSource<List<StaySuggestV2>> call() throws Exception
+            public ObservableSource<List<StaySuggest>> call() throws Exception
             {
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
-                ArrayList<StaySuggestV2> staySuggestList = null;
+                ArrayList<StaySuggest> staySuggestList = null;
                 Cursor cursor = null;
                 try
                 {
@@ -620,8 +620,8 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         String suggestString = cursor.getString(cursor.getColumnIndex(StayIbRecentlySuggestList.SUGGEST));
 
                         StaySuggestData staySuggestData = LoganSquare.parse(suggestString, StaySuggestData.class);
-                        StaySuggestV2 staySuggest = staySuggestData.getSuggest();
-                        staySuggest.menuType = StaySuggestV2.MenuType.RECENTLY_SEARCH;
+                        StaySuggest staySuggest = staySuggestData.getSuggest();
+                        staySuggest.menuType = StaySuggest.MenuType.RECENTLY_SEARCH;
 
                         staySuggestList.add(staySuggest);
                     }
@@ -655,7 +655,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> deleteRecentlyStaySuggest(StaySuggestV2 staySuggest)
+    public Observable<Boolean> deleteRecentlyStaySuggest(StaySuggest staySuggest)
     {
         return Observable.defer(new Callable<Observable<Boolean>>()
         {

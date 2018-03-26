@@ -2,7 +2,7 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface SuggestInterface
 
     Observable<List<StayOutboundSuggest>> getPopularRegionSuggestsByStayOutbound();
 
-    Observable<List<StaySuggestV2>> getSuggestByStay(String checkInDate, int stays, String keyword);
+    Observable<List<StaySuggest>> getSuggestByStay(String checkInDate, int stays, String keyword);
 
     Observable<List<GourmetSuggestV2>> getSuggestsByGourmet(String reservationDate, String term);
 }

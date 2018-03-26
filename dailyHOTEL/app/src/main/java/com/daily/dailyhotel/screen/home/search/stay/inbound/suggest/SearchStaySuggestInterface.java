@@ -3,13 +3,13 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 
 import java.util.List;
 
 public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 {
-    void setStaySuggests(List<StaySuggestV2> staySuggestList);
+    void setStaySuggests(List<StaySuggest> staySuggestList);
 
     void setGourmetSuggests(List<GourmetSuggestV2> gourmetSuggestList);
 
@@ -23,9 +23,9 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggests(StaySuggestV2 locationSuggest, List<StaySuggestV2> staySuggestList);
+    void setRecentlySuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList);
 
-    void setPopularAreaSuggests(StaySuggestV2 locationSuggest, List<StaySuggestV2> staySuggestList);
+    void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList);
 
     int getRecentlySuggestAllEntryCount();
 
@@ -37,5 +37,5 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 
     void removeRecentlyItem(int position);
 
-    void setNearbyStaySuggest(StaySuggestV2 nearbyStaySuggest);
+    void setNearbyStaySuggest(StaySuggest nearbyStaySuggest);
 }

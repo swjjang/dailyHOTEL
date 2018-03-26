@@ -31,7 +31,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayCampaignTags;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
@@ -423,8 +423,8 @@ public class SearchStayCampaignTagListFragmentPresenter extends BasePagerFragmen
 
         getViewInterface().setEmptyViewVisible(false, mViewModel.getFilter().isDefault() == false);
 
-        StaySuggestV2 suggest = mViewModel.getSuggest();
-        StaySuggestV2.CampaignTag suggestItem = (StaySuggestV2.CampaignTag) suggest.getSuggestItem();
+        StaySuggest suggest = mViewModel.getSuggest();
+        StaySuggest.CampaignTag suggestItem = (StaySuggest.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
         StayBookDateTime bookDateTime = mViewModel.getBookDateTime();
 
@@ -689,8 +689,8 @@ public class SearchStayCampaignTagListFragmentPresenter extends BasePagerFragmen
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        StaySuggestV2 suggest = mViewModel.getSuggest();
-        StaySuggestV2.CampaignTag suggestItem = (StaySuggestV2.CampaignTag) suggest.getSuggestItem();
+        StaySuggest suggest = mViewModel.getSuggest();
+        StaySuggest.CampaignTag suggestItem = (StaySuggest.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
         StayBookDateTime bookDateTime = mViewModel.getBookDateTime();
 

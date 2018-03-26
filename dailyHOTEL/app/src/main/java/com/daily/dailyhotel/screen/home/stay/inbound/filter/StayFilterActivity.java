@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.twoheart.dailyhotel.R;
@@ -42,7 +42,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
 
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
         , DailyCategoryType categoryType, String viewType//
-        , StayFilter stayFilter, StaySuggestV2 suggest, ArrayList<String> categories, Location location, double radius, String searchWord)
+        , StayFilter stayFilter, StaySuggest suggest, ArrayList<String> categories, Location location, double radius, String searchWord)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);

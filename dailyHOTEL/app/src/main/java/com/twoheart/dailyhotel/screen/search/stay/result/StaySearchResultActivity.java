@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +22,7 @@ import com.daily.dailyhotel.entity.AreaElement;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -81,7 +82,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     private PlaceSearchResultNetworkController mNetworkController;
 
     //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
-    //        , String inputText, StaySuggestV2 suggest, SortType sortType, String callByScreen)
+    //        , String inputText, StaySuggest suggest, SortType sortType, String callByScreen)
     //    {
     //        Intent intent = new Intent(context, StaySearchResultActivity.class);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
@@ -100,7 +101,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     //    }
     //
     //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
-    //        , StaySuggestV2 suggest, double radius, boolean isDeepLink)
+    //        , StaySuggest suggest, double radius, boolean isDeepLink)
     //    {
     //        Intent intent = new Intent(context, StaySearchResultActivity.class);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
@@ -122,7 +123,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(this);
         mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+        StaySuggest suggest = mStaySearchCuration.getSuggest();
 
         if (suggest.isLocationSuggestType() == true)
         {
@@ -199,7 +200,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
-            StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+            StaySuggest suggest = mStaySearchCuration.getSuggest();
 
             if (suggest.isLocationSuggestType() == true)
             {
@@ -274,7 +275,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     return;
                 }
 
-                StaySuggestV2 suggest = staySuggestParcel.getSuggest();
+                StaySuggest suggest = staySuggestParcel.getSuggest();
 
                 if (suggest == null)
                 {
@@ -316,11 +317,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
                 mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
-                StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+                StaySuggest suggest = mStaySearchCuration.getSuggest();
 
                 if (suggest.isLocationSuggestType() == true)
                 {
-                    StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+                    StaySuggest.Location suggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
                     mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
                     mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
@@ -352,7 +353,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationFailed()
     {
-        StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+        StaySuggest suggest = mStaySearchCuration.getSuggest();
 
         if (suggest.isLocationSuggestType() == true)
         {
@@ -376,7 +377,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+        StaySuggest suggest = mStaySearchCuration.getSuggest();
 
         if (suggest.isLocationSuggestType() == true)
         {
@@ -400,7 +401,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             showEmptyLayout();
         } else
         {
-            StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+            StaySuggest suggest = mStaySearchCuration.getSuggest();
 
             if (suggest.isLocationSuggestType() == true)
             {
@@ -476,7 +477,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        StaySuggestV2 suggest = staySuggestParcel.getSuggest();
+        StaySuggest suggest = staySuggestParcel.getSuggest();
 
         mStaySearchCuration.setSuggest(suggest);
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
@@ -484,7 +485,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         if (suggest.isLocationSuggestType() == true)
         {
-            StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) suggest.getSuggestItem();
+            StaySuggest.Location suggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
             if (suggestItem.latitude != 0.0d && suggestItem.longitude != 0.0d)
             {
@@ -541,7 +542,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+        StaySuggest suggest = mStaySearchCuration.getSuggest();
 
         try
         {
@@ -619,7 +620,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         unLockUI();
 
-        StaySuggestV2 suggest = mStaySearchCuration.getSuggest();
+        StaySuggest suggest = mStaySearchCuration.getSuggest();
 
         mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
         mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
@@ -1277,6 +1278,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     StaySearchResultListFragment.OnStaySearchResultListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStaySearchResultListFragmentListener()
     {
+        @SuppressLint("RestrictedApi")
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)

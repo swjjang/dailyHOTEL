@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Created by android_sam on 2018. 3. 5..
  */
 
-public class StaySuggestV2
+public class StaySuggest
 {
     public enum SuggestType
     {
@@ -43,7 +43,7 @@ public class StaySuggestV2
     //    public String text1;
     //    public String text2;
 
-    public StaySuggestV2(MenuType menuType, @NonNull SuggestItem suggestItem)
+    public StaySuggest(MenuType menuType, @NonNull SuggestItem suggestItem)
     {
         this.menuType = menuType;
         this.suggestItem = suggestItem;
@@ -358,7 +358,7 @@ public class StaySuggestV2
 
         public static CampaignTag getSuggestItem(com.daily.dailyhotel.entity.CampaignTag campaignTag)
         {
-            StaySuggestV2.CampaignTag suggestItem = new StaySuggestV2.CampaignTag();
+            StaySuggest.CampaignTag suggestItem = new StaySuggest.CampaignTag();
             suggestItem.index = campaignTag.index;
             suggestItem.name = campaignTag.campaignTag;
             suggestItem.startDate = campaignTag.startDate;

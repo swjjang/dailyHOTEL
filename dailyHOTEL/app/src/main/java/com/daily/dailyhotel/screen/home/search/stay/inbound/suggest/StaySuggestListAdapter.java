@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeSectionDataBinding;
@@ -149,7 +149,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private void onBindViewHolder(DirectViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
 
@@ -194,7 +194,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
         if (DailyTextUtils.isTextEmpty(staySuggest.getText1()) == true)
         {
@@ -210,7 +210,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggestV2 staySuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(staySuggest);
 
@@ -231,7 +231,7 @@ public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             case STAY:
             {
-                StaySuggestV2.Stay stay = (StaySuggestV2.Stay) staySuggest.getSuggestItem();
+                StaySuggest.Stay stay = (StaySuggest.Stay) staySuggest.getSuggestItem();
 
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
                 holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);

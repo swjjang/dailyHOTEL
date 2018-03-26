@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.twoheart.dailyhotel.R;
@@ -37,7 +37,7 @@ public class SearchStayResultTabActivity extends BaseActivity<SearchStayResultTa
     public static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
 
     public static Intent newInstance(Context context, DailyCategoryType categoryType, String checkInDateTime, String checkOutDateTime//
-        , StaySuggestV2 suggest, String inputKeyWord, SearchStayResultAnalyticsParam analyticsParam)
+        , StaySuggest suggest, String inputKeyWord, SearchStayResultAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, SearchStayResultTabActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());

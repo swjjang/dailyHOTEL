@@ -13,7 +13,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 
 import java.util.List;
@@ -114,9 +114,9 @@ public interface SearchStayResultListFragmentInterface
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity, SearchStayResultTabPresenter.ViewType viewType, StayBookDateTime bookDateTime//
-            , StaySuggestV2 suggest, StayFilter stayFilter, boolean empty, String callbyScreen);
+            , StaySuggest suggest, StayFilter stayFilter, boolean empty, String callbyScreen);
 
-        void onEventStayClick(Activity activity, Stay stay, StaySuggestV2 suggest);
+        void onEventStayClick(Activity activity, Stay stay, StaySuggest suggest);
 
         void onEventWishClick(Activity activity, boolean wish);
 
@@ -124,7 +124,7 @@ public interface SearchStayResultListFragmentInterface
 
         void onEventCallClick(Activity activity);
 
-        void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggestV2 suggest, String inputKeyword//
+        void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggest suggest, String inputKeyword//
             , int searchCount, int searchMaxCount);
     }
 }

@@ -18,7 +18,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
@@ -124,7 +124,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_search_search_stay));
 
-        StaySuggestV2 suggest = mSearchViewModel.getSuggest();
+        StaySuggest suggest = mSearchViewModel.getSuggest();
         String displayName = suggest == null ? null : suggest.getText1();
 
         if (DailyTextUtils.isTextEmpty(displayName) == true)
@@ -382,8 +382,8 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             return;
         }
 
-        StaySuggestV2.CampaignTag suggestItem = StaySuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        StaySuggest.CampaignTag suggestItem = StaySuggest.CampaignTag.getSuggestItem(campaignTag);
+        StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchViewModel.setSuggest(suggest);
 
@@ -408,10 +408,10 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         mSearchViewModel = ViewModelProviders.of(activity, new SearchStayViewModel.SearchStayViewModelFactory()).get(SearchStayViewModel.class);
 
         // Stay
-        mSearchViewModel.setSuggestObserver(activity, new Observer<StaySuggestV2>()
+        mSearchViewModel.setSuggestObserver(activity, new Observer<StaySuggest>()
         {
             @Override
-            public void onChanged(@Nullable StaySuggestV2 suggest)
+            public void onChanged(@Nullable StaySuggest suggest)
             {
                 String displayName = suggest.getText1();
 

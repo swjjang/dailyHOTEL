@@ -2,12 +2,12 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 
 public class StaySearchCuration extends StayCuration
 {
-    private StaySuggestV2 mSuggest;
+    private StaySuggest mSuggest;
     private double mRadius;
 
     public StaySearchCuration()
@@ -28,12 +28,12 @@ public class StaySearchCuration extends StayCuration
         return mStayCurationOption;
     }
 
-    public StaySuggestV2 getSuggest()
+    public StaySuggest getSuggest()
     {
         return mSuggest;
     }
 
-    public void setSuggest(StaySuggestV2 suggest)
+    public void setSuggest(StaySuggest suggest)
     {
         mSuggest = suggest;
     }

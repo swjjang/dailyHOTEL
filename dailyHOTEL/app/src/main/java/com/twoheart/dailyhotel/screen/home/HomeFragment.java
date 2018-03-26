@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -28,7 +29,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
@@ -423,8 +424,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             bookDateTime.setCheckInDateTime(mTodayDateTime.dailyDateTime);
                             bookDateTime.setCheckOutDateTime(mTodayDateTime.dailyDateTime, 1);
 
-                            StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
-                            StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
+                            StaySuggest.Location suggestItem = new StaySuggest.Location();
+                            StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.REGION_LOCATION, suggestItem);
                             SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
                             analyticsParam.mCallByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
 
@@ -865,6 +866,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
+    @SuppressLint("RestrictedApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void startPlaceDetail(View view, CarouselListItem carouselListItem, TodayDateTime todayDateTime)
     {
@@ -1103,6 +1105,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     void startStayOutboundDetail(View view, CarouselListItem carouselListItem, TodayDateTime todayDateTime)
     {
@@ -1744,8 +1747,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             bookDateTime.setCheckInDateTime(mTodayDateTime.dailyDateTime);
             bookDateTime.setCheckOutDateTime(mTodayDateTime.dailyDateTime, 1);
 
-            StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
-            StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
+            StaySuggest.Location suggestItem = new StaySuggest.Location();
+            StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.REGION_LOCATION, suggestItem);
             SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
             analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
 
@@ -1938,6 +1941,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 Integer.toString(event.index), null);
         }
 
+        @SuppressLint("RestrictedApi")
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onRecommendationClick(View view, Recommendation recommendation)

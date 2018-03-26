@@ -22,7 +22,7 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
@@ -927,7 +927,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         StayBookDateTime bookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
-        StaySuggestV2 suggest = mSearchViewModel.stayViewModel.getSuggest();
+        StaySuggest suggest = mSearchViewModel.stayViewModel.getSuggest();
 
         startSearchStayResultTab(suggest, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -945,7 +945,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         try
         {
             StayBookDateTime bookDateTime = recentlyHistory.stayBookDateTime;
-            StaySuggestV2 suggest = recentlyHistory.staySuggest;
+            StaySuggest suggest = recentlyHistory.staySuggest;
 
             startSearchStayResultTab(suggest, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -964,8 +964,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        StaySuggestV2.CampaignTag suggestItem = StaySuggestV2.CampaignTag.getSuggestItem(campaignTag);
-        StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.CAMPAIGN_TAG, suggestItem);
+        StaySuggest.CampaignTag suggestItem = StaySuggest.CampaignTag.getSuggestItem(campaignTag);
+        StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.CAMPAIGN_TAG, suggestItem);
 
         mSearchViewModel.stayViewModel.setSuggest(suggest);
 
@@ -1257,10 +1257,10 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         });
 
         // Stay
-        mSearchViewModel.stayViewModel.setSuggestObserver(activity, new Observer<StaySuggestV2>()
+        mSearchViewModel.stayViewModel.setSuggestObserver(activity, new Observer<StaySuggest>()
         {
             @Override
-            public void onChanged(@Nullable StaySuggestV2 suggest)
+            public void onChanged(@Nullable StaySuggest suggest)
             {
                 String displayName = suggest.getText1();
 
@@ -1356,7 +1356,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void showSearchStay()
     {
-        StaySuggestV2 suggest = mSearchViewModel.stayViewModel.getSuggest();
+        StaySuggest suggest = mSearchViewModel.stayViewModel.getSuggest();
 
         if (suggest == null || DailyTextUtils.isTextEmpty(suggest.getText1()) == true)
         {
@@ -1427,7 +1427,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         getViewInterface().showSearchGourmet();
     }
 
-    void startSearchStayResultTab(StaySuggestV2 suggest, String checkInDateTime, String checkOutDateTime, String inputKeyWord)
+    void startSearchStayResultTab(StaySuggest suggest, String checkInDateTime, String checkOutDateTime, String inputKeyWord)
     {
         if (suggest == null || DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {

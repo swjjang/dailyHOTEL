@@ -6,7 +6,7 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
@@ -21,11 +21,11 @@ import io.reactivex.Observable;
 
 public interface SearchLocalInterface
 {
-    Observable<Boolean> addStayIbSearchResultHistory(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime, StaySuggestV2 suggest);
+    Observable<Boolean> addStayIbSearchResultHistory(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime, StaySuggest suggest);
 
     Observable<List<StaySearchResultHistory>> getStayIbSearchResultHistoryList(CommonDateTime commonDateTime, int maxCount);
 
-    Observable<Boolean> deleteStayIbSearchResultHistory(StaySuggestV2 suggest);
+    Observable<Boolean> deleteStayIbSearchResultHistory(StaySuggest suggest);
 
     Observable<Boolean> addGourmetSearchResultHistory(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, GourmetSuggestV2 suggest);
 

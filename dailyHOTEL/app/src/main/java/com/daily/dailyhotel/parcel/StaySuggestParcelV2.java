@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 
 /**
  * Created by android_sam on 2018. 3. 12..
@@ -12,9 +12,9 @@ import com.daily.dailyhotel.entity.StaySuggestV2;
 
 public class StaySuggestParcelV2 implements Parcelable
 {
-    private StaySuggestV2 mStaySuggest;
+    private StaySuggest mStaySuggest;
 
-    public StaySuggestParcelV2(@NonNull StaySuggestV2 staySuggest)
+    public StaySuggestParcelV2(@NonNull StaySuggest staySuggest)
     {
         if (staySuggest == null)
         {
@@ -29,7 +29,7 @@ public class StaySuggestParcelV2 implements Parcelable
         readFromParcel(in);
     }
 
-    public StaySuggestV2 getSuggest()
+    public StaySuggest getSuggest()
     {
         return mStaySuggest;
     }
@@ -43,20 +43,20 @@ public class StaySuggestParcelV2 implements Parcelable
 
     private void readFromParcel(Parcel in)
     {
-        StaySuggestV2.MenuType menuType;
-        StaySuggestV2.SuggestItem suggestItem;
+        StaySuggest.MenuType menuType;
+        StaySuggest.SuggestItem suggestItem;
 
         try
         {
-            menuType = StaySuggestV2.MenuType.valueOf(in.readString());
+            menuType = StaySuggest.MenuType.valueOf(in.readString());
         } catch (Exception e)
         {
-            menuType = StaySuggestV2.MenuType.UNKNOWN;
+            menuType = StaySuggest.MenuType.UNKNOWN;
         }
 
-        suggestItem = (StaySuggestV2.SuggestItem) in.readSerializable();
+        suggestItem = (StaySuggest.SuggestItem) in.readSerializable();
 
-        mStaySuggest = new StaySuggestV2(menuType, suggestItem);
+        mStaySuggest = new StaySuggest(menuType, suggestItem);
     }
 
     @Override

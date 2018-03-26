@@ -21,7 +21,7 @@ import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcelV2;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
@@ -58,7 +58,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     StayRemoteImpl mStayRemoteImpl;
 
     StayFilter mStayFilter;
-    StaySuggestV2 mSuggest;
+    StaySuggest mSuggest;
     StayBookDateTime mStayBookDateTime;
     List<String> mCategoryList;
     Location mLocation;
@@ -74,7 +74,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         void onScreen(Activity activity);
 
-        void onConfirmClick(Activity activity, StaySuggestV2 suggest, StayFilter stayFilter, int listCountByFilter);
+        void onConfirmClick(Activity activity, StaySuggest suggest, StayFilter stayFilter, int listCountByFilter);
 
         void onBackClick(Activity activity);
 
@@ -568,7 +568,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         {
             case AREA_GROUP:
             {
-                StaySuggestV2.AreaGroup suggestItem = (StaySuggestV2.AreaGroup) mSuggest.getSuggestItem();
+                StaySuggest.AreaGroup suggestItem = (StaySuggest.AreaGroup) mSuggest.getSuggestItem();
 
                 queryMap.put("provinceIdx", suggestItem.index);
 
@@ -581,7 +581,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             case LOCATION:
             {
-                StaySuggestV2.Location suggestItem = (StaySuggestV2.Location) mSuggest.getSuggestItem();
+                StaySuggest.Location suggestItem = (StaySuggest.Location) mSuggest.getSuggestItem();
 
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
@@ -595,7 +595,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             case STATION:
             {
-                StaySuggestV2.Station suggestItem = (StaySuggestV2.Station) mSuggest.getSuggestItem();
+                StaySuggest.Station suggestItem = (StaySuggest.Station) mSuggest.getSuggestItem();
 
                 queryMap.put("subwayIdx", suggestItem.index);
                 break;
@@ -603,7 +603,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             case DIRECT:
             {
-                StaySuggestV2.Direct suggestItem = (StaySuggestV2.Direct) mSuggest.getSuggestItem();
+                StaySuggest.Direct suggestItem = (StaySuggest.Direct) mSuggest.getSuggestItem();
 
                 queryMap.put("term", suggestItem.name);
                 break;
@@ -611,7 +611,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             case STAY:
             {
-                StaySuggestV2.Stay suggestItem = (StaySuggestV2.Stay) mSuggest.getSuggestItem();
+                StaySuggest.Stay suggestItem = (StaySuggest.Stay) mSuggest.getSuggestItem();
 
                 queryMap.put("targetIndices", suggestItem.index);
                 break;

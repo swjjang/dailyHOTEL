@@ -30,7 +30,7 @@ import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySubwayArea;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.SearchStayResultAnalyticsParam;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
@@ -779,7 +779,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             location = null;
         }
 
-        StaySuggestV2 suggest = toSuggest(mStayViewModel.stayRegion.getValue());
+        StaySuggest suggest = toSuggest(mStayViewModel.stayRegion.getValue());
 
         if (suggest == null)
         {
@@ -795,7 +795,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         mAnalytics.onFilterClick(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue());
     }
 
-    private StaySuggestV2 toSuggest(StayRegion region)
+    private StaySuggest toSuggest(StayRegion region)
     {
         if (region == null)
         {
@@ -806,28 +806,28 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             case AREA:
             {
-                StaySuggestV2.AreaGroup suggestItem = new StaySuggestV2.AreaGroup();
+                StaySuggest.AreaGroup suggestItem = new StaySuggest.AreaGroup();
                 suggestItem.index = region.getAreaGroupIndex();
                 suggestItem.name = region.getAreaGroupName();
 
                 if (region.getAreaElement() != null)
                 {
-                    StaySuggestV2.Area area = new StaySuggestV2.Area();
+                    StaySuggest.Area area = new StaySuggest.Area();
                     area.index = region.getAreaIndex();
                     area.name = region.getAreaName();
                     suggestItem.area = area;
                 }
 
-                return new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, suggestItem);
+                return new StaySuggest(StaySuggest.MenuType.SUGGEST, suggestItem);
             }
 
             case SUBWAY_AREA:
             {
-                StaySuggestV2.Station suggestItem = new StaySuggestV2.Station();
+                StaySuggest.Station suggestItem = new StaySuggest.Station();
                 suggestItem.index = region.getAreaIndex();
                 suggestItem.name = region.getAreaName();
 
-                return new StaySuggestV2(StaySuggestV2.MenuType.SUGGEST, suggestItem);
+                return new StaySuggest(StaySuggest.MenuType.SUGGEST, suggestItem);
             }
         }
 
@@ -1132,8 +1132,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
             {
-                StaySuggestV2.Location suggestItem = new StaySuggestV2.Location();
-                StaySuggestV2 suggest = new StaySuggestV2(StaySuggestV2.MenuType.REGION_LOCATION, suggestItem);
+                StaySuggest.Location suggestItem = new StaySuggest.Location();
+                StaySuggest suggest = new StaySuggest(StaySuggest.MenuType.REGION_LOCATION, suggestItem);
                 StayBookDateTime bookDateTime = mStayViewModel.getBookDateTime();
 
                 if (mStayViewModel.categoryType == DailyCategoryType.STAY_ALL)

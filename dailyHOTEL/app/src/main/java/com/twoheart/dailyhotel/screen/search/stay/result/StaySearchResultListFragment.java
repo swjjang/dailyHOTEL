@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -76,7 +76,7 @@ public class StaySearchResultListFragment extends StayListFragment
 
         super.setPlaceCuration(curation);
 
-        StaySuggestV2 suggest = ((StaySearchCuration) curation).getSuggest();
+        StaySuggest suggest = ((StaySearchCuration) curation).getSuggest();
 
         ((StaySearchResultListLayout) mPlaceListLayout).setLocationSearchType(suggest.isLocationSuggestType());
         ((StaySearchResultListLayout) mPlaceListLayout).setEmptyType(suggest);
@@ -162,7 +162,7 @@ public class StaySearchResultListFragment extends StayListFragment
                 }
 
                 Category category = mStayCuration.getCategory();
-                StaySuggestV2 suggest = ((StaySearchCuration) mStayCuration).getSuggest();
+                StaySuggest suggest = ((StaySearchCuration) mStayCuration).getSuggest();
 
                 if (suggest.isLocationSuggestType() == true)
                 {
@@ -192,7 +192,7 @@ public class StaySearchResultListFragment extends StayListFragment
                 }
 
                 Category category = mStayCuration.getCategory();
-                StaySuggestV2 suggest = ((StaySearchCuration) mStayCuration).getSuggest();
+                StaySuggest suggest = ((StaySearchCuration) mStayCuration).getSuggest();
 
                 if (suggest.isLocationSuggestType() == true)
                 {

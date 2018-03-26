@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.StaySuggestV2;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -74,7 +74,7 @@ public class StaySearchParams extends StayParams
 
         setSortType(mSort);
 
-        StaySuggestV2 suggest = staySearchCuration.getSuggest();
+        StaySuggest suggest = staySearchCuration.getSuggest();
 
         if (suggest != null)
         {
