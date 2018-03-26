@@ -25,7 +25,7 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
@@ -848,7 +848,7 @@ public class SearchStaySuggestPresenter //
     private void startFinishAction(GourmetSuggestV2 gourmetSuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, intent);

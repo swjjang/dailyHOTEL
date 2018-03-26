@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -19,7 +20,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -81,7 +82,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
     //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
     //
     //        if (sortType != null)
     //        {
@@ -99,7 +100,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     //        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
     //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(gourmetSuggest));
+    //        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
     //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
     //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
     //
@@ -255,7 +256,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                 gourmetBookingDay.setVisitDay(data.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME));
 
-                GourmetSuggestParcelV2 gourmetSuggestParcel = data.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+                GourmetSuggestParcel gourmetSuggestParcel = data.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
                 mInputText = data.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD);
 
                 if (gourmetSuggestParcel == null)
@@ -437,7 +438,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         mGourmetSearchCuration.setGourmetBookingDay(gourmetBookingDay);
 
-        GourmetSuggestParcelV2 gourmetSuggestParcel = intent.getParcelableExtra(INTENT_EXTRA_DATA_SUGGEST);
+        GourmetSuggestParcel gourmetSuggestParcel = intent.getParcelableExtra(INTENT_EXTRA_DATA_SUGGEST);
 
         if (gourmetSuggestParcel == null)
         {
@@ -566,7 +567,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     protected void finish(int resultCode)
     {
         Intent intent = new Intent();
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(mGourmetSearchCuration.getSuggest()));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(mGourmetSearchCuration.getSuggest()));
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT));
 
         setResult(resultCode, intent);
@@ -1130,6 +1131,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
     GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
     {
+        @SuppressLint("RestrictedApi")
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)

@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -36,7 +36,7 @@ public class SearchGourmetResultTabActivity extends BaseActivity<SearchGourmetRe
     {
         Intent intent = new Intent(context, SearchGourmetResultTabActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_INPUT_KEYWORD, inputKeyWord);
 
         return intent;

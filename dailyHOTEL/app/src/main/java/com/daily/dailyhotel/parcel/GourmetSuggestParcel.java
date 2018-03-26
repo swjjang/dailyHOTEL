@@ -10,11 +10,11 @@ import com.daily.dailyhotel.entity.GourmetSuggestV2;
  * Created by android_sam on 2018. 3. 7..
  */
 
-public class GourmetSuggestParcelV2 implements Parcelable
+public class GourmetSuggestParcel implements Parcelable
 {
     private GourmetSuggestV2 mGourmetSuggest;
 
-    public GourmetSuggestParcelV2(@NonNull GourmetSuggestV2 gourmetSuggest)
+    public GourmetSuggestParcel(@NonNull GourmetSuggestV2 gourmetSuggest)
     {
         if (gourmetSuggest == null)
         {
@@ -24,7 +24,7 @@ public class GourmetSuggestParcelV2 implements Parcelable
         mGourmetSuggest = gourmetSuggest;
     }
 
-    public GourmetSuggestParcelV2(Parcel in)
+    public GourmetSuggestParcel(Parcel in)
     {
         readFromParcel(in);
     }
@@ -67,15 +67,15 @@ public class GourmetSuggestParcelV2 implements Parcelable
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public GourmetSuggestParcelV2 createFromParcel(Parcel in)
+        public GourmetSuggestParcel createFromParcel(Parcel in)
         {
-            return new GourmetSuggestParcelV2(in);
+            return new GourmetSuggestParcel(in);
         }
 
         @Override
-        public GourmetSuggestParcelV2[] newArray(int size)
+        public GourmetSuggestParcel[] newArray(int size)
         {
-            return new GourmetSuggestParcelV2[size];
+            return new GourmetSuggestParcel[size];
         }
 
     };

@@ -18,7 +18,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggestV2;
-import com.daily.dailyhotel.parcel.GourmetSuggestParcelV2;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
@@ -98,7 +98,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             ExLog.e(e.toString());
         }
 
-        GourmetSuggestParcelV2 suggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+        GourmetSuggestParcel suggestParcel = intent.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
 
         if (suggestParcel != null)
         {
@@ -211,7 +211,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
                 {
                     try
                     {
-                        GourmetSuggestParcelV2 gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        GourmetSuggestParcel gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchViewModel.setSuggest(gourmetSuggestParcel.getSuggest());
                         mSearchViewModel.inputKeyword = data.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
@@ -305,7 +305,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
 
             Intent intent = new Intent();
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
-            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcelV2(suggest));
+            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(suggest));
 
             if (suggest.isCampaignTagSuggestType() == false)
             {
