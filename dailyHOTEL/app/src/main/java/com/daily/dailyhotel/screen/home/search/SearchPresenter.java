@@ -1275,6 +1275,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             @Override
             public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
             {
+                if (stayBookDateTime == null)
+                {
+                    Util.restartApp(getActivity());
+                    return;
+                }
+
                 getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
                     , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
                     , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//

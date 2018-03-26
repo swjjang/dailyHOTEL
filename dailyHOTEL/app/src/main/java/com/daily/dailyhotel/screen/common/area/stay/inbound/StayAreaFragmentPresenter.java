@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -367,8 +368,16 @@ public class StayAreaFragmentPresenter extends BasePagerFragmentPresenter<StayAr
             return;
         }
 
-        getFragment().getFragmentEventListener().onAreaClick(areaGroup, area);
+        try
+        {
+            getFragment().getFragmentEventListener().onAreaClick(areaGroup, area);
 
-        mAnalytics.onEventAreaClick(getActivity(), areaGroup.name, area.name);
+            mAnalytics.onEventAreaClick(getActivity(), areaGroup.name, area.name);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            Util.restartExitApp(getActivity());
+        }
     }
 }
