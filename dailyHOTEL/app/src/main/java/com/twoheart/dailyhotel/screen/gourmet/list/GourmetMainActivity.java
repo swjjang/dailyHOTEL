@@ -267,7 +267,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     }
 
     @Override
-    protected void onCurationActivityResult(int resultCode, Intent data)
+    protected void onFilterActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
@@ -293,9 +293,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             {
                 if (filter.isDistanceSort() == true)
                 {
-                    Location location = data.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION);
-
-                    mGourmetCuration.setLocation(location);
+                    mGourmetCuration.setLocation(data.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION));
                 }
 
                 if (mGourmetCuration.getLocation() != null)

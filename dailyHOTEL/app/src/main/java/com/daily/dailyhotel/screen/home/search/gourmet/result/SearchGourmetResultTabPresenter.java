@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,31 +20,25 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.parcel.GourmetFilterParcel;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.home.gourmet.filter.GourmetFilterActivity;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.GourmetCuration;
-import com.twoheart.dailyhotel.model.GourmetCurationOption;
-import com.twoheart.dailyhotel.model.GourmetSearchCuration;
-import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -459,58 +452,34 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             case Activity.RESULT_OK:
                 if (intent != null)
                 {
-                    PlaceCuration placeCuration = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACECURATION);
+                    GourmetFilterParcel filterParcel = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_FILTER);
 
-                    if ((placeCuration instanceof GourmetCuration) == false)
+                    if (filterParcel == null)
                     {
                         return;
                     }
 
-                    GourmetCuration gourmetCuration = (GourmetCuration) placeCuration;
-                    GourmetFilter gourmetFilter = mergeCurationToFilter(gourmetCuration, mViewModel.getFilter());
+                    GourmetFilter filter = filterParcel.getFilter();
 
-                    if (gourmetFilter.isDistanceSort() == true)
+                    if (filter == null)
                     {
-                        mViewModel.filterLocation = gourmetCuration.getLocation();
+                        return;
+                    }
+
+                    if (filter.isDistanceSort() == true)
+                    {
+                        mViewModel.filterLocation = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION);
                     } else
                     {
                         mViewModel.filterLocation = null;
                     }
 
-                    mViewModel.setFilter(gourmetFilter);
+                    mViewModel.setFilter(filter);
 
                     getViewInterface().refreshCurrentFragment();
                 }
                 break;
         }
-    }
-
-    private GourmetFilter mergeCurationToFilter(GourmetCuration gourmetCuration, GourmetFilter gourmetFilter)
-    {
-        if (gourmetCuration == null || gourmetFilter == null)
-        {
-            return null;
-        }
-
-        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetCuration.getCurationOption();
-
-        gourmetFilter.reset();
-        gourmetFilter.sortType = GourmetFilter.SortType.valueOf(gourmetCurationOption.getSortType().name());
-        gourmetFilter.defaultSortType = GourmetFilter.SortType.valueOf(gourmetCurationOption.getDefaultSortType().name());
-
-        List<String> filerCategoryList = new ArrayList<>(gourmetCurationOption.getFilterMap().keySet());
-
-        Map<String, GourmetFilter.Category> categoryMap = gourmetFilter.getCategoryMap();
-
-        for (String categoryName : filerCategoryList)
-        {
-            gourmetFilter.addCategory(categoryMap.get(categoryName));
-        }
-
-        gourmetFilter.flagAmenitiesFilters = gourmetCurationOption.flagAmenitiesFilters;
-        gourmetFilter.flagTimeFilter = gourmetCurationOption.flagTimeFilter;
-
-        return gourmetFilter;
     }
 
     protected void onCalendarActivityResult(int resultCode, Intent intent)
@@ -823,11 +792,10 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         try
         {
-            GourmetSearchCuration gourmetSearchCuration = toGourmetSearchCuration();
+            Intent intent = GourmetFilterActivity.newInstance(getActivity(), mViewModel.getBookDateTime().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mViewModel.getViewType().name(), mViewModel.getFilter(), mViewModel.getSuggest()//
+                , mViewModel.filterLocation, mViewModel.searchViewModel.radius, mViewModel.getInputKeyword());
 
-            Intent intent = GourmetSearchResultCurationActivity.newInstance(getActivity(),//
-                com.twoheart.dailyhotel.util.Constants.ViewType.valueOf(mViewModel.getViewType().name())//
-                , gourmetSearchCuration, gourmetSearchCuration.getLocation() != null);
             startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_FILTER);
 
             mAnalytics.onEventFilterClick(getActivity());
@@ -853,60 +821,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             , AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, true, true), SearchGourmetResultTabActivity.REQUEST_CODE_CALENDAR);
 
         mAnalytics.onEventCalendarClick(getActivity());
-    }
-
-    private GourmetSearchCuration toGourmetSearchCuration() throws Exception
-    {
-        GourmetSuggest suggest = mViewModel.getSuggest();
-
-        GourmetSearchCuration gourmetSearchCuration = new GourmetSearchCuration();
-        gourmetSearchCuration.setSuggest(suggest);
-        gourmetSearchCuration.setRadius(mViewModel.searchViewModel.radius);
-
-        gourmetSearchCuration.setGourmetBookingDay(mViewModel.getBookDateTime().getGourmetBookingDay());
-
-        GourmetCurationOption gourmetCurationOption = new GourmetCurationOption();
-
-        GourmetFilter gourmetFilter = mViewModel.getFilter();
-
-        // 추후 형변환 이슈로 수정될 예정
-        gourmetCurationOption.setFilterMap((HashMap) gourmetFilter.getCategoryFilterMap());
-
-        List<GourmetFilter.Category> categoryList = new ArrayList(gourmetFilter.getCategoryMap().values());
-        HashMap<String, Integer> categoryCodeMap = new HashMap<>();
-        HashMap<String, Integer> categorySequenceMap = new HashMap<>();
-
-        for (GourmetFilter.Category gourmetCategory : categoryList)
-        {
-            categoryCodeMap.put(gourmetCategory.name, gourmetCategory.code);
-            categorySequenceMap.put(gourmetCategory.name, gourmetCategory.sequence);
-        }
-
-        gourmetCurationOption.setCategoryCoderMap(categoryCodeMap);
-        gourmetCurationOption.setCategorySequenceMap(categorySequenceMap);
-
-        gourmetCurationOption.flagAmenitiesFilters = gourmetFilter.flagAmenitiesFilters;
-        gourmetCurationOption.flagTimeFilter = gourmetFilter.flagTimeFilter;
-        gourmetCurationOption.setDefaultSortType(Constants.SortType.valueOf(gourmetFilter.defaultSortType.name()));
-        gourmetCurationOption.setSortType(Constants.SortType.valueOf(gourmetFilter.sortType.name()));
-
-        gourmetSearchCuration.setCurationOption(gourmetCurationOption);
-
-        // 내 주변 검색
-        if (suggest.isLocationSuggestType() == true)
-        {
-            GourmetSuggest.Location locationSuggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
-            Location location = new Location("provider");
-            location.setLatitude(locationSuggestItem.latitude);
-            location.setLongitude(locationSuggestItem.longitude);
-
-            gourmetSearchCuration.setLocation(location);
-        } else if (gourmetFilter.isDistanceSort() == true)
-        {
-            gourmetSearchCuration.setLocation(mViewModel.filterLocation);
-        }
-
-        return gourmetSearchCuration;
     }
 
     @Override

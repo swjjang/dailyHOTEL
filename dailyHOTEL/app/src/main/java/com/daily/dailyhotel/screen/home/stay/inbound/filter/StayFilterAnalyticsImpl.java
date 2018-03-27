@@ -56,21 +56,23 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 }
             }
 
+            final char DELIMITER = '-';
+
             StringBuilder stringBuilder = new StringBuilder();
 
             String filterSortString = getFilterSortString(stayFilter.sortType);
             stringBuilder.append(filterSortString);
-            stringBuilder.append('-');
+            stringBuilder.append(DELIMITER);
             stringBuilder.append(stayFilter.person);
-            stringBuilder.append('-');
+            stringBuilder.append(DELIMITER);
 
-            String filterBedTypeString = getFilterBedType(stayFilter.flagBedTypeFilters);
+            String filterBedTypeString = getFilterBedTypeString(stayFilter.flagBedTypeFilters);
             stringBuilder.append(filterBedTypeString);
-            stringBuilder.append('-');
+            stringBuilder.append(DELIMITER);
 
             String filterAmenityString = getFilterAmenityString(stayFilter.flagAmenitiesFilters);
             stringBuilder.append(filterAmenityString);
-            stringBuilder.append('-');
+            stringBuilder.append(DELIMITER);
 
             String filterRoomAmenityString = getFilterRoomAmenityString(stayFilter.flagRoomAmenitiesFilters);
             stringBuilder.append(filterRoomAmenityString);
@@ -136,19 +138,31 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
             return;
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getFilterSortString(stayFilter.sortType));
-        stringBuilder.append('-');
-        stringBuilder.append(stayFilter.person);
-        stringBuilder.append('-');
-        stringBuilder.append(getFilterBedType(stayFilter.flagBedTypeFilters));
-        stringBuilder.append('-');
-        stringBuilder.append(getFilterAmenityString(stayFilter.flagAmenitiesFilters));
-        stringBuilder.append('-');
-        stringBuilder.append(getFilterRoomAmenityString(stayFilter.flagRoomAmenitiesFilters));
-
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SORT_FLITER //
-            , AnalyticsManager.Action.STAY_NO_RESULT, stringBuilder.toString(), null);
+            , AnalyticsManager.Action.STAY_NO_RESULT, getFilterString(stayFilter), null);
+    }
+
+    private String getFilterString(StayFilter filter)
+    {
+        if (filter == null)
+        {
+            return null;
+        }
+
+        final char DELIMITER = '-';
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getFilterSortString(filter.sortType));
+        stringBuilder.append(DELIMITER);
+        stringBuilder.append(filter.person);
+        stringBuilder.append(DELIMITER);
+        stringBuilder.append(getFilterBedTypeString(filter.flagBedTypeFilters));
+        stringBuilder.append(DELIMITER);
+        stringBuilder.append(getFilterAmenityString(filter.flagAmenitiesFilters));
+        stringBuilder.append(DELIMITER);
+        stringBuilder.append(getFilterRoomAmenityString(filter.flagRoomAmenitiesFilters));
+
+        return stringBuilder.toString();
     }
 
     private String getFilterSortString(StayFilter.SortType sortType)
@@ -180,7 +194,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
         }
     }
 
-    private String getFilterBedType(int flagBedTypeFilters)
+    private String getFilterBedTypeString(int flagBedTypeFilters)
     {
         // Bed Type
         if (flagBedTypeFilters == StayFilter.FLAG_BED_NONE)
@@ -188,24 +202,26 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
             return AnalyticsManager.Label.SORTFILTER_NONE;
         } else
         {
+            final char DELIMITER = ',';
+
             StringBuilder stringBuilder = new StringBuilder();
 
             if ((flagBedTypeFilters & StayFilter.FLAG_BED_DOUBLE) == StayFilter.FLAG_BED_DOUBLE)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append(DELIMITER);
             }
 
             if ((flagBedTypeFilters & StayFilter.FLAG_BED_TWIN) == StayFilter.FLAG_BED_TWIN)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TWIN).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TWIN).append(DELIMITER);
             }
 
             if ((flagBedTypeFilters & StayFilter.FLAG_BED_HEATEDFLOORS) == StayFilter.FLAG_BED_HEATEDFLOORS)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
+            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -222,49 +238,51 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
             return AnalyticsManager.Label.SORTFILTER_NONE;
         } else
         {
+            final char DELIMITER = ',';
+
             StringBuilder stringBuilder = new StringBuilder();
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PARKING) == StayFilter.FLAG_AMENITIES_PARKING)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_POOL) == StayFilter.FLAG_AMENITIES_POOL)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_POOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_POOL).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_FITNESS) == StayFilter.FLAG_AMENITIES_FITNESS)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SAUNA) == StayFilter.FLAG_AMENITIES_SAUNA)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_AMENITIES_BUSINESS_CENTER)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_AMENITIES_SHARED_BBQ)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PET) == StayFilter.FLAG_AMENITIES_PET)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PET).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
+            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -281,59 +299,61 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
             return AnalyticsManager.Label.SORTFILTER_NONE;
         } else
         {
+            final char DELIMITER = ',';
+
             StringBuilder stringBuilder = new StringBuilder();
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_ROOM_AMENITIES_WIFI)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PC).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_ROOM_AMENITIES_BATHTUB)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(DELIMITER);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
+            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
