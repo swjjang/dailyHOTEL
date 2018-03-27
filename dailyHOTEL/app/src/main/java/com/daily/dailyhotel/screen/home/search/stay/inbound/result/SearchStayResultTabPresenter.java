@@ -495,14 +495,14 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
                     return;
                 }
 
-                StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+                StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_FILTER);
 
                 if (stayFilterParcel == null)
                 {
                     return;
                 }
 
-                StayFilter stayFilter = stayFilterParcel.getStayFilter();
+                StayFilter stayFilter = stayFilterParcel.getFilter();
 
                 if (stayFilter == null)
                 {

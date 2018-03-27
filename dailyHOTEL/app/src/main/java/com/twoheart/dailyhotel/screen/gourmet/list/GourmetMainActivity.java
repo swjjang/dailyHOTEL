@@ -20,11 +20,14 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.PreferenceRegion;
+import com.daily.dailyhotel.parcel.GourmetFilterParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.filter.GourmetFilterActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
@@ -51,7 +54,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -63,7 +65,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -262,26 +267,34 @@ public class GourmetMainActivity extends PlaceMainActivity
     }
 
     @Override
-    protected void onCurationActivityResult(int resultCode, Intent data)
+    protected void onFilterActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+            GourmetFilterParcel filterParcel = data.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_FILTER);
 
-            if (placeCuration instanceof GourmetCuration == false)
+            if (filterParcel == null)
             {
                 return;
             }
 
-            GourmetCuration changedGourmetCuration = (GourmetCuration) placeCuration;
-            GourmetCurationOption changedGourmetCurationOption = (GourmetCurationOption) changedGourmetCuration.getCurationOption();
+            GourmetFilter filter = filterParcel.getFilter();
+            GourmetCurationOption changedGourmetCurationOption = filterToCuration(filter);
+
+            if (changedGourmetCurationOption == null)
+            {
+                return;
+            }
 
             mGourmetCuration.setCurationOption(changedGourmetCurationOption);
             mPlaceMainLayout.setOptionFilterSelected(changedGourmetCurationOption.isDefaultFilter() == false);
 
             if (changedGourmetCurationOption.getSortType() == SortType.DISTANCE)
             {
-                mGourmetCuration.setLocation(changedGourmetCuration.getLocation());
+                if (filter.isDistanceSort() == true)
+                {
+                    mGourmetCuration.setLocation(data.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION));
+                }
 
                 if (mGourmetCuration.getLocation() != null)
                 {
@@ -301,6 +314,37 @@ public class GourmetMainActivity extends PlaceMainActivity
             setResult(resultCode);
             finish();
         }
+    }
+
+    private GourmetCurationOption filterToCuration(GourmetFilter filter)
+    {
+        if (filter == null)
+        {
+            return null;
+        }
+
+        GourmetCurationOption curationOption = new GourmetCurationOption();
+
+        List<GourmetFilter.Category> categoryList = new ArrayList(filter.getCategoryMap().values());
+
+        HashMap<String, Integer> categoryCodeMap = new HashMap<>();
+        HashMap<String, Integer> categorySequenceMap = new HashMap<>();
+
+        for (GourmetFilter.Category category : categoryList)
+        {
+            categoryCodeMap.put(category.name, category.code);
+            categorySequenceMap.put(category.name, category.sequence);
+        }
+
+        curationOption.setCategoryCoderMap(categoryCodeMap);
+        curationOption.setCategorySequenceMap(categorySequenceMap);
+        curationOption.setFilterMap(filter.getCategoryFilterMap());
+        curationOption.setSortType(SortType.valueOf(filter.sortType.name()));
+        curationOption.setDefaultSortType(SortType.valueOf(filter.defaultSortType.name()));
+        curationOption.flagTimeFilter = filter.flagTimeFilter;
+        curationOption.flagAmenitiesFilters = filter.flagAmenitiesFilters;
+
+        return curationOption;
     }
 
     @Override
@@ -663,8 +707,32 @@ public class GourmetMainActivity extends PlaceMainActivity
                 return;
             }
 
-            Intent intent = GourmetCurationActivity.newInstance(GourmetMainActivity.this, mViewType, mGourmetCuration);
+            String visitDateTime = mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+
+            GourmetSuggest.AreaGroup suggestItem = new GourmetSuggest.AreaGroup();
+            suggestItem.index = province.index;
+            suggestItem.name = province.name;
+
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+
+                GourmetSuggest.Area areaSuggestItem = new GourmetSuggest.Area();
+                areaSuggestItem.index = area.index;
+                areaSuggestItem.name = area.name;
+                suggestItem.area = areaSuggestItem;
+            }
+
+            GourmetFilter gourmetFilter = curationToFilter((GourmetCurationOption) mGourmetCuration.getCurationOption());
+            GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, suggestItem);
+            Location location = mGourmetCuration.getLocation();
+
+            Intent intent = GourmetFilterActivity.newInstance(GourmetMainActivity.this, visitDateTime, mViewType.name(), gourmetFilter//
+                , suggest, location, 0, null);
+
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
+            //            Intent intent = GourmetCurationActivity.newInstance(GourmetMainActivity.this, mViewType, mGourmetCuration);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
@@ -681,6 +749,67 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, viewType, null);
+        }
+
+        private GourmetFilter curationToFilter(GourmetCurationOption curationOption)
+        {
+            GourmetFilter gourmetFilter = new GourmetFilter().reset();
+
+            if (curationOption == null)
+            {
+                return gourmetFilter;
+            }
+
+            gourmetFilter.getCategoryFilterMap().putAll(curationOption.getFilterMap());
+            gourmetFilter.setCategoryMap(getCategoryMap(curationOption.getCategoryCoderMap(), curationOption.getCategorySequenceMap()));
+            gourmetFilter.flagTimeFilter = curationOption.flagTimeFilter;
+            gourmetFilter.flagAmenitiesFilters = curationOption.flagAmenitiesFilters;
+            gourmetFilter.defaultSortType = GourmetFilter.SortType.valueOf(curationOption.getDefaultSortType().name());
+            gourmetFilter.sortType = GourmetFilter.SortType.valueOf(curationOption.getSortType().name());
+
+            return gourmetFilter;
+        }
+
+        private LinkedHashMap<String, GourmetFilter.Category> getCategoryMap(HashMap<String, Integer> categoryCodeMap//
+            , HashMap<String, Integer> categorySequenceMap)
+        {
+            if (categoryCodeMap == null || categorySequenceMap == null)
+            {
+                return null;
+            }
+
+            List<GourmetFilter.Category> categoryList = new ArrayList<>();
+
+            List<String> categoryKeyList = new ArrayList(categoryCodeMap.keySet());
+
+            for (String key : categoryKeyList)
+            {
+                GourmetFilter.Category category = new GourmetFilter.Category();
+                category.name = key;
+                category.code = categoryCodeMap.get(key);
+                category.sequence = categorySequenceMap.get(key);
+
+                categoryList.add(category);
+            }
+
+            Comparator<GourmetFilter.Category> comparator = new Comparator<GourmetFilter.Category>()
+            {
+                public int compare(GourmetFilter.Category category1, GourmetFilter.Category category2)
+                {
+                    return category1.sequence - category2.sequence;
+                }
+            };
+
+            Collections.sort(categoryList, comparator);
+
+            LinkedHashMap<String, GourmetFilter.Category> categoryMap = new LinkedHashMap<>();
+
+            for (GourmetFilter.Category category : categoryList)
+            {
+                categoryMap.put(category.name, category);
+            }
+
+            return categoryMap;
         }
 
         @Override

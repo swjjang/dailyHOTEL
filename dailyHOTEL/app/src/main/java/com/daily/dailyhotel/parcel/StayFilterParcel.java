@@ -9,16 +9,16 @@ import com.daily.dailyhotel.entity.StayFilter;
 
 public class StayFilterParcel implements Parcelable
 {
-    private StayFilter mStayFilter;
+    private StayFilter mFilter;
 
-    public StayFilterParcel(@NonNull StayFilter stayFilter)
+    public StayFilterParcel(@NonNull StayFilter filter)
     {
-        if (stayFilter == null)
+        if (filter == null)
         {
             throw new NullPointerException("stayFilter == null");
         }
 
-        mStayFilter = stayFilter;
+        mFilter = filter;
     }
 
     public StayFilterParcel(Parcel in)
@@ -26,43 +26,43 @@ public class StayFilterParcel implements Parcelable
         readFromParcel(in);
     }
 
-    public StayFilter getStayFilter()
+    public StayFilter getFilter()
     {
-        return mStayFilter;
+        return mFilter;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(mStayFilter.person);
-        dest.writeInt(mStayFilter.flagBedTypeFilters);
-        dest.writeInt(mStayFilter.flagAmenitiesFilters);
-        dest.writeInt(mStayFilter.flagRoomAmenitiesFilters);
-        dest.writeString(mStayFilter.sortType == null ? null : mStayFilter.sortType.name());
-        dest.writeString(mStayFilter.defaultSortType == null ? null : mStayFilter.defaultSortType.name());
+        dest.writeInt(mFilter.person);
+        dest.writeInt(mFilter.flagBedTypeFilters);
+        dest.writeInt(mFilter.flagAmenitiesFilters);
+        dest.writeInt(mFilter.flagRoomAmenitiesFilters);
+        dest.writeString(mFilter.sortType == null ? null : mFilter.sortType.name());
+        dest.writeString(mFilter.defaultSortType == null ? null : mFilter.defaultSortType.name());
     }
 
     private void readFromParcel(Parcel in)
     {
-        mStayFilter = new StayFilter();
+        mFilter = new StayFilter();
 
-        mStayFilter.person = in.readInt();
-        mStayFilter.flagBedTypeFilters = in.readInt();
-        mStayFilter.flagAmenitiesFilters = in.readInt();
-        mStayFilter.flagRoomAmenitiesFilters = in.readInt();
+        mFilter.person = in.readInt();
+        mFilter.flagBedTypeFilters = in.readInt();
+        mFilter.flagAmenitiesFilters = in.readInt();
+        mFilter.flagRoomAmenitiesFilters = in.readInt();
 
         String sortType = in.readString();
 
         if (DailyTextUtils.isTextEmpty(sortType) == false)
         {
-            mStayFilter.sortType = StayFilter.SortType.valueOf(sortType);
+            mFilter.sortType = StayFilter.SortType.valueOf(sortType);
         }
 
         String defaultSortType = in.readString();
 
         if (DailyTextUtils.isTextEmpty(defaultSortType) == false)
         {
-            mStayFilter.defaultSortType = StayFilter.SortType.valueOf(defaultSortType);
+            mFilter.defaultSortType = StayFilter.SortType.valueOf(defaultSortType);
         }
     }
 

@@ -164,9 +164,7 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
         }
 
         getViewDataBinding().bedTypeInclude.doubleBedTextView.setSelected((flagBedTypeFilters & StayFilter.FLAG_BED_DOUBLE) == StayFilter.FLAG_BED_DOUBLE);
-
         getViewDataBinding().bedTypeInclude.twinBedTextView.setSelected((flagBedTypeFilters & StayFilter.FLAG_BED_TWIN) == StayFilter.FLAG_BED_TWIN);
-
         getViewDataBinding().bedTypeInclude.heatedFloorsTextView.setSelected((flagBedTypeFilters & StayFilter.FLAG_BED_HEATEDFLOORS) == StayFilter.FLAG_BED_HEATEDFLOORS);
     }
 
@@ -179,19 +177,12 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
         }
 
         getViewDataBinding().amenityInclude.parkingTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PARKING) == StayFilter.FLAG_AMENITIES_PARKING);
-
         getViewDataBinding().amenityInclude.bbqTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_AMENITIES_SHARED_BBQ);
-
         getViewDataBinding().amenityInclude.poolTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_POOL) == StayFilter.FLAG_AMENITIES_POOL);
-
         getViewDataBinding().amenityInclude.businessCenterTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_AMENITIES_BUSINESS_CENTER);
-
         getViewDataBinding().amenityInclude.fitnessTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_FITNESS) == StayFilter.FLAG_AMENITIES_FITNESS);
-
         getViewDataBinding().amenityInclude.saunaTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SAUNA) == StayFilter.FLAG_AMENITIES_SAUNA);
-
         getViewDataBinding().amenityInclude.petTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PET) == StayFilter.FLAG_AMENITIES_PET);
-
         getViewDataBinding().amenityInclude.kidsPlayTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM);
     }
 
@@ -204,23 +195,14 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
         }
 
         getViewDataBinding().roomAmenityInclude.breakfastTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST);
-
         getViewDataBinding().roomAmenityInclude.wifiTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_ROOM_AMENITIES_WIFI);
-
         getViewDataBinding().roomAmenityInclude.cookingTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING);
-
         getViewDataBinding().roomAmenityInclude.pcTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC);
-
         getViewDataBinding().roomAmenityInclude.bathTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_ROOM_AMENITIES_BATHTUB);
-
         getViewDataBinding().roomAmenityInclude.tvTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV);
-
         getViewDataBinding().roomAmenityInclude.spaTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL);
-
         getViewDataBinding().roomAmenityInclude.privateBbqTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ);
-
         getViewDataBinding().roomAmenityInclude.karaokeTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE);
-
         getViewDataBinding().roomAmenityInclude.partyRoomTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM);
     }
 
@@ -404,7 +386,6 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
         }
 
         viewDataBinding.personInclude.minusPersonImageView.setOnClickListener(v -> getEventListener().onMinusPersonClick());
-
         viewDataBinding.personInclude.plusPersonImageView.setOnClickListener(v -> getEventListener().onPlusPersonClick());
     }
 

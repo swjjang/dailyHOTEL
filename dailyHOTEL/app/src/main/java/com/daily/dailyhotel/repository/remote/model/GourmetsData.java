@@ -11,9 +11,10 @@ import com.daily.dailyhotel.entity.Gourmets;
 import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by android_sam on 2017. 6. 15..
@@ -82,12 +83,22 @@ public class GourmetsData
         @JsonField(name = "categories")
         public List<Category> categoryList;
 
-        public Map<String, GourmetFilter.Category> getCategory()
+        public LinkedHashMap<String, GourmetFilter.Category> getCategory()
         {
-            Map<String, GourmetFilter.Category> categoryMap = new HashMap<>();
+            LinkedHashMap<String, GourmetFilter.Category> categoryMap = new LinkedHashMap<>();
+
+            Comparator<Category> comparator = new Comparator<Category>()
+            {
+                public int compare(Category category1, Category category2)
+                {
+                    return category1.sequence - category2.sequence;
+                }
+            };
 
             if (categoryList != null)
             {
+                Collections.sort(categoryList, comparator);
+
                 for (Category category : categoryList)
                 {
                     categoryMap.put(category.name, category.getCategory());

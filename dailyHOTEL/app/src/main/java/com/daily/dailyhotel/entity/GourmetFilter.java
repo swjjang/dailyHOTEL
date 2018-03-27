@@ -2,8 +2,8 @@ package com.daily.dailyhotel.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GourmetFilter
 {
@@ -22,8 +22,8 @@ public class GourmetFilter
     public static final int FLAG_AMENITIES_GROUPBOOKING = FLAG_AMENITIES_PRIVATEROOM << 1;
     public static final int FLAG_AMENITIES_CORKAGE = FLAG_AMENITIES_GROUPBOOKING << 1;
 
-    private Map<String, Integer> mFlagCategoryFilterMap; // 선택된 음식 종류
-    private Map<String, Category> mCategoryMap;
+    private HashMap<String, Integer> mFlagCategoryFilterMap; // 선택된 음식 종류
+    private LinkedHashMap<String, Category> mCategoryMap;
 
     public int flagTimeFilter;
     public int flagAmenitiesFilters;
@@ -50,7 +50,7 @@ public class GourmetFilter
     public GourmetFilter()
     {
         mFlagCategoryFilterMap = new HashMap<>();
-        mCategoryMap = new HashMap<>();
+        mCategoryMap = new LinkedHashMap<>();
     }
 
     public boolean isDistanceSort()
@@ -58,7 +58,7 @@ public class GourmetFilter
         return sortType == SortType.DISTANCE;
     }
 
-    public void setCategoryMap(Map<String, Category> categoryMap)
+    public void setCategoryMap(LinkedHashMap<String, Category> categoryMap)
     {
         if (categoryMap == null)
         {
@@ -66,6 +66,16 @@ public class GourmetFilter
         }
 
         mCategoryMap.putAll(categoryMap);
+    }
+
+    public boolean hasCategory(Category category)
+    {
+        if (category == null)
+        {
+            return false;
+        }
+
+        return mFlagCategoryFilterMap.containsKey(category.name);
     }
 
     public void addCategory(Category category)
@@ -88,12 +98,12 @@ public class GourmetFilter
         mFlagCategoryFilterMap.remove(category.name);
     }
 
-    public Map<String, Integer> getCategoryFilterMap()
+    public HashMap<String, Integer> getCategoryFilterMap()
     {
         return mFlagCategoryFilterMap;
     }
 
-    public Map<String, Category> getCategoryMap()
+    public LinkedHashMap<String, Category> getCategoryMap()
     {
         return mCategoryMap;
     }

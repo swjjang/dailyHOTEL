@@ -41,6 +41,7 @@ import java.util.TreeMap;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class GourmetCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
@@ -58,14 +59,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     protected android.support.v7.widget.GridLayout mAmenitiesGridLayout;
     protected ViewGroup mTimeRangeLayout;
 
-    public static Intent newInstance(Context context, ViewType viewType, GourmetCuration gourmetCuration)
-    {
-        Intent intent = new Intent(context, GourmetCurationActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, gourmetCuration);
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, ViewType viewType, GourmetCuration gourmetCuration)
+    //    {
+    //        Intent intent = new Intent(context, GourmetCurationActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, gourmetCuration);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

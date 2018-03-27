@@ -58,7 +58,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void onCurationActivityResult(int resultCode, Intent data);
+    protected abstract void onFilterActivityResult(int resultCode, Intent data);
 
     protected abstract void onLocationFailed();
 
@@ -229,7 +229,7 @@ public abstract class PlaceMainActivity extends BaseActivity
             {
                 mDontReloadAtOnResume = true;
 
-                onCurationActivityResult(resultCode, data);
+                onFilterActivityResult(resultCode, data);
                 break;
             }
 
@@ -237,7 +237,7 @@ public abstract class PlaceMainActivity extends BaseActivity
             {
                 mDontReloadAtOnResume = true;
 
-                onCurationActivityResult(resultCode, data);
+                onFilterActivityResult(resultCode, data);
                 break;
             }
 
