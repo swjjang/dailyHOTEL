@@ -299,7 +299,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             Intent intent = GourmetCalendarActivity.newInstance(getActivity()//
                 , startDateTime, endDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.ValueType.SEARCH, true//
-                , ScreenUtils.dpToPx(getActivity(), 44), true);
+                , ScreenUtils.dpToPx(getActivity(), 41), true);
 
             startActivityForResult(intent, ResearchGourmetActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)

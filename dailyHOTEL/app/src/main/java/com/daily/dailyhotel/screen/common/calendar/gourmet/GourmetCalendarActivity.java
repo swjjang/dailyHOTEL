@@ -13,6 +13,7 @@ public class GourmetCalendarActivity extends BaseActivity<GourmetCalendarPresent
     static final String INTENT_EXTRA_DATA_START_DATETIME = "startDateTime";
     static final String INTENT_EXTRA_DATA_END_DATETIME = "endDateTime";
     static final String INTENT_EXTRA_DATA_INDEX = "stayIndex";
+    static final String INTENT_EXTRA_DATA_SOLD_OUT_DAYS = "soldOutDays";
     static final String INTENT_EXTRA_DATA_CALLBYSCREEN = "callByScreen";
     static final String INTENT_EXTRA_DATA_IS_SELECTED = "isSelected";
     static final String INTENT_EXTRA_DATA_MARGIN_TOP = "marginTop";
@@ -35,8 +36,8 @@ public class GourmetCalendarActivity extends BaseActivity<GourmetCalendarPresent
     }
 
     public static Intent newInstance(Context context//
-        , String startDateTime, String endDateTime, int nightsOfMaxCount//
-        , String visitDateTime, int gourmetIndex//
+        , String startDateTime, String endDateTime, String visitDateTime//
+        , int gourmetIndex, int[] soldOutDays//
         , String callByScreen, boolean isSelected, int marginTop, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
@@ -44,6 +45,7 @@ public class GourmetCalendarActivity extends BaseActivity<GourmetCalendarPresent
         intent.putExtra(INTENT_EXTRA_DATA_END_DATETIME, endDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATETIME, visitDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, gourmetIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_SOLD_OUT_DAYS, soldOutDays);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
         intent.putExtra(INTENT_EXTRA_DATA_IS_SELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_MARGIN_TOP, marginTop);

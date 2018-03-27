@@ -1,21 +1,17 @@
 package com.twoheart.dailyhotel.screen.gourmet.filter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.daily.dailyhotel.entity.CommonDateTime;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,41 +20,42 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 {
     private int mPlaceIndex;
 
     //    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
-        , GourmetBookingDay gourmetBookingDay, int placeIndex, int dayOfMaxCount, String screen //
-        , ArrayList<Integer> soldOutList, boolean isSelected, boolean isAnimation)
-    {
-        Intent intent = new Intent(context, GourmetDetailCalendarActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
-        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
-        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
-        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, CommonDateTime commonDateTime //
-        , String visitDateTime, int gourmetIndex, int dayOfMaxCount, String screen //
-        , ArrayList<Integer> soldOutList, boolean selected, boolean animation) throws Exception
-    {
-        TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
-
-        GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-        gourmetBookingDay.setVisitDay(visitDateTime);
-
-        return newInstance(context, todayDateTime, gourmetBookingDay, gourmetIndex, dayOfMaxCount, screen//
-            , soldOutList, selected, animation);
-    }
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+    //        , GourmetBookingDay gourmetBookingDay, int placeIndex, int dayOfMaxCount, String screen //
+    //        , ArrayList<Integer> soldOutList, boolean isSelected, boolean isAnimation)
+    //    {
+    //        Intent intent = new Intent(context, GourmetDetailCalendarActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+    //        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
+    //        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, CommonDateTime commonDateTime //
+    //        , String visitDateTime, int gourmetIndex, int dayOfMaxCount, String screen //
+    //        , ArrayList<Integer> soldOutList, boolean selected, boolean animation) throws Exception
+    //    {
+    //        TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
+    //
+    //        GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+    //        gourmetBookingDay.setVisitDay(visitDateTime);
+    //
+    //        return newInstance(context, todayDateTime, gourmetBookingDay, gourmetIndex, dayOfMaxCount, screen//
+    //            , soldOutList, selected, animation);
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

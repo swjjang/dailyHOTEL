@@ -829,7 +829,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             Intent intent = GourmetCalendarActivity.newInstance(getActivity()//
                 , startDateTime, endDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, true//
-                , ScreenUtils.dpToPx(getActivity(), 44), true);
+                , 0, true);
 
             startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_CALENDAR);
 

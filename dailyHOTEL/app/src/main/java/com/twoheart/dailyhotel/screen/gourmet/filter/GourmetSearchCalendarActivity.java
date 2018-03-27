@@ -1,15 +1,13 @@
 package com.twoheart.dailyhotel.screen.gourmet.filter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 
+@Deprecated
 public class GourmetSearchCalendarActivity extends GourmetCalendarActivity
 {
     public static final String INTENT_EXTRA_DATA_SEARCH_TYPE = "searchType";
@@ -26,22 +24,21 @@ public class GourmetSearchCalendarActivity extends GourmetCalendarActivity
      * @param searchType
      * @return
      */
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
-        , GourmetBookingDay gourmetBookingDay, int dayOfMaxCount, String screen, boolean isSelected //
-        , boolean isAnimation, String searchType)
-    {
-        Intent intent = new Intent(context, GourmetSearchCalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
-        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
-        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCH_TYPE, searchType);
-
-        return intent;
-    }
-
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+    //        , GourmetBookingDay gourmetBookingDay, int dayOfMaxCount, String screen, boolean isSelected //
+    //        , boolean isAnimation, String searchType)
+    //    {
+    //        Intent intent = new Intent(context, GourmetSearchCalendarActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+    //        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCH_TYPE, searchType);
+    //
+    //        return intent;
+    //    }
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

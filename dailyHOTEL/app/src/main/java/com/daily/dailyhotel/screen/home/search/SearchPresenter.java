@@ -1167,7 +1167,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             Intent intent = GourmetCalendarActivity.newInstance(getActivity()//
                 , startDateTime, endDateTime, bookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.ValueType.SEARCH, true//
-                , ScreenUtils.dpToPx(getActivity(), 44), true);
+                , ScreenUtils.dpToPx(getActivity(), 41), true);
 
             startActivityForResult(intent, SearchActivity.REQUEST_CODE_GOURMET_CALENDAR);
         } catch (Exception e)

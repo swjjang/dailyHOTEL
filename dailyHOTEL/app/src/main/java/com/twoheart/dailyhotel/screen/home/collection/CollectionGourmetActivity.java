@@ -441,7 +441,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             Intent intent = com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity.newInstance(this//
                 , startDateTime, endDateTime, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                 , AnalyticsManager.ValueType.SEARCH, true//
-                , ScreenUtils.dpToPx(this, 44), true);
+                , 0, true);
 
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
         } catch (Exception e)

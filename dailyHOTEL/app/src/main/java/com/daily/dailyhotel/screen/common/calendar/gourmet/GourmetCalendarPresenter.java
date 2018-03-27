@@ -10,8 +10,11 @@ import android.util.SparseIntArray;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
+import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.BaseCalendarPresenter;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
@@ -36,6 +39,8 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
 {
     private GourmetCalendarInterface.AnalyticsInterface mAnalytics;
 
+    GourmetRemoteImpl mGourmetRemoteImpl;
+
     String mVisitDateTime;
 
     String mStartDateTime;
@@ -48,6 +53,7 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
 
     private CalendarImpl mCalendarImpl;
     private int mGourmetIndex;
+    SparseIntArray mSoldOutDays;
 
     public GourmetCalendarPresenter(@NonNull GourmetCalendarActivity activity)
     {
@@ -72,6 +78,7 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
 
         setAnalytics(new GourmetCalendarAnalyticsImpl());
 
+        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mCalendarImpl = new CalendarImpl(activity);
 
         setRefresh(true);
@@ -104,6 +111,18 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
             mIsSelected = intent.getBooleanExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_IS_SELECTED, true);
             mMarginTop = intent.getIntExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_MARGIN_TOP, 0);
             mIsAnimation = intent.getBooleanExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
+
+            int[] soldOutDays = intent.getIntArrayExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_SOLD_OUT_DAYS);
+
+            if (soldOutDays != null)
+            {
+                mSoldOutDays = new SparseIntArray();
+
+                for (int day : soldOutDays)
+                {
+                    mSoldOutDays.put(day, day);
+                }
+            }
 
             mGourmetIndex = intent.getIntExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_INDEX, 0);
         } catch (Exception e)
@@ -141,7 +160,7 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
             @Override
             public List<ObjectItem> apply(String calendarHolidays) throws Exception
             {
-                List<ObjectItem> calendarList = makeCalendar(mStartDateTime, mEndDateTime, getHolidayArray(calendarHolidays), null);
+                List<ObjectItem> calendarList = makeCalendar(mStartDateTime, mEndDateTime, getHolidayArray(calendarHolidays), mSoldOutDays);
 
                 calendarList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
 
@@ -354,18 +373,54 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
 
         if (mGourmetIndex == 0)
         {
-            Intent intent = new Intent();
-            intent.putExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME, mVisitDateTime);
-
-            setResult(Activity.RESULT_OK, intent);
-
-            onBackClick();
+            finish(mVisitDateTime);
         } else
         {
+            try
+            {
+                addCompositeDisposable(mGourmetRemoteImpl.getDetail(mGourmetIndex, new GourmetBookDateTime(mVisitDateTime)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetDetail>()
+                {
+                    @Override
+                    public void accept(GourmetDetail gourmetDetail) throws Exception
+                    {
+                        if (gourmetDetail.getGourmetMenuList() == null || gourmetDetail.getGourmetMenuList().size() == 0)
+                        {
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                , getString(R.string.gourmet_detail_calender_dialog_message)//
+                                , getString(R.string.dialog_btn_text_confirm), null);
+                        } else
+                        {
+                            finish(mVisitDateTime);
+                        }
+
+                        unLockAll();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        finish(mVisitDateTime);
+                    }
+                }));
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
 
         }
 
         mAnalytics.onEventConfirmClick(getActivity(), mCallByScreen, mVisitDateTime);
+    }
+
+    private void finish(String visitDateTime)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME, visitDateTime);
+
+        setResult(Activity.RESULT_OK, intent);
+
+        onBackClick();
     }
 
     void reset()
