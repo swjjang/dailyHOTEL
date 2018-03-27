@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:minHeight="58dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="58dp">
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/iconImageView"
@@ -15,54 +14,57 @@
             android:layout_marginLeft="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:id="@+id/textLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:paddingTop="13dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
             android:paddingBottom="13dp"
+            android:paddingTop="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/iconImageView"
             app:layout_constraintRight_toLeftOf="@+id/deleteImageView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_goneMarginRight="15dp">
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/titleTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/priceTextView"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/priceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                app:layout_constraintTop_toTopOf="@+id/titleTextView"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/titleTextView"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"/>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/priceTextView"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp" />
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/priceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp" />
+
+            </RelativeLayout>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1px"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleTextView"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/deleteImageView"
@@ -75,7 +77,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/vector_ic_delete_greylight_small"/>
+            app:srcCompat="@drawable/vector_ic_delete_greylight_small" />
 
         <View
             android:id="@+id/bottomDivider"
@@ -87,8 +89,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
