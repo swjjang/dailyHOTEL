@@ -465,7 +465,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
             {
                 processCheckInDateTime(dayDateTime, yyyyMMdd);
 
-                if (mStayIndex > 0 & mNightsOfMaxCount > 1)
+                if (mStayIndex > 0 && mNightsOfMaxCount > 1)
                 {
                     setAvailableCheckOutDays(mCheckInDateTime, DailyCalendar.compareDateDay(mEndDateTime, mStartDateTime) + 1);
                 }
