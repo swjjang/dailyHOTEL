@@ -26,6 +26,7 @@ import com.daily.dailyhotel.screen.home.search.CommonDateTimeViewModel;
 import com.daily.dailyhotel.screen.home.search.SearchStayViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -215,23 +216,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         switch (requestCode)
         {
             case ResearchStayActivity.REQUEST_CODE_SUGGEST:
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    try
-                    {
-                        StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-
-                        if (staySuggestParcel != null)
-                        {
-                            mSearchViewModel.setSuggest(staySuggestParcel.getSuggest());
-                        }
-
-                        mSearchViewModel.inputKeyword = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
+                onSuggestActivityResult(resultCode, data);
                 break;
 
             case ResearchStayActivity.REQUEST_CODE_CALENDAR:
@@ -247,6 +232,35 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
                     {
                         ExLog.d(e.toString());
                     }
+                }
+                break;
+        }
+    }
+
+    private void onSuggestActivityResult(int resultCode, Intent intent)
+    {
+        switch (resultCode)
+        {
+            case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
+            case Activity.RESULT_OK:
+                if (intent == null)
+                {
+                    return;
+                }
+
+                try
+                {
+                    StaySuggestParcel staySuggestParcel = intent.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                    if (staySuggestParcel != null)
+                    {
+                        mSearchViewModel.setSuggest(staySuggestParcel.getSuggest());
+                    }
+
+                    mSearchViewModel.inputKeyword = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
                 }
                 break;
         }
