@@ -27,6 +27,7 @@ import com.daily.dailyhotel.screen.home.search.SearchStayOutboundViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -238,18 +239,27 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
     {
         switch (resultCode)
         {
+            case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
             case Activity.RESULT_OK:
-                if (intent != null)
+                if (intent == null)
                 {
-                    try
+                    return;
+                }
+
+                try
+                {
+                    StayOutboundSuggestParcel suggestParcel = intent.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                    if (suggestParcel == null)
                     {
-                        StayOutboundSuggestParcel suggestParcel = intent.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                        mSearchModel.setSuggest(suggestParcel.getSuggest());
-                        mSearchModel.inputKeyword = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
+                        return;
                     }
+
+                    mSearchModel.setSuggest(suggestParcel.getSuggest());
+                    mSearchModel.inputKeyword = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
                 }
                 break;
         }
