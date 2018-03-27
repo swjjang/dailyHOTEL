@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.calendar.stay;
+package com.daily.dailyhotel.screen.common.calendar;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -20,14 +20,10 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseDialogView<T1, T2> implements View.OnClickListener
+public abstract class BaseCalendarView<T1 extends OnBaseEventListener, T2 extends ActivityCalendarDataBinding> extends BaseDialogView<T1, T2> implements View.OnClickListener
 {
     private static final int ANIMATION_DELAY = 200;
     AnimatorSet mAnimatorSet;
-
-    public interface OnEventListener extends OnBaseEventListener
-    {
-    }
 
     public BaseCalendarView(BaseActivity baseActivity, T1 listener)
     {
@@ -63,7 +59,7 @@ public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListen
         getViewDataBinding().titleTextView.setText(title);
     }
 
-    Observable<Boolean> showAnimation()
+    protected Observable<Boolean> showAnimation()
     {
         if (getViewDataBinding() == null || mAnimatorSet != null && mAnimatorSet.isStarted() == true)
         {
@@ -91,7 +87,7 @@ public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListen
                     @Override
                     public void onAnimationStart(Animator animation)
                     {
-                        setVisibility(true);
+                        setVisible(true);
                     }
 
                     @Override
@@ -126,7 +122,7 @@ public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListen
         return observable.subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    Observable<Boolean> hideAnimation()
+    protected Observable<Boolean> hideAnimation()
     {
         if (getViewDataBinding() == null || mAnimatorSet != null && mAnimatorSet.isStarted() == true)
         {
@@ -214,17 +210,17 @@ public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListen
         return observable.subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    void setVisibility(boolean visibility)
+    protected void setVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().animationLayout.setVisibility(visibility == true ? View.VISIBLE : View.INVISIBLE);
+        getViewDataBinding().animationLayout.setVisibility(visible == true ? View.VISIBLE : View.INVISIBLE);
     }
 
-    void setConfirmEnabled(boolean enabled)
+    protected void setConfirmEnabled(boolean enabled)
     {
         if (getViewDataBinding() == null)
         {
@@ -234,7 +230,7 @@ public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListen
         getViewDataBinding().confirmView.setEnabled(enabled);
     }
 
-    void setConfirmText(String text)
+    protected void setConfirmText(String text)
     {
         if (getViewDataBinding() == null)
         {

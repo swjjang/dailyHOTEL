@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.calendar.stay;
+package com.daily.dailyhotel.screen.common.calendar;
 
 
 import android.support.annotation.NonNull;
@@ -178,15 +178,15 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         }
     }
 
-    protected static class Day
+    public static class Day
     {
         public int year;
         public int month;
         public int dayOfMonth;
-        boolean holiday;
-        boolean soldOut;
-        boolean lastDay;
-        boolean sideDay; // 시작 날짜와 끝 날짜 양쪽으로 사용하지 않는 달력
+        public boolean holiday;
+        public boolean soldOut;
+        public boolean lastDay;
+        public boolean sideDay; // 시작 날짜와 끝 날짜 양쪽으로 사용하지 않는 달력
 
         public String getDateTime()
         {
@@ -199,7 +199,7 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         }
     }
 
-    protected static class Month
+    public static class Month
     {
         public int year;
         public int month;

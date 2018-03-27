@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetFilter;
@@ -26,6 +27,7 @@ import com.daily.dailyhotel.entity.PreferenceRegion;
 import com.daily.dailyhotel.parcel.GourmetFilterParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
+import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.filter.GourmetFilterActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
@@ -53,7 +55,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -252,17 +253,25 @@ public class GourmetMainActivity extends PlaceMainActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+            String visitDateTime = data.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME);
 
-            if (gourmetBookingDay == null)
+            if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
             {
                 return;
             }
 
-            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
-            ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
+            try
+            {
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay(visitDateTime);
 
-            refreshCurrentFragment(true);
+                mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
+
+                refreshCurrentFragment(true);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 
@@ -403,17 +412,29 @@ public class GourmetMainActivity extends PlaceMainActivity
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(this, todayDateTime //
-            , mGourmetCuration.getGourmetBookingDay(), GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , callByScreen, true, true);
+        final int DAYS_OF_MAX_COUNT = 30;
 
-        if (intent == null)
+        try
         {
-            Util.restartApp(this);
-            return;
-        }
+            Calendar calendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+            GourmetBookingDay gourmetBookingDay = mGourmetCuration.getGourmetBookingDay();
+
+            Intent intent = GourmetCalendarActivity.newInstance(this//
+                , startDateTime, endDateTime, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , callByScreen, true//
+                , ScreenUtils.dpToPx(this, 44), true);
+
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLockUI();
+        }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);

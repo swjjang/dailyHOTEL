@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.calendar.stay;
+package com.daily.dailyhotel.screen.common.calendar.gourmet;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,31 +7,25 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 
-public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
+public class GourmetCalendarActivity extends BaseActivity<GourmetCalendarPresenter>
 {
-    public static final String INTENT_EXTRA_DATA_CHECK_IN_DATETIME = "checkInDateTime";
-    public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATETIME = "checkOutDateTime";
+    public static final String INTENT_EXTRA_DATA_VISIT_DATETIME = "visitDateTime";
     static final String INTENT_EXTRA_DATA_START_DATETIME = "startDateTime";
     static final String INTENT_EXTRA_DATA_END_DATETIME = "endDateTime";
-    static final String INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT = "nightsOfMaxCount";
-    static final String INTENT_EXTRA_DATA_INDEX = "index";
-    static final String INTENT_EXTRA_DATA_SOLD_OUT_DAYS = "soldOutDays";
+    static final String INTENT_EXTRA_DATA_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_CALLBYSCREEN = "callByScreen";
     static final String INTENT_EXTRA_DATA_IS_SELECTED = "isSelected";
     static final String INTENT_EXTRA_DATA_MARGIN_TOP = "marginTop";
     static final String INTENT_EXTRA_DATA_ISANIMATION = "isAnimation";
 
     public static Intent newInstance(Context context//
-        , String startDateTime, String endDateTime, int nightsOfMaxCount//
-        , String checkInDateTime, String checkOutDateTime//
+        , String startDateTime, String endDateTime, String visitDateTime//
         , String callByScreen, boolean isSelected, int marginTop, boolean isAnimation)
     {
-        Intent intent = new Intent(context, StayCalendarActivity.class);
+        Intent intent = new Intent(context, GourmetCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_START_DATETIME, startDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_DATETIME, endDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, nightsOfMaxCount);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATETIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATETIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATETIME, visitDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
         intent.putExtra(INTENT_EXTRA_DATA_IS_SELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_MARGIN_TOP, marginTop);
@@ -42,17 +36,14 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
 
     public static Intent newInstance(Context context//
         , String startDateTime, String endDateTime, int nightsOfMaxCount//
-        , String checkInDateTime, String checkOutDateTime, int stayIndex, int[] soldOutDays//
+        , String visitDateTime, int gourmetIndex//
         , String callByScreen, boolean isSelected, int marginTop, boolean isAnimation)
     {
-        Intent intent = new Intent(context, StayCalendarActivity.class);
+        Intent intent = new Intent(context, GourmetCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_START_DATETIME, startDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_DATETIME, endDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, nightsOfMaxCount);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATETIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATETIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_INDEX, stayIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_SOLD_OUT_DAYS, soldOutDays);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATETIME, visitDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, gourmetIndex);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
         intent.putExtra(INTENT_EXTRA_DATA_IS_SELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_MARGIN_TOP, marginTop);
@@ -69,8 +60,8 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
 
     @NonNull
     @Override
-    protected StayCalendarPresenter createInstancePresenter()
+    protected GourmetCalendarPresenter createInstancePresenter()
     {
-        return new StayCalendarPresenter(this);
+        return new GourmetCalendarPresenter(this);
     }
 }

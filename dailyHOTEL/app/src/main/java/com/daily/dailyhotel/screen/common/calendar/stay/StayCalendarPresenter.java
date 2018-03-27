@@ -14,6 +14,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
+import com.daily.dailyhotel.screen.common.calendar.BaseCalendarPresenter;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -35,9 +36,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarActivity, StayCalendarViewInterface> implements StayCalendarView.OnEventListener
+public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarActivity, StayCalendarInterface.ViewInterface> implements StayCalendarInterface.OnEventListener
 {
-    private StayCalendarPresenterAnalyticsInterface mAnalytics;
+    private StayCalendarInterface.AnalyticsInterface mAnalytics;
 
     String mCheckInDateTime;
     String mCheckOutDateTime;
@@ -55,17 +56,6 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
     private int mStayIndex;
     SparseIntArray mSoldOutDays;
 
-    public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
-    {
-        void setCheckInOutDateTime(String checkInDateTime, String checkOutDateTime);
-
-        void onScreen(Activity activity);
-
-        void onCloseEventClick(Activity activity, String callByScreen);
-
-        void onConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime);
-    }
-
     public StayCalendarPresenter(@NonNull StayCalendarActivity activity)
     {
         super(activity);
@@ -73,7 +63,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
     @NonNull
     @Override
-    protected StayCalendarViewInterface createInstanceViewInterface()
+    protected StayCalendarInterface.ViewInterface createInstanceViewInterface()
     {
         return new StayCalendarView(getActivity(), this);
     }
@@ -85,7 +75,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
         setContentView(R.layout.activity_calendar_data);
 
-        getViewInterface().setVisibility(false);
+        getViewInterface().setVisible(false);
 
         setAnalytics(new StayCalendarAnalyticsImpl());
 
@@ -97,7 +87,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayCalendarPresenterAnalyticsInterface) analytics;
+        mAnalytics = (StayCalendarInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -136,7 +126,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
                 }
             }
 
-            mStayIndex = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0);
+            mStayIndex = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_INDEX, 0);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -204,7 +194,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
                     }
                 } else
                 {
-                    getViewInterface().setVisibility(true);
+                    getViewInterface().setVisible(true);
                 }
 
                 return Observable.just(mIsSelected).subscribeOn(AndroidSchedulers.mainThread());
@@ -374,7 +364,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
     @Override
     public void onBackClick()
     {
-        mAnalytics.onCloseEventClick(getActivity(), mCallByScreen);
+        mAnalytics.onEventCloseClick(getActivity(), mCallByScreen);
 
         getActivity().onBackPressed();
     }
@@ -405,7 +395,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
         setResult(Activity.RESULT_OK, intent);
 
-        mAnalytics.onConfirmClick(getActivity(), mCallByScreen, mCheckInDateTime, mCheckOutDateTime);
+        mAnalytics.onEventConfirmClick(getActivity(), mCallByScreen, mCheckInDateTime, mCheckOutDateTime);
 
         onBackClick();
     }
