@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.calendar.stay;
+package com.daily.dailyhotel.screen.common.calendar.gourmet;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -24,18 +24,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class GourmetCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     Context mContext;
     private List<ObjectItem> mList;
-    private int mCheckInDay;
-    private int mCheckOutDay;
-    private boolean mLastDayEnabled;
-    private SparseIntArray mAvailableCheckOutDays;
+    private int mVisitDay;
 
     View.OnClickListener mOnClickListener;
 
-    public StayCalendarAdapter(Context context, List<ObjectItem> arrayList)
+    public GourmetCalendarAdapter(Context context, List<ObjectItem> arrayList)
     {
         mContext = context;
 
@@ -126,24 +123,9 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return 0;
     }
 
-    public void setCheckInDay(int checkInDay)
+    public void setVisitDay(int visitDay)
     {
-        mCheckInDay = checkInDay;
-    }
-
-    public void setCheckOutDay(int checkOutDay)
-    {
-        mCheckOutDay = checkOutDay;
-    }
-
-    public void setLastDayEnabled(boolean enabled)
-    {
-        mLastDayEnabled = enabled;
-    }
-
-    public void setAvailableCheckOutDays(SparseIntArray availableCheckOutDays)
-    {
-        mAvailableCheckOutDays = availableCheckOutDays;
+        mVisitDay = visitDay;
     }
 
     @Override
@@ -281,23 +263,14 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 // yyyyMMdd
                 int yyyyMMdd = day.toyyyyMMdd();
 
-                if (mCheckInDay == yyyyMMdd)
+                if (mVisitDay == yyyyMMdd)
                 {
-                    setCheckInDayView(dayDataBinding, day);
-                } else if (mCheckOutDay == yyyyMMdd)
-                {
-                    setCheckOutDayView(dayDataBinding, day);
+                    setVisitDayView(dayDataBinding, day);
                 } else
                 {
                     if (day.soldOut == true)
                     {
-                        if (yyyyMMdd > mCheckInDay && mCheckOutDay == 0 && mAvailableCheckOutDays != null && mAvailableCheckOutDays.get(yyyyMMdd) > 0)
-                        {
-                            setDefaultDayView(dayDataBinding, day, dayOfWeek);
-                        } else
-                        {
-                            setSoldOutDayView(dayDataBinding, day);
-                        }
+                        setSoldOutDayView(dayDataBinding, day);
                     } else
                     {
                         setDefaultDayView(dayDataBinding, day, dayOfWeek);
@@ -345,7 +318,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dayDataBinding.dayLayout.setTag(day);
     }
 
-    private void setCheckInDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
+    private void setVisitDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
     {
         if (dayDataBinding == null)
         {
@@ -353,28 +326,10 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
-        dayDataBinding.checkTextView.setText(R.string.act_booking_chkin);
+        dayDataBinding.checkTextView.setText(R.string.label_visit_day);
         dayDataBinding.dayLayout.setEnabled(true);
         dayDataBinding.dayTextView.setStrikeFlag(false);
-        dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_in);
-        dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
-
-        dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
-        dayDataBinding.dayLayout.setTag(day);
-    }
-
-    private void setCheckOutDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
-    {
-        if (dayDataBinding == null)
-        {
-            return;
-        }
-
-        dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
-        dayDataBinding.checkTextView.setText(R.string.act_booking_chkout);
-        dayDataBinding.dayLayout.setEnabled(true);
-        dayDataBinding.dayTextView.setStrikeFlag(false);
-        dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_out);
+        dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_gourmet);
         dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
 
         dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
@@ -391,22 +346,8 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
         dayDataBinding.dayLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.selector_calendar_day_background));
         dayDataBinding.dayTextView.setTextColor(day.holiday ? getDayOfHolidayColor() : getDayOfWeekColor(dayOfWeek));
-        dayDataBinding.dayLayout.setEnabled(day.lastDay ? mLastDayEnabled : true);
+        dayDataBinding.dayLayout.setEnabled(true);
         dayDataBinding.dayTextView.setStrikeFlag(false);
-
-        // yyyyMMdd
-        int yyyyMMdd = day.toyyyyMMdd();
-
-        if (yyyyMMdd > mCheckInDay && yyyyMMdd < mCheckOutDay)
-        {
-            dayDataBinding.dayLayout.setActivated(true);
-            dayDataBinding.dayLayout.setSelected(true); // 배경색 변경
-        } else
-        {
-            dayDataBinding.dayLayout.setActivated(false);
-            dayDataBinding.dayLayout.setSelected(false); // 배경색 변경
-        }
-
         dayDataBinding.dayTextView.setText(Integer.toString(day.dayOfMonth));
         dayDataBinding.dayLayout.setTag(day);
     }

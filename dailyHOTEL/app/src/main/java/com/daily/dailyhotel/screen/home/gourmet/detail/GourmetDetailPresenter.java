@@ -43,6 +43,7 @@ import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
@@ -59,8 +60,6 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
@@ -77,6 +76,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
@@ -141,7 +141,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     boolean mCheckChangedPrice;
     private boolean mSoldOutFromList;
     private int mGradientType;
-    private List<Integer> mSoldOutDateList;
+    private int[] mSoldOutDays;
     boolean mShowCalendar;
     boolean mShowTrueVR;
     List<TrueVR> mTrueVRList;
@@ -541,18 +541,15 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data.hasExtra(GourmetDetailCalendarActivity.NAME_INTENT_EXTRA_DATA_VISIT_DATE) == true)
+                    String visitDateTime = data.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME);
+
+                    if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
                     {
-                        String visitDateTime = data.getStringExtra(GourmetDetailCalendarActivity.NAME_INTENT_EXTRA_DATA_VISIT_DATE);
-
-                        if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
-                        {
-                            return;
-                        }
-
-                        setGourmetBookDateTime(visitDateTime);
-                        setRefresh(true);
+                        return;
                     }
+
+                    setGourmetBookDateTime(visitDateTime);
+                    setRefresh(true);
                 }
                 break;
             }
@@ -1097,7 +1094,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         try
         {
-            startCalendar(mCommonDateTime, mGourmetBookDateTime, mGourmetIndex, mSoldOutDateList, true);
+            startCalendar(mCommonDateTime, mGourmetBookDateTime, mGourmetIndex, mSoldOutDays, true);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1548,7 +1545,20 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
     void setSoldOutDateList(List<Integer> soldOutList)
     {
-        mSoldOutDateList = soldOutList;
+        if (soldOutList == null || soldOutList.size() == 0)
+        {
+            mSoldOutDays = null;
+        } else
+        {
+            mSoldOutDays = new int[soldOutList.size()];
+
+            int size = soldOutList.size();
+
+            for (int i = 0; i < size; i++)
+            {
+                mSoldOutDays[i] = soldOutList.get(i);
+            }
+        }
     }
 
     void setTrueVRList(List<TrueVR> trueVRList)
@@ -1840,7 +1850,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     private void startCalendar(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime//
-        , int gourmetIndex, List<Integer> soldOutList, boolean animation) throws Exception
+        , int gourmetIndex, int[] soldOutDays, boolean animation) throws Exception
     {
         if (commonDateTime == null || gourmetBookDateTime == null)
         {
@@ -1849,14 +1859,28 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
 
-        Intent intent = GourmetDetailCalendarActivity.newInstance(getActivity(), //
-            commonDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmetIndex//
-            , GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , callByScreen, (ArrayList) soldOutList, true, animation);
+        final int DAYS_OF_MAX_COUNT = 30;
 
-        startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_CALENDAR);
+        try
+        {
+            Calendar calendar = DailyCalendar.getInstance(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-        mAnalytics.onEventCalendarClick(getActivity());
+            Intent intent = GourmetCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , gourmetIndex, soldOutDays//
+                , callByScreen, true//
+                , 0, true);
+
+            startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_CALENDAR);
+
+            mAnalytics.onEventCalendarClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     //    private void checkChangedPrice(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice, boolean compareListPrice)
@@ -2000,9 +2024,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
+        final int DAYS_OF_MAX_COUNT = 30;
+
         addCompositeDisposable(Observable.zip(observable//
             , mGourmetRemoteImpl.getDetail(mGourmetIndex, mGourmetBookDateTime)//
-            , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
+            , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, DAYS_OF_MAX_COUNT, false)//
             , mGourmetRemoteImpl.getReviewScores(mGourmetIndex)//
             , mGourmetRemoteImpl.getTrueVR(mGourmetIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//

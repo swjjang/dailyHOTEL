@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-public class StayStayOutboundFilterAnalyticsImpl implements StayOutboundFilterPresenter.StayOutboundFilterAnalyticsInterface
+public class StayOutboundFilterAnalyticsImpl implements StayOutboundFilterPresenter.StayOutboundFilterAnalyticsInterface
 {
     @Override
     public void onSortClick(Activity activity, StayOutboundFilters.SortType sortType)

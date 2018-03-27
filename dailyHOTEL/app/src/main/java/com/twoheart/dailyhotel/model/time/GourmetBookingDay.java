@@ -9,6 +9,11 @@ public class GourmetBookingDay extends PlaceBookingDay
     {
     }
 
+    public GourmetBookingDay(String visitDateTime) throws Exception
+    {
+        setVisitDay(visitDateTime);
+    }
+
     public GourmetBookingDay(Parcel in)
     {
         readFromParcel(in);

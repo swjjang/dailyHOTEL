@@ -53,7 +53,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     {
         setContentView(R.layout.activity_stay_outbound_filter_data);
 
-        setAnalytics(new StayStayOutboundFilterAnalyticsImpl());
+        setAnalytics(new StayOutboundFilterAnalyticsImpl());
 
         setRefresh(true);
     }

@@ -16,6 +16,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
@@ -32,7 +33,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -391,24 +392,30 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void onCalendarActivityResult(int resultCode, Intent data)
+    protected void onCalendarActivityResult(int resultCode, Intent intent)
     {
         if (resultCode == RESULT_OK)
         {
-            GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+            String visitDateTime = intent.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME);
 
-            if (gourmetBookingDay == null)
+            if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
             {
                 return;
             }
 
-            mPlaceBookingDay = gourmetBookingDay;
+            try
+            {
+                mPlaceBookingDay = new GourmetBookingDay(visitDateTime);
 
-            mCollectionBaseLayout.setCalendarText(getCalendarDate(gourmetBookingDay));
+                mCollectionBaseLayout.setCalendarText(getCalendarDate(mPlaceBookingDay));
 
-            lockUI();
+                lockUI();
 
-            requestRecommendationPlaceList(gourmetBookingDay);
+                requestRecommendationPlaceList(mPlaceBookingDay);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 
@@ -420,10 +427,29 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, todayDateTime//
-            , (GourmetBookingDay) placeBookingDay, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , AnalyticsManager.ValueType.SEARCH, true, true);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+        final int DAYS_OF_MAX_COUNT = 30;
+
+        try
+        {
+            Calendar calendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
+
+            Intent intent = com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity.newInstance(this//
+                , startDateTime, endDateTime, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , AnalyticsManager.ValueType.SEARCH, true//
+                , 0, true);
+
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLockUI();
+        }
     }
 
     @Override

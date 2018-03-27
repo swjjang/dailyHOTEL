@@ -665,8 +665,6 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
                     mClusterManager.removeItem(stayClusterItem);
                 }
             }
-
-            ExLog.d("pinkred - remove size : " + (beforeSize - ((List<StayClusterItem>) mClusterManager.getAlgorithm().getItems()).size()));
         }
     }
 

@@ -32,6 +32,7 @@ import com.daily.dailyhotel.repository.local.model.GourmetSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StayObSearchResultHistory;
 import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
@@ -44,7 +45,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivit
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -460,7 +460,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 {
                     try
                     {
-                        mSearchViewModel.setGourmetBookDateTime(data, GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATE);
+                        mSearchViewModel.setGourmetBookDateTime(data, GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -1151,12 +1151,31 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        CommonDateTime commonDateTime = mCommonDateTimeViewModel.commonDateTime;
-        GourmetBookDateTime gourmetBookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
 
-        startActivityForResult(GourmetCalendarActivity.newInstance(getActivity(), commonDateTime.getTodayDateTime() //
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , AnalyticsManager.ValueType.SEARCH, true, true), SearchActivity.REQUEST_CODE_GOURMET_CALENDAR);
+        final int DAYS_OF_MAX_COUNT = 30;
+
+        try
+        {
+            CommonDateTime commonDateTime = mCommonDateTimeViewModel.commonDateTime;
+            GourmetBookDateTime bookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
+
+            Calendar calendar = DailyCalendar.getInstance(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = GourmetCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, bookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , AnalyticsManager.ValueType.SEARCH, true//
+                , ScreenUtils.dpToPx(getActivity(), 41), true);
+
+            startActivityForResult(intent, SearchActivity.REQUEST_CODE_GOURMET_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLockAll();
+        }
     }
 
     @Override

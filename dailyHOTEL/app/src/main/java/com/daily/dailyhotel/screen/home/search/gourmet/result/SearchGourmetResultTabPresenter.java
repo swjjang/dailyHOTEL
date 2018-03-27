@@ -13,6 +13,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
@@ -25,19 +26,19 @@ import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.SearchLocalImpl;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
 import com.daily.dailyhotel.screen.home.gourmet.filter.GourmetFilterActivity;
 import com.daily.dailyhotel.screen.home.search.SearchGourmetViewModel;
 import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
 import com.daily.dailyhotel.util.DailyIntentUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -491,16 +492,16 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 {
                     try
                     {
-                        GourmetBookingDay gourmetBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+                        String visitDateTime = intent.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME);
 
-                        if (gourmetBookingDay == null)
+                        if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
                         {
                             return;
                         }
 
                         getViewInterface().resetFloatingActionViewTranslation();
 
-                        mViewModel.setBookDateTime(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
+                        mViewModel.setBookDateTime(visitDateTime);
 
                         if (mViewModel.getSuggest().isLocationSuggestType() == true)
                         {
@@ -813,14 +814,32 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             return;
         }
 
-        CommonDateTime commonDateTime = mViewModel.getCommonDateTime();
-        GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
+        final int DAYS_OF_MAX_COUNT = 30;
 
-        startActivityForResult(GourmetCalendarActivity.newInstance(getActivity(), commonDateTime.getTodayDateTime() //
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, true, true), SearchGourmetResultTabActivity.REQUEST_CODE_CALENDAR);
+        try
+        {
+            CommonDateTime commonDateTime = mViewModel.getCommonDateTime();
+            GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
 
-        mAnalytics.onEventCalendarClick(getActivity());
+            Calendar calendar = DailyCalendar.getInstance(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = GourmetCalendarActivity.newInstance(getActivity()//
+                , startDateTime, endDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, true//
+                , 0, true);
+
+            startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_CALENDAR);
+
+            mAnalytics.onEventCalendarClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLockAll();
+        }
     }
 
     @Override

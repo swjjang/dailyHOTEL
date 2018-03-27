@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCalendarPresenterAnalyticsInterface
+public class StayCalendarAnalyticsImpl implements StayCalendarInterface.AnalyticsInterface
 {
     private String mEnterCheckInDateTime, mEnterCheckOutDateTime;
 
@@ -34,7 +34,7 @@ public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCale
     }
 
     @Override
-    public void onCloseEventClick(Activity activity, String callByScreen)
+    public void onEventCloseClick(Activity activity, String callByScreen)
     {
         if (activity == null)
         {
@@ -46,7 +46,7 @@ public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCale
     }
 
     @Override
-    public void onConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime)
+    public void onEventConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime)
     {
         if (activity == null || DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
