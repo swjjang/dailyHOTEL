@@ -19,6 +19,7 @@ public class SearchStayOutboundSuggestActivity extends BaseActivity<SearchStayOu
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_CLICK_TYPE = "clickType";
     public static final String INTENT_EXTRA_DATA_IS_RESEARCH = "research";
+    public static final String INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE = "originServiceType";
 
     public static final int REQUEST_CODE_SPEECH_INPUT = 10000;
     public static final int REQUEST_CODE_SETTING_LOCATION = 10001;

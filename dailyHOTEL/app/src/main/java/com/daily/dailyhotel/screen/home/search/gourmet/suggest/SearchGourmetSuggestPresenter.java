@@ -618,6 +618,7 @@ public class SearchGourmetSuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
         intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.GOURMET.name());
 
         setResult(Activity.RESULT_OK, intent);
         finish();

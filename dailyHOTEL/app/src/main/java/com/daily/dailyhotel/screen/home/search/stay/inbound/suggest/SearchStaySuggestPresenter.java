@@ -843,6 +843,7 @@ public class SearchStaySuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.HOTEL.name());
 
         setResult(Activity.RESULT_OK, intent);
         finish();
@@ -853,6 +854,7 @@ public class SearchStaySuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.HOTEL.name());
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, intent);
         finish();
@@ -863,6 +865,7 @@ public class SearchStaySuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.HOTEL.name());
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND, intent);
         finish();

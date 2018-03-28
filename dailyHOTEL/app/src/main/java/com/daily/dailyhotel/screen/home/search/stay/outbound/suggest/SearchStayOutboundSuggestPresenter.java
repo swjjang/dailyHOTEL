@@ -674,6 +674,7 @@ public class SearchStayOutboundSuggestPresenter //
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE, DailyTextUtils.isTextEmpty(analyticsClickType) ? "" : analyticsClickType);
+        intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.OB_STAY.name());
 
         setResult(Activity.RESULT_OK, intent);
         finish();
@@ -684,6 +685,7 @@ public class SearchStayOutboundSuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.OB_STAY.name());
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY, intent);
         finish();

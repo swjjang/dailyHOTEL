@@ -18,6 +18,7 @@ public class SearchGourmetSuggestActivity extends BaseActivity<SearchGourmetSugg
     public static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE = "originServiceType";
 
     public static final int REQUEST_CODE_SPEECH_INPUT = 10000;
     public static final int REQUEST_CODE_SETTING_LOCATION = 10001;
