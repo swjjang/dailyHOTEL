@@ -799,7 +799,7 @@ public class SearchStaySuggestPresenter //
             ExLog.d(e.getMessage());
         }
 
-        startFinishAction(stayOutboundSuggest, mKeyword);
+        startFinishAction(stayOutboundSuggest, null, mKeyword);
     }
 
     @Override
@@ -855,11 +855,16 @@ public class SearchStaySuggestPresenter //
         finish();
     }
 
-    void startFinishAction(StayOutboundSuggest stayOutboundSuggest, String keyword)
+    void startFinishAction(StayOutboundSuggest stayOutboundSuggest, StaySuggest staySuggest, String keyword)
     {
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+
+        if (staySuggest != null)
+        {
+            intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST_2, new StaySuggestParcel(staySuggest));
+        }
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND, intent);
         finish();
@@ -1158,7 +1163,7 @@ public class SearchStaySuggestPresenter //
                                 unLockAll();
 
                                 getViewInterface().setSuggest(itemLocation.address);
-                                startFinishAction(stayOutboundSuggest, mKeyword);
+                                startFinishAction(stayOutboundSuggest, mLocationSuggest, mKeyword);
                             }
 
                         }

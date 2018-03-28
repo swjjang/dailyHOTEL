@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.R;
 public class SearchStayOutboundSuggestActivity extends BaseActivity<SearchStayOutboundSuggestPresenter>
 {
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_SUGGEST_2 = "suggest2";
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_CLICK_TYPE = "clickType";
 

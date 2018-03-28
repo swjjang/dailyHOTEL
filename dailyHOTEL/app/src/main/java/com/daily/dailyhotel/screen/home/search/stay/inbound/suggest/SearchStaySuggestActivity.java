@@ -19,6 +19,7 @@ public class SearchStaySuggestActivity extends BaseActivity<SearchStaySuggestPre
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_SUGGEST_2 = "suggest2";
 
     public static final int REQUEST_CODE_SPEECH_INPUT = 10000;
     public static final int REQUEST_CODE_SETTING_LOCATION = 10001;

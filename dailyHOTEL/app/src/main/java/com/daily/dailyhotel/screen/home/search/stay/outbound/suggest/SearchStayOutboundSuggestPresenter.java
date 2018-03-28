@@ -677,11 +677,16 @@ public class SearchStayOutboundSuggestPresenter //
         finish();
     }
 
-    void startFinishAction(StaySuggest staySuggest, String keyword)
+    void startFinishAction(StaySuggest staySuggest, StayOutboundSuggest stayOutboundSuggest, String keyword)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
+        intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+
+        if (stayOutboundSuggest != null)
+        {
+            intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST_2, new StayOutboundSuggestParcel(stayOutboundSuggest));
+        }
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY, intent);
         finish();
@@ -884,7 +889,7 @@ public class SearchStayOutboundSuggestPresenter //
                                 unLockAll();
 
                                 getViewInterface().setSuggest(itemLocation.address);
-                                startFinishAction(staySuggest, mKeyword);
+                                startFinishAction(staySuggest, mLocationSuggest, mKeyword);
                             } else
                             {
                                 addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(mLocationSuggest, mKeyword) //
