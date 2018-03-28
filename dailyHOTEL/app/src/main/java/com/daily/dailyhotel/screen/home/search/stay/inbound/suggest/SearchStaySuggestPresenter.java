@@ -659,7 +659,7 @@ public class SearchStaySuggestPresenter //
 
     Observable getStayOutboundSuggestList(String keyword)
     {
-        return mSuggestRemoteImpl.getRegionSuggestsByStayOutbound(keyword).observeOn(Schedulers.io());
+        return mSuggestRemoteImpl.getSuggestsByStayOutbound(keyword).observeOn(Schedulers.io());
     }
 
     @Override
