@@ -295,7 +295,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             startActivityForResult(SearchStaySuggestActivity.newInstance(getActivity()//
                 , null //
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), ResearchStayActivity.REQUEST_CODE_SUGGEST);
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), true), ResearchStayActivity.REQUEST_CODE_SUGGEST);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

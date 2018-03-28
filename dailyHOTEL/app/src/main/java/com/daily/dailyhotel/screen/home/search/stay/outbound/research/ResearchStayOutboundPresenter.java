@@ -333,7 +333,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
     {
         try
         {
-            startActivityForResult(SearchStayOutboundSuggestActivity.newInstance(getActivity(), null), ResearchStayOutboundActivity.REQUEST_CODE_SUGGEST);
+            startActivityForResult(SearchStayOutboundSuggestActivity.newInstance(getActivity(), null, true), ResearchStayOutboundActivity.REQUEST_CODE_SUGGEST);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

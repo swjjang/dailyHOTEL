@@ -77,6 +77,7 @@ public class SearchStayOutboundSuggestPresenter //
     private List<StayOutboundSuggest> mSuggestList;
     StayOutboundSuggest mLocationSuggest;
     String mKeyword;
+    private boolean mIsResearch;
 
     DailyLocationExFactory mDailyLocationExFactory;
 
@@ -146,6 +147,7 @@ public class SearchStayOutboundSuggestPresenter //
         }
 
         mKeyword = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+        mIsResearch = intent.getBooleanExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_IS_RESEARCH, false);
 
         return true;
     }
@@ -677,16 +679,11 @@ public class SearchStayOutboundSuggestPresenter //
         finish();
     }
 
-    void startFinishAction(StaySuggest staySuggest, StayOutboundSuggest stayOutboundSuggest, String keyword)
+    void startFinishAction(StaySuggest staySuggest, String keyword)
     {
         Intent intent = new Intent();
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
-
-        if (stayOutboundSuggest != null)
-        {
-            intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST_2, new StayOutboundSuggestParcel(stayOutboundSuggest));
-        }
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY, intent);
         finish();
@@ -878,18 +875,26 @@ public class SearchStayOutboundSuggestPresenter //
 
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
-                                StaySuggest.Location itemLocation = new StaySuggest.Location();
-                                itemLocation.address = address.address;
-                                itemLocation.name = address.shortAddress;
-                                itemLocation.latitude = mLocationSuggest.latitude;
-                                itemLocation.longitude = mLocationSuggest.longitude;
+                                if (mIsResearch == false)
+                                {
+                                    StaySuggest.Location itemLocation = new StaySuggest.Location();
+                                    itemLocation.address = address.address;
+                                    itemLocation.name = address.shortAddress;
+                                    itemLocation.latitude = mLocationSuggest.latitude;
+                                    itemLocation.longitude = mLocationSuggest.longitude;
 
-                                StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.LOCATION, itemLocation);
+                                    StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.LOCATION, itemLocation);
 
-                                unLockAll();
+                                    unLockAll();
 
-                                getViewInterface().setSuggest(itemLocation.address);
-                                startFinishAction(staySuggest, mLocationSuggest, mKeyword);
+                                    getViewInterface().setSuggest(itemLocation.address);
+                                    startFinishAction(staySuggest, mKeyword);
+                                } else {
+                                    unLockAll();
+
+                                    getViewInterface().setSuggest(mLocationSuggest.display);
+                                    startFinishAction(mLocationSuggest, mKeyword, null);
+                                }
                             } else
                             {
                                 addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(mLocationSuggest, mKeyword) //

@@ -871,7 +871,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             startActivityForResult(SearchStaySuggestActivity.newInstance(getActivity()//
                 , null //
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SUGGEST);
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), false), SearchActivity.REQUEST_CODE_STAY_SUGGEST);
 
             mAnalytics.onEventStaySuggestClick(getActivity());
         } catch (Exception e)
@@ -987,7 +987,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        startActivityForResult(SearchStayOutboundSuggestActivity.newInstance(getActivity(), ""), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST);
+        startActivityForResult(SearchStayOutboundSuggestActivity.newInstance(getActivity(), "", false), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST);
 
         mAnalytics.onEventStayOutboundSuggestClick(getActivity());
     }
