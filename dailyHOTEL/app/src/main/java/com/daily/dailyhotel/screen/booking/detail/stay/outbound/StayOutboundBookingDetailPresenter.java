@@ -886,22 +886,20 @@ public class StayOutboundBookingDetailPresenter //
         {
             possibleShowReviewDay = DailyCalendar.compareDateDay(mStayOutboundBookingDetail.checkOutDate, mCommonDateTime.currentDateTime) < 0;
 
-            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkInTime.split(":")[0]);
             String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
 
-            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + mStayOutboundBookingDetail.checkInTime);
             checkInDateSpannableString.setSpan( //
                 new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
+                checkInDate.length(), checkInDate.length() + mStayOutboundBookingDetail.checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkOutTime.split(":")[0]);
             String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
 
-            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + mStayOutboundBookingDetail.checkOutTime);
             checkOutDateSpannableString.setSpan( //
                 new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
+                checkOutDate.length(), checkOutDate.length() + mStayOutboundBookingDetail.checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
