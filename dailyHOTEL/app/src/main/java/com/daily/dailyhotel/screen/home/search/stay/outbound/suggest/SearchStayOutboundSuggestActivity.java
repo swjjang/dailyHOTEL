@@ -18,6 +18,8 @@ public class SearchStayOutboundSuggestActivity extends BaseActivity<SearchStayOu
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_CLICK_TYPE = "clickType";
+    public static final String INTENT_EXTRA_DATA_IS_RESEARCH = "research";
+    public static final String INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE = "originServiceType";
 
     public static final int REQUEST_CODE_SPEECH_INPUT = 10000;
     public static final int REQUEST_CODE_SETTING_LOCATION = 10001;
@@ -25,10 +27,11 @@ public class SearchStayOutboundSuggestActivity extends BaseActivity<SearchStayOu
 
     public static final int RECENTLY_PLACE_MAX_REQUEST_COUNT = 10;
 
-    public static Intent newInstance(Context context, String keyword)
+    public static Intent newInstance(Context context, String keyword, boolean isResearch)
     {
         Intent intent = new Intent(context, SearchStayOutboundSuggestActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(INTENT_EXTRA_DATA_IS_RESEARCH, isResearch);
         return intent;
     }
 

@@ -62,37 +62,6 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<StayOutboundSuggest>> getRegionSuggestsByStayOutbound(String keyword)
-    {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/category-suggests"//
-            : "MCQ1NSQ1MiQ4MSQ2NyQ0NiQ1OSQ1MCQ0MSQ1MyQ4OCQyNSQ1OCQ5JDUyJDE0JA==$XMDI3ODcwTOTMzTNEM4MDQzNzA5OQzA0MTM1NDNENkQwZREI0QOkQX0CQFzUNNxMzAlZEMDhENEE4LNjAxRTRDRUM5MzUAlEQjVEMA==$";
-
-        return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
-            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
-            {
-                List<StayOutboundSuggest> list;
-
-                if (suggestsDataBaseDto != null)
-                {
-                    if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
-                    {
-                        list = suggestsDataBaseDto.data.getRegionSuggestList(mContext);
-                    } else
-                    {
-                        throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);
-                    }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
-
-                return list;
-            }).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
     public Observable<List<StayOutboundSuggest>> getPopularRegionSuggestsByStayOutbound()
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();

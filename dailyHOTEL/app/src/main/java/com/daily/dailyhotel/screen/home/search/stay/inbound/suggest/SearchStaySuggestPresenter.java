@@ -88,6 +88,7 @@ public class SearchStaySuggestPresenter //
     ArrayList<String> mGourmetKeywordList;
     StaySuggest mLocationSuggest;
     String mKeyword;
+    private boolean mIsResearch;
 
     DailyLocationExFactory mDailyLocationExFactory;
 
@@ -211,6 +212,8 @@ public class SearchStaySuggestPresenter //
         {
             return false;
         }
+
+        mIsResearch = intent.getBooleanExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_IS_RESEARCH, false);
 
         return true;
     }
@@ -470,7 +473,7 @@ public class SearchStaySuggestPresenter //
     {
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)
         {
-            if (mSuggestList == null || mSuggestList.size() == 0)
+            if (mIsResearch == false && (mSuggestList == null || mSuggestList.size() == 0))
             {
                 if (mGourmetSuggestList != null && mGourmetSuggestList.size() > 0)
                 {
@@ -574,7 +577,7 @@ public class SearchStaySuggestPresenter //
                     @Override
                     public ObservableSource<List> apply(List<StaySuggest> staySuggestList) throws Exception
                     {
-                        if (staySuggestList == null || staySuggestList.size() == 0)
+                        if (mIsResearch == false && (staySuggestList == null || staySuggestList.size() == 0))
                         {
                             if (mGourmetKeywordList != null && mGourmetKeywordList.size() > 0 && mGourmetKeywordList.contains(keyword))
                             {
@@ -659,7 +662,7 @@ public class SearchStaySuggestPresenter //
 
     Observable getStayOutboundSuggestList(String keyword)
     {
-        return mSuggestRemoteImpl.getRegionSuggestsByStayOutbound(keyword).observeOn(Schedulers.io());
+        return mSuggestRemoteImpl.getSuggestsByStayOutbound(keyword).observeOn(Schedulers.io());
     }
 
     @Override
@@ -840,6 +843,7 @@ public class SearchStaySuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.HOTEL.name());
 
         setResult(Activity.RESULT_OK, intent);
         finish();
@@ -850,6 +854,7 @@ public class SearchStaySuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.HOTEL.name());
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, intent);
         finish();
@@ -860,6 +865,7 @@ public class SearchStaySuggestPresenter //
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_ORIGIN_SERVICE_TYPE, Constants.ServiceType.HOTEL.name());
 
         setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND, intent);
         finish();
@@ -1147,20 +1153,29 @@ public class SearchStaySuggestPresenter //
                                     }));
                             } else
                             {
-                                StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, itemLocation.address);
-                                stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
-                                stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
-                                stayOutboundSuggest.latitude = itemLocation.latitude;
-                                stayOutboundSuggest.longitude = itemLocation.longitude;
-                                stayOutboundSuggest.country = address.country;
-                                stayOutboundSuggest.city = address.shortAddress;
+                                if (mIsResearch == false)
+                                {
+                                    StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, itemLocation.address);
+                                    stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
+                                    stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
+                                    stayOutboundSuggest.latitude = itemLocation.latitude;
+                                    stayOutboundSuggest.longitude = itemLocation.longitude;
+                                    stayOutboundSuggest.country = address.country;
+                                    stayOutboundSuggest.city = address.shortAddress;
 
-                                unLockAll();
+                                    unLockAll();
 
-                                getViewInterface().setSuggest(itemLocation.address);
-                                startFinishAction(stayOutboundSuggest, mKeyword);
+                                    getViewInterface().setSuggest(itemLocation.address);
+                                    startFinishAction(stayOutboundSuggest, mKeyword);
+                                } else
+                                {
+                                    // 재검색 시 에는 스위치 하지 않음
+                                    unLockAll();
+
+                                    getViewInterface().setSuggest(itemLocation.address);
+                                    startFinishAction(mLocationSuggest, mKeyword);
+                                }
                             }
-
                         }
                     }, new Consumer<Throwable>()
                     {
