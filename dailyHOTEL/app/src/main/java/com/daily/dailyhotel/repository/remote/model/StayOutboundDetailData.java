@@ -59,6 +59,12 @@ public class StayOutboundDetailData
     @JsonField(name = "wishCount")
     public int wishCount;
 
+    @JsonField(name = "couponDiscount")
+    public int couponDiscount;
+
+    @JsonField(name = "vendorTypes")
+    public List<String> vendorTypes;
+
     public StayOutboundDetailData()
     {
 
@@ -83,6 +89,19 @@ public class StayOutboundDetailData
         stayOutboundDetail.longitude = longitude;
         stayOutboundDetail.myWish = myWish;
         stayOutboundDetail.wishCount = wishCount;
+        stayOutboundDetail.couponPrice = couponDiscount;
+
+        if (vendorTypes != null)
+        {
+            int size = vendorTypes.size();
+
+            stayOutboundDetail.vendorTypes = new String[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                stayOutboundDetail.vendorTypes[i] = vendorTypes.get(i);
+            }
+        }
 
         LinkedHashMap<String, List<String>> detailsMap = new LinkedHashMap<>();
 

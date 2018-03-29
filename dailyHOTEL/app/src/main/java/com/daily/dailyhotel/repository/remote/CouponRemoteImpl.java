@@ -19,7 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
@@ -177,21 +179,8 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
         final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/payment/coupons"//
             : "MjAkNzMkMzEkODAkMjUkODUkOTAkOSQxMyQ5NSQyMSQ3NyQ4MyQ4JDg3JDI2JA==$MTE1OUU4VNEDFBMNEJENzAB3MMSjVFVNEJEOEPJEQ0Q1N0Y4N0RDOTVFQUIzN0NGQTM2M0M3MzZDOTdIGYNkQMxNAJzZDRNjIzXQQI==$";
 
-        JSONObject jsonObject = new JSONObject();
-
-        try
-        {
-            jsonObject.put("arrivalDate", checkInDate);
-            jsonObject.put("departureDate", checkOutDate);
-            jsonObject.put("outboundHotelId", Integer.toString(stayIndex));
-            jsonObject.put("rateCode", rateCode);
-            jsonObject.put("rateKey", rateKey);
-            jsonObject.put("roomTypeCode", roomTypeCode);
-            jsonObject.put("vendorType", vendorType);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        JSONObject jsonObject = getStayOutboundCouponListJsonObjectByPayment(checkInDate, checkOutDate//
+            , stayIndex, rateCode, rateKey, roomTypeCode, vendorType);
 
         return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
@@ -220,6 +209,100 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                     return coupons;
                 }
             }).subscribeOn(Schedulers.io());
+    }
+
+    private JSONObject getStayOutboundCouponListJsonObjectByPayment(String checkInDate, String checkOutDate//
+        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("arrivalDate", checkInDate);
+            jsonObject.put("departureDate", checkOutDate);
+            jsonObject.put("outboundHotelId", Integer.toString(stayIndex));
+            jsonObject.put("rateCode", rateCode);
+            jsonObject.put("rateKey", rateKey);
+            jsonObject.put("roomTypeCode", roomTypeCode);
+            jsonObject.put("vendorType", vendorType);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return jsonObject;
+    }
+
+    @Override
+    public Observable<Coupons> getStayOutboundCouponListByDetail(String checkInDate, String checkOutDate//
+        , int stayIndex, String[] vendorTypes)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/hotels/{stayIndex}/coupons"//
+            : "MTgkMTA4JDM2JDM4JDEzMSQzMCQ1NyQ5NyQxMTgkMTI3JDQ3JDI5JDUzJDgzJDExNCQxMDQk$QzVGNENBMEUyQzhDNjQJFNDQ3NTUwYNGjhEMTMDyCNkY4MTUR4NkUEwNjgwMTUYyM0I1QzQwNjUwRDcxOTEE5MTg2Q0Q5MUI1RTlDYRUMJFMENCRjQzROUQN5NEJMFQkJDQ0YJyRDM2REVHF$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        JSONObject jsonObject = getStayOutboundCouponListJsonObjectByDetail(checkInDate, checkOutDate, stayIndex, vendorTypes);
+
+        return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
+            {
+                @Override
+                public Coupons apply(BaseDto<CouponsData> couponsDataBaseDto) throws Exception
+                {
+                    Coupons coupons;
+
+                    if (couponsDataBaseDto != null)
+                    {
+                        if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
+                        {
+                            CouponsData couponsData = couponsDataBaseDto.data;
+
+                            coupons = couponsData == null || couponsData.getCoupons() == null ? new Coupons() : couponsData.getCoupons();
+                        } else
+                        {
+                            throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return coupons;
+                }
+            }).subscribeOn(Schedulers.io());
+    }
+
+    private JSONObject getStayOutboundCouponListJsonObjectByDetail(String checkInDate, String checkOutDate//
+        , int stayIndex, String[] vendorTypes)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("arrivalDate", checkInDate);
+            jsonObject.put("departureDate", checkOutDate);
+            jsonObject.put("outboundHotelId", Integer.toString(stayIndex));
+
+            JSONArray jsonArray = new JSONArray();
+            if (vendorTypes != null)
+            {
+                for (String vendorType : vendorTypes)
+                {
+                    jsonArray.put(vendorType);
+                }
+            }
+
+            jsonObject.put("vendorType", jsonArray);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return jsonObject;
     }
 
     @Override

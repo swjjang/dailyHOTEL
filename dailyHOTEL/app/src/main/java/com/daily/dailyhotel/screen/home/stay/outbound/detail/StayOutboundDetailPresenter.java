@@ -54,6 +54,7 @@ import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityListActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.coupon.SelectStayOutboundCouponDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
@@ -611,6 +612,17 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
 
                     mAnalytics.onEventWishClick(getActivity(), mStayOutboundDetail.index, isWish);
+                }
+                break;
+
+            case StayOutboundDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onDownloadCouponClick();
+
+                    setRefresh(true);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
         }
@@ -1391,6 +1403,63 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_daily_reward)//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), StayOutboundDetailActivity.REQUEST_CODE_WEB);
+    }
+
+    @Override
+    public void onDownloadCouponClick()
+    {
+        if (mStayOutboundDetail == null || lock())
+        {
+            return;
+        }
+
+//        mAnalytics.onEventDownloadCoupon(getActivity(), mStayOutboundDetail.name);
+
+        if (DailyHotel.isLogin() == false)
+        {
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_detail_please_login), //
+                getString(R.string.dialog_btn_login_for_benefit), getString(R.string.dialog_btn_text_close), //
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
+                        startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON);
+
+//                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), true);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+//                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+//                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
+                    }
+                }, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        unLockAll();
+                    }
+                }, true);
+        } else
+        {
+            Intent intent = SelectStayOutboundCouponDialogActivity.newInstance(getActivity()//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayIndex, mStayName, mStayOutboundDetail.vendorTypes);
+
+            startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

@@ -139,6 +139,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         void onRewardClick();
 
         void onRewardGuideClick();
+
+        void onDownloadCouponClick();
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -1336,6 +1338,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         {
             titleInformationView.setCouponVisible(true);
             titleInformationView.setCouponPriceText(getString(R.string.label_download_coupon_price, DailyTextUtils.getPriceFormat(getContext(), couponPrice, false)));
+            titleInformationView.setOnCouponClickListener(v -> getEventListener().onDownloadCouponClick());
         } else
         {
             titleInformationView.setCouponVisible(false);
