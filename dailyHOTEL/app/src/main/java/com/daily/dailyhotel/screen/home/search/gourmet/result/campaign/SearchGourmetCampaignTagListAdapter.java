@@ -294,8 +294,7 @@ public class SearchGourmetCampaignTagListAdapter extends RecyclerView.Adapter<Re
                 });
             }
 
-            cardView.setOnWishClickListener(v ->
-            {
+            cardView.setOnWishClickListener(v -> {
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(cardView);

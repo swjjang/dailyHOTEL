@@ -313,8 +313,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
 
-            stayOutboundCardView.setOnWishClickListener(v ->
-            {
+            stayOutboundCardView.setOnWishClickListener(v -> {
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(stayOutboundCardView);

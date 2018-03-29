@@ -1010,20 +1010,17 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                     }
                 });
             }
-        }.doOnComplete(() ->
-        {
+        }.doOnComplete(() -> {
             if (locationAnimationDisposable != null)
             {
                 locationAnimationDisposable.dispose();
             }
-        }).doOnDispose(() ->
-        {
+        }).doOnDispose(() -> {
             if (locationAnimationDisposable != null)
             {
                 locationAnimationDisposable.dispose();
             }
-        }).doOnError(throwable ->
-        {
+        }).doOnError(throwable -> {
             unLockAll();
 
             if (locationAnimationDisposable != null)

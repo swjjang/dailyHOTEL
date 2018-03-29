@@ -381,6 +381,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             String longUrl = mEventUrl;
 
+            if (DailyTextUtils.isTextEmpty(mEventDescription) == false)
+            {
+                mEventDescription = mEventDescription.replace("\n" + longUrl, "");
+            }
+
             String message = getString(R.string.message_detail_event_share_sms, mEventName, mEventDescription);
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
             {

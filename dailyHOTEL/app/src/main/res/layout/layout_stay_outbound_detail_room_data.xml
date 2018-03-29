@@ -145,7 +145,7 @@
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/rewardTextView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:drawablePadding="3dp"
@@ -156,8 +156,35 @@
                 android:visibility="gone"
                 app:drawableCompatLeft="@drawable/vector_r_ic_xs_14"
                 app:layout_constraintLeft_toLeftOf="@id/roomTypeTextView"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nrdTextView"/>
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/dotImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/rewardTextView"
+                app:layout_constraintLeft_toRightOf="@+id/rewardTextView"
+                app:layout_constraintTop_toTopOf="@+id/rewardTextView"
+                app:srcCompat="@drawable/info_ic_text_dot_grey"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/couponTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="3dp"
+                android:drawablePadding="3dp"
+                android:gravity="bottom"
+                android:text="@string/label_can_use_coupon"
+                android:textColor="@color/default_text_cf6675e"
+                android:textSize="12dp"
+                android:visibility="gone"
+                app:drawableCompatLeft="@drawable/vector_ic_coupon_available"
+                app:layout_constraintLeft_toRightOf="@+id/dotImageView"
+                app:layout_constraintTop_toBottomOf="@+id/nrdTextView"
+                app:layout_goneMarginLeft="0dp"/>
         </android.support.constraint.ConstraintLayout>
 
         <View

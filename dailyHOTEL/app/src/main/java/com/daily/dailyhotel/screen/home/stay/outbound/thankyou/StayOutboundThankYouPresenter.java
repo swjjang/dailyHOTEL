@@ -152,22 +152,20 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
         try
         {
-            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mCheckInTime.split(":")[0]);
             String checkInDate = mStayBookDateTime.getCheckInDateTime(DATE_FORMAT);
 
-            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + mCheckInTime);
             checkInDateSpannableString.setSpan( //
                 new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
-                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
+                checkInDate.length(), checkInDate.length() + mCheckInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mCheckOutTime.split(":")[0]);
             String checkOutDate = mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT);
 
-            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + mCheckOutTime);
             checkOutDateSpannableString.setSpan( //
                 new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
-                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
+                checkOutDate.length(), checkOutDate.length() + mCheckOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);

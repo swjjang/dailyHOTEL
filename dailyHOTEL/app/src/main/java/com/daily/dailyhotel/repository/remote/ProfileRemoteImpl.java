@@ -38,8 +38,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
             : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
 
         return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(API)) //
-            .subscribeOn(Schedulers.io()).map((userDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((userDataBaseDto) -> {
                 User user;
 
                 if (userDataBaseDto != null)
@@ -66,8 +65,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
             : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
 
-        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((userBenefitDataBaseDto) ->
-        {
+        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((userBenefitDataBaseDto) -> {
             UserBenefit userBenefit;
 
             if (userBenefitDataBaseDto != null)
@@ -95,8 +93,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
             : "MjkkMzQkNzMkNzAkNDEkNzMkMTIkNjMkNDUkOTAkMzYkODIkOTkkNDMkMTAkMTYk$MDE0NTQ0OTYZFVRkZM1OTMyQzgxRDY0MPTM1QSVjlCNDcRMzNAEVBM0Q5QjcyRjY0NUFJCNjRFQ0U0ONNTFVDEMUE1RUMwOLTBCNQ=Z=$";
 
         return mDailyMobileService.getUserSimpleInformation(Crypto.getUrlDecoderEx(API)) //
-            .subscribeOn(Schedulers.io()).map(userInformationDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(userInformationDataBaseDto -> {
                 UserSimpleInformation userSimpleInformation;
 
                 if (userInformationDataBaseDto != null)
@@ -124,8 +121,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
             : "MzkkMzEkNTIkNjUkNDckMzUkOTAkMTIkODEkNDEkNDEkNDckOTYkMTckNjEkMTAk$MjAxNkUyMTYk5QRDMzXQjk4RkYwOTRCMzMYwRkLRGMjHKlWBQPTdDMXDkxQkTNQBNzAzMDEyMjQgwMjg0M0VCMUNU2Qzk3OTNCOWQw==$";
 
         return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)) //
-            .subscribeOn(Schedulers.io()).map((BaseDto<UserTrackingData> userTrackingDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((BaseDto<UserTrackingData> userTrackingDataBaseDto) -> {
                 UserTracking userTracking;
 
                 if (userTrackingDataBaseDto != null)

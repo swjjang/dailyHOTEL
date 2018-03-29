@@ -770,19 +770,27 @@ public class StayBookingCancelDetailPresenter //
             return;
         }
 
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+        final String TIME_FORMAT = "HH:mm";
+
         try
         {
-            String checkInDateFormat = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
-            SpannableString checkInSpannableString = new SpannableString(checkInDateFormat);
-            checkInSpannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkInDateFormat.length() - 3, checkInDateFormat.length(),//
+            String checkInTime = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, TIME_FORMAT);
+            String checkInDateString = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
+
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDateString + " " + checkInTime);
+            checkInDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                checkInDateString.length(), checkInDateString.length() + checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+            String checkOutTime = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, TIME_FORMAT);
+            String checkOutDateString = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
 
-            String checkOutDateFormat = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
-            SpannableString checkOutSpannableString = new SpannableString(checkOutDateFormat);
-            checkOutSpannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDateString + " " + checkOutTime);
+            checkOutDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                checkOutDateString.length(), checkOutDateString.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             // 날짜로 계산한다. 서버에 체크인시간, 체크아웃시간이 잘못 기록되어있는 경우 발생해서 예외 처리 추가
@@ -794,7 +802,7 @@ public class StayBookingCancelDetailPresenter //
 
             int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
 
-            getViewInterface().setBookingDate(checkInSpannableString, checkOutSpannableString, nights);
+            getViewInterface().setBookingDate(checkInDateSpannableString, checkOutDateSpannableString, nights);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -893,20 +901,17 @@ public class StayBookingCancelDetailPresenter //
                     }
                 });
             }
-        }.doOnComplete(() ->
-        {
+        }.doOnComplete(() -> {
             if (locationAnimationDisposable != null)
             {
                 locationAnimationDisposable.dispose();
             }
-        }).doOnDispose(() ->
-        {
+        }).doOnDispose(() -> {
             if (locationAnimationDisposable != null)
             {
                 locationAnimationDisposable.dispose();
             }
-        }).doOnError(throwable ->
-        {
+        }).doOnError(throwable -> {
             unLockAll();
 
             if (locationAnimationDisposable != null)

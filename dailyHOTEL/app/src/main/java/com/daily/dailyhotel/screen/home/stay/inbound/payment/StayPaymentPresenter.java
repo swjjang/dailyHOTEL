@@ -444,8 +444,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     }
                 }
 
-                selectEasyCard(cardList ->
-                {
+                selectEasyCard(cardList -> {
                     unLockAll();
 
                     if (cardList.size() > 0)
@@ -474,8 +473,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     case Constants.CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
                         if (requestCode == StayPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT)
                         {
-                            selectEasyCard(cardList ->
-                            {
+                            selectEasyCard(cardList -> {
                                 unLockAll();
 
                                 if (cardList.size() > 0)
@@ -494,8 +492,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             });
                         } else
                         {
-                            selectEasyCard(cardList ->
-                            {
+                            selectEasyCard(cardList -> {
                                 unLockAll();
 
                                 if (cardList.size() > 0)
@@ -1318,8 +1315,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         {
                             startThankYou(paymentResult.aggregationId, false);
                         }
-                    }, throwable ->
-                    {
+                    }, throwable -> {
                         unLockAll();
 
                         if (throwable instanceof BaseException)
@@ -2482,8 +2478,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         if (resultCode == Activity.RESULT_OK)
         {
-            Observable.just(result).map(jsonString ->
-            {
+            Observable.just(result).map(jsonString -> {
                 PaymentResult paymentResult = new PaymentResult();
 
                 JSONObject jsonObject = new JSONObject(jsonString);
@@ -2541,8 +2536,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         }
                     }
                 }
-            }, throwable ->
-            {
+            }, throwable -> {
                 unLockAll();
 
                 if (throwable instanceof BaseException)

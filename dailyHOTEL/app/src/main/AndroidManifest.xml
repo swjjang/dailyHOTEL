@@ -864,7 +864,14 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound.SelectStayOutboundCouponDialogActivity"
+            android:name="com.daily.dailyhotel.screen.home.stay.outbound.payment.coupon.SelectStayOutboundCouponDialogActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.stay.outbound.detail.coupon.SelectStayOutboundCouponDialogActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

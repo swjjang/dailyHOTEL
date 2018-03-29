@@ -157,8 +157,7 @@ public abstract class BaseFragmentExceptionPresenter<T1 extends BaseFragment, T2
 
     private void onHandleAuthorizedError()
     {
-        addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object ->
-        {
+        addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object -> {
             new FacebookRemoteImpl().logOut();
             new KakaoRemoteImpl().logOut();
 

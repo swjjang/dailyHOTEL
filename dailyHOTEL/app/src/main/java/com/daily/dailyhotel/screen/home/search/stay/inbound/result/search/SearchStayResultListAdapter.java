@@ -302,8 +302,7 @@ public class SearchStayResultListAdapter extends RecyclerView.Adapter<RecyclerVi
                 });
             }
 
-            cardView.setOnWishClickListener(v ->
-            {
+            cardView.setOnWishClickListener(v -> {
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(cardView);

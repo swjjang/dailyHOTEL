@@ -43,8 +43,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
             : "MzMkMjkkNDIkNzIkODIkNjEkNzMkNTQkMCQ2MCQ4OSQxMCQxNSQyMSQ1OSQ5MSQ=$JRDI2RUU4MCURFMYkJDN0YE3ODU4MTUyMYjIyNSzQwN0M1TRkY2MThDMTYPIyRkIL5M0GE0NkVGODc2QOOUFDOTQ0MEDEQV2MUUwRQ==$";
 
         return mDailyMobileService.getHomeWishList(Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 List<RecentlyPlace> recentlyPlaceList;
 
                 if (baseDto != null)
@@ -72,8 +71,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
             : "NjUkMjckNDAkNjUkNjckMzEkMyQ0OSQ4NCQ2MiQ1MiQ5MiQ4MSQ5NSQzNCQ0NyQ=$QTdCEMEQ3MENFNkVBNDhBRDVBNjUOzQjBgL0QTJGQTFFFREGI1NTEVVFQ0U5NjA2MUkZCMzhHEUNOTIyMUYI3RkQ3FQTU2MZTCIwRA==$";
 
         return mDailyMobileService.getStayWishList(Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 List<Stay> stayList = new ArrayList<>();
 
                 if (baseDto != null)
@@ -114,8 +112,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
         urlParams.put("{stayIndex}", Integer.toString(wishIndex));
 
         return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -141,8 +138,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
         urlParams.put("{stayIndex}", Integer.toString(wishIndex));
 
         return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -216,8 +212,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
         urlParams.put("{stayIndex}", Integer.toString(wishIndex));
 
         return mDailyMobileService.addStayOutboundWish(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -245,8 +240,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
         urlParams.put("{stayIndex}", Integer.toString(wishIndex));
 
         return mDailyMobileService.removeStayOutboundWish(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -273,8 +267,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
             : "MzgkMTUkMzIkMTgkNDAkNDEkMzMkMjkkNDMkMTQkMjIkMTkkNDUkNTAkMjgkMzIk$NTBFODQwNDgzNTPAWzNFF0IWxQUIL2OEMER4NzBCWCMjMyNIALIkOEVCNDU=$";
 
         return mDailyMobileService.getWishCount(Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishCount wishCount;
 
                 if (baseDto != null)
@@ -308,8 +301,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
             : "MzUkODMkMjgkMjAkMjUkODMkNDIkODckNTMkMjckMjckMTMkNiQ0OCQ0MSQxNiQ=$NDRBMDFlCQzZBOSDXQ5MDlDKMEY2FMSUUJDRRDRGMjFNDFOTNcJyQjM1QjM4NQjI1RTc1NEM2NzZEQUVDQTdBRjBGNkUOwMLDMI1OQ==$";
 
         return mDailyMobileService.getStayOutboundWishCount(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 int wishCount;
 
                 if (baseDto != null)

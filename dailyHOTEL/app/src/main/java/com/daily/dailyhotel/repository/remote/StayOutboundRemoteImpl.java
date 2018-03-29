@@ -245,8 +245,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         urlParams.put("{hotelId}", Integer.toString(index));
 
         return mDailyMobileService.getStayOutboundDetailInformation(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
-            , jsonObject).subscribeOn(Schedulers.io()).map((stayOutboundDetailDataBaseDto) ->
-        {
+            , jsonObject).subscribeOn(Schedulers.io()).map((stayOutboundDetailDataBaseDto) -> {
             StayOutboundDetail stayOutboundDetail;
 
             if (stayOutboundDetailDataBaseDto != null)
@@ -394,8 +393,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         urlParams.put("{stayIndex}", Integer.toString(wishIndex));
 
         return mDailyMobileService.addStayOutboundWish(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -423,8 +421,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         urlParams.put("{stayIndex}", Integer.toString(wishIndex));
 
         return mDailyMobileService.removeStayOutboundWish(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)

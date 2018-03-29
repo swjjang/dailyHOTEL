@@ -231,8 +231,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 }
             });
 
-            stayCardView.setOnWishClickListener(v ->
-            {
+            stayCardView.setOnWishClickListener(v -> {
                 if (mListener != null)
                 {
                     mListener.onWishClick(stayCardView);
@@ -298,8 +297,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 }
             });
 
-            stayOutboundCardView.setOnWishClickListener(v ->
-            {
+            stayOutboundCardView.setOnWishClickListener(v -> {
                 if (mListener != null)
                 {
                     mListener.onWishClick(stayOutboundCardView);

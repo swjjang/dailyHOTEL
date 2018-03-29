@@ -22,6 +22,7 @@ public class StayOutboundDetail extends Configurations
     public int rewardStickerCount;
     public boolean myWish;
     public int wishCount;
+    public String[] vendorTypes;
 
     LinkedHashMap<String, List<String>> mInformationMap;
     List<DetailImageInformation> mImageList;

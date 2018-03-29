@@ -433,8 +433,7 @@ public class HomeLayout extends BaseBlurLayout
 
         homeMessageLayout.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onMessageTextAreaClick());
 
-        closeView.setOnClickListener(v ->
-        {
+        closeView.setOnClickListener(v -> {
             startTextLayoutCloseAnimation();
 
             ((OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
@@ -654,8 +653,7 @@ public class HomeLayout extends BaseBlurLayout
         final DailyTextView providerButtonView = mProviderLayout.findViewById(R.id.providerInfoButtonView);
         providerButtonView.setDrawableVectorTint(R.color.default_text_cababab);
         providerButtonView.setSelected(false);
-        providerButtonView.setOnClickListener(v ->
-        {
+        providerButtonView.setOnClickListener(v -> {
             boolean isSelected = !providerButtonView.isSelected();
             providerButtonView.setSelected(isSelected);
 
@@ -1195,8 +1193,7 @@ public class HomeLayout extends BaseBlurLayout
         final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
         valueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         valueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        valueAnimator.addUpdateListener(animation ->
-        {
+        valueAnimator.addUpdateListener(animation -> {
             int value = (int) animation.getAnimatedValue();
             ViewGroup.LayoutParams params = view.getLayoutParams();
             params.height = value;
@@ -1253,8 +1250,7 @@ public class HomeLayout extends BaseBlurLayout
         final ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
         closeValueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        closeValueAnimator.addUpdateListener(animation ->
-        {
+        closeValueAnimator.addUpdateListener(animation -> {
             int value = (int) animation.getAnimatedValue();
             ViewGroup.LayoutParams params = view.getLayoutParams();
             params.height = value;
@@ -1531,8 +1527,7 @@ public class HomeLayout extends BaseBlurLayout
     {
         if (mDailyHomeScrollView != null && mDailyHomeScrollView.getChildCount() != 0)
         {
-            mDailyHomeScrollView.postDelayed(() ->
-            {
+            mDailyHomeScrollView.postDelayed(() -> {
                 // 간헐적으로 2번 해줘야 동작하는 경우로 인하여 2번 처리
                 mDailyHomeScrollView.fullScroll(View.FOCUS_DOWN);
                 mDailyHomeScrollView.scrollBy(0, 10000);

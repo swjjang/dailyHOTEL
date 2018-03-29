@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.gourmet.filter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -37,44 +36,44 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     protected boolean mIsChanged;
 
-//    /**
-//     * @param context
-//     * @param todayDateTime
-//     * @param gourmetBookingDay
-//     * @param screen
-//     * @param isSelected
-//     * @param isAnimation
-//     * @return
-//     */
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
-//        , GourmetBookingDay gourmetBookingDay, int dayOfMaxCount, String screen //
-//        , boolean isSelected, boolean isAnimation)
-//    {
-//        Intent intent = new Intent(context, GourmetCalendarActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-//        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-//        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
-//        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
-//        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
-//
-//        return intent;
-//    }
-//
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
-//        , String visitDate, int dayOfMaxCount, String screen //
-//        , boolean isSelected, boolean isAnimation)
-//    {
-//        Intent intent = new Intent(context, GourmetCalendarActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
-//        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
-//        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
-//        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
-//        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
-//
-//        return intent;
-//    }
+    //    /**
+    //     * @param context
+    //     * @param todayDateTime
+    //     * @param gourmetBookingDay
+    //     * @param screen
+    //     * @param isSelected
+    //     * @param isAnimation
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+    //        , GourmetBookingDay gourmetBookingDay, int dayOfMaxCount, String screen //
+    //        , boolean isSelected, boolean isAnimation)
+    //    {
+    //        Intent intent = new Intent(context, GourmetCalendarActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+    //        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+    //        , String visitDate, int dayOfMaxCount, String screen //
+    //        , boolean isSelected, boolean isAnimation)
+    //    {
+    //        Intent intent = new Intent(context, GourmetCalendarActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+    //        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+    //        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

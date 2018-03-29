@@ -95,19 +95,19 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             return;
         }
 
-        SaleRoomInformationViewHolder saleRoomInformationViewHolder = (SaleRoomInformationViewHolder) holder;
+        LayoutStayOutboundDetailRoomDataBinding dataBinding = ((SaleRoomInformationViewHolder) holder).dataBinding;
 
-        saleRoomInformationViewHolder.dataBinding.getRoot().setTag(position);
+        dataBinding.getRoot().setTag(position);
 
         if (mSelectedPosition == position)
         {
-            saleRoomInformationViewHolder.dataBinding.getRoot().setSelected(true);
+            dataBinding.getRoot().setSelected(true);
         } else
         {
-            saleRoomInformationViewHolder.dataBinding.getRoot().setSelected(false);
+            dataBinding.getRoot().setSelected(false);
         }
 
-        saleRoomInformationViewHolder.dataBinding.roomTypeTextView.setText(stayOutboundRoom.roomName);
+        dataBinding.roomTypeTextView.setText(stayOutboundRoom.roomName);
 
         String price, discountPrice;
 
@@ -145,16 +145,16 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
 
         if (DailyTextUtils.isTextEmpty(price) == true)
         {
-            saleRoomInformationViewHolder.dataBinding.priceTextView.setVisibility(View.GONE);
-            saleRoomInformationViewHolder.dataBinding.priceTextView.setText(null);
+            dataBinding.priceTextView.setVisibility(View.GONE);
+            dataBinding.priceTextView.setText(null);
         } else
         {
-            saleRoomInformationViewHolder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.dataBinding.priceTextView.setPaintFlags(saleRoomInformationViewHolder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            saleRoomInformationViewHolder.dataBinding.priceTextView.setText(price);
+            dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            dataBinding.priceTextView.setPaintFlags(dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            dataBinding.priceTextView.setText(price);
         }
 
-        saleRoomInformationViewHolder.dataBinding.discountPriceTextView.setText(discountPrice);
+        dataBinding.discountPriceTextView.setText(discountPrice);
 
         String personOption;
 
@@ -173,49 +173,66 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
 
         if (DailyTextUtils.isTextEmpty(personOption) == true)
         {
-            saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.GONE);
+            dataBinding.optionTextView.setVisibility(View.GONE);
         } else
         {
-            saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.dataBinding.optionTextView.setText(personOption);
+            dataBinding.optionTextView.setVisibility(View.VISIBLE);
+            dataBinding.optionTextView.setText(personOption);
         }
 
         if (DailyTextUtils.isTextEmpty(stayOutboundRoom.valueAddName) == true)
         {
-            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.GONE);
+            dataBinding.amenitiesTextView.setVisibility(View.GONE);
         } else
         {
-            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setText(stayOutboundRoom.valueAddName);
+            dataBinding.amenitiesTextView.setVisibility(View.VISIBLE);
+            dataBinding.amenitiesTextView.setText(stayOutboundRoom.valueAddName);
         }
 
         if (stayOutboundRoom.promotion == true && DailyTextUtils.isTextEmpty(stayOutboundRoom.promotionDescription) == false)
         {
-            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.dataBinding.benefitTextView.setText(stayOutboundRoom.promotionDescription);
+            dataBinding.benefitTextView.setVisibility(View.VISIBLE);
+            dataBinding.benefitTextView.setText(stayOutboundRoom.promotionDescription);
         } else
         {
-            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.GONE);
+            dataBinding.benefitTextView.setVisibility(View.GONE);
         }
 
-        if (stayOutboundRoom.nonRefundable == false || DailyTextUtils.isTextEmpty(stayOutboundRoom.nonRefundableDescription) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundRoom.nonRefundableDescription) == false)
         {
-            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.GONE);
+            dataBinding.nrdTextView.setVisibility(View.VISIBLE);
+            dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
         } else
         {
-            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
+            dataBinding.nrdTextView.setVisibility(View.GONE);
         }
 
-        saleRoomInformationViewHolder.dataBinding.rewardTextView.setVisibility((mRewardEnabled && stayOutboundRoom.provideRewardSticker) ? View.VISIBLE : View.GONE);
+        dataBinding.rewardTextView.setVisibility((mRewardEnabled && stayOutboundRoom.provideRewardSticker) ? View.VISIBLE : View.GONE);
 
-        // 마지막 목록에는 하단에 10dp여유를 준다.
+        if (stayOutboundRoom.hasCoupon)
+        {
+            if (dataBinding.rewardTextView.getVisibility() == View.VISIBLE)
+            {
+                dataBinding.dotImageView.setVisibility(View.VISIBLE);
+            } else
+            {
+                dataBinding.dotImageView.setVisibility(View.GONE);
+            }
+
+            dataBinding.couponTextView.setVisibility(View.VISIBLE);
+        } else
+        {
+            dataBinding.dotImageView.setVisibility(View.GONE);
+            dataBinding.couponTextView.setVisibility(View.GONE);
+        }
+
+        // 마지막 목록에는 하단에 10dp 여유를 준다.
         if (position == getItemCount() - 1)
         {
-            saleRoomInformationViewHolder.dataBinding.getRoot().setPadding(0, 0, 0, ScreenUtils.dpToPx(mContext, 10));
+            dataBinding.getRoot().setPadding(0, 0, 0, ScreenUtils.dpToPx(mContext, 10));
         } else
         {
-            saleRoomInformationViewHolder.dataBinding.getRoot().setPadding(0, 0, 0, 0);
+            dataBinding.getRoot().setPadding(0, 0, 0, 0);
         }
     }
 

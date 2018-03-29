@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound;
+package com.daily.dailyhotel.screen.home.stay.outbound.payment.coupon;
 
 import android.content.Context;
 import android.content.DialogInterface;
