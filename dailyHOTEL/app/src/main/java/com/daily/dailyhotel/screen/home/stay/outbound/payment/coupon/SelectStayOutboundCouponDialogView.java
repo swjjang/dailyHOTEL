@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.payment.coupon;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,6 +36,7 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
         super(baseActivity, listener);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void setContentView(final ActivitySelectCouponDialogDataBinding viewDataBinding)
     {

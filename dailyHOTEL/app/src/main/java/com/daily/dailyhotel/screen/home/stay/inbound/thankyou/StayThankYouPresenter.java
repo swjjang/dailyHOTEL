@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.thankyou;
 
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -664,6 +665,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     void startGourmetDetail(View view, Gourmet gourmet, CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime)
     {

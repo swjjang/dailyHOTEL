@@ -87,8 +87,6 @@ public class EventWebAnalyticsImpl implements EventWebInterface.AnalyticsInterfa
             return;
         }
 
-        if ()
-
-        AnalyticsManager.getInstance(activity).recordDeepLink(externalDeepLink);
+        AnalyticsManager.getInstance(activity).recordDeepLink(dailyDeepLink);
     }
 }

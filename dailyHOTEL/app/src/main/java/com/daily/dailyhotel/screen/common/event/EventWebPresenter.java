@@ -251,7 +251,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    downloadCoupon(mCouponCode, mDeepLinkUrl);
+                    onDownloadCoupon(mCouponCode, mDeepLinkUrl, null);
                 }
                 break;
             }
@@ -610,6 +610,11 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
             String longUrl = mEventUrl;
 
+            if (DailyTextUtils.isTextEmpty(mEventDescription) == false)
+            {
+                mEventDescription = mEventDescription.replace("\n" + longUrl, "");
+            }
+
             String message = getString(R.string.message_detail_event_share_sms, mEventName, mEventDescription);
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
             {
@@ -748,7 +753,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     {
                         DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                        AnalyticsManager.getInstance(com.twoheart.dailyhotel.screen.event.EventWebActivity.this).recordDeepLink(externalDeepLink);
+                        mAnalytics.onRecordDeepLink(getActivity(), externalDeepLink);
 
                         if (externalDeepLink.isHotelDetailView() == true)
                         {
@@ -764,31 +769,31 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                             }
                         } else if (externalDeepLink.isStaySearchResultView() == true)
                         {
-                            if (moveDeepLinkStaySearchResult(com.twoheart.dailyhotel.screen.event.EventWebActivity.this, externalDeepLink) == true)
+                            if (moveDeepLinkStaySearchResult(getActivity(), externalDeepLink) == true)
                             {
                                 return;
                             }
                         } else if (externalDeepLink.isGourmetSearchResultView() == true)
                         {
-                            if (moveDeepLinkGourmetSearchResult(com.twoheart.dailyhotel.screen.event.EventWebActivity.this, externalDeepLink) == true)
+                            if (moveDeepLinkGourmetSearchResult(getActivity(), externalDeepLink) == true)
                             {
                                 return;
                             }
                         } else if (externalDeepLink.isCouponView() == true)
                         {
-                            if (moveDeepLinkCouponList(com.twoheart.dailyhotel.screen.event.EventWebActivity.this, externalDeepLink) == true)
+                            if (moveDeepLinkCouponList(getActivity(), externalDeepLink) == true)
                             {
                                 return;
                             }
                         } else if (externalDeepLink.isRegisterCouponView() == true)
                         {
-                            if (moveDeepLinkRegisterCoupon(com.twoheart.dailyhotel.screen.event.EventWebActivity.this, externalDeepLink) == true)
+                            if (moveDeepLinkRegisterCoupon(getActivity(), externalDeepLink) == true)
                             {
                                 return;
                             }
                         } else if (externalDeepLink.isRewardView() == true)
                         {
-                            if (moveDeepLinkReward(com.twoheart.dailyhotel.screen.event.EventWebActivity.this, externalDeepLink) == true)
+                            if (moveDeepLinkReward(getActivity(), externalDeepLink) == true)
                             {
                                 return;
                             }
