@@ -62,8 +62,7 @@ public class DailySearchToolbarView extends ConstraintLayout
             return;
         }
 
-        viewDataBinding.menuImageView.setOnClickListener(v ->
-        {
+        viewDataBinding.menuImageView.setOnClickListener(v -> {
             if (mToolbarListener == null)
             {
                 return;
@@ -72,8 +71,7 @@ public class DailySearchToolbarView extends ConstraintLayout
             mToolbarListener.onBackClick();
         });
 
-        viewDataBinding.titleBackgroundView.setOnClickListener(v ->
-        {
+        viewDataBinding.titleBackgroundView.setOnClickListener(v -> {
             if (mToolbarListener == null)
             {
                 return;

@@ -1330,8 +1330,7 @@ public class SearchStaySuggestPresenter //
                     }
                 });
             }
-        }.doOnError(throwable ->
-        {
+        }.doOnError(throwable -> {
             //            unLockAll();
             if (isUserClick == false)
             {

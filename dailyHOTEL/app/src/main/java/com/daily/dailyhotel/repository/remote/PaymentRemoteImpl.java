@@ -80,8 +80,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         urlParams.put("{stayIndex}", Integer.toString(index));
 
         return mDailyMobileService.getStayOutboundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(stayOutboundPaymentDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(stayOutboundPaymentDataBaseDto -> {
                 StayOutboundPayment stayOutboundPayment;
 
                 if (stayOutboundPaymentDataBaseDto != null)
@@ -119,8 +118,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             : "MTIkNDQkNTUkNTMkMzYkODQkODQkODQkMTQkNjQkOTUkNjckNTAkMTAwJDE2JDg3JA==$QTBENDRBMzY5VNUDLBEQUExNjlBMTc3ODE4QUQU0N0VENDZXBODNE5NTEM1ML0RGNTYREGRTQ0NzMwNkI5NEQwMPzQYLGwQjEzQKg=A=$";
 
         return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights) //
-            .subscribeOn(Schedulers.io()).map(stayPaymentDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(stayPaymentDataBaseDto -> {
                 StayPayment stayPayment;
 
                 if (stayPaymentDataBaseDto != null)
@@ -197,8 +195,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         }
 
         return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto -> {
                 GourmetPayment gourmetPayment;
 
                 if (gourmetPaymentDataBaseDto != null)
@@ -267,8 +264,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         urlParams.put("{hotelId}", Integer.toString(index));
 
         return mDailyMobileService.getStayOutboundPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto -> {
                 PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
@@ -302,8 +298,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         urlParams.put("{saleType}", saleType);
 
         return mDailyMobileService.getStayOutboundPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto -> {
                 PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
@@ -369,8 +364,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             : "NDQkNzMkNDUkNjAkMzEkMzkkNyQxNSQ0OSQ4OSQxJDM0JDIyJDM2JDc5JDgxJA==$OADFGREUJ1NkUwMjXExMTYZyQjk0MzMzQTgXPO1Q0ZDNTBBGM0VBZQSM0RDRUQwMDAwNDWk0QUEzNUIO2JRjQ1YMjM3M0VEXQ0I3RA==$";
 
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto -> {
                 PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
@@ -398,8 +392,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             : "MzgkNDUkMyQyOSQ2MiQyNCQxNiQ0OSQ0OSQxNCQxMSQ3NyQ2MSQyMCQ0MSQxMyQ=$RTAU0NEFCRjFRQDQQzgAzIOTE0NjAJxMDAxSMEU3NTRU4RUIM0RkE0KXDNjRDMThEEOTQxNzPdBN0VGRkJVCNTgyMzMyN0ZGQzYzOA==$";
 
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto -> {
                 PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
@@ -509,8 +502,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             : "MjAkMTgkMjAkNTMkNDAkMjUkODAkNjgkNTUkMCQzMyQ2NiQ3NCQ4JDU2JDgwJA==$NQzhCRDRIBNjhDMDFFOEEIFxHNkQNGOTA5OMTY2QjJBMNkMwMkU4M0FESQTKKAzNDI5MUjY2QTINPEQ0QJFQzUyQkAE2RUZBMzI5MA==$";
 
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto -> {
                 PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
@@ -550,8 +542,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             : "NTgkNDYkOTckNzIkMTI2JDQ4JDExOCQ3JDQxJDExNiQ0OSQxMDEkODAkNjgkMzEkMTA2JA==$QkJCQ0IG5QUM1QjQzQkM5MTg5RjVFQTJQ2NzkyNkE4RQkE2RkLRIUwNjhCNjM1NTGQ4RDYVFMjdDMkJU0NEzRDNjVCODQ4OUZBNjdEMDOcJN1MTA4MThCQjgwNWjdBMAEE1NjNCNkNI3ODBD$";
 
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject) //
-            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto -> {
                 PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)

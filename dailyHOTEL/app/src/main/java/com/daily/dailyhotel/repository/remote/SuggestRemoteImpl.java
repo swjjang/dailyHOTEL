@@ -39,8 +39,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
             : "MCQ1NSQ1MiQ4MSQ2NyQ0NiQ1OSQ1MCQ0MSQ1MyQ4OCQyNSQ1OCQ5JDUyJDE0JA==$XMDI3ODcwTOTMzTNEM4MDQzNzA5OQzA0MTM1NDNENkQwZREI0QOkQX0CQFzUNNxMzAlZEMDhENEE4LNjAxRTRDRUM5MzUAlEQjVEMA==$";
 
         return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
-            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) -> {
                 List<StayOutboundSuggest> list;
 
                 if (suggestsDataBaseDto != null)
@@ -70,8 +69,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
             : "NDEkMTQkNjUkNjckODEkMjAkMTMkNDMkNzMkNTEkMzkkMjMkNSQ1OCQ2NSQ4MSQ=$NDhERQjE0MDhCMUDBgyMjlPEAMDJGNkYzNTFFQ0MzBQjU4TQSTM1MTSA2RHDg5RTJQFRTkwNTYO3HOUMIDxNjQyNDc2QFTAxOTg2MQ==$";
 
         return mDailyMobileService.getPopularAreaSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) -> {
                 List<StayOutboundSuggest> list;
 
                 if (suggestsDataBaseDto != null)

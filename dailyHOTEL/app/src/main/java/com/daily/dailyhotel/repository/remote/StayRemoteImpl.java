@@ -45,8 +45,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     public Observable<Stays> getList(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
     {
         return mDailyMobileService.getStayList(getBaseUrl() + getListApiUrl(categoryType) + toStringQueryParams(queryMap, abTestType)) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 Stays stays;
 
                 if (baseDto != null)
@@ -74,8 +73,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
 
         return mDailyMobileService.getStayList(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 Stays stays;
 
                 if (baseDto != null)
@@ -100,8 +98,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     public Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
     {
         return mDailyMobileService.getStayListCountByFilter(getBaseUrl() + getListApiUrl(categoryType) + toStringQueryParams(queryMap, abTestType)) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 StayFilterCount stayFilterCount;
 
                 if (baseDto != null)
@@ -129,8 +126,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
 
         return mDailyMobileService.getStayListCountByFilter(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 StayFilterCount stayFilterCount;
 
                 if (baseDto != null)
@@ -182,8 +178,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 
         return mDailyMobileService.getStayDetail(Crypto.getUrlDecoderEx(API, urlParams) //
             , stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights()) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 StayDetail stayDetail;
 
                 if (baseDto != null)
@@ -231,8 +226,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 
         return mDailyMobileService.getStayHasCoupon(Crypto.getUrlDecoderEx(API, urlParams) //
             , stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights()) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 boolean hasCoupon = false;
 
                 if (baseDto != null)
@@ -257,8 +251,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -284,8 +277,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -311,8 +303,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.getReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 ReviewScores reviewScores;
 
                 if (baseDto != null)
@@ -343,8 +334,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 TrueReviews trueReviews;
 
                 if (baseDto != null)
@@ -375,8 +365,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseListDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseListDto -> {
                 List<TrueVR> trueVR = new ArrayList<>();
 
                 if (baseListDto != null)
@@ -409,8 +398,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                 : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
 
             return mDailyMobileService.getStayAreaList(Crypto.getUrlDecoderEx(API))//
-                .subscribeOn(Schedulers.io()).map(baseDto ->
-                {
+                .subscribeOn(Schedulers.io()).map(baseDto -> {
                     List<StayAreaGroup> areaGroupList;
 
                     if (baseDto != null)
@@ -438,8 +426,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             urlParams.put("{category}", categoryType.getCodeString(mContext));
 
             return mDailyMobileService.getStayCategoryAreaList(Crypto.getUrlDecoderEx(API, urlParams))//
-                .subscribeOn(Schedulers.io()).map(baseDto ->
-                {
+                .subscribeOn(Schedulers.io()).map(baseDto -> {
                     List<StayAreaGroup> areaGroupList;
 
                     if (baseDto != null)
@@ -478,8 +465,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         }
 
         return mDailyMobileService.getStaySubwayAreaList(Crypto.getUrlDecoderEx(API), category)//
-            .subscribeOn(Schedulers.io()).map(baseListDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseListDto -> {
                 LinkedHashMap<Area, List<StaySubwayAreaGroup>> subwayHashMap = new LinkedHashMap<>();
 
                 if (baseListDto != null)

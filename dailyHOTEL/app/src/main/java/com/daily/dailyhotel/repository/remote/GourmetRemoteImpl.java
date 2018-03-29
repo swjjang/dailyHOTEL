@@ -44,8 +44,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
 
         return mDailyMobileService.getGourmetList(Crypto.getUrlDecoderEx(URL), gourmetParams.toParamsMap() //
             , gourmetParams.getCategoryList(), gourmetParams.getTimeList(), gourmetParams.getLuxuryList()) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 List<Gourmet> gourmetList = new ArrayList<>();
 
                 if (baseDto != null)
@@ -73,8 +72,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
             : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
 
         return mDailyMobileService.getGourmetList(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 Gourmets gourmets;
 
                 if (baseDto != null)
@@ -102,8 +100,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
             : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
 
         return mDailyMobileService.getGourmetListCountByFilter(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 GourmetFilterCount filterCount;
 
                 if (baseDto != null)
@@ -134,8 +131,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.getGourmetDetail(Crypto.getUrlDecoderEx(API, urlParams), gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 GourmetDetail gourmetDetail;
 
                 if (baseDto != null)
@@ -182,8 +178,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.getGourmetHasCoupon(Crypto.getUrlDecoderEx(API, urlParams), gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 boolean hasCoupon = false;
 
                 if (baseDto != null)
@@ -208,8 +203,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -235,8 +229,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 WishResult wishResult = new WishResult();
 
                 if (baseDto != null)
@@ -262,8 +255,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.getReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 ReviewScores reviewScores;
 
                 if (baseDto != null)
@@ -294,8 +286,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
-            .subscribeOn(Schedulers.io()).map(baseDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 TrueReviews trueReviews;
 
                 if (baseDto != null)
@@ -326,8 +317,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io()).map(baseListDto ->
-            {
+            .subscribeOn(Schedulers.io()).map(baseListDto -> {
                 List<TrueVR> trueVR = new ArrayList<>();
 
                 if (baseListDto != null)

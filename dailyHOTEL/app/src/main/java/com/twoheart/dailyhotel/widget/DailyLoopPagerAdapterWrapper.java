@@ -135,9 +135,9 @@ public class DailyLoopPagerAdapterWrapper extends PagerAdapter
         }
     }
 
-	/*
+    /*
      * Delegate rest of methods directly to the inner adapter.
-	 */
+     */
 
     @Override
     public void finishUpdate(ViewGroup container)
@@ -175,9 +175,9 @@ public class DailyLoopPagerAdapterWrapper extends PagerAdapter
         mAdapter.setPrimaryItem(container, position, object);
     }
 
-	/*
+    /*
      * End delegation
-	 */
+     */
 
     /**
      * Container class for caching the boundary views

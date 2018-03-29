@@ -38,8 +38,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
             : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
 
         return mDailyMobileService.getCommonDateTime(Crypto.getUrlDecoderEx(API)) //
-            .subscribeOn(Schedulers.io()).map((commonDateTimeDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((commonDateTimeDataBaseDto) -> {
                 CommonDateTime commonDateTime;
 
                 if (commonDateTimeDataBaseDto != null)
@@ -86,8 +85,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
         }
 
         return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject) //
-            .subscribeOn(Schedulers.io()).map((shortUrlData) ->
-            {
+            .subscribeOn(Schedulers.io()).map((shortUrlData) -> {
                 String shortUrl;
 
                 if (shortUrlData != null && DailyTextUtils.isTextEmpty(shortUrlData.id) == false)
@@ -109,8 +107,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
             : "ODckNDIkMzUkNzYkMzAkNjEkOTAkNTgkNTIkODEkNDckOSQ2MiQzMiQ3NyQ2OSQ=$NjdCRTNCQBTczOUY4RTJGMzY5RDA2NEWTRCMTkX5NDA3NEOE1HRDNBNVjc3NzMAA1NkAQRyNTgwNjBWDNEY3REIXM1NkRCREQ4MVQ=K=$";
 
         return mDailyMobileService.updateNotification(Crypto.getUrlDecoderEx(API), agreed)//
-            .subscribeOn(Schedulers.io()).map((BaseDto<NotificationData> notificationDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((BaseDto<NotificationData> notificationDataBaseDto) -> {
                 Notification notification;
 
                 if (notificationDataBaseDto != null)
@@ -139,8 +136,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
             : "NzYkMTMkNDIkODQkNjQkMCQ5MyQzMiQyNSQ0NyQ3MyQ4MCQ5OSQ2JDEwMSQ3OSQ=$FREQ3QETU4QTIzMHTVGMjE5NjUPzMUVBRTVUzQkY2MTlCMIDAY5NkQ3MDA5RDlEMTBDNDSM5Q0BQyMzUJGIRDY3VMDBGOIDNDOA=FQT=$";
 
         return mDailyMobileService.getConfigurations(Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io()).map((configurationDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((configurationDataBaseDto) -> {
                 Configurations configuration;
 
                 if (configurationDataBaseDto != null)
@@ -168,8 +164,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
             : "NTYkNjgkMTkkNyQ4JDI4JDUyJDE4JDc5JDg1JDY0JDg0JDY5JDc5JDYxJDk0JA==$ODdCM0QIL5RDY2RTRFNQjlFGRDhBRATk5ODlCMkEyQjVBQjYxRjc2YQkRENzUEzTOVUExMAjZENzkD1NVDEE3RTNFBHQjNRCOUYyNA==$";
 
         return mDailyMobileService.getNoticeAgreementMessage(Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io()).map((baseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((baseDto) -> {
                 NoticeAgreementMessage noticeAgreementMessage;
 
                 if (baseDto != null)
@@ -198,8 +193,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
             : "NjgkOSQ4NSQ3NiQ3MCQ0NyQ1MCQzMiQ5NCQxNiQ5JDE3JDQxJDQ4JDk1JDUk$QTcxNVjkwRTOUEyOURMYBQTcyQzlBOTBCOUIS1OTg2VQ0JBREUI5NDTEwYRDA5M0RCNzAxMzM0ODIzXVNzc5NzRM3NjUxNEUODxMQQ==$";
 
         return mDailyMobileService.updateNoticeAgreement(Crypto.getUrlDecoderEx(API), agreed)//
-            .subscribeOn(Schedulers.io()).map((baseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((baseDto) -> {
                 NoticeAgreementResultMessage noticeAgreementResultMessage;
 
                 if (baseDto != null)

@@ -294,8 +294,7 @@ public class SearchGourmetResultListAdapter extends RecyclerView.Adapter<Recycle
                 });
             }
 
-            cardView.setOnWishClickListener(v ->
-            {
+            cardView.setOnWishClickListener(v -> {
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(cardView);

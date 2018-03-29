@@ -197,8 +197,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
                 });
             }
 
-            stayCardView.setOnWishClickListener(v ->
-            {
+            stayCardView.setOnWishClickListener(v -> {
                 if (mListener != null)
                 {
                     mListener.onItemRemoveClick(stayCardView);
@@ -252,8 +251,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
                 });
             }
 
-            stayOutboundCardView.setOnWishClickListener(v ->
-            {
+            stayOutboundCardView.setOnWishClickListener(v -> {
                 if (mListener != null)
                 {
                     mListener.onItemRemoveClick(stayOutboundCardView);

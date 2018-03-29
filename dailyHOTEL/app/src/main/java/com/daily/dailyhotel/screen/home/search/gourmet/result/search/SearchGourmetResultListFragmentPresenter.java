@@ -1222,7 +1222,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                 queryMap.put("targetIndices", suggestItem.index);
                 break;
             }
-            
+
             case DIRECT:
                 queryMap.put("term", suggest.getSuggestItem().name);
                 break;

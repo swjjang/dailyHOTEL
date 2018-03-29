@@ -1413,7 +1413,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-//        mAnalytics.onEventDownloadCoupon(getActivity(), mStayOutboundDetail.name);
+        //        mAnalytics.onEventDownloadCoupon(getActivity(), mStayOutboundDetail.name);
 
         if (DailyHotel.isLogin() == false)
         {
@@ -1427,21 +1427,21 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON);
 
-//                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), true);
+                        //                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), true);
                     }
                 }, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-//                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
+                        //                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
                     @Override
                     public void onCancel(DialogInterface dialog)
                     {
-//                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
+                        //                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
                     }
                 }, new DialogInterface.OnDismissListener()
                 {

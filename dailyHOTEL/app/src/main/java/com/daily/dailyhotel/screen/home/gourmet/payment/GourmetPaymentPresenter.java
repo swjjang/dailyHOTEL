@@ -405,8 +405,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     }
                 }
 
-                selectEasyCard(cardList ->
-                {
+                selectEasyCard(cardList -> {
                     unLockAll();
 
                     if (cardList.size() > 0)
@@ -435,8 +434,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     case Constants.CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
                         if (requestCode == GourmetPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT)
                         {
-                            selectEasyCard(cardList ->
-                            {
+                            selectEasyCard(cardList -> {
                                 unLockAll();
 
                                 if (cardList.size() > 0)
@@ -455,8 +453,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                             });
                         } else
                         {
-                            selectEasyCard(cardList ->
-                            {
+                            selectEasyCard(cardList -> {
                                 unLockAll();
 
                                 if (cardList.size() > 0)
@@ -1301,8 +1298,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         {
                             startThankYou(paymentResult.aggregationId, false);
                         }
-                    }, throwable ->
-                    {
+                    }, throwable -> {
                         unLockAll();
 
                         if (throwable instanceof BaseException)
@@ -2102,8 +2098,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         if (resultCode == Activity.RESULT_OK)
         {
-            Observable.just(result).map(jsonString ->
-            {
+            Observable.just(result).map(jsonString -> {
                 PaymentResult paymentResult = new PaymentResult();
 
                 JSONObject jsonObject = new JSONObject(jsonString);
@@ -2163,8 +2158,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
 
                 }
-            }, throwable ->
-            {
+            }, throwable -> {
                 unLockAll();
 
                 if (throwable instanceof BaseException)

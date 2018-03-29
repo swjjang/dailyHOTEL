@@ -800,15 +800,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-            , observable, (commonDateTime, stayOutbounds) ->
-            {
+            , observable, (commonDateTime, stayOutbounds) -> {
                 setCommonDateTime(commonDateTime);
 
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
 
                 return stayOutbounds;
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
-        {
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds -> {
             int size = stayOutbounds.getStayOutbound().size();
 
             mAnalytics.onScreen(getActivity(), size == 0);
@@ -1115,8 +1113,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, false, mCacheKey, mCacheLocation, mCustomerSessionId).observeOn(AndroidSchedulers.mainThread());
             }
 
-            addCompositeDisposable(observable.subscribe(stayOutbounds ->
-            {
+            addCompositeDisposable(observable.subscribe(stayOutbounds -> {
                 onStayOutbounds(stayOutbounds);
 
                 getViewInterface().setRefreshing(false);
