@@ -200,13 +200,13 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
 
         if (stayOutboundRoom.nonRefundable == false || DailyTextUtils.isTextEmpty(stayOutboundRoom.nonRefundableDescription) == true)
         {
-            if (DailyTextUtils.isTextEmpty(stayOutboundRoom.policy) == false)
+            if (DailyTextUtils.isTextEmpty(stayOutboundRoom.policy))
+            {
+                dataBinding.nrdTextView.setVisibility(View.GONE);
+            } else
             {
                 dataBinding.nrdTextView.setVisibility(View.VISIBLE);
                 dataBinding.nrdTextView.setText(stayOutboundRoom.policy);
-            } else
-            {
-                dataBinding.nrdTextView.setVisibility(View.GONE);
             }
         } else
         {
