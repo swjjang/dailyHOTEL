@@ -350,8 +350,7 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             this.dataBinding = dataBinding;
 
-            dataBinding.reservationLinkTextView.setOnClickListener(v ->
-            {
+            dataBinding.reservationLinkTextView.setOnClickListener(v -> {
                 if (mOnEventListener != null)
                 {
                     mOnEventListener.onClick(dataBinding.getRoot());

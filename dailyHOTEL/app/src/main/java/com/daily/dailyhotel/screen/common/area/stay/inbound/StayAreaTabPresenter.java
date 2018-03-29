@@ -531,8 +531,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
                     }
                 });
             }
-        }.doOnError(throwable ->
-        {
+        }.doOnError(throwable -> {
             unLockAll();
 
             if (throwable instanceof PermissionException)

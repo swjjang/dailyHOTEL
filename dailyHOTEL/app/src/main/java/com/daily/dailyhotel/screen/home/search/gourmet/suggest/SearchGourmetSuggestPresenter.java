@@ -993,8 +993,7 @@ public class SearchGourmetSuggestPresenter //
                     }
                 });
             }
-        }.doOnError(throwable ->
-        {
+        }.doOnError(throwable -> {
             //            unLockAll();
             if (isUserClick == false)
             {

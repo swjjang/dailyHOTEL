@@ -159,8 +159,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
         screenLock(showProgress);
 
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime()//
-            .subscribe(commonDateTime ->
-            {
+            .subscribe(commonDateTime -> {
                 onCommonDateTime(commonDateTime);
 
                 screenUnLock();

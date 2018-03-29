@@ -285,8 +285,7 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
         DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
 
         rewardCardView.setGuideVisible(true);
-        rewardCardView.setOnGuideClickListener(v ->
-        {
+        rewardCardView.setOnGuideClickListener(v -> {
             if (getEventListener() == null)
             {
                 return;
@@ -299,8 +298,7 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
         {
             rewardCardView.setOptionVisible(true);
             rewardCardView.setOptionText(optionText);
-            rewardCardView.setOnClickListener(v ->
-            {
+            rewardCardView.setOnClickListener(v -> {
                 if (getEventListener() == null)
                 {
                     return;

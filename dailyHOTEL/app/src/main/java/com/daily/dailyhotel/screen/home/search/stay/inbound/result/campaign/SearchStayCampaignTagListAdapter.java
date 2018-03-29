@@ -302,8 +302,7 @@ public class SearchStayCampaignTagListAdapter extends RecyclerView.Adapter<Recyc
                 });
             }
 
-            cardView.setOnWishClickListener(v ->
-            {
+            cardView.setOnWishClickListener(v -> {
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(cardView);

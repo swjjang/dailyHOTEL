@@ -125,8 +125,7 @@ public class RecentPlacesTabActivity extends BaseActivity
             lockUI();
 
             addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime() //
-                .subscribe(commonDateTime ->
-                {
+                .subscribe(commonDateTime -> {
                     if (mFragmentList != null)
                     {
                         for (RecentPlacesListFragment fragment : mFragmentList)

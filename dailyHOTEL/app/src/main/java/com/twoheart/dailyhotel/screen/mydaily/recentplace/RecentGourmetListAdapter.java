@@ -174,8 +174,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
                 }
             });
 
-            gourmetCardView.setOnWishClickListener(v ->
-            {
+            gourmetCardView.setOnWishClickListener(v -> {
                 if (mListener != null)
                 {
                     mListener.onWishClick(gourmetCardView);

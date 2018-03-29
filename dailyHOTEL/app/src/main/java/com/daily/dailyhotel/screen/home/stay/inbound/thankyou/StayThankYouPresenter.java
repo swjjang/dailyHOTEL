@@ -207,24 +207,30 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         String name = DailyUserPreference.getInstance(getActivity()).getName();
         getViewInterface().setUserName(name);
 
-        final String DATE_FORMAT = "yyyy.M.d (EEE) HH시";
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+        final String TIME_FORMAT = "HH:mm";
 
         try
         {
+            String checkInTime = mStayBookDateTime.getCheckInDateTime(TIME_FORMAT);
             String checkInDate = mStayBookDateTime.getCheckInDateTime(DATE_FORMAT);
+
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
+            checkInDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            String checkOutTime = mStayBookDateTime.getCheckOutDateTime(TIME_FORMAT);
             String checkOutDate = mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT);
 
-            SpannableString checkInSpannableString = new SpannableString(checkInDate);
-            checkInSpannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkInDate.length() - 3, checkInDate.length(),//
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
+            checkOutDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            SpannableString checkOutSpannableString = new SpannableString(checkOutDate);
-            checkOutSpannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkOutDate.length() - 3, checkOutDate.length(),//
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            getViewInterface().setBooking(checkInSpannableString, checkOutSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomName);
+            getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomName);
 
             // 예약 대기 표시
             if (mWaitingForBooking == true)

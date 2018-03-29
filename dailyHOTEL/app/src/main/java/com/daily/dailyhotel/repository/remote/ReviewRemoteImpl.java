@@ -38,8 +38,7 @@ public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
         urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
 
         return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams)) //
-            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) -> {
                 Review review;
 
                 if (reviewDataBaseDto != null)
@@ -70,8 +69,7 @@ public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
         urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
 
         return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams)) //
-            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) -> {
                 Review review;
 
                 if (reviewDataBaseDto != null)
@@ -104,8 +102,7 @@ public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
         urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
 
         return mDailyMobileService.getStayOutboundReview(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)) //
-            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
-            {
+            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) -> {
                 Review review;
 
                 if (reviewDataBaseDto != null)

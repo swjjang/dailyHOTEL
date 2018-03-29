@@ -198,20 +198,13 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             dataBinding.benefitTextView.setVisibility(View.GONE);
         }
 
-        if (stayOutboundRoom.nonRefundable == false || DailyTextUtils.isTextEmpty(stayOutboundRoom.nonRefundableDescription) == true)
-        {
-            if (DailyTextUtils.isTextEmpty(stayOutboundRoom.policy))
-            {
-                dataBinding.nrdTextView.setVisibility(View.GONE);
-            } else
-            {
-                dataBinding.nrdTextView.setVisibility(View.VISIBLE);
-                dataBinding.nrdTextView.setText(stayOutboundRoom.policy);
-            }
-        } else
+        if (DailyTextUtils.isTextEmpty(stayOutboundRoom.nonRefundableDescription) == false)
         {
             dataBinding.nrdTextView.setVisibility(View.VISIBLE);
             dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
+        } else
+        {
+            dataBinding.nrdTextView.setVisibility(View.GONE);
         }
 
         dataBinding.rewardTextView.setVisibility((mRewardEnabled && stayOutboundRoom.provideRewardSticker) ? View.VISIBLE : View.GONE);

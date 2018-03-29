@@ -593,8 +593,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
             if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
             {
-                addCompositeDisposable(new ConfigLocalImpl(this).clear().subscribe(object ->
-                {
+                addCompositeDisposable(new ConfigLocalImpl(this).clear().subscribe(object -> {
                     new FacebookRemoteImpl().logOut();
                     new KakaoRemoteImpl().logOut();
 
@@ -1488,8 +1487,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     public void showNonOperatingTimeDialog(final OnCallDialogListener listener)
     {
-        View.OnClickListener positiveListener = v ->
-        {
+        View.OnClickListener positiveListener = v -> {
             releaseUiComponent();
 
             if (listener != null)
@@ -1498,8 +1496,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             }
         };
 
-        DialogInterface.OnDismissListener dismissListener = dialog ->
-        {
+        DialogInterface.OnDismissListener dismissListener = dialog -> {
             releaseUiComponent();
             if (listener != null)
             {

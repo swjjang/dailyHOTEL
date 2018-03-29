@@ -154,7 +154,7 @@ public class DailyLoopViewPager extends ViewPager
      *
      * @param position
      * @param count
-     * @return (position-1)%count
+     * @return (position - 1)%count
      */
     public static int toRealPosition(int position, int count)
     {

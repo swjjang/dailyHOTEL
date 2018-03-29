@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetFilter;

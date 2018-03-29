@@ -8,7 +8,6 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.screen.common.calendar.BaseCalendarPresenter;
-import com.daily.dailyhotel.screen.common.calendar.BaseCalendarView;
 
 import java.util.List;
 
@@ -62,15 +61,6 @@ public interface StayCalendarInterface
 
         void onEventConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime);
     }
-
-
-
-
-
-
-
-
-
 
 
 }

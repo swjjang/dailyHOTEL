@@ -157,8 +157,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
 
     private void onHandleAuthorizedError()
     {
-        addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object ->
-        {
+        addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object -> {
             new FacebookRemoteImpl().logOut();
             new KakaoRemoteImpl().logOut();
 

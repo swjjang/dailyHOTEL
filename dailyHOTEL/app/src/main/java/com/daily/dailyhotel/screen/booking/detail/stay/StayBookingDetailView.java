@@ -17,7 +17,7 @@ import android.net.Uri;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Html;
 import android.text.Spannable;
-import android.text.SpannableStringBuilder;
+import android.text.SpannableString;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -412,31 +412,40 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
             return;
         }
 
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+        final String TIME_FORMAT = "HH:mm";
+
         try
         {
-            String checkInDateFormat = DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
-            SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
-            checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
-                checkInDateFormat.length() - 3, checkInDateFormat.length(),//
+            String checkInTime = DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, TIME_FORMAT);
+            String checkInDate = DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
+
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
+            checkInDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
+                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            String checkOutDateFormat = DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
-            SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
-            checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
-                checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
+            String checkOutTime = DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, TIME_FORMAT);
+            String checkOutDate = DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
+
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
+            checkOutDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
+                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             int nights = DailyCalendar.compareDateDay(stayBookingDetail.checkOutDateTime, stayBookingDetail.checkInDateTime);
 
             mBookingDetail01DataBinding.dateInformationView.setDateVisible(true, true);
 
-            mBookingDetail01DataBinding.dateInformationView.setDate1Text(getString(R.string.label_check_in), checkInSpannableStringBuilder);
+            mBookingDetail01DataBinding.dateInformationView.setDate1Text(getString(R.string.label_check_in), checkInDateSpannableString);
             mBookingDetail01DataBinding.dateInformationView.setData1TextSize(13.0f, 13.0f);
 
             mBookingDetail01DataBinding.dateInformationView.setCenterNightsVisible(true);
             mBookingDetail01DataBinding.dateInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
 
-            mBookingDetail01DataBinding.dateInformationView.setDate2Text(getString(R.string.label_check_out), checkOutSpannableStringBuilder);
+            mBookingDetail01DataBinding.dateInformationView.setDate2Text(getString(R.string.label_check_out), checkOutDateSpannableString);
             mBookingDetail01DataBinding.dateInformationView.setData2TextSize(13.0f, 13.0f);
         } catch (Exception e)
         {

@@ -809,8 +809,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                     }
                 });
             }
-        }.doOnError(throwable ->
-        {
+        }.doOnError(throwable -> {
             unLockAll();
 
             if (throwable instanceof PermissionException)

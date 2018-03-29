@@ -309,8 +309,7 @@ public class StayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 });
             }
 
-            stayCardView.setOnWishClickListener(v ->
-            {
+            stayCardView.setOnWishClickListener(v -> {
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(stayCardView);

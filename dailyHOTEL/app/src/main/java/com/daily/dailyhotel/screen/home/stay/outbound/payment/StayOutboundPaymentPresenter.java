@@ -40,8 +40,8 @@ import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.payment.PaymentWebActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.coupon.SelectStayOutboundCouponDialogActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -428,8 +428,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     }
                 }
 
-                selectEasyCard(cardList ->
-                {
+                selectEasyCard(cardList -> {
                     unLockAll();
 
                     if (cardList.size() > 0)
@@ -458,8 +457,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     case Constants.CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
                         if (requestCode == StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT)
                         {
-                            selectEasyCard(cardList ->
-                            {
+                            selectEasyCard(cardList -> {
                                 unLockAll();
 
                                 if (cardList.size() > 0)
@@ -478,8 +476,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             });
                         } else
                         {
-                            selectEasyCard(cardList ->
-                            {
+                            selectEasyCard(cardList -> {
                                 unLockAll();
 
                                 if (cardList.size() > 0)
@@ -1222,8 +1219,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         {
                             startThankYou(paymentResult.aggregationId, false);
                         }
-                    }, throwable ->
-                    {
+                    }, throwable -> {
                         unLockAll();
 
                         if (throwable instanceof BaseException)
@@ -2194,8 +2190,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         if (resultCode == Activity.RESULT_OK)
         {
-            Observable.just(result).map(jsonString ->
-            {
+            Observable.just(result).map(jsonString -> {
                 PaymentResult paymentResult = new PaymentResult();
 
                 JSONObject jsonObject = new JSONObject(jsonString);
@@ -2223,8 +2218,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     startThankYou(paymentResult.aggregationId, false);
                 }
-            }, throwable ->
-            {
+            }, throwable -> {
                 unLockAll();
 
                 if (throwable instanceof BaseException)

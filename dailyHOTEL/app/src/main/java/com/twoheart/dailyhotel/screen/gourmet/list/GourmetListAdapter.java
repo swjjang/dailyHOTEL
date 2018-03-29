@@ -208,8 +208,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                 });
             }
 
-            gourmetCardView.setOnWishClickListener(v ->
-            {
+            gourmetCardView.setOnWishClickListener(v -> {
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(gourmetCardView);

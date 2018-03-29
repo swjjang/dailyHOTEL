@@ -891,7 +891,8 @@ public class SearchStayOutboundSuggestPresenter //
 
                                     getViewInterface().setSuggest(itemLocation.address);
                                     startFinishAction(staySuggest, mKeyword);
-                                } else {
+                                } else
+                                {
                                     unLockAll();
 
                                     getViewInterface().setSuggest(mLocationSuggest.display);
@@ -1057,8 +1058,7 @@ public class SearchStayOutboundSuggestPresenter //
                     }
                 });
             }
-        }.doOnError(throwable ->
-        {
+        }.doOnError(throwable -> {
             if (isUserClick == false)
             {
                 // 화면 진입 시 처리 임

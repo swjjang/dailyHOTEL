@@ -266,16 +266,16 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         addCompositeDisposable(Observable.zip(mStayOutboundRemoteImpl.getDetailInformation(mStayIndex, mStayBookDateTime, mPeople) //
             , mStayOutboundRemoteImpl.getDetailRoomList(mStayIndex, mStayBookDateTime, mPeople) //
             , new BiFunction<StayOutboundDetail, List<StayOutboundRoom>, StayOutboundDetail>()
-        {
-            @Override
-            public StayOutboundDetail apply(StayOutboundDetail stayOutboundDetail, List<StayOutboundRoom> stayOutboundRoomList) throws Exception
             {
-                setStayOutboundDetail(stayOutboundDetail);
-                setRoomList(stayOutboundRoomList);
+                @Override
+                public StayOutboundDetail apply(StayOutboundDetail stayOutboundDetail, List<StayOutboundRoom> stayOutboundRoomList) throws Exception
+                {
+                    setStayOutboundDetail(stayOutboundDetail);
+                    setRoomList(stayOutboundRoomList);
 
-                return stayOutboundDetail;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutboundDetail>()
+                    return stayOutboundDetail;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutboundDetail>()
         {
             @Override
             public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
