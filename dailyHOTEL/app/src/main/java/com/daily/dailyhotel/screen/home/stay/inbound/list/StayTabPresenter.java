@@ -36,7 +36,6 @@ import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
-import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
@@ -1091,9 +1090,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             case Activity.RESULT_OK:
             case com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR:
-                if (data != null && data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION) == true)
+                if (data != null && data.hasExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_REGION) == true)
                 {
-                    StayRegionParcel stayRegionParcel = data.getParcelableExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION);
+                    StayRegionParcel stayRegionParcel = data.getParcelableExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_REGION);
 
                     if (stayRegionParcel == null)
                     {
@@ -1115,7 +1114,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                     setRefresh(true);
 
-                    boolean changedAreaGroup = data.getBooleanExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHANGED_AREA_GROUP, false);
+                    boolean changedAreaGroup = data.getBooleanExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_CHANGED_AREA_GROUP, false);
 
                     if (changedAreaGroup == true)
                     {

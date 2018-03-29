@@ -396,44 +396,34 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             case CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
             {
                 mDontReload = false;
-                // ⬇︎ Old source 예약 대기 화면 진입 후 복귀시 Refresh 하도록 수정 - 에러 메시지는 이전 화면에서 보여주고 종료 하도록 수정되었음
-                //                if (resultCode == CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT)
-                //                {
-                //                    BaseActivity baseActivity = (BaseActivity) getActivity();
-                //
-                //                    if (baseActivity == null)
-                //                    {
-                //                        return;
-                //                    }
-                //
-                //                    baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
-                //                }
-                //
-                //                mDontReload = true;
                 break;
             }
 
             case REQUEST_CODE_BOOKING_CANCEL:
             {
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_STAY_LIST)
+                switch (resultCode)
                 {
-                    mDontReload = true;
+                    case Constants.CODE_RESULT_ACTIVITY_STAY_LIST:
+                        mDontReload = true;
 
-                    if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
-                    {
-                        mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
-                    }
-                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST)
-                {
-                    mDontReload = true;
+                        if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                        {
+                            mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
+                        }
+                        break;
 
-                    if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
-                    {
-                        mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
-                    }
-                } else
-                {
-                    mDontReload = false;
+                    case Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST:
+                        mDontReload = true;
+
+                        if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                        {
+                            mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
+                        }
+                        break;
+
+                    default:
+                        mDontReload = false;
+                        break;
                 }
                 break;
             }

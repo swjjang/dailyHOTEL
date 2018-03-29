@@ -524,30 +524,32 @@ public class PinnedSectionRecyclerView extends RecyclerView
                 mTouchTarget.dispatchTouchEvent(ev);
             }
 
-            if (action == MotionEvent.ACTION_UP)
-            { // perform onClick on pinned view
-                super.dispatchTouchEvent(ev);
-                clearTouchTarget();
-
-            } else if (action == MotionEvent.ACTION_CANCEL)
-            { // cancel
-                clearTouchTarget();
-
-            } else if (action == MotionEvent.ACTION_MOVE)
+            switch (action)
             {
-                if (Math.abs(y - mTouchPoint.y) > mTouchSlop)
-                {
-                    // cancel sequence on touch target
-                    MotionEvent event = MotionEvent.obtain(ev);
-                    event.setAction(MotionEvent.ACTION_CANCEL);
-                    mTouchTarget.dispatchTouchEvent(event);
-                    event.recycle();
-
-                    // provide correct sequence to super class for further handling
-                    super.dispatchTouchEvent(mDownEvent);
+                case MotionEvent.ACTION_UP:
                     super.dispatchTouchEvent(ev);
                     clearTouchTarget();
-                }
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    if (Math.abs(y - mTouchPoint.y) > mTouchSlop)
+                    {
+                        // cancel sequence on touch target
+                        MotionEvent event = MotionEvent.obtain(ev);
+                        event.setAction(MotionEvent.ACTION_CANCEL);
+                        mTouchTarget.dispatchTouchEvent(event);
+                        event.recycle();
+
+                        // provide correct sequence to super class for further handling
+                        super.dispatchTouchEvent(mDownEvent);
+                        super.dispatchTouchEvent(ev);
+                        clearTouchTarget();
+                    }
+                    break;
+
+                case MotionEvent.ACTION_CANCEL:
+                    clearTouchTarget();
+                    break;
             }
 
             return true;

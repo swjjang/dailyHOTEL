@@ -175,29 +175,42 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         parseCategory(category, mainCategoryMap, subCategoryMap);
 
-        // 환불인 경우 바로 연동한다.
-        if (mCallScreen == CallScreen.SCREEN_STAY_REFUND || mCallScreen == CallScreen.SCREEN_STAY_OUTBOUND_REFUND)
-        {
-            final String STAY_PREFIX = "S_";
-            final String STAY_REFUND = "64796";
 
-            mOnEventListener.onHappyTalk(STAY_PREFIX, STAY_REFUND);
-        } else if (mCallScreen == CallScreen.SCREEN_STAY_BOOKING_CANCEL || mCallScreen == CallScreen.SCREEN_STAY_OUTBOUND_BOOKING_CANCEL)
+        switch (mCallScreen)
         {
-            final String STAY_PREFIX = "S_";
-            final String STAY_BOOKING_CANCEL = "64796";
+            case SCREEN_STAY_REFUND:
+            case SCREEN_STAY_OUTBOUND_REFUND:
+            {
+                final String STAY_PREFIX = "S_";
+                final String STAY_REFUND = "64796";
 
-            mOnEventListener.onHappyTalk(STAY_PREFIX, STAY_BOOKING_CANCEL);
-        } else if (mCallScreen == CallScreen.SCREEN_GOURMET_BOOKING_CANCEL)
-        {
-            final String GOURMET_PREFIX = "G_";
-            final String GOURMET_BOOKING_CANCEL = "64801";
+                mOnEventListener.onHappyTalk(STAY_PREFIX, STAY_REFUND);
+                break;
+            }
 
-            mOnEventListener.onHappyTalk(GOURMET_PREFIX, GOURMET_BOOKING_CANCEL);
-        } else
-        {
-            mLayout.setVisibility(View.VISIBLE);
-            mLayout.setCategory(callScreen, mainCategoryMap, subCategoryMap);
+            case SCREEN_STAY_BOOKING_CANCEL:
+            case SCREEN_STAY_OUTBOUND_BOOKING_CANCEL:
+            {
+                final String STAY_PREFIX = "S_";
+                final String STAY_BOOKING_CANCEL = "64796";
+
+                mOnEventListener.onHappyTalk(STAY_PREFIX, STAY_BOOKING_CANCEL);
+                break;
+            }
+
+            case SCREEN_GOURMET_BOOKING_CANCEL:
+            {
+                final String GOURMET_PREFIX = "G_";
+                final String GOURMET_BOOKING_CANCEL = "64801";
+
+                mOnEventListener.onHappyTalk(GOURMET_PREFIX, GOURMET_BOOKING_CANCEL);
+                break;
+            }
+
+            default:
+                mLayout.setVisibility(View.VISIBLE);
+                mLayout.setCategory(callScreen, mainCategoryMap, subCategoryMap);
+                break;
         }
     }
 

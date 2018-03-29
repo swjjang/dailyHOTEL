@@ -1790,7 +1790,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void onRoomList(List<StayOutboundRoom> roomList)
+    void onRoomList(List<StayOutboundRoom> roomList)
     {
         mRoomList = roomList;
 
@@ -1843,7 +1843,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void sendScreenAnalytics()
+    void sendScreenAnalytics()
     {
         boolean isRunDetail = (mNetworkRunState & IS_RUNNED_DETAIL) > 0;
         boolean isRunRoomList = (mNetworkRunState & IS_RUNNED_ROOM_LIST) > 0;
