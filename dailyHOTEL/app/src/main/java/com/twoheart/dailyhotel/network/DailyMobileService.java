@@ -10,6 +10,7 @@ import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
+import com.daily.dailyhotel.repository.remote.model.DownloadCouponResultData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GoogleAddressData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
@@ -1092,7 +1093,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("{mobileAPI}")
-    Observable<BaseDto<Object>> getDownloadCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("couponCode") String couponCode);
+    Observable<BaseDto<DownloadCouponResultData>> getDownloadCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("couponCode") String couponCode);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

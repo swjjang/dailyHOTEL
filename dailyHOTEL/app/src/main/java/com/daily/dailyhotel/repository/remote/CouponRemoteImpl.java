@@ -8,7 +8,9 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.CouponInterface;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
+import com.daily.dailyhotel.entity.DownloadCouponResult;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
+import com.daily.dailyhotel.repository.remote.model.DownloadCouponResultData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -223,22 +225,22 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<Boolean> getDownloadCoupon(String couponCode)
+    public Observable<DownloadCouponResult> getDownloadCoupon(String couponCode)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/download"//
             : "MzMkNTYkMTgkODUkNTMkMzUkOTAkNTQkNyQyMyQxNiQyMCQ4MSQ2MiQ3NCQxMyQ=$QUE2NzVCFMUU5RNEFKCMjSQE3MOjUyRkFBOTVDMGCzlFN0M3QzkzM0VGMTAQO3QVzBMFMTJGMDhFDN0MxMUMHzNDc5RDY4NDLU5YNA==$";
 
         return mDailyMobileService.getDownloadCoupon(Crypto.getUrlDecoderEx(API), couponCode) //
-            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<DownloadCouponResultData>, DownloadCouponResult>()
             {
                 @Override
-                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
+                public DownloadCouponResult apply(@io.reactivex.annotations.NonNull BaseDto<DownloadCouponResultData> baseDto) throws Exception
                 {
                     if (baseDto != null)
                     {
                         if (baseDto.msgCode == 100)
                         {
-                            return true;
+                            return baseDto.data.getResult();
                         } else
                         {
                             throw new BaseException(baseDto.msgCode, baseDto.msg);

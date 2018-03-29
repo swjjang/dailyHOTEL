@@ -14,6 +14,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
+import com.daily.dailyhotel.entity.DownloadCouponResult;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
@@ -284,10 +285,10 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
         }
 
         // 쿠폰 다운로드 시도!
-        addCompositeDisposable(mCouponRemoteImpl.getDownloadCoupon(coupon.couponCode).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        addCompositeDisposable(mCouponRemoteImpl.getDownloadCoupon(coupon.couponCode).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<DownloadCouponResult>()
         {
             @Override
-            public void accept(Boolean aBoolean) throws Exception
+            public void accept(DownloadCouponResult downloadCouponResult) throws Exception
             {
                 setRefresh(true);
                 onRefresh(true);

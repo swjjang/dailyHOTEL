@@ -2,6 +2,7 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
+import com.daily.dailyhotel.entity.DownloadCouponResult;
 
 import java.util.List;
 
@@ -22,5 +23,5 @@ public interface CouponInterface
     Observable<Coupons> getStayOutboundCouponListByPayment(String checkInDate, String checkOutDate//
         , int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType);
 
-    Observable<Boolean> getDownloadCoupon(String couponCode);
+    Observable<DownloadCouponResult> getDownloadCoupon(String couponCode);
 }
