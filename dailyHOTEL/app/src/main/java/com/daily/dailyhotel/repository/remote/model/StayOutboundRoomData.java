@@ -49,6 +49,9 @@ public class StayOutboundRoomData
     @JsonField(name = "promotionDescription")
     public String promotionDescription;
 
+    @JsonField(name = "policy")
+    public String policy;
+
     @JsonField(name = "nonRefundable")
     public boolean nonRefundable;
 
@@ -87,6 +90,7 @@ public class StayOutboundRoomData
         stayOutboundRoom.promotionDescription = promotionDescription;
         stayOutboundRoom.nonRefundable = nonRefundable;
         stayOutboundRoom.nonRefundableDescription = nonRefundableDescription;
+        stayOutboundRoom.policy = policy;
         stayOutboundRoom.valueAddName = valueAddName;
         stayOutboundRoom.vendorType = vendorType;
         stayOutboundRoom.provideRewardSticker = provideRewardSticker;

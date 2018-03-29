@@ -20,6 +20,7 @@ public class StayOutboundRoom
     public String promotionDescription;
     public boolean nonRefundable;
     public String nonRefundableDescription;
+    public String policy;
     public String valueAddName;
     public String vendorType;
     public boolean provideRewardSticker;
