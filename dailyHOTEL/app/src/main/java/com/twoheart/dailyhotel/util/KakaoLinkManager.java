@@ -677,15 +677,20 @@ public class KakaoLinkManager implements Constants
                 return;
             }
 
-            if (DailyTextUtils.isTextEmpty(description))
+            String encodeTitle = URLEncoder.encode(title);
+            String encodeDesc = null;
+
+            if (DailyTextUtils.isTextEmpty(description) == false)
             {
-                description = webUrl;
-            } else
-            {
-                description += "\n" + webUrl;
+                description = description.replace("\n" + webUrl, "");
+
+                encodeDesc = URLEncoder.encode(description);
             }
 
-            String schemeParams = String.format(Locale.KOREA, "vc=12&v=hed&t=%s&url=%s", title, webUrl);
+            encodeDesc += "\n" + webUrl;
+            description += "\n" + webUrl;
+
+            String schemeParams = String.format(Locale.KOREA, "vc=12&v=hed&t=%s&url=%s&desc=%s&iurl=%s", encodeTitle, webUrl, encodeDesc, imageUrl);
 
             final int width = ScreenUtils.getScreenWidth(mContext);
             final int height = ScreenUtils.getRatioHeightType16x9(width);
