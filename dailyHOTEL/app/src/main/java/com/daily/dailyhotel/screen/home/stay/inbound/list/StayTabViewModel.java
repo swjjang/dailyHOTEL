@@ -52,25 +52,6 @@ public class StayTabViewModel extends ViewModel
             stayTabViewModel.stayFilter.setValue(new StayFilter().reset());
             stayTabViewModel.viewType.setValue(StayTabPresenter.ViewType.LIST);
 
-            if (mContext == null)
-            {
-                stayTabViewModel.selectedCategory.setValue(Category.ALL);
-            } else
-            {
-                String oldCategoryCode = DailyPreference.getInstance(mContext).getStayCategoryCode();
-                String oldCategoryName = DailyPreference.getInstance(mContext).getStayCategoryName();
-
-                if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
-                {
-                    stayTabViewModel.selectedCategory.setValue(new Category(oldCategoryCode, oldCategoryName));
-                } else
-                {
-                    stayTabViewModel.selectedCategory.setValue(Category.ALL);
-                }
-            }
-
-            stayTabViewModel.categoryType = DailyCategoryType.STAY_ALL;
-
             return stayTabViewModel;
         }
     }
@@ -110,7 +91,7 @@ public class StayTabViewModel extends ViewModel
         }
     }
 
-    public void setCategoryType(Intent intent, DailyCategoryType defaultCategoryType)
+    public void setCategoryType(Context context, Intent intent, DailyCategoryType defaultCategoryType)
     {
         if (intent == null)
         {
@@ -124,6 +105,27 @@ public class StayTabViewModel extends ViewModel
             {
                 categoryType = defaultCategoryType;
             }
+        }
+
+        selectedCategory.setValue(getSelectedCategoryType(context, categoryType));
+    }
+
+    private Category getSelectedCategoryType(Context context, DailyCategoryType categoryType)
+    {
+        if (context == null || categoryType == null || categoryType != DailyCategoryType.STAY_ALL)
+        {
+            return Category.ALL;
+        }
+
+        String oldCategoryCode = DailyPreference.getInstance(context).getStayCategoryCode();
+        String oldCategoryName = DailyPreference.getInstance(context).getStayCategoryName();
+
+        if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
+        {
+            return new Category(oldCategoryCode, oldCategoryName);
+        } else
+        {
+            return Category.ALL;
         }
     }
 }

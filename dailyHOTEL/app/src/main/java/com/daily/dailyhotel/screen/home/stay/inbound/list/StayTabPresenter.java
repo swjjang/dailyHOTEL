@@ -139,7 +139,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onNewIntent(Intent intent)
     {
-        mStayViewModel.setCategoryType(intent, DailyCategoryType.STAY_ALL);
+        mStayViewModel.setCategoryType(getActivity(), intent, DailyCategoryType.STAY_ALL);
 
         if (DailyIntentUtils.hasDeepLink(intent) == true)
         {
