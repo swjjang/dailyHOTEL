@@ -260,9 +260,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         if (DailyHotel.isLogin() == false)
         {
             setRefresh(false);
-
-            // onResume 시에 가능하지만 빠른 처리를 위해서
-            startLogin();
         }
     }
 
