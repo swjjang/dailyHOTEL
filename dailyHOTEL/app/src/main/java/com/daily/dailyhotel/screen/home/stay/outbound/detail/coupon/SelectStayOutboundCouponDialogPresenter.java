@@ -182,7 +182,6 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
         final String DATE_FORMAT = "yyyy-MM-dd";
 
-
         addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByDetail(mStayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT), mStayIndex, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {

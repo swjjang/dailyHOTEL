@@ -24,6 +24,7 @@ public class StayOutboundRoom
     public String valueAddName;
     public String vendorType;
     public boolean provideRewardSticker;
+    public boolean hasCoupon;
 
     public StayOutboundRoom()
     {
