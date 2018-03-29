@@ -245,7 +245,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
-        JSONObject jsonObject = getStayOutboundCouponListJsonObjectByDetail(checkInDate, checkOutDate, vendorTypes);
+        JSONObject jsonObject = getStayOutboundCouponListJsonObjectByDetail(checkInDate, checkOutDate, stayIndex, vendorTypes);
 
         return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
@@ -276,7 +276,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
             }).subscribeOn(Schedulers.io());
     }
 
-    private JSONObject getStayOutboundCouponListJsonObjectByDetail(String checkInDate, String checkOutDate, String[] vendorTypes)
+    private JSONObject getStayOutboundCouponListJsonObjectByDetail(String checkInDate, String checkOutDate, int stayIndex, String[] vendorTypes)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -284,17 +284,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
         {
             jsonObject.put("arrivalDate", checkInDate);
             jsonObject.put("departureDate", checkOutDate);
-
-            JSONArray jsonArray = new JSONArray();
-            if (vendorTypes != null)
-            {
-                for (String vendorType : vendorTypes)
-                {
-                    jsonArray.put(vendorType);
-                }
-            }
-
-            jsonObject.put("vendorType", jsonArray);
+            jsonObject.put("outboundHotelId", Integer.toString(stayIndex));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
