@@ -67,6 +67,9 @@ public class StayOutboundRoomData
     @JsonField(name = "provideRewardSticker")
     public boolean provideRewardSticker;
 
+    @JsonField(name = "hasCoupon")
+    public boolean hasCoupon;
+
     public StayOutboundRoomData()
     {
 
@@ -94,6 +97,7 @@ public class StayOutboundRoomData
         stayOutboundRoom.valueAddName = valueAddName;
         stayOutboundRoom.vendorType = vendorType;
         stayOutboundRoom.provideRewardSticker = provideRewardSticker;
+        stayOutboundRoom.hasCoupon = hasCoupon;
 
         return stayOutboundRoom;
     }
