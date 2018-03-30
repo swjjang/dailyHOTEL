@@ -9,7 +9,6 @@ import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
     public Object instantiateItem(ViewGroup container, int position)
     {
         final int width = ScreenUtils.getScreenWidth(mContext);
-        final int height = PlaceDetailLayout.getImageLayoutHeight(mContext);
+        final int height = getImageLayoutHeight(mContext);
         final com.facebook.drawee.view.SimpleDraweeView imageView = new com.facebook.drawee.view.SimpleDraweeView(mContext);
 
         if (mImageInformationList == null || mImageInformationList.size() == 0 || position < 0)
@@ -112,5 +111,10 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
     public void destroyItem(ViewGroup container, int position, Object object)
     {
         container.removeView((View) object);
+    }
+
+    public int getImageLayoutHeight(Context context)
+    {
+        return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
     }
 }
