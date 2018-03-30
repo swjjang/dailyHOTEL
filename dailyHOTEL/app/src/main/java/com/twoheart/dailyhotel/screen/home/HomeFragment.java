@@ -41,6 +41,7 @@ import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
+import com.daily.dailyhotel.screen.common.event.EventWebActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
@@ -65,7 +66,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
@@ -798,7 +798,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             return;
         }
 
-        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName, eventDescription, imageUrl);
+        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.EventType.HOME_EVENT, url, eventName, eventDescription, imageUrl);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 

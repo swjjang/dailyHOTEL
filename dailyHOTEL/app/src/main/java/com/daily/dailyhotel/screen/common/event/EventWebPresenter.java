@@ -3,16 +3,17 @@ package com.daily.dailyhotel.screen.common.event;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.webkit.JsResult;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
@@ -22,13 +23,25 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DownloadCouponResult;
+import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
+import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -38,19 +51,13 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONObject;
-
 import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by sheldon
@@ -230,6 +237,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+        ExLog.d("sam : onActivityResult unLockAll");
 
         switch (requestCode)
         {
@@ -251,7 +259,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    onDownloadCoupon(mCouponCode, mDeepLinkUrl, null);
+                    onDownloadCoupon(mCouponCode, mDeepLinkUrl, mConfirmText);
                 }
                 break;
             }
@@ -276,6 +284,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
         setRefresh(false);
         screenLock(showProgress);
+        ExLog.d("sam : onRefresh screenLock on");
 
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime() //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<CommonDateTime>()
@@ -285,6 +294,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 {
                     mCommonDateTime = commonDateTime;
                     unLockAll();
+                    ExLog.d("sam : onRefresh unLockAll");
                 }
             }, new Consumer<Throwable>()
             {
@@ -293,6 +303,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 {
                     ExLog.d(throwable.toString());
                     unLockAll();
+                    ExLog.d("sam : onRefresh throw unLockAll");
                 }
             }));
     }
@@ -452,12 +463,15 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             return;
         }
 
+        ExLog.d("sam : onScrollTop lock");
+
         addCompositeDisposable(getViewInterface().smoothScrollTop().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
                 unLockAll();
+                ExLog.d("sam : onScrollTop unLockAll");
             }
         }, new Consumer<Throwable>()
         {
@@ -465,6 +479,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             public void accept(Throwable throwable) throws Exception
             {
                 unLockAll();
+                ExLog.d("sam : onScrollTop unLockAll");
             }
         }));
     }
@@ -476,6 +491,8 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         {
             return;
         }
+
+        ExLog.d("sam : onHomeClick lock");
 
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
     }
@@ -503,10 +520,10 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         try
         {
-            if (lock())
-            {
-                return;
-            }
+//            if (lock())
+//            {
+//                return;
+//            }
 
             String longUrl = mEventUrl;
 
@@ -520,6 +537,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     public void accept(String shortUrl) throws Exception
                     {
                         unLockAll();
+                        ExLog.d("sam : onShareKakaoClick unLockAll");
 
                         KakaoLinkManager.newInstance(getActivity()).shareEventWebView(mEventName //
                             , mEventDescription //
@@ -532,6 +550,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     public void accept(Throwable throwable) throws Exception
                     {
                         unLockAll();
+                        ExLog.d("sam : onShareKakaoClick unLockAll");
 
                         KakaoLinkManager.newInstance(getActivity()).shareEventWebView(mEventName //
                             , mEventDescription //
@@ -553,6 +572,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 }, null);
 
             unLockAll();
+            ExLog.d("sam : onShareKakaoClick unLockAll");
         }
     }
 
@@ -561,10 +581,10 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         try
         {
-            if (lock())
-            {
-                return;
-            }
+//            if (lock())
+//            {
+//                return;
+//            }
 
             String longUrl = mEventUrl;
 
@@ -574,6 +594,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull String shortUrl) throws Exception
                 {
                     unLockAll();
+                    ExLog.d("sam : onCopyLinkClick unLockAll");
 
                     DailyTextUtils.clipText(getActivity(), shortUrl);
 
@@ -585,6 +606,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull Throwable throwable) throws Exception
                 {
                     unLockAll();
+                    ExLog.d("sam : onCopyLinkClick unLockAll");
 
                     DailyTextUtils.clipText(getActivity(), longUrl);
 
@@ -594,6 +616,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         } catch (Exception e)
         {
             unLockAll();
+            ExLog.d("sam : onCopyLinkClick unLockAll");
             ExLog.d(e.toString());
         }
     }
@@ -603,10 +626,10 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         try
         {
-            if (lock())
-            {
-                return;
-            }
+//            if (lock())
+//            {
+//                return;
+//            }
 
             String longUrl = mEventUrl;
 
@@ -622,6 +645,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull String shortUrl) throws Exception
                 {
                     unLockAll();
+                    ExLog.d("sam : onMoreShareClick unLockAll");
 
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -637,6 +661,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull Throwable throwable) throws Exception
                 {
                     unLockAll();
+                    ExLog.d("sam : onMoreShareClick unLockAll");
 
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -650,6 +675,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         } catch (Exception e)
         {
             unLockAll();
+            ExLog.d("sam : onMoreShareClick unLockAll");
             ExLog.d(e.toString());
         }
     }
@@ -657,10 +683,27 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public void onDownloadCoupon(String couponCode, String deepLink, String confirmText)
     {
-        if (DailyTextUtils.isTextEmpty(couponCode, deepLink) == true || lock() == true)
+        if (DailyTextUtils.isTextEmpty(couponCode, deepLink) == true )
         {
             return;
         }
+
+        mCouponCode = couponCode;
+        mDeepLinkUrl = deepLink;
+        mConfirmText = confirmText;
+
+        if (DailyHotel.isLogin() == false)
+        {
+            startLogin();
+            return;
+        }
+
+        if (lock() == true)
+        {
+            return;
+        }
+
+        ExLog.d("sam : onDownloadCoupon lock");
 
         addCompositeDisposable(mCouponRemoteImpl.getDownloadCoupon(couponCode).observeOn(AndroidSchedulers.mainThread()) //
             .subscribe(new Consumer<DownloadCouponResult>()
@@ -699,8 +742,17 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                         BaseException baseException = (BaseException) throwable;
 
                         getViewInterface().showSimpleDialog(null, baseException.getMessage()//
-                            , getString(R.string.dialog_btn_text_confirm), null, null, null, null, null, true);
-                    } else {
+                            , getString(R.string.dialog_btn_text_confirm), null, null, null, null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    unLockAll();
+                                    ExLog.d("sam : onDownloadCoupon lock");
+                                }
+                            }, true);
+                    } else
+                    {
                         onHandleError(throwable);
                     }
                 }
@@ -757,13 +809,13 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
                         if (externalDeepLink.isHotelDetailView() == true)
                         {
-                            if (moveDeepLinkStayDetail(mTodayDateTime, externalDeepLink) == true)
+                            if (moveDeepLinkStayDetail(externalDeepLink) == true)
                             {
                                 return;
                             }
                         } else if (externalDeepLink.isGourmetDetailView() == true)
                         {
-                            if (moveDeepLinkGourmetDetail(mTodayDateTime, externalDeepLink) == true)
+                            if (moveDeepLinkGourmetDetail(externalDeepLink) == true)
                             {
                                 return;
                             }
@@ -799,13 +851,13 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                             }
                         } else if (externalDeepLink.isRewardView() == true)
                         {
-                            if (moveDeepLinkReward(com.twoheart.dailyhotel.screen.event.EventWebActivity.this, externalDeepLink) == true)
+                            if (moveDeepLinkReward(getActivity(), externalDeepLink) == true)
                             {
                                 return;
                             }
                         } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
                         {
-                            if (moveDeepLinkStayOutboundSearchResult(mTodayDateTime, externalDeepLink) == true)
+                            if (moveDeepLinkStayOutboundSearchResult(externalDeepLink) == true)
                             {
                                 return;
                             }
@@ -823,7 +875,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                             }
                         } else if (externalDeepLink.isCampaignTagListView() == true)
                         {
-                            if (moveDeepLinkCampaignTagListView(mTodayDateTime, externalDeepLink) == true)
+                            if (moveDeepLinkCampaignTagListView(externalDeepLink) == true)
                             {
                                 return;
                             }
@@ -840,7 +892,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 break;
         }
 
-        Intent intent = new Intent(com.twoheart.dailyhotel.screen.event.EventWebActivity.this, LauncherActivity.class);
+        Intent intent = new Intent(getActivity(), LauncherActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(uri));
 
@@ -850,12 +902,422 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public void onFeed(String message)
     {
+        if (getActivity().isFinishing() == true)
+        {
+            return;
+        }
 
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        });
     }
 
     @Override
     public void onEnabledBenefitAlarm()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        ExLog.d("sam : onEnabledBenefitAlarm lock");
+
+        boolean isBenefitAlarm = DailyUserPreference.getInstance(getActivity()).isBenefitAlarm();
+
+        if (isBenefitAlarm == false)
+        {
+            // 자바 스크립트 호출시에 스레드가 다른것 같다. 에러나서 수정
+            new Handler().post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    addCompositeDisposable(mCommonRemoteImpl.updateNotification(true) //
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Notification>()
+                        {
+                            @Override
+                            public void accept(Notification notification) throws Exception
+                            {
+                                unLockAll();
+                                ExLog.d("sam : onEnabledBenefitAlarm unLockAll");
+
+                                DailyUserPreference.getInstance(getActivity()).setBenefitAlarm(notification.agreed);
+                                AnalyticsManager.getInstance(getActivity()).setPushEnabled(notification.agreed, AnalyticsManager.ValueType.LAUNCH);
+
+                                if (notification.agreed == true)
+                                {
+                                    // 혜택 알림 설정이 off --> on 일때
+                                    String title = getString(R.string.label_setting_alarm);
+                                    String message = getString(R.string.message_benefit_alarm_on_confirm_format, notification.serverDate);
+                                    String positive = getString(R.string.dialog_btn_text_confirm);
+
+                                    getViewInterface().showSimpleDialog(title, message, positive, null);
+
+                                    AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
+                                        AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
+                                }
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception
+                            {
+                                onHandleError(throwable);
+                            }
+                        }));
+                }
+            });
+        } else
+        {
+            // 이미 햬택을 받고 계십니다.
+            unLockAll();
+            ExLog.d("sam : onEnabledBenefitAlarm unLockAll");
+
+            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_already_agree_benefit_on), getString(R.string.dialog_btn_text_confirm), null);
+        }
+    }
+
+    boolean moveDeepLinkStayDetail(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || getActivity() == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                Intent intent = StayDetailActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink());
+
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkGourmetDetail(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || getActivity() == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                Intent intent = GourmetDetailActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink());
+
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkStaySearchResult(Context context, DailyExternalDeepLink externalDeepLink)
+    {
+        if (externalDeepLink == null || context == null)
+        {
+            return false;
+        }
+
+        startActivityForResult(SearchStayResultTabActivity.newInstance(context, externalDeepLink.getDeepLink())//
+            , Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+
+        externalDeepLink.clear();
+
+        return true;
+    }
+
+    boolean moveDeepLinkGourmetSearchResult(Context context, DailyExternalDeepLink externalDeepLink)
+    {
+        if (context == null || externalDeepLink == null)
+        {
+            return false;
+        }
+
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(context, externalDeepLink.getDeepLink())//
+            , Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+
+        externalDeepLink.clear();
+
+        return true;
+    }
+
+    boolean moveDeepLinkCouponList(Context context, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || context == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                CouponListActivity.SortType sortType;
+
+                String placeType = externalDeepLink.getPlaceType();
+
+                if (DailyTextUtils.isTextEmpty(placeType) == true)
+                {
+                    sortType = CouponListActivity.SortType.ALL;
+                } else
+                {
+                    try
+                    {
+                        sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
+                    } catch (Exception e)
+                    {
+                        sortType = CouponListActivity.SortType.ALL;
+                    }
+                }
+
+                Intent intent = CouponListActivity.newInstance(context, sortType, dailyDeepLink.getDeepLink());
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPONLIST);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkRegisterCoupon(Context context, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || context == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+//                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                Intent intent = RegisterCouponActivity.newInstance(context, AnalyticsManager.Screen.EVENT_DETAIL);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkReward(Context context, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || context == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+//                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                Intent intent = RewardActivity.newInstance(context);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkStayOutboundSearchResult(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || getActivity() == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                startActivity(StayOutboundListActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink()));
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkStayOutboundDetail(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || getActivity() == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                startActivity(StayOutboundDetailActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink()));
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkSearchHome(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || getActivity() == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                startActivity(SearchActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink()));
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkCampaignTagListView(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                switch (externalDeepLink.getPlaceType())
+                {
+                    case DailyDeepLink.STAY:
+                        moveDeepLinkStayCampaignTag(externalDeepLink);
+                        break;
+
+                    case DailyDeepLink.GOURMET:
+                        moveDeepLinkGourmetCampaignTag(externalDeepLink);
+                        break;
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    void moveDeepLinkStayCampaignTag(DailyExternalDeepLink externalDeepLink)
+    {
+        if (externalDeepLink == null || getActivity() == null)
+        {
+            return;
+        }
+
+        startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
+            , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
+    }
+
+    void moveDeepLinkGourmetCampaignTag(DailyExternalDeepLink externalDeepLink)
+    {
+        if (externalDeepLink == null || getActivity() == null)
+        {
+            return;
+        }
+
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
+            , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
+    }
+
+    void startLogin()
+    {
+        if (getActivity() == null)
+        {
+            return;
+        }
+
+        getViewInterface().showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon) //
+            , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no) //
+            , v ->
+            {
+                Intent intent = LoginActivity.newInstance(getActivity());
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_LOGIN);
+            }, null);
     }
 }

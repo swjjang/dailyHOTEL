@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
-import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -324,7 +323,8 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             String lowImageUrl = "http://img.dailyhotel.me/resources/images/home_event/180110_dailytureawards_sm.jpg";
 
-            baseActivity.startActivityForResult(EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOME_EVENT//
+            baseActivity.startActivityForResult(com.daily.dailyhotel.screen.common.event.EventWebActivity.newInstance( //
+                baseActivity, com.daily.dailyhotel.screen.common.event.EventWebActivity.EventType.HOME_EVENT//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards() //
                 , getString(R.string.label_daily_true_awards), getString(R.string.label_daily_true_awards_share_description), lowImageUrl) //
                 , Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);

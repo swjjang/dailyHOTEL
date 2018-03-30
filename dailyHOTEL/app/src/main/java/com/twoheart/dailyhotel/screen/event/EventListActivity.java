@@ -226,7 +226,9 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
             return;
         }
 
-        Intent intent = EventWebActivity.newInstance(EventListActivity.this, EventWebActivity.SourceType.EVENT, url, eventName, eventDescription, imageUrl);
+        Intent intent = com.daily.dailyhotel.screen.common.event.EventWebActivity.newInstance( //
+            EventListActivity.this, com.daily.dailyhotel.screen.common.event.EventWebActivity.EventType.EVENT //
+            , url, eventName, eventDescription, imageUrl);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 

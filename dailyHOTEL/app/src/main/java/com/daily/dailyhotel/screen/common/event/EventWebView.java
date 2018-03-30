@@ -124,6 +124,23 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
         getViewDataBinding().webView.setWebViewClient(new DailyWebViewClient());
         getViewDataBinding().webView.setWebChromeClient(new DailyWebChromeClient());
 
+        getViewDataBinding().webView.getSettings().setJavaScriptEnabled(true);
+        getViewDataBinding().webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+
+        if (VersionUtils.isOverAPI21())
+        {
+            getViewDataBinding().webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.setAcceptThirdPartyCookies(getViewDataBinding().webView, true);
+        }
+
+        mJavaScriptExtension = new JavaScriptExtension();
+        getViewDataBinding().webView.addJavascriptInterface(mJavaScriptExtension, "android");
+        getViewDataBinding().webView.clearCache(true);
+        getViewDataBinding().webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+
         getViewDataBinding().topImageView.setOnClickListener(v -> getEventListener().onScrollTop());
         getViewDataBinding().topImageView.setVisibility(View.GONE);
 
@@ -144,23 +161,6 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
 
         getViewDataBinding().homeImageView.setOnClickListener(v -> getEventListener().onHomeClick());
         getViewDataBinding().homeImageView.setVisibility(View.GONE);
-
-        getViewDataBinding().webView.getSettings().setJavaScriptEnabled(true);
-        getViewDataBinding().webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-
-        if (VersionUtils.isOverAPI21())
-        {
-            getViewDataBinding().webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.setAcceptCookie(true);
-            cookieManager.setAcceptThirdPartyCookies(getViewDataBinding().webView, true);
-        }
-
-        mJavaScriptExtension = new JavaScriptExtension();
-        getViewDataBinding().webView.addJavascriptInterface(mJavaScriptExtension, "android");
-        getViewDataBinding().webView.clearCache(true);
-        getViewDataBinding().webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
     }
 
     @Override
