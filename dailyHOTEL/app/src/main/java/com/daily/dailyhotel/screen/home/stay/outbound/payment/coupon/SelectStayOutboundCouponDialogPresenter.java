@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -26,7 +25,9 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
-public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresenter<SelectStayOutboundCouponDialogActivity, SelectStayOutboundCouponDialogInterface.ViewInterface> implements SelectStayOutboundCouponDialogInterface.OnEventListener
+public class SelectStayOutboundCouponDialogPresenter//
+    extends BaseExceptionPresenter<SelectStayOutboundCouponDialogActivity, SelectStayOutboundCouponDialogInterface.ViewInterface>//
+    implements SelectStayOutboundCouponDialogInterface.OnEventListener
 {
     private SelectStayOutboundCouponDialogInterface.AnalyticsInterface mAnalytics;
 
@@ -87,7 +88,10 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
         try
         {
-            mStayBookDateTime = new StayBookDateTime(intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME), intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
+            String checkInDateTime = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+            String checkOutDateTime = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+            mStayBookDateTime = new StayBookDateTime(checkInDateTime, checkOutDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -217,7 +221,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
                     mMaxCouponAmount = coupons.maxCouponAmount;
 
                     getViewInterface().setVisible(true);
-                    getViewInterface().showCouponListDialog(getString(R.string.label_select_coupon), coupons.coupons);
+                    getViewInterface().setCouponListDialog(getString(R.string.label_select_coupon), coupons.coupons);
                 }
 
                 unLockAll();

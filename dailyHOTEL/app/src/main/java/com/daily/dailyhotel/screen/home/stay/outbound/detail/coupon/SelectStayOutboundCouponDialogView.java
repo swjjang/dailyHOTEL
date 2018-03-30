@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.detail.coupon;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -83,12 +82,14 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
     }
 
     @Override
-    public void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener confirmListener)
+    public void setCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener confirmListener)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
+
+        getViewDataBinding().titleTextView.setText(title);
 
         if (mSelectStayOutboundCouponDialogAdapter == null)
         {
@@ -102,13 +103,10 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
             });
 
             getViewDataBinding().recyclerView.setAdapter(mSelectStayOutboundCouponDialogAdapter);
-        } else
-        {
-            mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
-            mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
         }
 
-        getViewDataBinding().titleTextView.setText(title);
+        mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
+        mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
 
         getViewDataBinding().oneButtonLayout.setVisibility(View.VISIBLE);
         getViewDataBinding().twoButtonLayout.setVisibility(View.GONE);

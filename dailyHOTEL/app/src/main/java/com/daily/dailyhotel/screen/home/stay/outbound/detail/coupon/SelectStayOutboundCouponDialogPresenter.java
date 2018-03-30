@@ -16,6 +16,8 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
 
+import java.util.List;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
@@ -23,7 +25,9 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
-public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresenter<SelectStayOutboundCouponDialogActivity, SelectStayOutboundCouponDialogInterface.ViewInterface> implements SelectStayOutboundCouponDialogInterface.OnEventListener
+public class SelectStayOutboundCouponDialogPresenter//
+    extends BaseExceptionPresenter<SelectStayOutboundCouponDialogActivity, SelectStayOutboundCouponDialogInterface.ViewInterface>//
+    implements SelectStayOutboundCouponDialogInterface.OnEventListener
 {
     private SelectStayOutboundCouponDialogInterface.AnalyticsInterface mAnalytics;
 
@@ -83,7 +87,10 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
         try
         {
-            mStayBookDateTime = new StayBookDateTime(intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME), intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
+            String checkInDateTime = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+            String checkOutDateTime = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+            mStayBookDateTime = new StayBookDateTime(checkInDateTime, checkOutDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -189,7 +196,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
                 {
                     getViewInterface().setVisible(false);
 
-                    getViewInterface().showSimpleDialog(getString(R.string.coupon_dont_download_coupon), getString(R.string.message_select_coupon_empty), //
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_select_coupon_empty), //
                         getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
                             @Override
@@ -201,20 +208,11 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
                 } else
                 {
-                    boolean hasDownloadCoupon = false;
-
-                    for (Coupon coupon : coupons.coupons)
-                    {
-                        if (coupon.isDownloaded == false)
-                        {
-                            hasDownloadCoupon = true;
-                            break;
-                        }
-                    }
-
-                    String title = getString(hasDownloadCoupon == true ? R.string.coupon_download_coupon : R.string.coupon_dont_download_coupon);
                     getViewInterface().setVisible(true);
-                    getViewInterface().showCouponListDialog(title, coupons.coupons, new View.OnClickListener()
+
+                    String title = getString(hasDownLoadableCoupons(coupons.coupons) ? R.string.coupon_download_coupon : R.string.coupon_dont_download_coupon);
+
+                    getViewInterface().setCouponListDialog(title, coupons.coupons, new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -234,6 +232,24 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
                 onHandleErrorAndFinish(throwable);
             }
         }));
+    }
+
+    boolean hasDownLoadableCoupons(List<Coupon> couponList)
+    {
+        if (couponList == null || couponList.size() == 0)
+        {
+            return false;
+        }
+
+        for (Coupon coupon : couponList)
+        {
+            if (coupon.isDownloaded == false)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

@@ -212,7 +212,6 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
 
     private void setSelectedLayout(SelectCouponViewHolder holder, boolean rewardCoupon, boolean isSelected)
     {
-
         if (isSelected == true)
         {
             holder.dataBinding.getRoot().setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
