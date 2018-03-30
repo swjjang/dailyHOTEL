@@ -413,7 +413,7 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
         mAnalytics.onEventConfirmClick(getActivity(), mCallByScreen, mVisitDateTime);
     }
 
-    private void finish(String visitDateTime)
+    void finish(String visitDateTime)
     {
         Intent intent = new Intent();
         intent.putExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATETIME, visitDateTime);

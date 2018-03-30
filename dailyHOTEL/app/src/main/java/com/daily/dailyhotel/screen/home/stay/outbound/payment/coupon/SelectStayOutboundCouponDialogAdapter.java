@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.databinding.LayoutSelectCouponDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,10 +35,10 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
         void updatePositiveButton();
     }
 
-    public SelectStayOutboundCouponDialogAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
+    public SelectStayOutboundCouponDialogAdapter(Context context, OnCouponItemListener listener)
     {
         mContext = context;
-        mList = list;
+        mList = new ArrayList<>();
         mListener = listener;
         setSelectedMode(true);
     }
@@ -212,7 +213,6 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
 
     private void setSelectedLayout(SelectCouponViewHolder holder, boolean rewardCoupon, boolean isSelected)
     {
-
         if (isSelected == true)
         {
             holder.dataBinding.getRoot().setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));

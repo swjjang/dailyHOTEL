@@ -271,15 +271,19 @@ public class StayOutboundBookingDetailPresenter //
             {
                 String reviewStatusType = null;
 
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REVIEW_COMPLETE)
+                switch (resultCode)
                 {
-                    reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
-                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_REVIEW_MODIFIABLE)
-                {
-                    reviewStatusType = PlaceBookingDetail.ReviewStatusType.MODIFIABLE;
-                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_REVIEW_ADDABLE)
-                {
-                    reviewStatusType = PlaceBookingDetail.ReviewStatusType.ADDABLE;
+                    case Constants.CODE_RESULT_ACTIVITY_REVIEW_COMPLETE:
+                        reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_REVIEW_MODIFIABLE:
+                        reviewStatusType = PlaceBookingDetail.ReviewStatusType.MODIFIABLE;
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_REVIEW_ADDABLE:
+                        reviewStatusType = PlaceBookingDetail.ReviewStatusType.ADDABLE;
+                        break;
                 }
 
                 if (DailyTextUtils.isTextEmpty(reviewStatusType) == false)

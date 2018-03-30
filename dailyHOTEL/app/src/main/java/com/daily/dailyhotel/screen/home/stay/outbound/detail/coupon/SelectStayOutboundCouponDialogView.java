@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.stay.outbound.detail.coupon;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -86,65 +85,36 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
     }
 
     @Override
-    public void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener positiveListener//
-        , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener)
+    public void setCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener confirmListener)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
+        getViewDataBinding().titleTextView.setText(title);
+
         if (mSelectStayOutboundCouponDialogAdapter == null)
         {
-            mSelectStayOutboundCouponDialogAdapter = new SelectStayOutboundCouponDialogAdapter(getContext(), couponList, new SelectStayOutboundCouponDialogAdapter.OnCouponItemListener()
+            mSelectStayOutboundCouponDialogAdapter = new SelectStayOutboundCouponDialogAdapter(getContext(), new SelectStayOutboundCouponDialogAdapter.OnCouponItemListener()
             {
                 @Override
                 public void onDownloadClick(int position)
                 {
                     getEventListener().onDownloadCouponClick(mSelectStayOutboundCouponDialogAdapter.getItem(position));
                 }
-
-                @Override
-                public void updatePositiveButton()
-                {
-                    if (mSelectStayOutboundCouponDialogAdapter.getSelectPosition() != -1)
-                    {
-                        getViewDataBinding().positiveTextView.setEnabled(true);
-                    } else
-                    {
-                        getViewDataBinding().positiveTextView.setEnabled(false);
-                    }
-                }
             });
 
-            mSelectStayOutboundCouponDialogAdapter.setSelectedMode(true);
             getViewDataBinding().recyclerView.setAdapter(mSelectStayOutboundCouponDialogAdapter);
-        } else
-        {
-            mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
-            mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
         }
 
-        getViewDataBinding().positiveTextView.setText(R.string.dialog_btn_text_select);
-        getViewDataBinding().positiveTextView.setEnabled(false);
-        getViewDataBinding().negativeTextView.setText(R.string.dialog_btn_text_cancel);
+        mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
+        mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
 
-        getViewDataBinding().positiveTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                int selectPosition = mSelectStayOutboundCouponDialogAdapter.getSelectPosition();
-                Coupon coupon = mSelectStayOutboundCouponDialogAdapter.getItem(selectPosition);
+        getViewDataBinding().oneButtonLayout.setVisibility(View.VISIBLE);
+        getViewDataBinding().twoButtonLayout.setVisibility(View.GONE);
 
-                getEventListener().onConfirm(coupon);
-            }
-        });
-
-        getViewDataBinding().negativeTextView.setOnClickListener(v -> getEventListener().onBackClick());
-
-        getViewDataBinding().oneButtonLayout.setVisibility(View.GONE);
-        getViewDataBinding().twoButtonLayout.setVisibility(View.VISIBLE);
+        getViewDataBinding().confirmTextView.setOnClickListener(confirmListener);
     }
 
     private class BackgroundDrawable extends Drawable

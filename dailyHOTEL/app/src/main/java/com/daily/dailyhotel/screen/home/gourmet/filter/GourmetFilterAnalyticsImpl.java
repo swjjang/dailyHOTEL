@@ -80,16 +80,16 @@ public class GourmetFilterAnalyticsImpl implements GourmetFilterInterface.Analyt
 
         // 추가 항목
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.GOURMET_SORT, filterSortString.toString(), null);
+            , AnalyticsManager.Action.GOURMET_SORT, filterSortString, null);
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.GOURMET_CATEGORY, filterCategoryString.toString(), null);
+            , AnalyticsManager.Action.GOURMET_CATEGORY, filterCategoryString, null);
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.GOURMET_TIME, filterTimeString.toString(), null);
+            , AnalyticsManager.Action.GOURMET_TIME, filterTimeString, null);
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.GOURMET_AMENITIES, filterAmenityString.toString(), null);
+            , AnalyticsManager.Action.GOURMET_AMENITIES, filterAmenityString, null);
     }
 
     @Override

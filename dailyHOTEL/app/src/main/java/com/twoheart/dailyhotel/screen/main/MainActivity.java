@@ -608,13 +608,14 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     return;
                 }
 
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                switch (resultCode)
                 {
-                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, false, null);
-                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
-                {
-                    if (mMainFragmentManager != null)
-                    {
+                    case Activity.RESULT_OK:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, false, null);
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_GO_HOME:
                         Fragment fragment = mMainFragmentManager.getCurrentFragment();
 
                         if (fragment instanceof HomeFragment)
@@ -624,10 +625,11 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         {
                             mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false, null);
                         }
-                    }
-                } else
-                {
-                    mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                        break;
+
+                    default:
+                        mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                        break;
                 }
                 break;
             }

@@ -77,7 +77,7 @@ public class SearchStayOutboundSuggestPresenter //
     private List<StayOutboundSuggest> mSuggestList;
     StayOutboundSuggest mLocationSuggest;
     String mKeyword;
-    private boolean mIsResearch;
+    boolean mIsResearch;
 
     DailyLocationExFactory mDailyLocationExFactory;
 

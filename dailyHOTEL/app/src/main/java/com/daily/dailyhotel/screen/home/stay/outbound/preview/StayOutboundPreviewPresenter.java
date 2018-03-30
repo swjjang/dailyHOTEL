@@ -242,12 +242,12 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private void setStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
+    void setStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
         mStayOutboundDetail = stayOutboundDetail;
     }
 
-    private void setRoomList(List<StayOutboundRoom> roomList)
+    void setRoomList(List<StayOutboundRoom> roomList)
     {
         mRoomList = roomList;
     }

@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.stay.outbound.payment.coupon;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -86,17 +85,18 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
     }
 
     @Override
-    public void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener positiveListener//
-        , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener)
+    public void setCouponListDialog(String title, List<Coupon> couponList)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
+        getViewDataBinding().titleTextView.setText(title);
+
         if (mSelectStayOutboundCouponDialogAdapter == null)
         {
-            mSelectStayOutboundCouponDialogAdapter = new SelectStayOutboundCouponDialogAdapter(getContext(), couponList, new SelectStayOutboundCouponDialogAdapter.OnCouponItemListener()
+            mSelectStayOutboundCouponDialogAdapter = new SelectStayOutboundCouponDialogAdapter(getContext(), new SelectStayOutboundCouponDialogAdapter.OnCouponItemListener()
             {
                 @Override
                 public void onDownloadClick(int position)
@@ -119,11 +119,10 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
 
             mSelectStayOutboundCouponDialogAdapter.setSelectedMode(true);
             getViewDataBinding().recyclerView.setAdapter(mSelectStayOutboundCouponDialogAdapter);
-        } else
-        {
-            mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
-            mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
         }
+
+        mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
+        mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
 
         getViewDataBinding().positiveTextView.setText(R.string.dialog_btn_text_select);
         getViewDataBinding().positiveTextView.setEnabled(false);

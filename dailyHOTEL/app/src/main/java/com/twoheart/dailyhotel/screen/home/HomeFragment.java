@@ -40,7 +40,6 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
-import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -375,13 +374,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     case Activity.RESULT_OK:
                     case com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR:
                     {
-                        if (data != null && (data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION) == false//
-                            || data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false))
+                        if (data != null && (data.hasExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_REGION) == false//
+                            || data.hasExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false))
                         {
                             return;
                         }
 
-                        StayRegionParcel stayRegionParcel = data.getParcelableExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION);
+                        StayRegionParcel stayRegionParcel = data.getParcelableExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_REGION);
 
                         if (stayRegionParcel == null)
                         {
@@ -395,7 +394,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             return;
                         }
 
-                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
 
                         try
                         {
@@ -410,13 +409,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                     case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
                     {
-                        if (data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false)
+                        if (data.hasExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false)
                         {
                             return;
                         }
 
                         // 검색 결과 화면으로 이동한다.
-                        DailyCategoryType categoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+                        DailyCategoryType categoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaTabActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
 
                         try
                         {

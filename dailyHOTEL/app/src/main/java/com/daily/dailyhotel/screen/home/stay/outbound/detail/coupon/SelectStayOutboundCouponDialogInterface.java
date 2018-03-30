@@ -1,6 +1,5 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.detail.coupon;
 
-import android.content.DialogInterface;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -16,14 +15,11 @@ public interface SelectStayOutboundCouponDialogInterface
     {
         void setVisible(boolean visible);
 
-        void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener positiveListener//
-            , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener);
+        void setCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener confirmListener);
     }
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onConfirm(Coupon coupon);
-
         void onDownloadCouponClick(Coupon coupon);
     }
 

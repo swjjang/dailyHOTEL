@@ -57,30 +57,30 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     private static final String CREATE_T_RECENTLY = "CREATE TABLE IF NOT EXISTS " + T_RECENTLY + " (" //
         + RecentlyList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + RecentlyList.PLACE_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
-        + RecentlyList.NAME + " TEXT NULL, " //
-        + RecentlyList.ENGLISH_NAME + " TEXT NULL, " //
+        + RecentlyList.NAME + " TEXT, " //
+        + RecentlyList.ENGLISH_NAME + " TEXT, " //
         + RecentlyList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
         + RecentlyList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
-        + RecentlyList.REGION_NAME + " TEXT NULL, " //
-        + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
+        + RecentlyList.REGION_NAME + " TEXT, " //
+        + RecentlyList.IMAGE_URL + " TEXT " + ");";
 
     // added database version 3 and change version 5 (added field DISPLAY_TEXT) drop and create
     private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
         + StayObRecentlySuggestList._ID + " INTEGER  PRIMARY KEY NOT NULL, " //
         + StayObRecentlySuggestList.SUGGEST + " TEXT NOT NULL, " //
         + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
-        + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
+        + StayObRecentlySuggestList.KEYWORD + " TEXT " + ");";
 
     // added database version 4
     private static final String CREATE_T_TEMP_REVIEW = "CREATE TABLE IF NOT EXISTS " + T_TEMP_REVIEW + " (" //
         + TempReviewList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + TempReviewList.RESERVATION_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
         + TempReviewList.SERVICE_TYPE + " TEXT NOT NULL, " //
-        + TempReviewList.START_DATE + " TEXT NULL, " //
-        + TempReviewList.END_DATE + " TEXT NULL, " //
-        + TempReviewList.SCORE_QUESTION + " TEXT NULL, " //
-        + TempReviewList.PICK_QUESTION + " TEXT NULL, " //
-        + TempReviewList.COMMENT + " TEXT NULL " + ");";
+        + TempReviewList.START_DATE + " TEXT, " //
+        + TempReviewList.END_DATE + " TEXT, " //
+        + TempReviewList.SCORE_QUESTION + " TEXT, " //
+        + TempReviewList.PICK_QUESTION + " TEXT, " //
+        + TempReviewList.COMMENT + " TEXT " + ");";
 
     // added database version 5
     private static final String CREATE_T_GOURMET_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_GOURMET_IB_RECENTLY_SUGGEST + " (" //
@@ -89,7 +89,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + GourmetRecentlySuggestList.DISPLAY + " TEXT NOT NULL, " //
         + GourmetRecentlySuggestList.SUGGEST + " TEXT NOT NULL, " //
         + GourmetRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
-        + GourmetRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
+        + GourmetRecentlySuggestList.KEYWORD + " TEXT " + ");";
 
     // added database version 5
     private static final String CREATE_T_STAY_IB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_IB_RECENTLY_SUGGEST + " (" //
@@ -98,7 +98,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayIbRecentlySuggestList.DISPLAY + " TEXT NOT NULL, " //
         + StayIbRecentlySuggestList.SUGGEST + " TEXT NOT NULL, " //
         + StayIbRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
-        + StayIbRecentlySuggestList.KEYWORD + " TEXT NULL " + ");";
+        + StayIbRecentlySuggestList.KEYWORD + " TEXT " + ");";
 
     // added database version 5
     private static final String CREATE_T_SEARCH_RESULT_HISTORY = "CREATE TABLE IF NOT EXISTS " + T_SEARCH_RESULT_HISTORY + " (" //
@@ -106,12 +106,12 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + SearchResultHistoryList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
         + SearchResultHistoryList.DISPLAY_NAME + " TEXT NOT NULL, " //
         + SearchResultHistoryList.START_DATE + " TEXT NOT NULL, " //
-        + SearchResultHistoryList.END_DATE + " TEXT NULL, " //
-        + SearchResultHistoryList.SUGGEST + " TEXT NULL, " // StaySuggest, GourmetSuggest, StayOutboundSuggest - json String 예정
+        + SearchResultHistoryList.END_DATE + " TEXT, " //
+        + SearchResultHistoryList.SUGGEST + " TEXT, " // StaySuggest, GourmetSuggest, StayOutboundSuggest - json String 예정
         + SearchResultHistoryList.ADULT_COUNT + " INTEGER NOT NULL DEFAULT 0, " //
         + SearchResultHistoryList.START_DATE_TIME + " INTEGER NOT NULL DEFAULT 0, " //
         + SearchResultHistoryList.SAVING_TIME + " INTEGER NOT NULL DEFAULT 0, " //
-        + SearchResultHistoryList.CHILD_AGE_LIST + " TEXT NULL " + ");";
+        + SearchResultHistoryList.CHILD_AGE_LIST + " TEXT " + ");";
 
     public DailyDb(Context context)
     {

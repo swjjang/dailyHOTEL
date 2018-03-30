@@ -22,9 +22,6 @@ public class SelectStayOutboundCouponDialogActivity extends BaseActivity<SelectS
     static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_VENDOR_TYPE = "vendorType";
 
-    public static final String INTENT_EXTRA_MAX_COUPON_AMOUNT = "maxCouponAmount";
-    public static final String INTENT_EXTRA_SELECT_COUPON = "selectedCoupon";
-
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
         , int stayIndex, String stayName, String[] vendorType)
     {
