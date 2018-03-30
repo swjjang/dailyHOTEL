@@ -742,7 +742,18 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                         BaseException baseException = (BaseException) throwable;
 
                         getViewInterface().showSimpleDialog(null, baseException.getMessage()//
-                            , getString(R.string.dialog_btn_text_confirm), null, null, null, null, new DialogInterface.OnDismissListener()
+                            , getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    // 이미 다운 로드 받은 경우 딥링크를 호출 한다.
+                                    if (baseException.getCode() == 300)
+                                    {
+                                        onInternalLink(deepLink);
+                                    }
+                                }
+                            }, null, null, new DialogInterface.OnDismissListener()
                             {
                                 @Override
                                 public void onDismiss(DialogInterface dialog)
