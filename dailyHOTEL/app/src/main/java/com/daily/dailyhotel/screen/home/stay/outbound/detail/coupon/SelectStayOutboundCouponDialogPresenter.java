@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.detail.coupon;
 
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
 
@@ -35,7 +33,6 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
     String mStayName;
     StayBookDateTime mStayBookDateTime;
     String[] mVendorType;
-    int mMaxCouponAmount;
 
     public SelectStayOutboundCouponDialogPresenter(@NonNull SelectStayOutboundCouponDialogActivity activity)
     {
@@ -192,7 +189,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
                 {
                     getViewInterface().setVisible(false);
 
-                    getViewInterface().showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
+                    getViewInterface().showSimpleDialog(getString(R.string.coupon_dont_download_coupon), getString(R.string.message_select_coupon_empty), //
                         getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
                             @Override
@@ -204,29 +201,25 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
                 } else
                 {
-                    mMaxCouponAmount = coupons.maxCouponAmount;
+                    boolean hasDownloadCoupon = false;
 
+                    for (Coupon coupon : coupons.coupons)
+                    {
+                        if (coupon.isDownloaded == false)
+                        {
+                            hasDownloadCoupon = true;
+                            break;
+                        }
+                    }
+
+                    String title = getString(hasDownloadCoupon == true ? R.string.coupon_download_coupon : R.string.coupon_dont_download_coupon);
                     getViewInterface().setVisible(true);
-                    getViewInterface().showCouponListDialog(getString(R.string.label_select_coupon), coupons.coupons, new View.OnClickListener()
+                    getViewInterface().showCouponListDialog(title, coupons.coupons, new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
-
-                        }
-                    }, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-
+                            onBackClick();
                         }
                     });
                 }
@@ -247,22 +240,6 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
     public void onBackClick()
     {
         getActivity().onBackPressed();
-    }
-
-    @Override
-    public void onConfirm(Coupon coupon)
-    {
-        if (coupon == null || lock() == true)
-        {
-            return;
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, new CouponParcel(coupon));
-        intent.putExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, mMaxCouponAmount);
-
-        setResult(Activity.RESULT_OK, intent);
-        onBackClick();
     }
 
     @Override

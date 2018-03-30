@@ -24,14 +24,10 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
     private Context mContext;
     private List<Coupon> mList;
     OnCouponItemListener mListener;
-    int mSelectPosition = -1;
-    private boolean mIsSelectedMode;
 
     public interface OnCouponItemListener
     {
         void onDownloadClick(int position);
-
-        void updatePositiveButton();
     }
 
     public SelectStayOutboundCouponDialogAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
@@ -39,7 +35,6 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
         mContext = context;
         mList = list;
         mListener = listener;
-        setSelectedMode(true);
     }
 
     @Override
@@ -141,50 +136,21 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
 
         setDownLoadLayout(holder, coupon.type == Coupon.Type.REWARD, coupon.isDownloaded);
 
-        if (mIsSelectedMode == true && coupon.isDownloaded == true)
+        if (coupon.isDownloaded == false)
         {
-            setSelectedLayout(holder, coupon.type == Coupon.Type.REWARD, mSelectPosition == position);
-
             holder.dataBinding.getRoot().setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
                     Coupon coupon = getItem(position);
-                    if (coupon.isDownloaded == true)
-                    {
-                        mSelectPosition = position;
-                    } else
-                    {
-                        mSelectPosition = -1;
-                        mListener.onDownloadClick(position);
-                    }
-
-                    notifyDataSetChanged();
-                    mListener.updatePositiveButton();
+                    mListener.onDownloadClick(position);
                 }
             });
         } else
         {
-            holder.dataBinding.getRoot().setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    Coupon coupon = getItem(position);
-                    if (coupon.isDownloaded == false)
-                    {
-                        mListener.onDownloadClick(position);
-                    }
-                }
-            });
+            holder.dataBinding.getRoot().setOnClickListener(null);
         }
-    }
-
-
-    public void setSelectedMode(boolean selected)
-    {
-        mIsSelectedMode = selected;
     }
 
     public Coupon getCoupon(String couponCode)
@@ -203,35 +169,6 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
         }
 
         return null;
-    }
-
-    public int getSelectPosition()
-    {
-        return mSelectPosition;
-    }
-
-    private void setSelectedLayout(SelectCouponViewHolder holder, boolean rewardCoupon, boolean isSelected)
-    {
-
-        if (isSelected == true)
-        {
-            holder.dataBinding.getRoot().setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
-
-            holder.dataBinding.couponPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
-            holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, R.drawable.ic_check_s, 0);
-            holder.dataBinding.couponPriceTextView.setSelected(true);
-
-            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
-        } else
-        {
-            holder.dataBinding.getRoot().setBackgroundResource(R.color.white);
-
-            holder.dataBinding.couponPriceTextView.setTextColor(mContext.getResources().getColor(R.color.black));
-            holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
-            holder.dataBinding.couponPriceTextView.setSelected(false);
-
-            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-        }
     }
 
     private void setDownLoadLayout(SelectCouponViewHolder holder, boolean rewardCoupon, boolean isDownload)

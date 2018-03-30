@@ -217,28 +217,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
                     mMaxCouponAmount = coupons.maxCouponAmount;
 
                     getViewInterface().setVisible(true);
-                    getViewInterface().showCouponListDialog(getString(R.string.label_select_coupon), coupons.coupons, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-
-                        }
-                    }, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-
-                        }
-                    });
+                    getViewInterface().showCouponListDialog(getString(R.string.label_select_coupon), coupons.coupons);
                 }
 
                 unLockAll();

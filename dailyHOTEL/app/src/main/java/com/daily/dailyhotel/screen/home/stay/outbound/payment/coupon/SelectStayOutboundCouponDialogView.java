@@ -83,8 +83,7 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
     }
 
     @Override
-    public void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener positiveListener//
-        , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener)
+    public void showCouponListDialog(String title, List<Coupon> couponList)
     {
         if (getViewDataBinding() == null)
         {
@@ -121,6 +120,8 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
             mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
             mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
         }
+
+        getViewDataBinding().titleTextView.setText(title);
 
         getViewDataBinding().positiveTextView.setText(R.string.dialog_btn_text_select);
         getViewDataBinding().positiveTextView.setEnabled(false);

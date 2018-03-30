@@ -83,8 +83,7 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
     }
 
     @Override
-    public void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener positiveListener//
-        , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener)
+    public void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener confirmListener)
     {
         if (getViewDataBinding() == null)
         {
@@ -100,21 +99,8 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
                 {
                     getEventListener().onDownloadCouponClick(mSelectStayOutboundCouponDialogAdapter.getItem(position));
                 }
-
-                @Override
-                public void updatePositiveButton()
-                {
-                    if (mSelectStayOutboundCouponDialogAdapter.getSelectPosition() != -1)
-                    {
-                        getViewDataBinding().positiveTextView.setEnabled(true);
-                    } else
-                    {
-                        getViewDataBinding().positiveTextView.setEnabled(false);
-                    }
-                }
             });
 
-            mSelectStayOutboundCouponDialogAdapter.setSelectedMode(true);
             getViewDataBinding().recyclerView.setAdapter(mSelectStayOutboundCouponDialogAdapter);
         } else
         {
@@ -122,26 +108,12 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
             mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
         }
 
-        getViewDataBinding().positiveTextView.setText(R.string.dialog_btn_text_select);
-        getViewDataBinding().positiveTextView.setEnabled(false);
-        getViewDataBinding().negativeTextView.setText(R.string.dialog_btn_text_cancel);
+        getViewDataBinding().titleTextView.setText(title);
 
-        getViewDataBinding().positiveTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                int selectPosition = mSelectStayOutboundCouponDialogAdapter.getSelectPosition();
-                Coupon coupon = mSelectStayOutboundCouponDialogAdapter.getItem(selectPosition);
+        getViewDataBinding().oneButtonLayout.setVisibility(View.VISIBLE);
+        getViewDataBinding().twoButtonLayout.setVisibility(View.GONE);
 
-                getEventListener().onConfirm(coupon);
-            }
-        });
-
-        getViewDataBinding().negativeTextView.setOnClickListener(v -> getEventListener().onBackClick());
-
-        getViewDataBinding().oneButtonLayout.setVisibility(View.GONE);
-        getViewDataBinding().twoButtonLayout.setVisibility(View.VISIBLE);
+        getViewDataBinding().confirmTextView.setOnClickListener(confirmListener);
     }
 
     private class BackgroundDrawable extends Drawable

@@ -16,8 +16,7 @@ public interface SelectStayOutboundCouponDialogInterface
     {
         void setVisible(boolean visible);
 
-        void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener positiveListener//
-            , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener);
+        void showCouponListDialog(String title, List<Coupon> couponList);
     }
 
     interface OnEventListener extends OnBaseEventListener

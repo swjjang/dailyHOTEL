@@ -16,14 +16,11 @@ public interface SelectStayOutboundCouponDialogInterface
     {
         void setVisible(boolean visible);
 
-        void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener positiveListener//
-            , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener);
+        void showCouponListDialog(String title, List<Coupon> couponList, View.OnClickListener confirmListener);
     }
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onConfirm(Coupon coupon);
-
         void onDownloadCouponClick(Coupon coupon);
     }
 
