@@ -27,6 +27,8 @@ public interface EventWebInterface
         void setShareButtonVisible(boolean visible);
 
         void showShareDialog(DialogInterface.OnDismissListener listener);
+
+        void onEnabledProgress(boolean enabled);
     }
 
     interface OnEventListener extends OnBaseEventListener
@@ -66,6 +68,10 @@ public interface EventWebInterface
         void onFeed(String message);
 
         void onEnabledBenefitAlarm();
+
+        void onScreenLock();
+
+        void onUnlockAll();
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

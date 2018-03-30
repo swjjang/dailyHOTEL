@@ -237,7 +237,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
-        ExLog.d("sam : onActivityResult unLockAll");
 
         switch (requestCode)
         {
@@ -283,8 +282,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         }
 
         setRefresh(false);
-        screenLock(showProgress);
-        ExLog.d("sam : onRefresh screenLock on");
 
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime() //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<CommonDateTime>()
@@ -293,8 +290,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(CommonDateTime commonDateTime) throws Exception
                 {
                     mCommonDateTime = commonDateTime;
-                    unLockAll();
-                    ExLog.d("sam : onRefresh unLockAll");
                 }
             }, new Consumer<Throwable>()
             {
@@ -302,8 +297,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(Throwable throwable) throws Exception
                 {
                     ExLog.d(throwable.toString());
-                    unLockAll();
-                    ExLog.d("sam : onRefresh throw unLockAll");
                 }
             }));
     }
@@ -463,15 +456,12 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             return;
         }
 
-        ExLog.d("sam : onScrollTop lock");
-
         addCompositeDisposable(getViewInterface().smoothScrollTop().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
                 unLockAll();
-                ExLog.d("sam : onScrollTop unLockAll");
             }
         }, new Consumer<Throwable>()
         {
@@ -479,7 +469,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             public void accept(Throwable throwable) throws Exception
             {
                 unLockAll();
-                ExLog.d("sam : onScrollTop unLockAll");
             }
         }));
     }
@@ -491,8 +480,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         {
             return;
         }
-
-        ExLog.d("sam : onHomeClick lock");
 
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
     }
@@ -537,7 +524,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     public void accept(String shortUrl) throws Exception
                     {
                         unLockAll();
-                        ExLog.d("sam : onShareKakaoClick unLockAll");
 
                         KakaoLinkManager.newInstance(getActivity()).shareEventWebView(mEventName //
                             , mEventDescription //
@@ -550,7 +536,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     public void accept(Throwable throwable) throws Exception
                     {
                         unLockAll();
-                        ExLog.d("sam : onShareKakaoClick unLockAll");
 
                         KakaoLinkManager.newInstance(getActivity()).shareEventWebView(mEventName //
                             , mEventDescription //
@@ -572,7 +557,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 }, null);
 
             unLockAll();
-            ExLog.d("sam : onShareKakaoClick unLockAll");
         }
     }
 
@@ -581,11 +565,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         try
         {
-//            if (lock())
-//            {
-//                return;
-//            }
-
             String longUrl = mEventUrl;
 
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
@@ -594,7 +573,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull String shortUrl) throws Exception
                 {
                     unLockAll();
-                    ExLog.d("sam : onCopyLinkClick unLockAll");
 
                     DailyTextUtils.clipText(getActivity(), shortUrl);
 
@@ -606,7 +584,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull Throwable throwable) throws Exception
                 {
                     unLockAll();
-                    ExLog.d("sam : onCopyLinkClick unLockAll");
 
                     DailyTextUtils.clipText(getActivity(), longUrl);
 
@@ -616,7 +593,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         } catch (Exception e)
         {
             unLockAll();
-            ExLog.d("sam : onCopyLinkClick unLockAll");
             ExLog.d(e.toString());
         }
     }
@@ -626,11 +602,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         try
         {
-//            if (lock())
-//            {
-//                return;
-//            }
-
             String longUrl = mEventUrl;
 
             if (DailyTextUtils.isTextEmpty(mEventDescription) == false)
@@ -645,7 +616,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull String shortUrl) throws Exception
                 {
                     unLockAll();
-                    ExLog.d("sam : onMoreShareClick unLockAll");
 
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -661,7 +631,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 public void accept(@NonNull Throwable throwable) throws Exception
                 {
                     unLockAll();
-                    ExLog.d("sam : onMoreShareClick unLockAll");
 
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -675,7 +644,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         } catch (Exception e)
         {
             unLockAll();
-            ExLog.d("sam : onMoreShareClick unLockAll");
             ExLog.d(e.toString());
         }
     }
@@ -702,8 +670,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         {
             return;
         }
-
-        ExLog.d("sam : onDownloadCoupon lock");
 
         addCompositeDisposable(mCouponRemoteImpl.getDownloadCoupon(couponCode).observeOn(AndroidSchedulers.mainThread()) //
             .subscribe(new Consumer<DownloadCouponResult>()
@@ -759,7 +725,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                                 public void onDismiss(DialogInterface dialog)
                                 {
                                     unLockAll();
-                                    ExLog.d("sam : onDownloadCoupon lock");
                                 }
                             }, true);
                     } else
@@ -936,8 +901,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             return;
         }
 
-        ExLog.d("sam : onEnabledBenefitAlarm lock");
-
         boolean isBenefitAlarm = DailyUserPreference.getInstance(getActivity()).isBenefitAlarm();
 
         if (isBenefitAlarm == false)
@@ -955,7 +918,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                             public void accept(Notification notification) throws Exception
                             {
                                 unLockAll();
-                                ExLog.d("sam : onEnabledBenefitAlarm unLockAll");
 
                                 DailyUserPreference.getInstance(getActivity()).setBenefitAlarm(notification.agreed);
                                 AnalyticsManager.getInstance(getActivity()).setPushEnabled(notification.agreed, AnalyticsManager.ValueType.LAUNCH);
@@ -987,10 +949,21 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         {
             // 이미 햬택을 받고 계십니다.
             unLockAll();
-            ExLog.d("sam : onEnabledBenefitAlarm unLockAll");
 
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_already_agree_benefit_on), getString(R.string.dialog_btn_text_confirm), null);
         }
+    }
+
+    @Override
+    public void onScreenLock()
+    {
+        screenLock(true);
+    }
+
+    @Override
+    public void onUnlockAll()
+    {
+        unLockAll();
     }
 
     boolean moveDeepLinkStayDetail(DailyDeepLink dailyDeepLink)
