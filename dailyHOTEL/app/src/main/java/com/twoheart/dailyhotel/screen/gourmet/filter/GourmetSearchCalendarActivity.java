@@ -14,16 +14,16 @@ public class GourmetSearchCalendarActivity extends GourmetCalendarActivity
 
     private String mSearchType;
 
-//    /**
-//     * @param context
-//     * @param todayDateTime
-//     * @param gourmetBookingDay
-//     * @param screen
-//     * @param isSelected
-//     * @param isAnimation
-//     * @param searchType
-//     * @return
-//     */
+    //    /**
+    //     * @param context
+    //     * @param todayDateTime
+    //     * @param gourmetBookingDay
+    //     * @param screen
+    //     * @param isSelected
+    //     * @param isAnimation
+    //     * @param searchType
+    //     * @return
+    //     */
     //    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
     //        , GourmetBookingDay gourmetBookingDay, int dayOfMaxCount, String screen, boolean isSelected //
     //        , boolean isAnimation, String searchType)

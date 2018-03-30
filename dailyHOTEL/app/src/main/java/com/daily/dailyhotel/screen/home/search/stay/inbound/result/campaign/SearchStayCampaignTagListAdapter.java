@@ -20,13 +20,12 @@ import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutListLoadingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SearchStayCampaignTagListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class SearchStayCampaignTagListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     Context mContext;
     List<ObjectItem> mList;
@@ -149,12 +148,6 @@ public class SearchStayCampaignTagListAdapter extends RecyclerView.Adapter<Recyc
         }
 
         return mList.size();
-    }
-
-    @Override
-    public boolean isItemViewTypePinned(int viewType)
-    {
-        return viewType == ObjectItem.TYPE_SECTION;
     }
 
     @Override

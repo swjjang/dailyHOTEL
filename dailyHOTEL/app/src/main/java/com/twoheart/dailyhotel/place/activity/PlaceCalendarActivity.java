@@ -42,6 +42,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@Deprecated
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
     protected static final String INTENT_EXTRA_DATA_SCREEN = "screen";

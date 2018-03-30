@@ -17,14 +17,13 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     protected Context mContext;
     protected LayoutInflater mInflater;
@@ -132,12 +131,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return mPlaceViewItemList.get(position);
-    }
-
-    @Override
-    public boolean isItemViewTypePinned(int viewType)
-    {
-        return viewType == PlaceViewItem.TYPE_SECTION;
     }
 
     @Override

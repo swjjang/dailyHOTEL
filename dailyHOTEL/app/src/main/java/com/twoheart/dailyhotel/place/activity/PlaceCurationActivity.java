@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.ref.WeakReference;
 
+@Deprecated
 public abstract class PlaceCurationActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int HANDLE_MESSAGE_RESULT = 1;

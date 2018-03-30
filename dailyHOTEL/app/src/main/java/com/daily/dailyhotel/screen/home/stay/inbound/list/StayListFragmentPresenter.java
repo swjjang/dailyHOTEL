@@ -1012,6 +1012,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             {
                 if (isCurrentFragment() == false)
                 {
+                    mNeedToRefresh = true;
                 } else
                 {
                     getViewInterface().scrollStop();

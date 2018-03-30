@@ -7,20 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class PlaceListFragment extends BaseFragment implements Constants
 {
@@ -213,96 +206,5 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public int getPlaceCount()
     {
         return mPlaceCount;
-    }
-
-    protected ArrayList<PlaceViewItem> makePlaceList(List<? extends Place> placeList, SortType sortType, boolean hasSection)
-    {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
-
-        if (placeList == null || placeList.size() == 0)
-        {
-            return placeViewItemList;
-        }
-
-        String previousRegion = null;
-        boolean hasDailyChoice = false;
-
-        int entryPosition = 1;
-
-        if (mPlaceListLayout != null)
-        {
-            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
-
-            int oldListSize = oldList.size();
-            if (oldListSize > 0)
-            {
-                int start = oldList.size() - 1;
-                int end = oldListSize - 5;
-                end = end < 0 ? 0 : end;
-
-                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
-                for (int i = start; i >= end; i--)
-                {
-                    PlaceViewItem item = oldList.get(i);
-                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
-                    {
-                        Place place = item.getItem();
-                        entryPosition = place.entryPosition + 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (hasSection == true)
-        {
-            for (Place place : placeList)
-            {
-                // 지역순에만 section 존재함
-                if (SortType.DEFAULT == sortType)
-                {
-                    String region = place.districtName;
-
-                    if (DailyTextUtils.isTextEmpty(region) == true)
-                    {
-                        continue;
-                    }
-
-                    if (place.isDailyChoice == true)
-                    {
-                        if (hasDailyChoice == false)
-                        {
-                            hasDailyChoice = true;
-
-                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                            placeViewItemList.add(section);
-                        }
-                    } else
-                    {
-                        if (DailyTextUtils.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                        {
-                            previousRegion = region;
-
-                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                            placeViewItemList.add(section);
-                        }
-                    }
-                }
-
-                place.entryPosition = entryPosition;
-                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                entryPosition++;
-            }
-        } else
-        {
-            for (Place place : placeList)
-            {
-                place.entryPosition = entryPosition;
-                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                entryPosition++;
-            }
-        }
-
-        return placeViewItemList;
     }
 }

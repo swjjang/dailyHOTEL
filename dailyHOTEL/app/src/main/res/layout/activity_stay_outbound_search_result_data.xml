@@ -36,12 +36,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="vertical"
-                    android:transitionGroup="true"/>
+                    android:transitionGroup="true"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
             </android.support.v4.widget.SwipeRefreshLayout>
 
             <com.daily.base.widget.DailyTouchableFrameView

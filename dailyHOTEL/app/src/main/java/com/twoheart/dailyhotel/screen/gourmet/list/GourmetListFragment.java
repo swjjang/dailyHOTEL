@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -14,6 +15,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetParams;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -294,6 +296,97 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         return placeCurationOption.isDefaultFilter();
+    }
+
+    private ArrayList<PlaceViewItem> makePlaceList(List<? extends Place> placeList, SortType sortType, boolean hasSection)
+    {
+        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
+
+        if (placeList == null || placeList.size() == 0)
+        {
+            return placeViewItemList;
+        }
+
+        String previousRegion = null;
+        boolean hasDailyChoice = false;
+
+        int entryPosition = 1;
+
+        if (mPlaceListLayout != null)
+        {
+            ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
+
+            int oldListSize = oldList.size();
+            if (oldListSize > 0)
+            {
+                int start = oldList.size() - 1;
+                int end = oldListSize - 5;
+                end = end < 0 ? 0 : end;
+
+                // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함
+                for (int i = start; i >= end; i--)
+                {
+                    PlaceViewItem item = oldList.get(i);
+                    if (item.mType == PlaceViewItem.TYPE_ENTRY)
+                    {
+                        Place place = item.getItem();
+                        entryPosition = place.entryPosition + 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (hasSection == true)
+        {
+            for (Place place : placeList)
+            {
+                // 지역순에만 section 존재함
+                if (SortType.DEFAULT == sortType)
+                {
+                    String region = place.districtName;
+
+                    if (DailyTextUtils.isTextEmpty(region) == true)
+                    {
+                        continue;
+                    }
+
+                    if (place.isDailyChoice == true)
+                    {
+                        if (hasDailyChoice == false)
+                        {
+                            hasDailyChoice = true;
+
+                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
+                            placeViewItemList.add(section);
+                        }
+                    } else
+                    {
+                        if (DailyTextUtils.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
+                        {
+                            previousRegion = region;
+
+                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
+                            placeViewItemList.add(section);
+                        }
+                    }
+                }
+
+                place.entryPosition = entryPosition;
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                entryPosition++;
+            }
+        } else
+        {
+            for (Place place : placeList)
+            {
+                place.entryPosition = entryPosition;
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                entryPosition++;
+            }
+        }
+
+        return placeViewItemList;
     }
 
     /////////////////////////////////////////////////////////////////////////////////
