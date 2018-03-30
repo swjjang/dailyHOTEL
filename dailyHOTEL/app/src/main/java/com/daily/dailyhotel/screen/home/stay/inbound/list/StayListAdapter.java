@@ -10,23 +10,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
+import com.daily.dailyhotel.view.DailyRecyclerStickyItemDecoration;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutListLoadingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class StayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class StayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DailyRecyclerStickyItemDecoration.StickyHeaderInterface
 {
     Context mContext;
     List<ObjectItem> mList;
@@ -135,6 +136,40 @@ public class StayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
+    public int getStickyHeaderPositionForItem(int itemPosition)
+    {
+        int headerPosition = 0;
+        do
+        {
+            if (isStickyHeader(itemPosition))
+            {
+                headerPosition = itemPosition;
+                break;
+            }
+            itemPosition -= 1;
+        } while (itemPosition >= 0);
+        return headerPosition;
+    }
+
+    @Override
+    public int getStickyHeaderLayout(int headerPosition)
+    {
+        return R.layout.layout_section_data;
+    }
+
+    @Override
+    public void onBindStickyHeaderView(View header, int position)
+    {
+        ((TextView) header.findViewById(R.id.sectionTextView)).setText(getItem(position).<String>getItem());
+    }
+
+    @Override
+    public boolean isStickyHeader(int position)
+    {
+        return mList.get(position).mType == ObjectItem.TYPE_SECTION;
+    }
+
+    @Override
     public int getItemViewType(int position)
     {
         return mList.get(position).mType;
@@ -149,12 +184,6 @@ public class StayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         return mList.size();
-    }
-
-    @Override
-    public boolean isItemViewTypePinned(int viewType)
-    {
-        return viewType == ObjectItem.TYPE_SECTION;
     }
 
     @Override

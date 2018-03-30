@@ -20,6 +20,7 @@ import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapFragment;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapViewPagerAdapter;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
+import com.daily.dailyhotel.view.DailyRecyclerStickyItemDecoration;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.daily.dailyhotel.view.DailyStayMapCardView;
 import com.google.android.gms.maps.model.LatLng;
@@ -147,6 +148,9 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
                     }
                 }
             });
+
+            DailyRecyclerStickyItemDecoration sectionItemDecoration = new DailyRecyclerStickyItemDecoration(getViewDataBinding().recyclerView, mListAdapter);
+            getViewDataBinding().recyclerView.addItemDecoration(sectionItemDecoration);
         }
 
         mListAdapter.setDistanceEnabled(isSortByDistance);

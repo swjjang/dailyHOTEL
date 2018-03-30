@@ -31,6 +31,7 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
+import com.daily.dailyhotel.view.DailyRecyclerStickyItemDecoration;
 import com.daily.dailyhotel.view.DailySearchStayOutboundAreaCardView;
 import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
@@ -54,7 +55,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     private static final int VIEWPAGER_OTHER_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    StayOutboundListAdapter mStayOutboundListAdapter;
+    StayOutboundListAdapter mListAdapter;
 
     StayOutboundMapFragment mStayOutboundMapFragment;
     DailyOverScrollViewPager mViewPager;
@@ -140,7 +141,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         viewDataBinding.swipeRefreshLayout.setOnRefreshListener(() -> getEventListener().onRefreshAll(false));
 
-        viewDataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
 
         viewDataBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
@@ -270,10 +270,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        if (mStayOutboundListAdapter == null)
+        if (mListAdapter == null)
         {
-            mStayOutboundListAdapter = new StayOutboundListAdapter(getContext(), null);
-            mStayOutboundListAdapter.setOnClickListener(new View.OnClickListener()
+            mListAdapter = new StayOutboundListAdapter(getContext(), null);
+            mListAdapter.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -284,7 +284,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         return;
                     }
 
-                    ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
@@ -317,7 +317,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         return false;
                     }
 
-                    ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
@@ -344,7 +344,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 }
             });
 
-            mStayOutboundListAdapter.setOnWishClickListener(new View.OnClickListener()
+            mListAdapter.setOnWishClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -360,7 +360,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         return;
                     }
 
-                    ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
+                    ObjectItem objectItem = mListAdapter.getItem(position);
 
                     if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
@@ -368,15 +368,18 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                     }
                 }
             });
+
+            DailyRecyclerStickyItemDecoration sectionItemDecoration = new DailyRecyclerStickyItemDecoration(getViewDataBinding().recyclerView, mListAdapter);
+            getViewDataBinding().recyclerView.addItemDecoration(sectionItemDecoration);
         }
 
-        getViewDataBinding().recyclerView.setAdapter(mStayOutboundListAdapter);
+        getViewDataBinding().recyclerView.setAdapter(mListAdapter);
 
-        mStayOutboundListAdapter.setAll(objectItemList);
-        mStayOutboundListAdapter.setDistanceEnabled(isSortByDistance);
-        mStayOutboundListAdapter.setNightsEnabled(isNights);
-        mStayOutboundListAdapter.setRewardEnabled(rewardEnabled);
-        mStayOutboundListAdapter.notifyDataSetChanged();
+        mListAdapter.setAll(objectItemList);
+        mListAdapter.setDistanceEnabled(isSortByDistance);
+        mListAdapter.setNightsEnabled(isNights);
+        mListAdapter.setRewardEnabled(rewardEnabled);
+        mListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -389,7 +392,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         setRefreshing(false);
 
-        if (mStayOutboundListAdapter == null)
+        if (mListAdapter == null)
         {
             return;
         }
@@ -399,9 +402,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         setSearchLocationScreenVisible(false);
         setListScreenVisible(true);
 
-        mStayOutboundListAdapter.remove(mStayOutboundListAdapter.getItemCount() - 1);
-        mStayOutboundListAdapter.addAll(objectItemList);
-        mStayOutboundListAdapter.notifyDataSetChanged();
+        mListAdapter.remove(mListAdapter.getItemCount() - 1);
+        mListAdapter.addAll(objectItemList);
+        mListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -909,7 +912,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     @Override
     public void setWish(int position, boolean wish)
     {
-        if (getViewDataBinding() == null || mStayOutboundListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return;
         }
@@ -932,12 +935,12 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     @Override
     public ObjectItem getObjectItem(int position)
     {
-        if (getViewDataBinding() == null || mStayOutboundListAdapter == null)
+        if (getViewDataBinding() == null || mListAdapter == null)
         {
             return null;
         }
 
-        return mStayOutboundListAdapter.getItem(position);
+        return mListAdapter.getItem(position);
     }
 
     @Override
