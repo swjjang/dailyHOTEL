@@ -169,6 +169,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             {
                 if (isCurrentFragment() == false)
                 {
+                    mNeedToRefresh = true;
                 } else
                 {
                     getViewInterface().scrollStop();
