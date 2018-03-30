@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.view.DailyRecyclerStickyItemDecoration;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -22,7 +23,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +43,11 @@ public abstract class PlaceListLayout extends BaseLayout
 
     protected LinearLayoutManager mLayoutManager;
 
-    protected PlaceListAdapter mPlaceListAdapter;
+    protected PlaceListAdapter mListAdapter;
 
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
-    protected PinnedSectionRecyclerView mPlaceRecyclerView;
+    protected RecyclerView mRecyclerView;
 
     protected enum ScreenType
     {
@@ -117,27 +117,33 @@ public abstract class PlaceListLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        mPlaceRecyclerView = view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         mLayoutManager = new LinearLayoutManager(mContext);
-        mPlaceRecyclerView.setLayoutManager(mLayoutManager);
-        EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<>());
+        mListAdapter = getPlaceListAdapter(mContext, new ArrayList<>());
 
         if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
         {
-            mPlaceListAdapter.setTrueVREnabled(true);
+            mListAdapter.setTrueVREnabled(true);
         }
 
         if (Util.supportPreview(mContext) == true)
         {
-            mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
+            mListAdapter.setOnLongClickListener(mOnItemLongClickListener);
         }
 
-        mPlaceListAdapter.setOnWishClickListener(mOnWishClickListener);
+        mListAdapter.setOnWishClickListener(mOnWishClickListener);
 
-        mPlaceRecyclerView.setAdapter(mPlaceListAdapter);
+        if (mListAdapter instanceof DailyRecyclerStickyItemDecoration.StickyHeaderInterface)
+        {
+            DailyRecyclerStickyItemDecoration itemDecoration = new DailyRecyclerStickyItemDecoration(mRecyclerView, (DailyRecyclerStickyItemDecoration.StickyHeaderInterface) mListAdapter);
+            mRecyclerView.addItemDecoration(itemDecoration);
+        }
+
+        mRecyclerView.setAdapter(mListAdapter);
 
         mSwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -150,7 +156,7 @@ public abstract class PlaceListLayout extends BaseLayout
             }
         });
 
-        mPlaceRecyclerView.addOnScrollListener(new OnScrollListener()
+        mRecyclerView.addOnScrollListener(new OnScrollListener()
         {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
@@ -158,9 +164,7 @@ public abstract class PlaceListLayout extends BaseLayout
                 // SwipeRefreshLayout
                 if (dy <= 0)
                 {
-                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mPlaceRecyclerView.getLayoutManager();
-
-                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+                    int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
                     if (firstVisibleItem == 0)
                     {
@@ -217,16 +221,15 @@ public abstract class PlaceListLayout extends BaseLayout
         });
 
         mMapLayout = view.findViewById(R.id.mapLayout);
-        mPlaceRecyclerView.setShadowVisible(false);
         //        setBannerVisibility(false);
     }
 
     public void clearList()
     {
-        if (mPlaceListAdapter != null)
+        if (mListAdapter != null)
         {
-            mPlaceListAdapter.clear();
-            mPlaceListAdapter.notifyDataSetChanged();
+            mListAdapter.clear();
+            mListAdapter.notifyDataSetChanged();
         }
 
         setScrollListTop();
@@ -234,32 +237,32 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public List<PlaceViewItem> getList()
     {
-        if (mPlaceListAdapter == null)
+        if (mListAdapter == null)
         {
             return null;
         }
 
-        return mPlaceListAdapter.getAll();
+        return mListAdapter.getAll();
     }
 
     public PlaceViewItem getItem(int position)
     {
-        if (mPlaceRecyclerView == null || mPlaceListAdapter == null)
+        if (mRecyclerView == null || mListAdapter == null)
         {
             return null;
         }
 
-        return mPlaceListAdapter.getItem(position);
+        return mListAdapter.getItem(position);
     }
 
     public int getItemCount()
     {
-        if (mPlaceListAdapter == null)
+        if (mListAdapter == null)
         {
             return 0;
         }
 
-        return mPlaceListAdapter.getItemCount();
+        return mListAdapter.getItemCount();
     }
 
     public PlaceListMapFragment getListMapFragment()
@@ -294,9 +297,9 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public void setScrollListTop()
     {
-        if (mPlaceRecyclerView != null)
+        if (mRecyclerView != null)
         {
-            mPlaceRecyclerView.scrollToPosition(0);
+            mRecyclerView.scrollToPosition(0);
         }
     }
 
@@ -325,7 +328,7 @@ public abstract class PlaceListLayout extends BaseLayout
     {
         mIsLoading = false;
 
-        if (mPlaceListAdapter == null || placeBookingDay == null)
+        if (mListAdapter == null || placeBookingDay == null)
         {
             Util.restartApp(mContext);
             return;
@@ -333,6 +336,13 @@ public abstract class PlaceListLayout extends BaseLayout
 
         if (viewType == Constants.ViewType.LIST)
         {
+            DailyRecyclerStickyItemDecoration itemDecoration = getItemDecoration(mRecyclerView);
+
+            if (itemDecoration != null)
+            {
+                itemDecoration.setStickyEnabled(hasSectionList(list));
+            }
+
             setVisibility(fragmentManager, viewType, Constants.EmptyStatus.NOT_EMPTY, true);
 
             // 리스트의 경우 Pagination 상황 고려
@@ -396,31 +406,31 @@ public abstract class PlaceListLayout extends BaseLayout
                     }
                 }
 
-                mPlaceListAdapter.setPlaceBookingDay(placeBookingDay);
-                mPlaceListAdapter.setRewardEnabled(rewardEnabled);
-                mPlaceListAdapter.setSortType(sortType);
-                mPlaceListAdapter.addAll(list);
+                mListAdapter.setPlaceBookingDay(placeBookingDay);
+                mListAdapter.setRewardEnabled(rewardEnabled);
+                mListAdapter.setSortType(sortType);
+                mListAdapter.addAll(list);
 
                 if (list.size() < Constants.PAGENATION_LIST_SIZE)
                 {
-                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
+                    mListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
                 } else
                 {
-                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
+                    mListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_LOADING_VIEW, null));
                 }
             } else
             {
                 // 요청 온 데이터가 empty 일때 기존 리스트가 있으면 라스트 footer 재 생성
                 if (oldListSize > 0)
                 {
-                    mPlaceListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
+                    mListAdapter.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, true));
                 }
             }
 
             int size = getItemCount();
             if (size == 0)
             {
-                mPlaceListAdapter.notifyDataSetChanged();
+                mListAdapter.notifyDataSetChanged();
                 setVisibility(fragmentManager, viewType, Constants.EmptyStatus.EMPTY, true);
             } else
             {
@@ -439,8 +449,8 @@ public abstract class PlaceListLayout extends BaseLayout
                     //                    }
                 }
 
-                mPlaceListAdapter.setSortType(sortType);
-                mPlaceListAdapter.notifyDataSetChanged();
+                mListAdapter.setSortType(sortType);
+                mListAdapter.notifyDataSetChanged();
             }
         } else
         {
@@ -448,9 +458,39 @@ public abstract class PlaceListLayout extends BaseLayout
         }
     }
 
+    private DailyRecyclerStickyItemDecoration getItemDecoration(RecyclerView recyclerView)
+    {
+        if (recyclerView == null)
+        {
+            return null;
+        }
+
+        int itemDecorationCount = recyclerView.getItemDecorationCount();
+
+        if (itemDecorationCount > 0)
+        {
+            for (int i = 0; i < itemDecorationCount; i++)
+            {
+                RecyclerView.ItemDecoration itemDecoration = recyclerView.getItemDecorationAt(i);
+
+                if (itemDecoration instanceof DailyRecyclerStickyItemDecoration)
+                {
+                    return (DailyRecyclerStickyItemDecoration) itemDecoration;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private boolean hasSectionList(List<PlaceViewItem> objectItemList)
+    {
+        return objectItemList != null && objectItemList.size() > 0 && objectItemList.get(0).mType == PlaceViewItem.TYPE_SECTION;
+    }
+
     public boolean hasSalesPlace()
     {
-        return hasSalesPlace(mPlaceListAdapter.getAll());
+        return hasSalesPlace(mListAdapter.getAll());
     }
 
     protected boolean hasSalesPlace(List<PlaceViewItem> list)
@@ -480,7 +520,7 @@ public abstract class PlaceListLayout extends BaseLayout
     {
         mIsLoading = false;
 
-        if (mPlaceListAdapter == null)
+        if (mListAdapter == null)
         {
             Util.restartApp(mContext);
             return;
@@ -493,7 +533,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
             if (list == null || list.size() == 0)
             {
-                mPlaceListAdapter.notifyDataSetChanged();
+                mListAdapter.notifyDataSetChanged();
                 setVisibility(fragmentManager, viewType, Constants.EmptyStatus.EMPTY, true);
 
             } else
@@ -618,14 +658,14 @@ public abstract class PlaceListLayout extends BaseLayout
         @Override
         public void onClick(View view)
         {
-            int position = mPlaceRecyclerView.getChildAdapterPosition(view);
+            int position = mRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
                 ((OnEventListener) mOnEventListener).onPlaceClick(-1, null, null);
                 return;
             }
 
-            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
+            PlaceViewItem placeViewItem = mListAdapter.getItem(position);
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
@@ -639,14 +679,14 @@ public abstract class PlaceListLayout extends BaseLayout
         @Override
         public boolean onLongClick(View view)
         {
-            int position = mPlaceRecyclerView.getChildAdapterPosition(view);
+            int position = mRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
                 ((OnEventListener) mOnEventListener).onPlaceLongClick(-1, null, null);
                 return true;
             }
 
-            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
+            PlaceViewItem placeViewItem = mListAdapter.getItem(position);
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
@@ -662,18 +702,18 @@ public abstract class PlaceListLayout extends BaseLayout
         @Override
         public void onClick(View view)
         {
-            if (mPlaceRecyclerView == null)
+            if (mRecyclerView == null)
             {
                 return;
             }
 
-            int position = mPlaceRecyclerView.getChildAdapterPosition(view);
+            int position = mRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
                 return;
             }
 
-            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
+            PlaceViewItem placeViewItem = mListAdapter.getItem(position);
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
@@ -681,20 +721,4 @@ public abstract class PlaceListLayout extends BaseLayout
             }
         }
     };
-
-
-    //    protected View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
-    //    {
-    //        @Override
-    //        public void onClick(View view)
-    //        {
-    //            Integer index = (Integer) view.getTag(view.getId());
-    //            if (index != null)
-    //            {
-    //                EventBanner eventBanner = getEventBanner(index);
-    //
-    //                ((OnEventListener) mOnEventListener).onEventBannerClick(eventBanner);
-    //            }
-    //        }
-    //    };
 }

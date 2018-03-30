@@ -10,10 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
+import com.daily.dailyhotel.view.DailyRecyclerStickyItemDecoration;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
@@ -26,7 +28,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
-public class GourmetListAdapter extends PlaceListAdapter
+public class GourmetListAdapter extends PlaceListAdapter implements DailyRecyclerStickyItemDecoration.StickyHeaderInterface
 {
     View.OnClickListener mOnClickListener;
 
@@ -173,6 +175,40 @@ public class GourmetListAdapter extends PlaceListAdapter
     public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
     {
 
+    }
+
+    @Override
+    public int getStickyHeaderPositionForItem(int itemPosition)
+    {
+        int headerPosition = 0;
+        do
+        {
+            if (isStickyHeader(itemPosition))
+            {
+                headerPosition = itemPosition;
+                break;
+            }
+            itemPosition -= 1;
+        } while (itemPosition >= 0);
+        return headerPosition;
+    }
+
+    @Override
+    public int getStickyHeaderLayout(int headerPosition)
+    {
+        return R.layout.layout_section_data;
+    }
+
+    @Override
+    public void onBindStickyHeaderView(View header, int position)
+    {
+        ((TextView) header.findViewById(R.id.sectionTextView)).setText(getItem(position).<String>getItem());
+    }
+
+    @Override
+    public boolean isStickyHeader(int position)
+    {
+        return getItem(position).mType == PlaceViewItem.TYPE_SECTION;
     }
 
     protected class GourmetViewHolder extends RecyclerView.ViewHolder

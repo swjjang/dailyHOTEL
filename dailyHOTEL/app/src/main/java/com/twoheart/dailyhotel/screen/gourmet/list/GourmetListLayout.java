@@ -58,17 +58,17 @@ public class GourmetListLayout extends PlaceListLayout
     @Override
     public void notifyWishChanged(int position, boolean wish)
     {
-        if (mPlaceRecyclerView == null)
+        if (mRecyclerView == null)
         {
             return;
         }
 
-        mPlaceRecyclerView.post(new Runnable()
+        mRecyclerView.post(new Runnable()
         {
             @Override
             public void run()
             {
-                GourmetListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetListAdapter.GourmetViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
+                GourmetListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetListAdapter.GourmetViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
 
                 if (gourmetViewHolder != null)
                 {

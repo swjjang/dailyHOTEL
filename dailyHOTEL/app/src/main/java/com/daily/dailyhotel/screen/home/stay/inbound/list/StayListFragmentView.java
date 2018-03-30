@@ -149,8 +149,15 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
                 }
             });
 
-            DailyRecyclerStickyItemDecoration sectionItemDecoration = new DailyRecyclerStickyItemDecoration(getViewDataBinding().recyclerView, mListAdapter);
-            getViewDataBinding().recyclerView.addItemDecoration(sectionItemDecoration);
+            DailyRecyclerStickyItemDecoration itemDecoration = new DailyRecyclerStickyItemDecoration(getViewDataBinding().recyclerView, mListAdapter);
+            getViewDataBinding().recyclerView.addItemDecoration(itemDecoration);
+        }
+
+        DailyRecyclerStickyItemDecoration itemDecoration = getItemDecoration(getViewDataBinding().recyclerView);
+
+        if (itemDecoration != null)
+        {
+            itemDecoration.setStickyEnabled(hasSectionList(objectItemList));
         }
 
         mListAdapter.setDistanceEnabled(isSortByDistance);
@@ -160,6 +167,36 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
         mListAdapter.setAll(objectItemList);
 
         getViewDataBinding().recyclerView.setAdapter(mListAdapter);
+    }
+
+    private DailyRecyclerStickyItemDecoration getItemDecoration(RecyclerView recyclerView)
+    {
+        if (recyclerView == null)
+        {
+            return null;
+        }
+
+        int itemDecorationCount = recyclerView.getItemDecorationCount();
+
+        if (itemDecorationCount > 0)
+        {
+            for (int i = 0; i < itemDecorationCount; i++)
+            {
+                RecyclerView.ItemDecoration itemDecoration = recyclerView.getItemDecorationAt(i);
+
+                if (itemDecoration instanceof DailyRecyclerStickyItemDecoration)
+                {
+                    return (DailyRecyclerStickyItemDecoration) itemDecoration;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private boolean hasSectionList(List<ObjectItem> objectItemList)
+    {
+        return objectItemList != null && objectItemList.size() > 0 && objectItemList.get(0).mType == ObjectItem.TYPE_SECTION;
     }
 
     @Override

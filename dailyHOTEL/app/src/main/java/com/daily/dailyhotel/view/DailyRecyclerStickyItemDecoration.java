@@ -12,10 +12,13 @@ public class DailyRecyclerStickyItemDecoration extends RecyclerView.ItemDecorati
 {
     private StickyHeaderInterface mListener;
     private int mStickyHeaderHeight;
+    private boolean mStickyEnabled;
 
     public DailyRecyclerStickyItemDecoration(@NonNull RecyclerView recyclerView, @NonNull StickyHeaderInterface listener)
     {
         mListener = listener;
+
+        setStickyEnabled(true);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener()
         {
@@ -46,6 +49,11 @@ public class DailyRecyclerStickyItemDecoration extends RecyclerView.ItemDecorati
     {
         super.onDrawOver(canvas, parent, state);
 
+        if (mStickyEnabled == false)
+        {
+            return;
+        }
+
         View topChild = parent.getChildAt(0);
         if (topChild == null)
         {
@@ -53,7 +61,7 @@ public class DailyRecyclerStickyItemDecoration extends RecyclerView.ItemDecorati
         }
 
         int topChildPosition = parent.getChildAdapterPosition(topChild);
-        if (topChildPosition == RecyclerView.NO_POSITION || mListener.isStickyHeader(topChildPosition) == false)
+        if (topChildPosition == RecyclerView.NO_POSITION)
         {
             return;
         }
@@ -76,6 +84,11 @@ public class DailyRecyclerStickyItemDecoration extends RecyclerView.ItemDecorati
         }
 
         drawHeader(canvas, currentHeader);
+    }
+
+    public void setStickyEnabled(boolean enabled)
+    {
+        mStickyEnabled = enabled;
     }
 
     private View getHeaderViewForItem(int position, RecyclerView parent)
