@@ -93,7 +93,7 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
 
         if (mSelectStayOutboundCouponDialogAdapter == null)
         {
-            mSelectStayOutboundCouponDialogAdapter = new SelectStayOutboundCouponDialogAdapter(getContext(), couponList, new SelectStayOutboundCouponDialogAdapter.OnCouponItemListener()
+            mSelectStayOutboundCouponDialogAdapter = new SelectStayOutboundCouponDialogAdapter(getContext(), new SelectStayOutboundCouponDialogAdapter.OnCouponItemListener()
             {
                 @Override
                 public void onDownloadClick(int position)
