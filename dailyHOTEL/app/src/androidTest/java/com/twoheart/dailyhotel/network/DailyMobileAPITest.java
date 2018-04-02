@@ -876,52 +876,52 @@ public class DailyMobileAPITest
     @Test
     public void requestUserCheckEmail() throws Exception
     {
-        mLock = new CountDownLatch(1);
-
-        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                try
-                {
-                    assertThat(response, notNullValue());
-                    assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-
-                    JSONObject responseJSONObject = response.body();
-
-                    String result = responseJSONObject.getString("isSuccess");
-
-                    assertThat(responseJSONObject.getString("msg"), allOf(notNullValue(), isA(String.class)));
-
-                    if ("false".equalsIgnoreCase(result) == true)
-                    {
-                        assertThat(true, anyOf(is(response.code() == 200), is(responseJSONObject.getString("msg").contains("이미 비밀번호 변경을 요청하였습니다."))));
-                    } else
-                    {
-                        assertThat(result, is("true"));
-                    }
-
-                } catch (Throwable t)
-                {
-                    addException(call, response, t);
-                } finally
-                {
-                    mLock.countDown();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                addException(call, null, t);
-                mLock.countDown();
-            }
-        };
-
-        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Crypto.getUrlDecoderEx(TEST_EMAIL), networkCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+//        mLock = new CountDownLatch(1);
+//
+//        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+//        {
+//            @Override
+//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+//            {
+//                try
+//                {
+//                    assertThat(response, notNullValue());
+//                    assertThat(response.isSuccessful(), is(true));
+//                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+//
+//                    JSONObject responseJSONObject = response.body();
+//
+//                    String result = responseJSONObject.getString("isSuccess");
+//
+//                    assertThat(responseJSONObject.getString("msg"), allOf(notNullValue(), isA(String.class)));
+//
+//                    if ("false".equalsIgnoreCase(result) == true)
+//                    {
+//                        assertThat(true, anyOf(is(response.code() == 200), is(responseJSONObject.getString("msg").contains("이미 비밀번호 변경을 요청하였습니다."))));
+//                    } else
+//                    {
+//                        assertThat(result, is("true"));
+//                    }
+//
+//                } catch (Throwable t)
+//                {
+//                    addException(call, response, t);
+//                } finally
+//                {
+//                    mLock.countDown();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSONObject> call, Throwable t)
+//            {
+//                addException(call, null, t);
+//                mLock.countDown();
+//            }
+//        };
+//
+//        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Crypto.getUrlDecoderEx(TEST_EMAIL), networkCallback);
+//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test

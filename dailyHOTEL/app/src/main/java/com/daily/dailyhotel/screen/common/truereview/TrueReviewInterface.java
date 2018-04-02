@@ -25,4 +25,6 @@ public interface TrueReviewInterface extends BaseDialogViewInterface
     Observable<Boolean> smoothScrollTop();
 
     void setTopButtonVisible(boolean visible);
+
+    void setTrueReviewProductVisible(boolean visible);
 }

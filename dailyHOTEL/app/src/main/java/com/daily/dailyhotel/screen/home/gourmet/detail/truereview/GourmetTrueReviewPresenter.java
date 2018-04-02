@@ -16,6 +16,7 @@ import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.common.truereview.TrueReviewInterface;
 import com.daily.dailyhotel.screen.common.truereview.TrueReviewView;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.ReviewTermsActivity;
 
@@ -124,6 +125,7 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
 
         getViewInterface().setToolbarTitle(getString(R.string.label_truereview));
         getViewInterface().setReviewScores(getString(R.string.message_detail_review_gourmet_explain), mReviewScores.getReviewScoreList());
+        getViewInterface().setTrueReviewProductVisible(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigStayDetailTrueReviewProductVisible());
     }
 
     @Override
