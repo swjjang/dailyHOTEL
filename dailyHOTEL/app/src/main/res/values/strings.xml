@@ -1532,7 +1532,7 @@
     <string name="label_stay_outbound_search_under_of_1_age">1세 미만</string>
 
     <string name="label_stay_outbound_suggest_region">도시/지역</string>
-    <string name="label_stay_outbound_suggest_hotel">호텔</string>
+    <string name="label_stay_outbound_suggest_hotel">스테이</string>
     <string name="label_stay_outbound_suggest_point">주요지점</string>
     <string name="label_stay_outbound_suggest_station">역</string>
     <string name="label_stay_outbound_suggest_airport">공항</string>
