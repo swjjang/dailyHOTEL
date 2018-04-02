@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.model;
 
-import android.location.Location;
 import android.os.Parcel;
 
 import com.daily.base.util.DailyTextUtils;
@@ -15,6 +14,7 @@ public class GourmetSearchParams extends GourmetParams
 {
     private String term;
     private double radius;
+    private int targetIndices;
 
     public GourmetSearchParams(PlaceCuration placeCuration)
     {
@@ -59,23 +59,52 @@ public class GourmetSearchParams extends GourmetParams
 
         GourmetSuggest suggest = gourmetSearchCuration.getSuggest();
 
-        if (suggest == null || suggest.isLocationSuggestType() == true)
+        switch (suggest.getSuggestType())
         {
-            term = null;
-        } else
-        {
-            term = suggest.getSuggestItem().name;
-        }
-
-        if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
-        {
-            radius = gourmetSearchCuration.getRadius();
-
-            Location location = gourmetSearchCuration.getLocation();
-            if (location != null)
+            case AREA_GROUP:
             {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
+                GourmetSuggest.AreaGroup suggestItem = (GourmetSuggest.AreaGroup) suggest.getSuggestItem();
+
+                provinceIdx = suggestItem.index;
+
+                if (suggestItem.area != null && suggestItem.area.index > 0)
+                {
+                    areaIdx = suggestItem.area.index;
+                }
+                break;
+            }
+
+            case LOCATION:
+            {
+                GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
+
+                latitude = suggestItem.latitude;
+                longitude = suggestItem.longitude;
+
+                if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
+                {
+                    radius = gourmetSearchCuration.getRadius();
+                }
+                break;
+            }
+
+            case STATION:
+                break;
+
+            case DIRECT:
+            {
+                GourmetSuggest.Direct suggestItem = (GourmetSuggest.Direct) suggest.getSuggestItem();
+
+                term = suggestItem.name;
+                break;
+            }
+
+            case GOURMET:
+            {
+                GourmetSuggest.Gourmet suggestItem = (GourmetSuggest.Gourmet) suggest.getSuggestItem();
+
+                targetIndices = suggestItem.index;
+                break;
             }
         }
     }
@@ -111,6 +140,11 @@ public class GourmetSearchParams extends GourmetParams
         {
             hashMap.put("page", page);
             hashMap.put("limit", limit);
+        }
+
+        if(targetIndices > 0)
+        {
+            hashMap.put("targetIndices", targetIndices);
         }
 
         if (DailyTextUtils.isTextEmpty(term) == false)
@@ -156,12 +190,22 @@ public class GourmetSearchParams extends GourmetParams
         return hashMap;
     }
 
+    @Override
+    protected void clear()
+    {
+        super.clear();
+
+        term = null;
+        radius = 0.0d;
+    }
+
     protected void readFromParcel(Parcel in)
     {
         super.readFromParcel(in);
 
         term = in.readString();
         radius = in.readDouble();
+        targetIndices = 0;
     }
 
     @Override
