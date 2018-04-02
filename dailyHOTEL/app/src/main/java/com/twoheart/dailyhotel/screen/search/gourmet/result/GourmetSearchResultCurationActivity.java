@@ -189,13 +189,13 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
             } else
             {
-                if (totalCount >= maxCount)
-                {
-                    setResultMessage(getString(R.string.label_gourmet_filter_result_over_count, maxCount));
-                } else
-                {
-                    setResultMessage(getString(R.string.label_gourmet_filter_result_count, totalCount));
-                }
+                //                if (totalCount >= maxCount)
+                //                {
+                //                setResultMessage(getString(R.string.label_gourmet_filter_result_over_count, maxCount));
+                //                } else
+                //                {
+                setResultMessage(getString(R.string.label_gourmet_filter_result_count, totalCount));
+                //                }
             }
 
             setConfirmOnClickListener(GourmetSearchResultCurationActivity.this);
