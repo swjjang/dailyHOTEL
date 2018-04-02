@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.copy;
+package com.daily.dailyhotel.screen.copy.java;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;

@@ -1,5 +1,6 @@
 package com.daily.base;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import com.daily.base.util.DailyLock;
+import com.daily.base.util.VersionUtils;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -40,8 +42,6 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
 
     public abstract void constructorInitialize(T1 activity);
 
-    public abstract void setAnalytics(BaseAnalyticsInterface analytics);
-
     public abstract void onPostCreate();
 
     protected abstract void onHandleError(Throwable throwable);
@@ -59,6 +59,11 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     protected String getString(int resId, Object... formatArgs)
     {
         return mActivity.getString(resId, formatArgs);
+    }
+
+    public void setAnalytics(BaseAnalyticsInterface analytics)
+    {
+
     }
 
     public void setContentView(@LayoutRes int layoutResID)
@@ -144,6 +149,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
         mActivity.startActivityForResult(intent, requestCode);
     }
 
+    @SuppressLint("RestrictedApi")
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void startActivityForResult(Intent intent, int requestCode, Bundle options)
     {
@@ -253,5 +259,10 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     protected boolean equalsCallingActivity(Class className)
     {
         return mActivity.equalsCallingActivity(className);
+    }
+
+    protected boolean isFinish()
+    {
+        return mActivity.isFinishing() || (VersionUtils.isOverAPI17() && mActivity.isDestroyed());
     }
 }

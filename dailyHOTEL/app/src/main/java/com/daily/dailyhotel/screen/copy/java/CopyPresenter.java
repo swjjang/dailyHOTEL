@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.copy;
+package com.daily.dailyhotel.screen.copy.java;
 
 
 import android.content.Intent;
@@ -15,11 +15,13 @@ import com.twoheart.dailyhotel.R;
  */
 public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInterface.ViewInterface> implements CopyInterface.OnEventListener
 {
-    private CopyInterface.AnalyticsInterface mAnalytics;
+    private final CopyInterface.AnalyticsInterface mAnalytics;
 
     public CopyPresenter(@NonNull CopyActivity activity)
     {
         super(activity);
+
+        mAnalytics = new CopyAnalyticsImpl();
     }
 
     @NonNull
@@ -37,12 +39,6 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
         setAnalytics(new CopyAnalyticsImpl());
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (CopyInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -129,7 +125,7 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true || isRefresh() == false)
+        if (isFinish() == true || isRefresh() == false)
         {
             return;
         }
