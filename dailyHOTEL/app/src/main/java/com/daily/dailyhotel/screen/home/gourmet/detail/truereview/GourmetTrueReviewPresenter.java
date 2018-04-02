@@ -195,58 +195,64 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
 
         setRefresh(false);
 
-        if (mTotalElements == 0)
+        screenLock(showProgress);
+
+        addCompositeDisposable(mGourmetRemoteImpl.getTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT)//
+            .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<TrueReviews, Observable<Long>>()
+            {
+                @Override
+                public Observable<Long> apply(@io.reactivex.annotations.NonNull TrueReviews trueReviews) throws Exception
+                {
+                    unLockAll();
+
+                    addTrueReviews(trueReviews);
+
+                    return Observable.timer(300, TimeUnit.MILLISECONDS);
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
+            {
+                @Override
+                public void accept(Long aLong) throws Exception
+                {
+                    unLockAll();
+
+                    getViewInterface().showReviewScoresAnimation();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+    }
+
+    private synchronized void onMoreRefreshing()
+    {
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
-            screenLock(showProgress);
-
-            addCompositeDisposable(mGourmetRemoteImpl.getTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT)//
-                .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<TrueReviews, Observable<Long>>()
-                {
-                    @Override
-                    public Observable<Long> apply(@io.reactivex.annotations.NonNull TrueReviews trueReviews) throws Exception
-                    {
-                        unLockAll();
-
-                        addTrueReviews(trueReviews);
-
-                        return Observable.timer(300, TimeUnit.MILLISECONDS);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
-                {
-                    @Override
-                    public void accept(Long aLong) throws Exception
-                    {
-                        unLockAll();
-
-                        getViewInterface().showReviewScoresAnimation();
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        onHandleError(throwable);
-                    }
-                }));
-        } else
-        {
-            addCompositeDisposable(mGourmetRemoteImpl.getTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT) //
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
-                {
-                    @Override
-                    public void accept(TrueReviews trueReviews) throws Exception
-                    {
-                        addTrueReviews(trueReviews);
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        onHandleError(throwable);
-                    }
-                }));
+            return;
         }
+
+        setRefresh(false);
+
+        addCompositeDisposable(mGourmetRemoteImpl.getTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
+            {
+                @Override
+                public void accept(TrueReviews trueReviews) throws Exception
+                {
+                    addTrueReviews(trueReviews);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     @Override
@@ -307,7 +313,7 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
             mLoadingPage = mPage + 1;
 
             setRefresh(true);
-            onRefresh(false);
+            onMoreRefreshing();
         }
     }
 

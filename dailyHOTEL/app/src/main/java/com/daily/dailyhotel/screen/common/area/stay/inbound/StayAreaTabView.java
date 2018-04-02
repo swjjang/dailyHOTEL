@@ -127,7 +127,7 @@ public class StayAreaTabView extends BaseDialogView<StayAreaTabInterface.OnEvent
         }
 
         viewDataBinding.viewPager.setOffscreenPageLimit(2);
-        viewDataBinding.viewPager.setPagingEnabled(false);
+        viewDataBinding.viewPager.setPagingEnabled(true);
         viewDataBinding.viewPager.setAdapter(mFragmentPagerAdapter);
     }
 

@@ -7,6 +7,7 @@ public class TrueReview
     public String createdAt; // ISO-8601
     public float averageScore;
     public boolean more;
+    public String productName;
 
     private TrueReviewReply mReply;
 
