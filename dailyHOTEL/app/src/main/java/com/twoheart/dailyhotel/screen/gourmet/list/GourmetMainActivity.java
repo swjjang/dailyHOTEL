@@ -730,17 +730,22 @@ public class GourmetMainActivity extends PlaceMainActivity
             String visitDateTime = mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT);
 
             GourmetSuggest.AreaGroup suggestItem = new GourmetSuggest.AreaGroup();
-            suggestItem.index = province.index;
-            suggestItem.name = province.name;
 
             if (province instanceof Area)
             {
                 Area area = (Area) province;
 
+                suggestItem.index = area.getProvince().index;
+                suggestItem.name = area.getProvince().name;
+
                 GourmetSuggest.Area areaSuggestItem = new GourmetSuggest.Area();
                 areaSuggestItem.index = area.index;
                 areaSuggestItem.name = area.name;
                 suggestItem.area = areaSuggestItem;
+            } else
+            {
+                suggestItem.index = province.index;
+                suggestItem.name = province.name;
             }
 
             GourmetFilter gourmetFilter = curationToFilter((GourmetCurationOption) mGourmetCuration.getCurationOption());

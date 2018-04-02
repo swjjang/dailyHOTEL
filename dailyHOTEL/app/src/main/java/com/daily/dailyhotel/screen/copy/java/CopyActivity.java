@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.copy;
+package com.daily.dailyhotel.screen.copy.java;
 
 
 import android.content.Context;
