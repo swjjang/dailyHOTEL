@@ -715,12 +715,12 @@ public class KakaoLinkManager implements Constants
                         .build()) //
                     .setDescrption(description) //
                     .setImageWidth(width).setImageHeight(height).build()) //
-                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
-                    .setWebUrl(webUrl) //
-                    .setMobileWebUrl(webUrl) //
-                    .setAndroidExecutionParams(schemeParams) //
-                    .setIosExecutionParams(schemeParams) //
-                    .build())) //
+//                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+//                    .setWebUrl(webUrl) //
+//                    .setMobileWebUrl(webUrl) //
+//                    .setAndroidExecutionParams(schemeParams) //
+//                    .setIosExecutionParams(schemeParams) //
+//                    .build())) //
                 .build();
 
             mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()

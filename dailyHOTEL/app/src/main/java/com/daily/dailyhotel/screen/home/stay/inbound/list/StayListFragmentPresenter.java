@@ -360,6 +360,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onRefresh()
     {
+        if (mViewType == null)
+        {
+            return;
+        }
+
         mNeedToRefresh = false;
 
         switch (mViewType)
