@@ -72,6 +72,10 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         void onEventBackClick(Activity activity);
 
         void onEventOrderComplete(Activity activity);
+
+        void onEventShowBenefitAlarmPopup(Activity activity);
+
+        void onEventShowBenefitAlarmPopupClick(Activity activity, boolean agreed);
     }
 
     public GourmetThankYouPresenter(@NonNull GourmetThankYouActivity activity)
@@ -385,6 +389,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                         public void onClick(View v)
                         {
                             updateNotificationResultMessage(true);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), true);
                         }
                     }, new View.OnClickListener()
                     {
@@ -392,6 +398,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                         public void onClick(View v)
                         {
                             updateNotificationResultMessage(false);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), false);
                         }
                     }, new DialogInterface.OnCancelListener()
                     {
@@ -399,6 +407,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                         public void onCancel(DialogInterface dialog)
                         {
                             updateNotificationResultMessage(false);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), false);
                         }
                     }, new DialogInterface.OnDismissListener()
                     {
@@ -417,6 +427,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
                 ExLog.e(throwable.toString());
             }
         }));
+
+        mAnalytics.onEventShowBenefitAlarmPopup(getActivity());
     }
 
     void updateNotificationResultMessage(boolean agreed)
