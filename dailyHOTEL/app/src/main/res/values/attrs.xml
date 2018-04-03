@@ -36,4 +36,9 @@
             <enum name="stay_outbound" value="2"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="ShimmerView">
+        <attr name="primaryColor" format="color"/>
+        <attr name="reflectionColor" format="color"/>
+    </declare-styleable>
 </resources>

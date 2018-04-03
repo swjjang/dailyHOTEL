@@ -67,6 +67,8 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void setListScreenVisible(boolean visible);
 
+    void setShimmerScreenVisible(boolean visible);
+
     void showEmptyScreen(EmptyScreenType emptyScreenType);
 
     void hideEmptyScreen();
@@ -90,4 +92,6 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
     void setPopularAreaVisible(boolean visible);
 
     void showRadiusPopup();
+
+    void setShimmerViewVisible(boolean visible);
 }

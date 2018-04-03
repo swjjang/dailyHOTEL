@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <merge
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <View
+            android:id="@+id/cardTopDividerView"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:background="@color/default_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/cardTopLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce1e1e1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardTopDividerView"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simpleDraweeView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,21:9"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardTopLineView"
+            fresco:actualImageScaleType="centerCrop"/>
+
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/wishImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/img_list_heart_gradient"
+            android:visibility="visible"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/simpleDraweeView"
+            app:srcCompat="@drawable/vector_list_ic_heart_off"/>
+
+        <View
+            android:id="@+id/gradientTopView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
+            app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView"
+            app:layout_constraintRight_toRightOf="@id/simpleDraweeView"
+            app:layout_constraintTop_toTopOf="@id/simpleDraweeView"/>
+
+        <View
+            android:id="@+id/gradientBottomView"
+            android:layout_width="0dp"
+            android:layout_height="78dp"
+            app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/informationLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/simpleDraweeView">
+
+            <com.daily.dailyhotel.view.shimmer.ShimmerView
+                android:id="@+id/shimmerView1"
+                android:layout_width="252.5dp"
+                android:layout_height="19dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.daily.dailyhotel.view.shimmer.ShimmerView
+                android:id="@+id/shimmerView2"
+                android:layout_width="172.5dp"
+                android:layout_height="17dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shimmerView1"/>
+
+            <com.daily.dailyhotel.view.shimmer.ShimmerView
+                android:id="@+id/shimmerView3"
+                android:layout_width="86.5dp"
+                android:layout_height="17dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shimmerView2"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/cardBottomLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce1e1e1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/informationLayout"/>
+        <!--</android.support.constraint.ConstraintLayout>-->
+    </merge>
+</layout>
