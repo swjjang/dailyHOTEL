@@ -538,7 +538,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             Map<String, Object> queryMap = getQueryMap();
             queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
 
-            return mStayRemoteImpl.getLocalPlusListCountByFilte(queryMap);
+            return mStayRemoteImpl.getLocalPlusListCountByFilter(queryMap);
         } else
         {
             return Observable.just(new StayFilterCount());
