@@ -16,10 +16,13 @@ public class GourmetSearchParams extends GourmetParams
     private String term;
     private double radius;
     private int targetIndices;
+    private boolean mAddSearchType;
 
-    public GourmetSearchParams(PlaceCuration placeCuration)
+    public GourmetSearchParams(PlaceCuration placeCuration, boolean addSearchType)
     {
         super(placeCuration);
+
+        mAddSearchType = addSearchType;
     }
 
     public GourmetSearchParams(Parcel in)
@@ -129,6 +132,11 @@ public class GourmetSearchParams extends GourmetParams
     public Map<String, Object> toParamsMap()
     {
         HashMap<String, Object> hashMap = new HashMap<>();
+
+        if (mAddSearchType == true)
+        {
+            hashMap.put("saleSearchType", "SHOW_SOLD_OUT");
+        }
 
         hashMap.put("reserveDate", date);
 

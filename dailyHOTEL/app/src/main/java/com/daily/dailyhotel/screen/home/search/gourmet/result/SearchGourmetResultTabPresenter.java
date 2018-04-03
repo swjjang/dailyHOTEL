@@ -825,8 +825,9 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         {
             GourmetSearchCuration gourmetSearchCuration = toGourmetSearchCuration();
 
-            Intent intent = GourmetSearchResultCurationActivity.newInstance(getActivity(),//
-                com.twoheart.dailyhotel.util.Constants.ViewType.valueOf(mViewModel.getViewType().name())//
+            Intent intent = GourmetSearchResultCurationActivity.newInstance(getActivity()//
+                , GourmetSearchResultCurationActivity.ListType.SEARCH//
+                , com.twoheart.dailyhotel.util.Constants.ViewType.valueOf(mViewModel.getViewType().name())//
                 , gourmetSearchCuration, gourmetSearchCuration.getLocation() != null);
             startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_FILTER);
 

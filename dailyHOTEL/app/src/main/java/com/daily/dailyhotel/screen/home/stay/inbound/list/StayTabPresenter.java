@@ -787,7 +787,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
+        startActivityForResult(StayFilterActivity.newInstance(getActivity(), StayFilterActivity.ListType.DEFAULT//
+            , checkInDateTime, checkOutDateTime//
             , mStayViewModel.categoryType, mStayViewModel.viewType.getValue().name()//
             , mStayViewModel.stayFilter.getValue(), suggest//
             , categoryList, location, 0, null), StayTabActivity.REQUEST_CODE_FILTER);

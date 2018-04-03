@@ -57,6 +57,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
     StayRemoteImpl mStayRemoteImpl;
 
+    StayFilterActivity.ListType mListType;
     StayFilter mStayFilter;
     StaySuggest mSuggest;
     StayBookDateTime mStayBookDateTime;
@@ -119,6 +120,14 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         if (intent == null)
         {
             return true;
+        }
+
+        try
+        {
+            mListType = StayFilterActivity.ListType.valueOf(intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = StayFilterActivity.ListType.DEFAULT;
         }
 
         String checkInDateTime = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
@@ -557,6 +566,16 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     Map<String, Object> getQueryMap()
     {
         Map<String, Object> queryMap = new HashMap<>();
+
+        switch (mListType)
+        {
+            case SEARCH:
+                queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
+                break;
+
+            default:
+                break;
+        }
 
         // dateCheckIn
         queryMap.put("dateCheckIn", mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));

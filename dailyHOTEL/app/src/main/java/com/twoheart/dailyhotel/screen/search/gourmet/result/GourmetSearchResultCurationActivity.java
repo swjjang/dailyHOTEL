@@ -22,10 +22,18 @@ import retrofit2.Response;
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
+    private ListType mListType;
 
-    public static Intent newInstance(Context context, ViewType viewType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
+    public enum ListType
+    {
+        DEFAULT,
+        SEARCH,
+    }
+
+    public static Intent newInstance(Context context, ListType listType, ViewType viewType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
     {
         Intent intent = new Intent(context, GourmetSearchResultCurationActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, gourmetCuration);
         intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
@@ -37,6 +45,14 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     protected void initIntent(Intent intent)
     {
         super.initIntent(intent);
+
+        try
+        {
+            mListType = ListType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = ListType.DEFAULT;
+        }
 
         mIsFixedLocation = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, false);
     }
@@ -145,7 +161,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
         if (mLastParams == null)
         {
-            mLastParams = new GourmetSearchParams(gourmetCuration);
+            mLastParams = new GourmetSearchParams(gourmetCuration, mListType == ListType.SEARCH);
         } else
         {
             mLastParams.setPlaceParams(gourmetCuration);

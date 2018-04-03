@@ -819,8 +819,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
-                mViewType, mGourmetSearchCuration, mIsFixedLocation);
+            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this//
+                , GourmetSearchResultCurationActivity.ListType.SEARCH//
+                , mViewType, mGourmetSearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
@@ -1443,14 +1444,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onFilterClick()
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
-                mViewType, mGourmetSearchCuration, mIsFixedLocation);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
+            //            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            //            {
+            //                return;
+            //            }
+            //
+            //            Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
+            //                mViewType, mGourmetSearchCuration, mIsFixedLocation);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
         }
 
         @Override

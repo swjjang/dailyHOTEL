@@ -43,6 +43,7 @@ import retrofit2.Response;
 
 public class GourmetCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
+    public static final String INTENT_EXTRA_DATA_LIST_TYPE = "listType";
     public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
 
     private static final int GOURMET_CATEGORY_COLUMN = 5;
