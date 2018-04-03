@@ -12,9 +12,8 @@ import com.daily.dailyhotel.entity.GourmetFilter;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.GourmetFilterParcel;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.twoheart.dailyhotel.R;
-
-import java.util.List;
 
 /**
  * Created by sheldon
@@ -34,13 +33,7 @@ public class GourmetFilterActivity extends BaseActivity<GourmetFilterPresenter>
     static final String INTENT_EXTRA_DATA_RADIUS = "radius";
     static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
 
-    public enum ListType
-    {
-        DEFAULT,
-        SEARCH,
-    }
-
-    public static Intent newInstance(Context context, ListType listType, String visitDateTime//
+    public static Intent newInstance(Context context, SearchGourmetResultTabPresenter.ListType listType, String visitDateTime//
         , String viewType, GourmetFilter filter//
         , GourmetSuggest suggest, Location location, float radius, String searchWord)
     {

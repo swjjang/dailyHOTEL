@@ -30,16 +30,19 @@ public class SearchStayResultTabActivity extends BaseActivity<SearchStayResultTa
     public static final int REQUEST_CODE_WISH_DIALOG = 10009;
     public static final int REQUEST_CODE_CALL = 10010;
 
+    public static final String INTENT_EXTRA_DATA_LIST_TYPE = "listType";
     public static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
 
-    public static Intent newInstance(Context context, DailyCategoryType categoryType, String checkInDateTime, String checkOutDateTime//
+    public static Intent newInstance(Context context, SearchStayResultTabPresenter.ListType listType//
+        , DailyCategoryType categoryType, String checkInDateTime, String checkOutDateTime//
         , StaySuggest suggest, String inputKeyWord, SearchStayResultAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, SearchStayResultTabActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);

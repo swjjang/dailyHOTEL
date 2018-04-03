@@ -60,6 +60,13 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     SearchGourmetResultViewModel mViewModel;
 
     DailyDeepLink mDailyDeepLink;
+    ListType mListType;
+
+    public enum ListType
+    {
+        DEFAULT,
+        SEARCH,
+    }
 
     public enum ViewType
     {
@@ -171,6 +178,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         if (DailyIntentUtils.hasDeepLink(intent) == true)
         {
+            mListType = ListType.SEARCH;
+
             try
             {
                 mDailyDeepLink = DailyIntentUtils.getDeepLink(intent);
@@ -242,6 +251,14 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         if (intent == null)
         {
             throw new NullPointerException("intent == null");
+        }
+
+        try
+        {
+            mListType = ListType.valueOf(intent.getStringExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = ListType.SEARCH;
         }
 
         mViewModel.setBookDateTime(intent, SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
@@ -792,7 +809,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         try
         {
-            Intent intent = GourmetFilterActivity.newInstance(getActivity(), GourmetFilterActivity.ListType.SEARCH//
+            Intent intent = GourmetFilterActivity.newInstance(getActivity(), mListType//
                 , mViewModel.getBookDateTime().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mViewModel.getViewType().name(), mViewModel.getFilter(), mViewModel.getSuggest()//
                 , mViewModel.filterLocation, mViewModel.searchViewModel.radius, mViewModel.getInputKeyword());

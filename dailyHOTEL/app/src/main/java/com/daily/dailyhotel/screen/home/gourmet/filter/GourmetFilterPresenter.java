@@ -24,6 +24,7 @@ import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.GourmetFilterParcel;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
@@ -54,7 +55,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     GourmetRemoteImpl mGourmetRemoteImpl;
 
     GourmetFilter mFilter;
-    GourmetFilterActivity.ListType mListType;
+    SearchGourmetResultTabPresenter.ListType mListType;
     GourmetSuggest mSuggest;
     GourmetBookDateTime mBookDateTime;
     Location mLocation;
@@ -105,10 +106,10 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         try
         {
-            mListType = GourmetFilterActivity.ListType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+            mListType = SearchGourmetResultTabPresenter.ListType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
         } catch (Exception e)
         {
-            mListType = GourmetFilterActivity.ListType.DEFAULT;
+            mListType = SearchGourmetResultTabPresenter.ListType.DEFAULT;
         }
 
         String visitDateTime = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);

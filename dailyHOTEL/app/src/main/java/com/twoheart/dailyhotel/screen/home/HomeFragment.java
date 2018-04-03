@@ -46,6 +46,7 @@ import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabActivity;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
@@ -429,7 +430,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             analyticsParam.mCallByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
 
                             startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
-                                , categoryType, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                , SearchStayResultTabPresenter.ListType.DEFAULT, categoryType, bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , suggest, null, analyticsParam)//
                                 , Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -1753,7 +1754,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
 
             startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
-                , DailyCategoryType.STAY_ALL//
+                , SearchStayResultTabPresenter.ListType.DEFAULT, DailyCategoryType.STAY_ALL//
                 , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , suggest, null, analyticsParam)//
