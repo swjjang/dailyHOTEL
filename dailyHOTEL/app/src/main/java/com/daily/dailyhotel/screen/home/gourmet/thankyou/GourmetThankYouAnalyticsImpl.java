@@ -144,4 +144,26 @@ public class GourmetThankYouAnalyticsImpl implements GourmetThankYouPresenter.Go
             ExLog.d(e.toString());
         }
     }
+
+    @Override
+    public void onEventShowBenefitAlarmPopup(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NOTIFICATION, "impression", "thankyou", null);
+    }
+
+    @Override
+    public void onEventShowBenefitAlarmPopupClick(Activity activity, boolean agreed)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NOTIFICATION, "button_clicks", agreed ? "now" : "later", null);
+    }
 }
