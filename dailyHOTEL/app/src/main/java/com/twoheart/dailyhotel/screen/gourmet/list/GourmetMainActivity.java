@@ -752,12 +752,11 @@ public class GourmetMainActivity extends PlaceMainActivity
             GourmetSuggest suggest = new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, suggestItem);
             Location location = mGourmetCuration.getLocation();
 
-            Intent intent = GourmetFilterActivity.newInstance(GourmetMainActivity.this, visitDateTime, mViewType.name(), gourmetFilter//
+            Intent intent = GourmetFilterActivity.newInstance(GourmetMainActivity.this, GourmetFilterActivity.ListType.DEFAULT//
+                , visitDateTime, mViewType.name(), gourmetFilter//
                 , suggest, location, 0, null);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
-            //            Intent intent = GourmetCurationActivity.newInstance(GourmetMainActivity.this, mViewType, mGourmetCuration);
-            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
 
