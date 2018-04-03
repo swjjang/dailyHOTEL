@@ -58,22 +58,21 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
+        if (Constants.SortType.DISTANCE == mSort)
+        {
+            radius = gourmetSearchCuration.getRadius();
+
+            Location location = gourmetSearchCuration.getLocation();
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+
         GourmetSuggest suggest = gourmetSearchCuration.getSuggest();
 
-        if (suggest == null)
-        {
-            if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
-            {
-                radius = gourmetSearchCuration.getRadius();
-
-                Location location = gourmetSearchCuration.getLocation();
-                if (location != null)
-                {
-                    latitude = location.getLatitude();
-                    longitude = location.getLongitude();
-                }
-            }
-        } else
+        if (suggest != null)
         {
             switch (suggest.getSuggestType())
             {
