@@ -429,6 +429,13 @@ public class SignupStep1Activity extends BaseActivity
         }
 
         @Override
+        public void onBenefitClick(boolean checked)
+        {
+            AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.NOTIFICATION//
+                , "button_clicks", checked ? "on" : "off", null);
+        }
+
+        @Override
         public void finish()
         {
             SignupStep1Activity.this.finish();

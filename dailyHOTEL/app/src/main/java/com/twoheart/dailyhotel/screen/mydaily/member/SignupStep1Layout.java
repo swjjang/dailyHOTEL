@@ -65,6 +65,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         void showTermOfPrivacy();
 
         void showBirthdayDatePicker(int year, int month, int day);
+
+        void onBenefitClick(boolean checked);
     }
 
     public SignupStep1Layout(Context context, OnEventListener mOnEventListener)
@@ -426,6 +428,11 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 } else
                 {
                     mAllAgreementCheckBox.setChecked(false);
+                }
+
+                if (v.getId() == R.id.benefitCheckBox)
+                {
+                    ((OnEventListener) mOnEventListener).onBenefitClick(mBenefitCheckBox.isChecked());
                 }
                 break;
             }
