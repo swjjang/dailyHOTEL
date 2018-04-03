@@ -76,10 +76,18 @@ public interface EventWebInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, String eventName, EventWebActivity.EventType eventType);
+        void onScreen(Activity activity, String eventName, EventWebActivity.EventType eventType, String eventUrl);
 
         void onDownLoadCoupon(Activity activity, String couponCode, String validTo);
 
         void onRecordDeepLink(Activity activity, DailyDeepLink dailyDeepLink);
+
+        void onShareClick(Activity activity, String eventUrl);
+
+        void onShareKakaoClick(Activity activity, String eventUrl);
+
+        void onShareCopyLinkClick(Activity activity, String eventUrl);
+
+        void onShareSeeMoreClick(Activity activity, String eventUrl);
     }
 }
