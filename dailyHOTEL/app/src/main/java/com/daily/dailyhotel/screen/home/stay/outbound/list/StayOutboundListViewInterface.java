@@ -92,6 +92,4 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
     void setPopularAreaVisible(boolean visible);
 
     void showRadiusPopup();
-
-    void setShimmerViewVisible(boolean visible);
 }

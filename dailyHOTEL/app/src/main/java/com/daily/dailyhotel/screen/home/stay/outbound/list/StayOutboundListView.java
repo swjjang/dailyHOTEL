@@ -733,6 +733,23 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
 
         getViewDataBinding().shimmerLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+
+        if (mShimmerViewAdapter == null)
+        {
+            mShimmerViewAdapter = new ShimmerViewAdapter(getContext(), 5);
+        }
+
+        getViewDataBinding().shimmerRecyclerView.setAdapter(mShimmerViewAdapter);
+
+        if (visible)
+        {
+            mShimmerViewAdapter.setAnimationStart(true);
+        } else
+        {
+            mShimmerViewAdapter.setAnimationStart(false);
+        }
+
+        mShimmerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -1050,32 +1067,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
 
         getViewDataBinding().toolbarView.showRadiusSpinnerPopup();
-    }
-
-    @Override
-    public void setShimmerViewVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (mShimmerViewAdapter == null)
-        {
-            mShimmerViewAdapter = new ShimmerViewAdapter(getContext(), 5);
-        }
-
-        getViewDataBinding().shimmerRecyclerView.setAdapter(mShimmerViewAdapter);
-
-        if (visible)
-        {
-            mShimmerViewAdapter.setAnimationStart(true);
-        } else
-        {
-            mShimmerViewAdapter.setAnimationStart(false);
-        }
-
-        mShimmerViewAdapter.notifyDataSetChanged();
     }
 
     private void showViewPagerAnimation()

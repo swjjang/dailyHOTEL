@@ -797,12 +797,10 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             screenLock(false);
 
             setScreenVisible(ScreenType.SHIMMER, mStayOutboundFilters);
-            getViewInterface().setShimmerViewVisible(true);
         } else
         {
             screenLock(showProgress);
             setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
-            getViewInterface().setShimmerViewVisible(false);
         }
 
         Observable<StayOutbounds> observable;
