@@ -60,7 +60,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     SearchGourmetResultViewModel mViewModel;
 
     DailyDeepLink mDailyDeepLink;
-    ListType mListType;
 
     public enum ListType
     {
@@ -160,6 +159,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 getViewInterface().setOptionFilterSelected(filter != null && filter.isDefault() == false);
             }
         });
+
+        mViewModel.listType = ListType.SEARCH;
     }
 
     @Override
@@ -178,7 +179,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         if (DailyIntentUtils.hasDeepLink(intent) == true)
         {
-            mListType = ListType.SEARCH;
+            mViewModel.listType = ListType.SEARCH;
 
             try
             {
@@ -255,10 +256,10 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         try
         {
-            mListType = ListType.valueOf(intent.getStringExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+            mViewModel.listType = ListType.valueOf(intent.getStringExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_LIST_TYPE));
         } catch (Exception e)
         {
-            mListType = ListType.SEARCH;
+            mViewModel.listType = ListType.SEARCH;
         }
 
         mViewModel.setBookDateTime(intent, SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
@@ -809,7 +810,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         try
         {
-            Intent intent = GourmetFilterActivity.newInstance(getActivity(), mListType//
+            Intent intent = GourmetFilterActivity.newInstance(getActivity(), mViewModel.listType//
                 , mViewModel.getBookDateTime().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mViewModel.getViewType().name(), mViewModel.getFilter(), mViewModel.getSuggest()//
                 , mViewModel.filterLocation, mViewModel.searchViewModel.radius, mViewModel.getInputKeyword());
