@@ -71,6 +71,10 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         void onEventPayment(Activity activity);
 
         void onEventOrderComplete(Activity activity);
+
+        void onEventShowBenefitAlarmPopup(Activity activity);
+
+        void onEventShowBenefitAlarmPopupClick(Activity activity, boolean agreed);
     }
 
     public StayOutboundThankYouPresenter(@NonNull StayOutboundThankYouActivity activity)
@@ -390,6 +394,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
                         public void onClick(View v)
                         {
                             updateNotificationResultMessage(true);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), true);
                         }
                     }, new View.OnClickListener()
                     {
@@ -397,6 +403,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
                         public void onClick(View v)
                         {
                             updateNotificationResultMessage(false);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), false);
                         }
                     }, new DialogInterface.OnCancelListener()
                     {
@@ -404,6 +412,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
                         public void onCancel(DialogInterface dialog)
                         {
                             updateNotificationResultMessage(false);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), false);
                         }
                     }, new DialogInterface.OnDismissListener()
                     {
@@ -422,6 +432,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
                 ExLog.e(throwable.toString());
             }
         }));
+
+        mAnalytics.onEventShowBenefitAlarmPopup(getActivity());
     }
 
     void updateNotificationResultMessage(boolean agreed)

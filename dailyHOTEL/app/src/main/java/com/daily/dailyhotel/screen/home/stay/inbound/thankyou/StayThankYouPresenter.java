@@ -124,6 +124,10 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         void onEventRecommendGourmetItemClick(Activity activity, double distance, int placeIndex);
 
         void onEventOrderComplete(Activity activity);
+
+        void onEventShowBenefitAlarmPopup(Activity activity);
+
+        void onEventShowBenefitAlarmPopupClick(Activity activity, boolean agreed);
     }
 
     public StayThankYouPresenter(@NonNull StayThankYouActivity activity)
@@ -923,6 +927,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                         public void onClick(View v)
                         {
                             updateNotificationResultMessage(true);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), true);
                         }
                     }, new View.OnClickListener()
                     {
@@ -930,6 +936,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                         public void onClick(View v)
                         {
                             updateNotificationResultMessage(false);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), false);
                         }
                     }, new DialogInterface.OnCancelListener()
                     {
@@ -937,6 +945,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                         public void onCancel(DialogInterface dialog)
                         {
                             updateNotificationResultMessage(false);
+
+                            mAnalytics.onEventShowBenefitAlarmPopupClick(getActivity(), false);
                         }
                     }, new DialogInterface.OnDismissListener()
                     {
@@ -955,6 +965,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                 ExLog.e(throwable.toString());
             }
         }));
+
+        mAnalytics.onEventShowBenefitAlarmPopup(getActivity());
     }
 
     void updateNotificationResultMessage(boolean agreed)

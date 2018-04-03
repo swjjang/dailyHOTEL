@@ -54,6 +54,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     GourmetRemoteImpl mGourmetRemoteImpl;
 
     GourmetFilter mFilter;
+    GourmetFilterActivity.ListType mListType;
     GourmetSuggest mSuggest;
     GourmetBookDateTime mBookDateTime;
     Location mLocation;
@@ -100,6 +101,14 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
         if (intent == null)
         {
             return true;
+        }
+
+        try
+        {
+            mListType = GourmetFilterActivity.ListType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = GourmetFilterActivity.ListType.DEFAULT;
         }
 
         String visitDateTime = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
@@ -468,6 +477,16 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     Map<String, Object> getQueryMap()
     {
         Map<String, Object> queryMap = new HashMap<>();
+
+        switch (mListType)
+        {
+            case SEARCH:
+                queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
+                break;
+
+            default:
+                break;
+        }
 
         Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mBookDateTime);
 

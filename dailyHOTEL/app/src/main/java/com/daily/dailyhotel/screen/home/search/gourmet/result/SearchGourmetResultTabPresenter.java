@@ -792,7 +792,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         try
         {
-            Intent intent = GourmetFilterActivity.newInstance(getActivity(), mViewModel.getBookDateTime().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            Intent intent = GourmetFilterActivity.newInstance(getActivity(), GourmetFilterActivity.ListType.SEARCH//
+                , mViewModel.getBookDateTime().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mViewModel.getViewType().name(), mViewModel.getFilter(), mViewModel.getSuggest()//
                 , mViewModel.filterLocation, mViewModel.searchViewModel.radius, mViewModel.getInputKeyword());
 

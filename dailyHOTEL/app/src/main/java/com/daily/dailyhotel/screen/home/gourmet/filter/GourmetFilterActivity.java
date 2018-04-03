@@ -14,6 +14,8 @@ import com.daily.dailyhotel.parcel.GourmetFilterParcel;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.twoheart.dailyhotel.R;
 
+import java.util.List;
+
 /**
  * Created by sheldon
  * Clean Architecture
@@ -23,6 +25,7 @@ public class GourmetFilterActivity extends BaseActivity<GourmetFilterPresenter>
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10000;
     static final int REQUEST_CODE_SETTING_LOCATION = 10001;
 
+    static final String INTENT_EXTRA_DATA_LIST_TYPE = "listType";
     static final String INTENT_EXTRA_DATA_VIEW_TYPE = "viewType";
     public static final String INTENT_EXTRA_DATA_FILTER = "filter";
     static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
@@ -31,13 +34,18 @@ public class GourmetFilterActivity extends BaseActivity<GourmetFilterPresenter>
     static final String INTENT_EXTRA_DATA_RADIUS = "radius";
     static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
 
-    protected double longitude;
-    protected double latitude;
+    public enum ListType
+    {
+        DEFAULT,
+        SEARCH,
+    }
 
-    public static Intent newInstance(Context context, String visitDateTime, String viewType, GourmetFilter filter//
+    public static Intent newInstance(Context context, ListType listType, String visitDateTime//
+        , String viewType, GourmetFilter filter//
         , GourmetSuggest suggest, Location location, float radius, String searchWord)
     {
         Intent intent = new Intent(context, GourmetFilterActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_VIEW_TYPE, viewType);
         intent.putExtra(INTENT_EXTRA_DATA_FILTER, new GourmetFilterParcel(filter));

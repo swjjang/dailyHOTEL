@@ -868,7 +868,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             Location location = mViewModel.getFilter().isDistanceSort() ? mViewModel.filterLocation : null;
             float radius = mViewModel.getSuggest().isLocationSuggestType() ? mViewModel.searchViewModel.getRadius() : 0.0f;
 
-            startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
+            startActivityForResult(StayFilterActivity.newInstance(getActivity(), StayFilterActivity.ListType.SEARCH, checkInDateTime, checkOutDateTime//
                 , DailyCategoryType.STAY_ALL, mViewModel.getViewType().name()//
                 , mViewModel.getFilter(), mViewModel.getSuggest()//
                 , categoryList, location, radius, null), SearchStayResultTabActivity.REQUEST_CODE_FILTER);

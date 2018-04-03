@@ -26,6 +26,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10000;
     static final int REQUEST_CODE_SETTING_LOCATION = 10001;
 
+    static final String INTENT_EXTRA_DATA_LIST_TYPE = "listType";
     static final String INTENT_EXTRA_DATA_VIEW_TYPE = "viewType";
     public static final String INTENT_EXTRA_DATA_FILTER = "filter";
     static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
@@ -37,14 +38,18 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
     static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
     static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
 
-    protected double longitude;
-    protected double latitude;
+    public enum ListType
+    {
+        DEFAULT,
+        SEARCH,
+    }
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
+    public static Intent newInstance(Context context, ListType listType, String checkInDateTime, String checkOutDateTime//
         , DailyCategoryType categoryType, String viewType, StayFilter filter, StaySuggest suggest//
-        , ArrayList<String> categories, Location location, float radius, String searchWord)
+        , ArrayList<String> categories, Location location, double radius, String searchWord)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY_TYPE, categoryType.name());
