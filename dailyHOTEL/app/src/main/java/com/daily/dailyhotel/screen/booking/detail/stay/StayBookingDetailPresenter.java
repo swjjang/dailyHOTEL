@@ -26,6 +26,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.RefundPolicy;
 import com.daily.dailyhotel.entity.Review;
 import com.daily.dailyhotel.entity.ReviewAnswerValue;
@@ -639,10 +640,17 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                 location.setLatitude(mStayBookingDetail.latitude);
                 location.setLongitude(mStayBookingDetail.longitude);
 
+                GourmetSuggest.Location suggestItem = new GourmetSuggest.Location();
+                suggestItem.latitude = location.getLatitude();
+                suggestItem.longitude = location.getLongitude();
+
+                GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MenuType.SUGGEST, suggestItem);
+
                 GourmetSearchCuration gourmetCuration = new GourmetSearchCuration();
                 GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetCuration.getCurationOption();
                 gourmetCurationOption.setSortType(Constants.SortType.DISTANCE);
 
+                gourmetCuration.setSuggest(gourmetSuggest);
                 gourmetCuration.setGourmetBookingDay(gourmetBookingDay);
                 gourmetCuration.setLocation(location);
                 gourmetCuration.setCurationOption(gourmetCurationOption);

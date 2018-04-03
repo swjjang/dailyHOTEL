@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
+import android.location.Location;
 import android.os.Parcel;
 
 import com.daily.base.util.DailyTextUtils;
@@ -59,52 +60,68 @@ public class GourmetSearchParams extends GourmetParams
 
         GourmetSuggest suggest = gourmetSearchCuration.getSuggest();
 
-        switch (suggest.getSuggestType())
+        if (suggest == null)
         {
-            case AREA_GROUP:
+            if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
             {
-                GourmetSuggest.AreaGroup suggestItem = (GourmetSuggest.AreaGroup) suggest.getSuggestItem();
+                radius = gourmetSearchCuration.getRadius();
 
-                provinceIdx = suggestItem.index;
-
-                if (suggestItem.area != null && suggestItem.area.index > 0)
+                Location location = gourmetSearchCuration.getLocation();
+                if (location != null)
                 {
-                    areaIdx = suggestItem.area.index;
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
                 }
-                break;
             }
-
-            case LOCATION:
+        } else
+        {
+            switch (suggest.getSuggestType())
             {
-                GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
-
-                latitude = suggestItem.latitude;
-                longitude = suggestItem.longitude;
-
-                if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
+                case AREA_GROUP:
                 {
-                    radius = gourmetSearchCuration.getRadius();
+                    GourmetSuggest.AreaGroup suggestItem = (GourmetSuggest.AreaGroup) suggest.getSuggestItem();
+
+                    provinceIdx = suggestItem.index;
+
+                    if (suggestItem.area != null && suggestItem.area.index > 0)
+                    {
+                        areaIdx = suggestItem.area.index;
+                    }
+                    break;
                 }
-                break;
-            }
 
-            case STATION:
-                break;
+                case LOCATION:
+                {
+                    GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
 
-            case DIRECT:
-            {
-                GourmetSuggest.Direct suggestItem = (GourmetSuggest.Direct) suggest.getSuggestItem();
+                    latitude = suggestItem.latitude;
+                    longitude = suggestItem.longitude;
 
-                term = suggestItem.name;
-                break;
-            }
+                    if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
+                    {
+                        radius = gourmetSearchCuration.getRadius();
+                    }
+                    break;
+                }
 
-            case GOURMET:
-            {
-                GourmetSuggest.Gourmet suggestItem = (GourmetSuggest.Gourmet) suggest.getSuggestItem();
+                case STATION:
+                    break;
 
-                targetIndices = suggestItem.index;
-                break;
+                case DIRECT:
+                {
+                    GourmetSuggest.Direct suggestItem = (GourmetSuggest.Direct) suggest.getSuggestItem();
+
+                    term = suggestItem.name;
+                    break;
+                }
+
+                case GOURMET:
+                {
+                    GourmetSuggest.Gourmet suggestItem = (GourmetSuggest.Gourmet) suggest.getSuggestItem();
+
+                    targetIndices = suggestItem.index;
+                    break;
+                }
             }
         }
     }
@@ -142,7 +159,7 @@ public class GourmetSearchParams extends GourmetParams
             hashMap.put("limit", limit);
         }
 
-        if(targetIndices > 0)
+        if (targetIndices > 0)
         {
             hashMap.put("targetIndices", targetIndices);
         }

@@ -176,7 +176,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
         try
         {
-            mAnalytics.onScreen(getActivity(), mEventName, mEventType);
+            mAnalytics.onScreen(getActivity(), mEventName, mEventType, mEventUrl);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -500,6 +500,14 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 unLockAll();
             }
         });
+
+        try
+        {
+            mAnalytics.onShareClick(getActivity(), mEventUrl);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
@@ -529,6 +537,14 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                             , mEventDescription //
                             , shortUrl //
                             , mImageUrl);
+
+                        try
+                        {
+                            mAnalytics.onShareKakaoClick(getActivity(), mEventUrl);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -541,6 +557,14 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                             , mEventDescription //
                             , longUrl //
                             , mImageUrl);
+
+                        try
+                        {
+                            mAnalytics.onShareKakaoClick(getActivity(), mEventUrl);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
                     }
                 }));
         } catch (Exception e)
@@ -577,6 +601,14 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     DailyTextUtils.clipText(getActivity(), shortUrl);
 
                     DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+
+                    try
+                    {
+                        mAnalytics.onShareCopyLinkClick(getActivity(), mEventUrl);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }, new Consumer<Throwable>()
             {
@@ -588,6 +620,14 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     DailyTextUtils.clipText(getActivity(), longUrl);
 
                     DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+
+                    try
+                    {
+                        mAnalytics.onShareCopyLinkClick(getActivity(), mEventUrl);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }));
         } catch (Exception e)
@@ -624,6 +664,14 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
                     Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
                     startActivity(chooser);
+
+                    try
+                    {
+                        mAnalytics.onShareSeeMoreClick(getActivity(), mEventUrl);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }, new Consumer<Throwable>()
             {
@@ -639,6 +687,14 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                     intent.putExtra(Intent.EXTRA_TEXT, message + longUrl);
                     Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
                     startActivity(chooser);
+
+                    try
+                    {
+                        mAnalytics.onShareSeeMoreClick(getActivity(), mEventUrl);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }));
         } catch (Exception e)
