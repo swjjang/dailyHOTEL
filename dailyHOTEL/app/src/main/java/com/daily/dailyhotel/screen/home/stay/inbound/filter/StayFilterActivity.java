@@ -12,6 +12,7 @@ import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
@@ -38,13 +39,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
     static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
     static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
 
-    public enum ListType
-    {
-        DEFAULT,
-        SEARCH,
-    }
-
-    public static Intent newInstance(Context context, ListType listType, String checkInDateTime, String checkOutDateTime//
+    public static Intent newInstance(Context context, SearchStayResultTabPresenter.ListType listType, String checkInDateTime, String checkOutDateTime//
         , DailyCategoryType categoryType, String viewType, StayFilter stayFilter, StaySuggest suggest//
         , ArrayList<String> categories, Location location, double radius, String searchWord)
     {

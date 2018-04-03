@@ -67,6 +67,13 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     SearchGourmetResultViewModel mViewModel;
 
     DailyDeepLink mDailyDeepLink;
+    ListType mListType;
+
+    public enum ListType
+    {
+        DEFAULT,
+        SEARCH,
+    }
 
     public enum ViewType
     {
@@ -178,6 +185,8 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         if (DailyIntentUtils.hasDeepLink(intent) == true)
         {
+            mListType = ListType.SEARCH;
+
             try
             {
                 mDailyDeepLink = DailyIntentUtils.getDeepLink(intent);
@@ -249,6 +258,14 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         if (intent == null)
         {
             throw new NullPointerException("intent == null");
+        }
+
+        try
+        {
+            mListType = ListType.valueOf(intent.getStringExtra(SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = ListType.SEARCH;
         }
 
         mViewModel.setBookDateTime(intent, SearchGourmetResultTabActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
@@ -826,7 +843,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             GourmetSearchCuration gourmetSearchCuration = toGourmetSearchCuration();
 
             Intent intent = GourmetSearchResultCurationActivity.newInstance(getActivity()//
-                , GourmetSearchResultCurationActivity.ListType.SEARCH//
+                , mListType//
                 , com.twoheart.dailyhotel.util.Constants.ViewType.valueOf(mViewModel.getViewType().name())//
                 , gourmetSearchCuration, gourmetSearchCuration.getLocation() != null);
             startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_FILTER);

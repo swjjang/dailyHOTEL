@@ -66,6 +66,13 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     SearchStayResultViewModel mViewModel;
 
     DailyDeepLink mDailyDeepLink;
+    ListType mListType;
+
+    public enum ListType
+    {
+        DEFAULT,
+        SEARCH,
+    }
 
     public enum ViewType
     {
@@ -178,6 +185,8 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
         if (DailyIntentUtils.hasDeepLink(intent) == true)
         {
+            mListType = ListType.SEARCH;
+
             try
             {
                 mDailyDeepLink = DailyIntentUtils.getDeepLink(intent);
@@ -251,6 +260,14 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         if (intent == null)
         {
             throw new NullPointerException("intent == null");
+        }
+
+        try
+        {
+            mListType = ListType.valueOf(intent.getStringExtra(SearchStayResultTabActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = ListType.SEARCH;
         }
 
         try
@@ -868,7 +885,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             Location location = mViewModel.getFilter().isDistanceSort() ? mViewModel.filterLocation : null;
             float radius = mViewModel.getSuggest().isLocationSuggestType() ? mViewModel.searchViewModel.getRadius() : 0.0f;
 
-            startActivityForResult(StayFilterActivity.newInstance(getActivity(), StayFilterActivity.ListType.SEARCH, checkInDateTime, checkOutDateTime//
+            startActivityForResult(StayFilterActivity.newInstance(getActivity(), mListType, checkInDateTime, checkOutDateTime//
                 , DailyCategoryType.STAY_ALL, mViewModel.getViewType().name()//
                 , mViewModel.getFilter(), mViewModel.getSuggest()//
                 , categoryList, location, radius, null), SearchStayResultTabActivity.REQUEST_CODE_FILTER);

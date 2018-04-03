@@ -34,8 +34,10 @@ import com.daily.dailyhotel.repository.local.model.StaySearchResultHistory;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabActivity;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
@@ -1571,8 +1573,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         SearchStayResultAnalyticsParam analyticsParam = new SearchStayResultAnalyticsParam();
         analyticsParam.mCallByScreen = AnalyticsManager.Screen.SEARCH_MAIN;
 
-        startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity(), DailyCategoryType.STAY_ALL//
-            , checkInDateTime, checkOutDateTime, suggest, inputKeyWord, analyticsParam)//
+        startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity(), SearchStayResultTabPresenter.ListType.SEARCH//
+            , DailyCategoryType.STAY_ALL, checkInDateTime, checkOutDateTime, suggest, inputKeyWord, analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
@@ -1583,7 +1585,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return;
         }
 
-        startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), visitDateTime, suggest, inputKeyword)//
+        startActivityForResult(SearchGourmetResultTabActivity.newInstance(getActivity(), SearchGourmetResultTabPresenter.ListType.SEARCH//
+            , visitDateTime, suggest, inputKeyword)//
             , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
     }
 

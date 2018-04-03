@@ -25,6 +25,7 @@ import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -57,7 +58,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
     StayRemoteImpl mStayRemoteImpl;
 
-    StayFilterActivity.ListType mListType;
+    SearchStayResultTabPresenter.ListType mListType;
     StayFilter mStayFilter;
     StaySuggest mSuggest;
     StayBookDateTime mStayBookDateTime;
@@ -124,10 +125,10 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         try
         {
-            mListType = StayFilterActivity.ListType.valueOf(intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+            mListType = SearchStayResultTabPresenter.ListType.valueOf(intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
         } catch (Exception e)
         {
-            mListType = StayFilterActivity.ListType.DEFAULT;
+            mListType = SearchStayResultTabPresenter.ListType.DEFAULT;
         }
 
         String checkInDateTime = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);

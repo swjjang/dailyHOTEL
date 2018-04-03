@@ -28,13 +28,16 @@ public class SearchGourmetResultTabActivity extends BaseActivity<SearchGourmetRe
     public static final int REQUEST_CODE_WISH_DIALOG = 10009;
     public static final int REQUEST_CODE_CALL = 10010;
 
+    public static final String INTENT_EXTRA_DATA_LIST_TYPE = "listType";
     public static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_INPUT_KEYWORD = "inputKeyword";
 
-    public static Intent newInstance(Context context, String visitDateTime, GourmetSuggest suggest, String inputKeyWord)
+    public static Intent newInstance(Context context, SearchGourmetResultTabPresenter.ListType listType//
+        , String visitDateTime, GourmetSuggest suggest, String inputKeyWord)
     {
         Intent intent = new Intent(context, SearchGourmetResultTabActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_INPUT_KEYWORD, inputKeyWord);

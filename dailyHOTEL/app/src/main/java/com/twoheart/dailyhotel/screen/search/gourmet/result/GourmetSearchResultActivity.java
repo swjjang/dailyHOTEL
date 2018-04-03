@@ -25,6 +25,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -820,7 +821,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this//
-                , GourmetSearchResultCurationActivity.ListType.SEARCH//
+                , SearchGourmetResultTabPresenter.ListType.SEARCH//
                 , mViewType, mGourmetSearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 

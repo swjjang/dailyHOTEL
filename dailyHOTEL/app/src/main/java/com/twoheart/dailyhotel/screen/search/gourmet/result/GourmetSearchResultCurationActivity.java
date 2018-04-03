@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -22,15 +23,9 @@ import retrofit2.Response;
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
     private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
-    private ListType mListType;
+    private SearchGourmetResultTabPresenter.ListType mListType;
 
-    public enum ListType
-    {
-        DEFAULT,
-        SEARCH,
-    }
-
-    public static Intent newInstance(Context context, ListType listType, ViewType viewType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
+    public static Intent newInstance(Context context, SearchGourmetResultTabPresenter.ListType listType, ViewType viewType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
     {
         Intent intent = new Intent(context, GourmetSearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
@@ -48,10 +43,10 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
         try
         {
-            mListType = ListType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_LIST_TYPE));
+            mListType = SearchGourmetResultTabPresenter.ListType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_LIST_TYPE));
         } catch (Exception e)
         {
-            mListType = ListType.DEFAULT;
+            mListType = SearchGourmetResultTabPresenter.ListType.SEARCH;
         }
 
         mIsFixedLocation = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, false);
@@ -161,7 +156,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
         if (mLastParams == null)
         {
-            mLastParams = new GourmetSearchParams(gourmetCuration, mListType == ListType.SEARCH);
+            mLastParams = new GourmetSearchParams(gourmetCuration, mListType == SearchGourmetResultTabPresenter.ListType.SEARCH);
         } else
         {
             mLastParams.setPlaceParams(gourmetCuration);
