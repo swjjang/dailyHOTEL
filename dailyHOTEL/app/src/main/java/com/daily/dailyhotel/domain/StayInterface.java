@@ -29,7 +29,7 @@ public interface StayInterface
 
     Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
 
-    Observable<StayFilterCount> getLocalPlusListCountByFilte(Map<String, Object> queryMap);
+    Observable<StayFilterCount> getLocalPlusListCountByFilter(Map<String, Object> queryMap);
 
     Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime);
 
