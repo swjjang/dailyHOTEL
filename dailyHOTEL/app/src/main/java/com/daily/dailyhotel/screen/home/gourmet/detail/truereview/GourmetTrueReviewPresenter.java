@@ -125,7 +125,7 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
 
         getViewInterface().setToolbarTitle(getString(R.string.label_truereview));
         getViewInterface().setReviewScores(getString(R.string.message_detail_review_gourmet_explain), mReviewScores.getReviewScoreList());
-        getViewInterface().setTrueReviewProductVisible(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigStayDetailTrueReviewProductVisible());
+        getViewInterface().setTrueReviewProductVisible(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigGourmetDetailTrueReviewProductVisible());
     }
 
     @Override
