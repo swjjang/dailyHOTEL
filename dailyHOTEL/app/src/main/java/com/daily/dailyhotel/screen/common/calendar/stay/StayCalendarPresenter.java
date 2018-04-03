@@ -77,17 +77,11 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
         getViewInterface().setVisible(false);
 
-        setAnalytics(new StayCalendarAnalyticsImpl());
+        mAnalytics = new StayCalendarAnalyticsImpl();
 
         mCalendarImpl = new CalendarImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayCalendarInterface.AnalyticsInterface) analytics;
     }
 
     @Override

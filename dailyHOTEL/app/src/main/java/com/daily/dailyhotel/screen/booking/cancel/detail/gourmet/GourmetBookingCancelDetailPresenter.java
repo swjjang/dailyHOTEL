@@ -115,18 +115,12 @@ public class GourmetBookingCancelDetailPresenter //
     {
         setContentView(R.layout.activity_gourmet_booking_cancel_detail_data);
 
-        setAnalytics(new GourmetBookingCancelDetailCancelAnalyticsImpl());
+        mAnalytics = new GourmetBookingCancelDetailCancelAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetBookingCancelAnalyticsInterface) analytics;
     }
 
     @Override

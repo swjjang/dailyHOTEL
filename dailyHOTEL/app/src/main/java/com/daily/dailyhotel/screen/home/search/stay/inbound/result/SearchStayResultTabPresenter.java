@@ -97,7 +97,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
     {
         setContentView(R.layout.activity_search_stay_result_tab_data);
 
-        setAnalytics(new SearchStayResultTabAnalyticsImpl());
+        mAnalytics = new SearchStayResultTabAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
@@ -167,12 +167,6 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
         mViewModel.setCategory(Category.ALL);
         mViewModel.categoryType = DailyCategoryType.STAY_ALL;
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SearchStayResultTabInterface.AnalyticsInterface) analytics;
     }
 
     @Override

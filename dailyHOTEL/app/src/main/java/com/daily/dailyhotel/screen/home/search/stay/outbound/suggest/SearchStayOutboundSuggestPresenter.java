@@ -113,7 +113,7 @@ public class SearchStayOutboundSuggestPresenter //
     {
         setContentView(R.layout.activity_stay_outbound_search_suggest_data);
 
-        setAnalytics(new SearchStayOutboundSuggestAnalyticsImpl());
+        mAnalytics = new SearchStayOutboundSuggestAnalyticsImpl();
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
@@ -130,12 +130,6 @@ public class SearchStayOutboundSuggestPresenter //
         mLocationSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SearchStayOutboundSuggestAnalyticsInterface) analytics;
     }
 
     @Override

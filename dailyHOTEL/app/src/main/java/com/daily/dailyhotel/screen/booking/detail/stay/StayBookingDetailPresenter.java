@@ -189,7 +189,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     {
         setContentView(R.layout.activity_stay_booking_detail_data);
 
-        setAnalytics(new StayBookingDetailAnalyticsImpl());
+        mAnalytics = new StayBookingDetailAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mReviewRemoteImpl = new ReviewRemoteImpl(activity);
@@ -198,12 +198,6 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         mRefundRemoteImpl = new RefundRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayBookingDetailAnalyticsInterface) analytics;
     }
 
     @Override

@@ -78,18 +78,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     {
         setContentView(R.layout.activity_reward_data);
 
-        setAnalytics(new RewardAnalyticsImpl());
+        mAnalytics = new RewardAnalyticsImpl();
 
         mRewardRemoteImpl = new RewardRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (RewardAnalyticsInterface) analytics;
     }
 
     @Override

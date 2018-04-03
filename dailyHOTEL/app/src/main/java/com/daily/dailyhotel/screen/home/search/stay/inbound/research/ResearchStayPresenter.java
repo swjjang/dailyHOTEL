@@ -65,17 +65,11 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     {
         setContentView(R.layout.activity_research_stay_data);
 
-        setAnalytics(new ResearchStayAnalyticsImpl());
+        mAnalytics = new ResearchStayAnalyticsImpl();
 
         initViewModel(activity);
 
         setRefresh(false);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (ResearchStayInterface.AnalyticsInterface) analytics;
     }
 
     @Override

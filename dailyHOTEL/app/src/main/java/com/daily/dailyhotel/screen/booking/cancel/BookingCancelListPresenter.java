@@ -92,19 +92,13 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     {
         setContentView(R.layout.activity_booking_cancel_list_data);
 
-        setAnalytics(new BookingCancelListAnalyticsImpl());
+        mAnalytics = new BookingCancelListAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (BookingCancelListAnalyticsInterface) analytics;
     }
 
     @Override

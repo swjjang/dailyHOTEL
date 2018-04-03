@@ -15,13 +15,11 @@ import com.twoheart.dailyhotel.R;
  */
 public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInterface.ViewInterface> implements CopyInterface.OnEventListener
 {
-    private final CopyInterface.AnalyticsInterface mAnalytics;
+    private CopyInterface.AnalyticsInterface mAnalytics;
 
     public CopyPresenter(@NonNull CopyActivity activity)
     {
         super(activity);
-
-        mAnalytics = new CopyAnalyticsImpl();
     }
 
     @NonNull
@@ -36,7 +34,7 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     {
         setContentView(R.layout.activity_copy_data);
 
-        setAnalytics(new CopyAnalyticsImpl());
+        mAnalytics = new CopyAnalyticsImpl();
 
         setRefresh(true);
     }

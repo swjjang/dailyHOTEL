@@ -83,17 +83,11 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     {
         setContentView(R.layout.activity_gourmet_filter_data);
 
-        setAnalytics(new GourmetFilterAnalyticsImpl());
+        mAnalytics = new GourmetFilterAnalyticsImpl();
 
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetFilterInterface.AnalyticsInterface) analytics;
     }
 
     @Override

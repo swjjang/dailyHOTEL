@@ -206,8 +206,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         setContentView(R.layout.activity_stay_outbound_detail_data);
 
+        mAnalytics = new StayOutboundDetailAnalyticsImpl();
+
         mAppResearch = new AppResearch(activity);
-        setAnalytics(new StayOutboundDetailAnalyticsImpl());
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
@@ -226,12 +227,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             addCompositeDisposable(observable.subscribe());
         }
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundDetailAnalyticsInterface) analytics;
     }
 
     @Override

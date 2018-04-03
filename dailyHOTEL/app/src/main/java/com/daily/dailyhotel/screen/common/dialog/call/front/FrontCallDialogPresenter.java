@@ -48,15 +48,9 @@ public class FrontCallDialogPresenter extends BaseExceptionPresenter<FrontCallDi
     {
         setContentView(0);
 
-        setAnalytics(new FrontCallDialogAnalyticsImpl());
+        mAnalytics = new FrontCallDialogAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (FrontCallDialogAnalyticsInterface) analytics;
     }
 
     @Override

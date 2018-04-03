@@ -56,15 +56,9 @@ public class NavigatorDialogPresenter extends BaseExceptionPresenter<NavigatorDi
     {
         setContentView(0);
 
-        setAnalytics(new NavigatorDialogAnalyticsImpl());
+        mAnalytics = new NavigatorDialogAnalyticsImpl();
 
         setRefresh(false);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (NavigatorDialogAnalyticsInterface) analytics;
     }
 
     @Override

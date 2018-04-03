@@ -67,17 +67,11 @@ public class StayOutboundRefundPresenter //
     {
         setContentView(R.layout.activity_stay_outbound_refund_data);
 
-        setAnalytics(new StayOutboundRefundAnalyticsImpl());
+        mAnalytics = new StayOutboundRefundAnalyticsImpl();
 
         mRefundRemoteImpl = new RefundRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundRefundAnalyticsInterface) analytics;
     }
 
     @Override

@@ -62,7 +62,7 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
     {
         setContentView(R.layout.activity_stay_receipt_data);
 
-        setAnalytics(new StayReceiptAnalyticsImpl());
+        mAnalytics = new StayReceiptAnalyticsImpl();
 
         mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
 
@@ -74,12 +74,6 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
         }
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayReceiptAnalyticsInterface) analytics;
     }
 
     @Override

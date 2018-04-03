@@ -63,17 +63,11 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     {
         setContentView(R.layout.activity_research_gourmet_data);
 
-        setAnalytics(new ResearchGourmeAnalyticsImpl());
+        mAnalytics = new ResearchGourmeAnalyticsImpl();
 
         initViewModel(activity);
 
         setRefresh(false);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (ResearchGourmetInterface.AnalyticsInterface) analytics;
     }
 
     @Override

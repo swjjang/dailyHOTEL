@@ -76,18 +76,12 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
 
         getViewInterface().setVisible(false);
 
-        setAnalytics(new GourmetCalendarAnalyticsImpl());
+        mAnalytics = new GourmetCalendarAnalyticsImpl();
 
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mCalendarImpl = new CalendarImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetCalendarInterface.AnalyticsInterface) analytics;
     }
 
     @Override

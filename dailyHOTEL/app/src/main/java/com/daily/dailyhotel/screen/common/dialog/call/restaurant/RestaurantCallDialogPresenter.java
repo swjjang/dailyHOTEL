@@ -47,15 +47,9 @@ public class RestaurantCallDialogPresenter extends BaseExceptionPresenter<Restau
     {
         setContentView(0);
 
-        setAnalytics(new RestaurantCallDialogAnalyticsImpl());
+        mAnalytics = new RestaurantCallDialogAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (RestaurantCallDialogAnalyticsInterface) analytics;
     }
 
     @Override

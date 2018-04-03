@@ -111,7 +111,7 @@ public class SearchGourmetSuggestPresenter //
     {
         setContentView(R.layout.activity_search_gourmet_suggest_data);
 
-        setAnalytics(new SearchGourmetSuggestAnalyticsImpl());
+        mAnalytics = new SearchGourmetSuggestAnalyticsImpl();
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
@@ -132,12 +132,6 @@ public class SearchGourmetSuggestPresenter //
         notifyDataSetChanged();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SearchGourmetSuggestAnalyticsInterface) analytics;
     }
 
     @Override

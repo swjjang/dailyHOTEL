@@ -76,17 +76,11 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
     {
         setContentView(R.layout.activity_true_review_data);
 
-        setAnalytics(new GourmetGourmetTrueReviewAnalyticsImpl());
+        mAnalytics = new GourmetGourmetTrueReviewAnalyticsImpl();
 
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetTrueReviewAnalyticsInterface) analytics;
     }
 
     @Override

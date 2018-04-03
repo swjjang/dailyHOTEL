@@ -44,15 +44,9 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     {
         setContentView(R.layout.activity_stay_outbound_people_data);
 
-        setAnalytics(new SelectPeopleAnalyticsImpl());
+        mAnalytics = new SelectPeopleAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SelectPeopleAnalyticsInterface) analytics;
     }
 
     @Override

@@ -91,7 +91,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
     {
         setContentView(R.layout.activity_search_gourmet_result_tab_data);
 
-        setAnalytics(new SearchGourmetResultTabAnalyticsImpl());
+        mAnalytics = new SearchGourmetResultTabAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
@@ -160,12 +160,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
                 getViewInterface().setOptionFilterSelected(filter != null && filter.isDefault() == false);
             }
         });
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SearchGourmetResultTabInterface.AnalyticsInterface) analytics;
     }
 
     @Override

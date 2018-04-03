@@ -61,11 +61,6 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
         return mActivity.getString(resId, formatArgs);
     }
 
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-
-    }
-
     public void setContentView(@LayoutRes int layoutResID)
     {
         if (mOnViewInterface == null)

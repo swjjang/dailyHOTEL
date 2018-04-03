@@ -193,7 +193,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     {
         setContentView(R.layout.activity_gourmet_payment_data);
 
-        setAnalytics(new GourmetPaymentAnalyticsImpl());
+        mAnalytics = new GourmetPaymentAnalyticsImpl();
 
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
@@ -202,12 +202,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         mCartLocalImpl = new CartLocalImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetPaymentAnalyticsInterface) analytics;
     }
 
     @Override

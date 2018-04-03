@@ -53,15 +53,9 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     {
         setContentView(R.layout.activity_stay_outbound_filter_data);
 
-        setAnalytics(new StayOutboundFilterAnalyticsImpl());
+        mAnalytics = new StayOutboundFilterAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundFilterAnalyticsInterface) analytics;
     }
 
     @Override

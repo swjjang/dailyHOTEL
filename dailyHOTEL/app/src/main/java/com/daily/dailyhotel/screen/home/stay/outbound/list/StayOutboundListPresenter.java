@@ -200,7 +200,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         setContentView(R.layout.activity_stay_outbound_search_result_data);
 
-        setAnalytics(new StayOutboundListAnalyticsImpl());
+        mAnalytics = new StayOutboundListAnalyticsImpl();
 
         mViewState = ViewState.LIST;
 
@@ -212,12 +212,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundListAnalyticsInterface) analytics;
     }
 
     @Override

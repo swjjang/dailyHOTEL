@@ -98,17 +98,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     {
         setContentView(R.layout.activity_gourmet_menus_data);
 
-        setAnalytics(new GourmetMenusAnalyticsImpl());
+        mAnalytics = new GourmetMenusAnalyticsImpl();
 
         mCartLocalImpl = new CartLocalImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetMenusAnalyticsInterface) analytics;
     }
 
     @Override

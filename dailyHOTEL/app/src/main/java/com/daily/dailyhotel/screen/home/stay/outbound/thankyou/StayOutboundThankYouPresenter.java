@@ -94,18 +94,12 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     {
         setContentView(R.layout.activity_stay_outbound_payment_thank_you_data);
 
-        setAnalytics(new StayOutboundThankYouAnalyticsImpl());
+        mAnalytics = new StayOutboundThankYouAnalyticsImpl();
 
         mRewardRemoteImpl = new RewardRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundThankYouAnalyticsInterface) analytics;
     }
 
     @Override

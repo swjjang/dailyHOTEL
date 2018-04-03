@@ -76,17 +76,11 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
     {
         setContentView(R.layout.activity_true_review_data);
 
-        setAnalytics(new StayTrueReviewAnalyticsImpl());
+        mAnalytics = new StayTrueReviewAnalyticsImpl();
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayTrueReviewAnalyticsInterface) analytics;
     }
 
     @Override

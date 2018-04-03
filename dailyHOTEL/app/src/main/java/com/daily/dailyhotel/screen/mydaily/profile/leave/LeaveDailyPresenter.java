@@ -63,17 +63,11 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
     {
         setContentView(R.layout.activity_leave_daily_data);
 
-        setAnalytics(new LeaveDailyAnalyticsImpl());
+        mAnalytics = new LeaveDailyAnalyticsImpl();
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (LeaveDailyInterface.AnalyticsInterface) analytics;
     }
 
     @Override

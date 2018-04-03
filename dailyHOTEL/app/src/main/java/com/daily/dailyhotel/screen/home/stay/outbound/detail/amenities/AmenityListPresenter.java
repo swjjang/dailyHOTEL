@@ -40,11 +40,6 @@ public class AmenityListPresenter extends BaseExceptionPresenter<AmenityListActi
     }
 
     @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-    }
-
-    @Override
     public boolean onIntent(Intent intent)
     {
         if (intent == null)

@@ -84,7 +84,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
     {
         setContentView(R.layout.activity_stay_area_list_data);
 
-        setAnalytics(new StayAreaTabAnalyticsImpl());
+        mAnalytics = new StayAreaTabAnalyticsImpl();
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
 
@@ -102,12 +102,6 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         mStayAreaViewModel = ViewModelProviders.of(activity, new StayAreaViewModel.StayAreaViewModelFactory()).get(StayAreaViewModel.class);
 
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayAreaTabInterface.AnalyticsInterface) analytics;
     }
 
     @Override

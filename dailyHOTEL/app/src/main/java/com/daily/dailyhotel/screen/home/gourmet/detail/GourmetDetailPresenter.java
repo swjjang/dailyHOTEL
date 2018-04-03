@@ -237,8 +237,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         setContentView(R.layout.activity_gourmet_detail_data);
 
+        mAnalytics = new GourmetDetailAnalyticsImpl();
+
         mAppResearch = new AppResearch(activity);
-        setAnalytics(new GourmetDetailAnalyticsImpl());
 
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
@@ -252,12 +253,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         setVisitTime(FULL_TIME, false);
 
         setRefresh(false);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetDetailAnalyticsInterface) analytics;
     }
 
     @Override

@@ -46,15 +46,9 @@ public class AutoRefundDialogPresenter extends BaseMultiWindowPresenter<AutoRefu
     {
         setContentView(R.layout.dialog_type_refund_layout_data);
 
-        setAnalytics(new AutoRefundDialogAnalyticsImpl());
+        mAnalytics = new AutoRefundDialogAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (AutoRefundAnalyticsInterface) analytics;
     }
 
     @Override
