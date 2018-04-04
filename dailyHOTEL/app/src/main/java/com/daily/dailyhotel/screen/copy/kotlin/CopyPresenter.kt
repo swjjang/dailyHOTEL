@@ -68,7 +68,7 @@ class CopyPresenter(activity: CopyActivity)//
         super.onRestoreInstanceState(savedInstanceState)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         unLockAll()
     }
 
