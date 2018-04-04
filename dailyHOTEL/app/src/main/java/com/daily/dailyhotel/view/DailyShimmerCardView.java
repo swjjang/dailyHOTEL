@@ -233,6 +233,8 @@ public class DailyShimmerCardView extends ConstraintLayout
             return;
         }
 
+        mShimmer.setSimmerWidth(ScreenUtils.dpToPx(getContext(), 252.5));
+
         mShimmer.start(mViewDataBinding.shimmerView1);
         mShimmer.start(mViewDataBinding.shimmerView2);
         mShimmer.start(mViewDataBinding.shimmerView3);

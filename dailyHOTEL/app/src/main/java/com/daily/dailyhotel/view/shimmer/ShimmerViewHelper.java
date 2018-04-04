@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 
 public class ShimmerViewHelper
@@ -20,7 +21,7 @@ public class ShimmerViewHelper
         void onSetupAnimation(View target);
     }
 
-    private static final int DEFAULT_REFLECTION_COLOR = 0xFFE7E7E7;
+    private static final int DEFAULT_REFLECTION_COLOR = 0xFFEBEBEB;
     private static final int DEFAULT_PRIMARY_COLOR = 0xFFF8F8F9;
 
     private View view;
@@ -150,19 +151,19 @@ public class ShimmerViewHelper
 
     private void resetLinearGradient()
     {
-
-
         // our gradient is a simple linear gradient from textColor to reflectionColor. its axis is at the center
         // when it's outside of the view, the outer color (textColor) will be repeated (Shader.TileMode.CLAMP)
         // initially, the linear gradient is positioned on the left side of the view
-        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0, new int[]{primaryColor, reflectionColor, primaryColor,}, new float[]{0, 0.5f, 1}, Shader.TileMode.CLAMP);
+        int secondaryColor = 0xFFF0F0F1;
+//        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0, new int[]{primaryColor, secondaryColor, reflectionColor, secondaryColor, primaryColor,}, new float[]{0, 0.35f, 0.5f, 0.65f, 1}, Shader.TileMode.CLAMP);
+        linearGradient = new LinearGradient(-ScreenUtils.dpToPx(view.getContext(), 60d), 0, 0, 0, new int[]{primaryColor,  reflectionColor,  primaryColor,}, new float[]{0, 0.5f, 1}, Shader.TileMode.CLAMP);
+//        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0, new int[]{primaryColor,  reflectionColor,  primaryColor,}, new float[]{0, 0.5f, 1}, Shader.TileMode.CLAMP);
 
         paint.setShader(linearGradient);
     }
 
     protected void onSizeChanged()
     {
-
         resetLinearGradient();
 
         if (!isSetUp)
@@ -182,7 +183,6 @@ public class ShimmerViewHelper
      */
     public void onDraw(Canvas canvas)
     {
-
         // only draw the shader gradient over the text while animating
         if (isShimmering)
         {
