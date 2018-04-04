@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.view.shimmer;
+package com.daily.dailyhotel.view.shimmer.kotlin;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -49,7 +49,7 @@ public class ShimmerViewHelper
     private boolean isSetUp;
 
     // callback called after first global layout
-    private AnimationSetupCallback callback;
+    private AnimationSetupCallback animationSetupCallback;
 
     private float linearGradientWidth;
 
@@ -91,7 +91,12 @@ public class ShimmerViewHelper
 
     public void setAnimationSetupCallback(AnimationSetupCallback callback)
     {
-        this.callback = callback;
+        this.animationSetupCallback = callback;
+    }
+
+    public AnimationSetupCallback getAnimationSetupCallback()
+    {
+        return animationSetupCallback;
     }
 
     public int getPrimaryColor()
@@ -178,9 +183,9 @@ public class ShimmerViewHelper
         {
             isSetUp = true;
 
-            if (callback != null)
+            if (animationSetupCallback != null)
             {
-                callback.onSetupAnimation(view);
+                animationSetupCallback.onSetupAnimation(view);
             }
         }
     }

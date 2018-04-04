@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.view.shimmer;
+package com.daily.dailyhotel.view.shimmer.kotlin;
 
 public interface ShimmerViewInterface
 {
@@ -13,6 +13,8 @@ public interface ShimmerViewInterface
     boolean isSetUp();
 
     void setAnimationSetupCallback(ShimmerViewHelper.AnimationSetupCallback callback);
+
+    ShimmerViewHelper.AnimationSetupCallback getAnimationSetupCallback();
 
     int getPrimaryColor();
 
