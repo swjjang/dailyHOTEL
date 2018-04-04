@@ -63,7 +63,7 @@ public class DailyShimmerCardView extends ConstraintLayout
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_shimmer_card_data, this, true);
         mViewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-        setGradientView(mViewDataBinding.gradientBottomView);
+//        setGradientView(mViewDataBinding.gradientBottomView);
     }
 
     public void setImage(ImageMap imageMap)

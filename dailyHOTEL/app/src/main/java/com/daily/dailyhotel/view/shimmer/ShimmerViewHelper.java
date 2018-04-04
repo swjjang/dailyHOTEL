@@ -9,6 +9,7 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 
 public class ShimmerViewHelper
@@ -19,8 +20,8 @@ public class ShimmerViewHelper
         void onSetupAnimation(View target);
     }
 
-    private static final int DEFAULT_REFLECTION_COLOR = 0xFFD6D6D6;
-    private static final int DEFAULT_PRIMARY_COLOR = 0xFFDFDFE0;
+    private static final int DEFAULT_REFLECTION_COLOR = 0xFFE7E7E7;
+    private static final int DEFAULT_PRIMARY_COLOR = 0xFFF8F8F9;
 
     private View view;
     private Paint paint;
@@ -136,7 +137,7 @@ public class ShimmerViewHelper
                     reflectionColor = a.getColor(R.styleable.ShimmerView_reflectionColor, DEFAULT_REFLECTION_COLOR);
                 } catch (Exception e)
                 {
-                    android.util.Log.e("ShimmerTextView", "Error while creating the view:", e);
+                    ExLog.e("sam : Error while creating the view:" + e.toString());
                 } finally
                 {
                     a.recycle();
