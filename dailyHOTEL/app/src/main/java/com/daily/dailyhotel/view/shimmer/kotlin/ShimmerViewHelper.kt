@@ -160,8 +160,8 @@ class ShimmerViewHelper(private val view: View, attributeSet: AttributeSet) {
 
     companion object {
 
-        private val DEFAULT_REFLECTION_COLOR = -0x141415
-        private val DEFAULT_PRIMARY_COLOR = -0x70707
+        private val DEFAULT_REFLECTION_COLOR = 0xFFEBEBEB
+        private val DEFAULT_PRIMARY_COLOR = 0xFFF8F8F9
     }
 }
 
