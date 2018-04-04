@@ -5,15 +5,13 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class ShimmerView extends View implements ShimmerViewBase
+public class ShimmerView extends View implements ShimmerViewInterface
 {
-
     private ShimmerViewHelper shimmerViewHelper;
 
     public ShimmerView(Context context)
     {
         super(context);
-
         shimmerViewHelper = new ShimmerViewHelper(this, null);
     }
 
@@ -87,6 +85,12 @@ public class ShimmerView extends View implements ShimmerViewBase
     public void setReflectionColor(int reflectionColor)
     {
         shimmerViewHelper.setReflectionColor(reflectionColor);
+    }
+
+    @Override
+    public void setLinearGradientWidth(float width)
+    {
+        shimmerViewHelper.setLinearGradientWidth(width);
     }
 
     @Override

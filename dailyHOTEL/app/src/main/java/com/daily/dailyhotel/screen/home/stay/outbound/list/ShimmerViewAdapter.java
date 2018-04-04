@@ -56,7 +56,6 @@ public class ShimmerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ShimmerViewHolder viewHolder = (ShimmerViewHolder) holder;
 
         viewHolder.shimmerCardView.setDividerVisible(true);
-        viewHolder.shimmerCardView.setWishVisible(true);
 
         if (mAnimatonStart)
         {

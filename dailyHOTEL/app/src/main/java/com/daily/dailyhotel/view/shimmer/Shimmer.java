@@ -17,12 +17,14 @@ public class Shimmer
     private static final long DEFAULT_START_DELAY = 0;
     private static final int DEFAULT_DIRECTION = ANIMATION_DIRECTION_LTR;
     private static final int DEFAULT_SIMMER_WIDTH = -1;
+    private static final int DEFAULT_LINEAR_GRADIENT_WIDTH = -1;
 
     int repeatCount;
     long duration;
     long startDelay;
     int direction;
     int simmerWidth;
+    float linearGradientWidth;
     Animator.AnimatorListener animatorListener;
 
     ObjectAnimator animator;
@@ -34,6 +36,7 @@ public class Shimmer
         startDelay = DEFAULT_START_DELAY;
         direction = DEFAULT_DIRECTION;
         simmerWidth = DEFAULT_SIMMER_WIDTH;
+        linearGradientWidth = DEFAULT_LINEAR_GRADIENT_WIDTH;
     }
 
     public int getRepeatCount()
@@ -108,7 +111,18 @@ public class Shimmer
         return this;
     }
 
-    public <V extends View & ShimmerViewBase> void start(final V shimmerView)
+    public float getLinearGradientWidth()
+    {
+        return linearGradientWidth;
+    }
+
+    public Shimmer setLinearGradientWidth(float linearGradientWidth)
+    {
+        this.linearGradientWidth = linearGradientWidth;
+        return this;
+    }
+
+    public <V extends View & ShimmerViewInterface> void start(final V shimmerView)
     {
 
         if (isAnimating())
@@ -128,9 +142,12 @@ public class Shimmer
                 float toX = simmerWidth == DEFAULT_SIMMER_WIDTH ? shimmerView.getWidth() : simmerWidth;
                 if (direction == ANIMATION_DIRECTION_RTL)
                 {
-                    fromX = shimmerView.getWidth();
+                    fromX = simmerWidth == DEFAULT_SIMMER_WIDTH ? shimmerView.getWidth() : simmerWidth;
                     toX = 0;
                 }
+
+                float gradientWidth = linearGradientWidth == DEFAULT_LINEAR_GRADIENT_WIDTH ? shimmerView.getWidth() : linearGradientWidth;
+                shimmerView.setLinearGradientWidth(gradientWidth);
 
                 animator = ObjectAnimator.ofFloat(shimmerView, "gradientX", fromX, toX);
                 animator.setRepeatCount(repeatCount);

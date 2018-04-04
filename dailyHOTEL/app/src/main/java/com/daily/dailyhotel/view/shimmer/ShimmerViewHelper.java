@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 
 public class ShimmerViewHelper
@@ -51,6 +50,8 @@ public class ShimmerViewHelper
 
     // callback called after first global layout
     private AnimationSetupCallback callback;
+
+    private float linearGradientWidth;
 
     public ShimmerViewHelper(View view, AttributeSet attributeSet)
     {
@@ -121,6 +122,15 @@ public class ShimmerViewHelper
         }
     }
 
+    public void setLinearGradientWidth(float width)
+    {
+        this.linearGradientWidth = width < 0 ? view.getWidth() : width;
+        if (isSetUp)
+        {
+            resetLinearGradient();
+        }
+    }
+
     private void init(AttributeSet attributeSet)
     {
 
@@ -154,10 +164,8 @@ public class ShimmerViewHelper
         // our gradient is a simple linear gradient from textColor to reflectionColor. its axis is at the center
         // when it's outside of the view, the outer color (textColor) will be repeated (Shader.TileMode.CLAMP)
         // initially, the linear gradient is positioned on the left side of the view
-        int secondaryColor = 0xFFF0F0F1;
-//        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0, new int[]{primaryColor, secondaryColor, reflectionColor, secondaryColor, primaryColor,}, new float[]{0, 0.35f, 0.5f, 0.65f, 1}, Shader.TileMode.CLAMP);
-        linearGradient = new LinearGradient(-ScreenUtils.dpToPx(view.getContext(), 60d), 0, 0, 0, new int[]{primaryColor,  reflectionColor,  primaryColor,}, new float[]{0, 0.5f, 1}, Shader.TileMode.CLAMP);
-//        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0, new int[]{primaryColor,  reflectionColor,  primaryColor,}, new float[]{0, 0.5f, 1}, Shader.TileMode.CLAMP);
+        float width = linearGradientWidth < 0 ? view.getWidth() : linearGradientWidth;
+        linearGradient = new LinearGradient(-width, 0, 0, 0, new int[]{primaryColor, reflectionColor, primaryColor,}, new float[]{0, 0.5f, 1}, Shader.TileMode.CLAMP);
 
         paint.setShader(linearGradient);
     }
@@ -186,7 +194,6 @@ public class ShimmerViewHelper
         // only draw the shader gradient over the text while animating
         if (isShimmering)
         {
-
             // first onDraw() when shimmering
             if (paint.getShader() == null)
             {
@@ -199,7 +206,6 @@ public class ShimmerViewHelper
             // this is required in order to invalidate the shader's position
             linearGradient.setLocalMatrix(linearGradientMatrix);
             canvas.drawPaint(paint);
-
         } else
         {
             // we're not animating, remove the shader from the paint
