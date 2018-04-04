@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
+import android.location.Location;
 import android.os.Parcel;
 
 import com.daily.base.util.DailyTextUtils;
@@ -15,10 +16,13 @@ public class GourmetSearchParams extends GourmetParams
     private String term;
     private double radius;
     private int targetIndices;
+    private boolean mAddSearchType;
 
-    public GourmetSearchParams(PlaceCuration placeCuration)
+    public GourmetSearchParams(PlaceCuration placeCuration, boolean addSearchType)
     {
         super(placeCuration);
+
+        mAddSearchType = addSearchType;
     }
 
     public GourmetSearchParams(Parcel in)
@@ -57,54 +61,69 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
+        if (Constants.SortType.DISTANCE == mSort)
+        {
+            radius = gourmetSearchCuration.getRadius();
+
+            Location location = gourmetSearchCuration.getLocation();
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+
         GourmetSuggest suggest = gourmetSearchCuration.getSuggest();
 
-        switch (suggest.getSuggestType())
+        if (suggest != null)
         {
-            case AREA_GROUP:
+            switch (suggest.getSuggestType())
             {
-                GourmetSuggest.AreaGroup suggestItem = (GourmetSuggest.AreaGroup) suggest.getSuggestItem();
-
-                provinceIdx = suggestItem.index;
-
-                if (suggestItem.area != null && suggestItem.area.index > 0)
+                case AREA_GROUP:
                 {
-                    areaIdx = suggestItem.area.index;
+                    GourmetSuggest.AreaGroup suggestItem = (GourmetSuggest.AreaGroup) suggest.getSuggestItem();
+
+                    provinceIdx = suggestItem.index;
+
+                    if (suggestItem.area != null && suggestItem.area.index > 0)
+                    {
+                        areaIdx = suggestItem.area.index;
+                    }
+                    break;
                 }
-                break;
-            }
 
-            case LOCATION:
-            {
-                GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
-
-                latitude = suggestItem.latitude;
-                longitude = suggestItem.longitude;
-
-                if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
+                case LOCATION:
                 {
-                    radius = gourmetSearchCuration.getRadius();
+                    GourmetSuggest.Location suggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
+
+                    latitude = suggestItem.latitude;
+                    longitude = suggestItem.longitude;
+
+                    if (Constants.SortType.DISTANCE == mSort || suggest.isLocationSuggestType() == true)
+                    {
+                        radius = gourmetSearchCuration.getRadius();
+                    }
+                    break;
                 }
-                break;
-            }
 
-            case STATION:
-                break;
+                case STATION:
+                    break;
 
-            case DIRECT:
-            {
-                GourmetSuggest.Direct suggestItem = (GourmetSuggest.Direct) suggest.getSuggestItem();
+                case DIRECT:
+                {
+                    GourmetSuggest.Direct suggestItem = (GourmetSuggest.Direct) suggest.getSuggestItem();
 
-                term = suggestItem.name;
-                break;
-            }
+                    term = suggestItem.name;
+                    break;
+                }
 
-            case GOURMET:
-            {
-                GourmetSuggest.Gourmet suggestItem = (GourmetSuggest.Gourmet) suggest.getSuggestItem();
+                case GOURMET:
+                {
+                    GourmetSuggest.Gourmet suggestItem = (GourmetSuggest.Gourmet) suggest.getSuggestItem();
 
-                targetIndices = suggestItem.index;
-                break;
+                    targetIndices = suggestItem.index;
+                    break;
+                }
             }
         }
     }
@@ -113,6 +132,11 @@ public class GourmetSearchParams extends GourmetParams
     public Map<String, Object> toParamsMap()
     {
         HashMap<String, Object> hashMap = new HashMap<>();
+
+        if (mAddSearchType == true)
+        {
+            hashMap.put("saleSearchType", "SHOW_SOLD_OUT");
+        }
 
         hashMap.put("reserveDate", date);
 
@@ -142,7 +166,7 @@ public class GourmetSearchParams extends GourmetParams
             hashMap.put("limit", limit);
         }
 
-        if(targetIndices > 0)
+        if (targetIndices > 0)
         {
             hashMap.put("targetIndices", targetIndices);
         }

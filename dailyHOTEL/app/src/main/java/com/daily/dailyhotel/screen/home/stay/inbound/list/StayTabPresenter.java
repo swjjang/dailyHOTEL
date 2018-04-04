@@ -40,6 +40,7 @@ import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabActivity;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -786,7 +787,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
+        startActivityForResult(StayFilterActivity.newInstance(getActivity(), SearchStayResultTabPresenter.ListType.DEFAULT//
+            , checkInDateTime, checkOutDateTime//
             , mStayViewModel.categoryType, mStayViewModel.viewType.getValue().name()//
             , mStayViewModel.stayFilter.getValue(), suggest//
             , categoryList, location, 0, null), StayTabActivity.REQUEST_CODE_FILTER);
@@ -1141,7 +1143,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     analyticsParam.mCallByScreen = AnalyticsManager.Screen.HOME;
 
                     startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
-                        , DailyCategoryType.STAY_ALL//
+                        , SearchStayResultTabPresenter.ListType.DEFAULT, DailyCategoryType.STAY_ALL//
                         , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , suggest, null, analyticsParam)//
@@ -1152,7 +1154,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     analyticsParam.mCallByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
 
                     startActivityForResult(SearchStayResultTabActivity.newInstance(getActivity()//
-                        , mStayViewModel.categoryType//
+                        , SearchStayResultTabPresenter.ListType.DEFAULT, mStayViewModel.categoryType//
                         , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , suggest, null, analyticsParam)//

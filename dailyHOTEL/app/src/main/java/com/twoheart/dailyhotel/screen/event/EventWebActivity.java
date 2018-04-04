@@ -193,6 +193,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
         setWebView(mEventUrl);
 
         //        initLayout((DailyWebView) webView);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "entrance", mEventUrl, null);
     }
 
     private void initToolbar(String title)
@@ -279,6 +281,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
         });
 
         showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_button_click", mEventUrl, null);
     }
 
     void onShareKakaoClick()
@@ -304,6 +308,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             , mEventDescription //
                             , shortUrl //
                             , mImageUrl);
+
+                        AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_kakao", mEventUrl, null);
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -316,6 +322,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             , mEventDescription //
                             , longUrl //
                             , mImageUrl);
+
+                        AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_kakao", mEventUrl, null);
                     }
                 }));
         } catch (Exception e)
@@ -353,6 +361,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     DailyTextUtils.clipText(EventWebActivity.this, shortUrl);
 
                     DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+
+                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_link_copy", mEventUrl, null);
                 }
             }, new Consumer<Throwable>()
             {
@@ -364,6 +374,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     DailyTextUtils.clipText(EventWebActivity.this, longUrl);
 
                     DailyToast.showToast(EventWebActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+
+                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_link_copy", mEventUrl, null);
                 }
             }));
         } catch (Exception e)
@@ -401,6 +413,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
                     Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
                     startActivity(chooser);
+
+                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_see_more", mEventUrl, null);
                 }
             }, new Consumer<Throwable>()
             {
@@ -416,6 +430,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     intent.putExtra(Intent.EXTRA_TEXT, message + longUrl);
                     Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
                     startActivity(chooser);
+
+                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_see_more", mEventUrl, null);
                 }
             }));
         } catch (Exception e)

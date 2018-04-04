@@ -25,6 +25,7 @@ import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -58,6 +59,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     StayRemoteImpl mStayRemoteImpl;
 
     StayFilter mFilter;
+    SearchStayResultTabPresenter.ListType mListType;
     StaySuggest mSuggest;
     StayBookDateTime mStayBookDateTime;
     List<String> mCategoryList;
@@ -119,6 +121,14 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         if (intent == null)
         {
             return true;
+        }
+
+        try
+        {
+            mListType = SearchStayResultTabPresenter.ListType.valueOf(intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = SearchStayResultTabPresenter.ListType.DEFAULT;
         }
 
         String checkInDateTime = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
@@ -538,7 +548,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             Map<String, Object> queryMap = getQueryMap();
             queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
 
-            return mStayRemoteImpl.getLocalPlusListCountByFilte(queryMap);
+            return mStayRemoteImpl.getLocalPlusListCountByFilter(queryMap);
         } else
         {
             return Observable.just(new StayFilterCount());
@@ -559,6 +569,16 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     Map<String, Object> getQueryMap()
     {
         Map<String, Object> queryMap = new HashMap<>();
+
+        switch (mListType)
+        {
+            case SEARCH:
+                queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
+                break;
+
+            default:
+                break;
+        }
 
         Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mStayBookDateTime);
 

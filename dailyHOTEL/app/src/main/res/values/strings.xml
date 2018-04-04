@@ -1144,7 +1144,7 @@
 
     <!--New Search Suggest -->
     <string name="label_search_nearby_title">현재 위치로 설정</string>
-    <string name="label_search_nearby_description">위치서비스 약관 동의 필요</string>
+    <string name="label_search_nearby_description">위치정보 이용동의 필요</string>
     <string name="label_search_nearby_empty_address">현재 위치 주변</string>
     <string name="label_search_suggest_type_stay">스테이</string>
     <string name="label_search_suggest_type_gourmet">레스토랑</string>

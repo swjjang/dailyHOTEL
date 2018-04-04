@@ -1666,6 +1666,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     {
                         mIsBenefitAlarm = true;
                         mNetworkController.requestNoticeAgreementResult(true);
+
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NOTIFICATION, "button_clicks", "now", null);
                     }
                 }, new View.OnClickListener()
                 {
@@ -1674,6 +1676,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     {
                         mIsBenefitAlarm = false;
                         mNetworkController.requestNoticeAgreementResult(false);
+
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NOTIFICATION, "button_clicks", "later", null);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
@@ -1682,8 +1686,13 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     {
                         mIsBenefitAlarm = false;
                         mNetworkController.requestNoticeAgreementResult(false);
+
+                        AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NOTIFICATION, "button_clicks", "later", null);
                     }
                 }, null, true);
+
+
+            AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NOTIFICATION, "impression", "home", null);
         }
 
         @Override

@@ -1249,6 +1249,10 @@ public class AnalyticsManager
         public static final String TRUE_AWARDS = "true_awards";
 
         public static final String MEMBER_LEAVE = "member_leave";
+
+        public static final String EVENTPAGE_SHARE = "eventpage_share";
+
+        public static final String NOTIFICATION = "notification";
     }
 
     public static class Label

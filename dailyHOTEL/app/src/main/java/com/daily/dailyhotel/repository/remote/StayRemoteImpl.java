@@ -120,7 +120,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<StayFilterCount> getLocalPlusListCountByFilte(Map<String, Object> queryMap)
+    public Observable<StayFilterCount> getLocalPlusListCountByFilter(Map<String, Object> queryMap)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
             : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";

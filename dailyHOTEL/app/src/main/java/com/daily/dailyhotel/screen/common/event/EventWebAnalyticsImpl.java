@@ -18,7 +18,7 @@ import java.util.Map;
 public class EventWebAnalyticsImpl implements EventWebInterface.AnalyticsInterface
 {
     @Override
-    public void onScreen(Activity activity, String eventName, EventWebActivity.EventType eventType)
+    public void onScreen(Activity activity, String eventName, EventWebActivity.EventType eventType, String eventUrl)
     {
         if (activity == null)
         {
@@ -43,6 +43,8 @@ public class EventWebAnalyticsImpl implements EventWebInterface.AnalyticsInterfa
                 AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.HOME_EVENT_DETAIL, null);
                 break;
         }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "entrance", eventUrl, null);
     }
 
     @Override
@@ -88,5 +90,49 @@ public class EventWebAnalyticsImpl implements EventWebInterface.AnalyticsInterfa
         }
 
         AnalyticsManager.getInstance(activity).recordDeepLink(dailyDeepLink);
+    }
+
+    @Override
+    public void onShareClick(Activity activity, String eventUrl)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_button_click", eventUrl, null);
+    }
+
+    @Override
+    public void onShareKakaoClick(Activity activity, String eventUrl)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_kakao", eventUrl, null);
+    }
+
+    @Override
+    public void onShareCopyLinkClick(Activity activity, String eventUrl)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_link_copy", eventUrl, null);
+    }
+
+    @Override
+    public void onShareSeeMoreClick(Activity activity, String eventUrl)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.EVENTPAGE_SHARE, "share_see_more", eventUrl, null);
     }
 }

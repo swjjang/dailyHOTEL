@@ -1283,6 +1283,16 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     {
         Map<String, Object> queryMap = new HashMap<>();
 
+        switch (mViewModel.listType)
+        {
+            case SEARCH:
+                queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
+                break;
+
+            default:
+                break;
+        }
+
         Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mViewModel.getBookDateTime());
 
         if (bookDateTimeQueryMap != null)

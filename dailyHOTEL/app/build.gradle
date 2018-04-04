@@ -1,6 +1,9 @@
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 buildscript {
     repositories {
@@ -203,6 +206,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // kotlin
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    kapt "com.android.databinding:compiler:$android_gradle_version"
+
     implementation 'com.android.support:support-v4:27.1.0'
     implementation 'com.android.support:cardview-v7:27.1.0'
     implementation 'com.android.support:customtabs:27.1.0'
@@ -266,7 +274,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-perf:11.4.2'
 
     implementation 'com.bluelinelabs:logansquare:1.3.7'
-    annotationProcessor 'com.bluelinelabs:logansquare-compiler:1.3.7'
+    kapt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     implementation "com.github.aurae.retrofit2:converter-logansquare:1.4.1"
 
     // 다른앱 프로세스 보기
@@ -274,6 +282,8 @@ dependencies {
 
     // 카카오 광고 SDK
     implementation 'com.kakao.ad:tracker:0.2.6@aar'
+
+
 
     //
 //    debugCompile 'com.facebook.stetho:stetho:1.4.1'
