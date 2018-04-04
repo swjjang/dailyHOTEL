@@ -62,6 +62,18 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
     }
 
     @Override
+    public void defaultSortLayoutGone()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().sortInclude.regionRadioButton.setVisibility(View.GONE);
+        getViewDataBinding().sortInclude.emptyRadioButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     public void setCategory(LinkedHashMap<String, GourmetFilter.Category> categoryMap)
     {
         if (getViewDataBinding() == null || categoryMap == null)

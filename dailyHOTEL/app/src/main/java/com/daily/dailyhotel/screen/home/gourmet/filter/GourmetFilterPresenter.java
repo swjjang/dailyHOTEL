@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
@@ -161,6 +160,11 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
+
+        if (mSuggest.isLocationSuggestType())
+        {
+            getViewInterface().defaultSortLayoutGone();
+        }
 
         getViewInterface().setCategory(mFilter.getCategoryMap());
 

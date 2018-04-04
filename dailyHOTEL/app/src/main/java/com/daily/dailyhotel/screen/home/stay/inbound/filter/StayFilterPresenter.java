@@ -194,6 +194,11 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
 
+        if (mSuggest.isLocationSuggestType())
+        {
+            getViewInterface().defaultSortLayoutGone();
+        }
+
         notifyFilterChanged();
     }
 
@@ -663,7 +668,11 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
                 queryMap.put("latitude", suggestItem.latitude);
                 queryMap.put("longitude", suggestItem.longitude);
-                queryMap.put("radius", radius);
+
+                if (radius > 0)
+                {
+                    queryMap.put("radius", radius);
+                }
                 break;
             }
 

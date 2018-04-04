@@ -15,6 +15,8 @@ public interface GourmetFilterInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
     {
+        void defaultSortLayoutGone();
+
         void setCategory(LinkedHashMap<String, GourmetFilter.Category> categoryMap);
 
         void setSortCheck(GourmetFilter.SortType sortType);

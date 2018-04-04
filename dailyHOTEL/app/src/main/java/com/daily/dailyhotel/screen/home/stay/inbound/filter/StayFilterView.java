@@ -73,6 +73,18 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
     }
 
     @Override
+    public void defaultSortLayoutGone()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().sortInclude.regionRadioButton.setVisibility(View.GONE);
+        getViewDataBinding().sortInclude.emptyRadioButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     public void setSortLayout(StayFilter.SortType sortType)
     {
         if (getViewDataBinding() == null || sortType == null)
