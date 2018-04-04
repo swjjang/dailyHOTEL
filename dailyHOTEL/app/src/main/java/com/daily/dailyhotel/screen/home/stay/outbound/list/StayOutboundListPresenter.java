@@ -129,6 +129,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     DailyDeepLink mDailyDeepLink;
 
+    boolean mIsFirstLoad;
+
     enum ViewState
     {
         MAP,
@@ -143,7 +145,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         EMPTY,
         ERROR,
         SEARCH_LOCATION,
-        LIST
+        LIST,
+        SHIMMER
     }
 
     public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
@@ -210,6 +213,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mSearchLocalImpl = new SearchLocalImpl(activity);
 
         setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
+
+        mIsFirstLoad = true;
 
         setRefresh(true);
     }
@@ -779,8 +784,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         clearCompositeDisposable();
 
         setRefresh(false);
-        screenLock(showProgress);
-        setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
+
+        if (mIsFirstLoad == true)
+        {
+            mIsFirstLoad = false;
+            screenLock(false);
+
+            setScreenVisible(ScreenType.SHIMMER, mStayOutboundFilters);
+        } else
+        {
+            screenLock(showProgress);
+            setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
+        }
 
         Observable<StayOutbounds> observable;
         if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
@@ -1835,12 +1850,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
+                getViewInterface().setShimmerScreenVisible(false);
                 break;
 
             case EMPTY:
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
+                getViewInterface().setShimmerScreenVisible(false);
 
                 if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
                 {
@@ -1875,6 +1892,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
                 getViewInterface().setBottomLayoutVisible(false);
+                getViewInterface().setShimmerScreenVisible(false);
                 break;
 
             case SEARCH_LOCATION:
@@ -1883,6 +1901,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setSearchLocationScreenVisible(true);
                 getViewInterface().setListScreenVisible(false);
                 getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.NONE);
+                getViewInterface().setShimmerScreenVisible(false);
                 break;
 
             case LIST:
@@ -1891,6 +1910,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(true);
                 getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.NONE);
+                getViewInterface().setShimmerScreenVisible(false);
+                break;
+
+            case SHIMMER:
+                getViewInterface().hideEmptyScreen();
+                getViewInterface().setErrorScreenVisible(false);
+                getViewInterface().setSearchLocationScreenVisible(false);
+                getViewInterface().setListScreenVisible(false);
+                getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.NONE);
+                getViewInterface().setShimmerScreenVisible(true);
                 break;
         }
     }

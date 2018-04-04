@@ -2,9 +2,11 @@ package com.daily.dailyhotel.screen.home.stay.outbound.list;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.location.Location;
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
@@ -56,6 +58,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
     StayOutboundListAdapter mListAdapter;
+    ShimmerViewAdapter mShimmerViewAdapter;
 
     StayOutboundMapFragment mStayOutboundMapFragment;
     DailyOverScrollViewPager mViewPager;
@@ -722,6 +725,34 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
+    public void setShimmerScreenVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().shimmerLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+
+        if (mShimmerViewAdapter == null)
+        {
+            mShimmerViewAdapter = new ShimmerViewAdapter(getContext(), 5);
+        }
+
+        getViewDataBinding().shimmerRecyclerView.setAdapter(mShimmerViewAdapter);
+
+        if (visible)
+        {
+            mShimmerViewAdapter.setAnimationStart(true);
+        } else
+        {
+            mShimmerViewAdapter.setAnimationStart(false);
+        }
+
+        mShimmerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void showEmptyScreen(EmptyScreenType emptyScreenType)
     {
         if (getViewDataBinding() == null || emptyScreenType == null)
@@ -1292,6 +1323,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         return areaCardView;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
     {
         if (context == null || viewGroup == null)
