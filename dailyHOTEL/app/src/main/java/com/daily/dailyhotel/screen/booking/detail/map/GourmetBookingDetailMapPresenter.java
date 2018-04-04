@@ -61,13 +61,7 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
     {
         super.constructorInitialize(activity);
 
-        setAnalytics(new GourmetBookingDetailMapAnalyticsImpl());
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetBookingDetailMapAnalyticsInterface) analytics;
+        mAnalytics = new GourmetBookingDetailMapAnalyticsImpl();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

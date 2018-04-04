@@ -51,17 +51,11 @@ public class CouponHistoryPresenter extends BaseExceptionPresenter<CouponHistory
     {
         setContentView(R.layout.activity_coupon_history_data);
 
-        setAnalytics(new CouponHistoryAnalyticsImpl());
+        mAnalytics = new CouponHistoryAnalyticsImpl();
 
         mCouponRemoteImpl = new CouponRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (CouponHistoryAnalyticsInterface) analytics;
     }
 
     @Override

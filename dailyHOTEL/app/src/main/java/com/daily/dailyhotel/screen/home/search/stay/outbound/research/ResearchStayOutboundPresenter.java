@@ -67,17 +67,11 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
     {
         setContentView(R.layout.activity_research_stay_outbound_data);
 
-        setAnalytics(new ResearchStayOutboundAnalyticsImpl());
+        mAnalytics = new ResearchStayOutboundAnalyticsImpl();
 
         initViewModel(activity);
 
         setRefresh(false);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (ResearchStayOutboundInterface.AnalyticsInterface) analytics;
     }
 
     @Override

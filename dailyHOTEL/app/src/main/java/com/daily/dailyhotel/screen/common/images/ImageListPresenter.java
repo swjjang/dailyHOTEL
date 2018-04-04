@@ -62,15 +62,9 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     {
         setContentView(R.layout.activity_image_list_data);
 
-        setAnalytics(new ImageListAnalyticsImpl());
+        mAnalytics = new ImageListAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (ImageListAnalyticsInterface) analytics;
     }
 
     @Override

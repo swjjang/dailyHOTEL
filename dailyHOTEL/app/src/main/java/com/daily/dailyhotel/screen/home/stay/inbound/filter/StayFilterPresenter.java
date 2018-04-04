@@ -102,17 +102,11 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         setContentView(R.layout.activity_stay_filter_data);
 
-        setAnalytics(new StayFilterAnalyticsImpl());
+        mAnalytics = new StayFilterAnalyticsImpl();
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayFilterAnalyticsInterface) analytics;
     }
 
     @Override

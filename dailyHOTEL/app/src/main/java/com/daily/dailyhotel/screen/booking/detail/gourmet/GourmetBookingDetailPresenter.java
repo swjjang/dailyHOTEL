@@ -152,19 +152,13 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     {
         setContentView(R.layout.activity_gourmet_booking_detail_data);
 
-        setAnalytics(new GourmetBookingDetailAnalyticsImpl());
+        mAnalytics = new GourmetBookingDetailAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mReviewRemoteImpl = new ReviewRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetBookingDetailAnalyticsInterface) analytics;
     }
 
     @Override

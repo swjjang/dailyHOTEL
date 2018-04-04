@@ -77,17 +77,11 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     {
         setContentView(R.layout.activity_stay_outbound_preview_data);
 
-        setAnalytics(new StayOutboundPreviewAnalyticsImpl());
+        mAnalytics = new StayOutboundPreviewAnalyticsImpl();
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundPreviewAnalyticsInterface) analytics;
     }
 
     @Override

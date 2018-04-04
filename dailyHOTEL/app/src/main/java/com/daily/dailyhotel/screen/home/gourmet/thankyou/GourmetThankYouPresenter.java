@@ -95,18 +95,12 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     {
         setContentView(R.layout.activity_gourmet_payment_thank_you_data);
 
-        setAnalytics(new GourmetThankYouAnalyticsImpl());
+        mAnalytics = new GourmetThankYouAnalyticsImpl();
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetThankYouAnalyticsInterface) analytics;
     }
 
     @Override

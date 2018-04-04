@@ -16,6 +16,7 @@ import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.truereview.TrueReviewInterface;
 import com.daily.dailyhotel.screen.common.truereview.TrueReviewView;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.ReviewTermsActivity;
 
@@ -75,17 +76,11 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
     {
         setContentView(R.layout.activity_true_review_data);
 
-        setAnalytics(new StayTrueReviewAnalyticsImpl());
+        mAnalytics = new StayTrueReviewAnalyticsImpl();
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayTrueReviewAnalyticsInterface) analytics;
     }
 
     @Override
@@ -124,6 +119,7 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
 
         getViewInterface().setToolbarTitle(getString(R.string.label_truereview));
         getViewInterface().setReviewScores(getString(R.string.message_detail_review_stay_explain), mReviewScores.getReviewScoreList());
+        getViewInterface().setTrueReviewProductVisible(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigStayDetailTrueReviewProductVisible());
     }
 
     @Override
@@ -195,47 +191,28 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
 
         setRefresh(false);
 
-        if (mTotalElements == 0)
-        {
-            screenLock(showProgress);
+        screenLock(showProgress);
 
-            addCompositeDisposable(mStayRemoteImpl.getTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT)//
-                .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<TrueReviews, Observable<Long>>()
-                {
-                    @Override
-                    public Observable<Long> apply(@io.reactivex.annotations.NonNull TrueReviews trueReviews) throws Exception
-                    {
-                        unLockAll();
-
-                        addTrueReviews(trueReviews);
-
-                        return Observable.timer(300, TimeUnit.MILLISECONDS);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
-                {
-                    @Override
-                    public void accept(Long aLong) throws Exception
-                    {
-                        unLockAll();
-
-                        getViewInterface().showReviewScoresAnimation();
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        onHandleError(throwable);
-                    }
-                }));
-        } else
-        {
-            addCompositeDisposable(mStayRemoteImpl.getTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
+        addCompositeDisposable(mStayRemoteImpl.getTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT)//
+            .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<TrueReviews, Observable<Long>>()
             {
                 @Override
-                public void accept(TrueReviews trueReviews) throws Exception
+                public Observable<Long> apply(@io.reactivex.annotations.NonNull TrueReviews trueReviews) throws Exception
                 {
+                    unLockAll();
+
                     addTrueReviews(trueReviews);
+
+                    return Observable.timer(300, TimeUnit.MILLISECONDS);
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
+            {
+                @Override
+                public void accept(Long aLong) throws Exception
+                {
+                    unLockAll();
+
+                    getViewInterface().showReviewScoresAnimation();
                 }
             }, new Consumer<Throwable>()
             {
@@ -245,7 +222,32 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
                     onHandleError(throwable);
                 }
             }));
+    }
+
+    private synchronized void onMoreRefreshing()
+    {
+        if (getActivity().isFinishing() == true || isRefresh() == false)
+        {
+            return;
         }
+
+        setRefresh(false);
+
+        addCompositeDisposable(mStayRemoteImpl.getTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
+        {
+            @Override
+            public void accept(TrueReviews trueReviews) throws Exception
+            {
+                addTrueReviews(trueReviews);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override
@@ -306,7 +308,7 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
             mLoadingPage = mPage + 1;
 
             setRefresh(true);
-            onRefresh(false);
+            onMoreRefreshing();
         }
     }
 

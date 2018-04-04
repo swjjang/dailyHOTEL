@@ -128,7 +128,7 @@ public class SearchStaySuggestPresenter //
     {
         setContentView(R.layout.activity_search_stay_suggest_data);
 
-        setAnalytics(new SearchStaySuggestAnalyticsImpl());
+        mAnalytics = new SearchStaySuggestAnalyticsImpl();
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
@@ -176,12 +176,6 @@ public class SearchStaySuggestPresenter //
         }));
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SearchStaySuggestAnalyticsInterface) analytics;
     }
 
     @Override

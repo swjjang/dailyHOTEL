@@ -273,6 +273,17 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
     }
 
     @Override
+    public void setTrueReviewProductVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null || mTrueReviewListAdapter == null)
+        {
+            return;
+        }
+
+        mTrueReviewListAdapter.setTrueReviewProductVisible(visible);
+    }
+
+    @Override
     public void setReviewScores(String title, List<ReviewScore> reviewScoreList)
     {
         if (getViewDataBinding() == null || reviewScoreList == null || reviewScoreList.size() == 0)
@@ -395,6 +406,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         private int mTotalCount;
         private String mHeaderTitle;
         private ViewGroup mProgressBarLayout;
+        private boolean mProductVisible;
 
         public TrueReviewListAdapter(Context context)
         {
@@ -446,6 +458,11 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         public void setTotalCount(int totalCount)
         {
             mTotalCount = totalCount;
+        }
+
+        public void setTrueReviewProductVisible(boolean visible)
+        {
+            mProductVisible = visible;
         }
 
         public void clear()
@@ -594,6 +611,15 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         {
             final int MAX_LINE = 10;
             final TrueReview trueReview = objectItem.getItem();
+
+            if (DailyTextUtils.isTextEmpty(trueReview.productName) == true)
+            {
+                holder.dataBinding.productNameTextView.setVisibility(View.GONE);
+            } else
+            {
+                holder.dataBinding.productNameTextView.setVisibility(View.VISIBLE);
+                holder.dataBinding.productNameTextView.setText(trueReview.productName);
+            }
 
             holder.dataBinding.ratingTextView.setText(Float.toString(trueReview.averageScore));
 

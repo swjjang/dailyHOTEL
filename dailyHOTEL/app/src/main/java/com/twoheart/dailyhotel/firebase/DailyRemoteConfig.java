@@ -115,6 +115,7 @@ public class DailyRemoteConfig
         String androidGourmetSearchKeyword = mFirebaseRemoteConfig.getString("androidGourmetSearchKeyword");
         String androidPaymentCardEvent = mFirebaseRemoteConfig.getString("androidPaymentCardEvent");
         String androidSearch = mFirebaseRemoteConfig.getString("androidSearch");
+        String ANDTrueReview = mFirebaseRemoteConfig.getString("ANDTrueReview");
 
         if (Constants.DEBUG == true)
         {
@@ -158,6 +159,7 @@ public class DailyRemoteConfig
                 ExLog.d("androidGourmetSearchKeyword : " + androidGourmetSearchKeyword);
                 ExLog.d("androidPaymentCardEvent : " + androidPaymentCardEvent);
                 ExLog.d("androidSearch : " + androidSearch);
+                ExLog.d("ANDTrueReview : " + ANDTrueReview);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -233,6 +235,9 @@ public class DailyRemoteConfig
 
         // 검색 StayOutboundSuggest 힌트
         writeSearch(mContext, androidSearch);
+
+        // 상세화면 트루리뷰 상품 정보 노출 여부
+        writeTrueReview(mContext, ANDTrueReview);
 
         if (listener != null)
         {
@@ -844,6 +849,44 @@ public class DailyRemoteConfig
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchStaySuggestHint(stayHint);
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchStayOutboundSuggestHint(stayOutboundHint);
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchGourmetSuggestHint(gourmetHint);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
+    void writeTrueReview(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayDetailTrueReviewProductVisible(true);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible(true);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigGourmetDetailTrueReviewProductVisible(true);
+        } else
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+                JSONObject productNameVisibleJSONObject = jsonObject.getJSONObject("productNameVisible");
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - " + productNameVisibleJSONObject);
+                }
+
+                boolean stayProductVisible = productNameVisibleJSONObject.getBoolean("stay");
+                boolean stayOutboundProductVisible = productNameVisibleJSONObject.getBoolean("stayOutbound");
+                boolean gourmetProductVisible = productNameVisibleJSONObject.getBoolean("gourmet");
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayDetailTrueReviewProductVisible(stayProductVisible);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible(stayOutboundProductVisible);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigGourmetDetailTrueReviewProductVisible(gourmetProductVisible);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

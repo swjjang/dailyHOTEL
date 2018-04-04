@@ -44,15 +44,9 @@ public class EmailDialogPresenter extends BaseExceptionPresenter<EmailDialogActi
     {
         setContentView(0);
 
-        setAnalytics(new EmailDialogAnalyticsImpl());
+        mAnalytics = new EmailDialogAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (EmailDialogAnalyticsInterface) analytics;
     }
 
     @Override

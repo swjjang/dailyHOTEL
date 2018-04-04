@@ -64,19 +64,13 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     {
         setContentView(R.layout.activity_wish_dialog_data);
 
-        setAnalytics(new WishDialogAnalyticsImpl());
+        mAnalytics = new WishDialogAnalyticsImpl();
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (WishDialogAnalyticsInterface) analytics;
     }
 
     @Override

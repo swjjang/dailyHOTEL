@@ -153,6 +153,11 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_SEARCH_STAYOUTBOUND_SUGGEST_HINT = "441";
     private static final String KEY_REMOTE_CONFIG_SEARCH_GOURMET_SUGGEST_HINT = "442";
 
+    // 상세 트루리뷰 상품 정보
+    private static final String KEY_REMOTE_CONFIG_STAY_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE = "450";
+    private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE = "451";
+    private static final String KEY_REMOTE_CONFIG_GOURMET_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE = "452";
+
     // A/B Test
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
@@ -1218,5 +1223,37 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigSearchGourmetSuggestHint()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_SEARCH_GOURMET_SUGGEST_HINT, null);
+    }
+
+
+    // True Review
+    public void setKeyRemoteConfigStayDetailTrueReviewProductVisible(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE, value);
+    }
+
+    public boolean isKeyRemoteConfigStayDetailTrueReviewProductVisible()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE, true);
+    }
+
+    public void setKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE, value);
+    }
+
+    public boolean isKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE, true);
+    }
+
+    public void setKeyRemoteConfigGourmetDetailTrueReviewProductVisible(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_GOURMET_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE, value);
+    }
+
+    public boolean isKeyRemoteConfigGourmetDetailTrueReviewProductVisible()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE, true);
     }
 }

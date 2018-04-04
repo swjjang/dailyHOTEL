@@ -90,18 +90,12 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     {
         setContentView(R.layout.activity_profile_data);
 
-        setAnalytics(new ProfileAnalyticsImpl());
+        mAnalytics = new ProfileAnalyticsImpl();
 
         mConfigLocalImpl = new ConfigLocalImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
         //        setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (ProfileAnalyticsInterface) analytics;
     }
 
     @Override

@@ -98,19 +98,13 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     {
         setContentView(R.layout.activity_search_data);
 
-        setAnalytics(new SearchAnalyticsImpl());
+        mAnalytics = new SearchAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         initViewModel(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SearchInterface.AnalyticsInterface) analytics;
     }
 
     @Override

@@ -64,17 +64,11 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
     {
         setContentView(R.layout.activity_stay_auto_refund_data);
 
-        setAnalytics(new StayAutoRefundAnalyticsImpl());
+        mAnalytics = new StayAutoRefundAnalyticsImpl();
 
         mRefundRemoteImpl = new RefundRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayAutoRefundAnalyticsInterface) analytics;
     }
 
     @Override

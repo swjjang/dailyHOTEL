@@ -126,19 +126,13 @@ public class StayOutboundBookingDetailPresenter //
     {
         setContentView(R.layout.activity_stay_outbound_booking_detail_data);
 
-        setAnalytics(new StayOutboundBookingDetailAnalyticsImpl());
+        mAnalytics = new StayOutboundBookingDetailAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mReviewRemoteImpl = new ReviewRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundBookingAnalyticsInterface) analytics;
     }
 
     @Override

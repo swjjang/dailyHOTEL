@@ -206,7 +206,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     {
         setContentView(R.layout.activity_stay_payment_data);
 
-        setAnalytics(new StayPaymentAnalyticsImpl());
+        mAnalytics = new StayPaymentAnalyticsImpl();
 
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
@@ -214,12 +214,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mCouponRemoteImpl = new CouponRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayPaymentAnalyticsInterface) analytics;
     }
 
     @Override

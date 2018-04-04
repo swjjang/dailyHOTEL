@@ -147,7 +147,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     {
         setContentView(R.layout.activity_stay_payment_thank_you_data);
 
-        setAnalytics(new StayThankYouAnalyticsImpl());
+        mAnalytics = new StayThankYouAnalyticsImpl();
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
@@ -155,12 +155,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         mRewardRemoteImpl = new RewardRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayThankYouAnalyticsInterface) analytics;
     }
 
     @Override

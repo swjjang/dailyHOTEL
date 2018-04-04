@@ -13,6 +13,15 @@
         android:paddingRight="15dp"
         android:paddingTop="20dp">
 
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            dailyFont:style="Medium"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

@@ -23,6 +23,9 @@ public class TrueReviewData
     @JsonField(name = "reviewReply")
     public TrueReviewReplyData reviewReply;
 
+    @JsonField(name = "itemName")
+    public String itemName;
+
     public TrueReviewData()
     {
     }
@@ -35,6 +38,7 @@ public class TrueReviewData
         trueReview.comment = comment;
         trueReview.createdAt = createdAt;
         trueReview.averageScore = avgScore;
+        trueReview.productName = itemName;
 
         if (reviewReply != null)
         {

@@ -56,17 +56,11 @@ public class SelectStayOutboundCouponDialogPresenter//
     {
         setContentView(R.layout.activity_select_coupon_dialog_data);
 
-        setAnalytics(new SelectStayOutboundCouponDialogAnalyticsImpl());
+        mAnalytics = new SelectStayOutboundCouponDialogAnalyticsImpl();
 
         mCouponRemoteImpl = new CouponRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (SelectStayOutboundCouponDialogInterface.AnalyticsInterface) analytics;
     }
 
     @Override

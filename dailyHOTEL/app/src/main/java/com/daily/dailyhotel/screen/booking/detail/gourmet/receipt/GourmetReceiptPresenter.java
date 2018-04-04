@@ -59,7 +59,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     {
         setContentView(R.layout.activity_gourmet_receipt_data);
 
-        setAnalytics(new GourmetReceiptAnalyticsImpl());
+        mAnalytics = new GourmetReceiptAnalyticsImpl();
 
         mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
 
@@ -70,12 +70,6 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
         }
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (GourmetReceiptAnalyticsInterface) analytics;
     }
 
     @Override

@@ -98,18 +98,12 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         setContentView(R.layout.activity_web_data);
 
-        setAnalytics(new EventWebAnalyticsImpl());
+        mAnalytics = new EventWebAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(getActivity());
         mCouponRemoteImpl = new CouponRemoteImpl(getActivity());
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (EventWebInterface.AnalyticsInterface) analytics;
     }
 
     @Override

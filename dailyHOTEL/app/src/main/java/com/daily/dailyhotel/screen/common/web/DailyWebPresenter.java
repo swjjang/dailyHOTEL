@@ -58,15 +58,9 @@ public class DailyWebPresenter extends BaseExceptionPresenter<DailyWebActivity, 
     {
         setContentView(R.layout.activity_web_data);
 
-        setAnalytics(new DailyWebAnalyticsImpl());
+        mAnalytics = new DailyWebAnalyticsImpl();
 
         setRefresh(false);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (DailyWebAnalyticsInterface) analytics;
     }
 
     @Override

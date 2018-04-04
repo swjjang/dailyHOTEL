@@ -53,17 +53,11 @@ public class CheckPasswordPresenter //
     {
         setContentView(R.layout.activity_check_password_data);
 
-        setAnalytics(new CheckPasswordAnalyticsImpl());
+        mAnalytics = new CheckPasswordAnalyticsImpl();
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (CheckPasswordAnalyticsInterface) analytics;
     }
 
     @Override

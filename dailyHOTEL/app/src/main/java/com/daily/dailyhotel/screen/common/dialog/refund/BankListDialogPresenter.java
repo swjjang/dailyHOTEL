@@ -55,17 +55,11 @@ public class BankListDialogPresenter extends BaseMultiWindowPresenter<BankListDi
     {
         setContentView(R.layout.dialog_refund_bank_list_data);
 
-        setAnalytics(new BankListDialogAnalyticsImpl());
+        mAnalytics = new BankListDialogAnalyticsImpl();
 
         mRefundRemoteImpl = new RefundRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (BankListDialogAnalyticsInterface) analytics;
     }
 
     @Override

@@ -170,7 +170,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     {
         setContentView(R.layout.activity_stay_outbound_payment_data);
 
-        setAnalytics(new StayOutboundPaymentAnalyticsImpl());
+        mAnalytics = new StayOutboundPaymentAnalyticsImpl();
 
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
@@ -178,12 +178,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mCouponRemoteImpl = new CouponRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayOutboundPaymentAnalyticsInterface) analytics;
     }
 
     @Override

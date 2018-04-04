@@ -107,7 +107,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     {
         setContentView(R.layout.activity_stay_tab_data);
 
-        setAnalytics(new StayTabAnalyticsImpl());
+        mAnalytics = new StayTabAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mStayRemoteImpl = new StayRemoteImpl(activity);
@@ -115,12 +115,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         initViewModel(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (StayTabInterface.AnalyticsInterface) analytics;
     }
 
     @Override

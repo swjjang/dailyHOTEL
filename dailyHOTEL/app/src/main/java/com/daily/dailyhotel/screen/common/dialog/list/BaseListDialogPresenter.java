@@ -49,15 +49,9 @@ public class BaseListDialogPresenter extends BaseMultiWindowPresenter<BaseListDi
     {
         setContentView(R.layout.dialog_list_data);
 
-        setAnalytics(new BaseListDialogAnalyticsImpl());
+        mAnalytics = new BaseListDialogAnalyticsImpl();
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (BaseListDialogInterface.AnalyticsInterface) analytics;
     }
 
     @Override

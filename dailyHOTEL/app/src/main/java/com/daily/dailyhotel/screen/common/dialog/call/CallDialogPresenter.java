@@ -57,17 +57,11 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
     {
         setContentView(0);
 
-        setAnalytics(new CallDialogAnalyticsImpl());
+        mAnalytics = new CallDialogAnalyticsImpl();
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (CallDialogAnalyticsInterface) analytics;
     }
 
     @Override

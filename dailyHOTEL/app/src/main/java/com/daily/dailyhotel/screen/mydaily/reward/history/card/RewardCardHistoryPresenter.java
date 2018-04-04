@@ -52,17 +52,11 @@ public class RewardCardHistoryPresenter extends BaseExceptionPresenter<RewardCar
     {
         setContentView(R.layout.activity_reward_card_data);
 
-        setAnalytics(new RewardCardHistoryAnalyticsImpl());
+        mAnalytics = new RewardCardHistoryAnalyticsImpl();
 
         mRewardRemoteImpl = new RewardRemoteImpl(activity);
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (RewardCardHistoryAnalyticsInterface) analytics;
     }
 
     @Override

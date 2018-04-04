@@ -85,17 +85,11 @@ public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActi
     {
         setContentView(R.layout.activity_payment_wait_data);
 
-        setAnalytics(new PaymentWaitAnalyticsImpl());
+        mAnalytics = new PaymentWaitAnalyticsImpl();
 
         mBookingRemoteImpl = new BookingRemoteImpl(getActivity());
 
         setRefresh(true);
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        mAnalytics = (PaymentWaitAnalyticsInterface) analytics;
     }
 
     @Override
