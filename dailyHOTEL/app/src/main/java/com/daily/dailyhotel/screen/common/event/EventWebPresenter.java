@@ -509,10 +509,10 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         try
         {
-//            if (lock())
-//            {
-//                return;
-//            }
+            //            if (lock())
+            //            {
+            //                return;
+            //            }
 
             String longUrl = mEventUrl;
 
@@ -701,7 +701,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public void onDownloadCoupon(String couponCode, String deepLink, String confirmText)
     {
-        if (DailyTextUtils.isTextEmpty(couponCode, deepLink) == true )
+        if (DailyTextUtils.isTextEmpty(couponCode, deepLink) == true)
         {
             return;
         }
@@ -1161,7 +1161,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
-//                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+                //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
                 Intent intent = RegisterCouponActivity.newInstance(context, AnalyticsManager.Screen.EVENT_DETAIL);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
@@ -1189,7 +1189,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
-//                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+                //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
                 Intent intent = RewardActivity.newInstance(context);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
@@ -1348,8 +1348,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
         getViewInterface().showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon) //
             , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no) //
-            , v ->
-            {
+            , v -> {
                 Intent intent = LoginActivity.newInstance(getActivity());
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_LOGIN);
             }, null);

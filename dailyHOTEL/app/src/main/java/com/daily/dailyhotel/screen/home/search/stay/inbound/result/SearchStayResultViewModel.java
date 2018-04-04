@@ -32,6 +32,7 @@ public class SearchStayResultViewModel extends ViewModel
     public Location filterLocation;
     public DailyCategoryType categoryType;
     public boolean resetCategory;
+    public SearchStayResultTabPresenter.ListType listType;
 
     static class SearchStayViewModelFactory implements ViewModelProvider.Factory
     {
