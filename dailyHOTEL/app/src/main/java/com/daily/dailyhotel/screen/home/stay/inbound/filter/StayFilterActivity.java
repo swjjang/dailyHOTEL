@@ -42,7 +42,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
     public static Intent newInstance(Context context, SearchStayResultTabPresenter.ListType listType//
         , String checkInDateTime, String checkOutDateTime//
         , DailyCategoryType categoryType, String viewType, StayFilter filter, StaySuggest suggest//
-        , ArrayList<String> categories, Location location, double radius, String searchWord)
+        , ArrayList<String> categories, Location location, float radius, String searchWord)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());

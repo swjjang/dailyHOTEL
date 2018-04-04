@@ -5,6 +5,8 @@ import com.daily.dailyhotel.entity.StayFilter;
 
 public interface StayFilterInterface extends BaseDialogViewInterface
 {
+    void defaultSortLayoutGone();
+
     void setSortLayout(StayFilter.SortType sortType);
 
     void setSortLayoutEnabled(boolean enabled);
