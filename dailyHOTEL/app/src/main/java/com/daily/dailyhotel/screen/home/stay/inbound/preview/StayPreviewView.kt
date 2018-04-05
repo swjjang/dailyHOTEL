@@ -12,14 +12,18 @@ import com.daily.dailyhotel.entity.DetailImageInformation
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayPreviewDataBinding
 import io.reactivex.Completable
-import io.reactivex.CompletableObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterface.OnEventListener)//
     : BaseDialogView<StayPreviewInterface.OnEventListener, ActivityStayPreviewDataBinding>(activity, listener), StayPreviewInterface.ViewInterface {
 
     override fun setContentView(viewDataBinding: ActivityStayPreviewDataBinding) {
+        viewDataBinding.root.visibility = View.INVISIBLE
         viewDataBinding.popupLayout.setOnClickListener { eventListener.onDetailClick() }
+
+        viewDataBinding.wishTextView.setOnClickListener { eventListener.onWishClick() }
+        viewDataBinding.shareKakaoTextView.setOnClickListener { eventListener.onKakaoClick() }
+        viewDataBinding.mapTextView.setOnClickListener { eventListener.onMapClick() }
         viewDataBinding.closeView.setOnClickListener { eventListener.onBackClick() }
     }
 
@@ -121,49 +125,96 @@ class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterf
             viewDataBinding.wishDotImageView.visibility = View.GONE
         }
 
-        viewDataBinding.trueReviewCountTextView.text = reviewCountText;
+        viewDataBinding.trueReviewCountTextView.text = reviewCountText
 
         viewDataBinding.wishCountTextView.visibility = if (wishCountVisible) View.VISIBLE else View.GONE
         viewDataBinding.wishCountTextView.text = wishCountText
     }
 
+    override fun setWish(wish: Boolean) {
+        if (wish) {
+            viewDataBinding.wishTextView.setText(R.string.label_preview_remove_wish)
+            viewDataBinding.wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_on, 0, 0)
+        } else {
+            viewDataBinding.wishTextView.setText(R.string.label_preview_add_wish)
+            viewDataBinding.wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_off, 0, 0)
+        }
+    }
+
+
     override fun setBookingButtonText(text: String) {
         viewDataBinding.bookingTextView.text = text
     }
 
-    override fun hidePreviewAnimation(): Completable {
+    override fun showAnimation(): Completable {
         val scaleObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(viewDataBinding.root
-                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f)
-                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f));
+                , PropertyValuesHolder.ofFloat("scaleX", 0.7f, 1.0f)
+                , PropertyValuesHolder.ofFloat("scaleY", 0.7f, 1.0f))
 
-        val alphaObjectAnimator = ObjectAnimator.ofFloat(viewDataBinding.root, "alpha", 1.0f, 0.0f)
-        val animatorSet = AnimatorSet();
+        val alphaObjectAnimator = ObjectAnimator.ofFloat(viewDataBinding.root, "alpha", 0.0f, 1.0f)
+        val animatorSet = AnimatorSet()
 
         animatorSet.playTogether(scaleObjectAnimator, alphaObjectAnimator)
-        animatorSet.duration = 200;
+        animatorSet.duration = 200
         animatorSet.interpolator = AccelerateDecelerateInterpolator()
 
-        return object : Completable() {
-            override fun subscribeActual(observer: CompletableObserver) {
-                animatorSet.addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(animation: Animator?) {
-                    }
+        return Completable.create {
+            animatorSet.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
 
-                    override fun onAnimationEnd(animation: Animator?) {
-                        animatorSet.removeAllListeners()
+                override fun onAnimationEnd(animation: Animator?) {
+                    animatorSet.removeAllListeners()
 
-                        observer.onComplete()
-                    }
+                    viewDataBinding.root.scaleX = 1.0f
+                    viewDataBinding.root.scaleY = 1.0f
 
-                    override fun onAnimationCancel(animation: Animator?) {
-                    }
+                    it.onComplete()
+                }
 
-                    override fun onAnimationStart(animation: Animator?) {
-                    }
-                });
+                override fun onAnimationCancel(animation: Animator?) {
+                }
 
-                animatorSet.start()
-            }
+                override fun onAnimationStart(animation: Animator?) {
+                    viewDataBinding.root.visibility = View.VISIBLE
+                }
+            })
+
+            animatorSet.start()
+        }.subscribeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun hideAnimation(): Completable {
+        val scaleObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(viewDataBinding.root
+                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f)
+                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f))
+
+        val alphaObjectAnimator = ObjectAnimator.ofFloat(viewDataBinding.root, "alpha", 1.0f, 0.0f)
+        val animatorSet = AnimatorSet()
+
+        animatorSet.playTogether(scaleObjectAnimator, alphaObjectAnimator)
+        animatorSet.duration = 200
+        animatorSet.interpolator = AccelerateDecelerateInterpolator()
+
+        return Completable.create {
+            animatorSet.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    animatorSet.removeAllListeners()
+
+                    it.onComplete()
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+            })
+
+            animatorSet.start()
         }.subscribeOn(AndroidSchedulers.mainThread())
     }
 }

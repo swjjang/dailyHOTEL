@@ -809,7 +809,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             notifyWishChanged(wishCount, wish);
 
             startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
-                , mStayOutboundDetail.index, wish, -1, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundDetailActivity.REQUEST_CODE_WISH_DIALOG);
+                , mStayOutboundDetail.index, wish, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundDetailActivity.REQUEST_CODE_WISH_DIALOG);
         }
     }
 

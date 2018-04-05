@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.R
 
 class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
     companion object {
-        const val REQUEST_CODE_LOGIN_IN_BY_WISH = 10000
+        const val REQUEST_CODE_WISH_DIALOG = 10000
 
         const val INTENT_EXTRA_DATA_WISH = "wish"
         const val INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime"
@@ -19,7 +19,6 @@ class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
         const val INTENT_EXTRA_DATA_STAY_VIEW_PRICE = "viewPrice"
 
         const val SKIP_CHECK_PRICE_VALUE = Int.MIN_VALUE
-
 
         @JvmStatic
         fun newInstance(context: Context, checkDateTime: String, checkOutDateTime: String

@@ -21,9 +21,13 @@ interface StayPreviewInterface {
 
         fun setReviewInformation(reviewCountVisible: Boolean, reviewCountText: SpannableStringBuilder?, wishCountVisible: Boolean, wishCountText: SpannableStringBuilder?)
 
+        fun setWish(wish: Boolean)
+
         fun setBookingButtonText(text: String)
 
-        fun hidePreviewAnimation(): Completable
+        fun showAnimation(): Completable
+
+        fun hideAnimation(): Completable
     }
 
     interface OnEventListener : OnBaseEventListener {

@@ -1,25 +1,38 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.preview
 
+import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.view.View
+import com.daily.base.BaseActivity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.*
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
+import com.daily.dailyhotel.storage.preference.DailyUserPreference
 import com.twoheart.dailyhotel.R
+import com.twoheart.dailyhotel.util.Constants
+import com.twoheart.dailyhotel.util.KakaoLinkManager
+import com.twoheart.dailyhotel.util.Util
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Consumer
+import java.util.*
 
 class StayPreviewPresenter(activity: StayPreviewActivity)
     : BaseExceptionPresenter<StayPreviewActivity, StayPreviewInterface.ViewInterface>(activity), StayPreviewInterface.OnEventListener {
 
     private lateinit var stayRemoteImpl: StayRemoteImpl
+    private lateinit var commonRemoteImpl: CommonRemoteImpl
 
     private lateinit var stayBookDateTime: StayBookDateTime
     private var stayIndex: Int = -1
@@ -42,6 +55,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         setContentView(R.layout.activity_stay_preview_data)
 
         stayRemoteImpl = StayRemoteImpl(activity)
+        commonRemoteImpl = CommonRemoteImpl(activity)
 
         isRefresh = true
     }
@@ -51,8 +65,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             return true
         }
 
-        var checkInDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME)
-        var checkOutDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)
+        val checkInDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME)
+        val checkOutDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)
 
         try {
             stayBookDateTime = StayBookDateTime(checkInDateTime, checkOutDateTime)
@@ -67,7 +81,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         }
 
         stayName = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_NAME)
-        var grade = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
+        val grade = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
 
         try {
             stayGrade = Stay.Grade.valueOf(grade)
@@ -85,6 +99,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     override fun onPostCreate() {
         notifyDataSetChanged()
+
+        addCompositeDisposable(viewInterface.showAnimation().subscribe())
     }
 
     override fun onStart() {
@@ -112,7 +128,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             return true
         }
 
-        addCompositeDisposable(viewInterface.hidePreviewAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
+        addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
 
         return true
     }
@@ -127,6 +143,25 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         unLockAll()
+
+        when (requestCode) {
+            StayPreviewActivity.REQUEST_CODE_WISH_DIALOG -> onWishDialogActivityResult(resultCode, intent)
+        }
+    }
+
+    private fun onWishDialogActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+
+                intent?.let {
+                    val wish = it.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false)
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish))
+                }
+
+                onBackClick()
+            }
+        }
     }
 
     @Synchronized
@@ -142,13 +177,13 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
                 , BiFunction<StayDetail, ReviewScores, Int> { stayDetail, reviewScores ->
             this@StayPreviewPresenter.stayDetail = stayDetail
             reviewScores.reviewScoreTotalCount
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(Consumer<Int> { trueReviewCount ->
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
             this@StayPreviewPresenter.trueReviewCount = trueReviewCount
 
             notifyDataSetChanged()
 
             unLockAll()
-        }, Consumer<Throwable> { throwable -> onHandleError(throwable) }))
+        }, { throwable -> onHandleError(throwable) }))
     }
 
     override fun onBackClick() {
@@ -156,19 +191,86 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     }
 
     override fun onDetailClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        setResult(Activity.RESULT_OK)
+        onBackClick()
     }
 
     override fun onWishClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (!::stayDetail.isInitialized || lock()) {
+            return
+        }
+
+        viewInterface.setWish(!stayDetail.myWish)
+
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+                , stayIndex, !stayDetail.myWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayPreviewActivity.REQUEST_CODE_WISH_DIALOG)
     }
 
     override fun onKakaoClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (!::stayDetail.isInitialized || lock()) {
+            return
+        }
+
+        try {
+            activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
+        } catch (e: PackageManager.NameNotFoundException) {
+            viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                    , View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }
+                    , null, null, DialogInterface.OnDismissListener { onBackClick() }, true)
+
+            unLockAll()
+            return
+        }
+
+        screenLock(true)
+
+        val DATE_FORMAT = "yyyy-MM-dd"
+        val name = DailyUserPreference.getInstance(activity).name
+        val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
+        val longUrl = String.format(Locale.KOREA, urlFormat, stayIndex
+                , stayBookDateTime.getCheckInDateTime(DATE_FORMAT)
+                , stayBookDateTime.nights)
+
+        addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
+            addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe {
+                KakaoLinkManager.newInstance(activity).shareStay(name
+                        , stayDetail.name
+                        , stayDetail.address
+                        , stayDetail.index
+                        , if (stayDetail.imageInformationList == null || stayDetail.imageInformationList.size == 0) null else stayDetail.imageInformationList.get(0).imageMap.mediumUrl
+                        , shortUrl
+                        , stayBookDateTime)
+
+                finish()
+            })
+
+        }, {
+            addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe {
+                KakaoLinkManager.newInstance(activity).shareStay(name
+                        , stayDetail.name
+                        , stayDetail.address
+                        , stayDetail.index
+                        , if (stayDetail.imageInformationList == null || stayDetail.imageInformationList.size == 0) null else stayDetail.imageInformationList.get(0).imageMap.mediumUrl
+                        , "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index
+                        , stayBookDateTime)
+
+                finish()
+            })
+        }))
     }
 
     override fun onMapClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (!::stayDetail.isInitialized || lock()) {
+            return
+        }
+
+        addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe {
+            Util.shareNaverMap(activity, stayDetail.name//
+                    , stayDetail.latitude.toString(), stayDetail.longitude.toString())
+
+            finish()
+        })
     }
 
     internal fun notifyDataSetChanged() {
@@ -183,6 +285,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             notifyRoomInformationDataSetChanged(soldOut, stayDetail.roomList)
             notifyReviewInformationDataSetChanged(trueReviewCount, stayDetail.wishCount)
 
+            viewInterface.setWish(stayDetail.myWish)
             viewInterface.setBookingButtonText(if (soldOut) getString(R.string.label_booking_view_detail) else getString(R.string.label_preview_booking))
         } else {
             viewInterface.setCategory(stayGrade?.getName(activity), false)

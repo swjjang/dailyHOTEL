@@ -864,7 +864,7 @@ public class SearchStayCampaignTagListFragmentPresenter extends BasePagerFragmen
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
-            , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), SearchStayResultTabActivity.REQUEST_CODE_WISH_DIALOG);
+            , stay.index, !currentWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), SearchStayResultTabActivity.REQUEST_CODE_WISH_DIALOG);
 
         mAnalytics.onEventWishClick(getActivity(), !currentWish);
     }
