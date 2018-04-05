@@ -94,7 +94,7 @@ public class SearchStayViewModel extends ViewModel
 
     public float getRadius()
     {
-        return mRadius.getValue();
+        return (mRadius.getValue() == null) ? 0.0f : mRadius.getValue();
     }
 
     public void setRadiusObserver(BaseActivity activity, Observer<Float> observer)
