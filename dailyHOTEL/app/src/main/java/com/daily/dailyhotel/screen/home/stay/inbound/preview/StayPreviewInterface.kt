@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.preview
 
+import android.app.Activity
 import android.text.SpannableStringBuilder
 import com.daily.base.BaseAnalyticsInterface
 import com.daily.base.BaseDialogViewInterface
@@ -38,8 +39,23 @@ interface StayPreviewInterface {
         fun onKakaoClick()
 
         fun onMapClick()
+
+        fun onCloseClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {
+        fun onScreen(activity: Activity, category: String?)
+
+        fun onEventBackClick(activity: Activity)
+
+        fun onEventCloseClick(activity: Activity)
+
+        fun onEventWishClick(activity: Activity, wish: Boolean)
+
+        fun onEventKakaoClick(activity: Activity)
+
+        fun onEventMapClick(activity: Activity)
+
+        fun onEventDetailClick(activity: Activity)
     }
 }

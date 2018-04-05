@@ -717,15 +717,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
 
 
-        Intent intent = com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity.newInstance(getActivity()//
+        Intent intent = StayPreviewActivity.newInstance(getActivity()//
             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stay.index, stay.name, stay.grade.name(), stay.discountPrice);
-
-        //        Intent intent = StayPreviewActivity.newInstance(getActivity()//
-        //            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-        //            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-        //            , stay.index, stay.name, stay.discountPrice, stay.grade.name());
+            , stay.index, stay.name, stay.grade.getName(getActivity()), stay.discountPrice);
 
         startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PREVIEW);
     }

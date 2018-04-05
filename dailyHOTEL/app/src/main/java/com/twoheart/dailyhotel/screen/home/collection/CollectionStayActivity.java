@@ -17,6 +17,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -32,7 +33,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -268,7 +268,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                    case BaseActivity.RESULT_CODE_REFRESH:
                         if (data != null && data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -707,7 +707,12 @@ public class CollectionStayActivity extends CollectionBaseActivity
             mPlaceViewItemByLongPress = placeViewItem;
             mListCountByLongPress = count;
 
-            Intent intent = StayPreviewActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay);
+            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+            Intent intent = StayPreviewActivity.newInstance(CollectionStayActivity.this//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , recommendationStay.index, recommendationStay.name, recommendationStay.grade, recommendationStay.discount);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }

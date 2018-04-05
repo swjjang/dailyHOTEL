@@ -160,12 +160,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".screen.hotel.preview.StayPreviewActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity
             android:name=".screen.gourmet.preview.GourmetPreviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"

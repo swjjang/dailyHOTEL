@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.preview;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -21,7 +19,6 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
-import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -39,6 +36,7 @@ import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StayPreviewActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_WISH = "wish";
@@ -59,136 +57,136 @@ public class StayPreviewActivity extends BaseActivity
     private int mViewPrice;
     boolean mEnteredLogin;
 
-    /**
-     * 리스트에서 호출, 검색 결과에서 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param stay
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Stay stay)
-    {
-        Intent intent = new Intent(context, StayPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stay.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
-
-        return intent;
-    }
-
-    /**
-     * 캠페인 태그 리스트에서 호출
-     *
-     * @param context
-     * @param checkInDate
-     * @param checkOutDate
-     * @return
-     */
-    public static Intent newInstance(Context context, String checkInDate, String checkOutDate, int stayIndex//
-        , String stayName, int discountPrice, String gradeName)
-    {
-        Intent intent = new Intent(context, StayPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stayIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stayName);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, gradeName);
-
-        return intent;
-    }
-
-    /**
-     * 홈에서 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param recentlyPlace
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecentlyPlace recentlyPlace)
-    {
-        if (stayBookingDay == null || recentlyPlace == null)
-        {
-            return null;
-        }
-
-        Intent intent = new Intent(context, StayPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recentlyPlace.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recentlyPlace.title);
-
-        if (recentlyPlace.prices != null && recentlyPlace.prices.discountPrice > 0)
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recentlyPlace.prices.discountPrice);
-        } else
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
-        }
-
-        Stay.Grade grade;
-        try
-        {
-            grade = Stay.Grade.valueOf(recentlyPlace.details.grade);
-        } catch (Exception e)
-        {
-            grade = Stay.Grade.etc;
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, grade.name());
-
-        return intent;
-    }
-
-    /**
-     * 추천 목록에서 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param recommendationStay
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecommendationStay recommendationStay)
-    {
-        Intent intent = new Intent(context, StayPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationStay.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationStay.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationStay.discount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, recommendationStay.grade);
-
-        return intent;
-    }
-
-    /**
-     * 위시 목록에서 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param index
-     * @param name
-     * @param grade
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int index, String name, String grade)
-    {
-        Intent intent = new Intent(context, StayPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, grade);
-
-        return intent;
-    }
+    //    /**
+    //     * 리스트에서 호출, 검색 결과에서 호출
+    //     *
+    //     * @param context
+    //     * @param stayBookingDay
+    //     * @param stay
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Stay stay)
+    //    {
+    //        Intent intent = new Intent(context, StayPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stay.index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+    //
+    //        return intent;
+    //    }
+    //
+    //    /**
+    //     * 캠페인 태그 리스트에서 호출
+    //     *
+    //     * @param context
+    //     * @param checkInDate
+    //     * @param checkOutDate
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, String checkInDate, String checkOutDate, int stayIndex//
+    //        , String stayName, int discountPrice, String gradeName)
+    //    {
+    //        Intent intent = new Intent(context, StayPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stayIndex);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stayName);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, discountPrice);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, gradeName);
+    //
+    //        return intent;
+    //    }
+    //
+    //    /**
+    //     * 홈에서 호출
+    //     *
+    //     * @param context
+    //     * @param stayBookingDay
+    //     * @param recentlyPlace
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecentlyPlace recentlyPlace)
+    //    {
+    //        if (stayBookingDay == null || recentlyPlace == null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        Intent intent = new Intent(context, StayPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recentlyPlace.index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recentlyPlace.title);
+    //
+    //        if (recentlyPlace.prices != null && recentlyPlace.prices.discountPrice > 0)
+    //        {
+    //            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recentlyPlace.prices.discountPrice);
+    //        } else
+    //        {
+    //            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
+    //        }
+    //
+    //        Stay.Grade grade;
+    //        try
+    //        {
+    //            grade = Stay.Grade.valueOf(recentlyPlace.details.grade);
+    //        } catch (Exception e)
+    //        {
+    //            grade = Stay.Grade.etc;
+    //        }
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, grade.name());
+    //
+    //        return intent;
+    //    }
+    //
+    //    /**
+    //     * 추천 목록에서 호출
+    //     *
+    //     * @param context
+    //     * @param stayBookingDay
+    //     * @param recommendationStay
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecommendationStay recommendationStay)
+    //    {
+    //        Intent intent = new Intent(context, StayPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationStay.index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationStay.name);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationStay.discount);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, recommendationStay.grade);
+    //
+    //        return intent;
+    //    }
+    //
+    //    /**
+    //     * 위시 목록에서 호출
+    //     *
+    //     * @param context
+    //     * @param stayBookingDay
+    //     * @param index
+    //     * @param name
+    //     * @param grade
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int index, String name, String grade)
+    //    {
+    //        Intent intent = new Intent(context, StayPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, name);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, grade);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

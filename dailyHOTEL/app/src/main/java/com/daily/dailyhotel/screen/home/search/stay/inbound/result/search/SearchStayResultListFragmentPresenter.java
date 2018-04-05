@@ -42,6 +42,7 @@ import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayRes
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultViewModel;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -50,7 +51,6 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -317,7 +317,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                 }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 break;
 
-            case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+            case BaseActivity.RESULT_CODE_REFRESH:
                 if (intent != null && intent.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                 {
                     onChangedWish(mWishPosition, intent.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -973,7 +973,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         Intent intent = StayPreviewActivity.newInstance(getActivity()//
             , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stay.index, stay.name, stay.discountPrice, stay.grade.name());
+            , stay.index, stay.name, stay.grade.getName(getActivity()), stay.discountPrice);
 
         startActivityForResult(intent, SearchStayResultTabActivity.REQUEST_CODE_PREVIEW);
     }

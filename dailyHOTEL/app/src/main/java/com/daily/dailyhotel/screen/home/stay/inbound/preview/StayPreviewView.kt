@@ -24,7 +24,7 @@ class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterf
         viewDataBinding.wishTextView.setOnClickListener { eventListener.onWishClick() }
         viewDataBinding.shareKakaoTextView.setOnClickListener { eventListener.onKakaoClick() }
         viewDataBinding.mapTextView.setOnClickListener { eventListener.onMapClick() }
-        viewDataBinding.closeView.setOnClickListener { eventListener.onBackClick() }
+        viewDataBinding.closeView.setOnClickListener { eventListener.onCloseClick() }
     }
 
     override fun setToolbarTitle(title: String?) {

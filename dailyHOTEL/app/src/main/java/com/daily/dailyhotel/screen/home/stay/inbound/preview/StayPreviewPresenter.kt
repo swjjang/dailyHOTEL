@@ -12,7 +12,10 @@ import com.daily.base.BaseActivity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.*
+import com.daily.dailyhotel.entity.ReviewScores
+import com.daily.dailyhotel.entity.StayBookDateTime
+import com.daily.dailyhotel.entity.StayDetail
+import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
@@ -37,7 +40,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     private lateinit var stayBookDateTime: StayBookDateTime
     private var stayIndex: Int = -1
     private lateinit var stayName: String
-    private lateinit var stayGrade: Stay.Grade
+    private lateinit var stayGrade: String
     private var viewPrice: Int = StayPreviewActivity.SKIP_CHECK_PRICE_VALUE
 
     private lateinit var stayDetail: StayDetail
@@ -81,13 +84,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         }
 
         stayName = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_NAME)
-        val grade = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
-
-        try {
-            stayGrade = Stay.Grade.valueOf(grade)
-        } catch (e: Exception) {
-            stayGrade = Stay.Grade.etc
-        }
+        stayGrade = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
 
         viewPrice = intent.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_VIEW_PRICE, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE)
 
@@ -130,6 +127,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
         addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
 
+        analytics.onEventBackClick(activity)
+
         return true
     }
 
@@ -159,8 +158,10 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
                     setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish))
                 }
 
-                onBackClick()
+                addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
             }
+
+            else -> viewInterface.setWish(stayDetail.myWish)
         }
     }
 
@@ -176,6 +177,9 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         addCompositeDisposable(Observable.zip(stayRemoteImpl.getDetail(stayIndex, stayBookDateTime), stayRemoteImpl.getReviewScores(stayIndex)
                 , BiFunction<StayDetail, ReviewScores, Int> { stayDetail, reviewScores ->
             this@StayPreviewPresenter.stayDetail = stayDetail
+
+            analytics.onScreen(activity, stayDetail.category)
+
             reviewScores.reviewScoreTotalCount
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
             this@StayPreviewPresenter.trueReviewCount = trueReviewCount
@@ -193,6 +197,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     override fun onDetailClick() {
         setResult(Activity.RESULT_OK)
         onBackClick()
+
+        analytics.onEventDetailClick(activity)
     }
 
     override fun onWishClick() {
@@ -200,16 +206,22 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             return
         }
 
-        viewInterface.setWish(!stayDetail.myWish)
+        val changeWish = !stayDetail.myWish
+
+        viewInterface.setWish(changeWish)
+
+        analytics.onEventWishClick(activity, changeWish)
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
-                , stayIndex, !stayDetail.myWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayPreviewActivity.REQUEST_CODE_WISH_DIALOG)
+                , stayIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), StayPreviewActivity.REQUEST_CODE_WISH_DIALOG)
     }
 
     override fun onKakaoClick() {
         if (!::stayDetail.isInitialized || lock()) {
             return
         }
+
+        analytics.onEventKakaoClick(activity)
 
         try {
             activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
@@ -271,7 +283,20 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
             finish()
         })
+
+        analytics.onEventMapClick(activity)
     }
+
+    override fun onCloseClick() {
+        if (lock()) {
+            return
+        }
+
+        addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
+
+        analytics.onEventCloseClick(activity)
+    }
+
 
     internal fun notifyDataSetChanged() {
         viewInterface.setName(stayName)
@@ -288,7 +313,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             viewInterface.setWish(stayDetail.myWish)
             viewInterface.setBookingButtonText(if (soldOut) getString(R.string.label_booking_view_detail) else getString(R.string.label_preview_booking))
         } else {
-            viewInterface.setCategory(stayGrade?.getName(activity), false)
+            viewInterface.setCategory(stayGrade, false)
         }
     }
 
