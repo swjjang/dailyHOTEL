@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.copy.kotlin
+package com.daily.dailyhotel.screen.home.stay.inbound.preview
 
 import android.content.Context
 import android.content.Intent
@@ -7,8 +7,6 @@ import com.daily.base.BaseActivity
 import com.twoheart.dailyhotel.R
 
 class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
-
-
     companion object {
         const val REQUEST_CODE_LOGIN_IN_BY_WISH = 10000
 
@@ -24,8 +22,8 @@ class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
 
 
         @JvmStatic
-        fun newInstance(context: Context, checkDateTime: String, checkOutDateTime: String//
-                        , index: Int, name: String, grade: String//
+        fun newInstance(context: Context, checkDateTime: String, checkOutDateTime: String
+                        , index: Int, name: String, grade: String
                         , viewPrice: Int = SKIP_CHECK_PRICE_VALUE): Intent {
             val intent = Intent(context, StayPreviewActivity::class.java)
 
@@ -41,7 +39,7 @@ class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold)
+        overridePendingTransition(R.anim.hold, R.anim.hold)
 
         super.onCreate(savedInstanceState)
     }
@@ -53,6 +51,6 @@ class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
     override fun finish() {
         super.finish()
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right)
+        overridePendingTransition(R.anim.hold, R.anim.hold)
     }
 }
