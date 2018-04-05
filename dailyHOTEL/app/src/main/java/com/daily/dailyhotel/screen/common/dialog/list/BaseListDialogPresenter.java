@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Surface;
 
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.base.BaseMultiWindowPresenter;

@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.webkit.JsResult;
 
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;

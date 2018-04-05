@@ -14,7 +14,6 @@ import android.util.Pair;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;

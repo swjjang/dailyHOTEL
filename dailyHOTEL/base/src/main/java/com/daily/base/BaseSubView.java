@@ -50,8 +50,7 @@ public abstract class BaseSubView<T1 extends OnBaseSubEventListener, T2 extends 
         mViewDataBinding.getRoot().setVisibility(visibility);
     }
 
-    protected
-    @NonNull
+    protected @NonNull
     Context getContext()
     {
         return mContext;
@@ -62,8 +61,7 @@ public abstract class BaseSubView<T1 extends OnBaseSubEventListener, T2 extends 
         return mViewDataBinding;
     }
 
-    protected
-    @NonNull
+    protected @NonNull
     T1 getEventListener()
     {
         return mOnEventListener;

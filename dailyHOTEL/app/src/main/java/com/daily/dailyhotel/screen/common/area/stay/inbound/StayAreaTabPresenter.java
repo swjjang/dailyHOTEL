@@ -12,7 +12,6 @@ import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;

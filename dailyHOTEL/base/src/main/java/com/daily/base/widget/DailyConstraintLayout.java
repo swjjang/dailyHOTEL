@@ -1,13 +1,8 @@
 package com.daily.base.widget;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-
-import com.daily.base.util.VersionUtils;
 
 public class DailyConstraintLayout extends ConstraintLayout
 {

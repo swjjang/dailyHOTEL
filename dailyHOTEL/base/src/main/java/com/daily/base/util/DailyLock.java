@@ -139,8 +139,7 @@ public class DailyLock
                 }
             });
 
-            mDialog.setOnKeyListener((dialog, keyCode, event) ->
-            {
+            mDialog.setOnKeyListener((dialog, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled())
                 {
                     mActivity.onLockProgressBackPressed();

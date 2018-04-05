@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.R
 class CopyPresenter(activity: CopyActivity)//
     : BaseExceptionPresenter<CopyActivity, CopyInterface.ViewInterface>(activity), CopyInterface.OnEventListener {
 
-    private val analytics : CopyInterface.AnalyticsInterface by lazy {
+    private val analytics: CopyInterface.AnalyticsInterface by lazy {
         CopyAnalyticsImpl()
     }
 

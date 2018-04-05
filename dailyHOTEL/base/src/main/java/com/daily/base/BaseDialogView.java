@@ -129,8 +129,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             dataBinding.oneButtonLayout.setVisibility(View.GONE);
 
             dataBinding.negativeTextView.setText(negative);
-            dataBinding.negativeTextView.setOnClickListener(v ->
-            {
+            dataBinding.negativeTextView.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing() == true)
                 {
                     mDialog.dismiss();
@@ -144,8 +143,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
 
 
             dataBinding.positiveTextView.setText(positive);
-            dataBinding.positiveTextView.setOnClickListener(v ->
-            {
+            dataBinding.positiveTextView.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing())
                 {
                     mDialog.dismiss();
@@ -162,8 +160,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
 
             dataBinding.confirmTextView.setText(positive);
-            dataBinding.oneButtonLayout.setOnClickListener(v ->
-            {
+            dataBinding.oneButtonLayout.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing())
                 {
                     mDialog.dismiss();
@@ -274,8 +271,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             dataBinding.oneButtonLayout.setVisibility(View.GONE);
 
             dataBinding.negativeTextView.setText(negative);
-            dataBinding.negativeTextView.setOnClickListener(v ->
-            {
+            dataBinding.negativeTextView.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing() == true)
                 {
                     mDialog.dismiss();
@@ -289,8 +285,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
 
 
             dataBinding.positiveTextView.setText(positive);
-            dataBinding.positiveTextView.setOnClickListener(v ->
-            {
+            dataBinding.positiveTextView.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing())
                 {
                     mDialog.dismiss();
@@ -307,8 +302,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
 
             dataBinding.confirmTextView.setText(positive);
-            dataBinding.oneButtonLayout.setOnClickListener(v ->
-            {
+            dataBinding.oneButtonLayout.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing())
                 {
                     mDialog.dismiss();
@@ -381,8 +375,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             dataBinding.oneButtonLayout.setVisibility(View.GONE);
 
             dataBinding.negativeTextView.setText(negative);
-            dataBinding.negativeTextView.setOnClickListener(v ->
-            {
+            dataBinding.negativeTextView.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing() == true)
                 {
                     mDialog.dismiss();
@@ -396,8 +389,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
 
 
             dataBinding.positiveTextView.setText(positive);
-            dataBinding.positiveTextView.setOnClickListener(v ->
-            {
+            dataBinding.positiveTextView.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing())
                 {
                     mDialog.dismiss();
@@ -414,8 +406,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
 
             dataBinding.confirmTextView.setText(positive);
-            dataBinding.oneButtonLayout.setOnClickListener(v ->
-            {
+            dataBinding.oneButtonLayout.setOnClickListener(v -> {
                 if (mDialog != null && mDialog.isShowing())
                 {
                     mDialog.dismiss();
