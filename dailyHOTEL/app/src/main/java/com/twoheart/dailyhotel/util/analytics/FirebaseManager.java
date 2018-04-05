@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -28,12 +29,22 @@ public class FirebaseManager extends BaseAnalyticsManager
     void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
         mFirebaseAnalytics.setCurrentScreen(activity, screenName, screenClassOverride);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "recordScreen : " + screenName);
+        }
     }
 
     @Override
     void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
         mFirebaseAnalytics.setCurrentScreen(activity, screenName, screenClassOverride);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "recordScreen : " + screenName);
+        }
     }
 
     @Override
@@ -66,12 +77,11 @@ public class FirebaseManager extends BaseAnalyticsManager
         }
 
         mFirebaseAnalytics.logEvent(category, bundle);
-    }
 
-    @Override
-    void recordEvent(String category, String action, String label, long value, Map<String, String> params)
-    {
-
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "recordEvent : " + category + ", " + bundle.toString());
+        }
     }
 
     @Override
