@@ -49,6 +49,7 @@ import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayRes
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
@@ -71,7 +72,6 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
-import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
@@ -2146,7 +2146,10 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentlyPlace);
+                            Intent intent = StayPreviewActivity.newInstance(getActivity()//
+                                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , recentlyPlace.index, recentlyPlace.title, recentlyPlace.details.grade, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE);
 
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                             break;
@@ -2278,7 +2281,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentlyPlace);
+                            Intent intent = StayPreviewActivity.newInstance(getActivity()//
+                                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , recentlyPlace.index, recentlyPlace.title, recentlyPlace.details.grade//
+                                , StayPreviewActivity.SKIP_CHECK_PRICE_VALUE);
 
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                             break;

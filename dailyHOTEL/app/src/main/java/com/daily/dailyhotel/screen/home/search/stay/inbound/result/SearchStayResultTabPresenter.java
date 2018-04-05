@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;

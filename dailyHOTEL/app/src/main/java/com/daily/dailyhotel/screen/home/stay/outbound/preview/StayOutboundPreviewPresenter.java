@@ -310,7 +310,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
-            , mStayOutboundDetail.index, !currentWish, mPosition, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG);
+            , mStayOutboundDetail.index, !currentWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG);
     }
 
     @Override

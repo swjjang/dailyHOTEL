@@ -1,4 +1,5 @@
 @file:JvmName("Shimmer")
+
 package com.daily.dailyhotel.view.shimmer.kotlin
 
 import android.animation.Animator

@@ -22,6 +22,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.view.DailyStayCardView;
@@ -32,7 +33,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -252,7 +252,12 @@ public class StayWishListFragment extends PlaceWishListFragment
         mViewByLongPress = view;
         mPositionByLongPress = position;
 
-        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.grade.getName(mBaseActivity));
+        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+        Intent intent = StayPreviewActivity.newInstance(getActivity()//
+            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+            , stay.index, stay.name, stay.grade.getName(getContext()), stay.discountPrice);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
     }

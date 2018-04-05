@@ -1,8 +1,5 @@
 package com.daily.base;
 
-import android.content.DialogInterface;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 public interface BaseViewInterface
