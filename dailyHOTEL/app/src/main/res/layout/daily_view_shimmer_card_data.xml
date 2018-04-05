@@ -79,7 +79,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/simpleDraweeView">
 
-            <com.daily.dailyhotel.view.shimmer.ShimmerView
+            <com.daily.dailyhotel.view.shimmer.kotlin.ShimmerView
                 android:id="@+id/shimmerView1"
                 android:layout_width="252.5dp"
                 android:layout_height="19dp"
@@ -89,7 +89,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <com.daily.dailyhotel.view.shimmer.ShimmerView
+            <com.daily.dailyhotel.view.shimmer.kotlin.ShimmerView
                 android:id="@+id/shimmerView2"
                 android:layout_width="172.5dp"
                 android:layout_height="17dp"
@@ -99,7 +99,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shimmerView1"/>
 
-            <com.daily.dailyhotel.view.shimmer.ShimmerView
+            <com.daily.dailyhotel.view.shimmer.kotlin.ShimmerView
                 android:id="@+id/shimmerView3"
                 android:layout_width="86.5dp"
                 android:layout_height="17dp"

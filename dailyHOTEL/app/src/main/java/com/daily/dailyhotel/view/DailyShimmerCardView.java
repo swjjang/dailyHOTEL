@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.view.shimmer.Shimmer;
+import com.daily.dailyhotel.view.shimmer.kotlin.Shimmer;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewShimmerCardDataBinding;
 
@@ -110,7 +110,7 @@ public class DailyShimmerCardView extends ConstraintLayout
         }
 
         // Shimmer 의 동작위치를 전체 동일하게 만들기 위한 설정
-        mShimmer.setSimmerWidth(ScreenUtils.dpToPx(getContext(), 252.5d));
+        mShimmer.setShimmerWidth(ScreenUtils.dpToPx(getContext(), 252.5d));
         mShimmer.setLinearGradientWidth(ScreenUtils.dpToPx(getContext(), 60d));
 
         mShimmer.start(mViewDataBinding.shimmerView1);

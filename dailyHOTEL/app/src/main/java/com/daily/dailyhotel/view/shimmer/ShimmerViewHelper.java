@@ -139,13 +139,13 @@ public class ShimmerViewHelper
 
         if (attributeSet != null)
         {
-            TypedArray a = view.getContext().obtainStyledAttributes(attributeSet, R.styleable.ShimmerView, 0, 0);
+            TypedArray a = view.getContext().obtainStyledAttributes(attributeSet, R.styleable.shimmerView, 0, 0);
             if (a != null)
             {
                 try
                 {
-                    primaryColor = a.getColor(R.styleable.ShimmerView_primaryColor, DEFAULT_PRIMARY_COLOR);
-                    reflectionColor = a.getColor(R.styleable.ShimmerView_reflectionColor, DEFAULT_REFLECTION_COLOR);
+                    primaryColor = a.getColor(R.styleable.shimmerView_primaryColor, DEFAULT_PRIMARY_COLOR);
+                    reflectionColor = a.getColor(R.styleable.shimmerView_reflectionColor, DEFAULT_REFLECTION_COLOR);
                 } catch (Exception e)
                 {
                     ExLog.e("sam : Error while creating the view:" + e.toString());

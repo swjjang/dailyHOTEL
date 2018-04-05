@@ -2,7 +2,6 @@ package com.daily.dailyhotel.view.shimmer;
 
 public interface ShimmerViewInterface
 {
-
     float getGradientX();
 
     void setGradientX(float gradientX);

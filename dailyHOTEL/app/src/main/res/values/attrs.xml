@@ -37,7 +37,7 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="ShimmerView">
+    <declare-styleable name="shimmerView">
         <attr name="primaryColor" format="color"/>
         <attr name="reflectionColor" format="color"/>
     </declare-styleable>
