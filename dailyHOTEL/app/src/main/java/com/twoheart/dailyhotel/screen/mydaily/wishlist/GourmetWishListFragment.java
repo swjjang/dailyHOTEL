@@ -15,6 +15,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -24,7 +25,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -101,7 +101,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                    case BaseActivity.CODE_RESULT_ACTIVITY_REFRESH:
                         forceRefreshList();
                         break;
                 }
@@ -401,11 +401,11 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             mViewByLongPress = view;
             mPositionByLongPress = position;
 
-            Intent intent = GourmetPreviewActivity.newInstance(getActivity(), mCommonDateTime.dailyDateTime//
+            String visitDateTime = ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = GourmetPreviewActivity.newInstance(getActivity(), visitDateTime//
                 , gourmet.index, gourmet.name, gourmet.category, gourmet.discountPrice);
             
-            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, (GourmetBookingDay) mPlaceBookingDay, gourmet);
-
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
 

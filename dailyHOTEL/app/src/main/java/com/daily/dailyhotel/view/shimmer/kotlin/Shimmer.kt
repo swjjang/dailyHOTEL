@@ -23,9 +23,8 @@ class Shimmer {
             field = direction
         }
 
-    private var shimmerWidth: Int = DEFAULT_SIMMER_WIDTH
-    private var linearGradientWidth: Float = DEFAULT_LINEAR_GRADIENT_WIDTH
-
+    var shimmerWidth: Int = DEFAULT_SIMMER_WIDTH
+    var linearGradientWidth: Float = DEFAULT_LINEAR_GRADIENT_WIDTH
     private val animatorSet = AnimatorSet()
     private val animatorList = mutableListOf<ObjectAnimator>()
 
@@ -90,8 +89,8 @@ class Shimmer {
         }
 
         if (!isAllViewSetUp()) {
-            for (animator in animatorList) {
-                (animator.target as ShimmerView).callback = object : ShimmerView.AnimationSetupCallback {
+            animatorList.forEach{
+                (it.target as ShimmerView).callback = object : ShimmerView.AnimationSetupCallback {
                     override fun onSetupAnimation(target: View) {
                         if (isAllViewSetUp()) {
                             animate.run()
@@ -109,20 +108,17 @@ class Shimmer {
             return false
         }
 
-        for (animator in animatorList) {
-            var shimmerView = animator.target as ShimmerView
-            if (!shimmerView.isSetUp) {
+        animatorList.forEach {
+            if(!(it.target as ShimmerView).isSetUp)
                 return false
-            }
         }
 
         return true
     }
 
     fun cancel() {
-        animatorSet.let { animatorSet ->
-            animatorSet.cancel()
-        }
+        animatorSet.cancel()
+        animatorList.clear()
     }
 
     fun isAnimating(): Boolean {
@@ -133,11 +129,11 @@ class Shimmer {
         const val ANIMATION_DIRECTION_LTR = 0
         const val ANIMATION_DIRECTION_RTL = 1
 
-        private const val DEFAULT_REPEAT_COUNT = ValueAnimator.INFINITE
-        private const val DEFAULT_DURATION: Long = 1500
-        private const val DEFAULT_START_DELAY: Long = 0
-        private const val DEFAULT_DIRECTION = ANIMATION_DIRECTION_LTR
-        private const val DEFAULT_SIMMER_WIDTH = -1
-        private const val DEFAULT_LINEAR_GRADIENT_WIDTH: Float = -1f
+        const val DEFAULT_REPEAT_COUNT = ValueAnimator.INFINITE
+        const val DEFAULT_DURATION: Long = 1500
+        const val DEFAULT_START_DELAY: Long = 0
+        const val DEFAULT_DIRECTION = ANIMATION_DIRECTION_LTR
+        const val DEFAULT_SIMMER_WIDTH = -1
+        const val DEFAULT_LINEAR_GRADIENT_WIDTH: Float = -1f
     }
 }

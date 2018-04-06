@@ -37,6 +37,7 @@ import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultViewModel;
@@ -47,7 +48,6 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -198,7 +198,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
                 }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 break;
 
-            case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+            case BaseActivity.RESULT_CODE_REFRESH:
                 if (intent != null && intent.hasExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                 {
                     onChangedWish(mWishPosition, intent.getBooleanExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -652,8 +652,8 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
 
         GourmetBookDateTime gourmetBookDateTime = mViewModel.getBookDateTime();
 
-        Intent intent = GourmetPreviewActivity.newInstance(getActivity() //
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmet.toGourmet());
+        Intent intent = GourmetPreviewActivity.newInstance(getActivity(), gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , gourmet.index, gourmet.name, gourmet.category, gourmet.discountPrice);
 
         startActivityForResult(intent, SearchGourmetResultTabActivity.REQUEST_CODE_PREVIEW);
     }

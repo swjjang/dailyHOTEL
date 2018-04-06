@@ -44,6 +44,7 @@ import com.daily.dailyhotel.screen.common.area.stay.inbound.StayAreaTabActivity;
 import com.daily.dailyhotel.screen.common.event.EventWebActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
@@ -69,7 +70,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
-import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
@@ -2146,7 +2146,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayPreviewActivity.newInstance(getActivity()//
+                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity//
                                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , recentlyPlace.index, recentlyPlace.title, recentlyPlace.details.grade, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE);
@@ -2157,10 +2157,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         case GOURMET:
                         {
-                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
-
-                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentlyPlace);
+                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, mTodayDateTime.dailyDateTime//
+                                , recentlyPlace.index, recentlyPlace.title, recentlyPlace.details.category, GourmetPreviewActivity.SKIP_CHECK_PRICE_VALUE);
 
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                             break;
@@ -2281,7 +2279,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayPreviewActivity.newInstance(getActivity()//
+                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity//
                                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , recentlyPlace.index, recentlyPlace.title, recentlyPlace.details.grade//
@@ -2296,7 +2294,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                             gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentlyPlace);
+                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, mTodayDateTime.dailyDateTime//
+                                , recentlyPlace.index, recentlyPlace.title, recentlyPlace.details.category, GourmetPreviewActivity.SKIP_CHECK_PRICE_VALUE);
 
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                             break;

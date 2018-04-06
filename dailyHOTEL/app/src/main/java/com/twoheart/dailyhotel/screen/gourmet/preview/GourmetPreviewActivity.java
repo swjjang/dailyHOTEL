@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.preview;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,18 +9,15 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
-import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -38,6 +34,7 @@ import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class GourmetPreviewActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_WISH = "wish";
@@ -57,104 +54,104 @@ public class GourmetPreviewActivity extends BaseActivity
     private int mViewPrice;
     boolean mEnteredLogin;
 
-    /**
-     * 리스트에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param gourmet
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Gourmet gourmet)
-    {
-        Intent intent = new Intent(context, GourmetPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
-
-        return intent;
-    }
-
-    /**
-     * 캠페인태그 리스트에서 호출
-     *
-     * @param context
-     * @param visitDate
-     * @param gourmet
-     * @return
-     */
-    public static Intent newInstance(Context context, String visitDate, Gourmet gourmet)
-    {
-        Intent intent = new Intent(context, GourmetPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
-
-        return intent;
-    }
-
-    /**
-     * 홈에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param recentlyPlace
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecentlyPlace recentlyPlace)
-    {
-        if (gourmetBookingDay == null || recentlyPlace == null)
-        {
-            return null;
-        }
-
-        Intent intent = new Intent(context, GourmetPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recentlyPlace.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recentlyPlace.title);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recentlyPlace.details.category);
-
-        if (recentlyPlace.prices != null && recentlyPlace.prices.discountPrice > 0)
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recentlyPlace.prices.discountPrice);
-        } else
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
-        }
-
-        return intent;
-    }
-
-    /**
-     * 추천 목록에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param recommendationGourmet
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecommendationGourmet recommendationGourmet)
-    {
-        Intent intent = new Intent(context, GourmetPreviewActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, recommendationGourmet.isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
-
-        return intent;
-    }
+    //    /**
+    //     * 리스트에서 호출
+    //     *
+    //     * @param context
+    //     * @param gourmetBookingDay
+    //     * @param gourmet
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Gourmet gourmet)
+    //    {
+    //        Intent intent = new Intent(context, GourmetPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
+    //
+    //        return intent;
+    //    }
+    //
+    //    /**
+    //     * 캠페인태그 리스트에서 호출
+    //     *
+    //     * @param context
+    //     * @param visitDate
+    //     * @param gourmet
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, String visitDate, Gourmet gourmet)
+    //    {
+    //        Intent intent = new Intent(context, GourmetPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
+    //
+    //        return intent;
+    //    }
+    //
+    //    /**
+    //     * 홈에서 호출
+    //     *
+    //     * @param context
+    //     * @param gourmetBookingDay
+    //     * @param recentlyPlace
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecentlyPlace recentlyPlace)
+    //    {
+    //        if (gourmetBookingDay == null || recentlyPlace == null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        Intent intent = new Intent(context, GourmetPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recentlyPlace.index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recentlyPlace.title);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recentlyPlace.details.category);
+    //
+    //        if (recentlyPlace.prices != null && recentlyPlace.prices.discountPrice > 0)
+    //        {
+    //            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recentlyPlace.prices.discountPrice);
+    //        } else
+    //        {
+    //            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
+    //        }
+    //
+    //        return intent;
+    //    }
+    //
+    //    /**
+    //     * 추천 목록에서 호출
+    //     *
+    //     * @param context
+    //     * @param gourmetBookingDay
+    //     * @param recommendationGourmet
+    //     * @return
+    //     */
+    //    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecommendationGourmet recommendationGourmet)
+    //    {
+    //        Intent intent = new Intent(context, GourmetPreviewActivity.class);
+    //
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, recommendationGourmet.isSoldOut);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
+    //
+    //        return intent;
+    //    }
 
 
     @Override

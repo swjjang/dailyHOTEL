@@ -19,6 +19,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -33,7 +34,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -262,7 +262,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                         if (data != null && data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -691,7 +691,10 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             mPlaceViewItemByLongPress = placeViewItem;
             mListCountByLongPress = count;
 
-            Intent intent = GourmetPreviewActivity.newInstance(CollectionGourmetActivity.this, (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet);
+            String visitDateTime = ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = GourmetPreviewActivity.newInstance(CollectionGourmetActivity.this, visitDateTime//
+                , recommendationGourmet.index, recommendationGourmet.name, recommendationGourmet.category, recommendationGourmet.discount);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }

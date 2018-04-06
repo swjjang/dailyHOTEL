@@ -22,8 +22,7 @@ class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
         const val SKIP_CHECK_PRICE_VALUE = Int.MIN_VALUE
 
         @JvmStatic
-        fun newInstance(context: Context, checkDateTime: String, checkOutDateTime: String
-                        , index: Int, name: String, grade: String
+        fun newInstance(context: Context, checkDateTime: String, checkOutDateTime: String, index: Int, name: String, grade: String
                         , viewPrice: Int = SKIP_CHECK_PRICE_VALUE): Intent {
             val intent = Intent(context, StayPreviewActivity::class.java)
 

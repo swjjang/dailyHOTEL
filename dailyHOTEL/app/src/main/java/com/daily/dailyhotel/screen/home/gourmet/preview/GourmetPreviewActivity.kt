@@ -21,9 +21,7 @@ class GourmetPreviewActivity : BaseActivity<GourmetPreviewPresenter>() {
         const val SKIP_CHECK_PRICE_VALUE = Int.MIN_VALUE
 
         @JvmStatic
-        fun newInstance(context: Context, visitDateTime: String
-                        , index: Int, name: String, category: String
-                        , viewPrice: Int = SKIP_CHECK_PRICE_VALUE): Intent {
+        fun newInstance(context: Context, visitDateTime: String, index: Int, name: String, category: String, viewPrice: Int = SKIP_CHECK_PRICE_VALUE): Intent {
             val intent = Intent(context, GourmetPreviewActivity::class.java)
 
             intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime)
