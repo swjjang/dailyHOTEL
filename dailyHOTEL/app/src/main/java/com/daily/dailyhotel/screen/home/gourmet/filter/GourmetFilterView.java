@@ -356,7 +356,7 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
                 break;
 
             // Amenity
-            case R.id.parkingTextView:
+            case R.id.parkingCheckView:
                 getEventListener().onCheckedChangedAmenities(GourmetFilter.FLAG_AMENITIES_PARKING);
                 break;
             case R.id.valetCheckView:
