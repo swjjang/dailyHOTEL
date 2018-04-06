@@ -1,6 +1,5 @@
 package com.daily.base;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.ViewDataBinding;
 import android.view.View;

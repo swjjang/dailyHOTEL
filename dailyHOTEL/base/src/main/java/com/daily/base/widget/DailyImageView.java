@@ -1,5 +1,6 @@
 package com.daily.base.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatDrawableManager;
@@ -25,6 +26,7 @@ public class DailyImageView extends AppCompatImageView
         super(context, attrs, defStyle);
     }
 
+    @SuppressLint("RestrictedApi")
     public void setVectorImageResource(@DrawableRes int resId)
     {
         if (VersionUtils.isOverAPI21() == true)
@@ -32,10 +34,7 @@ public class DailyImageView extends AppCompatImageView
             super.setImageResource(resId);
         } else
         {
-            if (resId > 0)
-            {
-                super.setImageDrawable(AppCompatDrawableManager.get().getDrawable(getContext(), resId));
-            }
+            super.setImageDrawable(AppCompatDrawableManager.get().getDrawable(getContext(), resId));
         }
     }
 }

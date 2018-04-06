@@ -7,10 +7,10 @@ import android.graphics.Typeface;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 
+import com.daily.base.R;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

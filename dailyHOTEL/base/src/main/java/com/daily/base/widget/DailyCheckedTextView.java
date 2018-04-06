@@ -6,8 +6,8 @@ import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.util.AttributeSet;
 
-import com.daily.base.util.FontManager;
 import com.daily.base.R;
+import com.daily.base.util.FontManager;
 
 public class DailyCheckedTextView extends AppCompatCheckedTextView
 {

@@ -37,6 +37,7 @@ import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -46,7 +47,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -180,7 +180,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                    case BaseActivity.RESULT_CODE_REFRESH:
                         if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -716,10 +716,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
 
+
         Intent intent = StayPreviewActivity.newInstance(getActivity()//
             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stay.index, stay.name, stay.discountPrice, stay.grade.name());
+            , stay.index, stay.name, stay.grade.getName(getActivity()), stay.discountPrice);
 
         startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PREVIEW);
     }
@@ -988,7 +989,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
-            , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
+            , stay.index, !currentWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
 
         mAnalytics.onEventWishClick(getActivity(), mStayViewModel.categoryType, !currentWish);
     }

@@ -1,5 +1,6 @@
 package com.daily.base.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -153,6 +154,7 @@ public class DailyTextView extends AppCompatTextView
         super.setTypeface(typeface);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
     {
@@ -162,32 +164,11 @@ public class DailyTextView extends AppCompatTextView
         } else
         {
             Context context = getContext();
-            Drawable leftDrawable = null;
-            Drawable topDrawable = null;
-            Drawable rightDrawable = null;
-            Drawable bottomDrawable = null;
 
-            if (left > 0)
-            {
-                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, left);
-            }
-
-            if (top > 0)
-            {
-                topDrawable = AppCompatDrawableManager.get().getDrawable(context, top);
-            }
-
-            if (right > 0)
-            {
-                rightDrawable = AppCompatDrawableManager.get().getDrawable(context, right);
-            }
-
-            if (bottom > 0)
-            {
-                bottomDrawable = AppCompatDrawableManager.get().getDrawable(context, bottom);
-            }
-
-            super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
+            super.setCompoundDrawablesWithIntrinsicBounds(AppCompatDrawableManager.get().getDrawable(context, left)//
+                , AppCompatDrawableManager.get().getDrawable(context, top)//
+                , AppCompatDrawableManager.get().getDrawable(context, right)//
+                , AppCompatDrawableManager.get().getDrawable(context, bottom));
         }
     }
 

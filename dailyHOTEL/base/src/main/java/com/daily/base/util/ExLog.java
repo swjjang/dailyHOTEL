@@ -1,7 +1,8 @@
 package com.daily.base.util;
 
-import com.daily.base.BuildConfig;
 import android.util.Log;
+
+import com.daily.base.BuildConfig;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -1104,7 +1104,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
-            , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
+            , gourmet.index, !currentWish, AnalyticsManager.Screen.DAILYGOURMET_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
 
         mAnalytics.onEventWishClick(getActivity(), !currentWish);
     }

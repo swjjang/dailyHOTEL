@@ -261,9 +261,7 @@ public class StayDetailData
                     DetailImageInformation detailImageInformation = new DetailImageInformation();
 
                     ImageMap imageMap = new ImageMap();
-                    imageMap.smallUrl = null;
-                    imageMap.mediumUrl = imgUrl + key + imageInformationData.name;
-                    imageMap.bigUrl = imgUrl + key + imageInformationData.name;
+                    imageMap.bigUrl = imageMap.mediumUrl = imageMap.smallUrl = imgUrl + key + imageInformationData.name;
 
                     detailImageInformation.caption = imageInformationData.description;
                     detailImageInformation.setImageMap(imageMap);

@@ -24,6 +24,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
@@ -35,7 +36,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -153,15 +153,14 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                         }
                         break;
 
-                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                         if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            requestRecentPlacesList();
                         }
-                        break;
-
-                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
-                        requestRecentPlacesList();
                         break;
                 }
                 break;
@@ -588,7 +587,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         mViewByLongPress = view;
         mPositionByLongPress = position;
 
-        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, recentlyPlace);
+        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+        Intent intent = StayPreviewActivity.newInstance(getActivity()//
+            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+            , recentlyPlace.index, recentlyPlace.title, recentlyPlace.details.grade, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
     }
@@ -894,7 +898,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
 
                 mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
-                    , recentlyPlace.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+                    , recentlyPlace.index, !currentWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
 
                 AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                     , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
@@ -910,7 +914,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
 
                 mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.OB_STAY//
-                    , stayOutbound.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+                    , stayOutbound.index, !currentWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
 
                 AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                     , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
