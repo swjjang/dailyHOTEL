@@ -7,6 +7,9 @@ import android.view.View
 import com.daily.base.util.ExLog
 import com.twoheart.dailyhotel.R
 
+private const val DEFAULT_REFLECTION_COLOR = 0xFFEBEBEB
+private const val DEFAULT_PRIMARY_COLOR = 0xFFF8F8F9
+
 class ShimmerView : View {
 
     private val paint: Paint = Paint()
@@ -81,15 +84,15 @@ class ShimmerView : View {
         reflectionColor = DEFAULT_REFLECTION_COLOR.toInt()
 
         attrs?.let {
-            context.obtainStyledAttributes(attrs, R.styleable.shimmerView, 0, 0)?.let { a ->
-                try {
-                    primaryColor = a.getColor(R.styleable.shimmerView_primaryColor, DEFAULT_PRIMARY_COLOR.toInt())
-                    reflectionColor = a.getColor(R.styleable.shimmerView_reflectionColor, DEFAULT_REFLECTION_COLOR.toInt())
-                } catch (e: Exception) {
-                    ExLog.e("sam : Error while creating the view:" + e.toString())
-                } finally {
-                    a.recycle()
-                }
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.shimmerView, 0, 0)
+
+            try {
+                primaryColor = typedArray.getColor(R.styleable.shimmerView_primaryColor, DEFAULT_PRIMARY_COLOR.toInt())
+                reflectionColor = typedArray.getColor(R.styleable.shimmerView_reflectionColor, DEFAULT_REFLECTION_COLOR.toInt())
+            } catch (e: Exception) {
+                ExLog.e("sam : Error while creating the view:" + e.toString())
+            } finally {
+                typedArray.recycle()
             }
         }
     }
@@ -98,7 +101,7 @@ class ShimmerView : View {
         // our gradient is a simple linear gradient from textColor to reflectionColor. its axis is at the center
         // when it's outside of the view, the outer color (textColor) will be repeated (Shader.TileMode.CLAMP)
         // initially, the linear gradient is positioned on the left side of the view
-        val width = if (linearGradientWidth < 0) getWidth().toFloat() else linearGradientWidth
+        val width = if (linearGradientWidth < 0) width.toFloat() else linearGradientWidth
         linearGradient = LinearGradient(-width, 0f, 0f, 0f, intArrayOf(primaryColor, reflectionColor, primaryColor), floatArrayOf(0f, 0.5f, 1f), Shader.TileMode.CLAMP)
 
         paint.shader = linearGradient
@@ -119,9 +122,7 @@ class ShimmerView : View {
         if (!isSetUp) {
             isSetUp = true
 
-            callback?.let { callback ->
-                callback.onSetupAnimation(this)
-            }
+            callback?.let { it.onSetupAnimation(this@ShimmerView) }
         }
     }
 
@@ -141,7 +142,7 @@ class ShimmerView : View {
             linearGradientMatrix.setTranslate(2 * gradientX, 0f)
 
             // this is required in order to invalidate the shader's position
-            linearGradient!!.setLocalMatrix(linearGradientMatrix)
+            linearGradient?.setLocalMatrix(linearGradientMatrix)
             canvas.drawPaint(paint)
         } else {
             // we're not animating, remove the shader from the paint
@@ -153,13 +154,7 @@ class ShimmerView : View {
         super.onDraw(canvas)
     }
 
-    companion object {
-        private const val DEFAULT_REFLECTION_COLOR = 0xFFEBEBEB
-        private const val DEFAULT_PRIMARY_COLOR = 0xFFF8F8F9
-    }
-
     interface AnimationSetupCallback {
         fun onSetupAnimation(target: View)
     }
-
 }

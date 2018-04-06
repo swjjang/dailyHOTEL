@@ -64,29 +64,27 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     }
 
     override fun onIntent(intent: Intent?): Boolean {
-        if (intent == null) {
+        return intent?.let {
+            val visitDateTime = it.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME)
+
+            try {
+                bookDateTime = GourmetBookDateTime(visitDateTime)
+            } catch (e: Exception) {
+                return false
+            }
+
+            gourmetIndex = it.getIntExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_INDEX, 0)
+
+            if (gourmetIndex <= 0) {
+                return false
+            }
+
+            gourmetName = it.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_NAME)
+            gourmetCategory = it.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_CATEGORY)
+            viewPrice = it.getIntExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_VIEW_PRICE, GourmetPreviewActivity.SKIP_CHECK_PRICE_VALUE)
+
             return true
-        }
-
-        val visitDateTime = intent.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME)
-
-        try {
-            bookDateTime = GourmetBookDateTime(visitDateTime)
-        } catch (e: Exception) {
-            return false
-        }
-
-        gourmetIndex = intent.getIntExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_INDEX, 0)
-
-        if (gourmetIndex <= 0) {
-            return false
-        }
-
-        gourmetName = intent.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_NAME)
-        gourmetCategory = intent.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_CATEGORY)
-        viewPrice = intent.getIntExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_VIEW_PRICE, GourmetPreviewActivity.SKIP_CHECK_PRICE_VALUE)
-
-        return true
+        } ?: true
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -250,20 +248,19 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
         val longUrl = String.format(Locale.KOREA, urlFormat, gourmetIndex
                 , bookDateTime.getVisitDateTime("yyyy-MM-dd"))
 
-        // flatMapCompletable 을 사용하고 싶었는데 shortUrl 을 넘겨주어야 하는게 쉽지 않다.
         addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
             hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, shortUrl) }
         }, {
-            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/gourmet/"
+            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/gourmet/" + detail.index
 
-            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl + detail.index) }
+            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl) }
         }))
     }
 
     private fun startKakaoLinkApplication(userName: String, detail: GourmetDetail, bookDateTime: GourmetBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareGourmet(userName
                 , detail.name, detail.address, detail.index
-                , if (detail.hasImageInformations()) detail.imageInformationList[0].imageMap.mediumUrl else null
+                , detail.imageInformationList?.get(0)?.imageMap?.mediumUrl
                 , url, bookDateTime)
     }
 
@@ -310,36 +307,26 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     private fun notifyMenuInformationDataSetChanged(soldOut: Boolean, menuList: List<GourmetMenu>?) {
         val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price)
         else getMenuTypeCountText(menuList?.size ?: 0)
-        val rangePriceText: String? = getRangePriceText(menuList)
 
-        viewInterface.setMenuInformation(roomTypeCountText, !soldOut, rangePriceText)
+        viewInterface.setMenuInformation(roomTypeCountText, !soldOut, getRangePriceText(menuList))
     }
 
     private fun notifyReviewInformationDataSetChanged(trueReviewCount: Int, wishCount: Int) {
         when {
             trueReviewCount > 0 && wishCount > 0 -> {
                 viewInterface.setReviewInformationVisible(true)
-
-                val trueReviewCountText = getTrueReviewCountText(trueReviewCount)
-                val wishCountText = getWishCountText(wishCount)
-
-                viewInterface.setReviewInformation(true, trueReviewCountText, true, wishCountText)
+                viewInterface.setReviewInformation(true, getTrueReviewCountText(trueReviewCount)
+                        , true, getWishCountText(wishCount))
             }
 
             trueReviewCount > 0 -> {
                 viewInterface.setReviewInformationVisible(true)
-
-                val trueReviewCountText = getTrueReviewCountText(trueReviewCount)
-
-                viewInterface.setReviewInformation(true, trueReviewCountText, false, null)
+                viewInterface.setReviewInformation(true, getTrueReviewCountText(trueReviewCount), false, null)
             }
 
             wishCount > 0 -> {
                 viewInterface.setReviewInformationVisible(true)
-
-                val wishCountText = getWishCountText(wishCount)
-
-                viewInterface.setReviewInformation(false, null, true, wishCountText)
+                viewInterface.setReviewInformation(false, null, true, getWishCountText(wishCount))
             }
 
             else -> viewInterface.setReviewInformationVisible(false)
@@ -373,23 +360,17 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     }
 
     private fun getTrueReviewCountText(count: Int): SpannableStringBuilder {
-        val trueReviewCountText = getString(R.string.label_detail_truereview_count, DailyTextUtils.formatIntegerToString(count))
-
-        return getCountTextSpannableStringBuilder(trueReviewCountText)
+        return getCountTextSpannableStringBuilder(getString(R.string.label_detail_truereview_count, DailyTextUtils.formatIntegerToString(count)))
     }
 
     private fun getWishCountText(count: Int): SpannableStringBuilder {
-        val wishCountText = getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(count))
-
-        return getCountTextSpannableStringBuilder(wishCountText)
+        return getCountTextSpannableStringBuilder(getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(count)))
     }
 
     private fun getCountTextSpannableStringBuilder(countText: String): SpannableStringBuilder {
-        val spannableStringBuilder = SpannableStringBuilder(countText)
-
-        spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
-                countText.indexOf(" "), countText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        return spannableStringBuilder
+        return SpannableStringBuilder(countText).apply {
+            setSpan(CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
+                    countText.indexOf(" "), countText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 }

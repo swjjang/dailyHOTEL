@@ -51,7 +51,7 @@ class GourmetPreviewView(activity: GourmetPreviewActivity, listener: GourmetPrev
         viewDataBinding.subCategoryTextView.visibility = visibility
     }
 
-    override fun setImages(imageList: Array<String>?) {
+    override fun setImages(imageList: Array<kotlin.String>?) {
         setImagesPlaceholder(R.drawable.layerlist_placeholder_s)
 
         when (imageList?.size) {

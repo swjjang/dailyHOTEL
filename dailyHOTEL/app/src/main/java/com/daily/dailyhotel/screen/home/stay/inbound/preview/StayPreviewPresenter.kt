@@ -64,30 +64,28 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     }
 
     override fun onIntent(intent: Intent?): Boolean {
-        if (intent == null) {
+        return intent?.let {
+            val checkInDateTime = it.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME)
+            val checkOutDateTime = it.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)
+
+            try {
+                bookDateTime = StayBookDateTime(checkInDateTime, checkOutDateTime)
+            } catch (e: Exception) {
+                return false
+            }
+
+            stayIndex = it.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
+
+            if (stayIndex <= 0) {
+                return false
+            }
+
+            stayName = it.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_NAME)
+            stayGrade = it.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
+            viewPrice = it.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_VIEW_PRICE, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE)
+
             return true
-        }
-
-        val checkInDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME)
-        val checkOutDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)
-
-        try {
-            bookDateTime = StayBookDateTime(checkInDateTime, checkOutDateTime)
-        } catch (e: Exception) {
-            return false
-        }
-
-        stayIndex = intent.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
-
-        if (stayIndex <= 0) {
-            return false
-        }
-
-        stayName = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_NAME)
-        stayGrade = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
-        viewPrice = intent.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_VIEW_PRICE, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE)
-
-        return true
+        } ?: true
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -256,20 +254,17 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
             hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, shortUrl) }
         }, {
-            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/stay/"
+            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/stay/" + detail.index
 
-            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl + detail.index) }
+            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl) }
         }))
     }
 
     private fun startKakaoLinkApplication(userName: String, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareStay(userName
-                , detail.name
-                , detail.address
-                , detail.index
-                , if (detail.hasImageInformations()) detail.imageInformationList[0].imageMap.mediumUrl else null
-                , url
-                , bookDateTime)
+                , detail.name, detail.address, detail.index
+                , detail.imageInformationList?.get(0)?.imageMap?.mediumUrl
+                , url, bookDateTime)
     }
 
     override fun onMapClick() {
@@ -291,7 +286,6 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
         analytics.onEventCloseClick(activity)
     }
-
 
     internal fun notifyDataSetChanged() {
         viewInterface.setName(stayName)
@@ -315,36 +309,25 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     private fun notifyRoomInformationDataSetChanged(soldOut: Boolean, roomList: List<StayRoom>?) {
         val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price)
         else getRoomTypeCountText(roomList?.size ?: 0)
-        val rangePriceText: String? = getRangePriceText(roomList)
 
-        viewInterface.setRoomInformation(roomTypeCountText, !soldOut && bookDateTime.nights > 1, !soldOut, rangePriceText)
+        viewInterface.setRoomInformation(roomTypeCountText, !soldOut && bookDateTime.nights > 1, !soldOut, getRangePriceText(roomList))
     }
 
     private fun notifyReviewInformationDataSetChanged(trueReviewCount: Int, wishCount: Int) {
         when {
             trueReviewCount > 0 && wishCount > 0 -> {
                 viewInterface.setReviewInformationVisible(true)
-
-                val trueReviewCountText = getTrueReviewCountText(trueReviewCount)
-                val wishCountText = getWishCountText(wishCount)
-
-                viewInterface.setReviewInformation(true, trueReviewCountText, true, wishCountText)
+                viewInterface.setReviewInformation(true, getTrueReviewCountText(trueReviewCount), true, getWishCountText(wishCount))
             }
 
             trueReviewCount > 0 -> {
                 viewInterface.setReviewInformationVisible(true)
-
-                val trueReviewCountText = getTrueReviewCountText(trueReviewCount)
-
-                viewInterface.setReviewInformation(true, trueReviewCountText, false, null)
+                viewInterface.setReviewInformation(true, getTrueReviewCountText(trueReviewCount), false, null)
             }
 
             wishCount > 0 -> {
                 viewInterface.setReviewInformationVisible(true)
-
-                val wishCountText = getWishCountText(wishCount)
-
-                viewInterface.setReviewInformation(false, null, true, wishCountText)
+                viewInterface.setReviewInformation(false, null, true, getWishCountText(wishCount))
             }
 
             else -> viewInterface.setReviewInformationVisible(false)
@@ -378,24 +361,17 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     }
 
     private fun getTrueReviewCountText(count: Int): SpannableStringBuilder {
-        val trueReviewCountText = getString(R.string.label_detail_truereview_count, DailyTextUtils.formatIntegerToString(count))
-
-        return getCountTextSpannableStringBuilder(trueReviewCountText)
+        return getCountTextSpannableStringBuilder(getString(R.string.label_detail_truereview_count, DailyTextUtils.formatIntegerToString(count)))
     }
 
     private fun getWishCountText(count: Int): SpannableStringBuilder {
-        val wishCountText = getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(count))
-
-        return getCountTextSpannableStringBuilder(wishCountText)
+        return getCountTextSpannableStringBuilder(getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(count)))
     }
 
     private fun getCountTextSpannableStringBuilder(countText: String): SpannableStringBuilder {
-        val spannableStringBuilder = SpannableStringBuilder(countText)
-
-        spannableStringBuilder.setSpan( //
-                CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
-                countText.indexOf(" "), countText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        return spannableStringBuilder
+        return SpannableStringBuilder(countText).apply {
+            setSpan(CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
+                    countText.indexOf(" "), countText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 }
