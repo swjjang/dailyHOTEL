@@ -308,7 +308,8 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     }
 
     private fun notifyMenuInformationDataSetChanged(soldOut: Boolean, menuList: List<GourmetMenu>?) {
-        val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price) else getMenuTypeCountText(menuList)
+        val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price)
+        else getMenuTypeCountText(menuList?.size ?: 0)
         val rangePriceText: String? = getRangePriceText(menuList)
 
         viewInterface.setMenuInformation(roomTypeCountText, !soldOut, rangePriceText)
@@ -345,12 +346,8 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
         }
     }
 
-    private fun getMenuTypeCountText(menuList: List<GourmetMenu>?): String {
-        return if (menuList == null || menuList.isEmpty()) {
-            getString(R.string.message_preview_changed_price)
-        } else {
-            getString(R.string.label_detail_gourmet_product_count, menuList.size)
-        }
+    private fun getMenuTypeCountText(count: Int): String {
+        return if (count == 0) getString(R.string.message_preview_changed_price) else getString(R.string.label_detail_gourmet_product_count, count)
     }
 
     private fun getRangePriceText(menuList: List<GourmetMenu>?): String? {

@@ -313,7 +313,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     }
 
     private fun notifyRoomInformationDataSetChanged(soldOut: Boolean, roomList: List<StayRoom>?) {
-        val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price) else getRoomTypeCountText(roomList)
+        val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price)
+        else getRoomTypeCountText(roomList?.size ?: 0)
         val rangePriceText: String? = getRangePriceText(roomList)
 
         viewInterface.setRoomInformation(roomTypeCountText, !soldOut && bookDateTime.nights > 1, !soldOut, rangePriceText)
@@ -350,12 +351,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         }
     }
 
-    private fun getRoomTypeCountText(roomList: List<StayRoom>?): String {
-        return if (roomList == null || roomList.isEmpty()) {
-            getString(R.string.message_preview_changed_price)
-        } else {
-            getString(R.string.label_detail_stay_product_count, roomList.size)
-        }
+    private fun getRoomTypeCountText(count: Int): String {
+        return if (count == 0) getString(R.string.message_preview_changed_price) else getString(R.string.label_detail_stay_product_count, count)
     }
 
     private fun getRangePriceText(roomList: List<StayRoom>?): String? {
