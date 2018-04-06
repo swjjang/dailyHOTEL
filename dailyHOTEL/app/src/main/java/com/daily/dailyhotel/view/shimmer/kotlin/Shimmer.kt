@@ -1,5 +1,3 @@
-@file:JvmName("Shimmer")
-
 package com.daily.dailyhotel.view.shimmer.kotlin
 
 import android.animation.Animator
@@ -74,7 +72,7 @@ class Shimmer {
 
     @Synchronized
     fun start() {
-        if (animatorSet.isRunning) {
+        if (isAnimating()) {
             return
         }
 
@@ -94,6 +92,10 @@ class Shimmer {
 
     private fun isAllViewSetUp(): Boolean {
         return animatorList.takeWhile { !((it.target as ShimmerView).isSetUp) }.isEmpty()
+    }
+
+    fun isAnimating(): Boolean {
+        return animatorSet.isRunning
     }
 
     fun cancel() {
