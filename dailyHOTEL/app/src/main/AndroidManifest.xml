@@ -337,11 +337,6 @@
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
-            android:name=".screen.booking.detail.PaymentWaitActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".screen.mydaily.creditcard.RegisterCreditCardActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
