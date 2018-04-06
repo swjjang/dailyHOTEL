@@ -85,7 +85,7 @@ public class StayDetail extends Configurations
         return mDetailImageInformationList;
     }
 
-    public boolean hasImageInformationList()
+    public boolean hasImageInformations()
     {
         return mDetailImageInformationList != null && mDetailImageInformationList.size() > 0;
     }

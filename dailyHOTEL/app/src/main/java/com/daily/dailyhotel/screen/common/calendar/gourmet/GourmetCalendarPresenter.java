@@ -376,7 +376,7 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
                     @Override
                     public void accept(GourmetDetail gourmetDetail) throws Exception
                     {
-                        if (gourmetDetail.getGourmetMenuList() == null || gourmetDetail.getGourmetMenuList().size() == 0)
+                        if (gourmetDetail.hasMenus() == false)
                         {
                             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
                                 , getString(R.string.gourmet_detail_calender_dialog_message)//

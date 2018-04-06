@@ -216,7 +216,7 @@ public class GourmetDetailData
             gourmetMenuList.add(menuData.getMenu());
         }
 
-        gourmetDetail.setGourmetMenuList(gourmetMenuList);
+        gourmetDetail.setMenuList(gourmetMenuList);
 
         // 상세
         gourmetDetail.setDescriptionList(details);

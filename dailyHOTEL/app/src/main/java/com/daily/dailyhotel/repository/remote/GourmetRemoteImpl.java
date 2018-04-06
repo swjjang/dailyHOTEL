@@ -145,7 +145,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
                         {
                             case 5:
                                 gourmetDetail = baseDto.data.getGourmetDetail();
-                                gourmetDetail.setGourmetMenuList(null);
+                                gourmetDetail.setMenuList(null);
                                 break;
 
                             case 100:

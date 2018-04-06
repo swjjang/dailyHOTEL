@@ -401,6 +401,9 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             mViewByLongPress = view;
             mPositionByLongPress = position;
 
+            Intent intent = GourmetPreviewActivity.newInstance(getActivity(), mCommonDateTime.dailyDateTime//
+                , gourmet.index, gourmet.name, gourmet.category, gourmet.discountPrice);
+            
             Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, (GourmetBookingDay) mPlaceBookingDay, gourmet);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);

@@ -1433,12 +1433,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getGourmetMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime, mGourmetDetail.category, imageUrl)//
+            , mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime, mGourmetDetail.category, imageUrl)//
             , GourmetDetailActivity.REQUEST_CODE_MENU);
 
         try
         {
-            mAnalytics.onEventMenuClick(getActivity(), mGourmetDetail.getGourmetMenuList().get(index).index, position);
+            mAnalytics.onEventMenuClick(getActivity(), mGourmetDetail.getMenuList().get(index).index, position);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1665,14 +1665,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);
 
-        if (mGourmetDetail.getGourmetMenuList() == null || mGourmetDetail.getGourmetMenuList().size() == 0)
+        if (mGourmetDetail.hasMenus() == false)
         {
             setStatus(STATUS_SOLD_OUT);
         } else
         {
             setStatus(STATUS_SELECT_MENU);
 
-            if (mGourmetDetail.getGourmetMenuList().size() > SHOWN_MENU_COUNT)
+            if (mGourmetDetail.getMenuList().size() > SHOWN_MENU_COUNT)
             {
                 mAnalytics.onEventHasHiddenMenus(getActivity());
             }
@@ -1696,7 +1696,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         {
             mShowCalendar = false;
 
-            if (mGourmetDetail.getGourmetMenuList() != null && mGourmetDetail.getGourmetMenuList().size() > 0)
+            if (mGourmetDetail.hasMenus() == true)
             {
                 onCalendarClick();
             }
@@ -1785,13 +1785,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
     void notifyOperationTimeChanged()
     {
-        List<GourmetMenu> menuList = mGourmetDetail.getGourmetMenuList();
-
-        if (menuList == null)
+        if (mGourmetDetail.hasMenus() == false)
         {
             getViewInterface().setMenus(null, SHOWN_MENU_COUNT);
             return;
         }
+
+        List<GourmetMenu> menuList = mGourmetDetail.getMenuList();
 
         if (FULL_TIME.equalsIgnoreCase(mVisitTime) == true)
         {
@@ -1948,10 +1948,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return INVALID_GOURMET_SOLD_OUT;
         }
 
-        // 판매 완료 혹은 가격이 변동되었는지 조사한다
-        List<GourmetMenu> menuList = gourmetDetail.getGourmetMenuList();
-
-        if (menuList == null || menuList.size() == 0)
+        if (gourmetDetail.hasMenus() == false)
         {
             if (mSoldOutFromList == false)
             {
@@ -1965,6 +1962,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return INVALID_GOURMET_SOLD_OUT;
         } else
         {
+            List<GourmetMenu> menuList = gourmetDetail.getMenuList();
+
             if (isDeepLink == false && compareListPrice == true)
             {
                 boolean hasPrice = false;
@@ -2044,7 +2043,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     setSoldOutDateList(unavailableDates);
                     setTrueVRList(trueVRList);
                     setGourmetDetail(gourmetDetail);
-                    setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getGourmetMenuList());
+                    setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getMenuList());
                     setVisitTime(FULL_TIME, false);
 
                     return gourmetCart;
@@ -2062,7 +2061,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 int checkPriceResult = checkChangedPrice(mIsDeepLink, mGourmetDetail, mPriceFromList, mCheckChangedPrice == false);
                 mCheckChangedPrice = false;
 
-                int validCartResult = validGourmetCart(mGourmetIndex, gourmetCart, mGourmetDetail.getGourmetMenuList());
+                int validCartResult = validGourmetCart(mGourmetIndex, gourmetCart, mGourmetDetail.getMenuList());
 
                 switch (validCartResult)
                 {

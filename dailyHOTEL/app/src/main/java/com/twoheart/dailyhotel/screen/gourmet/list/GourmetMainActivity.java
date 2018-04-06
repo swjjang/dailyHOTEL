@@ -30,6 +30,7 @@ import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivi
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.filter.GourmetFilterActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
+import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.result.SearchGourmetResultTabPresenter;
@@ -55,7 +56,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -1307,7 +1307,10 @@ public class GourmetMainActivity extends PlaceMainActivity
                     mListCountByLongPress = listCount;
 
                     Gourmet gourmet = placeViewItem.getItem();
-                    Intent intent = GourmetPreviewActivity.newInstance(GourmetMainActivity.this, mGourmetCuration.getGourmetBookingDay(), gourmet);
+                    String visitDateTime = mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+
+                    Intent intent = GourmetPreviewActivity.newInstance(GourmetMainActivity.this, visitDateTime//
+                        , gourmet.index, gourmet.name, gourmet.category, gourmet.discountPrice);
 
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                     break;

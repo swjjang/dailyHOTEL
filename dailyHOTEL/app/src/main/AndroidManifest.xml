@@ -160,12 +160,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".screen.gourmet.preview.GourmetPreviewActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity
             android:name=".screen.common.ImageDetailListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -506,6 +500,13 @@
 
         <activity
             android:name="com.daily.dailyhotel.screen.home.stay.inbound.preview.StayPreviewActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

@@ -42,6 +42,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -52,7 +53,6 @@ import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
@@ -323,7 +323,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         switch (requestCode)
         {
             case StayThankYouActivity.REQUEST_CODE_PREVIEW:
-            {
                 if (resultCode == Activity.RESULT_OK)
                 {
                     Observable.create(new ObservableOnSubscribe<Object>()
@@ -336,7 +335,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
                 break;
-            }
         }
 
         unLockAll();
@@ -654,7 +652,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
             gourmetBookingDay.setVisitDay(visitDay);
 
-            Intent intent = GourmetPreviewActivity.newInstance(getActivity(), gourmetBookingDay, gourmet);
+            Intent intent = GourmetPreviewActivity.newInstance(getActivity(), mCommonDateTime.dailyDateTime//
+                , gourmet.index, gourmet.name, gourmet.category, gourmet.discountPrice);
 
             startActivityForResult(intent, StayThankYouActivity.REQUEST_CODE_PREVIEW);
         } catch (Exception e)

@@ -10,11 +10,11 @@ import android.view.View
 import com.daily.base.util.VersionUtils
 
 class Shimmer {
-    var repeatCount: Int = 0
-    var duration: Long = 0
-    var startDelay: Long = 0
+    private var repeatCount: Int = DEFAULT_REPEAT_COUNT
+    private var duration: Long = DEFAULT_DURATION
+    private var startDelay: Long = DEFAULT_START_DELAY
 
-    var direction: Int = 0
+    private var direction: Int = DEFAULT_DIRECTION
         set(direction) {
             if (direction != ANIMATION_DIRECTION_LTR && direction != ANIMATION_DIRECTION_RTL) {
                 throw IllegalArgumentException("The animation direction must be either ANIMATION_DIRECTION_LTR or ANIMATION_DIRECTION_RTL")
@@ -23,37 +23,29 @@ class Shimmer {
             field = direction
         }
 
-    var shimmerWidth: Int = 0
-    var linearGradientWidth: Float = 0.toFloat()
-    var animatorListener: Animator.AnimatorListener? = null
+    private var shimmerWidth: Int = DEFAULT_SIMMER_WIDTH
+    private var linearGradientWidth: Float = DEFAULT_LINEAR_GRADIENT_WIDTH
 
     private val animatorSet = AnimatorSet()
-    private val animatorList = ArrayList<ObjectAnimator>()
-
-    init {
-        repeatCount = DEFAULT_REPEAT_COUNT
-        duration = DEFAULT_DURATION
-        startDelay = DEFAULT_START_DELAY
-        direction = DEFAULT_DIRECTION
-        shimmerWidth = DEFAULT_SIMMER_WIDTH
-        linearGradientWidth = DEFAULT_LINEAR_GRADIENT_WIDTH.toFloat()
-    }
+    private val animatorList = mutableListOf<ObjectAnimator>()
 
     fun add(shimmerView: ShimmerView) {
 
-        shimmerView?.let { view ->
-            var fromX = 0f
-            var toX = (if (shimmerWidth == DEFAULT_SIMMER_WIDTH) view.width else shimmerWidth).toFloat()
+        shimmerView.let { view ->
+            val fromX: Int
+            val toX: Int
 
             if (direction == ANIMATION_DIRECTION_RTL) {
-                fromX = (if (shimmerWidth == DEFAULT_SIMMER_WIDTH) view.width else shimmerWidth).toFloat()
-                toX = 0f
+                fromX = if (shimmerWidth == DEFAULT_SIMMER_WIDTH) view.width else shimmerWidth
+                toX = 0
+            } else {
+                fromX = 0
+                toX = if (shimmerWidth == DEFAULT_SIMMER_WIDTH) view.width else shimmerWidth
             }
 
-            val gradientWidth = if (linearGradientWidth == DEFAULT_LINEAR_GRADIENT_WIDTH.toFloat()) view.width.toFloat() else linearGradientWidth
-            view.linearGradientWidth = gradientWidth
+            view.linearGradientWidth = if (linearGradientWidth == DEFAULT_LINEAR_GRADIENT_WIDTH) view.width.toFloat() else linearGradientWidth
 
-            var animator = ObjectAnimator.ofFloat(view, "gradientX", fromX, toX).apply {
+            var animator = ObjectAnimator.ofFloat(view, "gradientX", fromX.toFloat(), toX.toFloat()).apply {
                 repeatCount = this@Shimmer.repeatCount
                 duration = this@Shimmer.duration
                 startDelay = this@Shimmer.startDelay
@@ -93,10 +85,6 @@ class Shimmer {
         }
 
         val animate = Runnable {
-            animatorListener?.let { listener ->
-                animatorSet.addListener(listener)
-            }
-
             animatorSet.playTogether(animatorList as Collection<Animator>?)
             animatorSet.start()
         }
@@ -138,7 +126,7 @@ class Shimmer {
     }
 
     fun isAnimating(): Boolean {
-        return animatorSet != null && animatorSet!!.isRunning
+        return animatorSet.isRunning
     }
 
     companion object {
@@ -150,6 +138,6 @@ class Shimmer {
         private const val DEFAULT_START_DELAY: Long = 0
         private const val DEFAULT_DIRECTION = ANIMATION_DIRECTION_LTR
         private const val DEFAULT_SIMMER_WIDTH = -1
-        private const val DEFAULT_LINEAR_GRADIENT_WIDTH = -1
+        private const val DEFAULT_LINEAR_GRADIENT_WIDTH: Float = -1f
     }
 }

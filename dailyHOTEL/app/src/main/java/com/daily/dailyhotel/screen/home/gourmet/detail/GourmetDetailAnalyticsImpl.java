@@ -45,14 +45,14 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetail.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(gourmetDetail.benefit) ? "no" : "yes");
 
-            List<GourmetMenu> gourmetMenuList = gourmetDetail.getGourmetMenuList();
+            List<GourmetMenu> gourmetMenuList = gourmetDetail.getMenuList();
 
-            if (gourmetMenuList == null || gourmetMenuList.size() == 0)
-            {
-                params.put(AnalyticsManager.KeyType.PRICE, "0");
-            } else
+            if (gourmetDetail.hasMenus() == true)
             {
                 params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetMenuList.get(0).discountPrice));
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, "0");
             }
 
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetDetail.index));

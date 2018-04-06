@@ -31,7 +31,7 @@ public class GourmetDetail
     private Sticker mSticker;
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<LinkedHashMap<String, List<String>>> mDescriptionMap;
-    private List<GourmetMenu> mGourmetMenuList;
+    private List<GourmetMenu> mMenuList;
     private List<Pictogram> mPictogramList;
     private List<String> mBenefitContentList;
 
@@ -70,14 +70,24 @@ public class GourmetDetail
         mPictogramList = pictogramList;
     }
 
-    public List<GourmetMenu> getGourmetMenuList()
+    public boolean hasMenus()
     {
-        return mGourmetMenuList;
+        return mMenuList != null && mMenuList.size() > 0;
     }
 
-    public void setGourmetMenuList(List<GourmetMenu> gourmetMenuList)
+    public List<GourmetMenu> getMenuList()
     {
-        mGourmetMenuList = gourmetMenuList;
+        return mMenuList;
+    }
+
+    public void setMenuList(List<GourmetMenu> gourmetMenuList)
+    {
+        mMenuList = gourmetMenuList;
+    }
+
+    public boolean hasImageInformations()
+    {
+        return mDetailImageInformationList != null && mDetailImageInformationList.size() > 0;
     }
 
     public List<DetailImageInformation> getImageInformationList()

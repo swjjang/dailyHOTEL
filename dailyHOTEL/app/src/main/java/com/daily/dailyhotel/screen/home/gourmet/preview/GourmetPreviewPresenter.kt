@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.preview
+package com.daily.dailyhotel.screen.home.gourmet.preview
 
 import android.app.Activity
 import android.content.DialogInterface
@@ -12,12 +12,12 @@ import com.daily.base.BaseActivity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.dailyhotel.base.BaseExceptionPresenter
+import com.daily.dailyhotel.entity.GourmetBookDateTime
+import com.daily.dailyhotel.entity.GourmetDetail
+import com.daily.dailyhotel.entity.GourmetMenu
 import com.daily.dailyhotel.entity.ReviewScores
-import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
-import com.daily.dailyhotel.repository.remote.StayRemoteImpl
+import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
 import com.daily.dailyhotel.storage.preference.DailyUserPreference
 import com.twoheart.dailyhotel.R
@@ -31,33 +31,33 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import java.util.*
 
-class StayPreviewPresenter(activity: StayPreviewActivity)
-    : BaseExceptionPresenter<StayPreviewActivity, StayPreviewInterface.ViewInterface>(activity), StayPreviewInterface.OnEventListener {
+class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
+    : BaseExceptionPresenter<GourmetPreviewActivity, GourmetPreviewInterface.ViewInterface>(activity), GourmetPreviewInterface.OnEventListener {
 
-    private lateinit var stayRemoteImpl: StayRemoteImpl
+    private lateinit var gourmetRemoteImpl: GourmetRemoteImpl
     private lateinit var commonRemoteImpl: CommonRemoteImpl
 
-    private lateinit var bookDateTime: StayBookDateTime
-    private var stayIndex: Int = 0
-    private lateinit var stayName: String
-    private lateinit var stayGrade: String
-    private var viewPrice: Int = StayPreviewActivity.SKIP_CHECK_PRICE_VALUE
+    private lateinit var bookDateTime: GourmetBookDateTime
+    private var gourmetIndex: Int = 0
+    private lateinit var gourmetName: String
+    private lateinit var gourmetCategory: String
+    private var viewPrice: Int = GourmetPreviewActivity.SKIP_CHECK_PRICE_VALUE
 
-    private lateinit var detail: StayDetail
+    private lateinit var detail: GourmetDetail
     private var trueReviewCount: Int = 0
 
-    private val analytics: StayPreviewInterface.AnalyticsInterface by lazy {
-        StayPreviewAnalyticsImpl()
+    private val analytics: GourmetPreviewInterface.AnalyticsInterface by lazy {
+        GourmetPreviewAnalyticsImpl()
     }
 
-    override fun createInstanceViewInterface(): StayPreviewInterface.ViewInterface {
-        return StayPreviewView(activity, this)
+    override fun createInstanceViewInterface(): GourmetPreviewInterface.ViewInterface {
+        return GourmetPreviewView(activity, this)
     }
 
-    override fun constructorInitialize(activity: StayPreviewActivity) {
+    override fun constructorInitialize(activity: GourmetPreviewActivity) {
         setContentView(R.layout.activity_stay_preview_data)
 
-        stayRemoteImpl = StayRemoteImpl(activity)
+        gourmetRemoteImpl = GourmetRemoteImpl(activity)
         commonRemoteImpl = CommonRemoteImpl(activity)
 
         isRefresh = true
@@ -68,24 +68,23 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             return true
         }
 
-        val checkInDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME)
-        val checkOutDateTime = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)
+        val visitDateTime = intent.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME)
 
         try {
-            bookDateTime = StayBookDateTime(checkInDateTime, checkOutDateTime)
+            bookDateTime = GourmetBookDateTime(visitDateTime)
         } catch (e: Exception) {
             return false
         }
 
-        stayIndex = intent.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
+        gourmetIndex = intent.getIntExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_INDEX, 0)
 
-        if (stayIndex <= 0) {
+        if (gourmetIndex <= 0) {
             return false
         }
 
-        stayName = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_NAME)
-        stayGrade = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
-        viewPrice = intent.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_VIEW_PRICE, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE)
+        gourmetName = intent.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_NAME)
+        gourmetCategory = intent.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_CATEGORY)
+        viewPrice = intent.getIntExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_VIEW_PRICE, GourmetPreviewActivity.SKIP_CHECK_PRICE_VALUE)
 
         return true
     }
@@ -143,7 +142,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         unLockAll()
 
         when (requestCode) {
-            StayPreviewActivity.REQUEST_CODE_WISH_DIALOG -> onWishDialogActivityResult(resultCode, intent)
+            GourmetPreviewActivity.REQUEST_CODE_WISH_DIALOG -> onWishDialogActivityResult(resultCode, intent)
         }
     }
 
@@ -154,7 +153,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
                 intent?.let {
                     val wish = it.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false)
 
-                    setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish))
+                    setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, wish))
                 }
 
                 hideAnimationAfterFinish()
@@ -180,15 +179,15 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         isRefresh = false
         screenLock(showProgress)
 
-        addCompositeDisposable(Observable.zip(stayRemoteImpl.getDetail(stayIndex, bookDateTime), stayRemoteImpl.getReviewScores(stayIndex)
-                , BiFunction<StayDetail, ReviewScores, Int> { stayDetail, reviewScores ->
-            this@StayPreviewPresenter.detail = stayDetail
+        addCompositeDisposable(Observable.zip(gourmetRemoteImpl.getDetail(gourmetIndex, bookDateTime), gourmetRemoteImpl.getReviewScores(gourmetIndex)
+                , BiFunction<GourmetDetail, ReviewScores, Int> { gourmetDetail, reviewScores ->
+            this@GourmetPreviewPresenter.detail = gourmetDetail
 
-            analytics.onScreen(activity, stayDetail.category)
+            analytics.onScreen(activity, gourmetDetail.category)
 
             reviewScores.reviewScoreTotalCount
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
-            this@StayPreviewPresenter.trueReviewCount = trueReviewCount
+            this@GourmetPreviewPresenter.trueReviewCount = trueReviewCount
 
             notifyDataSetChanged()
 
@@ -221,8 +220,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
         analytics.onEventWishClick(activity, changeWish)
 
-        startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.HOTEL//
-                , stayIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), StayPreviewActivity.REQUEST_CODE_WISH_DIALOG)
+        startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.GOURMET
+                , gourmetIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), GourmetPreviewActivity.REQUEST_CODE_WISH_DIALOG)
     }
 
     override fun onKakaoClick() {
@@ -235,8 +234,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         try {
             activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
         } catch (e: PackageManager.NameNotFoundException) {
-            viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+            viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)
+                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)
                     , View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }
                     , null, null, DialogInterface.OnDismissListener { onBackClick() }, true)
 
@@ -247,29 +246,25 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         screenLock(true)
 
         val name = DailyUserPreference.getInstance(activity).name
-        val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
-        val longUrl = String.format(Locale.KOREA, urlFormat, stayIndex
-                , bookDateTime.getCheckInDateTime("yyyy-MM-dd")
-                , bookDateTime.nights)
+        val urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_kakaotalk"
+        val longUrl = String.format(Locale.KOREA, urlFormat, gourmetIndex
+                , bookDateTime.getVisitDateTime("yyyy-MM-dd"))
 
         // flatMapCompletable 을 사용하고 싶었는데 shortUrl 을 넘겨주어야 하는게 쉽지 않다.
         addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
             hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, shortUrl) }
         }, {
-            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/stay/"
+            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/gourmet/"
 
             hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl + detail.index) }
         }))
     }
 
-    private fun startKakaoLinkApplication(userName: String, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
-        KakaoLinkManager.newInstance(activity).shareStay(userName
-                , detail.name
-                , detail.address
-                , detail.index
+    private fun startKakaoLinkApplication(userName: String, detail: GourmetDetail, bookDateTime: GourmetBookDateTime, url: String) {
+        KakaoLinkManager.newInstance(activity).shareGourmet(userName
+                , detail.name, detail.address, detail.index
                 , if (detail.hasImageInformations()) detail.imageInformationList[0].imageMap.mediumUrl else null
-                , url
-                , bookDateTime)
+                , url, bookDateTime)
     }
 
     override fun onMapClick() {
@@ -294,29 +289,29 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
 
     internal fun notifyDataSetChanged() {
-        viewInterface.setName(stayName)
+        viewInterface.setName(gourmetName)
 
         if (::detail.isInitialized) {
-            val soldOut = !detail.hasRooms()
+            val soldOut = !detail.hasMenus()
 
-            viewInterface.setCategory(detail.grade.getName(activity), detail.activeReward)
+            viewInterface.setCategory(detail.category, detail.categorySub)
             viewInterface.setImages(detail.imageInformationList.map { it.imageMap.smallUrl }.toTypedArray())
 
-            notifyRoomInformationDataSetChanged(soldOut, detail.roomList)
+            notifyMenuInformationDataSetChanged(soldOut, detail.menuList)
             notifyReviewInformationDataSetChanged(trueReviewCount, detail.wishCount)
 
             viewInterface.setWish(detail.myWish)
             viewInterface.setBookingButtonText(if (soldOut) getString(R.string.label_booking_view_detail) else getString(R.string.label_preview_booking))
         } else {
-            viewInterface.setCategory(stayGrade, false)
+            viewInterface.setCategory(detail.category, null)
         }
     }
 
-    private fun notifyRoomInformationDataSetChanged(soldOut: Boolean, roomList: List<StayRoom>?) {
-        val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price) else getRoomTypeCountText(roomList)
-        val rangePriceText: String? = getRangePriceText(roomList)
+    private fun notifyMenuInformationDataSetChanged(soldOut: Boolean, menuList: List<GourmetMenu>?) {
+        val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price) else getMenuTypeCountText(menuList)
+        val rangePriceText: String? = getRangePriceText(menuList)
 
-        viewInterface.setRoomInformation(roomTypeCountText, !soldOut && bookDateTime.nights > 1, !soldOut, rangePriceText)
+        viewInterface.setMenuInformation(roomTypeCountText, !soldOut, rangePriceText)
     }
 
     private fun notifyReviewInformationDataSetChanged(trueReviewCount: Int, wishCount: Int) {
@@ -350,22 +345,22 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         }
     }
 
-    private fun getRoomTypeCountText(roomList: List<StayRoom>?): String {
-        return if (roomList == null || roomList.isEmpty()) {
+    private fun getMenuTypeCountText(menuList: List<GourmetMenu>?): String {
+        return if (menuList == null || menuList.isEmpty()) {
             getString(R.string.message_preview_changed_price)
         } else {
-            getString(R.string.label_detail_stay_product_count, roomList.size)
+            getString(R.string.label_detail_gourmet_product_count, menuList.size)
         }
     }
 
-    private fun getRangePriceText(roomList: List<StayRoom>?): String? {
-        return roomList?.let {
+    private fun getRangePriceText(menuList: List<GourmetMenu>?): String? {
+        return menuList?.let {
             var minPrice = Int.MAX_VALUE
             var maxPrice = Int.MIN_VALUE
 
             it.forEach {
-                minPrice = Math.min(minPrice, it.discountAverage)
-                maxPrice = Math.max(maxPrice, it.discountAverage)
+                minPrice = Math.min(minPrice, it.discountPrice)
+                maxPrice = Math.max(maxPrice, it.discountPrice)
             }
 
             if (minPrice == Int.MAX_VALUE || minPrice <= 0 || maxPrice == Int.MIN_VALUE || maxPrice == 0) {
@@ -395,8 +390,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     private fun getCountTextSpannableStringBuilder(countText: String): SpannableStringBuilder {
         val spannableStringBuilder = SpannableStringBuilder(countText)
 
-        spannableStringBuilder.setSpan( //
-                CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
+        spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
                 countText.indexOf(" "), countText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         return spannableStringBuilder
