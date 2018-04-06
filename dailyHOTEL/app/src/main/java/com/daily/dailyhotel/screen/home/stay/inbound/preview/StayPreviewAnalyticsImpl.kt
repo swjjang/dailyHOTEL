@@ -4,6 +4,7 @@ import android.app.Activity
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
 
 class StayPreviewAnalyticsImpl : StayPreviewInterface.AnalyticsInterface {
+
     override fun onScreen(activity: Activity, category: String?) {
         val params = hashMapOf(
                 AnalyticsManager.KeyType.PLACE_TYPE to AnalyticsManager.ValueType.STAY

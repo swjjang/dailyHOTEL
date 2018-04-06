@@ -8,7 +8,6 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.daily.base.BaseDialogView
-import com.daily.dailyhotel.entity.DetailImageInformation
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayPreviewDataBinding
 import io.reactivex.Completable
@@ -17,10 +16,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterface.OnEventListener)//
     : BaseDialogView<StayPreviewInterface.OnEventListener, ActivityStayPreviewDataBinding>(activity, listener), StayPreviewInterface.ViewInterface {
 
-    override fun setContentView(viewDataBinding: ActivityStayPreviewDataBinding) {
-        viewDataBinding.root.visibility = View.INVISIBLE
-        viewDataBinding.popupLayout.setOnClickListener { eventListener.onDetailClick() }
+    private lateinit var simpleDraweeViewList: List<com.facebook.drawee.view.SimpleDraweeView>
 
+    override fun setContentView(viewDataBinding: ActivityStayPreviewDataBinding) {
+
+        simpleDraweeViewList = listOf(viewDataBinding.simpleDraweeView01
+                , viewDataBinding.simpleDraweeView02
+                , viewDataBinding.simpleDraweeView03
+                , viewDataBinding.simpleDraweeView04)
+
+        viewDataBinding.popupLayout.setOnClickListener { eventListener.onDetailClick() }
         viewDataBinding.wishTextView.setOnClickListener { eventListener.onWishClick() }
         viewDataBinding.shareKakaoTextView.setOnClickListener { eventListener.onKakaoClick() }
         viewDataBinding.mapTextView.setOnClickListener { eventListener.onMapClick() }
@@ -44,68 +49,51 @@ class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterf
         viewDataBinding.rewardTextView.visibility = visibility
     }
 
-    override fun setImages(imageList: List<DetailImageInformation>?) {
+    override fun setImages(imageList: Array<String>?) {
         setImagesPlaceholder(R.drawable.layerlist_placeholder_s)
 
         when (imageList?.size) {
             0, null -> {
-                setImagesVisibility()
-                return
+                setImagesVisibility(arrayOf(View.GONE, View.GONE, View.GONE, View.GONE))
             }
 
             1 -> {
-                setImagesVisibility(View.VISIBLE, View.INVISIBLE)
-                setImagesUrl(imageList.get(0).imageMap.smallUrl)
+                setImagesVisibility(arrayOf(View.VISIBLE, View.INVISIBLE, View.GONE, View.GONE))
+                setImagesUrl(imageList)
             }
 
             2 -> {
-                setImagesVisibility(View.VISIBLE, View.VISIBLE)
-                setImagesUrl(imageList.get(0).imageMap.smallUrl, imageList.get(1).imageMap.smallUrl)
+                setImagesVisibility(arrayOf(View.VISIBLE, View.VISIBLE, View.GONE, View.GONE))
+                setImagesUrl(imageList)
             }
 
             3 -> {
-                setImagesVisibility(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.INVISIBLE)
-                setImagesUrl(imageList.get(0).imageMap.smallUrl, imageList.get(1).imageMap.smallUrl, imageList.get(2).imageMap.smallUrl)
+                setImagesVisibility(arrayOf(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.INVISIBLE))
+                setImagesUrl(imageList)
             }
 
             else -> {
-                setImagesVisibility(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.VISIBLE)
-                setImagesUrl(imageList.get(0).imageMap.smallUrl, imageList.get(1).imageMap.smallUrl, imageList.get(2).imageMap.smallUrl, imageList.get(3).imageMap.smallUrl)
+                setImagesVisibility(arrayOf(View.VISIBLE, View.VISIBLE, View.VISIBLE, View.VISIBLE))
+                setImagesUrl(imageList)
             }
         }
     }
 
     private fun setImagesPlaceholder(resourceId: Int) {
-        viewDataBinding.simpleDraweeView01.hierarchy.setPlaceholderImage(resourceId)
-        viewDataBinding.simpleDraweeView02.hierarchy.setPlaceholderImage(resourceId)
-        viewDataBinding.simpleDraweeView03.hierarchy.setPlaceholderImage(resourceId)
-        viewDataBinding.simpleDraweeView04.hierarchy.setPlaceholderImage(resourceId)
+        simpleDraweeViewList.forEach { it.hierarchy.setPlaceholderImage(resourceId) }
     }
 
-    private fun setImagesVisibility(image01Visibility: Int = View.GONE
-                                    , image02Visibility: Int = View.GONE
-                                    , image03Visibility: Int = View.GONE
-                                    , image04Visibility: Int = View.GONE) {
-        viewDataBinding.simpleDraweeView01.visibility = image01Visibility
-        viewDataBinding.simpleDraweeView02.visibility = image02Visibility
-        viewDataBinding.simpleDraweeView03.visibility = image03Visibility
-        viewDataBinding.simpleDraweeView04.visibility = image04Visibility
+    private fun setImagesVisibility(visibilityList: Array<Int>) {
+        visibilityList.take(simpleDraweeViewList.size).forEachIndexed { index, visibility -> simpleDraweeViewList[index].visibility = visibility }
     }
 
-    private fun setImagesUrl(image01Uri: String? = null
-                             , image02Uri: String? = null
-                             , image03Uri: String? = null
-                             , image04Uri: String? = null) {
-        viewDataBinding.simpleDraweeView01.setImageURI(image01Uri)
-        viewDataBinding.simpleDraweeView02.setImageURI(image02Uri)
-        viewDataBinding.simpleDraweeView03.setImageURI(image03Uri)
-        viewDataBinding.simpleDraweeView04.setImageURI(image04Uri)
+    private fun setImagesUrl(imageUris: Array<String>) {
+        imageUris.take(simpleDraweeViewList.size).forEachIndexed { index, imageUri -> simpleDraweeViewList[index].setImageURI(imageUri) }
     }
 
-    override fun setRoomInformation(roomTypeCountText: String?, nightEnabled: Boolean, rangePriceVisible: Boolean, rangePriceText: String?) {
+    override fun setRoomInformation(roomTypeCountText: String?, nightsEnabled: Boolean, rangePriceVisible: Boolean, rangePriceText: String?) {
         viewDataBinding.productCountTextView.text = roomTypeCountText
-        viewDataBinding.stayAverageView.visibility = if (nightEnabled) View.VISIBLE else View.GONE
-
+        viewDataBinding.stayAverageView.visibility = if (nightsEnabled) View.VISIBLE else View.GONE
         viewDataBinding.priceTextView.visibility = if (rangePriceVisible) View.VISIBLE else View.GONE
         viewDataBinding.priceTextView.text = rangePriceText
     }
@@ -116,7 +104,6 @@ class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterf
 
     override fun setReviewInformation(reviewCountVisible: Boolean, reviewCountText: SpannableStringBuilder?
                                       , wishCountVisible: Boolean, wishCountText: SpannableStringBuilder?) {
-
         if (reviewCountVisible) {
             viewDataBinding.trueReviewCountTextView.visibility = View.VISIBLE
             viewDataBinding.wishDotImageView.visibility = if (wishCountVisible) View.VISIBLE else View.GONE
@@ -126,7 +113,6 @@ class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterf
         }
 
         viewDataBinding.trueReviewCountTextView.text = reviewCountText
-
         viewDataBinding.wishCountTextView.visibility = if (wishCountVisible) View.VISIBLE else View.GONE
         viewDataBinding.wishCountTextView.text = wishCountText
     }
@@ -148,15 +134,14 @@ class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterf
 
     override fun showAnimation(): Completable {
         val scaleObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(viewDataBinding.root
-                , PropertyValuesHolder.ofFloat("scaleX", 0.7f, 1.0f)
-                , PropertyValuesHolder.ofFloat("scaleY", 0.7f, 1.0f))
-
-        val alphaObjectAnimator = ObjectAnimator.ofFloat(viewDataBinding.root, "alpha", 0.0f, 1.0f)
-        val animatorSet = AnimatorSet()
-
-        animatorSet.playTogether(scaleObjectAnimator, alphaObjectAnimator)
-        animatorSet.duration = 200
-        animatorSet.interpolator = AccelerateDecelerateInterpolator()
+                , PropertyValuesHolder.ofFloat(View.SCALE_X, 0.7f, 1.0f)
+                , PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.7f, 1.0f))
+        val alphaObjectAnimator = ObjectAnimator.ofFloat(viewDataBinding.root, View.ALPHA, 0.0f, 1.0f)
+        val animatorSet = AnimatorSet().apply {
+            playTogether(scaleObjectAnimator, alphaObjectAnimator)
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+        }
 
         return Completable.create {
             animatorSet.addListener(object : Animator.AnimatorListener {
@@ -186,15 +171,14 @@ class StayPreviewView(activity: StayPreviewActivity, listener: StayPreviewInterf
 
     override fun hideAnimation(): Completable {
         val scaleObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(viewDataBinding.root
-                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f)
-                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f))
-
-        val alphaObjectAnimator = ObjectAnimator.ofFloat(viewDataBinding.root, "alpha", 1.0f, 0.0f)
-        val animatorSet = AnimatorSet()
-
-        animatorSet.playTogether(scaleObjectAnimator, alphaObjectAnimator)
-        animatorSet.duration = 200
-        animatorSet.interpolator = AccelerateDecelerateInterpolator()
+                , PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 0.7f)
+                , PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 0.7f))
+        val alphaObjectAnimator = ObjectAnimator.ofFloat(viewDataBinding.root, View.ALPHA, 1.0f, 0.0f)
+        val animatorSet = AnimatorSet().apply {
+            playTogether(scaleObjectAnimator, alphaObjectAnimator)
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+        }
 
         return Completable.create {
             animatorSet.addListener(object : Animator.AnimatorListener {

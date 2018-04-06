@@ -38,7 +38,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     private lateinit var commonRemoteImpl: CommonRemoteImpl
 
     private lateinit var stayBookDateTime: StayBookDateTime
-    private var stayIndex: Int = -1
+    private var stayIndex: Int = 0
     private lateinit var stayName: String
     private lateinit var stayGrade: String
     private var viewPrice: Int = StayPreviewActivity.SKIP_CHECK_PRICE_VALUE
@@ -85,7 +85,6 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
         stayName = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_NAME)
         stayGrade = intent.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
-
         viewPrice = intent.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_VIEW_PRICE, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE)
 
         return true
@@ -125,7 +124,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             return true
         }
 
-        addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
+        hideAnimationAfterFinish()
 
         analytics.onEventBackClick(activity)
 
@@ -158,11 +157,15 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
                     setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish))
                 }
 
-                addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
+                hideAnimationAfterFinish()
             }
 
             else -> viewInterface.setWish(stayDetail.myWish)
         }
+    }
+
+    private fun hideAnimationAfterFinish() {
+        addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe { finish() })
     }
 
     @Synchronized
@@ -187,7 +190,10 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             notifyDataSetChanged()
 
             unLockAll()
-        }, { throwable -> onHandleError(throwable) }))
+        }, { throwable ->
+            onHandleError(throwable)
+            hideAnimationAfterFinish()
+        }))
     }
 
     override fun onBackClick() {
@@ -212,7 +218,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
         analytics.onEventWishClick(activity, changeWish)
 
-        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+        startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.HOTEL//
                 , stayIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), StayPreviewActivity.REQUEST_CODE_WISH_DIALOG)
     }
 
@@ -237,34 +243,35 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
         screenLock(true)
 
-        val DATE_FORMAT = "yyyy-MM-dd"
         val name = DailyUserPreference.getInstance(activity).name
         val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
         val longUrl = String.format(Locale.KOREA, urlFormat, stayIndex
-                , stayBookDateTime.getCheckInDateTime(DATE_FORMAT)
+                , stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")
                 , stayBookDateTime.nights)
 
+        // flatMapCompletable 을 사용하고 싶었는데 shortUrl 을 넘겨주어야 하는게 쉽지 않다.
         addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
             addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe {
                 KakaoLinkManager.newInstance(activity).shareStay(name
                         , stayDetail.name
                         , stayDetail.address
                         , stayDetail.index
-                        , if (stayDetail.imageInformationList == null || stayDetail.imageInformationList.size == 0) null else stayDetail.imageInformationList.get(0).imageMap.mediumUrl
+                        , if (stayDetail.hasImageInformationList()) stayDetail.imageInformationList[0].imageMap.mediumUrl else null
                         , shortUrl
                         , stayBookDateTime)
 
                 finish()
             })
-
         }, {
+            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/stay/"
+
             addCompositeDisposable(viewInterface.hideAnimation().observeOn(AndroidSchedulers.mainThread()).subscribe {
                 KakaoLinkManager.newInstance(activity).shareStay(name
                         , stayDetail.name
                         , stayDetail.address
                         , stayDetail.index
-                        , if (stayDetail.imageInformationList == null || stayDetail.imageInformationList.size == 0) null else stayDetail.imageInformationList.get(0).imageMap.mediumUrl
-                        , "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index
+                        , if (stayDetail.hasImageInformationList()) stayDetail.imageInformationList[0].imageMap.mediumUrl else null
+                        , mobileWebUrl + stayDetail.index
                         , stayBookDateTime)
 
                 finish()
@@ -302,10 +309,10 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         viewInterface.setName(stayName)
 
         if (::stayDetail.isInitialized) {
-            val soldOut = stayDetail.roomList == null || stayDetail.roomList.isEmpty()
+            val soldOut = !stayDetail.hasRooms()
 
             viewInterface.setCategory(stayDetail.grade.getName(activity), stayDetail.activeReward)
-            viewInterface.setImages(stayDetail.imageInformationList)
+            viewInterface.setImages(stayDetail.imageInformationList.map { it.imageMap.smallUrl }.toTypedArray())
 
             notifyRoomInformationDataSetChanged(soldOut, stayDetail.roomList)
             notifyReviewInformationDataSetChanged(trueReviewCount, stayDetail.wishCount)
@@ -387,21 +394,22 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     private fun getTrueReviewCountText(count: Int): SpannableStringBuilder {
         val trueReviewCountText = getString(R.string.label_detail_truereview_count, DailyTextUtils.formatIntegerToString(count))
-        val spannableStringBuilder = SpannableStringBuilder(trueReviewCountText)
 
-        spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
-                trueReviewCountText.indexOf(" "), trueReviewCountText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        return spannableStringBuilder
+        return getCountTextSpannableStringBuilder(trueReviewCountText)
     }
 
     private fun getWishCountText(count: Int): SpannableStringBuilder {
         val wishCountText = getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(count))
-        val spannableStringBuilder = SpannableStringBuilder(wishCountText)
+
+        return getCountTextSpannableStringBuilder(wishCountText)
+    }
+
+    private fun getCountTextSpannableStringBuilder(countText: String): SpannableStringBuilder {
+        val spannableStringBuilder = SpannableStringBuilder(countText)
 
         spannableStringBuilder.setSpan( //
                 CustomFontTypefaceSpan(FontManager.getInstance(activity).demiLightTypeface),
-                wishCountText.indexOf(" "), wishCountText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                countText.indexOf(" "), countText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         return spannableStringBuilder
     }

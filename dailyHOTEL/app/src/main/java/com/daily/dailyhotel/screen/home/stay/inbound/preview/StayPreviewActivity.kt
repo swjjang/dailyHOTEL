@@ -7,6 +7,7 @@ import com.daily.base.BaseActivity
 import com.twoheart.dailyhotel.R
 
 class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
+
     companion object {
         const val REQUEST_CODE_WISH_DIALOG = 10000
 

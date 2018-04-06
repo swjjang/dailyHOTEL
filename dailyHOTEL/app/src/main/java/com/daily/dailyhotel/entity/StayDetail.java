@@ -65,6 +65,11 @@ public class StayDetail extends Configurations
         mPictogramList = pictogramList;
     }
 
+    public boolean hasRooms()
+    {
+        return mStayRoomList != null && mStayRoomList.size() > 0;
+    }
+
     public List<StayRoom> getRoomList()
     {
         return mStayRoomList;
@@ -78,6 +83,11 @@ public class StayDetail extends Configurations
     public List<DetailImageInformation> getImageInformationList()
     {
         return mDetailImageInformationList;
+    }
+
+    public boolean hasImageInformationList()
+    {
+        return mDetailImageInformationList != null && mDetailImageInformationList.size() > 0;
     }
 
     public void setImageInformationList(List<DetailImageInformation> detailImageInformationList)
