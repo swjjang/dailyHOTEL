@@ -153,7 +153,6 @@ class ShimmerView : View {
         super.onDraw(canvas)
     }
 
-
     companion object {
         private const val DEFAULT_REFLECTION_COLOR = 0xFFEBEBEB
         private const val DEFAULT_PRIMARY_COLOR = 0xFFF8F8F9

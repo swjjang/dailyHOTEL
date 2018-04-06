@@ -1,7 +1,9 @@
 @file:JvmName("Shimmer")
+
 package com.daily.dailyhotel.view.shimmer.kotlin
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.view.View
@@ -25,8 +27,8 @@ class Shimmer {
     var linearGradientWidth: Float = 0.toFloat()
     var animatorListener: Animator.AnimatorListener? = null
 
-    var animator: ObjectAnimator? = null
-
+    private val animatorSet = AnimatorSet()
+    private val animatorList = ArrayList<ObjectAnimator>()
 
     init {
         repeatCount = DEFAULT_REPEAT_COUNT
@@ -37,63 +39,76 @@ class Shimmer {
         linearGradientWidth = DEFAULT_LINEAR_GRADIENT_WIDTH.toFloat()
     }
 
-    fun start(shimmerView: ShimmerView) {
+    fun add(shimmerView: ShimmerView) {
+
+        shimmerView?.let { view ->
+            var fromX = 0f
+            var toX = (if (shimmerWidth == DEFAULT_SIMMER_WIDTH) view.width else shimmerWidth).toFloat()
+
+            if (direction == ANIMATION_DIRECTION_RTL) {
+                fromX = (if (shimmerWidth == DEFAULT_SIMMER_WIDTH) view.width else shimmerWidth).toFloat()
+                toX = 0f
+            }
+
+            val gradientWidth = if (linearGradientWidth == DEFAULT_LINEAR_GRADIENT_WIDTH.toFloat()) view.width.toFloat() else linearGradientWidth
+            view.linearGradientWidth = gradientWidth
+
+            var animator = ObjectAnimator.ofFloat(view, "gradientX", fromX, toX).apply {
+                repeatCount = this@Shimmer.repeatCount
+                duration = this@Shimmer.duration
+                startDelay = this@Shimmer.startDelay
+
+                addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationStart(animation: Animator) {
+                        view.isShimmering = true
+                    }
+
+                    override fun onAnimationEnd(animation: Animator) {
+                        view.isShimmering = false
+
+                        if (VersionUtils.isOverAPI16()) {
+                            view.postInvalidateOnAnimation()
+                        } else {
+                            view.postInvalidate()
+                        }
+                    }
+
+                    override fun onAnimationCancel(animation: Animator) {
+                    }
+
+                    override fun onAnimationRepeat(animation: Animator) {
+                    }
+                })
+            }
+
+            if (!animatorList.contains(animator)) {
+                animatorList += animator
+            }
+        }
+    }
+
+    fun start() {
         if (isAnimating()) {
             return
         }
 
-        val animate: Runnable = Runnable {
-            shimmerView.isShimmering = true
-
-            var fromX = 0f
-            var toX = (if (shimmerWidth == DEFAULT_SIMMER_WIDTH) shimmerView.width else shimmerWidth).toFloat()
-
-            if (direction == ANIMATION_DIRECTION_RTL) {
-                fromX = (if (shimmerWidth == DEFAULT_SIMMER_WIDTH) shimmerView.width else shimmerWidth).toFloat()
-                toX = 0f
-            }
-
-            val gradientWidth = if (linearGradientWidth == DEFAULT_LINEAR_GRADIENT_WIDTH.toFloat()) shimmerView.width.toFloat() else linearGradientWidth
-            shimmerView.linearGradientWidth = gradientWidth
-
-            animator = ObjectAnimator.ofFloat(shimmerView, "gradientX", fromX, toX)
-            animator!!.repeatCount = repeatCount
-            animator!!.duration = duration
-            animator!!.startDelay = startDelay
-            animator!!.addListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {
-                }
-
-                override fun onAnimationEnd(animation: Animator) {
-                    shimmerView.isShimmering = false
-
-                    if (VersionUtils.isOverAPI16()) {
-                        shimmerView.postInvalidateOnAnimation()
-                    } else {
-                        shimmerView.postInvalidate()
-                    }
-
-                    animator = null
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                }
-
-                override fun onAnimationRepeat(animation: Animator) {
-                }
-            })
-
+        val animate = Runnable {
             animatorListener?.let { listener ->
-                animator!!.addListener(listener)
+                animatorSet.addListener(listener)
             }
 
-            animator!!.start()
+            animatorSet.playTogether(animatorList as Collection<Animator>?)
+            animatorSet.start()
         }
 
-        if (!shimmerView.isSetUp) {
-            shimmerView.callback = object : ShimmerView.AnimationSetupCallback {
-                override fun onSetupAnimation(target: View) {
-                    animate.run()
+        if (!isAllViewSetUp()) {
+            for (animator in animatorList) {
+                (animator.target as ShimmerView).callback = object : ShimmerView.AnimationSetupCallback {
+                    override fun onSetupAnimation(target: View) {
+                        if (isAllViewSetUp()) {
+                            animate.run()
+                        }
+                    }
                 }
             }
         } else {
@@ -101,14 +116,29 @@ class Shimmer {
         }
     }
 
+    fun isAllViewSetUp(): Boolean {
+        if (animatorList.isEmpty()) {
+            return false
+        }
+
+        for (animator in animatorList) {
+            var shimmerView = animator.target as ShimmerView
+            if (!shimmerView.isSetUp) {
+                return false
+            }
+        }
+
+        return true
+    }
+
     fun cancel() {
-        animator?.let { animator ->
-            animator.cancel()
+        animatorSet.let { animatorSet ->
+            animatorSet.cancel()
         }
     }
 
     fun isAnimating(): Boolean {
-        return animator != null && animator!!.isRunning;
+        return animatorSet != null && animatorSet!!.isRunning
     }
 
     companion object {
