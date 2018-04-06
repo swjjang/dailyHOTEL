@@ -5,18 +5,19 @@ import android.text.SpannableStringBuilder
 import com.daily.base.BaseAnalyticsInterface
 import com.daily.base.BaseDialogViewInterface
 import com.daily.base.OnBaseEventListener
-import com.daily.dailyhotel.entity.DetailImageInformation
 import io.reactivex.Completable
 
 interface StayPreviewInterface {
+
     interface ViewInterface : BaseDialogViewInterface {
+
         fun setName(name: String?)
 
         fun setCategory(category: String?, activeReward: Boolean)
 
-        fun setImages(imageList: List<DetailImageInformation>?)
+        fun setImages(imageList: Array<String>?)
 
-        fun setRoomInformation(roomTypeCountText: String?, nightEnabled: Boolean, rangePriceVisible: Boolean, rangePriceText: String?)
+        fun setRoomInformation(roomTypeCountText: String?, nightsEnabled: Boolean, rangePriceVisible: Boolean, rangePriceText: String?)
 
         fun setReviewInformationVisible(visible: Boolean)
 
@@ -32,6 +33,7 @@ interface StayPreviewInterface {
     }
 
     interface OnEventListener : OnBaseEventListener {
+
         fun onDetailClick()
 
         fun onWishClick()
@@ -44,6 +46,7 @@ interface StayPreviewInterface {
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {
+
         fun onScreen(activity: Activity, category: String?)
 
         fun onEventBackClick(activity: Activity)
