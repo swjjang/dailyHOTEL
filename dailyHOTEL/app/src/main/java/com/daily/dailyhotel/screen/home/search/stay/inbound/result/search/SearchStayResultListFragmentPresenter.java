@@ -22,6 +22,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Category;
@@ -585,15 +586,22 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                     locationSuggestItem.latitude = location.getLatitude();
                     locationSuggestItem.longitude = location.getLongitude();
 
-                    return mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude());
+                    return mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).onErrorResumeNext(new Function<Throwable, ObservableSource<? extends GoogleAddress>>()
+                    {
+                        @Override
+                        public ObservableSource<? extends GoogleAddress> apply(Throwable throwable) throws Exception
+                        {
+                            return Observable.just(new GoogleAddress());
+                        }
+                    });
                 }
             }).flatMap(new Function<GoogleAddress, ObservableSource<Boolean>>()
             {
                 @Override
                 public ObservableSource<Boolean> apply(GoogleAddress googleAddress) throws Exception
                 {
-                    locationSuggestItem.address = googleAddress.address;
-                    locationSuggestItem.name = googleAddress.shortAddress;
+                    locationSuggestItem.address = DailyTextUtils.isTextEmpty(googleAddress.address) ? getString(R.string.label_search_nearby_empty_address) : googleAddress.address;
+                    locationSuggestItem.name = DailyTextUtils.isTextEmpty(googleAddress.shortAddress) ? getString(R.string.label_search_nearby_empty_address) : googleAddress.shortAddress;
 
                     getActivity().runOnUiThread(() -> mViewModel.setSuggest(mViewModel.getSuggest()));
 
