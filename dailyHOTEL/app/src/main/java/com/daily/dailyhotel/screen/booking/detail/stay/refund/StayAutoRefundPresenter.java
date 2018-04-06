@@ -326,7 +326,7 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
         }
 
         Intent intent = AutoRefundDialogActivity.newInstance(getActivity(), mSelectedCancelReason, mCancelReasonMessage);
-        startActivityForResult(intent, com.twoheart.dailyhotel.screen.booking.detail.hotel.StayAutoRefundActivity.REQUEST_CODE_SELECT_CANCEL_TYPE);
+        startActivityForResult(intent, StayAutoRefundActivity.REQUEST_CODE_SELECT_CANCEL_TYPE);
     }
 
     @Override
@@ -344,7 +344,7 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
         }
 
         Intent intent = BankListDialogActivity.newInstance(getActivity(), bankParcel);
-        startActivityForResult(intent, com.twoheart.dailyhotel.screen.booking.detail.hotel.StayAutoRefundActivity.REQUEST_CODE_SELECT_BANK_LIST);
+        startActivityForResult(intent, StayAutoRefundActivity.REQUEST_CODE_SELECT_BANK_LIST);
     }
 
     @Override
