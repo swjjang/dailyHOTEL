@@ -194,9 +194,7 @@ public class GourmetDetailData
                     DetailImageInformation detailImageInformation = new DetailImageInformation();
 
                     ImageMap imageMap = new ImageMap();
-                    imageMap.smallUrl = null;
-                    imageMap.mediumUrl = imgUrl + key + imageInformationData.name;
-                    imageMap.bigUrl = imgUrl + key + imageInformationData.name;
+                    imageMap.smallUrl = imageMap.mediumUrl = imageMap.bigUrl = imgUrl + key + imageInformationData.name;
 
                     detailImageInformation.caption = imageInformationData.description;
                     detailImageInformation.setImageMap(imageMap);

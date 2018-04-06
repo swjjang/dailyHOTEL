@@ -55,7 +55,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     }
 
     override fun constructorInitialize(activity: GourmetPreviewActivity) {
-        setContentView(R.layout.activity_stay_preview_data)
+        setContentView(R.layout.activity_gourmet_preview_data)
 
         gourmetRemoteImpl = GourmetRemoteImpl(activity)
         commonRemoteImpl = CommonRemoteImpl(activity)
@@ -303,7 +303,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
             viewInterface.setWish(detail.myWish)
             viewInterface.setBookingButtonText(if (soldOut) getString(R.string.label_booking_view_detail) else getString(R.string.label_preview_booking))
         } else {
-            viewInterface.setCategory(detail.category, null)
+            viewInterface.setCategory(gourmetCategory, null)
         }
     }
 
