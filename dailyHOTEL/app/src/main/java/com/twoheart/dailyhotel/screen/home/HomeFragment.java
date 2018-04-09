@@ -349,22 +349,27 @@ public class HomeFragment extends BaseMenuNavigationFragment
             case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
             case Constants.CODE_REQUEST_ACTIVITY_BONUS:
             case Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL:
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
-                {
-                    mDontReload = true;
-                    mHomeLayout.setScrollTop();
 
-                    forceRefreshing();
-                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_SEARCH)
+                switch (resultCode)
                 {
-                    onSearchClick();
-                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST)
-                {
-                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
-                    {
-                        DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
-                        mOnEventListener.onCategoryItemClick(categoryType);
-                    }
+                    case Constants.CODE_RESULT_ACTIVITY_GO_HOME:
+                        mDontReload = true;
+                        mHomeLayout.setScrollTop();
+
+                        forceRefreshing();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_GO_SEARCH:
+                        onSearchClick();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST:
+                        if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
+                        {
+                            DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+                            mOnEventListener.onCategoryItemClick(categoryType);
+                        }
+                        break;
                 }
                 break;
 

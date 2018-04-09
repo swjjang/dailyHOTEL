@@ -1734,7 +1734,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+        boolean hasRecommendAroundList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
 
         getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
 
@@ -1751,7 +1751,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+        boolean hasRecommendAroundList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
 
         if (mStayOutboundDetail.activeReward == true && mIsProvideRewardSticker == true)
         {
@@ -1966,7 +1966,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 notifyRecommendAroundList();
                 notifyRewardChanged();
 
-                boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+                boolean hasRecommendList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
 
                 mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
 

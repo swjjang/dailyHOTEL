@@ -45,7 +45,7 @@ import io.reactivex.functions.Consumer;
  */
 public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOutboundThankYouActivity, StayOutboundThankYouInterface> implements StayOutboundThankYouView.OnEventListener
 {
-    private StayOutboundThankYouAnalyticsInterface mAnalytics;
+    StayOutboundThankYouAnalyticsInterface mAnalytics;
 
     private RewardRemoteImpl mRewardRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;

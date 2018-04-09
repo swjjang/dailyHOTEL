@@ -126,14 +126,7 @@ public class DailyOverScrollViewPager extends ViewPager
                 return true;
             }
 
-            if (getAdapter() != null)
-            {
-                if (isLast() && mOverScroll > 0)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return getAdapter() != null && isLast() && mOverScroll > 0;
         }
     }
 

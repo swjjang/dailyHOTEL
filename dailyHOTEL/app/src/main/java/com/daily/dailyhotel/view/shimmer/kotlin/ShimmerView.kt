@@ -122,7 +122,7 @@ class ShimmerView : View {
         if (!isSetUp) {
             isSetUp = true
 
-            callback?.let { it.onSetupAnimation(this@ShimmerView) }
+            callback?.onSetupAnimation(this@ShimmerView)
         }
     }
 

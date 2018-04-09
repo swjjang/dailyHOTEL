@@ -64,21 +64,21 @@ import io.reactivex.functions.Consumer;
  */
 public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, EventWebInterface.ViewInterface> implements EventWebInterface.OnEventListener
 {
-    private EventWebInterface.AnalyticsInterface mAnalytics;
+    EventWebInterface.AnalyticsInterface mAnalytics;
 
-    private CommonRemoteImpl mCommonRemoteImpl;
+    CommonRemoteImpl mCommonRemoteImpl;
     private CouponRemoteImpl mCouponRemoteImpl;
 
     private EventWebActivity.EventType mEventType;
-    private CommonDateTime mCommonDateTime;
-    private String mEventName;
-    private String mEventDescription;
-    private String mEventUrl;
-    private String mImageUrl;
+    CommonDateTime mCommonDateTime;
+    String mEventName;
+    String mEventDescription;
+    String mEventUrl;
+    String mImageUrl;
 
     private String mCouponCode;
     private String mDeepLinkUrl;
-    private String mConfirmText;
+    String mConfirmText;
 
     public EventWebPresenter(@NonNull EventWebActivity activity)
     {

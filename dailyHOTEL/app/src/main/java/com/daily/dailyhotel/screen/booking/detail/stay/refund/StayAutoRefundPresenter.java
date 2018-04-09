@@ -250,10 +250,7 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
             String accountNumber = getViewInterface().getAccountNumber();
             String accountName = getViewInterface().getAccountName();
 
-            if (mSelectedBank == null || DailyTextUtils.isTextEmpty(accountNumber, accountName) == true)
-            {
-                return false;
-            }
+            return mSelectedBank != null && DailyTextUtils.isTextEmpty(accountNumber, accountName) != true;
         }
 
         return true;

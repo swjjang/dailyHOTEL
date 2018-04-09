@@ -88,7 +88,7 @@ public class SearchStaySuggestPresenter //
     ArrayList<String> mGourmetKeywordList;
     StaySuggest mLocationSuggest;
     String mKeyword;
-    private boolean mIsResearch;
+    boolean mIsResearch;
 
     DailyLocationExFactory mDailyLocationExFactory;
 

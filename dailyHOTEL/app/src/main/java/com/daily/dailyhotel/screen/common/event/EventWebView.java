@@ -33,7 +33,7 @@ import io.reactivex.Observer;
 public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListener, ActivityWebDataBinding> implements EventWebInterface.ViewInterface
 {
     private JavaScriptExtension mJavaScriptExtension;
-    private boolean mEnabledProgress = true;
+    boolean mEnabledProgress = true;
 
     public EventWebView(BaseActivity baseActivity, EventWebInterface.OnEventListener listener)
     {
