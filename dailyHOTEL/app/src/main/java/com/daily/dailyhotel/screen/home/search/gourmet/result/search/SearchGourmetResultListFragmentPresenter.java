@@ -1462,7 +1462,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             @Override
             public void run() throws Exception
             {
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
@@ -1472,7 +1472,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             @Override
             public void run() throws Exception
             {
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
@@ -1484,7 +1484,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             {
                 unLockAll();
 
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
