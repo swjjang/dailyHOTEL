@@ -612,13 +612,13 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             final int MAX_LINE = 10;
             final TrueReview trueReview = objectItem.getItem();
 
-            if (DailyTextUtils.isTextEmpty(trueReview.productName) == true)
-            {
-                holder.dataBinding.productNameTextView.setVisibility(View.GONE);
-            } else
+            if (mProductVisible && DailyTextUtils.isTextEmpty(trueReview.productName) == false)
             {
                 holder.dataBinding.productNameTextView.setVisibility(View.VISIBLE);
                 holder.dataBinding.productNameTextView.setText(trueReview.productName);
+            } else
+            {
+                holder.dataBinding.productNameTextView.setVisibility(View.GONE);
             }
 
             holder.dataBinding.ratingTextView.setText(Float.toString(trueReview.averageScore));
