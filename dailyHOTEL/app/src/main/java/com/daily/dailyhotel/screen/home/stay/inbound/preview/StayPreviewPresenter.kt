@@ -360,11 +360,11 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         }
     }
 
-    private fun getTrueReviewCountText(count: Int): SpannableStringBuilder {
+    internal fun getTrueReviewCountText(count: Int): SpannableStringBuilder {
         return getCountTextSpannableStringBuilder(getString(R.string.label_detail_truereview_count, DailyTextUtils.formatIntegerToString(count)))
     }
 
-    private fun getWishCountText(count: Int): SpannableStringBuilder {
+    internal fun getWishCountText(count: Int): SpannableStringBuilder {
         return getCountTextSpannableStringBuilder(getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(count)))
     }
 
