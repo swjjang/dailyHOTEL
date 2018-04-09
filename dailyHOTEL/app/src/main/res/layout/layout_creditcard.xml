@@ -60,7 +60,6 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView"
                 android:layout_centerVertical="true"
                 android:drawablePadding="12dp"
                 android:gravity="center"

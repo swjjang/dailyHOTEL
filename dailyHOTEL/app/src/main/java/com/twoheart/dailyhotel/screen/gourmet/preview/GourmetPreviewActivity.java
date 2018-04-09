@@ -258,7 +258,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
     private void initLayout(String placeName, String category)
     {
-        setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
+        //        setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
 
         mPreviewLayout.setPlaceName(placeName);
         mPreviewLayout.setCategory(category, null);

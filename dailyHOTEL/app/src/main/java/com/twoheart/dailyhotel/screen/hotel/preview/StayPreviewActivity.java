@@ -317,7 +317,7 @@ public class StayPreviewActivity extends BaseActivity
 
     private void initLayout(String placeName, Stay.Grade grade)
     {
-        setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
+        //        setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
 
         mPreviewLayout.setPlaceName(placeName);
         mPreviewLayout.setCategory(grade, false);
