@@ -7,7 +7,7 @@ class GourmetPreviewAnalyticsImpl : GourmetPreviewInterface.AnalyticsInterface {
 
     override fun onScreen(activity: Activity, category: String?) {
         val params = hashMapOf(
-                AnalyticsManager.KeyType.PLACE_TYPE to AnalyticsManager.ValueType.STAY
+                AnalyticsManager.KeyType.PLACE_TYPE to AnalyticsManager.ValueType.GOURMET
                 , AnalyticsManager.KeyType.CATEGORY to category
         )
 
