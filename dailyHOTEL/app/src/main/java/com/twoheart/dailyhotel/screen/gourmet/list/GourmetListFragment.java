@@ -10,6 +10,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -25,7 +26,6 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
-import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -87,7 +87,7 @@ public class GourmetListFragment extends PlaceListFragment
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REFRESH)
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH)
                 {
                     if (data != null && data.hasExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                     {

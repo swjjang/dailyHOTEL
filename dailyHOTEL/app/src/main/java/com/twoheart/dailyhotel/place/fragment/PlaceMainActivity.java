@@ -359,7 +359,7 @@ public abstract class PlaceMainActivity extends BaseActivity
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                         if (data == null)
                         {
                             mDontReloadAtOnResume = false;
