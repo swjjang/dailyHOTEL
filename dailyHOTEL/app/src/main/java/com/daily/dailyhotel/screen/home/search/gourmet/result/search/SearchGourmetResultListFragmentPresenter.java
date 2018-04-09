@@ -502,10 +502,10 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
             GourmetSuggest.Location locationSuggestItem = (GourmetSuggest.Location) suggest.getSuggestItem();
 
-            observable = searchMyLocation(null).onErrorResumeNext(new Function<Throwable, ObservableSource<? extends Location>>()
+            observable = searchMyLocation(null).onErrorResumeNext(new Function<Throwable, ObservableSource<Location>>()
             {
                 @Override
-                public ObservableSource<? extends Location> apply(Throwable throwable) throws Exception
+                public ObservableSource<Location> apply(Throwable throwable) throws Exception
                 {
                     return Observable.just(new Location("provider"));
                 }
@@ -522,10 +522,10 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                     locationSuggestItem.latitude = location.getLatitude();
                     locationSuggestItem.longitude = location.getLongitude();
 
-                    return mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).onErrorResumeNext(new Function<Throwable, ObservableSource<? extends GoogleAddress>>()
+                    return mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).onErrorResumeNext(new Function<Throwable, ObservableSource<GoogleAddress>>()
                     {
                         @Override
-                        public ObservableSource<? extends GoogleAddress> apply(Throwable throwable) throws Exception
+                        public ObservableSource<GoogleAddress> apply(Throwable throwable) throws Exception
                         {
                             return Observable.just(new GoogleAddress());
                         }
