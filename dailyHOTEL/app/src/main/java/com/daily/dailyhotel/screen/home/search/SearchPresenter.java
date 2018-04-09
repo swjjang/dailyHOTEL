@@ -1518,14 +1518,21 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             getViewInterface().setSearchStayButtonEnabled(true);
         }
 
-        StayBookDateTime stayBookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
+        StayBookDateTime bookDateTime = mSearchViewModel.stayViewModel.getBookDateTime();
 
-        getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-            , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-            , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-            , stayBookDateTime.getNights()));
+        if (bookDateTime == null)
+        {
+            setRefresh(true);
+            onRefresh(true);
+        } else
+        {
+            getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                , bookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , bookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , bookDateTime.getNights()));
 
-        getViewInterface().showSearchStay();
+            getViewInterface().showSearchStay();
+        }
     }
 
     void showSearchStayOutbound()
@@ -1542,14 +1549,21 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             getViewInterface().setSearchStayOutboundButtonEnabled(true);
         }
 
-        StayBookDateTime stayBookDateTime = mSearchViewModel.stayOutboundViewModel.getBookDateTime();
+        StayBookDateTime bookDateTime = mSearchViewModel.stayOutboundViewModel.getBookDateTime();
 
-        getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-            , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-            , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-            , stayBookDateTime.getNights()));
+        if (bookDateTime == null)
+        {
+            setRefresh(true);
+            onRefresh(true);
+        } else
+        {
+            getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                , bookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , bookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , bookDateTime.getNights()));
 
-        getViewInterface().showSearchStayOutbound();
+            getViewInterface().showSearchStayOutbound();
+        }
     }
 
     void showSearchGourmet()
@@ -1568,11 +1582,18 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             getViewInterface().setSearchGourmetButtonEnabled(true);
         }
 
-        GourmetBookDateTime gourmetBookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
+        GourmetBookDateTime bookDateTime = mSearchViewModel.gourmetViewModel.getBookDateTime();
 
-        getViewInterface().setSearchGourmetCalendarText(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
+        if (bookDateTime == null)
+        {
+            setRefresh(true);
+            onRefresh(true);
+        } else
+        {
+            getViewInterface().setSearchGourmetCalendarText(bookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
 
-        getViewInterface().showSearchGourmet();
+            getViewInterface().showSearchGourmet();
+        }
     }
 
     void startSearchStayResultTab(StaySuggest suggest, String checkInDateTime, String checkOutDateTime, String inputKeyWord)
