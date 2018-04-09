@@ -578,11 +578,23 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
             StaySuggest.Location locationSuggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
-            observable = searchMyLocation(null).flatMap(new Function<Location, ObservableSource<GoogleAddress>>()
+            observable = searchMyLocation(null).onErrorResumeNext(new Function<Throwable, ObservableSource<? extends Location>>()
+            {
+                @Override
+                public ObservableSource<? extends Location> apply(Throwable throwable) throws Exception
+                {
+                    return Observable.just(new Location("provider"));
+                }
+            }).flatMap(new Function<Location, ObservableSource<GoogleAddress>>()
             {
                 @Override
                 public ObservableSource<GoogleAddress> apply(Location location) throws Exception
                 {
+                    if (location.getLongitude() == 0.0d && location.getLatitude() == 0.0d)
+                    {
+                        return Observable.just(new GoogleAddress());
+                    }
+
                     locationSuggestItem.latitude = location.getLatitude();
                     locationSuggestItem.longitude = location.getLongitude();
 
@@ -1601,7 +1613,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void run() throws Exception
             {
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
@@ -1611,7 +1623,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void run() throws Exception
             {
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
@@ -1623,7 +1635,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             {
                 unLockAll();
 
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
