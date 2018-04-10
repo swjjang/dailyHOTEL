@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+@Deprecated
 public class EventListAdapter extends ArrayAdapter<Event>
 {
     private ArrayList<Event> mArrayList;

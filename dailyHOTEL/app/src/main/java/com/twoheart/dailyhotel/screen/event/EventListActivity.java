@@ -26,7 +26,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
-
+@Deprecated
 public class EventListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
     View mEmptyView;
