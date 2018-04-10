@@ -8,11 +8,11 @@ import com.twoheart.dailyhotel.network.model.Event
 
 interface EventListInterface {
     interface ViewInterface : BaseDialogViewInterface {
-        fun onEventList(eventList:MutableList<Event>)
+        fun onEventList(eventList: MutableList<Event>)
     }
 
     interface OnEventListener : OnBaseEventListener {
-        fun onItemClick(event : Event)
+        fun onItemClick(event: Event)
         fun onHomeButtonClick()
     }
 

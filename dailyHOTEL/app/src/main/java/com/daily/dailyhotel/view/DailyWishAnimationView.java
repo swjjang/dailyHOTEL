@@ -122,7 +122,7 @@ public class DailyWishAnimationView extends ScrollView
         mAnimatorSet = new AnimatorSet();
         mAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
 
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return new Observable<Boolean>()
         {
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
@@ -165,7 +165,5 @@ public class DailyWishAnimationView extends ScrollView
                 mAnimatorSet.start();
             }
         };
-
-        return observable;
     }
 }
