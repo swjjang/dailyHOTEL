@@ -1,9 +1,8 @@
-package com.daily.dailyhotel.screen.copy.kotlin
+package com.daily.dailyhotel.screen.event.list.kotlin
 
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.daily.base.BaseDialogView
-import com.daily.dailyhotel.screen.event.list.kotlin.EventListAdapter
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityEventListDataBinding
 import com.twoheart.dailyhotel.network.model.Event
