@@ -1175,14 +1175,17 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
     {
         Map<String, Object> queryMap = new HashMap<>();
 
-        switch (mViewModel.listType)
+        if (mViewModel.listType != null)
         {
-            case SEARCH:
-                queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
-                break;
+            switch (mViewModel.listType)
+            {
+                case SEARCH:
+                    queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
 
         Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mViewModel.getBookDateTime());

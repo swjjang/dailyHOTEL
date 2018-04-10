@@ -569,14 +569,17 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         Map<String, Object> queryMap = new HashMap<>();
 
-        switch (mListType)
+        if (mListType != null)
         {
-            case SEARCH:
-                queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
-                break;
+            switch (mListType)
+            {
+                case SEARCH:
+                    queryMap.put("saleSearchType", "SHOW_SOLD_OUT");
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
 
         Map<String, Object> bookDateTimeQueryMap = getBookDateTimeQueryMap(mStayBookDateTime);
