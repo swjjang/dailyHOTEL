@@ -34,8 +34,13 @@ import java.util.*
 class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     : BaseExceptionPresenter<GourmetPreviewActivity, GourmetPreviewInterface.ViewInterface>(activity), GourmetPreviewInterface.OnEventListener {
 
-    private lateinit var gourmetRemoteImpl: GourmetRemoteImpl
-    private lateinit var commonRemoteImpl: CommonRemoteImpl
+    private val gourmetRemoteImpl: GourmetRemoteImpl by lazy {
+        GourmetRemoteImpl()
+    }
+
+    private val commonRemoteImpl: CommonRemoteImpl by lazy {
+        CommonRemoteImpl()
+    }
 
     private lateinit var bookDateTime: GourmetBookDateTime
     private var gourmetIndex: Int = 0
@@ -56,9 +61,6 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
 
     override fun constructorInitialize(activity: GourmetPreviewActivity) {
         setContentView(R.layout.activity_gourmet_preview_data)
-
-        gourmetRemoteImpl = GourmetRemoteImpl()
-        commonRemoteImpl = CommonRemoteImpl()
 
         isRefresh = true
     }
@@ -221,6 +223,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
         startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.GOURMET
                 , gourmetIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), GourmetPreviewActivity.REQUEST_CODE_WISH_DIALOG)
     }
+
 
     override fun onKakaoClick() {
         if (!::detail.isInitialized || lock()) {

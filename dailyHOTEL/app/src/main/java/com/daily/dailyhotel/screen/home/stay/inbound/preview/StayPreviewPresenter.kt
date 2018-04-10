@@ -34,8 +34,13 @@ import java.util.*
 class StayPreviewPresenter(activity: StayPreviewActivity)
     : BaseExceptionPresenter<StayPreviewActivity, StayPreviewInterface.ViewInterface>(activity), StayPreviewInterface.OnEventListener {
 
-    private lateinit var stayRemoteImpl: StayRemoteImpl
-    private lateinit var commonRemoteImpl: CommonRemoteImpl
+    private val stayRemoteImpl: StayRemoteImpl by lazy {
+        StayRemoteImpl()
+    }
+
+    private val commonRemoteImpl: CommonRemoteImpl by lazy {
+        CommonRemoteImpl()
+    }
 
     private lateinit var bookDateTime: StayBookDateTime
     private var stayIndex: Int = 0
@@ -56,9 +61,6 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     override fun constructorInitialize(activity: StayPreviewActivity) {
         setContentView(R.layout.activity_stay_preview_data)
-
-        stayRemoteImpl = StayRemoteImpl()
-        commonRemoteImpl = CommonRemoteImpl()
 
         isRefresh = true
     }
