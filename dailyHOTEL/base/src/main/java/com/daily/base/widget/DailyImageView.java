@@ -2,6 +2,7 @@ package com.daily.base.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatImageView;
@@ -34,7 +35,9 @@ public class DailyImageView extends AppCompatImageView
             super.setImageResource(resId);
         } else
         {
-            super.setImageDrawable(AppCompatDrawableManager.get().getDrawable(getContext(), resId));
+            Drawable drawable = resId == 0 ? null : AppCompatDrawableManager.get().getDrawable(getContext(), resId);
+
+            super.setImageDrawable(drawable);
         }
     }
 }
