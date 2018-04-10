@@ -67,8 +67,9 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
 //            }
 
             ObjectItem.TYPE_FOOTER_VIEW -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.list_row_couponlist_footer, parent, false)
-                return FooterViewHolder(view)
+                val viewDataBinding = DataBindingUtil.inflate<LayoutCouponboxCouponDataBinding>(
+                        LayoutInflater.from(parent.context), R.layout.list_row_coupon_list_footer_data, parent, false)
+                return FooterViewHolder(viewDataBinding)
             }
 
             else -> {
@@ -99,4 +100,11 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
         }
     }
 
+    private inner class ItemViewHolder(val dataBinding: LayoutCouponboxCouponDataBinding): RecyclerView.ViewHolder(dataBinding.root) {
+
+    }
+
+    private inner class FooterViewHolder(val dataBinding: LayoutListRowCouponListFooterDataBinding) : RecyclerView.ViewHolder(dataBinding.root) {
+
+    }
 }
