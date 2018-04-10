@@ -25,6 +25,7 @@ import java.util.List;
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
+@Deprecated
 public class CouponListLayout extends BaseLayout
 {
 
