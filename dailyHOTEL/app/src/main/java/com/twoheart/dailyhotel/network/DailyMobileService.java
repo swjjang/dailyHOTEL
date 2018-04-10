@@ -1134,4 +1134,8 @@ public interface DailyMobileService
     @POST("{mobileAPI}")
     Observable<BaseDto<Object>> getStayReceiptByEmail(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                       @Query("emails") String emails);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<Event>> getEventList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("storeType") String store);
 }

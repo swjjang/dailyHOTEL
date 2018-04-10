@@ -12,12 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
+import com.daily.dailyhotel.screen.copy.kotlin.EventListActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
-import com.twoheart.dailyhotel.screen.event.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -152,6 +152,10 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
         lockUiComponent();
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
+        //        baseActivity.startActivityForResult(EventListActivity.newInstance(baseActivity//
+        //            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST);
+
+
         baseActivity.startActivityForResult(EventListActivity.newInstance(baseActivity//
             , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST);
     }
