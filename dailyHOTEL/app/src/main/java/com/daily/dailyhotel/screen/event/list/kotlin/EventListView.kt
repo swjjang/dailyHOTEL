@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.screen.copy.kotlin
 
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.daily.base.BaseDialogView
 import com.daily.dailyhotel.screen.event.list.kotlin.EventListAdapter
@@ -16,6 +17,7 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
     override fun setContentView(viewDataBinding: ActivityEventListDataBinding) {
         initToolbar(viewDataBinding)
 
+        viewDataBinding.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         EdgeEffectColor.setEdgeGlowColor(
                 viewDataBinding.recyclerView,
                 context.resources.getColor(R.color.default_over_scroll_edge)
