@@ -38,7 +38,7 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
     }
 
     override fun onEventList(eventList: MutableList<Event>) {
-        if (eventListAdapter == null)
+        if (!::eventListAdapter.isInitialized)
         {
             eventListAdapter = EventListAdapter(context, mutableListOf())
         } else {
@@ -50,7 +50,7 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
             eventListener.onItemClick(event)
         }
 
-        if (eventList?.size == 0)
+        if (eventList.size == 0)
         {
             viewDataBinding.recyclerView.visibility = View.GONE
             viewDataBinding.emptyLayout.visibility = View.VISIBLE
