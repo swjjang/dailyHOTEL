@@ -394,26 +394,27 @@ public class StayOutboundRefundPresenter //
 
         try
         {
-            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundRefundDetail.checkInTime.split(":")[0]);
             String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
+            String checkInTime = mStayOutboundRefundDetail.checkInTime;
 
             SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
             checkInDateSpannableString.setSpan( //
-                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                 checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundRefundDetail.checkOutTime.split(":")[0]);
             String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
+            String checkOutTime = mStayOutboundRefundDetail.checkOutTime;
 
             SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
             checkOutDateSpannableString.setSpan( //
-                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                 checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
                 , DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+
             getViewInterface().setBookingDate(checkInDateSpannableString, checkOutDateSpannableString, nights);
         } catch (Exception e)
         {

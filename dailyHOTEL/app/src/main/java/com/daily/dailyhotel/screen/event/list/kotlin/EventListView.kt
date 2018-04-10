@@ -46,10 +46,7 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
             eventListAdapter.clear()
         }
 
-        eventListAdapter.onClickListener = View.OnClickListener {
-            var event = it.tag as Event
-            eventListener.onItemClick(event)
-        }
+        eventListAdapter.onClickListener = View.OnClickListener { eventListener.onItemClick(it.tag as Event) }
 
         if (eventList.size == 0) {
             viewDataBinding.recyclerView.visibility = View.GONE
