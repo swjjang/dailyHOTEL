@@ -25,7 +25,9 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
 
         viewDataBinding.homeButtonView.setOnClickListener { eventListener.onHomeButtonClick() }
 
-        eventListAdapter = EventListAdapter(context, mutableListOf())
+        if (!::eventListAdapter.isInitialized) {
+            eventListAdapter = EventListAdapter(context, mutableListOf())
+        }
     }
 
     override fun setToolbarTitle(title: String?) {
@@ -38,8 +40,7 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
     }
 
     override fun onEventList(eventList: MutableList<Event>) {
-        if (!::eventListAdapter.isInitialized)
-        {
+        if (!::eventListAdapter.isInitialized) {
             eventListAdapter = EventListAdapter(context, mutableListOf())
         } else {
             eventListAdapter.clear()
@@ -50,8 +51,7 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
             eventListener.onItemClick(event)
         }
 
-        if (eventList.size == 0)
-        {
+        if (eventList.size == 0) {
             viewDataBinding.recyclerView.visibility = View.GONE
             viewDataBinding.emptyLayout.visibility = View.VISIBLE
         } else {
