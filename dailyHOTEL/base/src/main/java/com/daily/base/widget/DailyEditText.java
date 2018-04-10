@@ -172,6 +172,7 @@ public class DailyEditText extends AppCompatEditText
         return super.onTouchEvent(event);
     }
 
+    @SuppressLint("RestrictedApi")
     private void setDeleteDrawable()
     {
         Drawable[] drawables = getCompoundDrawables();
@@ -330,7 +331,7 @@ public class DailyEditText extends AppCompatEditText
         super.setTypeface(typeface);
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "ResourceType"})
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
     {
@@ -340,11 +341,32 @@ public class DailyEditText extends AppCompatEditText
         } else
         {
             Context context = getContext();
+            Drawable leftDrawable = null;
+            Drawable topDrawable = null;
+            Drawable rightDrawable = null;
+            Drawable bottomDrawable = null;
 
-            super.setCompoundDrawablesWithIntrinsicBounds(AppCompatDrawableManager.get().getDrawable(context, left)//
-                , AppCompatDrawableManager.get().getDrawable(context, top)//
-                , AppCompatDrawableManager.get().getDrawable(context, right)//
-                , AppCompatDrawableManager.get().getDrawable(context, bottom));
+            if (left > 0)
+            {
+                leftDrawable = AppCompatDrawableManager.get().getDrawable(context, left);
+            }
+
+            if (top > 0)
+            {
+                topDrawable = AppCompatDrawableManager.get().getDrawable(context, top);
+            }
+
+            if (right > 0)
+            {
+                rightDrawable = AppCompatDrawableManager.get().getDrawable(context, right);
+            }
+
+            if (bottom > 0)
+            {
+                bottomDrawable = AppCompatDrawableManager.get().getDrawable(context, bottom);
+            }
+
+            super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
         }
     }
 
