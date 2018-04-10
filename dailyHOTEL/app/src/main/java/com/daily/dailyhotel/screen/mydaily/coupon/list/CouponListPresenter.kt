@@ -17,7 +17,7 @@ class CouponListPresenter(activity: CouponListActivity)//
     }
 
     override fun constructorInitialize(activity: CouponListActivity) {
-        setContentView(R.layout.activity_copy_data)
+        setContentView(R.layout.activity_coupon_list_data)
 
         isRefresh = true
     }
