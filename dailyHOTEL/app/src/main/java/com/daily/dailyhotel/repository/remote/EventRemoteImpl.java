@@ -1,8 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.EventInterface;
 import com.twoheart.dailyhotel.Setting;
@@ -20,9 +17,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class EventRemoteImpl extends BaseRemoteImpl implements EventInterface
 {
-    public EventRemoteImpl(@NonNull Context context)
+    public EventRemoteImpl()
     {
-        super(context);
+        super();
     }
 
     @Override

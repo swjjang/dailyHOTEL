@@ -23,7 +23,7 @@ class EventListPresenter(activity: EventListActivity)//
     private var dailyDeepLink: DailyDeepLink? = null
 
     private val eventRemoteImpl: EventRemoteImpl by lazy {
-        EventRemoteImpl(getActivity())
+        EventRemoteImpl()
     }
 
     override fun createInstanceViewInterface(): EventListInterface.ViewInterface {
