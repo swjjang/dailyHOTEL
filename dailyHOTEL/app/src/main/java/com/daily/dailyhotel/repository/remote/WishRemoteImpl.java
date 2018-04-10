@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.WishInterface;
@@ -31,11 +30,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
 {
-    public WishRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<List<RecentlyPlace>> getHomeWishList()
     {
@@ -155,17 +149,17 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
     }
 
     @Override
-    public Observable<List<StayOutbound>> getStayOutboundWishList()
+    public Observable<List<StayOutbound>> getStayOutboundWishList(Context context)
     {
         final int MAX_VALUE = 100;
 
-        return getStayOutboundWishList(MAX_VALUE);
+        return getStayOutboundWishList(context, MAX_VALUE);
     }
 
     @Override
-    public Observable<List<StayOutbound>> getStayOutboundWishList(int maxCount)
+    public Observable<List<StayOutbound>> getStayOutboundWishList(Context context, int maxCount)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems"//
             : "NDQkNzUkMzUkNDckODQkODgkODUkMjIkMjgkMjgkNyQzMyQ2NCQyOSQxMDEkNzIk$RTYzREQEyMURBMzI5QzI4RUGQwMTVDXZBRIUUxQUYZyMTgyRDNCANTzI1OTlEMTZFCMzZGOUHU3MTgyMEY4RjYM4RjY5BUMzIH1OQ=S=$";
@@ -201,9 +195,9 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
     }
 
     @Override
-    public Observable<WishResult> addStayOutboundWish(int wishIndex)
+    public Observable<WishResult> addStayOutboundWish(Context context, int wishIndex)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems/{stayIndex}/add"//
             : "OTUkMTIyJDY3JDExOSQ3MSQxMyQ2NCQxMzQkOTQkNTMkNDYkODgkMTExJDYwJDgxJDUk$REEzNQzg2RDJERXkRFMkQ0MzJGNDk5RjQzQjBBNTdDOUYzMGDdGQ0U4DQUMzMFDYwNzQJwNjVXBMUDE4MDAk2NjREOTWExMEEyNEZFFNkRSGNzQ0RDBRFODhCNkQ5NEZCMKDNGNZTEzNTUD1$";
@@ -229,9 +223,9 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
     }
 
     @Override
-    public Observable<WishResult> removeStayOutboundWish(int wishIndex)
+    public Observable<WishResult> removeStayOutboundWish(Context context, int wishIndex)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems/{stayIndex}/remove"//
             : "MiQ5NyQ2NSQ5MyQxMzEkOTMkNjgkMTAyJDEyNyQ2NyQxJDEzNyQxMTIkODIkMTQxJDY0JA==$MYzZk4MUZENzU0MDg0NjkwMTk2QzNERUNCRDRCMkY1QkNCMEJFNDEyOTE2MTcwNkCI3BRWUMY0RDk5M0ZCQAUVFREZCQ0Y0MEEHE4Q0E1EMREM2Q0RNDMzNBMkU0N0M2QjkyVQjNFODZIBCD$";
@@ -261,6 +255,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
      *
      * @return
      */
+    @Override
     public Observable<WishCount> getWishCount()
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes"//
@@ -293,9 +288,10 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
      *
      * @return
      */
-    public Observable<Integer> getStayOutboundWishCount()
+    @Override
+    public Observable<Integer> getStayOutboundWishCount(Context context)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishes"//
             : "MzUkODMkMjgkMjAkMjUkODMkNDIkODckNTMkMjckMjckMTMkNiQ0OCQ0MSQxNiQ=$NDRBMDFlCQzZBOSDXQ5MDlDKMEY2FMSUUJDRRDRGMjFNDFOTNcJyQjM1QjM4NQjI1RTc1NEM2NzZEQUVDQTdBRjBGNkUOwMLDMI1OQ==$";

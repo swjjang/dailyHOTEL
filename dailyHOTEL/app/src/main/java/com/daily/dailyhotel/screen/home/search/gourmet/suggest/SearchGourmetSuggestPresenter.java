@@ -113,11 +113,11 @@ public class SearchGourmetSuggestPresenter //
 
         mAnalytics = new SearchGourmetSuggestAnalyticsImpl();
 
-        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
-        mSuggestLocalImpl = new SuggestLocalImpl(activity);
-        mRecentlyRemoteImpl = new RecentlyRemoteImpl(activity);
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
-        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
+        mSuggestRemoteImpl = new SuggestRemoteImpl();
+        mSuggestLocalImpl = new SuggestLocalImpl();
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
@@ -311,8 +311,8 @@ public class SearchGourmetSuggestPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET) //
-            , mSuggestLocalImpl.getRecentlyGourmetSuggestList(10), new BiFunction<ArrayList<RecentlyDbPlace>, List<GourmetSuggest>, List<GourmetSuggest>>()
+        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(getActivity(), Constants.ServiceType.GOURMET) //
+            , mSuggestLocalImpl.getRecentlyGourmetSuggestList(getActivity(), 10), new BiFunction<ArrayList<RecentlyDbPlace>, List<GourmetSuggest>, List<GourmetSuggest>>()
             {
                 @Override
                 public List<GourmetSuggest> apply(ArrayList<RecentlyDbPlace> placeList, List<GourmetSuggest> searchList) throws Exception
@@ -486,7 +486,7 @@ public class SearchGourmetSuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword) //
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(getActivity(), visitDate, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()) //
                 .subscribe(new Consumer<List<GourmetSuggest>>()
                 {
@@ -549,7 +549,7 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(getActivity(), gourmetSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -587,7 +587,7 @@ public class SearchGourmetSuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(gourmetSuggest, mKeyword) //
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(getActivity(), gourmetSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -649,7 +649,7 @@ public class SearchGourmetSuggestPresenter //
         {
             GourmetSuggest.Gourmet gourmet = (GourmetSuggest.Gourmet) suggestItem;
 
-            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.GOURMET, gourmet.index) //
+            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(getActivity(), Constants.ServiceType.GOURMET, gourmet.index) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -676,7 +676,7 @@ public class SearchGourmetSuggestPresenter //
         } else
         {
             // 최근 검색어
-            addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyGourmetSuggest(gourmetSuggest) //
+            addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyGourmetSuggest(getActivity(), gourmetSuggest) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -811,7 +811,7 @@ public class SearchGourmetSuggestPresenter //
                                 return;
                             }
 
-                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(mLocationSuggest, mKeyword) //
+                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(getActivity(), mLocationSuggest, mKeyword) //
                                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                                 {
                                     @Override
@@ -846,7 +846,7 @@ public class SearchGourmetSuggestPresenter //
                                 return;
                             }
 
-                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(mLocationSuggest, mKeyword) //
+                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyGourmetSuggest(getActivity(), mLocationSuggest, mKeyword) //
                                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                                 {
                                     @Override

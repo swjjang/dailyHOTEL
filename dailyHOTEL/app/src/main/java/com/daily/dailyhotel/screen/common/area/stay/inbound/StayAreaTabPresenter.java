@@ -85,7 +85,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
 
         mAnalytics = new StayAreaTabAnalyticsImpl();
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
 
         initViewModel(activity);
 
@@ -258,7 +258,7 @@ public class StayAreaTabPresenter extends BaseExceptionPresenter<StayAreaTabActi
             @Override
             public ObservableSource<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> apply(Boolean result) throws Exception
             {
-                return mStayRemoteImpl.getRegionList(mStayAreaViewModel.categoryType);
+                return mStayRemoteImpl.getRegionList(getActivity(), mStayAreaViewModel.categoryType);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>>()
         {

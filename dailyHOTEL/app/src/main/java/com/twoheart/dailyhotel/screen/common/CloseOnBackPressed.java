@@ -51,7 +51,7 @@ public class CloseOnBackPressed
 
     public Observable<Boolean> onBackPressed()
     {
-        return new CartLocalImpl(mActivity).hasGourmetCart().observeOn(AndroidSchedulers.mainThread()).map(new Function<Boolean, Boolean>()
+        return new CartLocalImpl().hasGourmetCart(mActivity).observeOn(AndroidSchedulers.mainThread()).map(new Function<Boolean, Boolean>()
         {
             @Override
             public Boolean apply(Boolean hasGourmetCart) throws Exception

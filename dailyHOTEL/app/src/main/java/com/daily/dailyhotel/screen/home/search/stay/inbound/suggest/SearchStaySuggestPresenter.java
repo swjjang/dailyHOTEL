@@ -88,7 +88,7 @@ public class SearchStaySuggestPresenter //
     ArrayList<String> mGourmetKeywordList;
     StaySuggest mLocationSuggest;
     String mKeyword;
-    private boolean mIsResearch;
+    boolean mIsResearch;
 
     DailyLocationExFactory mDailyLocationExFactory;
 
@@ -130,11 +130,11 @@ public class SearchStaySuggestPresenter //
 
         mAnalytics = new SearchStaySuggestAnalyticsImpl();
 
-        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
-        mSuggestLocalImpl = new SuggestLocalImpl(activity);
-        mRecentlyRemoteImpl = new RecentlyRemoteImpl(activity);
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
-        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
+        mSuggestRemoteImpl = new SuggestRemoteImpl();
+        mSuggestLocalImpl = new SuggestLocalImpl();
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
@@ -360,8 +360,8 @@ public class SearchStaySuggestPresenter //
         screenLock(showProgress);
 
 
-        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL) //
-            , mSuggestLocalImpl.getRecentlyStaySuggestList(10) //
+        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.getRecentlyTypeList(getActivity(), Constants.ServiceType.HOTEL) //
+            , mSuggestLocalImpl.getRecentlyStaySuggestList(getActivity(), 10) //
             , new BiFunction<ArrayList<RecentlyDbPlace>, List<StaySuggest>, List<StaySuggest>>()
             {
                 @Override
@@ -565,7 +565,7 @@ public class SearchStaySuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByStay(checkInDate, nights, keyword) //
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestByStay(getActivity(), checkInDate, nights, keyword) //
                 .delaySubscription(500, TimeUnit.MILLISECONDS).flatMap(new Function<List<StaySuggest>, ObservableSource<List>>()
                 {
                     @Override
@@ -651,12 +651,12 @@ public class SearchStaySuggestPresenter //
 
     Observable getGourmetSuggestList(String visitDate, String keyword)
     {
-        return mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword).observeOn(Schedulers.io());
+        return mSuggestRemoteImpl.getSuggestsByGourmet(getActivity(), visitDate, keyword).observeOn(Schedulers.io());
     }
 
     Observable getStayOutboundSuggestList(String keyword)
     {
-        return mSuggestRemoteImpl.getSuggestsByStayOutbound(keyword).observeOn(Schedulers.io());
+        return mSuggestRemoteImpl.getSuggestsByStayOutbound(getActivity(), keyword).observeOn(Schedulers.io());
     }
 
     @Override
@@ -672,7 +672,7 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(getActivity(), staySuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -714,7 +714,7 @@ public class SearchStaySuggestPresenter //
         {
             StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.DIRECT, new StaySuggest.Direct(gourmetSuggest.getText1()));
 
-            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
+            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(getActivity(), staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -765,7 +765,7 @@ public class SearchStaySuggestPresenter //
         {
             StaySuggest staySuggest = new StaySuggest(StaySuggest.MenuType.DIRECT, new StaySuggest.Direct(stayOutboundSuggest.display));
 
-            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
+            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(getActivity(), staySuggest, mKeyword) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -812,7 +812,7 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(staySuggest, mKeyword) //
+        addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(getActivity(), staySuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -896,7 +896,7 @@ public class SearchStaySuggestPresenter //
         {
             StaySuggest.Stay stay = (StaySuggest.Stay) suggestItem;
 
-            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, stay.index) //
+            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(getActivity(), Constants.ServiceType.HOTEL, stay.index) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -923,7 +923,7 @@ public class SearchStaySuggestPresenter //
         } else
         {
             // 최근 검색어
-            addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyStaySuggest(staySuggest) //
+            addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyStaySuggest(getActivity(), staySuggest) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -1123,7 +1123,7 @@ public class SearchStaySuggestPresenter //
 
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
-                                addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(mLocationSuggest, mKeyword) //
+                                addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(getActivity(), mLocationSuggest, mKeyword) //
                                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                                     {
                                         @Override
@@ -1183,7 +1183,7 @@ public class SearchStaySuggestPresenter //
                                 return;
                             }
 
-                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(mLocationSuggest, mKeyword) //
+                            addCompositeDisposable(mSuggestLocalImpl.addRecentlyStaySuggest(getActivity(), mLocationSuggest, mKeyword) //
                                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                                 {
                                     @Override

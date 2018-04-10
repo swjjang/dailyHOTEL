@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
@@ -17,19 +19,19 @@ import io.reactivex.Observable;
 public interface BookingInterface
 {
     // Stay Outbound 예약 리스트
-    Observable<List<Booking>> getStayOutboundBookingList();
+    Observable<List<Booking>> getStayOutboundBookingList(Context context);
 
     // 예약 리스트
     Observable<List<Booking>> getBookingList();
 
     // 예약 리스트
-    Observable<Boolean> getStayOutboundHideBooking(int reservationIndex);
+    Observable<Boolean> getStayOutboundHideBooking(Context context, int reservationIndex);
 
     // 해외 예약 상세
-    Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(int reservationIndex);
+    Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(Context context, int reservationIndex);
 
     // 해외 예약 상세
-    Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(String aggregationId);
+    Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(Context context, String aggregationId);
 
     // 스테이 예약 상세
     Observable<StayBookingDetail> getStayBookingDetail(String aggregationId);
@@ -71,5 +73,5 @@ public interface BookingInterface
     Observable<List<BookingCancel>> getBookingCancelList();
 
     // Stay Outbound 취소내역 리스트
-    Observable<List<BookingCancel>> getStayOutboundBookingCancelList();
+    Observable<List<BookingCancel>> getStayOutboundBookingCancelList(Context context);
 }

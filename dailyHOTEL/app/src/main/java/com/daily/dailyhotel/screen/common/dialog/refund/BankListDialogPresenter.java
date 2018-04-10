@@ -57,7 +57,7 @@ public class BankListDialogPresenter extends BaseMultiWindowPresenter<BankListDi
 
         mAnalytics = new BankListDialogAnalyticsImpl();
 
-        mRefundRemoteImpl = new RefundRemoteImpl(activity);
+        mRefundRemoteImpl = new RefundRemoteImpl();
 
         setRefresh(true);
     }

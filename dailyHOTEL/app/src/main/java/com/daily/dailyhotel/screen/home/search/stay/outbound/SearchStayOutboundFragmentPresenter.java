@@ -73,9 +73,9 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     {
         setAnalytics(new SearchStayOutboundFragmentAnalyticsImpl());
 
-        mSearchLocalImpl = new SearchLocalImpl(activity);
-        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
-        mSuggestLocalImpl = new SuggestLocalImpl(activity);
+        mSearchLocalImpl = new SearchLocalImpl();
+        mSuggestRemoteImpl = new SuggestRemoteImpl();
+        mSuggestLocalImpl = new SuggestLocalImpl();
 
         initViewModel(activity);
 
@@ -214,7 +214,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
 
         StayOutboundSuggest suggest = recentlyHistory.stayOutboundSuggest;
 
-        addCompositeDisposable(mSearchLocalImpl.deleteStayObSearchResultHistory(suggest).observeOn(AndroidSchedulers.mainThread())//
+        addCompositeDisposable(mSearchLocalImpl.deleteStayObSearchResultHistory(getActivity(), suggest).observeOn(AndroidSchedulers.mainThread())//
             .flatMap(new Function<Boolean, ObservableSource<List<StayObSearchResultHistory>>>()
             {
                 @Override
@@ -224,7 +224,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
 
                     mAnalytics.onEventRecentlyHistoryDeleteClick(getActivity(), suggest.display);
 
-                    return mSearchLocalImpl.getStayObSearchResultHistoryList(mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
+                    return mSearchLocalImpl.getStayObSearchResultHistoryList(getActivity(), mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayObSearchResultHistory>>()
             {
@@ -262,7 +262,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     @Override
     public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
     {
-        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, stayOutboundSuggest.display) //
+        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(getActivity(), stayOutboundSuggest, stayOutboundSuggest.display) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -289,7 +289,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
         final int RECENTLY_HISTORY_MAX_COUNT = 3;
         CommonDateTime commonDateTime = mCommonDateTimeViewModel.commonDateTime;
 
-        addCompositeDisposable(mSearchLocalImpl.getStayObSearchResultHistoryList(commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
+        addCompositeDisposable(mSearchLocalImpl.getStayObSearchResultHistoryList(getActivity(), commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayObSearchResultHistory>>()
             {
                 @Override
@@ -322,7 +322,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
 
     void onPopularAreaRefresh()
     {
-        addCompositeDisposable(mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
+        addCompositeDisposable(mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
         {
             @Override
             public void accept(List<StayOutboundSuggest> stayOutboundSuggests) throws Exception

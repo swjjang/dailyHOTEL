@@ -140,7 +140,6 @@
                         app:srcCompat="@drawable/no_hotel_ic"/>
 
                     <LinearLayout
-                        android:id="@+id/textLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"

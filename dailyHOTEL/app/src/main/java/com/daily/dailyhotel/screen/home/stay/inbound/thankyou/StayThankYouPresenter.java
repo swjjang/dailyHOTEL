@@ -149,10 +149,10 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mAnalytics = new StayThankYouAnalyticsImpl();
 
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mRewardRemoteImpl = new RewardRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mRewardRemoteImpl = new RewardRemoteImpl();
 
         setRefresh(true);
     }
@@ -393,7 +393,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                 gourmetCuration.setRadius(10d);
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
-                return mGourmetRemoteImpl.getList(gourmetParams);
+                return mGourmetRemoteImpl.getList(getActivity(), gourmetParams);
             }
         });
 

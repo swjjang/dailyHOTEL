@@ -79,7 +79,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         mAnalytics = new StayOutboundPreviewAnalyticsImpl();
 
-        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
+        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl();
 
         setRefresh(true);
     }
@@ -257,8 +257,8 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mStayOutboundRemoteImpl.getDetailInformation(mStayIndex, mStayBookDateTime, mPeople) //
-            , mStayOutboundRemoteImpl.getDetailRoomList(mStayIndex, mStayBookDateTime, mPeople) //
+        addCompositeDisposable(Observable.zip(mStayOutboundRemoteImpl.getDetailInformation(getActivity(), mStayIndex, mStayBookDateTime, mPeople) //
+            , mStayOutboundRemoteImpl.getDetailRoomList(getActivity(), mStayIndex, mStayBookDateTime, mPeople) //
             , new BiFunction<StayOutboundDetail, List<StayOutboundRoom>, StayOutboundDetail>()
             {
                 @Override

@@ -17,10 +17,12 @@
             android:id="@+id/productNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="9dp"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            dailyFont:style="Medium"/>
+            android:layout_marginBottom="10dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="11dp"
+            dailyFont:style="DemiLight"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

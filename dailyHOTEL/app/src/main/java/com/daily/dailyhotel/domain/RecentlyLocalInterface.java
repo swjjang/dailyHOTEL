@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.twoheart.dailyhotel.util.Constants;
@@ -16,20 +18,20 @@ import io.reactivex.Observable;
 
 public interface RecentlyLocalInterface
 {
-    Observable addRecentlyItem(Constants.ServiceType serviceType, int index //
+    Observable addRecentlyItem(Context context, Constants.ServiceType serviceType, int index //
         , String name, String englishName, String imageUrl, String areaGroupName, boolean isUpdateDate);
 
-    Observable<Boolean> deleteRecentlyItem(Constants.ServiceType serviceType, int index);
+    Observable<Boolean> deleteRecentlyItem(Context context, Constants.ServiceType serviceType, int index);
 
-    Observable<Boolean> clearRecentlyItems(Constants.ServiceType serviceType);
+    Observable<Boolean> clearRecentlyItems(Context context, Constants.ServiceType serviceType);
 
-    Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Constants.ServiceType... serviceTypes);
+    Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Context context, Constants.ServiceType... serviceTypes);
 
-    Observable<ArrayList<CarouselListItem>> sortCarouselListItemList(ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes);
+    Observable<ArrayList<CarouselListItem>> sortCarouselListItemList(Context context, ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes);
 
-    Observable<String> getTargetIndices(Constants.ServiceType serviceType, int maxSize);
+    Observable<String> getTargetIndices(Context context, Constants.ServiceType serviceType, int maxSize);
 
-    Observable<JSONObject> getRecentlyJSONObject(int maxSize, Constants.ServiceType... serviceTypes);
+    Observable<JSONObject> getRecentlyJSONObject(Context context, int maxSize, Constants.ServiceType... serviceTypes);
 
-    Observable<ArrayList<Integer>> getRecentlyIndexList(Constants.ServiceType... serviceTypes);
+    Observable<ArrayList<Integer>> getRecentlyIndexList(Context context, Constants.ServiceType... serviceTypes);
 }

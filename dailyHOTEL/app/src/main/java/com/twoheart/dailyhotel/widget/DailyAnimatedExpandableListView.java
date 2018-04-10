@@ -124,7 +124,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
             {
                 // Get the view for the group is it is on screen...
                 View v = getChildAt(childIndex);
-                if (v.getBottom() >= getBottom())
+                if (v == null || v.getBottom() >= getBottom())
                 {
                     // If the user is not going to be able to see the animation
                     // we just expand the group without an animation.

@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import com.daily.base.exception.BaseException;
@@ -36,15 +35,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 {
-    public StayRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
-    public Observable<Stays> getList(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
+    public Observable<Stays> getList(Context context, DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
     {
-        return mDailyMobileService.getStayList(getBaseUrl() + getListApiUrl(categoryType) + toStringQueryParams(queryMap, abTestType)) //
+        return mDailyMobileService.getStayList(getBaseUrl(context) + getListApiUrl(context, categoryType) + toStringQueryParams(queryMap, abTestType)) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
                 Stays stays;
 
@@ -67,12 +61,12 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<Stays> getLocalPlusList(Map<String, Object> queryMap)
+    public Observable<Stays> getLocalPlusList(Context context, Map<String, Object> queryMap)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
             : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
 
-        return mDailyMobileService.getStayList(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
+        return mDailyMobileService.getStayList(getBaseUrl(context) + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
                 Stays stays;
 
@@ -95,9 +89,9 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
+    public Observable<StayFilterCount> getListCountByFilter(Context context, DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType)
     {
-        return mDailyMobileService.getStayListCountByFilter(getBaseUrl() + getListApiUrl(categoryType) + toStringQueryParams(queryMap, abTestType)) //
+        return mDailyMobileService.getStayListCountByFilter(getBaseUrl(context) + getListApiUrl(context, categoryType) + toStringQueryParams(queryMap, abTestType)) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
                 StayFilterCount stayFilterCount;
 
@@ -120,12 +114,12 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<StayFilterCount> getLocalPlusListCountByFilter(Map<String, Object> queryMap)
+    public Observable<StayFilterCount> getLocalPlusListCountByFilter(Context context, Map<String, Object> queryMap)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
             : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
 
-        return mDailyMobileService.getStayListCountByFilter(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
+        return mDailyMobileService.getStayListCountByFilter(getBaseUrl(context) + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap, null)) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
                 StayFilterCount stayFilterCount;
 
@@ -147,7 +141,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             });
     }
 
-    private String getListApiUrl(DailyCategoryType categoryType)
+    private String getListApiUrl(Context context, DailyCategoryType categoryType)
     {
         if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
         {
@@ -161,7 +155,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                 : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
 
             Map<String, String> urlParams = new HashMap<>();
-            urlParams.put("{categoryAsPath}", categoryType.getCodeString(mContext));
+            urlParams.put("{categoryAsPath}", categoryType.getCodeString(context));
 
             return Crypto.getUrlDecoderEx(API, urlParams);
         }
@@ -388,7 +382,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<List<StayAreaGroup>> getAreaList(DailyCategoryType categoryType)
+    public Observable<List<StayAreaGroup>> getAreaList(Context context, DailyCategoryType categoryType)
     {
         final String API;
 
@@ -423,7 +417,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                 : "OTkkNTIkMTIyJDEzJDI3JDE0JDg2JDcwJDUyJDM5JDI3JDExOSQxMjUkODkkMTIwJDExMSQ=$QjAyMTQ1MUIzQKLkE0OTAzNUQ3MXjIhENTQwQjY1KQjZFQTIyMDFFRWDk0PQUZGNEUyMUZBODVI5QjcxMDg4ODU1OLEVZGRUU3MThGNTQ4OUJCGPMTQ4REVDMLEUJCMDENCQ0ZCWRDZFQUM4$";
 
             Map<String, String> urlParams = new HashMap<>();
-            urlParams.put("{category}", categoryType.getCodeString(mContext));
+            urlParams.put("{category}", categoryType.getCodeString(context));
 
             return mDailyMobileService.getStayCategoryAreaList(Crypto.getUrlDecoderEx(API, urlParams))//
                 .subscribeOn(Schedulers.io()).map(baseDto -> {
@@ -449,7 +443,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> getSubwayAreaList(DailyCategoryType categoryType)
+    public Observable<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> getSubwayAreaList(Context context, DailyCategoryType categoryType)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v6/hotels/subway"//
             : "NTkkMjQkODkkMTgkNzMkMSQzMSQzOCQzMCQ3NCQyMyQ1MiQ0OCQ5JDEwMCQ4MSQ=$NP0RCOUIyZN0JEMjNDRjKVEMYDgwBQzYS3HN0Y2MTMVERkJFQPzJCQFjY0NTlBNzMzMzNUGOUFGQTgHyNCDVhEMjAzQjA1MTNBQg=SS=$";
@@ -461,7 +455,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             category = null;
         } else
         {
-            category = categoryType.getCodeString(mContext);
+            category = categoryType.getCodeString(context);
         }
 
         return mDailyMobileService.getStaySubwayAreaList(Crypto.getUrlDecoderEx(API), category)//
@@ -492,9 +486,9 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> getRegionList(DailyCategoryType categoryType)
+    public Observable<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> getRegionList(Context context, DailyCategoryType categoryType)
     {
-        return Observable.zip(getAreaList(categoryType), getSubwayAreaList(categoryType), new BiFunction<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>, Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>>()
+        return Observable.zip(getAreaList(context, categoryType), getSubwayAreaList(context, categoryType), new BiFunction<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>, Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>>()
         {
             @Override
             public Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>> apply(List<StayAreaGroup> areaGroupList, LinkedHashMap<Area, List<StaySubwayAreaGroup>> areaListLinkedHashMap) throws Exception

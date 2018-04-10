@@ -49,10 +49,7 @@ public class GourmetCampaignTagsData
             return null;
         }
 
-        ArrayList<Sticker> stickerArrayList = new ArrayList<>();
-        stickerArrayList.addAll(stickerList);
-
-        return stickerArrayList;
+        return new ArrayList<>(stickerList);
     }
 
     private List<Gourmet> getGourmetList(Context context)

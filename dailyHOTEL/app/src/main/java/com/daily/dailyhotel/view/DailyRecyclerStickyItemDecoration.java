@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 public class DailyRecyclerStickyItemDecoration extends RecyclerView.ItemDecoration
 {
     private StickyHeaderInterface mListener;
-    private int mStickyHeaderHeight;
+    int mStickyHeaderHeight;
     private boolean mStickyEnabled;
 
     public DailyRecyclerStickyItemDecoration(@NonNull RecyclerView recyclerView, @NonNull StickyHeaderInterface listener)

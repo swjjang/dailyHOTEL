@@ -60,7 +60,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        mProfileRemoteImpl = new ProfileRemoteImpl(getContext());
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         mMyDailyLayout = new MyDailyLayout(getActivity(), mOnEventListener);
         mMyDailyLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);

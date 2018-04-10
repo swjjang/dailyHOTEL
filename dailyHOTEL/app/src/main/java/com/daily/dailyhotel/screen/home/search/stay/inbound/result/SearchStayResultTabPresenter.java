@@ -97,9 +97,9 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
 
         mAnalytics = new SearchStayResultTabAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
-        mSearchLocalImpl = new SearchLocalImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
+        mSearchLocalImpl = new SearchLocalImpl();
 
         initViewModel(activity);
 
@@ -975,7 +975,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
         {
             if (mViewModel.getSuggest().menuType != StaySuggest.MenuType.REGION_LOCATION)
             {
-                addCompositeDisposable(mSearchLocalImpl.addStayIbSearchResultHistory(mViewModel.getCommonDateTime()//
+                addCompositeDisposable(mSearchLocalImpl.addStayIbSearchResultHistory(getActivity(), mViewModel.getCommonDateTime()//
                     , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
             }
         }

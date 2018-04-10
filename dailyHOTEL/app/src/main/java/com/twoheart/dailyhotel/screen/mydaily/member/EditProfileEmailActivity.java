@@ -53,7 +53,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
         setContentView(R.layout.activity_edit_email);
 
-        mProfileRemoteImpl = new ProfileRemoteImpl(this);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         initToolbar();
         initLayout();

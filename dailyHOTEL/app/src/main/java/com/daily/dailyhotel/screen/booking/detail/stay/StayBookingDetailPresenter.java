@@ -191,11 +191,11 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
         mAnalytics = new StayBookingDetailAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mReviewRemoteImpl = new ReviewRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
-        mRefundRemoteImpl = new RefundRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mReviewRemoteImpl = new ReviewRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
+        mRefundRemoteImpl = new RefundRemoteImpl();
 
         setRefresh(true);
     }
@@ -650,7 +650,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
 
-                addCompositeDisposable(mGourmetRemoteImpl.getList(gourmetParams) //
+                addCompositeDisposable(mGourmetRemoteImpl.getList(getActivity(), gourmetParams) //
                     .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
                     {
                         @Override
@@ -1542,9 +1542,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                 DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                 mStayBookingDetail.stayAddress);
 
-            CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());
-
-            addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            addCompositeDisposable(new CommonRemoteImpl().getShortUrl(longUrl).subscribe(new Consumer<String>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull String shortUrl) throws Exception

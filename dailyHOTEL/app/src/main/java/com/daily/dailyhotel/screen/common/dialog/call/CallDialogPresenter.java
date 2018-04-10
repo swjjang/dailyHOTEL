@@ -59,7 +59,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
 
         mAnalytics = new CallDialogAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
 
         setRefresh(true);
     }

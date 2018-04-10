@@ -57,7 +57,7 @@ public class SelectStayOutboundCouponDialogPresenter//
 
         mAnalytics = new SelectStayOutboundCouponDialogAnalyticsImpl();
 
-        mCouponRemoteImpl = new CouponRemoteImpl(activity);
+        mCouponRemoteImpl = new CouponRemoteImpl();
 
         setRefresh(true);
     }
@@ -180,7 +180,7 @@ public class SelectStayOutboundCouponDialogPresenter//
 
         final String DATE_FORMAT = "yyyy-MM-dd";
 
-        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByDetail(mStayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByDetail(getActivity(), mStayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT), mStayIndex, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {
             @Override

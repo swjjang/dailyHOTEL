@@ -108,8 +108,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         mAnalytics = new StayTabAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mStayRemoteImpl = new StayRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mStayRemoteImpl = new StayRemoteImpl();
 
         initViewModel(activity);
 
@@ -397,7 +397,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     return Observable.just(new Pair(null, null));
                 } else
                 {
-                    return mStayRemoteImpl.getRegionList(mStayViewModel.categoryType);
+                    return mStayRemoteImpl.getRegionList(getActivity(), mStayViewModel.categoryType);
                 }
             }
         }).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>, ObservableSource<Pair<Boolean, List<Category>>>>()

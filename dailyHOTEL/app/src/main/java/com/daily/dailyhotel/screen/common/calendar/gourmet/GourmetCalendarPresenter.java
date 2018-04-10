@@ -77,8 +77,8 @@ public class GourmetCalendarPresenter extends BaseCalendarPresenter<GourmetCalen
 
         mAnalytics = new GourmetCalendarAnalyticsImpl();
 
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
-        mCalendarImpl = new CalendarImpl(activity);
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
+        mCalendarImpl = new CalendarImpl();
 
         setRefresh(true);
     }

@@ -15,6 +15,6 @@ class CopyView(activity: CopyActivity, listener: CopyInterface.OnEventListener)/
     }
 
     private fun initToolbar(viewDataBinding: ActivityCopyDataBinding) {
-        viewDataBinding.toolbarView.setOnBackClickListener { eventListener.onBackClick() };
+        viewDataBinding.toolbarView.setOnBackClickListener { eventListener.onBackClick() }
     }
 }

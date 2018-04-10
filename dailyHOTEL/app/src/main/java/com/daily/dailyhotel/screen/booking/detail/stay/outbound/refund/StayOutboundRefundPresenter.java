@@ -69,7 +69,7 @@ public class StayOutboundRefundPresenter //
 
         mAnalytics = new StayOutboundRefundAnalyticsImpl();
 
-        mRefundRemoteImpl = new RefundRemoteImpl(activity);
+        mRefundRemoteImpl = new RefundRemoteImpl();
 
         setRefresh(true);
     }
@@ -172,7 +172,7 @@ public class StayOutboundRefundPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefundDetail(mBookingIndex).subscribe(new Consumer<StayOutboundRefundDetail>()
+        addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefundDetail(getActivity(), mBookingIndex).subscribe(new Consumer<StayOutboundRefundDetail>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundRefundDetail stayOutboundRefundDetail) throws Exception
@@ -224,7 +224,7 @@ public class StayOutboundRefundPresenter //
                         {
                             screenLock(true);
 
-                            addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefund(mBookingIndex, mStayOutboundRefundDetail.refundStatus.getValue(), mCancelKey, mCancelMessage).subscribe(new Consumer<String>()
+                            addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefund(getActivity(), mBookingIndex, mStayOutboundRefundDetail.refundStatus.getValue(), mCancelKey, mCancelMessage).subscribe(new Consumer<String>()
                             {
                                 @Override
                                 public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
@@ -294,7 +294,7 @@ public class StayOutboundRefundPresenter //
                         {
                             screenLock(true);
 
-                            addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefund(mBookingIndex, mStayOutboundRefundDetail.refundStatus.getValue(), mCancelKey, mCancelMessage).subscribe(new Consumer<String>()
+                            addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefund(getActivity(), mBookingIndex, mStayOutboundRefundDetail.refundStatus.getValue(), mCancelKey, mCancelMessage).subscribe(new Consumer<String>()
                             {
                                 @Override
                                 public void accept(@io.reactivex.annotations.NonNull String message) throws Exception

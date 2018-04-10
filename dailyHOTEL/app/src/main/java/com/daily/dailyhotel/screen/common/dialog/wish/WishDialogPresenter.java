@@ -66,9 +66,9 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
         mAnalytics = new WishDialogAnalyticsImpl();
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
-        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
+        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl();
 
         setRefresh(true);
     }
@@ -216,7 +216,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                 break;
 
             case OB_STAY:
-                wishResultObservable = mWish ? mStayOutboundRemoteImpl.addWish(mWishIndex) : mStayOutboundRemoteImpl.removeWish(mWishIndex);
+                wishResultObservable = mWish ? mStayOutboundRemoteImpl.addWish(getActivity(), mWishIndex) : mStayOutboundRemoteImpl.removeWish(getActivity(), mWishIndex);
                 break;
         }
 

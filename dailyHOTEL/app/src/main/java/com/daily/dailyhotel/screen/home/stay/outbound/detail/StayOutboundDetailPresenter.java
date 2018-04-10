@@ -210,10 +210,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         mAppResearch = new AppResearch(activity);
 
-        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
 
         setPeople(People.DEFAULT_ADULTS, null);
 
@@ -353,8 +353,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, null, true) //
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
+            , Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, null, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
@@ -1621,8 +1621,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 }
             }
 
-            addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-                Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, regionName, false) //
+            addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
+                , Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, regionName, false) //
                 .observeOn(Schedulers.io()).subscribe());
         } catch (Exception e)
         {
@@ -1734,7 +1734,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+        boolean hasRecommendAroundList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
 
         getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
 
@@ -1751,7 +1751,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+        boolean hasRecommendAroundList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
 
         if (mStayOutboundDetail.activeReward == true && mIsProvideRewardSticker == true)
         {
@@ -1877,7 +1877,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mNetworkRunState = IS_RUNNED_NONE;
 
         addCompositeDisposable(Observable.zip(observable, mCommonRemoteImpl.getCommonDateTime() //
-            , mStayOutboundRemoteImpl.getDetailInformation(mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread())//
+            , mStayOutboundRemoteImpl.getDetailInformation(getActivity(), mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread())//
             , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
             {
                 @Override
@@ -1930,7 +1930,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         // 객실 정보 가져오기
         setStatus(STATUS_ROOM_LIST_LOADING);
 
-        addCompositeDisposable(mStayOutboundRemoteImpl.getDetailRoomList(mStayIndex, mStayBookDateTime, mPeople) //
+        addCompositeDisposable(mStayOutboundRemoteImpl.getDetailRoomList(getActivity(), mStayIndex, mStayBookDateTime, mPeople) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundRoom>>()
             {
                 @Override
@@ -1957,7 +1957,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 }
             }));
 
-        addCompositeDisposable(mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
+        addCompositeDisposable(mStayOutboundRemoteImpl.getRecommendAroundList(getActivity(), mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
         {
             @Override
             public void accept(StayOutbounds stayOutbounds) throws Exception
@@ -1966,7 +1966,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 notifyRecommendAroundList();
                 notifyRewardChanged();
 
-                boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+                boolean hasRecommendList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
 
                 mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
 

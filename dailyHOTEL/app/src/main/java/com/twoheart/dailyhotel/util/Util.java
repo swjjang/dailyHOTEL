@@ -548,10 +548,7 @@ public class Util implements Constants
 
                 // 국내가 아니면 숫자만 있는지 검증한다 7자리 ~ 15자리
                 int length = text[1].length();
-                if (length >= 7 && length <= 15)
-                {
-                    return true;
-                }
+                return length >= 7 && length <= 15;
             }
         }
 

@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.SuggestInterface;
@@ -25,15 +24,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterface
 {
-    public SuggestRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
-    public Observable<List<StayOutboundSuggest>> getSuggestsByStayOutbound(String keyword)
+    public Observable<List<StayOutboundSuggest>> getSuggestsByStayOutbound(Context context, String keyword)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/category-suggests"//
             : "MCQ1NSQ1MiQ4MSQ2NyQ0NiQ1OSQ1MCQ0MSQ1MyQ4OCQyNSQ1OCQ5JDUyJDE0JA==$XMDI3ODcwTOTMzTNEM4MDQzNzA5OQzA0MTM1NDNENkQwZREI0QOkQX0CQFzUNNxMzAlZEMDhENEE4LNjAxRTRDRUM5MzUAlEQjVEMA==$";
@@ -46,7 +40,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                 {
                     if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
                     {
-                        list = suggestsDataBaseDto.data.getSuggestList(mContext);
+                        list = suggestsDataBaseDto.data.getSuggestList(context);
                     } else
                     {
                         throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);
@@ -61,9 +55,9 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<StayOutboundSuggest>> getPopularRegionSuggestsByStayOutbound()
+    public Observable<List<StayOutboundSuggest>> getPopularRegionSuggestsByStayOutbound(Context context)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/hot-keywords"//
             : "NDEkMTQkNjUkNjckODEkMjAkMTMkNDMkNzMkNTEkMzkkMjMkNSQ1OCQ2NSQ4MSQ=$NDhERQjE0MDhCMUDBgyMjlPEAMDJGNkYzNTFFQ0MzBQjU4TQSTM1MTSA2RHDg5RTJQFRTkwNTYO3HOUMIDxNjQyNDc2QFTAxOTg2MQ==$";
@@ -76,7 +70,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                 {
                     if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
                     {
-                        list = suggestsDataBaseDto.data.getRegionSuggestList(mContext);
+                        list = suggestsDataBaseDto.data.getRegionSuggestList(context);
                     } else
                     {
                         throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);
@@ -91,7 +85,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<StaySuggest>> getSuggestByStay(String checkInDate, int stays, String keyword)
+    public Observable<List<StaySuggest>> getSuggestByStay(Context context, String checkInDate, int stays, String keyword)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/hotels/sales/search/suggest"//
             : "MTIzJDEyJDEyNSQxJDIwJDEkODckMTYkODckNDkkOTMkNTMkODkkNTYkODEkOSQ=$OSYDg0RjMF1RkI2HOYTVGMkEQ3NjE1NzU3NjA3N0ZFOUNFN0I2GQjECwNHUQxQUNEQUM0NDc0MDUxMjREQDzM1NzREOEJCETzRCjYyMjk4NEJBQTJFQjJEQTIwMkZGRTZBMDE5NjkBWwOTk4$";
@@ -108,7 +102,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                     {
                         if (staySuggestsDataBaseDto.msgCode == 100 && staySuggestsDataBaseDto.data != null)
                         {
-                            list = staySuggestsDataBaseDto.data.getSuggestList(mContext);
+                            list = staySuggestsDataBaseDto.data.getSuggestList(context);
                         } else
                         {
                             throw new BaseException(staySuggestsDataBaseDto.msgCode, staySuggestsDataBaseDto.msg);
@@ -124,7 +118,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<GourmetSuggest>> getSuggestsByGourmet(String visitDate, String keyword)
+    public Observable<List<GourmetSuggest>> getSuggestsByGourmet(Context context, String visitDate, String keyword)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/gourmet/sales/search/suggest"//
             : "NjgkNjYkMzMkMjQkMTQkMzAkNjkkMTExJDY4JDExOCQ5NiQxMDckODMkOTckMjQkMzIk$NDVFRUFBRTFFNTOQ0RTcwQUEO4CQThCXZMURFRZDY3NkEwN0VDMDY3Q0EwQUExOEY5RjAyMMTjAA3KOEZDMTVEGNjRDNUFCM0I0BQNjFEODc4NjPZEQ0JEHMkM3NUUEzODk1NTNDMjM5NDU4$";
@@ -142,7 +136,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                     {
                         if (gourmetSuggestsDataBaseDto.msgCode == 100 && gourmetSuggestsDataBaseDto.data != null)
                         {
-                            list = gourmetSuggestsDataBaseDto.data.getSuggestList(mContext);
+                            list = gourmetSuggestsDataBaseDto.data.getSuggestList(context);
                         } else
                         {
                             throw new BaseException(gourmetSuggestsDataBaseDto.msgCode, gourmetSuggestsDataBaseDto.msg);

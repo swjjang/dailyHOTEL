@@ -1,8 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -26,11 +23,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
 {
-    public CommonRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<CommonDateTime> getCommonDateTime()
     {

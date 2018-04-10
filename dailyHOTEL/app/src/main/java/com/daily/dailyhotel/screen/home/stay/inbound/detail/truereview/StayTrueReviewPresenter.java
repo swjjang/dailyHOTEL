@@ -78,7 +78,7 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
 
         mAnalytics = new StayTrueReviewAnalyticsImpl();
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
 
         setRefresh(true);
     }

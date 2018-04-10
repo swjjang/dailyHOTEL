@@ -60,8 +60,8 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
-        mRecentlyLocalImpl = new RecentlyLocalImpl(getActivity());
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
     }
 
     @Override

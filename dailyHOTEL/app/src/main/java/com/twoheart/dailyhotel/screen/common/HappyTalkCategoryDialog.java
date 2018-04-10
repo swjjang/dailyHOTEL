@@ -239,15 +239,20 @@ public class HappyTalkCategoryDialog extends BaseActivity
         urlStringBuilder.append("&site_id=" + SITE_ID); // 사이트 아이디
         urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
 
-        if (mCallScreen == CallScreen.SCREEN_STAY_BOOKING_CANCEL || mCallScreen == CallScreen.SCREEN_STAY_OUTBOUND_BOOKING_CANCEL)
+        switch (mCallScreen)
         {
-            urlStringBuilder.append("&division_id=" + "64833"); // 중분류는 취소문의로
-        } else if (mCallScreen == CallScreen.SCREEN_GOURMET_BOOKING_CANCEL)
-        {
-            urlStringBuilder.append("&division_id=" + "64892"); // 중분류는 취소문의로
-        } else
-        {
-            urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
+            case SCREEN_STAY_BOOKING_CANCEL:
+            case SCREEN_STAY_OUTBOUND_BOOKING_CANCEL:
+                urlStringBuilder.append("&division_id=" + "64833"); // 중분류는 취소문의로
+                break;
+
+            case SCREEN_GOURMET_BOOKING_CANCEL:
+                urlStringBuilder.append("&division_id=" + "64892"); // 중분류는 취소문의로
+                break;
+
+            default:
+                urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
+                break;
         }
 
         urlStringBuilder.append("&title="); // 상담제목

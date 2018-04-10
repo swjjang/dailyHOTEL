@@ -225,11 +225,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         mAppResearch = new AppResearch(activity);
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mCalendarImpl = new CalendarImpl(activity);
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mCalendarImpl = new CalendarImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
 
         setStatus(STATUS_NONE);
 
@@ -368,8 +368,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.HOTEL, mStayIndex, mStayName, null, mImageUrl, null, true) //
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
+            , Constants.ServiceType.HOTEL, mStayIndex, mStayName, null, mImageUrl, null, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
@@ -1575,8 +1575,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             }
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, regionName, false) //
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
+            , Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, regionName, false) //
             .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//

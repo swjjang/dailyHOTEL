@@ -80,8 +80,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         mAnalytics = new RewardAnalyticsImpl();
 
-        mRewardRemoteImpl = new RewardRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mRewardRemoteImpl = new RewardRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
 
         setRefresh(true);
     }

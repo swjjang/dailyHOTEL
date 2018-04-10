@@ -82,7 +82,7 @@ public class SignupStep1Activity extends BaseActivity
 
         mSignupStep1Layout = new SignupStep1Layout(this, mOnEventListener);
 
-        mCommonRemoteImpl = new CommonRemoteImpl(this);
+        mCommonRemoteImpl = new CommonRemoteImpl();
 
         setContentView(mSignupStep1Layout.onCreateView(R.layout.activity_signup_step1));
 

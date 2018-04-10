@@ -67,7 +67,7 @@ public class StayWishListFragment extends PlaceWishListFragment
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        mWishRemoteImpl = new WishRemoteImpl(getContext());
+        mWishRemoteImpl = new WishRemoteImpl();
 
         return view;
     }
@@ -141,7 +141,7 @@ public class StayWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
-        addCompositeDisposable(Observable.zip(mWishRemoteImpl.getStayWishList(), mWishRemoteImpl.getStayOutboundWishList()//
+        addCompositeDisposable(Observable.zip(mWishRemoteImpl.getStayWishList(), mWishRemoteImpl.getStayOutboundWishList(getActivity())//
             , new BiFunction<List<Stay>, List<StayOutbound>, List<PlaceViewItem>>()
             {
                 @Override
@@ -567,7 +567,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                     break;
 
                 case PlaceViewItem.TYPE_OB_ENTRY:
-                    observable = mWishRemoteImpl.removeStayOutboundWish(((StayOutbound) placeViewItem.getItem()).index);
+                    observable = mWishRemoteImpl.removeStayOutboundWish(mBaseActivity, ((StayOutbound) placeViewItem.getItem()).index);
                     break;
             }
 

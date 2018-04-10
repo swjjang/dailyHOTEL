@@ -145,9 +145,9 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     {
         setAnalytics(new SearchStayResultListFragmentAnalyticsImpl());
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
-        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         initViewModel(activity);
 
@@ -578,18 +578,30 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
             StaySuggest.Location locationSuggestItem = (StaySuggest.Location) suggest.getSuggestItem();
 
-            observable = searchMyLocation(null).flatMap(new Function<Location, ObservableSource<GoogleAddress>>()
+            observable = searchMyLocation(null).onErrorResumeNext(new Function<Throwable, ObservableSource<Location>>()
+            {
+                @Override
+                public ObservableSource<Location> apply(Throwable throwable) throws Exception
+                {
+                    return Observable.just(new Location("provider"));
+                }
+            }).flatMap(new Function<Location, ObservableSource<GoogleAddress>>()
             {
                 @Override
                 public ObservableSource<GoogleAddress> apply(Location location) throws Exception
                 {
+                    if (location.getLongitude() == 0.0d && location.getLatitude() == 0.0d)
+                    {
+                        return Observable.just(new GoogleAddress());
+                    }
+
                     locationSuggestItem.latitude = location.getLatitude();
                     locationSuggestItem.longitude = location.getLongitude();
 
-                    return mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).onErrorResumeNext(new Function<Throwable, ObservableSource<? extends GoogleAddress>>()
+                    return mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).onErrorResumeNext(new Function<Throwable, ObservableSource<GoogleAddress>>()
                     {
                         @Override
-                        public ObservableSource<? extends GoogleAddress> apply(Throwable throwable) throws Exception
+                        public ObservableSource<GoogleAddress> apply(Throwable throwable) throws Exception
                         {
                             return Observable.just(new GoogleAddress());
                         }
@@ -618,7 +630,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public ObservableSource<Stays> apply(Boolean result) throws Exception
             {
-                return mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(mPage), null);
+                return mStayRemoteImpl.getList(getActivity(), mViewModel.categoryType, getQueryMap(mPage), null);
             }
         }).map(new Function<Stays, Pair<Stays, List<ObjectItem>>>()
         {
@@ -845,7 +857,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         mPage++;
 
-        addCompositeDisposable(mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(mPage), null).map(new Function<Stays, List<ObjectItem>>()
+        addCompositeDisposable(mStayRemoteImpl.getList(getActivity(), mViewModel.categoryType, getQueryMap(mPage), null).map(new Function<Stays, List<ObjectItem>>()
         {
             @Override
             public List<ObjectItem> apply(Stays stays) throws Exception
@@ -1012,7 +1024,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        addCompositeDisposable(mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(-1), null).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
+        addCompositeDisposable(mStayRemoteImpl.getList(getActivity(), mViewModel.categoryType, getQueryMap(-1), null).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
         {
             @Override
             public void accept(Stays stays) throws Exception
@@ -1601,7 +1613,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void run() throws Exception
             {
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
@@ -1611,7 +1623,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public void run() throws Exception
             {
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }
@@ -1623,7 +1635,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             {
                 unLockAll();
 
-                if (locationAnimationDisposable != null)
+                if (locationAnimationDisposable != null && locationAnimationDisposable.isDisposed() == false)
                 {
                     locationAnimationDisposable.dispose();
                 }

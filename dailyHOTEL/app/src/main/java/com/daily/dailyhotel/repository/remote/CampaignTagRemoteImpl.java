@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.CampaignTagInterface;
@@ -31,11 +30,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CampaignTagRemoteImpl extends BaseRemoteImpl implements CampaignTagInterface
 {
-    public CampaignTagRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<ArrayList<CampaignTag>> getCampaignTagList(String serviceType)
     {
@@ -137,7 +131,7 @@ public class CampaignTagRemoteImpl extends BaseRemoteImpl implements CampaignTag
     }
 
     @Override
-    public Observable<GourmetCampaignTags> getGourmetCampaignTags(int index, String visitDate)
+    public Observable<GourmetCampaignTags> getGourmetCampaignTags(Context context, int index, String visitDate)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
             : "NTAkOCQ4MSQyNiQxNyQ4NSQ5JDczJDYkMTkkNzQkNTckODIkNTkkNTgkODAk$OUVCMjUFFWVNkZGN0JCHIMEQ4QTNCRJTQ5N0EzMUFGNkJDNjIwQjVCMERULREBNzM2RDNENTQzQjIL5GJNkYwVMkNGNDhGDXRUVBNg==$";
@@ -157,7 +151,7 @@ public class CampaignTagRemoteImpl extends BaseRemoteImpl implements CampaignTag
                     {
                         if (gourmetCampaignTagsDataBaseDto.msgCode == 100 && gourmetCampaignTagsDataBaseDto.data != null)
                         {
-                            gourmetCampaignTags = gourmetCampaignTagsDataBaseDto.data.getGourmetCampaignTags(mContext);
+                            gourmetCampaignTags = gourmetCampaignTagsDataBaseDto.data.getGourmetCampaignTags(context);
                         } else
                         {
                             throw new BaseException(gourmetCampaignTagsDataBaseDto.msgCode, gourmetCampaignTagsDataBaseDto.msg);

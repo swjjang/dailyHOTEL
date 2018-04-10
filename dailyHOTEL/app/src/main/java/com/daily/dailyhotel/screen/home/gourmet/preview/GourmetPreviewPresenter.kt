@@ -57,8 +57,8 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     override fun constructorInitialize(activity: GourmetPreviewActivity) {
         setContentView(R.layout.activity_gourmet_preview_data)
 
-        gourmetRemoteImpl = GourmetRemoteImpl(activity)
-        commonRemoteImpl = CommonRemoteImpl(activity)
+        gourmetRemoteImpl = GourmetRemoteImpl()
+        commonRemoteImpl = CommonRemoteImpl()
 
         isRefresh = true
     }

@@ -113,8 +113,8 @@ public class StayOutboundBookingCancelDetailPresenter //
 
         mAnalytics = new StayOutboundBookingCancelDetailCancelAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
 
         setRefresh(true);
     }
@@ -248,7 +248,7 @@ public class StayOutboundBookingCancelDetailPresenter //
         screenLock(showProgress);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mBookingRemoteImpl.getStayOutboundBookingDetail(mBookingIndex) //
+            , mBookingRemoteImpl.getStayOutboundBookingDetail(getActivity(), mBookingIndex) //
             , new BiFunction<CommonDateTime, StayOutboundBookingDetail, StayOutboundBookingDetail>()
             {
                 @Override
@@ -616,7 +616,7 @@ public class StayOutboundBookingCancelDetailPresenter //
                 {
                     screenLock(true);
 
-                    addCompositeDisposable(mBookingRemoteImpl.getStayOutboundHideBooking(mBookingIndex).subscribe(new Consumer<Boolean>()
+                    addCompositeDisposable(mBookingRemoteImpl.getStayOutboundHideBooking(getActivity(), mBookingIndex).subscribe(new Consumer<Boolean>()
                     {
                         @Override
                         public void accept(@NonNull Boolean result) throws Exception

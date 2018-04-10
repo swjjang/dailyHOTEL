@@ -33,13 +33,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RecentlyRemoteImpl extends BaseRemoteImpl implements RecentlyInterface
 {
-    public RecentlyRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
-    public Observable<StayOutbounds> getStayOutboundRecentlyList(String targetIndices, int numberOfResults)
+    public Observable<StayOutbounds> getStayOutboundRecentlyList(Context context, String targetIndices, int numberOfResults)
     {
         if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
@@ -51,7 +46,7 @@ public class RecentlyRemoteImpl extends BaseRemoteImpl implements RecentlyInterf
             @Override
             public ObservableSource<StayOutbounds> call() throws Exception
             {
-                final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+                final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
                 final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
                     : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";

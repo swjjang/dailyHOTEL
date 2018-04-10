@@ -128,9 +128,9 @@ public class StayOutboundBookingDetailPresenter //
 
         mAnalytics = new StayOutboundBookingDetailAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mReviewRemoteImpl = new ReviewRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mReviewRemoteImpl = new ReviewRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
 
         setRefresh(true);
     }
@@ -311,7 +311,7 @@ public class StayOutboundBookingDetailPresenter //
             @Override
             public ObservableSource<? extends StayOutboundBookingDetail> call() throws Exception
             {
-                return DailyTextUtils.isTextEmpty(mAggregationId) ? mBookingRemoteImpl.getStayOutboundBookingDetail(mBookingIndex) : mBookingRemoteImpl.getStayOutboundBookingDetail(mAggregationId);
+                return DailyTextUtils.isTextEmpty(mAggregationId) ? mBookingRemoteImpl.getStayOutboundBookingDetail(getActivity(), mBookingIndex) : mBookingRemoteImpl.getStayOutboundBookingDetail(getActivity(), mAggregationId);
             }
         });
 
@@ -748,7 +748,7 @@ public class StayOutboundBookingDetailPresenter //
                 {
                     screenLock(true);
 
-                    addCompositeDisposable(mBookingRemoteImpl.getStayOutboundHideBooking(mBookingIndex).subscribe(new Consumer<Boolean>()
+                    addCompositeDisposable(mBookingRemoteImpl.getStayOutboundHideBooking(getActivity(), mBookingIndex).subscribe(new Consumer<Boolean>()
                     {
                         @Override
                         public void accept(@NonNull Boolean result) throws Exception
@@ -826,7 +826,7 @@ public class StayOutboundBookingDetailPresenter //
 
         if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true || PlaceBookingDetail.ReviewStatusType.MODIFIABLE.equalsIgnoreCase(reviewStatus) == true)
         {
-            addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(mBookingIndex) //
+            addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(getActivity(), mBookingIndex) //
                 .subscribeOn(io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                 {
                     @Override

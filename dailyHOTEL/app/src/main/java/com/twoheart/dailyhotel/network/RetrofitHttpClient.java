@@ -31,22 +31,25 @@ public class RetrofitHttpClient implements Constants
     private DailyMobileService mDailyMobileService;
     private TagCancellableCallAdapterFactory mTagCancellableCallAdapterFactory;
 
-    public synchronized static RetrofitHttpClient getInstance(Context context)
+    public synchronized static RetrofitHttpClient getInstance()
     {
         if (mInstance == null)
         {
-            mInstance = new RetrofitHttpClient(context);
+            mInstance = new RetrofitHttpClient();
         }
 
         return mInstance;
     }
 
-    private RetrofitHttpClient(Context context)
+    private RetrofitHttpClient()
     {
         mOkHttpClient = new OkHttpClient().newBuilder()//
             .addInterceptor(new HeaderInterceptor())//
             .readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
+    }
 
+    public void createService(Context context)
+    {
         mTagCancellableCallAdapterFactory = TagCancellableCallAdapterFactory.create();
 
         if (Constants.DEBUG == true)

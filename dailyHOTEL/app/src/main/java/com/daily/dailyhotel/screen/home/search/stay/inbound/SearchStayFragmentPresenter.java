@@ -74,8 +74,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     {
         setAnalytics(new SearchStayFragmentAnalyticsImpl());
 
-        mSearchLocalImpl = new SearchLocalImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
+        mSearchLocalImpl = new SearchLocalImpl();
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
 
         initViewModel(activity);
 
@@ -216,7 +216,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
 
         StaySuggest suggest = recentlyHistory.staySuggest;
 
-        addCompositeDisposable(mSearchLocalImpl.deleteStayIbSearchResultHistory(suggest).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<List<StaySearchResultHistory>>>()
+        addCompositeDisposable(mSearchLocalImpl.deleteStayIbSearchResultHistory(getActivity(), suggest).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<List<StaySearchResultHistory>>>()
         {
             @Override
             public ObservableSource<List<StaySearchResultHistory>> apply(Boolean aBoolean) throws Exception
@@ -225,7 +225,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
 
                 mAnalytics.onEventRecentlyHistoryDeleteClick(getActivity(), suggest.getText1());
 
-                return mSearchLocalImpl.getStayIbSearchResultHistoryList(mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
+                return mSearchLocalImpl.getStayIbSearchResultHistoryList(getActivity(), mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StaySearchResultHistory>>()
         {
@@ -283,7 +283,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
         final int RECENTLY_HISTORY_MAX_COUNT = 3;
         CommonDateTime commonDateTime = mCommonDateTimeViewModel.commonDateTime;
 
-        addCompositeDisposable(mSearchLocalImpl.getStayIbSearchResultHistoryList(commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
+        addCompositeDisposable(mSearchLocalImpl.getStayIbSearchResultHistoryList(getActivity(), commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StaySearchResultHistory>>()
             {
                 @Override

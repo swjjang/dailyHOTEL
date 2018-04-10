@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.Bank;
 import com.daily.dailyhotel.entity.OldRefund;
 import com.daily.dailyhotel.entity.RefundPolicy;
@@ -12,10 +14,10 @@ import io.reactivex.Observable;
 public interface RefundInterface
 {
     // Stay Outbound 환불 상세
-    Observable<StayOutboundRefundDetail> getStayOutboundRefundDetail(int bookingIndex);
+    Observable<StayOutboundRefundDetail> getStayOutboundRefundDetail(Context context, int bookingIndex);
 
     // Stay Outbound 환불
-    Observable<String> getStayOutboundRefund(int bookingIndex, String refundType, String cancelReasonType, String reasons);
+    Observable<String> getStayOutboundRefund(Context context, int bookingIndex, String refundType, String cancelReasonType, String reasons);
 
     // 환불
     Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType);

@@ -433,12 +433,8 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
                     return false;
                 }
 
-                if (region.index == lastRegion.index)
-                {
-                    return true;
-                }
+                return region.index == lastRegion.index;
 
-                return false;
             }
 
             @Override

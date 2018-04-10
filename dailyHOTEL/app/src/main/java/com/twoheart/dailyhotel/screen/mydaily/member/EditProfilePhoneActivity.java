@@ -74,7 +74,7 @@ public class EditProfilePhoneActivity extends BaseActivity
 
         mEditProfilePhoneLayout = new EditProfilePhoneLayout(this, mOnEventListener);
         mNetworkController = new EditProfilePhoneNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
-        mProfileRemoteImpl = new ProfileRemoteImpl(this);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         setContentView(mEditProfilePhoneLayout.onCreateView(R.layout.activity_edit_phone));
 

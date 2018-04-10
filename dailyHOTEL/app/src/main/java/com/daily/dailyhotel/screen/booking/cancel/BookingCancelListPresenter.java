@@ -94,9 +94,9 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
         mAnalytics = new BookingCancelListAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         setRefresh(true);
     }
@@ -214,7 +214,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         screenLock(showProgress);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime().observeOn(Schedulers.io()) //
-            , mBookingRemoteImpl.getBookingCancelList(), mBookingRemoteImpl.getStayOutboundBookingCancelList() //
+            , mBookingRemoteImpl.getBookingCancelList(), mBookingRemoteImpl.getStayOutboundBookingCancelList(getActivity()) //
             , new Function3<CommonDateTime, List<BookingCancel>, List<BookingCancel>, List<BookingCancel>>()
             {
                 @Override

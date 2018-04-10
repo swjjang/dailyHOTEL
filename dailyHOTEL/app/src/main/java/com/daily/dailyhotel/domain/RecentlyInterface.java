@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbounds;
 
@@ -15,7 +17,7 @@ import io.reactivex.Observable;
 
 public interface RecentlyInterface
 {
-    Observable<StayOutbounds> getStayOutboundRecentlyList(String targetIndices, int numberOfResults);
+    Observable<StayOutbounds> getStayOutboundRecentlyList(Context context, String targetIndices, int numberOfResults);
 
     Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(JSONObject recentJsonObject);
 }

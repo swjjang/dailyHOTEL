@@ -208,10 +208,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         mAnalytics = new StayPaymentAnalyticsImpl();
 
-        mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mCouponRemoteImpl = new CouponRemoteImpl(activity);
+        mPaymentRemoteImpl = new PaymentRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mCouponRemoteImpl = new CouponRemoteImpl();
 
         setRefresh(true);
     }

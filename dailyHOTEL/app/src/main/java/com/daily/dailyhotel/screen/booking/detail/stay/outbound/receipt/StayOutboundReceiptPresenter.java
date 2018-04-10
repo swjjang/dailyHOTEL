@@ -53,7 +53,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
 
         mAnalytics = new StayOutboundReceiptAnalyticsImpl();
 
-        mStayOutboundReceiptRemoteImpl = new StayOutboundReceiptRemoteImpl(activity);
+        mStayOutboundReceiptRemoteImpl = new StayOutboundReceiptRemoteImpl();
 
         setRefresh(true);
     }
@@ -163,7 +163,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getReceipt(mBookingIndex).subscribe(new Consumer<StayOutboundReceipt>()
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getReceipt(getActivity(), mBookingIndex).subscribe(new Consumer<StayOutboundReceipt>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundReceipt stayOutboundReceipt) throws Exception
@@ -216,7 +216,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getEmailReceipt(mBookingIndex, email).subscribe(new Consumer<String>()
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getEmailReceipt(getActivity(), mBookingIndex, email).subscribe(new Consumer<String>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull String result) throws Exception

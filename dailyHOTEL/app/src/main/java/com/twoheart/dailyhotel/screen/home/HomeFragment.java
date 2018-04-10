@@ -153,11 +153,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mCommonRemoteImpl = new CommonRemoteImpl(getActivity());
-        mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
-        mRecentlyLocalImpl = new RecentlyLocalImpl(getActivity());
-        mRewardRemoteImpl = new RewardRemoteImpl(getActivity());
-        mWishRemoteImpl = new WishRemoteImpl(getActivity());
+
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
+        mRewardRemoteImpl = new RewardRemoteImpl();
+        mWishRemoteImpl = new WishRemoteImpl();
     }
 
     @Nullable
@@ -349,22 +350,27 @@ public class HomeFragment extends BaseMenuNavigationFragment
             case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
             case Constants.CODE_REQUEST_ACTIVITY_BONUS:
             case Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL:
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
-                {
-                    mDontReload = true;
-                    mHomeLayout.setScrollTop();
 
-                    forceRefreshing();
-                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_SEARCH)
+                switch (resultCode)
                 {
-                    onSearchClick();
-                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST)
-                {
-                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
-                    {
-                        DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
-                        mOnEventListener.onCategoryItemClick(categoryType);
-                    }
+                    case Constants.CODE_RESULT_ACTIVITY_GO_HOME:
+                        mDontReload = true;
+                        mHomeLayout.setScrollTop();
+
+                        forceRefreshing();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_GO_SEARCH:
+                        onSearchClick();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST:
+                        if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
+                        {
+                            DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+                            mOnEventListener.onCategoryItemClick(categoryType);
+                        }
+                        break;
                 }
                 break;
 
@@ -1287,7 +1293,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         final int MAX_VALUE = 10;
 
-        addCompositeDisposable(Observable.zip(mWishRemoteImpl.getHomeWishList(), mWishRemoteImpl.getStayOutboundWishList(MAX_VALUE), new BiFunction<List<RecentlyPlace>, List<StayOutbound>, ArrayList<CarouselListItem>>()
+        addCompositeDisposable(Observable.zip(mWishRemoteImpl.getHomeWishList(), mWishRemoteImpl.getStayOutboundWishList(mBaseActivity, MAX_VALUE), new BiFunction<List<RecentlyPlace>, List<StayOutbound>, ArrayList<CarouselListItem>>()
         {
             @Override
             public ArrayList<CarouselListItem> apply(List<RecentlyPlace> recentlyPlaceList, List<StayOutbound> stayOutboundList) throws Exception
@@ -1401,7 +1407,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET) //
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(mBaseActivity, MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
@@ -1416,13 +1422,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 }
             });
 
-        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
+        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices(mBaseActivity, Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
             .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
             {
                 @Override
                 public ObservableSource<StayOutbounds> apply(@NonNull String targetIndices) throws Exception
                 {
-                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
+                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(mBaseActivity, targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
                 }
             });
 
@@ -1461,7 +1467,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             @Override
             public ObservableSource<ArrayList<CarouselListItem>> apply(@NonNull ArrayList<CarouselListItem> carouselListItems) throws Exception
             {
-                return mRecentlyLocalImpl.sortCarouselListItemList(carouselListItems, (Constants.ServiceType[]) null);
+                return mRecentlyLocalImpl.sortCarouselListItemList(mBaseActivity, carouselListItems, (Constants.ServiceType[]) null);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
         {

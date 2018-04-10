@@ -154,9 +154,9 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
         mAnalytics = new GourmetBookingDetailAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mReviewRemoteImpl = new ReviewRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mReviewRemoteImpl = new ReviewRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
 
         setRefresh(true);
     }
@@ -1143,9 +1143,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                 ticketName, getString(R.string.label_booking_count, totalTicketCount), //
                 restaurantInfo.address);
 
-            CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());
-
-            addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            addCompositeDisposable(new CommonRemoteImpl().getShortUrl(longUrl).subscribe(new Consumer<String>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull String shortUrl) throws Exception

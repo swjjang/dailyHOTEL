@@ -55,7 +55,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
         setContentView(R.layout.activity_edit_name);
 
-        mProfileRemoteImpl = new ProfileRemoteImpl(this);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         Intent intent = getIntent();
         String name = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);

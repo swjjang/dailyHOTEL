@@ -75,8 +75,8 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     {
         setAnalytics(new SearchGourmetFragmentAnalyticsImpl());
 
-        mSearchLocalImpl = new SearchLocalImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
+        mSearchLocalImpl = new SearchLocalImpl();
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
 
         initViewModel(activity);
 
@@ -216,7 +216,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
 
         GourmetSuggest suggest = recentlyHistory.gourmetSuggest;
 
-        addCompositeDisposable(mSearchLocalImpl.deleteGourmetSearchResultHistory(suggest).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<List<GourmetSearchResultHistory>>>()
+        addCompositeDisposable(mSearchLocalImpl.deleteGourmetSearchResultHistory(getActivity(), suggest).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<List<GourmetSearchResultHistory>>>()
         {
             @Override
             public ObservableSource<List<GourmetSearchResultHistory>> apply(Boolean aBoolean) throws Exception
@@ -225,7 +225,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
 
                 mAnalytics.onEventRecentlyHistoryDeleteClick(getActivity(), suggest.getText1());
 
-                return mSearchLocalImpl.getGourmetSearchResultHistoryList(mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
+                return mSearchLocalImpl.getGourmetSearchResultHistoryList(getActivity(), mCommonDateTimeViewModel.commonDateTime, RECENTLY_HISTORY_MAX_COUNT);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<GourmetSearchResultHistory>>()
         {
@@ -283,7 +283,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
         final int RECENTLY_HISTORY_MAX_COUNT = 3;
         CommonDateTime commonDateTime = mCommonDateTimeViewModel.commonDateTime;
 
-        addCompositeDisposable(mSearchLocalImpl.getGourmetSearchResultHistoryList(commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
+        addCompositeDisposable(mSearchLocalImpl.getGourmetSearchResultHistoryList(getActivity(), commonDateTime, RECENTLY_HISTORY_MAX_COUNT)//
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<GourmetSearchResultHistory>>()
             {
                 @Override

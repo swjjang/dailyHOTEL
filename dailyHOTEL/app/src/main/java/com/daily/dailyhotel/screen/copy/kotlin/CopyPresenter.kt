@@ -74,7 +74,7 @@ class CopyPresenter(activity: CopyActivity)//
 
     @Synchronized
     override fun onRefresh(showProgress: Boolean) {
-        if (isFinish() || !isRefresh) {
+        if (isFinish || !isRefresh) {
             return
         }
 

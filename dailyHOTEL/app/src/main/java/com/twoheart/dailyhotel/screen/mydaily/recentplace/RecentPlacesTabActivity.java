@@ -98,8 +98,8 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         setContentView(R.layout.activity_recent_places);
 
-        mCommonRemoteImpl = new CommonRemoteImpl(this);
-        mRecentlyLocalImpl = new RecentlyLocalImpl(this);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
 
         initIntent(getIntent());
 
@@ -278,8 +278,8 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         // mPlaceType == null 일때 - DeepLink 가 아닐때
         addCompositeDisposable(Observable.zip( //
-            mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
-            , mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET) //
+            mRecentlyLocalImpl.getRecentlyTypeList(RecentPlacesTabActivity.this, Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
+            , mRecentlyLocalImpl.getRecentlyTypeList(RecentPlacesTabActivity.this, Constants.ServiceType.GOURMET) //
             , new BiFunction<ArrayList<RecentlyDbPlace>, ArrayList<RecentlyDbPlace>, Integer>()
             {
                 @Override
@@ -483,7 +483,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onDeleteItemClickAnalytics()
         {
-            addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList((Constants.ServiceType[]) null) //
+            addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList(RecentPlacesTabActivity.this, (Constants.ServiceType[]) null) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
                 {
                     @Override

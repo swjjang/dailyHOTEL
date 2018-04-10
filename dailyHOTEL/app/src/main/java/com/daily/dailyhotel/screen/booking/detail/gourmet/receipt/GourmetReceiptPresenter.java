@@ -61,7 +61,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
 
         mAnalytics = new GourmetReceiptAnalyticsImpl();
 
-        mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
+        mReceiptRemoteImpl = new ReceiptRemoteImpl();
 
         mIsFullScreenMode = false;
         if (getViewInterface() != null)

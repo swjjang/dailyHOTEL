@@ -152,18 +152,22 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
 
         getViewDataBinding().personInclude.personCountTextView.setText(getString(R.string.label_more_person, person));
 
-        if (person == StayFilter.PERSON_COUNT_OF_MIN)
+        switch (person)
         {
-            getViewDataBinding().personInclude.minusPersonImageView.setEnabled(false);
-            getViewDataBinding().personInclude.plusPersonImageView.setEnabled(true);
-        } else if (person == StayFilter.PERSON_COUNT_OF_MAX)
-        {
-            getViewDataBinding().personInclude.minusPersonImageView.setEnabled(true);
-            getViewDataBinding().personInclude.plusPersonImageView.setEnabled(false);
-        } else
-        {
-            getViewDataBinding().personInclude.minusPersonImageView.setEnabled(true);
-            getViewDataBinding().personInclude.plusPersonImageView.setEnabled(true);
+            case StayFilter.PERSON_COUNT_OF_MIN:
+                getViewDataBinding().personInclude.minusPersonImageView.setEnabled(false);
+                getViewDataBinding().personInclude.plusPersonImageView.setEnabled(true);
+                break;
+
+            case StayFilter.PERSON_COUNT_OF_MAX:
+                getViewDataBinding().personInclude.minusPersonImageView.setEnabled(true);
+                getViewDataBinding().personInclude.plusPersonImageView.setEnabled(false);
+                break;
+
+            default:
+                getViewDataBinding().personInclude.minusPersonImageView.setEnabled(true);
+                getViewDataBinding().personInclude.plusPersonImageView.setEnabled(true);
+                break;
         }
     }
 

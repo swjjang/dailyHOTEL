@@ -64,7 +64,7 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
 
         mAnalytics = new StayReceiptAnalyticsImpl();
 
-        mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
+        mReceiptRemoteImpl = new ReceiptRemoteImpl();
 
         mIsFullScreenMode = false;
 

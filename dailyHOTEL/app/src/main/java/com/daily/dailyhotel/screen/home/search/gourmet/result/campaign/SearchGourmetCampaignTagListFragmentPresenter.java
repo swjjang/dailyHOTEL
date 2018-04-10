@@ -125,7 +125,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
     {
         setAnalytics(new SearchGourmetCampaignTagListFragmentAnalyticsImpl());
 
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
 
         initViewModel(activity);
 
@@ -427,7 +427,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         GourmetSuggest.CampaignTag suggestItem = (GourmetSuggest.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
-        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT))//
+        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(getActivity(), suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT))//
             .map(new Function<GourmetCampaignTags, Pair<GourmetCampaignTags, List<ObjectItem>>>()
             {
                 @Override
@@ -685,7 +685,7 @@ public class SearchGourmetCampaignTagListFragmentPresenter extends BasePagerFrag
         GourmetSuggest.CampaignTag suggestItem = (GourmetSuggest.CampaignTag) suggest.getSuggestItem();
         final String DATE_FORMAT = "yyyy-MM-dd";
 
-        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTags>()
+        addCompositeDisposable(mCampaignTagRemoteImpl.getGourmetCampaignTags(getActivity(), suggestItem.index, mViewModel.getBookDateTime().getVisitDateTime(DATE_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTags>()
         {
             @Override
             public void accept(GourmetCampaignTags campaignTags) throws Exception

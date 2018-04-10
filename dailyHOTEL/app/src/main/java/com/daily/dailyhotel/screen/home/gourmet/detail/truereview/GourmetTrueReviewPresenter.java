@@ -78,7 +78,7 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
 
         mAnalytics = new GourmetGourmetTrueReviewAnalyticsImpl();
 
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
 
         setRefresh(true);
     }

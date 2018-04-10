@@ -64,7 +64,7 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
 
         mAnalytics = new LeaveDailyAnalyticsImpl();
 
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         setRefresh(true);
     }
@@ -322,7 +322,7 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
                     screenLock(true);
 
                     addCompositeDisposable(mProfileRemoteImpl.doUserLeaveDaily(mSelectedReason.index).observeOn(AndroidSchedulers.mainThread()) //
-                        .subscribe(aBoolean -> addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object -> {
+                        .subscribe(aBoolean -> addCompositeDisposable(new ConfigLocalImpl().clear(getActivity()).subscribe(object -> {
                             new FacebookRemoteImpl().logOut();
                             new KakaoRemoteImpl().logOut();
 

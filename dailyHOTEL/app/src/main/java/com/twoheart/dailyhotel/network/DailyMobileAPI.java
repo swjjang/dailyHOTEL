@@ -65,7 +65,7 @@ public class DailyMobileAPI
     {
         mContext = context;
 
-        mDailyMobileService = RetrofitHttpClient.getInstance(context).getService();
+        mDailyMobileService = RetrofitHttpClient.getInstance().getService();
     }
 
     public void cancelAll(Context context, final String tag)
@@ -75,7 +75,7 @@ public class DailyMobileAPI
             return;
         }
 
-        RetrofitHttpClient.getInstance(context).cancelAll(tag);
+        RetrofitHttpClient.getInstance().cancelAll(tag);
     }
 
     public void requestStatusServer(String tag, Object listener)

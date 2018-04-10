@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
@@ -41,13 +40,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterface
 {
-    public PaymentRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
-    public Observable<StayOutboundPayment> getStayOutboundPayment(StayBookDateTime stayBookDateTime, int index//
+    public Observable<StayOutboundPayment> getStayOutboundPayment(Context context, StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType)
     {
         JSONObject jsonObject = new JSONObject();
@@ -71,7 +65,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             jsonObject = null;
         }
 
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}/room-reservation-saleinfos"//
             : "MTcwJDI1JDk0JDEzNSQxNzMkMTYzJDcyJDEzOCQxNDgkNjYkMTA5JDEzNCQ3MiQxNjYkNjAkMTU2JA==$RjNCNjM2RjZFQjFBNUVEMkI1MFkVCRjA1NjZFNDBFOTI3MEM4RDUzN0NFQkZNDQTQ0RPkNDNTQRDBNUU3RDFCNzU1MUIyOUIxQYkQzQkY3ODRFMEjY4QkZGNTZBMDUxQkQzODg2NLUE5RTECRBN0YyM0EU2OHUVBMkE5QUJCVQjc4RREM2MTM1RUWPI=$";
@@ -253,9 +247,9 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     }
 
     @Override
-    public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject)
+    public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(Context context, int index, JSONObject jsonObject)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/oneclick"//
             : "MTU2JDEyNyQxNTAkMTYyJDQkMjIkMTc0JDE2NSQyNCQxNDMkMTkwJDU4JDQ2JDIyNCQyMyQxMDYk$OUM2KNjQyOEY1QzQxRTUzQQBzVczQTFEQjBGRjU1ODY2NDIQ0QjM0NTc4RjYR0NUYxNTU4MDIyMUMzRUQ2RDYyQzgyRkYzQTBDQ0Y3MzNGIRTA2RUNCRTlEQUNEODMxNzg2QkNSGMkFFMjIwRDMK1NUI1NTg5QOUI5RDExWODkHCzMTgwMDA2JRTY2QzQ5OUE3DOTY1MDE3RTkwREMzNDU2NDYwNTE3NTcXxRQ==$";
@@ -286,9 +280,9 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     }
 
     @Override
-    public Observable<PaymentResult> getStayOutboundPaymentTypeFree(int index, String saleType, JSONObject jsonObject)
+    public Observable<PaymentResult> getStayOutboundPaymentTypeFree(Context context, int index, String saleType, JSONObject jsonObject)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/{saleType}"//
             : "NzkkMTk5JDUzJDE5OSQ4MCQzMyQxNTYkMTkkOTckMTE5JDEyMCQyMTUkMTY0JDE2NiQxMTUkMTQzJA==$QzBFMjE3RTMzQjAzRjFXEM0E4MjFFRkQyQBThBOUYyNUEzRDM4NjZGQWzJEMjZEODM5QTRCM0I0MjIwMTUXU2RDQ2Qzg0M0ZFNQUQ5QUMyM0U5ODM1RGjRFMKTUY2RTMxQzA0MEI5MjlFRkYFENEE4M0M0NDAzMkJFPMDUQ1BQjg0QzI3ODBGNTMzMjE0QzExQzg2N0YwNzE1MTIwRJjIUyRjJCWNTY0OTczRA==$";
@@ -320,9 +314,9 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     }
 
     @Override
-    public Observable<String> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject)
+    public Observable<String> getStayOutboundHasDuplicatePayment(Context context, int index, JSONObject jsonObject)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}/valid-reservations"//
             : "ODckMTE0JDc0JDEyNCQ0NCQ5NSQxMjckMTEzJDExMCQ2NiQzNyQzMCQxMzIkNjckMyQ2MCQ=$MDcR4OTk3N0Q3ODg0N0YxNzdDMzIxMEUMyQzFGNIzQxQzk1VMkJDRDk4NTU5JNjE3MUMyXOBTQyMDg3RDLU3OEYzQ0RCODIM3QTZGWMUMxMENFOEY2RDJg2NK0VFQHjU5MzBBRRSZDhERDA4QTYyQUE1RkQzNDk5N0RDNDE4NTk4MDFCM0FDQjcxQTg=$";
