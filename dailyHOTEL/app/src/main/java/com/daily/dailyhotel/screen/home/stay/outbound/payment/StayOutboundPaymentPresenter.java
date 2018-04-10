@@ -172,10 +172,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         mAnalytics = new StayOutboundPaymentAnalyticsImpl();
 
-        mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mCouponRemoteImpl = new CouponRemoteImpl(activity);
+        mPaymentRemoteImpl = new PaymentRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mCouponRemoteImpl = new CouponRemoteImpl();
 
         setRefresh(true);
     }
@@ -570,7 +570,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutboundPayment(mStayBookDateTime, mStayIndex//
+        addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutboundPayment(getActivity(), mStayBookDateTime, mStayIndex//
             , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople, mVendorType)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserSimpleInformation()//
             , mCommonRemoteImpl.getCommonDateTime()//
@@ -1023,7 +1023,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
             , mSaleType, mUserSimpleInformation.bonus, mSelectedCoupon, mGuest, mStayOutboundPayment.totalPrice, mVendorType, null);
 
-        addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(mStayIndex, jsonObject).subscribe(new Consumer<String>()
+        addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(getActivity(), mStayIndex, jsonObject).subscribe(new Consumer<String>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
@@ -1152,7 +1152,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
                 , mSaleType, mUserSimpleInformation.bonus, mSelectedCoupon, mGuest, mStayOutboundPayment.totalPrice, mVendorType, null);
 
-            addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeFree(mStayIndex, PAYMENT_TYPE.toLowerCase(), jsonObject).subscribe(new Consumer<PaymentResult>()
+            addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeFree(getActivity(), mStayIndex, PAYMENT_TYPE.toLowerCase(), jsonObject).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -1206,7 +1206,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mSaleType, mUserSimpleInformation.bonus, mSelectedCoupon, mGuest, mStayOutboundPayment.totalPrice//
                         , mVendorType, mSelectedCard.billKey);
 
-                    addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeEasy(mStayIndex, jsonObject).subscribe(new Consumer<PaymentResult>()
+                    addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeEasy(getActivity(), mStayIndex, jsonObject).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -2342,7 +2342,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         final String DATE_FORMAT = "yyyy-MM-dd";
 
-        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(stayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(getActivity(), stayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
             , stayBookDateTime.getCheckOutDateTime(DATE_FORMAT), stayIndex, rateCode, rateKey, roomTypeCode, vendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {
             @Override

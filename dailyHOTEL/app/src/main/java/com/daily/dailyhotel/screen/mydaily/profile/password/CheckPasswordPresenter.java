@@ -55,7 +55,7 @@ public class CheckPasswordPresenter //
 
         mAnalytics = new CheckPasswordAnalyticsImpl();
 
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         setRefresh(true);
     }

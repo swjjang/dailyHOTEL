@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
@@ -14,27 +16,27 @@ import io.reactivex.Observable;
 
 public interface SuggestLocalInterface
 {
-    Observable addStayOutboundSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword);
+    Observable addStayOutboundSuggestDb(Context context, StayOutboundSuggest stayOutboundSuggest, String keyword);
 
-    Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest();
+    Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest(Context context);
 
-    Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList(int maxCount);
+    Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList(Context context, int maxCount);
 
-    Observable<String> getRecentlyStayOutboundSuggestKeyword(final long id);
+    Observable<String> getRecentlyStayOutboundSuggestKeyword(Context context, final long id);
 
-    Observable<Boolean> deleteAllRecentlyStayOutboundSuggest();
+    Observable<Boolean> deleteAllRecentlyStayOutboundSuggest(Context context);
 
-    Observable<Boolean> deleteRecentlyStayOutboundSuggest(long id);
+    Observable<Boolean> deleteRecentlyStayOutboundSuggest(Context context, long id);
 
-    Observable<Boolean> addRecentlyGourmetSuggest(GourmetSuggest gourmetSuggest, String keyword);
+    Observable<Boolean> addRecentlyGourmetSuggest(Context context, GourmetSuggest gourmetSuggest, String keyword);
 
-    Observable<List<GourmetSuggest>> getRecentlyGourmetSuggestList(int maxCount);
+    Observable<List<GourmetSuggest>> getRecentlyGourmetSuggestList(Context context, int maxCount);
 
-    Observable<Boolean> deleteRecentlyGourmetSuggest(GourmetSuggest gourmetSuggest);
+    Observable<Boolean> deleteRecentlyGourmetSuggest(Context context, GourmetSuggest gourmetSuggest);
 
-    Observable<Boolean> addRecentlyStaySuggest(StaySuggest staySuggest, String keyword);
+    Observable<Boolean> addRecentlyStaySuggest(Context context, StaySuggest staySuggest, String keyword);
 
-    Observable<List<StaySuggest>> getRecentlyStaySuggestList(int maxCount);
+    Observable<List<StaySuggest>> getRecentlyStaySuggestList(Context context, int maxCount);
 
-    Observable<Boolean> deleteRecentlyStaySuggest(StaySuggest staySuggest);
+    Observable<Boolean> deleteRecentlyStaySuggest(Context context, StaySuggest staySuggest);
 }

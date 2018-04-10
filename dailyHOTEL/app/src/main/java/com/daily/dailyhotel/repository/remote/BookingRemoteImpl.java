@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.BookingInterface;
@@ -45,15 +44,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterface
 {
-    public BookingRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
-    public Observable<List<Booking>> getStayOutboundBookingList()
+    public Observable<List<Booking>> getStayOutboundBookingList(Context context)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations"//
             : "MTckMzAkNDUkNjMkMTAzJDExMSQ1JDAkNiQzJDEyJDEyMSQ5NiQxMzQkMzMkNTUk$ARUSFDMON0VCWNkYxMkZGQZkI0NDQ2N0QX2MYTNDMDQ0QUUxRDEDzMELRBNEEyMjY5NUI0XQjA1NEQ4RDQ3RTAzNjQ5QzJEOUUA5MzY5QUE2NkYA0Njg0NDZk5QjJgyNEE2NTAzNCkM0RjI5$";
@@ -125,9 +119,9 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     }
 
     @Override
-    public Observable<Boolean> getStayOutboundHideBooking(int bookingIndex)
+    public Observable<Boolean> getStayOutboundHideBooking(Context context, int bookingIndex)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}/hide"//
             : "MzckMTM5JDQkMjIkMTExJDE2NiQzNSQxNDAkMTkkMjkkODckMTAzJDEkOTYkMzYkMTU5JA==$NJDdFAQjRGNUQwNzdEQUII2QMzMyQ0YMzQjMI4QKjM4NUkEwNkE5OUVGOTA0MjkyQjRGMEMxMjhERUU3MDQ0NDU0NZDczMEM0ANkQyMDhBMRTdDNDZFM0ZFXQ0Y5Q0QyNDUxODQ1QzZCODEyNzEK0RjRZDQ0M4RNUE4Q0Q2RjJFNTc2QTkI0OTNDRkQ=$";
@@ -163,9 +157,9 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     }
 
     @Override
-    public Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(int bookingIndex)
+    public Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(Context context, int bookingIndex)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}"//
             : "MTY4JDg4JDc3JDU4JDE2NCQ3NiQxMjgkODckMTMzJDg3JDczJDEzNyQxNzckMTM1JDEwMyQxNyQ=$OUY1NDc3N0FDRTgzMNDk1MkVGQTQ3OTI5MzdBMUY1OTdBRTkwRkM0MzkwRTWhFNDZGMTMyNTBGDQTVYGRAkIxQUEyYENzIyFNzQwNTM2DNTgyMkM0ODcyQzY5QzhFOUQzRUI3EMzQDEzIOUYyOTU4RDU0QzUyMENEMzUwMjg0RTYwNOEQ1RjLk3QNUE=$";
@@ -201,9 +195,9 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     }
 
     @Override
-    public Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(String aggregationId)
+    public Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(Context context, String aggregationId)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/aggregations/{aggregationId}"//
             : "MTEyJDE2NCQxMTgkMjEkMzgkMjgkMzckODUkNzkkMTQkNTIkODgkMTc4JDYyJDkxJDEyJA==$MkU2MkExQkM0UNEHE5MkEyNEjUwNUMAyQTAyMEZBDMBTI0RUJCMkYQyRjhFMzU5VNjNCREJBNkNFNDU4OEZZCRTBFMDTJjA2MTE1MDEwRTU0QUY0MzU1RERBODdEAMDdCOMUI0MTZDQ0RBMzREQkQ4QTM5RkIzMUQyNTA3OUNEQkIyRTER2ODKhGQ0U=$";
@@ -702,9 +696,9 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     }
 
     @Override
-    public Observable<List<BookingCancel>> getStayOutboundBookingCancelList()
+    public Observable<List<BookingCancel>> getStayOutboundBookingCancelList(Context context)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/refunded-reservations"//
             : "MTEwJDgxJDU4JDI4JDIzJDExOCQ1MCQxMzQkOTckNDEkMzAkMyQ2MCQxMTUkNTUkMTA3JA==$MjFDEQjIyQTVCQjhGMERGNDhIDRkE4NHOTU3MThCQzhUGMzE0MkI1ZRKDE3MTKY1RkRRERTMxRjc2OEQzQTlDQjM4NUDlDQUYyQTg2HRDAxWQjMxNTdGND0QyQzYEwORDQ1NzBDNjkzQUUG5$";

@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetFilterCount;
@@ -18,11 +20,11 @@ import io.reactivex.Observable;
 
 public interface GourmetInterface
 {
-    Observable<Gourmets> getList(Map<String, Object> queryMap);
+    Observable<Gourmets> getList(Context context, Map<String, Object> queryMap);
 
-    Observable<List<Gourmet>> getList(GourmetParams gourmetParams);
+    Observable<List<Gourmet>> getList(Context context, GourmetParams gourmetParams);
 
-    Observable<GourmetFilterCount> getListCountByFilter(Map<String, Object> queryMap);
+    Observable<GourmetFilterCount> getListCountByFilter(Context context, Map<String, Object> queryMap);
 
     Observable<GourmetDetail> getDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime);
 

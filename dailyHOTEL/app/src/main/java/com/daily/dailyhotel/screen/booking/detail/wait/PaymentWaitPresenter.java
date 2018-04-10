@@ -87,7 +87,7 @@ public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActi
 
         mAnalytics = new PaymentWaitAnalyticsImpl();
 
-        mBookingRemoteImpl = new BookingRemoteImpl(getActivity());
+        mBookingRemoteImpl = new BookingRemoteImpl();
 
         setRefresh(true);
     }

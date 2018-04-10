@@ -118,10 +118,10 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     {
         super.onCreate(savedInstanceState);
 
-        mCommonRemoteImpl = new CommonRemoteImpl(getContext());
-        mReviewRemoteImpl = new ReviewRemoteImpl(getContext());
-        mBookingRemoteImpl = new BookingRemoteImpl(getContext());
-        mProfileRemoteImpl = new ProfileRemoteImpl(getContext());
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mReviewRemoteImpl = new ReviewRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
     }
 
     @Override
@@ -448,7 +448,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         setCancelHistoryButtonVisible(true);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-            , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
+            , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList(getContext())//
             , new Function3<CommonDateTime, List<Booking>, List<Booking>, List<Booking>>()
             {
                 @Override
@@ -1074,7 +1074,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 case STAY_OUTBOUND:
                 {
-                    addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(booking.reservationIndex) //
+                    addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(getActivity(), booking.reservationIndex) //
                         .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                         {
                             @Override

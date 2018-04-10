@@ -97,8 +97,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
         mAnalytics = new GourmetThankYouAnalyticsImpl();
 
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
 
         setRefresh(true);
     }

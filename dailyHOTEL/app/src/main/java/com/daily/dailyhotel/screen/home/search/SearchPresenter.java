@@ -99,7 +99,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         mAnalytics = new SearchAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
 
         initViewModel(activity);
 

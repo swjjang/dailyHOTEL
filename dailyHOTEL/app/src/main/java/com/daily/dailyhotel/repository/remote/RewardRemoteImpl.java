@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.RewardInterface;
 import com.daily.dailyhotel.entity.RewardCardHistoryDetail;
@@ -26,11 +24,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RewardRemoteImpl extends BaseRemoteImpl implements RewardInterface
 {
-    public RewardRemoteImpl(Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<RewardInformation> getRewardStickerCount()
     {

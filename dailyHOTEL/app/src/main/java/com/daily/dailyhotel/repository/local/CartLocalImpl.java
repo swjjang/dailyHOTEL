@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.local;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.CartInterface;
@@ -19,22 +18,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CartLocalImpl implements CartInterface
 {
-    Context mContext;
-
-    public CartLocalImpl(@NonNull Context context)
-    {
-        mContext = context;
-    }
-
     @Override
-    public Observable<GourmetCart> getGourmetCart()
+    public Observable<GourmetCart> getGourmetCart(Context context)
     {
         return Observable.defer(new Callable<ObservableSource<GourmetCart>>()
         {
             @Override
             public ObservableSource<GourmetCart> call() throws Exception
             {
-                String jsonObjectString = DailyCartPreference.getInstance(mContext).getGourmetCart();
+                String jsonObjectString = DailyCartPreference.getInstance(context).getGourmetCart();
 
                 if (DailyTextUtils.isTextEmpty(jsonObjectString) == true || "{}".equalsIgnoreCase(jsonObjectString) == true)
                 {
@@ -49,7 +41,7 @@ public class CartLocalImpl implements CartInterface
     }
 
     @Override
-    public Observable<Boolean> setGourmetCart(GourmetCart gourmetCart)
+    public Observable<Boolean> setGourmetCart(Context context, GourmetCart gourmetCart)
     {
         if (gourmetCart == null)
         {
@@ -58,7 +50,7 @@ public class CartLocalImpl implements CartInterface
                 @Override
                 public ObservableSource<Boolean> call() throws Exception
                 {
-                    DailyCartPreference.getInstance(mContext).setGourmetCart(null);
+                    DailyCartPreference.getInstance(context).setGourmetCart(null);
 
                     return Observable.just(true);
                 }
@@ -74,10 +66,10 @@ public class CartLocalImpl implements CartInterface
 
                     if (DailyTextUtils.isTextEmpty(jsonObjectString) == true || "{}".equalsIgnoreCase(jsonObjectString) == true)
                     {
-                        DailyCartPreference.getInstance(mContext).setGourmetCart(null);
+                        DailyCartPreference.getInstance(context).setGourmetCart(null);
                     } else
                     {
-                        DailyCartPreference.getInstance(mContext).setGourmetCart(gourmetCart.toJSONObject().toString());
+                        DailyCartPreference.getInstance(context).setGourmetCart(gourmetCart.toJSONObject().toString());
                     }
 
                     return true;
@@ -87,14 +79,14 @@ public class CartLocalImpl implements CartInterface
     }
 
     @Override
-    public Observable<Boolean> hasGourmetCart()
+    public Observable<Boolean> hasGourmetCart(Context context)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
             @Override
             public ObservableSource<Boolean> call() throws Exception
             {
-                String jsonObjectString = DailyCartPreference.getInstance(mContext).getGourmetCart();
+                String jsonObjectString = DailyCartPreference.getInstance(context).getGourmetCart();
 
                 return Observable.just(DailyTextUtils.isTextEmpty(jsonObjectString) == false && "{}".equalsIgnoreCase(jsonObjectString) == false);
             }
@@ -102,14 +94,14 @@ public class CartLocalImpl implements CartInterface
     }
 
     @Override
-    public Observable<Integer> getGourmetCartTotalCount()
+    public Observable<Integer> getGourmetCartTotalCount(Context context)
     {
         return Observable.defer(new Callable<ObservableSource<Integer>>()
         {
             @Override
             public ObservableSource<Integer> call() throws Exception
             {
-                String jsonObjectString = DailyCartPreference.getInstance(mContext).getGourmetCart();
+                String jsonObjectString = DailyCartPreference.getInstance(context).getGourmetCart();
 
                 if (DailyTextUtils.isTextEmpty(jsonObjectString) == true || "{}".equalsIgnoreCase(jsonObjectString) == true)
                 {
@@ -124,14 +116,14 @@ public class CartLocalImpl implements CartInterface
     }
 
     @Override
-    public Observable<Boolean> clearGourmetCart()
+    public Observable<Boolean> clearGourmetCart(Context context)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
             @Override
             public ObservableSource<Boolean> call() throws Exception
             {
-                DailyCartPreference.getInstance(mContext).setGourmetCart(null);
+                DailyCartPreference.getInstance(context).setGourmetCart(null);
 
                 return Observable.just(true);
             }

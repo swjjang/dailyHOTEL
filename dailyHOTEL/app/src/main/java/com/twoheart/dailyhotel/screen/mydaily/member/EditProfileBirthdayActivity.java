@@ -70,8 +70,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
         setContentView(R.layout.activity_edit_birthday);
 
-        mCommonRemoteImpl = new CommonRemoteImpl(this);
-        mProfileRemoteImpl = new ProfileRemoteImpl(this);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         Intent intent = getIntent();
         String birthday = intent.getStringExtra(INTENT_EXTRA_DATA_BIRTHDAY);

@@ -115,11 +115,11 @@ public class SearchStayOutboundSuggestPresenter //
 
         mAnalytics = new SearchStayOutboundSuggestAnalyticsImpl();
 
-        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
-        mSuggestLocalImpl = new SuggestLocalImpl(activity);
-        mRecentlyRemoteImpl = new RecentlyRemoteImpl(activity);
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
-        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
+        mSuggestRemoteImpl = new SuggestRemoteImpl();
+        mSuggestLocalImpl = new SuggestLocalImpl();
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
@@ -290,9 +290,9 @@ public class SearchStayOutboundSuggestPresenter //
 
         // 최근 검색어, 인기 지역 , 최근 본 업장 순
         addCompositeDisposable(Observable.zip( //
-            mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT) //
-            , mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound() //
-            , mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY) //
+            mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(getActivity(), SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT) //
+            , mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound(getActivity()) //
+            , mRecentlyLocalImpl.getRecentlyTypeList(getActivity(), Constants.ServiceType.OB_STAY) //
             , new Function3<List<StayOutboundSuggest>, List<StayOutboundSuggest>, ArrayList<RecentlyDbPlace>, List<StayOutboundSuggest>>()
             {
 
@@ -477,7 +477,7 @@ public class SearchStayOutboundSuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByStayOutbound(keyword)//
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByStayOutbound(getActivity(), keyword)//
                 .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(new Consumer<List<StayOutboundSuggest>>()
                 {
                     @Override
@@ -536,7 +536,7 @@ public class SearchStayOutboundSuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, mKeyword) //
+        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(getActivity(), stayOutboundSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -583,13 +583,13 @@ public class SearchStayOutboundSuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestKeyword(stayOutboundSuggest.id) //
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestKeyword(getActivity(), stayOutboundSuggest.id) //
             .flatMap(new Function<String, ObservableSource<String>>()
             {
                 @Override
                 public ObservableSource<String> apply(String keyword) throws Exception
                 {
-                    return mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, keyword).map(new Function<Boolean, String>()
+                    return mSuggestLocalImpl.addStayOutboundSuggestDb(getActivity(), stayOutboundSuggest, keyword).map(new Function<Boolean, String>()
                     {
                         @Override
                         public String apply(Boolean aBoolean) throws Exception
@@ -644,7 +644,7 @@ public class SearchStayOutboundSuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, mKeyword) //
+        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(getActivity(), stayOutboundSuggest, mKeyword) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -708,7 +708,7 @@ public class SearchStayOutboundSuggestPresenter //
 
         if (StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY == stayOutboundSuggest.menuType)
         {
-            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.OB_STAY, (int) stayOutboundSuggest.id) //
+            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY, (int) stayOutboundSuggest.id) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -734,7 +734,7 @@ public class SearchStayOutboundSuggestPresenter //
             }
         } else
         {
-            addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyStayOutboundSuggest(stayOutboundSuggest.id) //
+            addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyStayOutboundSuggest(getActivity(), stayOutboundSuggest.id) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
@@ -894,7 +894,7 @@ public class SearchStayOutboundSuggestPresenter //
                                 }
                             } else
                             {
-                                addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(mLocationSuggest, mKeyword) //
+                                addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(getActivity(), mLocationSuggest, mKeyword) //
                                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                                     {
                                         @Override

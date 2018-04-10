@@ -66,7 +66,7 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
 
         mAnalytics = new StayAutoRefundAnalyticsImpl();
 
-        mRefundRemoteImpl = new RefundRemoteImpl(activity);
+        mRefundRemoteImpl = new RefundRemoteImpl();
 
         setRefresh(true);
     }

@@ -63,7 +63,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
 
         mAnalytics = new RewardHistoryAnalyticsImpl();
 
-        mRewardRemoteImpl = new RewardRemoteImpl(activity);
+        mRewardRemoteImpl = new RewardRemoteImpl();
 
         setRefresh(true);
     }

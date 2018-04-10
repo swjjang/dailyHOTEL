@@ -35,11 +35,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
 {
-    public CouponRemoteImpl(Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<List<Coupon>> getCouponHistoryList()
     {
@@ -173,10 +168,10 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<Coupons> getStayOutboundCouponListByPayment(String checkInDate, String checkOutDate//
+    public Observable<Coupons> getStayOutboundCouponListByPayment(Context context, String checkInDate, String checkOutDate//
         , int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/payment/coupons"//
             : "MjAkNzMkMzEkODAkMjUkODUkOTAkOSQxMyQ5NSQyMSQ3NyQ4MyQ4JDg3JDI2JA==$MTE1OUU4VNEDFBMNEJENzAB3MMSjVFVNEJEOEPJEQ0Q1N0Y4N0RDOTVFQUIzN0NGQTM2M0M3MzZDOTdIGYNkQMxNAJzZDRNjIzXQQI==$";
@@ -236,10 +231,10 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<Coupons> getStayOutboundCouponListByDetail(String checkInDate, String checkOutDate//
+    public Observable<Coupons> getStayOutboundCouponListByDetail(Context context, String checkInDate, String checkOutDate//
         , int stayIndex, String[] vendorTypes)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/hotels/{stayIndex}/coupons"//
             : "MTgkMTA4JDM2JDM4JDEzMSQzMCQ1NyQ5NyQxMTgkMTI3JDQ3JDI5JDUzJDgzJDExNCQxMDQk$QzVGNENBMEUyQzhDNjQJFNDQ3NTUwYNGjhEMTMDyCNkY4MTUR4NkUEwNjgwMTUYyM0I1QzQwNjUwRDcxOTEE5MTg2Q0Q5MUI1RTlDYRUMJFMENCRjQzROUQN5NEJMFQkJDQ0YJyRDM2REVHF$";

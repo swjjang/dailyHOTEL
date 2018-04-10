@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetPayment;
@@ -19,7 +21,7 @@ import io.reactivex.Observable;
 public interface PaymentInterface
 {
     // Stay Outbound 결제 정보를 가져온다.
-    Observable<StayOutboundPayment> getStayOutboundPayment(StayBookDateTime stayBookDateTime, int index//
+    Observable<StayOutboundPayment> getStayOutboundPayment(Context context, StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType);
 
     Observable<StayPayment> getStayPayment(StayBookDateTime stayBookDateTime, int roomIndex);
@@ -29,11 +31,11 @@ public interface PaymentInterface
     // 간편 결제 카드 리스트를 얻어온다.
     Observable<List<Card>> getEasyCardList();
 
-    Observable<PaymentResult> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject);
+    Observable<PaymentResult> getStayOutboundPaymentTypeEasy(Context context, int index, JSONObject jsonObject);
 
-    Observable<PaymentResult> getStayOutboundPaymentTypeFree(int index, String saleType, JSONObject jsonObject);
+    Observable<PaymentResult> getStayOutboundPaymentTypeFree(Context context, int index, String saleType, JSONObject jsonObject);
 
-    Observable<String> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject);
+    Observable<String> getStayOutboundHasDuplicatePayment(Context context, int index, JSONObject jsonObject);
 
     Observable<PaymentResult> getStayPaymentTypeEasy(JSONObject jsonObject);
 

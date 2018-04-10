@@ -153,7 +153,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.GOURMET) //
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(mBaseActivity, DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.GOURMET) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
@@ -262,7 +262,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             return Observable.just(new ArrayList<>());
         }
 
-        return mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.GOURMET) //
+        return mRecentlyLocalImpl.getRecentlyIndexList(mBaseActivity, Constants.ServiceType.GOURMET) //
             .flatMap(new Function<ArrayList<Integer>, ObservableSource<ArrayList<PlaceViewItem>>>()
             {
                 @Override
@@ -496,8 +496,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
-                Constants.ServiceType.GOURMET, recentlyPlace.index).observeOn(Schedulers.io()).subscribe());
+            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(getActivity() //
+                , Constants.ServiceType.GOURMET, recentlyPlace.index).observeOn(Schedulers.io()).subscribe());
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

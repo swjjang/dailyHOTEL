@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
@@ -38,13 +37,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutboundInterface
 {
-    public StayOutboundRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
-    public Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, long geographyId//
+    public Observable<StayOutbounds> getList(Context context, StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, int numberOfResults//
         , String cacheKey, String cacheLocation, String customerSessionId)
     {
@@ -95,7 +89,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             jsonObject = null;
         }
 
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/geographicalid-find-hotels"//
             : "MTE4JDg0JDQ2JDEwNSQzOSQ4MyQxMDckMTE2JDEyNyQyNCQxMjMkMzYkMTEzJDU0JDEyOSQ3NCQ=$QzIwOUJFRDQ4RjFDREY2MzUwQMTRFOUNERUZTCQThZERDM3QjXY5NDRdBMTg3NjY0QUM0NUYyOZDU5QjlERUY1MNTdDTQzc4NDI5MzQ3RTQ3NEIVKwQEkJCMTBczMjcEzNRDNAOwQTI2Mzgy$";
@@ -128,7 +122,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
-    public Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, double latitude, double longitude, float radius//
+    public Observable<StayOutbounds> getList(Context context, StayBookDateTime stayBookDateTime, double latitude, double longitude, float radius//
         , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults, boolean mapScreen, String cacheKey, String cacheLocation, String customerSessionId)
     {
         JSONObject jsonObject = new JSONObject();
@@ -183,7 +177,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             jsonObject = null;
         }
 
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/coordinate-find-hotels"//
             : "NzgkNDEkODckMTkkMTA0JDI2JDM4JDU3JDcwJDEwNCQzNSQzNyQxMjIkMzUkNzgkMTMzJA==$MUIwQURENEVCREE4RDYC0RkJEQWzIzNUJBMGTDPJCYQzdBNZzczMDNEMjRCNMTY3QzAyMUVFMTkVDNKEI3NjRDMUFFDNTZGQFjlCMUVFMjNECMkI1HRjgyMjg3QTSVGMDM5ODNhBRUY4Q0Uy$";
@@ -216,7 +210,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
-    public Observable<StayOutboundDetail> getDetailInformation(int index, StayBookDateTime stayBookDateTime, People people)
+    public Observable<StayOutboundDetail> getDetailInformation(Context context, int index, StayBookDateTime stayBookDateTime, People people)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -236,7 +230,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             jsonObject = null;
         }
 
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/hotels/{hotelId}/description"//
             : "MzckODMkNzIkOTAkMTI3JDEyNiQxMDEkMTkkODUkOTkkMCQ5OSQxMDYkNDIkNjMkNzck$NMzc2RjI2N0M5RjY0MENJERDQ4NUE0QzA4NTMzROUYYxMTQyNTE2NkU0RDM1NUECxMTRBMTI4QThHPCRjY0MDJDNzICBENzIW0OUM0RMNjBCRROjAwOTk2NjI0QTEyQjA3OTQwQULMP3QkQ0$";
@@ -267,7 +261,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
-    public Observable<List<StayOutboundRoom>> getDetailRoomList(int index, StayBookDateTime stayBookDateTime, People people)
+    public Observable<List<StayOutboundRoom>> getDetailRoomList(Context context, int index, StayBookDateTime stayBookDateTime, People people)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -287,7 +281,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             jsonObject = null;
         }
 
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/hotels/{hotelId}/rooms"//
             : "MTI0JDk3JDM1JDc1JDEyOCQ4MyQxNCQ4MiQxMDMkODckNjYkMTgkOTMkNzIkNjckNSQ=$QTM0NJUZCQzU1OUHJCRLTQzMzUxNTA4OTEzQURNDQzgxREE1NDY5RjFCQzlCM0MyNENBBNNkU0LQzQzQzABCMzIP1RBEWUxNYUNGNTNBM0NDOOGTMyNENGOUFBRjM0NTRBN0EzMjU5JZOUNB$";
@@ -326,7 +320,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
-    public Observable<StayOutbounds> getRecommendAroundList(int index, StayBookDateTime stayBookDateTime, People people)
+    public Observable<StayOutbounds> getRecommendAroundList(Context context, int index, StayBookDateTime stayBookDateTime, People people)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -346,7 +340,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             jsonObject = null;
         }
 
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/recommend-around"//
             : "MTcwJDExMCQ2JDEwNSQxMzAkMTgkMTI5JDEyMyQ1MyQ2OSQ2MiQ0MyQyNiQ1OCQ3MCQ5NyQ=$MzZFOUSI2NkIwNEQwOFDQyNjVDRRjNDRDU1MUQwQjY0RHURDNTQ3RUNHFNAzExOTYCxMDJIEMEXFBQzExNjcyRjdGRDlBNDRCHRDhGNkM1RjIyNDkwDMTdFMjSMwMEMzNTZGBNDc3QA0ZQGMUFCOUZCM0FDOTQ1NkI0NTA0NEJEQzgwRjlDOTRERENU=$";
@@ -382,9 +376,9 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
-    public Observable<WishResult> addWish(int wishIndex)
+    public Observable<WishResult> addWish(Context context, int wishIndex)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems/{stayIndex}/add"//
             : "OTUkMTIyJDY3JDExOSQ3MSQxMyQ2NCQxMzQkOTQkNTMkNDYkODgkMTExJDYwJDgxJDUk$REEzNQzg2RDJERXkRFMkQ0MzJGNDk5RjQzQjBBNTdDOUYzMGDdGQ0U4DQUMzMFDYwNzQJwNjVXBMUDE4MDAk2NjREOTWExMEEyNEZFFNkRSGNzQ0RDBRFODhCNkQ5NEZCMKDNGNZTEzNTUD1$";
@@ -410,9 +404,9 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
-    public Observable<WishResult> removeWish(int wishIndex)
+    public Observable<WishResult> removeWish(Context context, int wishIndex)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems/{stayIndex}/remove"//
             : "MiQ5NyQ2NSQ5MyQxMzEkOTMkNjgkMTAyJDEyNyQ2NyQxJDEzNyQxMTIkODIkMTQxJDY0JA==$MYzZk4MUZENzU0MDg0NjkwMTk2QzNERUNCRDRCMkY1QkNCMEJFNDEyOTE2MTcwNkCI3BRWUMY0RDk5M0ZCQAUVFREZCQ0Y0MEEHE4Q0E1EMREM2Q0RNDMzNBMkU0N0M2QjkyVQjNFODZIBCD$";

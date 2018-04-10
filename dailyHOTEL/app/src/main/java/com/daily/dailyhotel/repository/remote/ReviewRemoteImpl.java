@@ -23,11 +23,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
 {
-    public ReviewRemoteImpl(Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<Review> getStayReview(int reservationIndex)
     {
@@ -91,9 +86,9 @@ public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
     }
 
     @Override
-    public Observable<Review> getStayOutboundReview(int reservationIndex)
+    public Observable<Review> getStayOutboundReview(Context context, int reservationIndex)
     {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/{reserveIdx}/reviewable-question"//
             : "NzYkMCQ4MiQxMCQyMCQ0MiQ0MiQ1OCQxMjkkODIkNjEkMTI1JDE2NiQxMDckMjIkMTM4JA==$XN0RBNENCMMDZEQTkwMjFRHFMzQ5QUFDMzdEOTNGRjYBE4ODZFMjhBQkE2MQEYK3RUVBMDdFQTM2QTQ1MjM1RTMzU5IOUU4RjlFNjYzQ0VGRDDVGODA4RTFFOEVBREZBCMjZFNRTg4GNTdERkY3QUYxMTRCQTk0RTdBQjMxQjUE0MzBCQ0E2MkU3NjU=$";

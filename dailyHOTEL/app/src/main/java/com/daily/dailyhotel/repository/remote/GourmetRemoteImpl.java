@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
@@ -31,13 +30,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterface
 {
-    public GourmetRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
-    public Observable<List<Gourmet>> getList(GourmetParams gourmetParams)
+    public Observable<List<Gourmet>> getList(Context context, GourmetParams gourmetParams)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
             : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
@@ -51,7 +45,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
                 {
                     if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        gourmetList.addAll(baseDto.data.getGourmetList(mContext));
+                        gourmetList.addAll(baseDto.data.getGourmetList(context));
                     } else
                     {
                         throw new BaseException(baseDto.msgCode, baseDto.msg);
@@ -66,12 +60,12 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
     }
 
     @Override
-    public Observable<Gourmets> getList(Map<String, Object> queryMap)
+    public Observable<Gourmets> getList(Context context, Map<String, Object> queryMap)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
             : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
 
-        return mDailyMobileService.getGourmetList(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
+        return mDailyMobileService.getGourmetList(getBaseUrl(context) + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
                 Gourmets gourmets;
 
@@ -79,7 +73,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
                 {
                     if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        gourmets = baseDto.data.getGourmets(mContext);
+                        gourmets = baseDto.data.getGourmets(context);
                     } else
                     {
                         throw new BaseException(baseDto.msgCode, baseDto.msg);
@@ -94,12 +88,12 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
     }
 
     @Override
-    public Observable<GourmetFilterCount> getListCountByFilter(Map<String, Object> queryMap)
+    public Observable<GourmetFilterCount> getListCountByFilter(Context context, Map<String, Object> queryMap)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
             : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
 
-        return mDailyMobileService.getGourmetListCountByFilter(getBaseUrl() + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
+        return mDailyMobileService.getGourmetListCountByFilter(getBaseUrl(context) + Crypto.getUrlDecoderEx(API) + toStringQueryParams(queryMap)) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
                 GourmetFilterCount filterCount;
 

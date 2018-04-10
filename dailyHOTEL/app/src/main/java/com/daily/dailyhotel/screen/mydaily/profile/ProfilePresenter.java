@@ -92,8 +92,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
         mAnalytics = new ProfileAnalyticsImpl();
 
-        mConfigLocalImpl = new ConfigLocalImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mConfigLocalImpl = new ConfigLocalImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
 
         //        setRefresh(true);
     }

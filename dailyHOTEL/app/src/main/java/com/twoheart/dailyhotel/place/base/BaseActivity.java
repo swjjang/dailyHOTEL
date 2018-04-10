@@ -593,7 +593,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
             if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
             {
-                addCompositeDisposable(new ConfigLocalImpl(this).clear().subscribe(object -> {
+                addCompositeDisposable(new ConfigLocalImpl().clear(this).subscribe(object -> {
                     new FacebookRemoteImpl().logOut();
                     new KakaoRemoteImpl().logOut();
 

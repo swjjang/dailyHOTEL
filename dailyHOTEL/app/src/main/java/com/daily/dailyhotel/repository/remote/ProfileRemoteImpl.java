@@ -1,8 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ProfileInterface;
 import com.daily.dailyhotel.entity.LeaveInfo;
@@ -26,11 +23,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterface
 {
-    public ProfileRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<User> getProfile()
     {

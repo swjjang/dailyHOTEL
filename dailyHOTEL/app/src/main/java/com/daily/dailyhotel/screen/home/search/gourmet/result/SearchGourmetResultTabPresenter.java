@@ -91,9 +91,9 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
         mAnalytics = new SearchGourmetResultTabAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
-        mSearchLocalImpl = new SearchLocalImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
+        mSearchLocalImpl = new SearchLocalImpl();
 
         initViewModel(activity);
 
@@ -903,7 +903,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
         {
             if (mViewModel.getSuggest().menuType != GourmetSuggest.MenuType.REGION_LOCATION)
             {
-                addCompositeDisposable(mSearchLocalImpl.addGourmetSearchResultHistory(mViewModel.getCommonDateTime()//
+                addCompositeDisposable(mSearchLocalImpl.addGourmetSearchResultHistory(getActivity(), mViewModel.getCommonDateTime()//
                     , mViewModel.getBookDateTime(), mViewModel.getSuggest()).observeOn(AndroidSchedulers.mainThread()).subscribe());
             }
         }

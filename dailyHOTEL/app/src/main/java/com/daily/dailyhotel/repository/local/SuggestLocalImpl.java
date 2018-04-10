@@ -2,7 +2,6 @@ package com.daily.dailyhotel.repository.local;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.daily.base.util.DailyTextUtils;
@@ -32,15 +31,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class SuggestLocalImpl implements SuggestLocalInterface
 {
-    Context mContext;
-
-    public SuggestLocalImpl(@NonNull Context context)
-    {
-        mContext = context;
-    }
-
     @Override
-    public Observable<Boolean> addStayOutboundSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword)
+    public Observable<Boolean> addStayOutboundSuggestDb(Context context, StayOutboundSuggest stayOutboundSuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -66,7 +58,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 dailyDb.addStayObRecentlySuggest(stayOutboundSuggest.id, suggestString, keyword, true);
 
@@ -78,14 +70,14 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest()
+    public Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest(Context context)
     {
         return Observable.defer(new Callable<ObservableSource<StayOutboundSuggest>>()
         {
             @Override
             public ObservableSource<StayOutboundSuggest> call() throws Exception
             {
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 StayOutboundSuggest stayOutboundSuggest = null;
                 Cursor cursor = null;
@@ -131,7 +123,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList(int maxCount)
+    public Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList(Context context, int maxCount)
     {
         final int maxSize = maxCount < 1 ? DailyDb.MAX_RECENT_PLACE_COUNT : maxCount;
 
@@ -140,7 +132,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
             @Override
             public ObservableSource<List<StayOutboundSuggest>> call() throws Exception
             {
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 ArrayList<StayOutboundSuggest> stayOutboundSuggestList = null;
                 Cursor cursor = null;
@@ -203,7 +195,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<String> getRecentlyStayOutboundSuggestKeyword(final long id)
+    public Observable<String> getRecentlyStayOutboundSuggestKeyword(Context context, final long id)
     {
         return Observable.defer(new Callable<ObservableSource<String>>()
         {
@@ -215,7 +207,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just("");
                 }
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 String keyword = null;
 
@@ -240,14 +232,14 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> deleteAllRecentlyStayOutboundSuggest()
+    public Observable<Boolean> deleteAllRecentlyStayOutboundSuggest(Context context)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
             @Override
             public ObservableSource<Boolean> call() throws Exception
             {
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 try
                 {
@@ -265,14 +257,14 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> deleteRecentlyStayOutboundSuggest(long id)
+    public Observable<Boolean> deleteRecentlyStayOutboundSuggest(Context context, long id)
     {
         return Observable.defer(new Callable<Observable<Boolean>>()
         {
             @Override
             public Observable<Boolean> call() throws Exception
             {
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 try
                 {
@@ -290,7 +282,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> addRecentlyGourmetSuggest(GourmetSuggest gourmetSuggest, String keyword)
+    public Observable<Boolean> addRecentlyGourmetSuggest(Context context, GourmetSuggest gourmetSuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -321,7 +313,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 String type = null;
                 String displayName = null;
@@ -381,14 +373,14 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<List<GourmetSuggest>> getRecentlyGourmetSuggestList(int maxCount)
+    public Observable<List<GourmetSuggest>> getRecentlyGourmetSuggestList(Context context, int maxCount)
     {
         return Observable.defer(new Callable<ObservableSource<List<GourmetSuggest>>>()
         {
             @Override
             public ObservableSource<List<GourmetSuggest>> call() throws Exception
             {
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 ArrayList<GourmetSuggest> gourmetSuggestList = null;
                 Cursor cursor = null;
@@ -451,7 +443,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> deleteRecentlyGourmetSuggest(GourmetSuggest gourmetSuggest)
+    public Observable<Boolean> deleteRecentlyGourmetSuggest(Context context, GourmetSuggest gourmetSuggest)
     {
         return Observable.defer(new Callable<Observable<Boolean>>()
         {
@@ -467,7 +459,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 String display = gourmetSuggest.getText1();
                 ExLog.d("sam : type : " + type + " , display : " + display);
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 try
                 {
@@ -485,7 +477,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> addRecentlyStaySuggest(StaySuggest staySuggest, String keyword)
+    public Observable<Boolean> addRecentlyStaySuggest(Context context, StaySuggest staySuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -516,7 +508,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                     return Observable.just(false);
                 }
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 String type = null;
                 String displayName = null;
@@ -585,14 +577,14 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<List<StaySuggest>> getRecentlyStaySuggestList(int maxCount)
+    public Observable<List<StaySuggest>> getRecentlyStaySuggestList(Context context, int maxCount)
     {
         return Observable.defer(new Callable<ObservableSource<List<StaySuggest>>>()
         {
             @Override
             public ObservableSource<List<StaySuggest>> call() throws Exception
             {
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 ArrayList<StaySuggest> staySuggestList = null;
                 Cursor cursor = null;
@@ -655,7 +647,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Boolean> deleteRecentlyStaySuggest(StaySuggest staySuggest)
+    public Observable<Boolean> deleteRecentlyStaySuggest(Context context, StaySuggest staySuggest)
     {
         return Observable.defer(new Callable<Observable<Boolean>>()
         {
@@ -671,7 +663,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 String name = staySuggest.getText1();
                 ExLog.d("sam : type : " + type + " , name : " + name);
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 try
                 {

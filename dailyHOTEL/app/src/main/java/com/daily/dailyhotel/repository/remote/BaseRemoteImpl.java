@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
@@ -12,19 +11,15 @@ import com.twoheart.dailyhotel.util.Crypto;
 
 public class BaseRemoteImpl
 {
-    Context mContext;
-
     DailyMobileService mDailyMobileService;
 
-    public BaseRemoteImpl(@NonNull Context context)
+    public BaseRemoteImpl()
     {
-        mContext = context;
-
-        mDailyMobileService = RetrofitHttpClient.getInstance(context).getService();
+        mDailyMobileService = RetrofitHttpClient.getInstance().getService();
     }
 
-    protected String getBaseUrl()
+    protected String getBaseUrl(Context context)
     {
-        return Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseUrl() : Crypto.getUrlDecoderEx(Setting.getServerUrl());
+        return Constants.DEBUG ? DailyPreference.getInstance(context).getBaseUrl() : Crypto.getUrlDecoderEx(Setting.getServerUrl());
     }
 }

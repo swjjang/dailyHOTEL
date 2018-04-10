@@ -1,8 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -30,11 +27,6 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
     private static final String KEY_COUNTRY = "country";
     private static final String KEY_SUBLOCALITY_LEVEL_2 = "sublocality_level_2";
     private static final String KEY_ADMINISTRATIVE_AREA_LEVEL_1 = "administrative_area_level_1";
-
-    public GoogleAddressRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
 
     @Override
     public Observable<GoogleAddress> getLocationAddress(double latitude, double longitude)

@@ -125,7 +125,7 @@ public class SearchStayCampaignTagListFragmentPresenter extends BasePagerFragmen
     {
         setAnalytics(new SearchStayCampaignTagListFragmentAnalyticsImpl());
 
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
 
         initViewModel(activity);
 

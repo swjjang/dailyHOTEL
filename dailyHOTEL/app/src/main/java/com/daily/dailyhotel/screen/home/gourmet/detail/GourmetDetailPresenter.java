@@ -241,12 +241,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         mAppResearch = new AppResearch(activity);
 
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mCalendarImpl = new CalendarImpl(activity);
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
-        mCartLocalImpl = new CartLocalImpl(activity);
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mCalendarImpl = new CalendarImpl();
+        mRecentlyLocalImpl = new RecentlyLocalImpl();
+        mCartLocalImpl = new CartLocalImpl();
 
         setStatus(STATUS_NONE);
 
@@ -377,8 +377,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.GOURMET, mGourmetIndex, mGourmetName, null, mImageUrl, null, true) //
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
+            , Constants.ServiceType.GOURMET, mGourmetIndex, mGourmetName, null, mImageUrl, null, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
@@ -422,7 +422,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             onRefresh(true);
         } else
         {
-            addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+            addCompositeDisposable(mCartLocalImpl.getGourmetCart(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
             {
                 @Override
                 public void accept(GourmetCart gourmetCart) throws Exception
@@ -573,7 +573,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             case GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+                    addCompositeDisposable(mCartLocalImpl.getGourmetCart(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
                     {
                         @Override
                         public void accept(GourmetCart gourmetCart) throws Exception
@@ -628,7 +628,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+                        addCompositeDisposable(mCartLocalImpl.getGourmetCart(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
                         {
                             @Override
                             public void accept(GourmetCart gourmetCart) throws Exception
@@ -1475,7 +1475,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+        addCompositeDisposable(mCartLocalImpl.getGourmetCart(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
         {
             @Override
             public void accept(GourmetCart gourmetCart) throws Exception
@@ -1658,8 +1658,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             }
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
-            Constants.ServiceType.GOURMET, mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, regionName, true) //
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
+            , Constants.ServiceType.GOURMET, mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, regionName, true) //
             .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
@@ -2026,7 +2026,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             , mGourmetRemoteImpl.getReviewScores(mGourmetIndex)//
             , mGourmetRemoteImpl.getTrueVR(mGourmetIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , mCartLocalImpl.getGourmetCart()//
+            , mCartLocalImpl.getGourmetCart(getActivity())//
             , new Function7<Boolean, GourmetDetail, List<Integer>, ReviewScores, List<TrueVR>, CommonDateTime, GourmetCart, GourmetCart>()
             {
                 @Override
@@ -2074,7 +2074,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         break;
 
                     case INVALID_GOURMET_SOLD_OUT:
-                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                         {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception
@@ -2087,7 +2087,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         break;
 
                     case INVALID_GOURMET_CART_CHANGED_PRICE:
-                        addCompositeDisposable(mCartLocalImpl.setGourmetCart(gourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        addCompositeDisposable(mCartLocalImpl.setGourmetCart(getActivity(), gourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                         {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception
@@ -2328,7 +2328,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
     void showClearCartDialog(String message)
     {
-        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        addCompositeDisposable(mCartLocalImpl.clearGourmetCart(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception

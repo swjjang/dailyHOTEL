@@ -195,7 +195,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL) //
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(mBaseActivity, DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
@@ -210,13 +210,13 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
             });
 
-        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
+        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices(mBaseActivity, Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
             .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
             {
                 @Override
                 public ObservableSource<StayOutbounds> apply(@NonNull String targetIndices) throws Exception
                 {
-                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
+                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(mBaseActivity, targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
                 }
             });
 
@@ -295,7 +295,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return Observable.just(new ArrayList<>());
         }
 
-        return mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
+        return mRecentlyLocalImpl.getRecentlyIndexList(getActivity(), Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
             .flatMap(new Function<ArrayList<Integer>, ObservableSource<ArrayList<PlaceViewItem>>>()
             {
                 @Override
@@ -632,8 +632,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
-            Constants.ServiceType.HOTEL, recentlyPlace.index).observeOn(Schedulers.io()).subscribe());
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(getActivity() //
+            , Constants.ServiceType.HOTEL, recentlyPlace.index).observeOn(Schedulers.io()).subscribe());
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
@@ -662,8 +662,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
-            Constants.ServiceType.OB_STAY, stayOutbound.index).observeOn(Schedulers.io()).subscribe());
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(getActivity() //
+            , Constants.ServiceType.OB_STAY, stayOutbound.index).observeOn(Schedulers.io()).subscribe());
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

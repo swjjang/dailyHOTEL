@@ -57,8 +57,8 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     override fun constructorInitialize(activity: StayPreviewActivity) {
         setContentView(R.layout.activity_stay_preview_data)
 
-        stayRemoteImpl = StayRemoteImpl(activity)
-        commonRemoteImpl = CommonRemoteImpl(activity)
+        stayRemoteImpl = StayRemoteImpl()
+        commonRemoteImpl = CommonRemoteImpl()
 
         isRefresh = true
     }

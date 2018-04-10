@@ -117,8 +117,8 @@ public class GourmetBookingCancelDetailPresenter //
 
         mAnalytics = new GourmetBookingCancelDetailCancelAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
 
         setRefresh(true);
     }

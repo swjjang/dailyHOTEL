@@ -70,8 +70,8 @@ public class AddProfileSocialActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         mAddProfileSocialLayout = new AddProfileSocialLayout(this, mOnEventListener);
-        mProfileRemoteImpl = new ProfileRemoteImpl(this);
-        mCommonRemoteImpl = new CommonRemoteImpl(this);
+        mProfileRemoteImpl = new ProfileRemoteImpl();
+        mCommonRemoteImpl = new CommonRemoteImpl();
 
         setContentView(mAddProfileSocialLayout.onCreateView(R.layout.activity_add_profile_social));
 

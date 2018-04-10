@@ -94,8 +94,8 @@ public class WishListTabActivity extends BaseActivity
 
         setContentView(R.layout.activity_wishlist);
 
-        mCommonRemoteImpl = new CommonRemoteImpl(this);
-        mWishRemoteImpl = new WishRemoteImpl(this);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mWishRemoteImpl = new WishRemoteImpl();
 
         initIntent(getIntent());
 
@@ -339,26 +339,27 @@ public class WishListTabActivity extends BaseActivity
 
     private void onRefresh()
     {
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mWishRemoteImpl.getWishCount(), mWishRemoteImpl.getStayOutboundWishCount(), new Function3<CommonDateTime, WishCount, Integer, WishCount>()
-        {
-            @Override
-            public WishCount apply(CommonDateTime commonDateTime, WishCount wishCount, Integer wishStayOutboundCount) throws Exception
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mWishRemoteImpl.getWishCount()//
+            , mWishRemoteImpl.getStayOutboundWishCount(this), new Function3<CommonDateTime, WishCount, Integer, WishCount>()
             {
-                if (mFragmentList != null)
+                @Override
+                public WishCount apply(CommonDateTime commonDateTime, WishCount wishCount, Integer wishStayOutboundCount) throws Exception
                 {
-                    TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
-
-                    for (PlaceWishListFragment fragment : mFragmentList)
+                    if (mFragmentList != null)
                     {
-                        fragment.setPlaceBookingDay(todayDateTime);
+                        TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
+
+                        for (PlaceWishListFragment fragment : mFragmentList)
+                        {
+                            fragment.setPlaceBookingDay(todayDateTime);
+                        }
                     }
+
+                    wishCount.wishStayOutboundCount = wishStayOutboundCount;
+
+                    return wishCount;
                 }
-
-                wishCount.wishStayOutboundCount = wishStayOutboundCount;
-
-                return wishCount;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishCount>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishCount>()
         {
             @Override
             public void accept(WishCount wishCount) throws Exception

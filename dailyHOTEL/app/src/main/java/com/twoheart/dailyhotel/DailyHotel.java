@@ -127,7 +127,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         FontManager.getInstance(getApplicationContext());
 
         // 장바구니 초기화
-        new CartLocalImpl(getApplicationContext()).clearGourmetCart().subscribe();
+        new CartLocalImpl().clearGourmetCart(getApplicationContext()).subscribe();
 
         registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
     }
@@ -146,7 +146,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
     private void initializeNetwork(Context context)
     {
-        RetrofitHttpClient.getInstance(context);
+        RetrofitHttpClient.getInstance().createService(context);
     }
 
     public static DailyHotel getGlobalApplicationContext()
@@ -266,7 +266,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 {
                     Util.restartApp(activity);
 
-                    new CartLocalImpl(activity).clearGourmetCart().subscribe();
+                    new CartLocalImpl().clearGourmetCart(activity).subscribe();
                 }
             }
         }

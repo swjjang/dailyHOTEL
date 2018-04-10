@@ -1464,7 +1464,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             // 메시지가 있을때 무조건 팝업을 발생한다.
             if (DailyTextUtils.isTextEmpty(title, message) == true)
             {
-                addCompositeDisposable(new CommonRemoteImpl(MainActivity.this).getConfigurations() //
+                addCompositeDisposable(new CommonRemoteImpl().getConfigurations() //
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
                     {
                         @Override
@@ -1577,7 +1577,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         return Observable.just(false);
                     } else
                     {
-                        return new ConfigLocalImpl(MainActivity.this).clear();
+                        return new ConfigLocalImpl().clear(MainActivity.this);
                     }
                 }
             }).subscribe(new Consumer<Boolean>()

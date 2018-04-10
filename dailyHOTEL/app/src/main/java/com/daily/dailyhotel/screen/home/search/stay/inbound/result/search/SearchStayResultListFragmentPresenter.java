@@ -145,9 +145,9 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     {
         setAnalytics(new SearchStayResultListFragmentAnalyticsImpl());
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
-        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         initViewModel(activity);
 
@@ -630,7 +630,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             @Override
             public ObservableSource<Stays> apply(Boolean result) throws Exception
             {
-                return mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(mPage), null);
+                return mStayRemoteImpl.getList(getActivity(), mViewModel.categoryType, getQueryMap(mPage), null);
             }
         }).map(new Function<Stays, Pair<Stays, List<ObjectItem>>>()
         {
@@ -857,7 +857,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         mPage++;
 
-        addCompositeDisposable(mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(mPage), null).map(new Function<Stays, List<ObjectItem>>()
+        addCompositeDisposable(mStayRemoteImpl.getList(getActivity(), mViewModel.categoryType, getQueryMap(mPage), null).map(new Function<Stays, List<ObjectItem>>()
         {
             @Override
             public List<ObjectItem> apply(Stays stays) throws Exception
@@ -1024,7 +1024,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        addCompositeDisposable(mStayRemoteImpl.getList(mViewModel.categoryType, getQueryMap(-1), null).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
+        addCompositeDisposable(mStayRemoteImpl.getList(getActivity(), mViewModel.categoryType, getQueryMap(-1), null).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
         {
             @Override
             public void accept(Stays stays) throws Exception

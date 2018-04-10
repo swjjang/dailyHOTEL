@@ -84,7 +84,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         mAnalytics = new GourmetFilterAnalyticsImpl();
 
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
 
         setRefresh(true);
     }
@@ -93,16 +93,16 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     public boolean onIntent(Intent intent)
     {
         if (intent == null)
-        {
-            return true;
-        }
 
-        try
+
         {
-            mListType = SearchGourmetResultTabPresenter.ListType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
-        } catch (Exception e)
-        {
-            mListType = SearchGourmetResultTabPresenter.ListType.DEFAULT;
+            try
+            {
+                mListType = SearchGourmetResultTabPresenter.ListType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+            } catch (Exception e)
+            {
+                mListType = SearchGourmetResultTabPresenter.ListType.DEFAULT;
+            }
         }
 
         String visitDateTime = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
@@ -441,7 +441,7 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
-        addCompositeDisposable(mGourmetRemoteImpl.getListCountByFilter(getQueryMap()).delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetFilterCount>()
+        addCompositeDisposable(mGourmetRemoteImpl.getListCountByFilter(getActivity(), getQueryMap()).delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetFilterCount>()
         {
             @Override
             public void accept(GourmetFilterCount filterCount) throws Exception

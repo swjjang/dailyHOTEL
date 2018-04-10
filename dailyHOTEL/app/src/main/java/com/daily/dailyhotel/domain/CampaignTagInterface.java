@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
 import com.daily.dailyhotel.entity.StayCampaignTags;
@@ -18,5 +20,5 @@ public interface CampaignTagInterface
 
     Observable<StayCampaignTags> getStayCampaignTags(int index, String checkInDate, int nights);
 
-    Observable<GourmetCampaignTags> getGourmetCampaignTags(int index, String visitDate);
+    Observable<GourmetCampaignTags> getGourmetCampaignTags(Context context, int index, String visitDate);
 }

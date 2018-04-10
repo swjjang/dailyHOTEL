@@ -104,7 +104,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         mGourmetCuration = new GourmetCuration();
 
-        mCartLocalImpl = new CartLocalImpl(this);
+        mCartLocalImpl = new CartLocalImpl();
 
         Intent intent = getIntent();
 
@@ -124,7 +124,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     {
         super.onResume();
 
-        addCompositeDisposable(mCartLocalImpl.getGourmetCartTotalCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+        addCompositeDisposable(mCartLocalImpl.getGourmetCartTotalCount(this).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
         {
             @Override
             public void accept(Integer count) throws Exception
@@ -858,7 +858,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 return;
             }
 
-            addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+            addCompositeDisposable(mCartLocalImpl.getGourmetCart(GourmetMainActivity.this).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
             {
                 @Override
                 public void accept(GourmetCart gourmetCart) throws Exception

@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
 import android.util.Pair;
 
 import com.daily.dailyhotel.entity.Area;
@@ -23,13 +24,13 @@ import io.reactivex.Observable;
 
 public interface StayInterface
 {
-    Observable<Stays> getList(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
+    Observable<Stays> getList(Context context, DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
 
-    Observable<Stays> getLocalPlusList(Map<String, Object> queryMap);
+    Observable<Stays> getLocalPlusList(Context context, Map<String, Object> queryMap);
 
-    Observable<StayFilterCount> getListCountByFilter(DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
+    Observable<StayFilterCount> getListCountByFilter(Context context, DailyCategoryType categoryType, Map<String, Object> queryMap, String abTestType);
 
-    Observable<StayFilterCount> getLocalPlusListCountByFilter(Map<String, Object> queryMap);
+    Observable<StayFilterCount> getLocalPlusListCountByFilter(Context context, Map<String, Object> queryMap);
 
     Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime);
 
@@ -45,9 +46,9 @@ public interface StayInterface
 
     Observable<List<TrueVR>> getTrueVR(int stayIndex);
 
-    Observable<List<StayAreaGroup>> getAreaList(DailyCategoryType categoryType);
+    Observable<List<StayAreaGroup>> getAreaList(Context context, DailyCategoryType categoryType);
 
-    Observable<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> getSubwayAreaList(DailyCategoryType categoryType);
+    Observable<LinkedHashMap<Area, List<StaySubwayAreaGroup>>> getSubwayAreaList(Context context, DailyCategoryType categoryType);
 
-    Observable<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> getRegionList(DailyCategoryType categoryType);
+    Observable<Pair<List<StayAreaGroup>, LinkedHashMap<Area, List<StaySubwayAreaGroup>>>> getRegionList(Context context, DailyCategoryType categoryType);
 }

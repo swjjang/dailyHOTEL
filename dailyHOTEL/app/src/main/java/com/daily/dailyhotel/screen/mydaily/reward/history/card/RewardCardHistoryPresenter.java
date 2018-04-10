@@ -54,7 +54,7 @@ public class RewardCardHistoryPresenter extends BaseExceptionPresenter<RewardCar
 
         mAnalytics = new RewardCardHistoryAnalyticsImpl();
 
-        mRewardRemoteImpl = new RewardRemoteImpl(activity);
+        mRewardRemoteImpl = new RewardRemoteImpl();
 
         setRefresh(true);
     }

@@ -78,7 +78,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
         mAnalytics = new StayCalendarAnalyticsImpl();
 
-        mCalendarImpl = new CalendarImpl(activity);
+        mCalendarImpl = new CalendarImpl();
 
         setRefresh(true);
     }

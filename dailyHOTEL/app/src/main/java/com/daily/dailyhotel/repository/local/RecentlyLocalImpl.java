@@ -41,15 +41,8 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
 {
     private static final String RECENT_PLACE_DELIMITER = ",";
 
-    Context mContext;
-
-    public RecentlyLocalImpl(Context context)
-    {
-        mContext = context;
-    }
-
     @Override
-    public Observable<Boolean> addRecentlyItem(Constants.ServiceType serviceType, int index //
+    public Observable<Boolean> addRecentlyItem(Context context, Constants.ServiceType serviceType, int index //
         , String name, String englishName, String imageUrl, String regionName, boolean isUpdateDate)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
@@ -62,7 +55,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
                     return Observable.just(false);
                 }
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
                 dailyDb.addRecentlyPlace(serviceType, index, name, englishName, imageUrl, regionName, isUpdateDate);
 
                 DailyDbHelper.getInstance().close();
@@ -73,7 +66,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<Boolean> deleteRecentlyItem(Constants.ServiceType serviceType, int index)
+    public Observable<Boolean> deleteRecentlyItem(Context context, Constants.ServiceType serviceType, int index)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -85,7 +78,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
                     return Observable.just(false);
                 }
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
                 dailyDb.deleteRecentlyItem(serviceType, index);
 
                 DailyDbHelper.getInstance().close();
@@ -96,7 +89,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<Boolean> clearRecentlyItems(Constants.ServiceType serviceType)
+    public Observable<Boolean> clearRecentlyItems(Context context, Constants.ServiceType serviceType)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -108,7 +101,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
                     return Observable.just(false);
                 }
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
                 dailyDb.deleteAllRecentlyItem(serviceType);
 
                 DailyDbHelper.getInstance().close();
@@ -119,14 +112,14 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Constants.ServiceType... serviceTypes)
+    public Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Context context, Constants.ServiceType... serviceTypes)
     {
         return Observable.defer(new Callable<ObservableSource<? extends ArrayList<RecentlyDbPlace>>>()
         {
             @Override
             public ObservableSource<? extends ArrayList<RecentlyDbPlace>> call() throws Exception
             {
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 Cursor cursor = null;
 
@@ -198,14 +191,14 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<ArrayList<CarouselListItem>> sortCarouselListItemList(ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes)
+    public Observable<ArrayList<CarouselListItem>> sortCarouselListItemList(Context context, ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes)
     {
         if (actualList == null || actualList.size() == 0)
         {
             return Observable.just(new ArrayList<>());
         }
 
-        return getRecentlyTypeList(serviceTypes).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<ArrayList<CarouselListItem>>>()
+        return getRecentlyTypeList(context, serviceTypes).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<ArrayList<CarouselListItem>>>()
         {
             @Override
             public ObservableSource<ArrayList<CarouselListItem>> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
@@ -248,7 +241,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<String> getTargetIndices(Constants.ServiceType serviceType, final int maxSize)
+    public Observable<String> getTargetIndices(Context context, Constants.ServiceType serviceType, final int maxSize)
     {
         return Observable.defer(new Callable<ObservableSource<String>>()
         {
@@ -264,7 +257,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
 
                 StringBuilder builder = new StringBuilder();
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 Cursor cursor = null;
 
@@ -320,9 +313,9 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<JSONObject> getRecentlyJSONObject(int maxSize, Constants.ServiceType... serviceTypes)
+    public Observable<JSONObject> getRecentlyJSONObject(Context context, int maxSize, Constants.ServiceType... serviceTypes)
     {
-        return getRecentlyTypeList(serviceTypes).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<JSONObject>>()
+        return getRecentlyTypeList(context, serviceTypes).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<JSONObject>>()
         {
             @Override
             public ObservableSource<JSONObject> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
@@ -349,7 +342,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<ArrayList<Integer>> getRecentlyIndexList(Constants.ServiceType... serviceTypes)
+    public Observable<ArrayList<Integer>> getRecentlyIndexList(Context context, Constants.ServiceType... serviceTypes)
     {
         return Observable.defer(new Callable<ObservableSource<ArrayList<Integer>>>()
         {
@@ -363,7 +356,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
 
                 ArrayList<Integer> indexList = new ArrayList<>();
 
-                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
                 Cursor cursor = null;
 

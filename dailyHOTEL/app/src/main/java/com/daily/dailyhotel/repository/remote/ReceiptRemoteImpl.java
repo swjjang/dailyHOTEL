@@ -1,8 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ReceiptInterface;
 import com.daily.dailyhotel.entity.GourmetReceipt;
@@ -26,11 +23,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ReceiptRemoteImpl extends BaseRemoteImpl implements ReceiptInterface
 {
-    public ReceiptRemoteImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<GourmetReceipt> getGourmetReceipt(int reservationIdx)
     {

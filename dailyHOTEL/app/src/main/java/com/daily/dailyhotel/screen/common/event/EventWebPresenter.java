@@ -99,8 +99,8 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
         mAnalytics = new EventWebAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(getActivity());
-        mCouponRemoteImpl = new CouponRemoteImpl(getActivity());
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mCouponRemoteImpl = new CouponRemoteImpl();
 
         setRefresh(true);
     }

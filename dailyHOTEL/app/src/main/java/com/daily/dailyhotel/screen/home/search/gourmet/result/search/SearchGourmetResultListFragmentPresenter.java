@@ -136,9 +136,9 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
     {
         setAnalytics(new SearchGourmetResultListFragmentAnalyticsImpl());
 
-        mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
-        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
+        mGourmetRemoteImpl = new GourmetRemoteImpl();
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         initViewModel(activity);
 
@@ -554,7 +554,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             @Override
             public ObservableSource<Gourmets> apply(Boolean result) throws Exception
             {
-                return mGourmetRemoteImpl.getList(getQueryMap(mPage));
+                return mGourmetRemoteImpl.getList(getActivity(), getQueryMap(mPage));
             }
         }).map(new Function<Gourmets, Pair<Gourmets, List<ObjectItem>>>()
         {
@@ -726,7 +726,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         mPage++;
 
-        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(mPage)).map(new Function<Gourmets, List<ObjectItem>>()
+        addCompositeDisposable(mGourmetRemoteImpl.getList(getActivity(), getQueryMap(mPage)).map(new Function<Gourmets, List<ObjectItem>>()
         {
             @Override
             public List<ObjectItem> apply(Gourmets gourmets) throws Exception
@@ -899,7 +899,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
-        addCompositeDisposable(mGourmetRemoteImpl.getList(getQueryMap(-1)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Gourmets>()
+        addCompositeDisposable(mGourmetRemoteImpl.getList(getActivity(), getQueryMap(-1)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Gourmets>()
         {
             @Override
             public void accept(Gourmets gourmets) throws Exception

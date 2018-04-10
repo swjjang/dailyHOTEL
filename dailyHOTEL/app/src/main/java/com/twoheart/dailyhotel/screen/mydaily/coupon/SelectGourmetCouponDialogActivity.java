@@ -97,7 +97,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
         mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
 
-        mCouponRemoteImpl = new CouponRemoteImpl(this);
+        mCouponRemoteImpl = new CouponRemoteImpl();
 
         if (DailyTextUtils.isTextEmpty(mCallByScreen) == true)
         {

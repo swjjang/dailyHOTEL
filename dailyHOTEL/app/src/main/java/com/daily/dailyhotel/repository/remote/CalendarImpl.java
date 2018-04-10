@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.CalendarInterface;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -25,11 +23,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
 {
-    public CalendarImpl(@NonNull Context context)
-    {
-        super(context);
-    }
-
     @Override
     public Observable<List<Integer>> getGourmetUnavailableDates(int gourmetIndex, int dateRange, boolean reverse)
     {

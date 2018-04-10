@@ -104,7 +104,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mAnalytics = new StayFilterAnalyticsImpl();
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
 
         setRefresh(true);
     }
@@ -494,7 +494,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         getViewInterface().setConfirmText(getString(R.string.label_searching));
 
-        addCompositeDisposable(Observable.zip(getLocalPlusListCountByFilter(), mStayRemoteImpl.getListCountByFilter(mCategoryType, getQueryMap()//
+        addCompositeDisposable(Observable.zip(getLocalPlusListCountByFilter(), mStayRemoteImpl.getListCountByFilter(getActivity(), mCategoryType, getQueryMap()//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<StayFilterCount, StayFilterCount, StayFilterCount>()
         {
             @Override
@@ -547,7 +547,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             Map<String, Object> queryMap = getQueryMap();
             queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
 
-            return mStayRemoteImpl.getLocalPlusListCountByFilter(queryMap);
+            return mStayRemoteImpl.getLocalPlusListCountByFilter(getActivity(), queryMap);
         } else
         {
             return Observable.just(new StayFilterCount());

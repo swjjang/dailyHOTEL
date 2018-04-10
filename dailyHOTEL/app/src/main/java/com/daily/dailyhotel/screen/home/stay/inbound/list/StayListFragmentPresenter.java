@@ -140,7 +140,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     {
         setAnalytics(new StayListFragmentAnalyticsImpl());
 
-        mStayRemoteImpl = new StayRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl();
 
         initViewModel(activity);
 
@@ -448,7 +448,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         getViewInterface().setEmptyViewVisible(false, applyFilter);
 
-        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<ObjectItem>>>()
+        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(getActivity(), mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public Pair<Boolean, List<ObjectItem>> apply(Stays bmStays, Stays stays) throws Exception
@@ -527,7 +527,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             Map<String, Object> queryMap = getQueryMap(0);
             queryMap.put("category", DailyCategoryType.STAY_BOUTIQUE.getCodeString(getActivity()));
 
-            return mStayRemoteImpl.getLocalPlusList(queryMap);
+            return mStayRemoteImpl.getLocalPlusList(getActivity(), queryMap);
         } else
         {
             return Observable.just(new Stays());
@@ -583,7 +583,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         mPage++;
 
-        addCompositeDisposable(mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
+        addCompositeDisposable(mStayRemoteImpl.getList(getActivity(), mStayViewModel.categoryType, getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
@@ -751,7 +751,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
 
-        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<Stay>>>()
+        addCompositeDisposable(Observable.zip(getLocalPlusList(), mStayRemoteImpl.getList(getActivity(), mStayViewModel.categoryType, getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()), new BiFunction<Stays, Stays, Pair<Boolean, List<Stay>>>()
         {
             @Override
             public Pair<Boolean, List<Stay>> apply(Stays bmStays, Stays stays) throws Exception

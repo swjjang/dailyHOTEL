@@ -53,7 +53,7 @@ public class CouponHistoryPresenter extends BaseExceptionPresenter<CouponHistory
 
         mAnalytics = new CouponHistoryAnalyticsImpl();
 
-        mCouponRemoteImpl = new CouponRemoteImpl(activity);
+        mCouponRemoteImpl = new CouponRemoteImpl();
 
         setRefresh(true);
     }

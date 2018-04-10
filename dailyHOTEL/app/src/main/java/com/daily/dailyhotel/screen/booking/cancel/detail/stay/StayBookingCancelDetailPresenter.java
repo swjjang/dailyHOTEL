@@ -119,8 +119,8 @@ public class StayBookingCancelDetailPresenter //
 
         mAnalytics = new StayBookingCancelDetailCancelAnalyticsImpl();
 
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mBookingRemoteImpl = new BookingRemoteImpl();
 
         setRefresh(true);
     }
