@@ -17,6 +17,12 @@ class CouponListActivity : BaseActivity<CouponListPresenter>() {
         }
     }
 
+    enum class SortType {
+        ALL,
+        STAY,
+        GOURMET
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold)
 

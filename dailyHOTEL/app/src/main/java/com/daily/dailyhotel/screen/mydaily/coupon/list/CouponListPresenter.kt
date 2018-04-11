@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.twoheart.dailyhotel.R
+import com.twoheart.dailyhotel.model.Coupon
 
 class CouponListPresenter(activity: CouponListActivity)//
     : BaseExceptionPresenter<CouponListActivity, CouponListInterface.ViewInterface>(activity), CouponListInterface.OnEventListener {
@@ -84,5 +85,29 @@ class CouponListPresenter(activity: CouponListActivity)//
 
     override fun onBackClick() {
         activity.onBackPressed()
+    }
+
+    override fun startCouponHistory() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun startNotice() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun startRegisterCoupon() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showListItemNotice(coupon: Coupon) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onListItemDownLoadClick(coupon: Coupon) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onItemSelectedSpinner(position: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
