@@ -272,30 +272,38 @@ public class CouponListActivity extends BaseActivity
 
     ArrayList<Coupon> makeSortCouponList(ArrayList<Coupon> originList, SortType sortType)
     {
-        if (originList == null || originList.size() == 0)
+        if (sortType == null || originList == null || originList.size() == 0)
         {
             return new ArrayList<>();
         }
 
         ArrayList<Coupon> sortList = new ArrayList<>();
-        if (sortType == null)
+
+        switch (sortType)
         {
-            // do nothing!
-        } else if (SortType.ALL.equals(sortType) == true)
-        {
-            sortList.addAll(originList);
-        } else
-        {
-            for (Coupon coupon : originList)
-            {
-                if (SortType.STAY.equals(sortType) == true && coupon.availableInStay == true)
+            case ALL:
+                sortList.addAll(originList);
+                break;
+
+            case STAY:
+                for (Coupon coupon : originList)
                 {
-                    sortList.add(coupon);
-                } else if (SortType.GOURMET.equals(sortType) == true && coupon.availableInGourmet == true)
-                {
-                    sortList.add(coupon);
+                    if (coupon.availableInStay == true || coupon.availableInOutboundHotel == true)
+                    {
+                        sortList.add(coupon);
+                    }
                 }
-            }
+                break;
+
+            case GOURMET:
+                for (Coupon coupon : originList)
+                {
+                    if (coupon.availableInGourmet)
+                    {
+                        break;
+                    }
+                }
+                break;
         }
 
         return sortList;
