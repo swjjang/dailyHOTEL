@@ -1073,7 +1073,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     setStayBookDateTime(checkInDateTime, checkOutDateTime);
                     notifyDateTextChanged();
 
-                    getViewInterface().refreshCurrentCategory();
+                    mStayViewModel.selectedCategory.setValue(Category.ALL);
+
+                    setRefresh(true);
                 }
                 break;
         }
