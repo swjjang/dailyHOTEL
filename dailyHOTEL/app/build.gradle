@@ -211,12 +211,12 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     kapt "com.android.databinding:compiler:$android_gradle_version"
 
-    implementation 'com.android.support:support-v4:27.1.0'
-    implementation 'com.android.support:cardview-v7:27.1.0'
-    implementation 'com.android.support:customtabs:27.1.0'
-    implementation 'com.android.support:animated-vector-drawable:27.1.0'
-    implementation 'com.android.support:gridlayout-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.android.support:customtabs:27.1.1'
+    implementation 'com.android.support:animated-vector-drawable:27.1.1'
+    implementation 'com.android.support:gridlayout-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation "android.arch.lifecycle:extensions:1.+"
@@ -293,7 +293,7 @@ dependencies {
 //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
 
     // test dependencies
-    androidTestDebugImplementation 'com.android.support:support-annotations:27.1.0'
+    androidTestDebugImplementation 'com.android.support:support-annotations:27.1.1'
     androidTestDebugImplementation 'com.android.support.test:runner:1.0.1'
     androidTestDebugImplementation 'com.android.support.test:rules:1.0.1'
     androidTestDebugImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
