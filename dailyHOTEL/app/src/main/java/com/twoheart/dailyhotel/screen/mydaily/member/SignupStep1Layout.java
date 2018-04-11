@@ -409,6 +409,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 mFourteenCheckBox.setChecked(isChecked);
                 mTermsOfServiceCheckBox.setChecked(isChecked);
                 mTermsOfPrivacyCheckBox.setChecked(isChecked);
+
+                if (isChecked != mBenefitCheckBox.isChecked())
+                {
+                    ((OnEventListener) mOnEventListener).onBenefitClick(isChecked);
+                }
+
                 mBenefitCheckBox.setChecked(isChecked);
                 break;
             }

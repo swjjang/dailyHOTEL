@@ -29,7 +29,6 @@
             android:divider="@color/white"
             android:dividerHeight="10dp"
             android:fadingEdge="none"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

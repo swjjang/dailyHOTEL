@@ -1157,7 +1157,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         DialogDailyAwardsDataBinding dataBinding = DataBindingUtil.inflate( //
             LayoutInflater.from(getContext()), R.layout.dialog_daily_awards_data, null, false);
 
-        dataBinding.awardImageView.setImageResource(R.drawable.vector_img_popup_detail_trueawards);
+        dataBinding.awardImageView.setImageResource(R.drawable.img_popup_detail_trueawards);
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
         {
@@ -1166,7 +1166,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             {
                 super.onFailure(id, throwable);
 
-                dataBinding.awardImageView.setImageResource(R.drawable.vector_img_popup_detail_trueawards);
+                dataBinding.awardImageView.setImageResource(R.drawable.img_popup_detail_trueawards);
             }
         };
 
