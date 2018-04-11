@@ -818,7 +818,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             @Override
                             public void onClick(View v)
                             {
-                                mSelectedCard = null;
                                 setSaleType(hasDepositSticker() ? STICKER : NONE);
 
                                 notifyStayOutboundPaymentChanged();

@@ -872,7 +872,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                             public void onClick(View v)
                             {
                                 setSaleType(NONE);
-                                mSelectedCoupon = null;
 
                                 notifyGourmetPaymentChanged();
                             }
