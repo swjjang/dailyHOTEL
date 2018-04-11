@@ -479,8 +479,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
-                unLockAll();
-
                 if (mEntryShowCalendar == true)
                 {
                     mEntryShowCalendar = false;
