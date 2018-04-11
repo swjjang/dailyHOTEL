@@ -647,6 +647,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             onViewTypeClick();
                         }
 
+                        mIsFirstLoad = true;
                         setScreenVisible(ScreenType.NONE, mStayOutboundFilters);
 
                         notifyToolbarChanged();
