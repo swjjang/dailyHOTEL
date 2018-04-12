@@ -74,9 +74,10 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
         try
         {
             mStayOutboundFilters.sortType = StayOutboundFilters.SortType.valueOf(intent.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT));
+            mStayOutboundFilters.defaultSortType = StayOutboundFilters.SortType.valueOf(intent.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_DEFAULT_SORT));
         } catch (Exception e)
         {
-            mStayOutboundFilters.sortType = StayOutboundFilters.SortType.RECOMMENDATION;
+            mStayOutboundFilters.sortType = mStayOutboundFilters.defaultSortType = StayOutboundFilters.SortType.RECOMMENDATION;
         }
 
         mStayOutboundFilters.rating = intent.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
@@ -238,8 +239,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
             mStayOutboundFilters = new StayOutboundFilters();
         }
 
-        mStayOutboundFilters.sortType = StayOutboundFilters.SortType.RECOMMENDATION;
-        mStayOutboundFilters.rating = -1;
+        mStayOutboundFilters.reset();
 
         getViewInterface().setSort(mStayOutboundFilters.sortType);
         getViewInterface().setRating(mStayOutboundFilters.rating);
