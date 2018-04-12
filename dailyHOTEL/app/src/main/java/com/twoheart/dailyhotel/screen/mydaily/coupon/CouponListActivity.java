@@ -39,6 +39,7 @@ import retrofit2.Response;
 /**
  * Created by Sam Lee on 2016. 5. 19..
  */
+@Deprecated
 public class CouponListActivity extends BaseActivity
 {
     CouponListLayout mCouponListLayout;

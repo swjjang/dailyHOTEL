@@ -13,6 +13,7 @@ class EventListView(activity: EventListActivity, listener: EventListInterface.On
 
     private lateinit var eventListAdapter: EventListAdapter
 
+    @Suppress("DEPRECATION")
     override fun setContentView(viewDataBinding: ActivityEventListDataBinding) {
         initToolbar(viewDataBinding)
 
