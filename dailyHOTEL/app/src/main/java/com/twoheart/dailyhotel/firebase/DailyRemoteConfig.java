@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.firebase;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
@@ -13,7 +14,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.Setting;
+import com.twoheart.dailyhotel.firebase.model.SplashDelegate;
+import com.twoheart.dailyhotel.firebase.model.VersionDelegate;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -99,11 +101,8 @@ public class DailyRemoteConfig
 
     void setConfig(final OnCompleteListener listener)
     {
-        String androidUpdateVersion = mFirebaseRemoteConfig.getString("androidUpdateVersion");
         String androidPaymentType = mFirebaseRemoteConfig.getString("androidPaymentType");
         String companyInfo = mFirebaseRemoteConfig.getString("companyInfo");
-        String androidSplashImageUrl = mFirebaseRemoteConfig.getString("androidSplashImageLink");
-        String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
         String androidText = mFirebaseRemoteConfig.getString("androidText");
         String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
         String androidBoutiqueBM = mFirebaseRemoteConfig.getString("androidBoutiqueBM");
@@ -121,11 +120,8 @@ public class DailyRemoteConfig
         {
             try
             {
-                ExLog.d("androidUpdateVersion : " + new JSONObject(androidUpdateVersion).toString());
                 ExLog.d("androidPaymentType : " + new JSONObject(androidPaymentType).toString());
                 ExLog.d("companyInfo : " + new JSONObject(companyInfo).toString());
-                ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
-                ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
                 ExLog.d("androidText : " + new JSONObject(androidText).toString());
                 ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                 ExLog.d("androidBoutiqueBM : " + new JSONObject(androidBoutiqueBM).toString());
@@ -166,36 +162,7 @@ public class DailyRemoteConfig
             }
         }
 
-        // 버전
-        String currentVersion = null, forceVersion = null;
-
-        try
-        {
-            JSONObject versionJSONObject = new JSONObject(androidUpdateVersion);
-            JSONObject versionCode = versionJSONObject.getJSONObject("versionCode");
-
-            switch (Setting.getStore())
-            {
-                case PLAY_STORE:
-                {
-                    JSONObject jsonObject = versionCode.getJSONObject("play");
-                    currentVersion = jsonObject.getString("current");
-                    forceVersion = jsonObject.getString("force");
-                    break;
-                }
-
-                case T_STORE:
-                {
-                    JSONObject jsonObject = versionCode.getJSONObject("one");
-                    currentVersion = jsonObject.getString("current");
-                    forceVersion = jsonObject.getString("force");
-                    break;
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        updateSplash(mContext, mFirebaseRemoteConfig.getString("Marketing_ANDSplash"));
 
         writeCompanyInformation(mContext, companyInfo);
         writePaymentType(mContext, androidPaymentType);
@@ -203,9 +170,6 @@ public class DailyRemoteConfig
         //
         DailyRemoteConfigPreference.getInstance(mContext).setRemoteConfigText(androidText);
         writeTextFiled(mContext, androidText);
-
-        // 이미지 로딩 관련(추후 진행)
-        processSplashImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
 
         // default Event link
         writeHomeEventDefaultLink(mContext, androidHomeEventDefaultLink);
@@ -241,69 +205,24 @@ public class DailyRemoteConfig
 
         if (listener != null)
         {
-            listener.onComplete(currentVersion, forceVersion);
+            // 버전
+            Pair<String, String> versionPair = getVersion(mFirebaseRemoteConfig.getString("androidUpdateVersion"));
+            listener.onComplete(versionPair.first, versionPair.second);
         }
     }
 
-    void processSplashImage(Context context, String updateTime, String imageUrl)
+    private void updateSplash(Context context, String jsonString)
     {
-        if (DailyTextUtils.isTextEmpty(updateTime, imageUrl) == true)
-        {
-            return;
-        }
+        SplashDelegate splashDelegate = new SplashDelegate(jsonString);
 
-        // 이미지 로딩 관련
-        int densityDpi = context.getResources().getDisplayMetrics().densityDpi;
-        String dpi;
+        String currentUpdateTime = DailyRemoteConfigPreference.getInstance(context).getRemoteConfigIntroImageVersion();
+        String newUpdateTime = splashDelegate.getUpdateTime();
 
-        if (densityDpi < 240)
+        if (DailyTextUtils.isTextEmpty(newUpdateTime, currentUpdateTime) == false //
+            && Constants.DAILY_INTRO_DEFAULT_VERSION.compareTo(newUpdateTime) < 0//
+            && currentUpdateTime.compareTo(newUpdateTime) < 0)
         {
-            dpi = "hdpi";
-        } else if (densityDpi <= 480)
-        {
-            dpi = "xhdpi";
-        } else
-        {
-            dpi = "xxxhdpi";
-        }
-
-        try
-        {
-            JSONObject updateTimeJSONObject = new JSONObject(updateTime);
-            JSONObject imageUrlJSONObject = new JSONObject(imageUrl);
-
-            // 아직은 고려하지 않도록 한다."default"
-            //            String defaultType = imageUrlJSONObject.getString("default");
-            String url = imageUrlJSONObject.getJSONObject("image").getString(dpi);
-            String currentVersion = DailyRemoteConfigPreference.getInstance(context).getRemoteConfigIntroImageVersion();
-            String newVersion = updateTimeJSONObject.getString("time");
-
-            if (DailyTextUtils.isTextEmpty(newVersion) == true)
-            {
-                // 리모트 컨피그에 new version 을 실수로 넣지 않았을때 - 기존 버전이 있을 경우 유지! 없을때는 디폴트 버전 셋팅!
-                if (DailyTextUtils.isTextEmpty(currentVersion) == true)
-                {
-                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                } else
-                {
-                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(currentVersion);
-                }
-            } else if (Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(newVersion) == true)
-            {
-                // 앱의 스플래쉬 버전이 기본 버전일때
-                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-            } else if (DailyTextUtils.isTextEmpty(currentVersion) == true || currentVersion.compareTo(newVersion) < 0)
-            {
-                // 앱의 스플래쉬 기존 버전이 없거나 새버전이 현재 버전보다 클 경우 다운로드를 시도
-                new SplashImageDownloadAsyncTask(context).execute(url, newVersion);
-            } else
-            {
-                // 앱의 스플래쉬 버전이 현재 버전과 같거나 작을때
-                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(currentVersion);
-            }
-        } catch (JSONException e)
-        {
-            ExLog.d(e.toString());
+            new SplashImageDownloadAsyncTask(context).execute(splashDelegate.getUrl(context), newUpdateTime);
         }
     }
 
@@ -892,5 +811,25 @@ public class DailyRemoteConfig
                 ExLog.e(e.toString());
             }
         }
+    }
+
+    Pair<String, String> getVersion(String jsonString)
+    {
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            return null;
+        }
+
+        try
+        {
+            VersionDelegate versionDelegate = new VersionDelegate(jsonString);
+
+            return new Pair(versionDelegate.getCurrent(), versionDelegate.getForce());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return null;
     }
 }

@@ -79,6 +79,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -453,15 +454,15 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             return;
         }
 
-        String splashVersion = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigIntroImageVersion();
+        String splashUpdateTime = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigIntroImageVersion();
 
         DailyImageView imageView = splashLayout.findViewById(R.id.splashImageView);
 
-        if (DailyTextUtils.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
+        if (DailyTextUtils.isTextEmpty(splashUpdateTime) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.compareTo(splashUpdateTime) > 0)
         {
             // 앱의 스플래쉬 버전이 비었거나 기본 버전일때
             imageView.setVectorImageResource(R.drawable.img_splash_logo);
-        } else if (Constants.DAILY_INTRO_CURRENT_VERSION.compareTo(splashVersion) >= 0)
+        } else if (Constants.DAILY_INTRO_CURRENT_VERSION.compareTo(splashUpdateTime) >= 0)
         {
             // 앱의 스플래쉬 버전이 현재 버전과 같거나 작을때
             imageView.setPadding(0, 0, 0, 0);
@@ -480,7 +481,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         } else
         {
             // 앱의 스플래쉬 버전이 현재 버전보다 높을때
-            String fileName = Util.makeIntroImageFileName(splashVersion);
+            String fileName = Util.makeIntroImageFileName(splashUpdateTime);
             File file = new File(getCacheDir(), fileName);
 
             if (file.exists() == false)
@@ -1457,40 +1458,38 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         @Override
         public void onCheckServerResponse(String title, String message)
         {
-            ExLog.d("sam : title = " + title + " , message = " + message);
-
             mDelayTimeHandler.removeMessages(0);
 
             // 메시지가 있을때 무조건 팝업을 발생한다.
             if (DailyTextUtils.isTextEmpty(title, message) == true)
             {
-                addCompositeDisposable(new CommonRemoteImpl().getConfigurations() //
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
+                addCompositeDisposable(new CommonRemoteImpl().getConfigurations().observeOn(Schedulers.newThread()).subscribe(new Consumer<Configurations>()
                     {
                         @Override
                         public void accept(Configurations configurations) throws Exception
                         {
-                            ExLog.d("sam : configurations = " + configurations.activeReward);
-
-                            unLockUI();
-
                             DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
                             new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
                             {
                                 @Override
                                 public void onComplete(String currentVersion, String forceVersion)
                                 {
-                                    if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
+                                    runOnUiThread(new Runnable()
                                     {
-                                        mNetworkController.requestVersion();
-                                    } else
-                                    {
-                                        ExLog.d("sam : requestVersion  not call");
+                                        @Override
+                                        public void run()
+                                        {
+                                            if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
+                                            {
+                                                mNetworkController.requestVersion();
+                                            } else
+                                            {
+                                                checkAppVersion(currentVersion, forceVersion);
+                                            }
 
-                                        checkAppVersion(currentVersion, forceVersion);
-                                    }
-
-                                    analyticsRankABTest();
+                                            analyticsRankABTest();
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -1499,8 +1498,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         @Override
                         public void accept(Throwable throwable) throws Exception
                         {
-                            ExLog.d("sam : " + throwable.toString());
-
                             onHandleError(throwable);
                         }
                     }));
