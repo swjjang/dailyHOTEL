@@ -29,4 +29,6 @@ public interface CouponInterface
         , int stayIndex, String[] vendorTypes);
 
     Observable<DownloadCouponResult> getDownloadCoupon(String couponCode);
+
+    Observable<List<Coupon>> getCouponList();
 }

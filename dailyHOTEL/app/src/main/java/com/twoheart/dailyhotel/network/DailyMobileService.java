@@ -1095,6 +1095,9 @@ public interface DailyMobileService
     @PUT("{mobileAPI}")
     Observable<BaseDto<DownloadCouponResultData>> getDownloadCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("couponCode") String couponCode);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<CouponsData>> getCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RewardRemoteImpl

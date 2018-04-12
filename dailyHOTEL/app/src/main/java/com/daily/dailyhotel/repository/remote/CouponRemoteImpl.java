@@ -318,4 +318,37 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                 }
             }).subscribeOn(Schedulers.io());
     }
+
+    @Override
+    public Observable<List<Coupon>> getCouponList()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons"//
+            : "NTUkNzUkNDQkMTIkMCQxNyQ4MiQ4NCQzNyQ0MCQ0OCQxNyQyNSQzMSQ2JDEwMiQ=$XMzE5MMTc3MTVEJQjBUSCQkM1QLUQ5NkWY5MUYzQUEQwWRDA5N0UA0MQUU0RDNDM0RXFRTE3RUJBRkY1RUM3NTUZGCNKzk5QTRDRA=B=$";
+
+        return mDailyMobileService.getCouponList(Crypto.getUrlDecoderEx(URL)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, List<Coupon>>()
+            {
+                @Override
+                public List<Coupon> apply(BaseDto<CouponsData> couponsDataBaseListDto) throws Exception
+                {
+                    List<Coupon> couponList;
+
+                    if (couponsDataBaseListDto != null)
+                    {
+                        if (couponsDataBaseListDto.msgCode == 100 && couponsDataBaseListDto.data != null)
+                        {
+                            couponList = couponsDataBaseListDto.data.getCouponList();
+                        } else
+                        {
+                            throw new BaseException(couponsDataBaseListDto.msgCode, couponsDataBaseListDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return couponList;
+                }
+            });
+    }
 }
