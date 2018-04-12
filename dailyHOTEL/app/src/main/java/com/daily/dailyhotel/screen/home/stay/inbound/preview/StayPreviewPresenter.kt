@@ -86,7 +86,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             stayGrade = it.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_GRADE)
             viewPrice = it.getIntExtra(StayPreviewActivity.INTENT_EXTRA_DATA_STAY_VIEW_PRICE, StayPreviewActivity.SKIP_CHECK_PRICE_VALUE)
 
-            return true
+            true
         } ?: true
     }
 
