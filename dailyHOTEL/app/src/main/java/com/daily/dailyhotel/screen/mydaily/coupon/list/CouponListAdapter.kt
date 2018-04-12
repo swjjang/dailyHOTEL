@@ -19,14 +19,8 @@ import com.twoheart.dailyhotel.databinding.LayoutCouponboxCouponDataBinding
 import com.twoheart.dailyhotel.databinding.ListRowCouponListFooterDataBinding
 import com.twoheart.dailyhotel.util.CouponUtil
 
-class CouponListAdapter(private val context: Context, private val list: MutableList<ObjectItem>, private val listener: OnCouponItemListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-//    companion object {
-//        private const val VIEW_TYPE_HEADER = 1
-//        private val VIEW_TYPE_ITEM = 2
-//        private val VIEW_TYPE_FOOTER = 3
-//
-//        private val FOOTER_COUNT = 1
-//    }
+class CouponListAdapter(private val context: Context, private val list: MutableList<ObjectItem>, private val listener: OnCouponItemListener)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnCouponItemListener {
         fun startNotice()
@@ -52,38 +46,33 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
     }
 
     fun getCoupon(couponCode: String): Coupon? {
-        return (list.size > 0).let {
+        if (list.size > 0) {
             for (item in list) {
                 when (item.mType) {
                     ObjectItem.TYPE_ENTRY -> {
-                        val coupon = item as Coupon
-                        if (coupon.couponCode.equals(couponCode, ignoreCase = true)) {
+                        val coupon = item.getItem() as Coupon
+                        if (coupon.couponCode.equals(couponCode, true)) {
                             return coupon
                         }
                     }
                 }
             }
-
-            return null
         }
+
+        return null
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-//            ObjectItem.TYPE_HEADER_VIEW -> {
-//
-//            }
-
-            ObjectItem.TYPE_FOOTER_VIEW -> {
-                val viewDataBinding = DataBindingUtil.inflate<ListRowCouponListFooterDataBinding>(
-                        LayoutInflater.from(parent.context), R.layout.list_row_coupon_list_footer_data, parent, false)
-                return FooterViewHolder(viewDataBinding)
-            }
-
-            else -> {
+        return when {
+            viewType != ObjectItem.TYPE_FOOTER_VIEW -> {
                 val viewDataBinding = DataBindingUtil.inflate<LayoutCouponboxCouponDataBinding>(
                         LayoutInflater.from(parent.context), R.layout.layout_couponbox_coupon_data, parent, false)
-                return ItemViewHolder(viewDataBinding)
+                ItemViewHolder(viewDataBinding)
+            }
+            else -> {
+                val viewDataBinding = DataBindingUtil.inflate<ListRowCouponListFooterDataBinding>(
+                        LayoutInflater.from(parent.context), R.layout.list_row_coupon_list_footer_data, parent, false)
+                FooterViewHolder(viewDataBinding)
             }
         }
     }
@@ -94,10 +83,6 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            ObjectItem.TYPE_HEADER_VIEW -> {
-
-            }
-
             ObjectItem.TYPE_FOOTER_VIEW -> {
                 (holder as FooterViewHolder).onBindViewHolder()
             }
@@ -109,6 +94,8 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
     }
 
     private inner class ItemViewHolder(val dataBinding: LayoutCouponboxCouponDataBinding) : RecyclerView.ViewHolder(dataBinding.root) {
+
+        @Suppress("DEPRECATION")
         fun onBindViewHolder(position: Int) {
             val item = getItem(position)
             if (ObjectItem.TYPE_ENTRY != item.mType) {
@@ -165,8 +152,8 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
             if (viewWidth == 0) {
                 val lineText = lastLineText
                 dataBinding.descriptionTextView.post {
-                    val viewWidth = dataBinding.descriptionTextView.width - dataBinding.descriptionTextView.paddingLeft - dataBinding.descriptionTextView.paddingRight
-                    setDescriptionText(viewWidth, lineText)
+                    val width = dataBinding.descriptionTextView.width - dataBinding.descriptionTextView.paddingLeft - dataBinding.descriptionTextView.paddingRight
+                    setDescriptionText(width, lineText)
                 }
             } else {
                 setDescriptionText(viewWidth, lastLineText)
@@ -199,21 +186,21 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
             dataBinding.downloadIconView.setOnClickListener { v -> listener.onDownloadClick(v, position) }
         }
 
-        private fun setDescriptionText(viewWidth: Int, lastLineText:String?) {
-            var lastLineText = lastLineText
+        private fun setDescriptionText(viewWidth: Int, lastLineText: String?) {
+            var text = lastLineText
 
-            if (DailyTextUtils.isTextEmpty(lastLineText)) {
-                lastLineText = ""
+            if (DailyTextUtils.isTextEmpty(text)) {
+                text = ""
             }
 
             val typeface: Typeface = FontManager.getInstance(context).regularTypeface
-            val textWidth = DailyTextUtils.getTextWidth(context, lastLineText, 11.0, typeface)
+            val textWidth = DailyTextUtils.getTextWidth(context, text, 11.0, typeface)
 
             (viewWidth <= textWidth).let {
-                lastLineText = lastLineText?.replace(", ", ",\n")
+                text = text?.replace(", ", ",\n")
             }
 
-            dataBinding.descriptionTextView.text = lastLineText
+            dataBinding.descriptionTextView.text = text
         }
 
     }

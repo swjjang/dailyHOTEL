@@ -29,5 +29,7 @@ interface CouponListInterface {
 
     interface AnalyticsInterface : BaseAnalyticsInterface {
         fun onScreen(activity: Activity)
+
+        fun onDownloadCoupon(activity: Activity, coupon: Coupon)
     }
 }

@@ -12,10 +12,10 @@ class CouponListActivity : BaseActivity<CouponListPresenter>() {
 
     companion object {
         @JvmStatic
-        fun newInstance(context: Context, sortType: SortType, deepLink: String): Intent {
+        fun newInstance(context: Context, sortType: SortType, deepLink: String?): Intent {
             val intent = Intent(context, CouponListActivity::class.java)
 
-            sortType?.let { intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name) }
+            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name)
             (!DailyTextUtils.isTextEmpty(deepLink)).let { intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink) }
 
             return intent

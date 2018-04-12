@@ -9,9 +9,13 @@ import android.view.View
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.Coupon
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity
+import com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
+import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponTermActivity
 import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.Constants
@@ -27,7 +31,7 @@ class CouponListPresenter(activity: CouponListActivity)//
     private var dailyDeepLink: DailyDeepLink? = null
     private val couponList = mutableListOf<Coupon>()
 
-    private val couponRemotImpl: CouponRemoteImpl by lazy {
+    private val couponRemoteImpl: CouponRemoteImpl by lazy {
         CouponRemoteImpl()
     }
 
@@ -40,10 +44,10 @@ class CouponListPresenter(activity: CouponListActivity)//
     }
 
     override fun constructorInitialize(activity: CouponListActivity) {
+        setContentView(R.layout.activity_coupon_list_data)
+
         DailyPreference.getInstance(activity).setNewCoupon(false)
         DailyPreference.getInstance(activity).viewedCouponTime = DailyPreference.getInstance(activity).latestCouponTime
-
-        setContentView(R.layout.activity_coupon_list_data)
 
         isRefresh = true
     }
@@ -55,8 +59,8 @@ class CouponListPresenter(activity: CouponListActivity)//
     override fun onIntent(intent: Intent?): Boolean {
         intent?.let {
             sortType = try {
-                CouponListActivity.SortType.valueOf(it.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE))
-            } catch (exception: Exception) {
+                CouponListActivity.SortType.valueOf(it.getStringExtra(CouponListActivity.INTENT_EXTRA_DATA_SORT_TYPE))
+            } catch (e: Exception) {
                 CouponListActivity.SortType.ALL
             }
 
@@ -153,10 +157,10 @@ class CouponListPresenter(activity: CouponListActivity)//
         isRefresh = false
         screenLock(showProgress)
 
-        addCompositeDisposable(couponRemotImpl.couponList.observeOn(AndroidSchedulers.mainThread())
+        addCompositeDisposable(couponRemoteImpl.couponList.observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     setCouponList(it)
-
+                    notifyCouponDataSetChanged()
                     unLockAll()
                 }, {
                     onHandleError(it)
@@ -187,7 +191,7 @@ class CouponListPresenter(activity: CouponListActivity)//
             finish()
         }
 
-        val cancleListener = DialogInterface.OnCancelListener {
+        val cancelListener = DialogInterface.OnCancelListener {
             finish()
         }
 
@@ -198,7 +202,7 @@ class CouponListPresenter(activity: CouponListActivity)//
             val negative = getString(R.string.dialog_btn_text_no)
 
             this@CouponListPresenter.viewInterface.showSimpleDialog(title, message, positive, negative
-                    , positiveListener, negativeListener, cancleListener, null, true)
+                    , positiveListener, negativeListener, cancelListener, null, true)
         }
     }
 
@@ -207,52 +211,61 @@ class CouponListPresenter(activity: CouponListActivity)//
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_LOGIN)
     }
 
-    private fun setCouponList(list : MutableList<Coupon>) {
+    private fun setCouponList(list: MutableList<Coupon>) {
+        couponList.clear()
         couponList += list
     }
 
-    private fun notifyDataSetChange() {
-
-
-        viewInterface.setData()
+    private fun notifyCouponDataSetChanged() {
+        viewInterface.setData(makeSortCouponList(couponList, sortType), sortType, false)
     }
 
-    private fun makeSortCouponList(orginList: MutableList<Coupon>, sortType:CouponListActivity.SortType) : MutableList<Coupon> {
-        return (orginList.size > 0).let {
+    private fun makeSortCouponList(originList: MutableList<Coupon>, sortType: CouponListActivity.SortType): MutableList<Coupon> {
+        return if (originList.size > 0) {
             val sortList = mutableListOf<Coupon>()
 
-            when(sortType) {
+            when (sortType) {
                 CouponListActivity.SortType.ALL -> {
-                    sortList += orginList
+                    sortList += originList
                 }
 
                 CouponListActivity.SortType.STAY -> {
-                    for (coupon in orginList) {
+                    for (coupon in originList) {
                         if (coupon.availableInStay || coupon.availableInOutboundHotel) {
-                            sortList.add(coupon)
+                            sortList += coupon
                         }
                     }
                 }
 
                 CouponListActivity.SortType.GOURMET -> {
-                    for (coupon in orginList) {
+                    for (coupon in originList) {
                         if (coupon.availableInGourmet) {
-                            sortList.add(coupon)
+                            sortList += coupon
                         }
                     }
                 }
             }
 
             sortList
-        } ?: mutableListOf<Coupon>()
+        } else {
+            mutableListOf()
+        }
     }
 
     override fun startCouponHistory() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // 쿠폰 사용내역 이동
+        if (lock()) {
+            return
+        }
+
+        val intent = CouponHistoryActivity.newInstance(activity)
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_HISTORY)
     }
 
     override fun startNotice() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // 쿠폰 사용시 유의사항 안내
+        val intent = CouponTermActivity.newInstance(activity)
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_TERMS)
     }
 
     override fun startRegisterCoupon() {
@@ -261,14 +274,49 @@ class CouponListPresenter(activity: CouponListActivity)//
     }
 
     override fun showListItemNotice(coupon: Coupon) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (Coupon.Type.REWARD == coupon.type) {
+            startActivityForResult(DailyWebActivity.newInstance(activity, getString(R.string.coupon_notice_text)
+                    , DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigStaticUrlDailyRewardCouponTerms)
+                    , Constants.CODE_REQUEST_ACTIVITY_COUPON_TERMS)
+        } else {
+            // 리스트 아이템 쿠폰 유의사항 팝업
+            // 쿠폰 사용시 유의사항 안내
+            val intent = CouponTermActivity.newInstance(activity, coupon.couponCode)
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_TERMS)
+        }
     }
 
     override fun onListItemDownLoadClick(coupon: Coupon) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) {
+            return
+        }
+
+        addCompositeDisposable(couponRemoteImpl.getDownloadCoupon(coupon.couponCode)
+                .observeOn(AndroidSchedulers.mainThread()).subscribe({
+                    analytics.onDownloadCoupon(activity, coupon)
+
+                    isRefresh = true
+                    onRefresh(true)
+                }, {
+                    onHandleError(it)
+                }))
     }
 
     override fun onItemSelectedSpinner(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        sortType = when (position) {
+            2 -> {
+                CouponListActivity.SortType.GOURMET
+            }
+
+            1 -> {
+                CouponListActivity.SortType.STAY
+            }
+
+            else -> {
+                CouponListActivity.SortType.ALL
+            }
+        }
+
+        viewInterface.setData(makeSortCouponList(couponList, sortType), sortType, true)
     }
 }

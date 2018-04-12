@@ -61,24 +61,20 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
 
     private fun initRecyclerView(viewDataBinding: ActivityCouponListDataBinding) {
         with(viewDataBinding.emptyView) {
-            couponUseNoticeTextView.setOnClickListener { TODO() }
-            couponHistoryTextView.setOnClickListener { TODO() }
+            couponUseNoticeTextView.setOnClickListener { eventListener.startNotice() }
+            couponHistoryTextView.setOnClickListener { eventListener.startCouponHistory() }
 
-            val layoutManager = LinearLayoutManager(context)
-            with(layoutManager) {
+            viewDataBinding.recyclerView.layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.VERTICAL
                 scrollToPosition(0)
             }
-
-            viewDataBinding.recyclerView.layoutManager = layoutManager
 
             EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, context.resources.getColor(R.color.default_over_scroll_edge))
         }
     }
 
     private fun updateHeaderTextView(count: Int) {
-        val text = context.getString(R.string.coupon_header_text, count)
-        viewDataBinding.couponTextView.text = text
+        viewDataBinding.couponTextView.text = context.getString(R.string.coupon_header_text, count)
     }
 
     override fun setSelectionSpinner(sortType: CouponListActivity.SortType) {
@@ -138,6 +134,8 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
                         }
                     }
                 })
+
+                recyclerView.adapter = listAdapter
             } else {
                 listAdapter.setData(itemList)
                 listAdapter.notifyDataSetChanged()
@@ -151,7 +149,9 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
         return listAdapter.getCoupon(couponCode)
     }
 
-    private inner class SortArrayAdapter(context: Context, resourceId: Int, list: Array<CharSequence>) : ArrayAdapter<CharSequence>(context, resourceId, list) {
+    @Suppress("DEPRECATION")
+    private inner class SortArrayAdapter(context: Context, resourceId: Int, list: Array<CharSequence>)
+        : ArrayAdapter<CharSequence>(context, resourceId, list) {
         var selectedPosition: Int = 0
 
         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
