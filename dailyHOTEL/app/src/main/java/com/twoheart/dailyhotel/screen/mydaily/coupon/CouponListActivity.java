@@ -300,7 +300,7 @@ public class CouponListActivity extends BaseActivity
                 {
                     if (coupon.availableInGourmet)
                     {
-                        break;
+                        sortList.add(coupon);
                     }
                 }
                 break;
