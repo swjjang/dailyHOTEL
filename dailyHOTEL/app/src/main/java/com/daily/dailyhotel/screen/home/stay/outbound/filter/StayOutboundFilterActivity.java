@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.R;
 public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterPresenter>
 {
     public static final String INTENT_EXTRA_DATA_SORT = "sort";
+    public static final String INTENT_EXTRA_DATA_DEFAULT_SORT = "defaultSort";
     public static final String INTENT_EXTRA_DATA_RATING = "rating";
     public static final String INTENT_EXTRA_DATA_ENABLEDLINES = "enabledLines";
 
@@ -30,6 +31,7 @@ public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterP
         if (stayOutboundFilters != null)
         {
             intent.putExtra(INTENT_EXTRA_DATA_SORT, stayOutboundFilters.sortType.name());
+            intent.putExtra(INTENT_EXTRA_DATA_DEFAULT_SORT, stayOutboundFilters.defaultSortType.name());
             intent.putExtra(INTENT_EXTRA_DATA_RATING, stayOutboundFilters.rating);
             intent.putExtra(INTENT_EXTRA_DATA_ENABLEDLINES, enabledLines);
         }
