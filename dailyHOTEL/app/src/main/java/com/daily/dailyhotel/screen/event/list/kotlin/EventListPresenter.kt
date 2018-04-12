@@ -61,10 +61,9 @@ class EventListPresenter(activity: EventListActivity)//
         analytics.onScreen(activity)
 
         if (dailyDeepLink != null) {
-            if (dailyDeepLink!!.isExternalDeepLink) {
-                val externalDeepLink: DailyExternalDeepLink = dailyDeepLink as DailyExternalDeepLink
-
-                if (externalDeepLink.isEventDetailView) {
+            val externalDeepLink: DailyExternalDeepLink? = dailyDeepLink as? DailyExternalDeepLink
+            externalDeepLink?.let { deepLink ->
+                deepLink.isEventDetailView.let {
                     startEventWeb(externalDeepLink.url, externalDeepLink.title, externalDeepLink.description, externalDeepLink.imageUrl)
                 }
             }

@@ -1,12 +1,16 @@
 package com.daily.dailyhotel.screen.mydaily.coupon.list
 
+import android.app.Activity
 import com.daily.base.BaseAnalyticsInterface
 import com.daily.base.BaseDialogViewInterface
 import com.daily.base.OnBaseEventListener
-import com.twoheart.dailyhotel.model.Coupon
+import com.daily.dailyhotel.entity.Coupon
 
 interface CouponListInterface {
     interface ViewInterface : BaseDialogViewInterface {
+        fun setSelectionSpinner(sortType: CouponListActivity.SortType)
+
+        fun setData(list: List<Coupon>, sortType: CouponListActivity.SortType, isScrollTop: Boolean)
     }
 
     interface OnEventListener : OnBaseEventListener {
@@ -24,5 +28,6 @@ interface CouponListInterface {
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {
+        fun onScreen(activity: Activity)
     }
 }

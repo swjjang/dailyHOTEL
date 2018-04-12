@@ -4,17 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.daily.base.BaseActivity
+import com.daily.base.util.DailyTextUtils
 import com.twoheart.dailyhotel.R
+import com.twoheart.dailyhotel.util.Constants
 
 class CouponListActivity : BaseActivity<CouponListPresenter>() {
 
     companion object {
         @JvmStatic
-        fun newInstance(context: Context): Intent {
+        fun newInstance(context: Context, sortType: SortType, deepLink: String): Intent {
             val intent = Intent(context, CouponListActivity::class.java)
+
+            sortType?.let { intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name) }
+            (!DailyTextUtils.isTextEmpty(deepLink)).let { intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink) }
 
             return intent
         }
+
+        const val INTENT_EXTRA_DATA_SORT_TYPE = "sortType"
     }
 
     enum class SortType {

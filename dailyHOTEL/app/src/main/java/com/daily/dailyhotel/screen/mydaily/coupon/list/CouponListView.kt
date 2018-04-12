@@ -81,8 +81,7 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
         viewDataBinding.couponTextView.text = text
     }
 
-    fun setSelectionSpinner(sortType: CouponListActivity.SortType) {
-
+    override fun setSelectionSpinner(sortType: CouponListActivity.SortType) {
         var position = when (sortType) {
             CouponListActivity.SortType.STAY -> 1
             CouponListActivity.SortType.GOURMET -> 2
@@ -93,7 +92,7 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
         viewDataBinding.sortSpinner.setSelection(position)
     }
 
-    fun setData(list: List<Coupon>, sortType: CouponListActivity.SortType, isScrollTop: Boolean) {
+    override fun setData(list: List<Coupon>, sortType: CouponListActivity.SortType, isScrollTop: Boolean) {
         with(viewDataBinding) {
             emptyView.visibility = if (list.isNotEmpty()) View.GONE else View.VISIBLE
 
@@ -148,7 +147,7 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
         }
     }
 
-    fun getCoupon(couponCode: String) : Coupon? {
+    fun getCoupon(couponCode: String): Coupon? {
         return listAdapter.getCoupon(couponCode)
     }
 
