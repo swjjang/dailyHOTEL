@@ -85,7 +85,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
             gourmetCategory = it.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_CATEGORY)
             viewPrice = it.getIntExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_GOURMET_VIEW_PRICE, GourmetPreviewActivity.SKIP_CHECK_PRICE_VALUE)
 
-            return true
+            true
         } ?: true
     }
 

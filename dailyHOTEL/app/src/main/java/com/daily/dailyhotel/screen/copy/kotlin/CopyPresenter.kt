@@ -26,11 +26,9 @@ class CopyPresenter(activity: CopyActivity)//
     }
 
     override fun onIntent(intent: Intent?): Boolean {
-        if (intent == null) {
-            return true
-        }
-
-        return true
+        return intent?.let {
+            true
+        } ?: true
     }
 
     override fun onNewIntent(intent: Intent?) {
