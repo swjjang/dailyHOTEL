@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.firebase;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Pair;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
@@ -15,7 +14,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledExcept
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.model.SplashDelegate;
-import com.twoheart.dailyhotel.firebase.model.VersionDelegate;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -206,8 +204,8 @@ public class DailyRemoteConfig
         if (listener != null)
         {
             // 버전
-            Pair<String, String> versionPair = getVersion(mFirebaseRemoteConfig.getString("androidUpdateVersion"));
-            listener.onComplete(versionPair.first, versionPair.second);
+            //            Pair<String, String> versionPair = getVersion(mFirebaseRemoteConfig.getString("ANDVersion"));
+            //            listener.onComplete(versionPair.first, versionPair.second);
         }
     }
 
@@ -292,7 +290,6 @@ public class DailyRemoteConfig
 
             String version = jsonObject.getString("version");
 
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextVersion(version);
             DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextLoginText01(jsonObject.getString("loginText01"));
             DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextSignUpText01(jsonObject.getString("signupText01"));
             DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextSignUpText02(jsonObject.getString("signupText02"));
@@ -811,25 +808,5 @@ public class DailyRemoteConfig
                 ExLog.e(e.toString());
             }
         }
-    }
-
-    Pair<String, String> getVersion(String jsonString)
-    {
-        if (DailyTextUtils.isTextEmpty(jsonString) == true)
-        {
-            return null;
-        }
-
-        try
-        {
-            VersionDelegate versionDelegate = new VersionDelegate(jsonString);
-
-            return new Pair(versionDelegate.getCurrent(), versionDelegate.getForce());
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
-        return null;
     }
 }

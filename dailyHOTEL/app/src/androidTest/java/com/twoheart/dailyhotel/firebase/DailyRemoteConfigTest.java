@@ -44,11 +44,15 @@ public class DailyRemoteConfigTest
     @Test
     public void testGetVersion()
     {
-        String testJson01 = "{\"play\":{\"current\":\"2.1.5\",\"force\":\"2.1.5\"},\"one\":{\"current\":\"2.1.5\",\"force\":\"2.1.5\"},\"versionCode\":{\"play\":{\"current\":\"2010501\",\"force\":\"2010501\"},\"one\":{\"current\":\"2010501\",\"force\":\"2010501\"}}}";
+        String testJson01 = "{\"stores\":{\"play\":{\"versionCode\":{\"optional\":\"2010501\",\"force\":\"2010501\"}},\"one\":{\"versionCode\":{\"optional\":\"2010501\",\"force\":\"2010501\"}}},\"messages\":{\"optional\":{\"title\":\"업데이트 알림\",\"message\":\"지금 업데이트하여\\n더욱 편리해진 데일리호텔을 경험해보세요!\"},\"force\":{\"title\":\"필수 업데이트 알림\",\"message\":\"지금 업데이트하여\\n더욱 편리해진 데일리호텔을 경험해보세요!\"}}}";
         Pair<String, String> pair01 = mRemoteConfig.getVersion(testJson01);
         assertNotNull(pair01);
         assertEquals("2010501", pair01.first);
         assertEquals("2010501", pair01.second);
+
+        mRemoteConfig.
+
+        assertEquals("업데이트 알림", );
 
         String testJson02 = "{}";
         Pair<String, String> pair02 = mRemoteConfig.getVersion(testJson02);

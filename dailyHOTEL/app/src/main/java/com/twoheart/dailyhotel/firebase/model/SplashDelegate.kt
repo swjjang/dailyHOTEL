@@ -22,10 +22,10 @@ class SplashDelegate(jsonString: String) {
     fun getUrl(context: Context): String? {
         val densityDpi = context.resources.displayMetrics.densityDpi;
 
-        when {
-            densityDpi < 240 -> return splash?.imageUpdate?.url?.hdpi
-            densityDpi <= 480 -> return splash?.imageUpdate?.url?.xhdpi
-            else -> return splash?.imageUpdate?.url?.xxxhdpi
+        return when {
+            densityDpi < 240 -> splash?.imageUpdate?.url?.hdpi
+            densityDpi <= 480 -> splash?.imageUpdate?.url?.xhdpi
+            else -> splash?.imageUpdate?.url?.xxxhdpi
         }
     }
 

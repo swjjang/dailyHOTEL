@@ -8,18 +8,18 @@ import com.twoheart.dailyhotel.Setting
 
 class VersionDelegate(jsonString: String) {
 
-    private val updateVersion: UpdateVersion?
+    private val version: Version?
 
     init {
-        updateVersion = LoganSquare.parse(jsonString, UpdateVersion::class.java)
+        version = LoganSquare.parse(jsonString, Version::class.java)
     }
 
-    val current: String?
+    val optional: String?
         get() {
             when (Setting.getStore()) {
-                Setting.Stores.PLAY_STORE -> return updateVersion?.versionCode?.play?.current
+                Setting.Stores.PLAY_STORE -> return version?.stores?.play?.versionCode?.optional
 
-                Setting.Stores.T_STORE -> return updateVersion?.versionCode?.one?.current
+                Setting.Stores.T_STORE -> return version?.stores?.one?.versionCode?.optional
 
                 else -> return null
             }
@@ -28,22 +28,36 @@ class VersionDelegate(jsonString: String) {
     val force: String?
         get() {
             when (Setting.getStore()) {
-                Setting.Stores.PLAY_STORE -> return updateVersion?.versionCode?.play?.force
+                Setting.Stores.PLAY_STORE -> return version?.stores?.play?.versionCode?.force
 
-                Setting.Stores.T_STORE -> return updateVersion?.versionCode?.one?.force
+                Setting.Stores.T_STORE -> return version?.stores?.one?.versionCode?.force
 
                 else -> return null
             }
         }
 
-    @JsonObject
-    internal class UpdateVersion {
-        @JsonField(name = arrayOf("versionCode"))
-        var versionCode: VersionCode? = null
-    }
+    val optionalMessage: Pair<String?, String?>
+        get() {
+            return Pair(version?.messages?.optional?.title, version?.messages?.optional?.message)
+        }
+
+    val forceMessage: Pair<String?, String?>
+        get() {
+            return Pair(version?.messages?.force?.title, version?.messages?.force?.message)
+        }
 
     @JsonObject
-    internal class VersionCode {
+    internal class Version {
+        @JsonField(name = arrayOf("stores"))
+        var stores: Stores? = null
+
+        @JsonField(name = arrayOf("messages"))
+        var messages: Messages? = null
+    }
+
+
+    @JsonObject
+    internal class Stores {
         @JsonField(name = arrayOf("play"))
         var play: Store? = null
 
@@ -53,10 +67,35 @@ class VersionDelegate(jsonString: String) {
 
     @JsonObject
     internal class Store {
-        @JsonField(name = arrayOf("current"))
-        var current: String? = null
+        @JsonField(name = arrayOf("versionCode"))
+        var versionCode: VersionCode? = null
+    }
+
+    @JsonObject
+    internal class VersionCode {
+        @JsonField(name = arrayOf("optional"))
+        var optional: String? = null
 
         @JsonField(name = arrayOf("force"))
         var force: String? = null
+    }
+
+
+    @JsonObject
+    internal class Messages {
+        @JsonField(name = arrayOf("optional"))
+        var optional: Message? = null
+
+        @JsonField(name = arrayOf("force"))
+        var force: Message? = null
+    }
+
+    @JsonObject
+    internal class Message {
+        @JsonField(name = arrayOf("title"))
+        var title: String? = null
+
+        @JsonField(name = arrayOf("message"))
+        var message: String? = null
     }
 }
