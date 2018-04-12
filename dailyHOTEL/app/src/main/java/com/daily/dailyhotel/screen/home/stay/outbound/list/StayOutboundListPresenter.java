@@ -322,6 +322,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             if (mStayOutboundSuggest != null && StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
             {
+                mStayOutboundFilters.defaultSortType = StayOutboundFilters.SortType.DISTANCE;
+
                 setFilter(StayOutboundFilters.SortType.DISTANCE, mStayOutboundSuggest.latitude, mStayOutboundSuggest.longitude);
             }
 
@@ -622,7 +624,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         if (mStayOutboundSuggest != null && StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
                         {
+                            mStayOutboundFilters.defaultSortType = StayOutboundFilters.SortType.DISTANCE;
                             setFilter(StayOutboundFilters.SortType.DISTANCE, mStayOutboundSuggest.latitude, mStayOutboundSuggest.longitude);
+                        } else
+                        {
+                            mStayOutboundFilters.defaultSortType = StayOutboundFilters.SortType.RECOMMENDATION;
+                            resetFilter();
                         }
 
                         StayOutboundListAnalyticsParam analyticsParam = mAnalytics.getAnalyticsParam();
@@ -651,6 +658,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         setScreenVisible(ScreenType.NONE, mStayOutboundFilters);
 
                         notifyToolbarChanged();
+                        notifyFilterChanged();
 
                         onRefreshAll(true);
                         break;
@@ -741,36 +749,41 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private void refreshAllSortTypeDistance()
     {
-        Observable observable = searchMyLocation(null);
-
-        if (observable != null)
+        if(StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
         {
-            screenLock(true);
+            notifyFilterChanged();
+            onRefreshAll(true);
+        } else
+        {
+            Observable observable = searchMyLocation(null);
 
-            setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
-
-            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+            if (observable != null)
             {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                screenLock(true);
+
+                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
+
+                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
                 {
-                    unLockAll();
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                    {
+                        setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
+                        notifyFilterChanged();
 
-                    setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
-                    notifyFilterChanged();
-
-                    onRefreshAll(false);
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                        onRefreshAll(true);
+                    }
+                }, new Consumer<Throwable>()
                 {
-                    unLockAll();
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                    {
+                        unLockAll();
 
-                    setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
-                }
-            }));
+                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
+                    }
+                }));
+            }
         }
     }
 
@@ -1521,6 +1534,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mStayOutboundFilters.rating = rating;
     }
 
+    void resetFilter()
+    {
+        if (mStayOutboundFilters == null)
+        {
+            return;
+        }
+
+        mStayOutboundFilters.reset();
+        mStayOutboundFilters.latitude = 0d;
+        mStayOutboundFilters.longitude = 0d;
+    }
+
     void setFilter(StayOutboundFilters.SortType sortType, double latitude, double longitude)
     {
         if (mStayOutboundFilters == null)
@@ -1536,15 +1561,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mStayOutboundFilters.sortType = sortType;
         }
 
-        if (sortType == StayOutboundFilters.SortType.DISTANCE)
-        {
-            mStayOutboundFilters.latitude = latitude;
-            mStayOutboundFilters.longitude = longitude;
-        } else
-        {
-            mStayOutboundFilters.latitude = 0;
-            mStayOutboundFilters.longitude = 0;
-        }
+        mStayOutboundFilters.latitude = latitude;
+        mStayOutboundFilters.longitude = longitude;
     }
 
     protected void onChangedWish(int position, boolean wish)
@@ -1774,13 +1792,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return true;
         }
 
-        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
-        {
-            return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && stayOutboundFilters.rating == -1);
-        } else
-        {
-            return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE && stayOutboundFilters.rating == -1);
-        }
+        return stayOutboundFilters.isDefaultFilter();
     }
 
     void notifyToolbarChanged()
