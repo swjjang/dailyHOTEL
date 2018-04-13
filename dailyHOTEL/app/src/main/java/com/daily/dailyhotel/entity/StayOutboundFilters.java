@@ -42,6 +42,6 @@ public class StayOutboundFilters
 
     public boolean isDefaultFilter()
     {
-        return sortType == defaultSortType;
+        return sortType == defaultSortType && rating == -1;
     }
 }
