@@ -519,6 +519,11 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 
             if (entryValue instanceof List)
             {
+                if (stringBuilder.length() > 1)
+                {
+                    stringBuilder.append('&');
+                }
+
                 stringBuilder.append(toStringListQueryParams(entryKey, (List) entryValue, stringBuilder.length() > 1));
             } else
             {
@@ -541,7 +546,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         return stringBuilder.toString();
     }
 
-    private String toStringListQueryParams(String entryKey, List entryValue, boolean addAmpersand)
+    private String toStringListQueryParams(String entryKey, List entryValue, boolean addBeginAmpersand)
     {
         if (entryKey == null || entryValue == null)
         {
@@ -550,16 +555,18 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (Object valueObject : entryValue)
+        int size = entryValue.size();
+
+        for (int i = 0; i < size; i++)
         {
-            String convertedEntryValue = valueObject.toString();
+            String convertedEntryValue = entryValue.get(i).toString();
 
             if (DailyTextUtils.isTextEmpty(convertedEntryValue) == true)
             {
                 continue;
             }
 
-            if (addAmpersand == true)
+            if (i > 0)
             {
                 stringBuilder.append('&');
             }
@@ -567,6 +574,11 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             stringBuilder.append(entryKey);
             stringBuilder.append("=");
             stringBuilder.append(convertedEntryValue);
+        }
+
+        if (addBeginAmpersand && stringBuilder.length() > 0)
+        {
+            stringBuilder.insert(0, '&');
         }
 
         return stringBuilder.toString();
