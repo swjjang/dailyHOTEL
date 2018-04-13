@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
+import com.daily.dailyhotel.util.takeNotEmpty
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException
@@ -57,17 +58,18 @@ class DailyRemoteConfig(private val context: Context) {
         })
     }
 
-    private fun setCompany(context: Context, jsonString: String) {
-        try {
-            val company = CompanyDelegate(jsonString)
+    internal fun setCompany(context: Context, jsonString: String) {
+        jsonString.takeNotEmpty {
+            try {
+                val company = CompanyDelegate(it)
 
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigCompanyInformation(company.name
-                    , company.ceo, company.bizRegNumber, company.itcRegNumber, company.address1
-                    , company.phoneNumber1, company.fax1, company.privacyManager)
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigCompanyInformation(company.name
+                        , company.ceo, company.bizRegNumber, company.itcRegNumber, company.address1
+                        , company.phoneNumber1, company.fax1, company.privacyManager)
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
-
     }
 
     private fun setRemoteConfig(listener: OnCompleteListener) {
@@ -88,203 +90,223 @@ class DailyRemoteConfig(private val context: Context) {
     }
 
     private fun updateSplash(context: Context, jsonString: String) {
-        val splashDelegate = SplashDelegate(jsonString)
-        val currentUpdateTime = DailyRemoteConfigPreference.getInstance(context).remoteConfigIntroImageVersion
+        jsonString.takeNotEmpty {
+            val splashDelegate = SplashDelegate(it)
+            val currentUpdateTime = DailyRemoteConfigPreference.getInstance(context).remoteConfigIntroImageVersion
 
-        splashDelegate.updateTime?.let {
-            if (DailyTextUtils.isTextEmpty(currentUpdateTime)) {
-                if (Constants.DAILY_INTRO_CURRENT_VERSION < it) {
-                    SplashImageDownloadAsyncTask(context).execute(splashDelegate.getUrl(context), it)
-                }
-            } else {
-                if (Constants.DAILY_INTRO_CURRENT_VERSION < currentUpdateTime && currentUpdateTime < it) {
-                    SplashImageDownloadAsyncTask(context).execute(splashDelegate.getUrl(context), it)
+            splashDelegate.updateTime?.let {
+                if (DailyTextUtils.isTextEmpty(currentUpdateTime)) {
+                    if (Constants.DAILY_INTRO_CURRENT_VERSION < it) {
+                        SplashImageDownloadAsyncTask(context).execute(splashDelegate.getUrl(context), it)
+                    }
+                } else {
+                    if (Constants.DAILY_INTRO_CURRENT_VERSION < currentUpdateTime && currentUpdateTime < it) {
+                        SplashImageDownloadAsyncTask(context).execute(splashDelegate.getUrl(context), it)
+                    }
                 }
             }
         }
     }
 
-    private fun setPayment(context: Context, jsonString: String) {
-        try {
-            val paymentDelegate = PaymentDelegate(jsonString)
+    internal fun setPayment(context: Context, jsonString: String) {
+        jsonString.takeNotEmpty {
+            try {
+                val paymentDelegate = PaymentDelegate(it)
 
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStaySimpleCardPaymentEnabled = paymentDelegate.stayEasyCard
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayCardPaymentEnabled = paymentDelegate.stayCard
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayPhonePaymentEnabled = paymentDelegate.stayPhone
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayVirtualPaymentEnabled = paymentDelegate.stayVirtual
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStaySimpleCardPaymentEnabled = paymentDelegate.stayEasyCard
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayCardPaymentEnabled = paymentDelegate.stayCard
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayPhonePaymentEnabled = paymentDelegate.stayPhone
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayVirtualPaymentEnabled = paymentDelegate.stayVirtual
 
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayOutboundSimpleCardPaymentEnabled = paymentDelegate.stayOutboundEasyCard
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayOutboundCardPaymentEnabled = paymentDelegate.stayOutboundCard
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayOutboundPhonePaymentEnabled = paymentDelegate.stayOutboundPhone
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayOutboundSimpleCardPaymentEnabled = paymentDelegate.stayOutboundEasyCard
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayOutboundCardPaymentEnabled = paymentDelegate.stayOutboundCard
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStayOutboundPhonePaymentEnabled = paymentDelegate.stayOutboundPhone
 
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetSimpleCardPaymentEnabled = paymentDelegate.gourmetEasyCard
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetCardPaymentEnabled = paymentDelegate.gourmetCard
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetPhonePaymentEnabled = paymentDelegate.gourmetPhone
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetVirtualPaymentEnabled = paymentDelegate.gourmetVirtual
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetSimpleCardPaymentEnabled = paymentDelegate.gourmetEasyCard
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetCardPaymentEnabled = paymentDelegate.gourmetCard
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetPhonePaymentEnabled = paymentDelegate.gourmetPhone
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigGourmetVirtualPaymentEnabled = paymentDelegate.gourmetVirtual
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
     }
 
-    private fun setMessages(context: Context, jsonString: String) {
-        try {
-            val messageDelegate = MessagesDelegate(jsonString)
+    internal fun setMessages(context: Context, jsonString: String) {
+        jsonString.takeNotEmpty {
+            try {
+                val messageDelegate = MessagesDelegate(it)
 
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigTextLoginText01 = messageDelegate.loginText01
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigTextSignUpText01 = messageDelegate.signupText01
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigTextSignUpText02 = messageDelegate.signupText02
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigHomeMessageAreaLoginEnabled = messageDelegate.homeMessageAreaLoginEnabled
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigHomeMessageAreaLogoutEnabled = messageDelegate.homeMessageAreaLogoutEnabled
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeMessageAreaLogoutTitle = messageDelegate.homeMessageAreaLogoutTitle
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeMessageAreaLogoutCallToAction = messageDelegate.homeMessageAreaLogoutCallToAction
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeCategoryEnabled = messageDelegate.homeCategoryAreaEnabled
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigTextLoginText01 = messageDelegate.loginText01
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigTextSignUpText01 = messageDelegate.signupText01
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigTextSignUpText02 = messageDelegate.signupText02
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigHomeMessageAreaLoginEnabled = messageDelegate.homeMessageAreaLoginEnabled
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigHomeMessageAreaLogoutEnabled = messageDelegate.homeMessageAreaLogoutEnabled
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeMessageAreaLogoutTitle = messageDelegate.homeMessageAreaLogoutTitle
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeMessageAreaLogoutCallToAction = messageDelegate.homeMessageAreaLogoutCallToAction
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeCategoryEnabled = messageDelegate.homeCategoryAreaEnabled
 
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
     }
 
     private fun setHomeDefaultEvent(context: Context, jsonString: String) {
-        try {
-            val homeDefaultEvent = HomeDefaultEventDelegate(jsonString)
-            val clientHomeEventCurrentUpdateTime = DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventCurrentVersion
+        jsonString.takeNotEmpty {
+            try {
+                val homeDefaultEvent = HomeDefaultEventDelegate(it)
+                val clientHomeEventCurrentUpdateTime = DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventCurrentVersion
 
-            homeDefaultEvent.updateTime?.let {
-                if (clientHomeEventCurrentUpdateTime == null || it > clientHomeEventCurrentUpdateTime) {
-                    ImageDownloadAsyncTask(context, it, ImageDownloadAsyncTask.OnCompletedListener { result, updateTime ->
-                        if (result) {
-                            val file = File(context.cacheDir, Util.makeImageFileName(clientHomeEventCurrentUpdateTime))
+                homeDefaultEvent.updateTime?.let {
+                    if (clientHomeEventCurrentUpdateTime == null || it > clientHomeEventCurrentUpdateTime) {
+                        ImageDownloadAsyncTask(context, it, ImageDownloadAsyncTask.OnCompletedListener { result, updateTime ->
+                            if (result) {
+                                val file = File(context.cacheDir, Util.makeImageFileName(clientHomeEventCurrentUpdateTime))
 
-                            if (file.exists() && !file.delete()) {
-                                file.deleteOnExit()
+                                if (file.exists() && !file.delete()) {
+                                    file.deleteOnExit()
+                                }
+
+                                DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventCurrentVersion = updateTime
+                                DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventIndex = homeDefaultEvent.index
+                                DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventTitle = homeDefaultEvent.title
+                                DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventUrl = homeDefaultEvent.eventUrl
                             }
-
-                            DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventCurrentVersion = updateTime
-                            DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventIndex = homeDefaultEvent.index
-                            DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventTitle = homeDefaultEvent.title
-                            DailyRemoteConfigPreference.getInstance(context).remoteConfigHomeEventUrl = homeDefaultEvent.eventUrl
-                        }
-                    }).execute(homeDefaultEvent.getImageUrl(context))
+                        }).execute(homeDefaultEvent.getImageUrl(context))
+                    }
                 }
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
             }
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
         }
     }
 
     private fun setConfig(context: Context, jsonString: String) {
-        try {
-            val configDelegate = ConfigDelegate(jsonString)
+        jsonString.takeNotEmpty {
+            try {
+                val configDelegate = ConfigDelegate(it)
 
-            DailyRemoteConfigPreference.getInstance(context).isRemoteConfigBoutiqueBMEnabled = configDelegate.boutiqueBusinessModelEnabled
+                DailyRemoteConfigPreference.getInstance(context).isRemoteConfigBoutiqueBMEnabled = configDelegate.boutiqueBusinessModelEnabled
 
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigOperationLunchTime = "${configDelegate.operationLunchStartTime},${configDelegate.operationLunchEndTime}"
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigOperationLunchTime = "${configDelegate.operationLunchStartTime},${configDelegate.operationLunchEndTime}"
 
-            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigStayDetailTrueReviewProductVisible = configDelegate.stayDetailTrueReviewProductNameVisible
-            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible = configDelegate.stayOutboundDetailTrueReviewProductNameVisible
-            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigGourmetDetailTrueReviewProductVisible = configDelegate.gourmetDetailTrueReviewProductNameVisible
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigStayDetailTrueReviewProductVisible = configDelegate.stayDetailTrueReviewProductNameVisible
+                DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible = configDelegate.stayOutboundDetailTrueReviewProductNameVisible
+                DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigGourmetDetailTrueReviewProductVisible = configDelegate.gourmetDetailTrueReviewProductNameVisible
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
     }
 
     private fun setStaticUlr(context: Context, jsonString: String) {
-        try {
-            val staticUrl = StaticUrlDelegate(jsonString)
+        jsonString.takeNotEmpty {
+            try {
+                val staticUrl = StaticUrlDelegate(it)
 
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlPrivacy = staticUrl.privacy
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlTerms = staticUrl.terms
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlAbout = staticUrl.about
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlLocation = staticUrl.location
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlChildProtect = staticUrl.childProtect
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlBonus = staticUrl.bonus
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlCoupon = staticUrl.coupon
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlProdCouponNote = staticUrl.prodCouponNote
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDevCouponNote = staticUrl.devCouponNote
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlFaq = staticUrl.faq
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlLicense = staticUrl.license
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlReview = staticUrl.review
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlLifeStyleProject = staticUrl.lifeStyleProject
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlCollectPersonalInformation = staticUrl.collectPersonalInformation
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyReward = staticUrl.dailyReward
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyRewardTerms = staticUrl.dailyRewardTerms
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyRewardCouponTerms = staticUrl.dailyRewardCouponTerms
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyTrueAwards = staticUrl.dailyTrueAwards
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlPrivacy = staticUrl.privacy
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlTerms = staticUrl.terms
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlAbout = staticUrl.about
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlLocation = staticUrl.location
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlChildProtect = staticUrl.childProtect
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlBonus = staticUrl.bonus
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlCoupon = staticUrl.coupon
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlProdCouponNote = staticUrl.prodCouponNote
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDevCouponNote = staticUrl.devCouponNote
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlFaq = staticUrl.faq
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlLicense = staticUrl.license
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlReview = staticUrl.review
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlLifeStyleProject = staticUrl.lifeStyleProject
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlCollectPersonalInformation = staticUrl.collectPersonalInformation
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyReward = staticUrl.dailyReward
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyRewardTerms = staticUrl.dailyRewardTerms
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyRewardCouponTerms = staticUrl.dailyRewardCouponTerms
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyTrueAwards = staticUrl.dailyTrueAwards
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
     }
 
     private fun setSearch(context: Context, jsonString: String) {
-        try {
-            val searchDelegate = SearchDelegate(jsonString)
+        jsonString.takeNotEmpty {
+            try {
+                val searchDelegate = SearchDelegate(it)
 
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigSearchStaySuggestHint = searchDelegate.suggestHintStay
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigSearchStayOutboundSuggestHint = searchDelegate.suggestHintStayOutbound
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigSearchGourmetSuggestHint = searchDelegate.suggestHintGourmet
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigSearchStaySuggestHint = searchDelegate.suggestHintStay
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigSearchStayOutboundSuggestHint = searchDelegate.suggestHintStayOutbound
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigSearchGourmetSuggestHint = searchDelegate.suggestHintGourmet
 
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigObSearchKeyword = searchDelegate.stayOutboundRelatedKeywords
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigGourmetSearchKeyword = searchDelegate.gourmetRelatedKeywords
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigObSearchKeyword = searchDelegate.stayOutboundRelatedKeywords
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigGourmetSearchKeyword = searchDelegate.gourmetRelatedKeywords
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
     }
 
     private fun setReward(context: Context, jsonString: String) {
-        try {
-            val rewardDelegate = RewardDelegate(jsonString)
+        jsonString.takeNotEmpty {
+            try {
+                val rewardDelegate = RewardDelegate(it)
 
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerCardTitleMessage = rewardDelegate.cardTitleMessage
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerRewardTitleMessage = rewardDelegate.rewardTitleMessage
-            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardStickerCampaignEnabled = rewardDelegate.campaignEnabled
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerGuides = rewardDelegate.guides
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberDefaultMessage = rewardDelegate.nonMemberMessageDefault
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberCampaignMessage = rewardDelegate.nonMemberMessageCampaign
-            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(rewardDelegate.nonMemberCampaignFreeNights)
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerCardTitleMessage = rewardDelegate.cardTitleMessage
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerRewardTitleMessage = rewardDelegate.rewardTitleMessage
+                DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardStickerCampaignEnabled = rewardDelegate.campaignEnabled
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerGuides = rewardDelegate.guides
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberDefaultMessage = rewardDelegate.nonMemberMessageDefault
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberCampaignMessage = rewardDelegate.nonMemberMessageCampaign
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(rewardDelegate.nonMemberCampaignFreeNights)
 
-            rewardDelegate.memberMessagesNights?.forEachIndexed { index, message -> DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(index, message) }
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                rewardDelegate.memberMessagesNights?.forEachIndexed { index, message -> DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(index, message) }
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
     }
 
     private fun setAppResearch(context: Context, jsonString: String) {
-        DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigAppResearch = jsonString
+        jsonString.takeNotEmpty { DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigAppResearch = it }
     }
 
     private fun setPaymentCardEvent(context: Context, jsonString: String) {
-        try {
-            val jsonObject = JSONObject(jsonString)
+        jsonString.takeNotEmpty {
+            try {
+                val jsonObject = JSONObject(it)
 
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigPaymentCardEvent =
-                    if (jsonObject.getBoolean("enabled")) jsonObject.getJSONArray("cardEvents")?.toString() else null
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigPaymentCardEvent =
+                        if (jsonObject.getBoolean("enabled")) jsonObject.getJSONArray("cardEvents")?.toString() else null
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
 
-            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigPaymentCardEvent = null
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigPaymentCardEvent = null
+            }
         }
     }
 
-    private fun getVersionNsetMessages(context: Context, jsonString: String): Pair<String?, String?>? {
-        try {
-            val versionDelegate = VersionDelegate(jsonString)
+    internal fun getVersionNsetMessages(context: Context, jsonString: String): Pair<String?, String?>? {
+        jsonString.takeNotEmpty {
+            try {
+                val versionDelegate = VersionDelegate(it)
 
-            val optionalJSONObject = JSONObject()
-            val optionalMessage = versionDelegate.optionalMessage
-            optionalJSONObject.put("title", optionalMessage.first)
-            optionalJSONObject.put("message", optionalMessage.second)
+                val optionalJSONObject = JSONObject()
+                val optionalMessage = versionDelegate.optionalMessage
+                optionalJSONObject.put("title", optionalMessage.first)
+                optionalJSONObject.put("message", optionalMessage.second)
 
-            val forceJSONObject = JSONObject()
-            val forceMessage = versionDelegate.forceMessage
-            forceJSONObject.put("title", forceMessage.first)
-            forceJSONObject.put("message", forceMessage.second)
+                val forceJSONObject = JSONObject()
+                val forceMessage = versionDelegate.forceMessage
+                forceJSONObject.put("title", forceMessage.first)
+                forceJSONObject.put("message", forceMessage.second)
 
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigUpdateOptional = optionalMessage.toString()
-            DailyRemoteConfigPreference.getInstance(context).remoteConfigUpdateForce = forceJSONObject.toString()
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigUpdateOptional = optionalJSONObject.toString()
+                DailyRemoteConfigPreference.getInstance(context).remoteConfigUpdateForce = forceJSONObject.toString()
 
-            return Pair(versionDelegate.optional, versionDelegate.force)
-        } catch (e: Exception) {
-            ExLog.e(e.toString())
+                return Pair(versionDelegate.optional, versionDelegate.force)
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+            }
         }
 
         return null

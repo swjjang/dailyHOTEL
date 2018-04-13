@@ -30,17 +30,17 @@ class ConfigDelegate(jsonString: String) {
 
     val stayDetailTrueReviewProductNameVisible: Boolean
         get() {
-            return config?.detailTrueReviewProductNameVisible.stay ?: true
+            return config?.detailTrueReviewProductNameVisible?.stay ?: true
         }
 
     val stayOutboundDetailTrueReviewProductNameVisible: Boolean
         get() {
-            return config?.detailTrueReviewProductNameVisible.stay ?: true
+            return config?.detailTrueReviewProductNameVisible?.stay ?: true
         }
 
     val gourmetDetailTrueReviewProductNameVisible: Boolean
         get() {
-            return config?.detailTrueReviewProductNameVisible.stay ?: true
+            return config?.detailTrueReviewProductNameVisible?.stay ?: true
         }
 
     @JsonObject
