@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+@Deprecated
 public class CouponTermActivity extends WebViewActivity
 {
     private static final String INTENT_EXTRA_DATA_COUPON_IDX = "coupon_idx";

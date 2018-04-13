@@ -31,10 +31,10 @@ import io.reactivex.functions.Consumer;
  */
 public class DailyWebPresenter extends BaseExceptionPresenter<DailyWebActivity, DailyWebInterface.ViewInterface> implements DailyWebInterface.OnEventListener
 {
-    private DailyWebInterface.AnalyticsInterface mAnalytics;
+    protected DailyWebInterface.AnalyticsInterface mAnalytics;
 
-    private String mTitleText;
-    private String mUrl;
+    protected String mTitleText;
+    protected String mUrl;
 
     public DailyWebPresenter(@NonNull DailyWebActivity activity)
     {
@@ -53,9 +53,14 @@ public class DailyWebPresenter extends BaseExceptionPresenter<DailyWebActivity, 
     {
         setContentView(R.layout.activity_web_data);
 
-        mAnalytics = new DailyWebAnalyticsImpl();
+        mAnalytics = initAnalytics();
 
         setRefresh(false);
+    }
+
+    protected DailyWebInterface.AnalyticsInterface initAnalytics()
+    {
+        return new DailyWebAnalyticsImpl();
     }
 
     @Override
