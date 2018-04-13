@@ -26,7 +26,6 @@ class CouponTermPresenter(activity: DailyWebActivity) : DailyWebPresenter(activi
             return true
         }
 
-
         if (intent.hasExtra(CouponTermActivity.INTENT_EXTRA_DATA_COUPON_IDX)) {
             mCouponIndex = intent.getStringExtra(CouponTermActivity.INTENT_EXTRA_DATA_COUPON_IDX)
         }
