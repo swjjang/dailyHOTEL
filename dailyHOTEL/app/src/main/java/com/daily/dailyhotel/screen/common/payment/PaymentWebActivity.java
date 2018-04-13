@@ -216,7 +216,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
 
             try
             {
-                data = response.body().string();
+                data = new String(response.body().string());
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
