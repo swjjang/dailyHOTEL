@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.webkit.JsResult;
 
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
@@ -30,16 +29,12 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
-public class DailyWebPresenter extends BaseExceptionPresenter<DailyWebActivity, DailyWebInterface> implements DailyWebView.OnEventListener
+public class DailyWebPresenter extends BaseExceptionPresenter<DailyWebActivity, DailyWebInterface.ViewInterface> implements DailyWebInterface.OnEventListener
 {
-    private DailyWebAnalyticsInterface mAnalytics;
+    private DailyWebInterface.AnalyticsInterface mAnalytics;
 
     private String mTitleText;
     private String mUrl;
-
-    public interface DailyWebAnalyticsInterface extends BaseAnalyticsInterface
-    {
-    }
 
     public DailyWebPresenter(@NonNull DailyWebActivity activity)
     {
@@ -48,7 +43,7 @@ public class DailyWebPresenter extends BaseExceptionPresenter<DailyWebActivity, 
 
     @NonNull
     @Override
-    protected DailyWebInterface createInstanceViewInterface()
+    protected DailyWebInterface.ViewInterface createInstanceViewInterface()
     {
         return new DailyWebView(getActivity(), this);
     }
