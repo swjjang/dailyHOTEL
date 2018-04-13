@@ -173,30 +173,28 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     @Synchronized
     override fun onRefresh(showProgress: Boolean) {
-        if (isFinish || !isRefresh) {
-            return
+        takeIf { !isFinish && isRefresh }.let {
+            isRefresh = false
+            screenLock(showProgress)
+
+            addCompositeDisposable(Observable.zip(stayRemoteImpl.getDetail(stayIndex, bookDateTime), stayRemoteImpl.getReviewScores(stayIndex)
+                    , BiFunction<StayDetail, ReviewScores, Int> { stayDetail, reviewScores ->
+                this@StayPreviewPresenter.detail = stayDetail
+
+                analytics.onScreen(activity, stayDetail.category)
+
+                reviewScores.reviewScoreTotalCount
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
+                this@StayPreviewPresenter.trueReviewCount = trueReviewCount
+
+                notifyDataSetChanged()
+
+                unLockAll()
+            }, { throwable ->
+                onHandleError(throwable)
+                hideAnimationAfterFinish()
+            }))
         }
-
-        isRefresh = false
-        screenLock(showProgress)
-
-        addCompositeDisposable(Observable.zip(stayRemoteImpl.getDetail(stayIndex, bookDateTime), stayRemoteImpl.getReviewScores(stayIndex)
-                , BiFunction<StayDetail, ReviewScores, Int> { stayDetail, reviewScores ->
-            this@StayPreviewPresenter.detail = stayDetail
-
-            analytics.onScreen(activity, stayDetail.category)
-
-            reviewScores.reviewScoreTotalCount
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
-            this@StayPreviewPresenter.trueReviewCount = trueReviewCount
-
-            notifyDataSetChanged()
-
-            unLockAll()
-        }, { throwable ->
-            onHandleError(throwable)
-            hideAnimationAfterFinish()
-        }))
     }
 
     override fun onBackClick() {
@@ -211,55 +209,51 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     }
 
     override fun onWishClick() {
-        if (!::detail.isInitialized || lock()) {
-            return
+        takeIf { it::detail.isInitialized && !lock() }.let {
+            val changeWish = !detail.myWish
+
+            viewInterface.setWish(changeWish)
+
+            analytics.onEventWishClick(activity, changeWish)
+
+            startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.HOTEL//
+                    , stayIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), StayPreviewActivity.REQUEST_CODE_WISH_DIALOG)
         }
-
-        val changeWish = !detail.myWish
-
-        viewInterface.setWish(changeWish)
-
-        analytics.onEventWishClick(activity, changeWish)
-
-        startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.HOTEL//
-                , stayIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), StayPreviewActivity.REQUEST_CODE_WISH_DIALOG)
     }
 
     override fun onKakaoClick() {
-        if (!::detail.isInitialized || lock()) {
-            return
+        takeIf { it::detail.isInitialized && !lock() }.let {
+            analytics.onEventKakaoClick(activity)
+
+            try {
+                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
+            } catch (e: PackageManager.NameNotFoundException) {
+                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                        , View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }
+                        , null, null, DialogInterface.OnDismissListener { onBackClick() }, true)
+
+                unLockAll()
+                return
+            }
+
+            screenLock(true)
+
+            val name = DailyUserPreference.getInstance(activity).name
+            val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
+            val longUrl = String.format(Locale.KOREA, urlFormat, stayIndex
+                    , bookDateTime.getCheckInDateTime("yyyy-MM-dd")
+                    , bookDateTime.nights)
+
+            // flatMapCompletable 을 사용하고 싶었는데 shortUrl 을 넘겨주어야 하는게 쉽지 않다.
+            addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
+                hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, shortUrl) }
+            }, {
+                val mobileWebUrl = "https://mobile.dailyhotel.co.kr/stay/" + detail.index
+
+                hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl) }
+            }))
         }
-
-        analytics.onEventKakaoClick(activity)
-
-        try {
-            activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
-        } catch (e: PackageManager.NameNotFoundException) {
-            viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                    , View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }
-                    , null, null, DialogInterface.OnDismissListener { onBackClick() }, true)
-
-            unLockAll()
-            return
-        }
-
-        screenLock(true)
-
-        val name = DailyUserPreference.getInstance(activity).name
-        val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
-        val longUrl = String.format(Locale.KOREA, urlFormat, stayIndex
-                , bookDateTime.getCheckInDateTime("yyyy-MM-dd")
-                , bookDateTime.nights)
-
-        // flatMapCompletable 을 사용하고 싶었는데 shortUrl 을 넘겨주어야 하는게 쉽지 않다.
-        addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
-            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, shortUrl) }
-        }, {
-            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/stay/" + detail.index
-
-            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl) }
-        }))
     }
 
     private fun startKakaoLinkApplication(userName: String, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
@@ -270,23 +264,19 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     }
 
     override fun onMapClick() {
-        if (!::detail.isInitialized || lock()) {
-            return
+        takeIf { it::detail.isInitialized && !lock() }.let {
+            hideAnimationAfterFinish { Util.shareNaverMap(activity, detail.name, detail.latitude.toString(), detail.longitude.toString()) }
+
+            analytics.onEventMapClick(activity)
         }
-
-        hideAnimationAfterFinish { Util.shareNaverMap(activity, detail.name, detail.latitude.toString(), detail.longitude.toString()) }
-
-        analytics.onEventMapClick(activity)
     }
 
     override fun onCloseClick() {
-        if (lock()) {
-            return
+        takeIf { !lock() }.let {
+            hideAnimationAfterFinish()
+
+            analytics.onEventCloseClick(activity)
         }
-
-        hideAnimationAfterFinish()
-
-        analytics.onEventCloseClick(activity)
     }
 
     internal fun notifyDataSetChanged() {

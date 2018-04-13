@@ -117,7 +117,7 @@
     <string name="label_area_list">지역명</string>
     <string name="label_subway_list">지하철역</string>
     <string name="label_allow_notification">알림허용</string>
-    <string name="label_can_use_coupon">쿠폰 적용 가능</string>
+    <string name="label_can_use_coupon">할인쿠폰 사용</string>
     <string name="label_or">또는</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
