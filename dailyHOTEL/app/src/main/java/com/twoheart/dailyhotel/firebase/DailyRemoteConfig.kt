@@ -152,7 +152,7 @@ class DailyRemoteConfig(private val context: Context) {
         }
     }
 
-    private fun setHomeDefaultEvent(context: Context, jsonString: String) {
+    internal fun setHomeDefaultEvent(context: Context, jsonString: String) {
         jsonString.takeNotEmpty {
             try {
                 val homeDefaultEvent = HomeDefaultEventDelegate(it)

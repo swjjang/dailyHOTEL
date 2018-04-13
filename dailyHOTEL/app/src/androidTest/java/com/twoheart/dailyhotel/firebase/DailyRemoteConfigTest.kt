@@ -134,6 +134,7 @@ class DailyRemoteConfigTest {
         assertFalse(preference.isRemoteConfigGourmetVirtualPaymentEnabled)
     }
 
+    @Test
     fun testSetMessages() {
         val testJson01 = "{\"updateTime\":\"2017-12-15T11:00:00+10:00\",\"login\":{\"text01\":\"10초 회원가입하고\\n지금 10만원 할인쿠폰팩 받으세요!!\"},\"signup\":{\"text01\":\"지금 회원가입하면 *10만원 할인쿠폰팩*을 드려요!\",\"text02\":\"데일리호텔 회원이 되어주셔서\\n진심으로 감사합니다!\"},\"home\":{\"messageArea\":{\"login\":{\"enabled\":true},\"logout\":{\"enabled\":true,\"title\":\"회원가입하고 15,000 쿠폰 받으세요!\",\"callToAction\":\"지금 가입하기\"}},\"categoryArea\":{\"enabled\":true}}}"
 
@@ -147,5 +148,18 @@ class DailyRemoteConfigTest {
         assertEquals("회원가입하고 15,000 쿠폰 받으세요!", preference.remoteConfigHomeMessageAreaLogoutTitle)
         assertEquals("지금 가입하기", preference.remoteConfigHomeMessageAreaLogoutCallToAction)
         assertTrue(preference.remoteConfigHomeCategoryEnabled)
+    }
+
+    @Test
+    fun testSetHomeDefaultEvent() {
+        val testJson01 = "{\"updateTime\":\"2017-02-16T09:00:00+09:00\",\"index\":0,\"title\":\"데일리, 추천을 발견하다\",\"eventUrl\":\"http://m.dailyhotel.co.kr/banner/170215default\",\"lowResolution\":\"http://img.dailyhotel.me/inapp_marketing/home_default_720-405.jpg\",\"highResolution\":\"http://img.dailyhotel.me/inapp_marketing/home_default_1440-810.jpg\"}"
+
+        remoteConfig.setHomeDefaultEvent(context, testJson01)
+
+        assertEquals("2017-02-16T09:00:00+09:00", preference.remoteConfigHomeEventCurrentVersion)
+        assertTrue(preference.remoteConfigHomeEventIndex == 0)
+
+        assertEquals("데일리, 추천을 발견하다", preference.remoteConfigHomeEventTitle)
+        assertEquals("http://m.dailyhotel.co.kr/banner/170215default", preference.remoteConfigHomeEventUrl)
     }
 }
