@@ -118,6 +118,7 @@
     <string name="label_subway_list">지하철역</string>
     <string name="label_allow_notification">알림허용</string>
     <string name="label_can_use_coupon">쿠폰 적용 가능</string>
+    <string name="label_or">또는</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -1707,7 +1708,7 @@
 
     <!-- Daily Reward -->
     <string name="label_daily_reward">데일리 리워드</string>
-    <string name="label_used_reward">적립 및 사용</string>
+    <string name="label_used_reward">리워드 적립 및 사용</string>
     <string name="label_reward_reward_history">데일리 리워드 내역</string>
     <string name="label_reward_reward_card_history">이전 카드 보기</string>
     <string name="label_reward_reward_guide">데일리 리워드 안내</string>

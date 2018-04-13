@@ -158,22 +158,24 @@
                 app:layout_constraintLeft_toLeftOf="@id/roomTypeTextView"
                 app:layout_constraintTop_toBottomOf="@+id/nrdTextView"/>
 
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/dotImageView"
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/orTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="4dp"
+                android:text="@string/label_or"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/rewardTextView"
                 app:layout_constraintLeft_toRightOf="@+id/rewardTextView"
-                app:layout_constraintTop_toTopOf="@+id/rewardTextView"
-                app:srcCompat="@drawable/info_ic_text_dot_grey"/>
+                app:layout_constraintTop_toTopOf="@+id/rewardTextView"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/couponTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="3dp"
                 android:drawablePadding="3dp"
                 android:gravity="bottom"
@@ -182,7 +184,7 @@
                 android:textSize="12dp"
                 android:visibility="gone"
                 app:drawableCompatLeft="@drawable/vector_ic_coupon_available"
-                app:layout_constraintLeft_toRightOf="@+id/dotImageView"
+                app:layout_constraintLeft_toRightOf="@+id/orTextView"
                 app:layout_constraintTop_toBottomOf="@+id/nrdTextView"
                 app:layout_goneMarginLeft="0dp"/>
         </android.support.constraint.ConstraintLayout>

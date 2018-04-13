@@ -213,16 +213,16 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         {
             if (dataBinding.rewardTextView.getVisibility() == View.VISIBLE)
             {
-                dataBinding.dotImageView.setVisibility(View.VISIBLE);
+                dataBinding.orTextView.setVisibility(View.VISIBLE);
             } else
             {
-                dataBinding.dotImageView.setVisibility(View.GONE);
+                dataBinding.orTextView.setVisibility(View.GONE);
             }
 
             dataBinding.couponTextView.setVisibility(View.VISIBLE);
         } else
         {
-            dataBinding.dotImageView.setVisibility(View.GONE);
+            dataBinding.orTextView.setVisibility(View.GONE);
             dataBinding.couponTextView.setVisibility(View.GONE);
         }
 
