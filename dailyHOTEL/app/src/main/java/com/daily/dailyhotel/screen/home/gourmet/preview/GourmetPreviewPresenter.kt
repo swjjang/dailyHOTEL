@@ -172,30 +172,28 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
 
     @Synchronized
     override fun onRefresh(showProgress: Boolean) {
-        if (isFinish || !isRefresh) {
-            return
+        takeIf { !isFinish && isRefresh }.let {
+            isRefresh = false
+            screenLock(showProgress)
+
+            addCompositeDisposable(Observable.zip(gourmetRemoteImpl.getDetail(gourmetIndex, bookDateTime), gourmetRemoteImpl.getReviewScores(gourmetIndex)
+                    , BiFunction<GourmetDetail, ReviewScores, Int> { gourmetDetail, reviewScores ->
+                this@GourmetPreviewPresenter.detail = gourmetDetail
+
+                analytics.onScreen(activity, gourmetDetail.category)
+
+                reviewScores.reviewScoreTotalCount
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
+                this@GourmetPreviewPresenter.trueReviewCount = trueReviewCount
+
+                notifyDataSetChanged()
+
+                unLockAll()
+            }, { throwable ->
+                onHandleError(throwable)
+                hideAnimationAfterFinish()
+            }))
         }
-
-        isRefresh = false
-        screenLock(showProgress)
-
-        addCompositeDisposable(Observable.zip(gourmetRemoteImpl.getDetail(gourmetIndex, bookDateTime), gourmetRemoteImpl.getReviewScores(gourmetIndex)
-                , BiFunction<GourmetDetail, ReviewScores, Int> { gourmetDetail, reviewScores ->
-            this@GourmetPreviewPresenter.detail = gourmetDetail
-
-            analytics.onScreen(activity, gourmetDetail.category)
-
-            reviewScores.reviewScoreTotalCount
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
-            this@GourmetPreviewPresenter.trueReviewCount = trueReviewCount
-
-            notifyDataSetChanged()
-
-            unLockAll()
-        }, { throwable ->
-            onHandleError(throwable)
-            hideAnimationAfterFinish()
-        }))
     }
 
     override fun onBackClick() {
@@ -210,54 +208,50 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     }
 
     override fun onWishClick() {
-        if (!::detail.isInitialized || lock()) {
-            return
+        takeIf { it::detail.isInitialized && !lock() }.let {
+            val changeWish = !detail.myWish
+
+            viewInterface.setWish(changeWish)
+
+            analytics.onEventWishClick(activity, changeWish)
+
+            startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.GOURMET
+                    , gourmetIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), GourmetPreviewActivity.REQUEST_CODE_WISH_DIALOG)
         }
-
-        val changeWish = !detail.myWish
-
-        viewInterface.setWish(changeWish)
-
-        analytics.onEventWishClick(activity, changeWish)
-
-        startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.GOURMET
-                , gourmetIndex, changeWish, AnalyticsManager.Screen.PEEK_POP), GourmetPreviewActivity.REQUEST_CODE_WISH_DIALOG)
     }
 
 
     override fun onKakaoClick() {
-        if (!::detail.isInitialized || lock()) {
-            return
+        takeIf { it::detail.isInitialized && !lock() }.let {
+            analytics.onEventKakaoClick(activity)
+
+            try {
+                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
+            } catch (e: PackageManager.NameNotFoundException) {
+                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)
+                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)
+                        , View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }
+                        , null, null, DialogInterface.OnDismissListener { onBackClick() }, true)
+
+                unLockAll()
+                return
+            }
+
+            screenLock(true)
+
+            val name = DailyUserPreference.getInstance(activity).name
+            val urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_kakaotalk"
+            val longUrl = String.format(Locale.KOREA, urlFormat, gourmetIndex
+                    , bookDateTime.getVisitDateTime("yyyy-MM-dd"))
+
+            addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
+                hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, shortUrl) }
+            }, {
+                val mobileWebUrl = "https://mobile.dailyhotel.co.kr/gourmet/" + detail.index
+
+                hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl) }
+            }))
         }
-
-        analytics.onEventKakaoClick(activity)
-
-        try {
-            activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
-        } catch (e: PackageManager.NameNotFoundException) {
-            viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)
-                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)
-                    , View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }
-                    , null, null, DialogInterface.OnDismissListener { onBackClick() }, true)
-
-            unLockAll()
-            return
-        }
-
-        screenLock(true)
-
-        val name = DailyUserPreference.getInstance(activity).name
-        val urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_kakaotalk"
-        val longUrl = String.format(Locale.KOREA, urlFormat, gourmetIndex
-                , bookDateTime.getVisitDateTime("yyyy-MM-dd"))
-
-        addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
-            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, shortUrl) }
-        }, {
-            val mobileWebUrl = "https://mobile.dailyhotel.co.kr/gourmet/" + detail.index
-
-            hideAnimationAfterFinish { startKakaoLinkApplication(name, detail, bookDateTime, mobileWebUrl) }
-        }))
     }
 
     private fun startKakaoLinkApplication(userName: String, detail: GourmetDetail, bookDateTime: GourmetBookDateTime, url: String) {
@@ -268,25 +262,20 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     }
 
     override fun onMapClick() {
-        if (!::detail.isInitialized || lock()) {
-            return
+        takeIf { it::detail.isInitialized && !lock() }.let {
+            hideAnimationAfterFinish { Util.shareNaverMap(activity, detail.name, detail.latitude.toString(), detail.longitude.toString()) }
+
+            analytics.onEventMapClick(activity)
         }
-
-        hideAnimationAfterFinish { Util.shareNaverMap(activity, detail.name, detail.latitude.toString(), detail.longitude.toString()) }
-
-        analytics.onEventMapClick(activity)
     }
 
     override fun onCloseClick() {
-        if (lock()) {
-            return
+        takeIf { !lock() }.let {
+            hideAnimationAfterFinish()
+
+            analytics.onEventCloseClick(activity)
         }
-
-        hideAnimationAfterFinish()
-
-        analytics.onEventCloseClick(activity)
     }
-
 
     internal fun notifyDataSetChanged() {
         viewInterface.setName(gourmetName)
