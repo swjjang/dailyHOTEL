@@ -371,7 +371,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         return stringBuilder.toString();
     }
 
-    private String toStringListQueryParams(String entryKey, List entryValue, boolean addAmpersand)
+    private String toStringListQueryParams(String entryKey, List entryValue, boolean addBeginAmpersand)
     {
         if (entryKey == null || entryValue == null)
         {
@@ -380,16 +380,18 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (Object valueObject : entryValue)
+        int size = entryValue.size();
+
+        for (int i = 0; i < size; i++)
         {
-            String convertedEntryValue = valueObject.toString();
+            String convertedEntryValue = entryValue.get(i).toString();
 
             if (DailyTextUtils.isTextEmpty(convertedEntryValue) == true)
             {
                 continue;
             }
 
-            if (addAmpersand == true)
+            if (i > 0)
             {
                 stringBuilder.append('&');
             }
@@ -397,6 +399,11 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
             stringBuilder.append(entryKey);
             stringBuilder.append("=");
             stringBuilder.append(convertedEntryValue);
+        }
+
+        if (addBeginAmpersand && stringBuilder.length() > 0)
+        {
+            stringBuilder.insert(0, '&');
         }
 
         return stringBuilder.toString();
