@@ -32,6 +32,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int mCheckOutDay;
     private boolean mLastDayEnabled;
     private SparseIntArray mAvailableCheckOutDays;
+    private int firstSoldOutDayAfterCheckInDay;
 
     View.OnClickListener mOnClickListener;
 
@@ -129,11 +130,15 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setCheckInDay(int checkInDay)
     {
         mCheckInDay = checkInDay;
+
+        firstSoldOutDayAfterCheckInDay = 0;
     }
 
     public void setCheckOutDay(int checkOutDay)
     {
         mCheckOutDay = checkOutDay;
+
+        firstSoldOutDayAfterCheckInDay = 0;
     }
 
     public void setLastDayEnabled(boolean enabled)
@@ -271,42 +276,62 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dayDataBinding.dayLayout.setEnabled(false);
             dayDataBinding.dayTextView.setStrikeFlag(false);
             dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
-        } else
-        {
-            if (day.sideDay == true)
-            {
-                setSideDayView(dayDataBinding, day);
-            } else
-            {
-                // yyyyMMdd
-                int yyyyMMdd = day.toyyyyMMdd();
 
-                if (mCheckInDay == yyyyMMdd)
-                {
-                    setCheckInDayView(dayDataBinding, day);
-                } else if (mCheckOutDay == yyyyMMdd)
-                {
-                    setCheckOutDayView(dayDataBinding, day);
-                } else
-                {
-                    if (day.soldOut == true)
-                    {
-                        if (yyyyMMdd > mCheckInDay && mCheckOutDay == 0 && mAvailableCheckOutDays != null && mAvailableCheckOutDays.get(yyyyMMdd) > 0)
-                        {
-                            setDefaultDayView(dayDataBinding, day, dayOfWeek);
-                        } else
-                        {
-                            setSoldOutDayView(dayDataBinding, day);
-                        }
-                    } else
-                    {
-                        setDefaultDayView(dayDataBinding, day, dayOfWeek);
-                    }
-                }
+            return;
+        }
+
+        dayDataBinding.dayLayout.setOnClickListener(mOnClickListener);
+
+        if (day.sideDay == true)
+        {
+            setSideDayView(dayDataBinding, day);
+            return;
+        }
+
+        // yyyyMMdd
+        int yyyyMMdd = day.toyyyyMMdd();
+
+        if (yyyyMMdd == mCheckInDay)
+        {
+            setCheckInDayView(dayDataBinding, day);
+            return;
+        }
+
+        if (yyyyMMdd == mCheckOutDay)
+        {
+            setCheckOutDayView(dayDataBinding, day);
+            return;
+        }
+
+        if (firstSoldOutDayAfterCheckInDay > 0 && yyyyMMdd > firstSoldOutDayAfterCheckInDay)
+        {
+            setSideDayView(dayDataBinding, day);
+            return;
+        }
+
+        if (day.soldOut == false)
+        {
+            setDefaultDayView(dayDataBinding, day, dayOfWeek);
+            return;
+        }
+
+        // checkIn만 체크된 경우
+        if (yyyyMMdd > mCheckInDay && mCheckOutDay == 0)
+        {
+            if (firstSoldOutDayAfterCheckInDay == 0)
+            {
+                firstSoldOutDayAfterCheckInDay = yyyyMMdd;
             }
 
-            dayDataBinding.dayLayout.setOnClickListener(mOnClickListener);
+            if (mAvailableCheckOutDays != null && mAvailableCheckOutDays.get(yyyyMMdd) > 0)
+            {
+                setDefaultDayView(dayDataBinding, day, dayOfWeek);
+
+                return;
+            }
         }
+
+        setSoldOutDayView(dayDataBinding, day);
     }
 
     private void setSideDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day)
