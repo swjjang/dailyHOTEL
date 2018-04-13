@@ -28,6 +28,21 @@ class ConfigDelegate(jsonString: String) {
             return config?.operationLunchTime?.endTime
         }
 
+    val stayDetailTrueReviewProductNameVisible: Boolean
+        get() {
+            return config?.detailTrueReviewProductNameVisible.stay ?: true
+        }
+
+    val stayOutboundDetailTrueReviewProductNameVisible: Boolean
+        get() {
+            return config?.detailTrueReviewProductNameVisible.stay ?: true
+        }
+
+    val gourmetDetailTrueReviewProductNameVisible: Boolean
+        get() {
+            return config?.detailTrueReviewProductNameVisible.stay ?: true
+        }
+
     @JsonObject
     internal class Config {
         @JsonField(name = arrayOf("boutiqueBusinessModelEnabled"))
@@ -35,6 +50,9 @@ class ConfigDelegate(jsonString: String) {
 
         @JsonField(name = arrayOf("messages"))
         var operationLunchTime: OperationLunchTime? = null
+
+        @JsonField(name = arrayOf("detailTrueReviewProductNameVisible"))
+        var detailTrueReviewProductNameVisible: DetailTrueReviewProductNameVisible? = null
     }
 
     @JsonObject
@@ -44,5 +62,17 @@ class ConfigDelegate(jsonString: String) {
 
         @JsonField(name = arrayOf("endTime"))
         var endTime: String? = null
+    }
+
+    @JsonObject
+    internal class DetailTrueReviewProductNameVisible {
+        @JsonField(name = arrayOf("stay"))
+        var stay: Boolean? = null
+
+        @JsonField(name = arrayOf("stay"))
+        var stayOutbound: Boolean? = null
+
+        @JsonField(name = arrayOf("stay"))
+        var gourmet: Boolean? = null
     }
 }

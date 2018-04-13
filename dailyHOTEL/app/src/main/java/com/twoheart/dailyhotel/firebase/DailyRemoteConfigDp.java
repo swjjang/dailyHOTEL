@@ -24,7 +24,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.Locale;
 
-public class DailyRemoteConfig
+@Deprecated
+public class DailyRemoteConfigDp
 {
     Context mContext;
     FirebaseRemoteConfig mFirebaseRemoteConfig;
@@ -34,7 +35,7 @@ public class DailyRemoteConfig
         void onComplete(String currentVersion, String forceVersion);
     }
 
-    public DailyRemoteConfig(Context context)
+    public DailyRemoteConfigDp(Context context)
     {
         mContext = context;
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();

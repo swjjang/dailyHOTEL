@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.util.Util
 import org.json.JSONObject
 import java.io.File
 
-class DailyRemoteConfigKt(private val context: Context) {
+class DailyRemoteConfig(private val context: Context) {
 
     private val remoteConfig = FirebaseRemoteConfig.getInstance()
 
@@ -79,44 +79,9 @@ class DailyRemoteConfigKt(private val context: Context) {
         setConfig(context, remoteConfig.getString("ANDConfig"))
         setStaticUlr(context, remoteConfig.getString("androidStaticUrl"))
         setSearch(context, remoteConfig.getString("ANDSearch"))
-
-//        writePaymentType(mContext, androidPaymentType)
-//
-//        //
-//        DailyRemoteConfigPreference.getInstance(mContext).remoteConfigText = androidText
-//        writeTextFiled(mContext, androidText)
-//
-//        // default Event link
-//        writeHomeEventDefaultLink(mContext, androidHomeEventDefaultLink)
-//
-//        // boutique BM - test BM
-//        writeBoutiqueBM(mContext, androidBoutiqueBM)
-//
-//        // androidStaticUrl
-//        writeStaticUrl(mContext, androidStaticUrl)
-//
-//        // Android Stay Rank A/B Test
-//        writeStayRankTest(mContext, androidStayRankABTest)
-//
-//        writeOBSearchKeyword(mContext, androidOBSearchKeyword)
-//
-//        // Reward Sticker
-//        writeRewardSticker(mContext, androidRewardSticker)
-//
-//        // 앱조사
-//        writeAppResearch(mContext, androidAppResearch)
-//
-//        // 고메 키워드
-//        writeGourmetSearchKeyword(mContext, androidGourmetSearchKeyword)
-//
-//        // 카드 이벤트 업체
-//        writePaymentCardEvent(mContext, androidPaymentCardEvent)
-//
-//        // 검색 StayOutboundSuggest 힌트
-//        writeSearch(mContext, androidSearch)
-//
-//        // 상세화면 트루리뷰 상품 정보 노출 여부
-//        writeTrueReview(mContext, ANDTrueReview)
+        setReward(context, remoteConfig.getString("Marketing_ANDRewardSticker"))
+        setAppResearch(context, remoteConfig.getString("androidAppResearch"))
+        setPaymentCardEvent(context, remoteConfig.getString("Marketing_ANDPaymentCardEvent"))
 
         val versionPair = getVersionNsetMessages(context, remoteConfig.getString("ANDVersion"))
         listener.onComplete(versionPair?.first, versionPair?.second)
@@ -212,7 +177,12 @@ class DailyRemoteConfigKt(private val context: Context) {
             val configDelegate = ConfigDelegate(jsonString)
 
             DailyRemoteConfigPreference.getInstance(context).isRemoteConfigBoutiqueBMEnabled = configDelegate.boutiqueBusinessModelEnabled
+
             DailyRemoteConfigPreference.getInstance(context).remoteConfigOperationLunchTime = "${configDelegate.operationLunchStartTime},${configDelegate.operationLunchEndTime}"
+
+            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigStayDetailTrueReviewProductVisible = configDelegate.stayDetailTrueReviewProductNameVisible
+            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible = configDelegate.stayOutboundDetailTrueReviewProductNameVisible
+            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigGourmetDetailTrueReviewProductVisible = configDelegate.gourmetDetailTrueReviewProductNameVisible
         } catch (e: Exception) {
             ExLog.e(e.toString())
         }
@@ -257,6 +227,41 @@ class DailyRemoteConfigKt(private val context: Context) {
             DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigGourmetSearchKeyword = searchDelegate.gourmetRelatedKeywords
         } catch (e: Exception) {
             ExLog.e(e.toString())
+        }
+    }
+
+    private fun setReward(context: Context, jsonString: String) {
+        try {
+            val rewardDelegate = RewardDelegate(jsonString)
+
+            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerCardTitleMessage = rewardDelegate.cardTitleMessage
+            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerRewardTitleMessage = rewardDelegate.rewardTitleMessage
+            DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardStickerCampaignEnabled = rewardDelegate.campaignEnabled
+            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerGuides = rewardDelegate.guides
+            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberDefaultMessage = rewardDelegate.nonMemberMessageDefault
+            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberCampaignMessage = rewardDelegate.nonMemberMessageCampaign
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(rewardDelegate.nonMemberCampaignFreeNights)
+
+            rewardDelegate.memberMessagesNights?.forEachIndexed { index, message -> DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(index, message) }
+        } catch (e: Exception) {
+            ExLog.e(e.toString())
+        }
+    }
+
+    private fun setAppResearch(context: Context, jsonString: String) {
+        DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigAppResearch = jsonString
+    }
+
+    private fun setPaymentCardEvent(context: Context, jsonString: String) {
+        try {
+            val jsonObject = JSONObject(jsonString)
+
+            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigPaymentCardEvent =
+                    if (jsonObject.getBoolean("enabled")) jsonObject.getJSONArray("cardEvents")?.toString() else null
+        } catch (e: Exception) {
+            ExLog.e(e.toString())
+
+            DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigPaymentCardEvent = null
         }
     }
 
