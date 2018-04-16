@@ -351,4 +351,26 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                 }
             });
     }
+
+    @Override
+    public Observable<BaseDto<Object>> setRegisterCoupon(String couponCode)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/keyword"//
+            : "NzUkMzEkMjAkOCQyJDAkNDkkNjEkMiQxOSQ5MCQ2MiQxMiQxNiQzMCQxNSQ=$NNTzJk1NTVDRKNDBdUGMzQX1RkMxFNjTU4OUY2NUEXzRUVCRTk1REUyUOEU0REY0QjHNLFRUIzQzc3RTlCMTRBQUMT0QzNFNNTNGNg==$\n";
+
+        return mDailyMobileService.setRegisterKeywordCoupon(Crypto.getUrlDecoderEx(URL), couponCode) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, BaseDto<Object>>()
+            {
+                @Override
+                public BaseDto<Object> apply(BaseDto<Object> objectBaseDto) throws Exception
+                {
+                    if (objectBaseDto != null)
+                    {
+                        return objectBaseDto;
+                    } else {
+                        throw new BaseException(-1, null);
+                    }
+                }
+            });
+    }
 }

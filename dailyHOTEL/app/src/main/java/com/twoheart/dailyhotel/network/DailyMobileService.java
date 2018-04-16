@@ -1099,6 +1099,10 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<CouponsData>> getCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @FormUrlEncoded
+    @POST("{mobileAPI}")
+    Observable<BaseDto<Object>> setRegisterKeywordCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("keyword") String keyword);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RewardRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////

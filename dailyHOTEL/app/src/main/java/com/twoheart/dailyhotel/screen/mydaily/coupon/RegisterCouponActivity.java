@@ -22,6 +22,7 @@ import retrofit2.Response;
 /**
  * Created by android_sam on 2016. 9. 19..
  */
+@Deprecated
 public class RegisterCouponActivity extends BaseActivity
 {
     private static final String INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
