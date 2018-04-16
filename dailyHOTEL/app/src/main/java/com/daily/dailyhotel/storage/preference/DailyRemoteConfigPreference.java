@@ -1049,7 +1049,7 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_MESSAGE, null);
     }
 
-    public void setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(int value)
+    public void setKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights(int value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_FREE_NIGHTS, value);
     }

@@ -32,7 +32,7 @@ class RewardDelegate(jsonString: String) {
 
     val nonMemberMessageDefault: String?
         get() {
-            return reward?.nonMember?.message?.default
+            return reward?.nonMember?.message?.defaultMessage
         }
 
     val nonMemberMessageCampaign: String?
@@ -47,26 +47,16 @@ class RewardDelegate(jsonString: String) {
 
     val memberMessagesNights: Array<String?>
         get() {
-            return arrayOf(reward?.member?.message?.nights0,
-                    reward?.member?.message?.nights1,
-                    reward?.member?.message?.nights2,
-                    reward?.member?.message?.nights3,
-                    reward?.member?.message?.nights4,
-                    reward?.member?.message?.nights5,
-                    reward?.member?.message?.nights6,
-                    reward?.member?.message?.nights7,
-                    reward?.member?.message?.nights8,
-                    reward?.member?.message?.nights9)
-        }
-
-    val guideTitleMessage: String?
-        get() {
-            return reward?.guideTitleMessage
-        }
-
-    val guideDescriptionMessage: String?
-        get() {
-            return reward?.guideDescriptionMessage
+            return arrayOf(reward?.member?.messages?.nights0,
+                    reward?.member?.messages?.nights1,
+                    reward?.member?.messages?.nights2,
+                    reward?.member?.messages?.nights3,
+                    reward?.member?.messages?.nights4,
+                    reward?.member?.messages?.nights5,
+                    reward?.member?.messages?.nights6,
+                    reward?.member?.messages?.nights7,
+                    reward?.member?.messages?.nights8,
+                    reward?.member?.messages?.nights9)
         }
 
     val guides: String?
@@ -101,12 +91,6 @@ class RewardDelegate(jsonString: String) {
         @JsonField(name = arrayOf("member"))
         var member: Member? = null
 
-        @JsonField(name = arrayOf("guideTitleMessage"))
-        var guideTitleMessage: String? = null
-
-        @JsonField(name = arrayOf("guideDescriptionMessage"))
-        var guideDescriptionMessage: String? = null
-
         @JsonField(name = arrayOf("guides"))
         var guides: List<Guide>? = null
     }
@@ -121,18 +105,18 @@ class RewardDelegate(jsonString: String) {
 
         @JsonObject
         internal class Message {
-            @JsonField(name = arrayOf("default"))
-            var default: String? = null
-
             @JsonField(name = arrayOf("campaign"))
             var campaign: String? = null
+
+            @JsonField(name = arrayOf("default"))
+            var defaultMessage: String? = null // default 라는 변수명을 사용할수가 없다.
         }
     }
 
     @JsonObject
     internal class Member {
-        @JsonField(name = arrayOf("message"))
-        var message: Messages? = null
+        @JsonField(name = arrayOf("messages"))
+        var messages: Messages? = null
 
         @JsonObject
         internal class Messages {

@@ -246,7 +246,7 @@ class DailyRemoteConfig(private val context: Context) {
         }
     }
 
-    private fun setReward(context: Context, jsonString: String) {
+    internal fun setReward(context: Context, jsonString: String) {
         jsonString.takeNotEmpty {
             try {
                 val rewardDelegate = RewardDelegate(it)
@@ -257,26 +257,26 @@ class DailyRemoteConfig(private val context: Context) {
                 DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerGuides = rewardDelegate.guides
                 DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberDefaultMessage = rewardDelegate.nonMemberMessageDefault
                 DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberCampaignMessage = rewardDelegate.nonMemberMessageCampaign
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(rewardDelegate.nonMemberCampaignFreeNights)
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigRewardStickerNonMemberCampaignFreeNights = rewardDelegate.nonMemberCampaignFreeNights
 
-                rewardDelegate.memberMessagesNights?.forEachIndexed { index, message -> DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(index, message) }
+                rewardDelegate.memberMessagesNights.forEachIndexed { index, message -> DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(index, message) }
             } catch (e: Exception) {
                 ExLog.e(e.toString())
             }
         }
     }
 
-    private fun setAppResearch(context: Context, jsonString: String) {
+    internal fun setAppResearch(context: Context, jsonString: String) {
         jsonString.takeNotEmpty { DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigAppResearch = it }
     }
 
-    private fun setPaymentCardEvent(context: Context, jsonString: String) {
+    internal fun setPaymentCardEvent(context: Context, jsonString: String) {
         jsonString.takeNotEmpty {
             try {
                 val jsonObject = JSONObject(it)
 
                 DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigPaymentCardEvent =
-                        if (jsonObject.getBoolean("enabled")) jsonObject.getJSONArray("cardEvents")?.toString() else null
+                        if (jsonObject.getBoolean("enabled")) jsonObject.getJSONArray("events")?.toString() else null
             } catch (e: Exception) {
                 ExLog.e(e.toString())
 

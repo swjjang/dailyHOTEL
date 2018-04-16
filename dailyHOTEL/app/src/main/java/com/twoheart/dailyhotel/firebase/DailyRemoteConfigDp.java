@@ -630,7 +630,7 @@ public class DailyRemoteConfigDp
 
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberDefaultMessage(nonMemberDefaultMessage);
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberCampaignMessage(nonMemberCampaignMessage);
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(campaignFreeNights);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights(campaignFreeNights);
 
                 JSONObject memberMessageJSONObject = jsonObject.getJSONObject("member").getJSONObject("message");
                 final int MAX_NIGHTS = 9;
