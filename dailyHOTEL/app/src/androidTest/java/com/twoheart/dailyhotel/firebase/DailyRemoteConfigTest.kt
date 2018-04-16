@@ -140,9 +140,9 @@ class DailyRemoteConfigTest {
 
         remoteConfig.setMessages(context, testJson01)
 
-        assertEquals("10초 회원가입하고\\n지금 10만원 할인쿠폰팩 받으세요!!", preference.remoteConfigTextLoginText01)
+        assertEquals("10초 회원가입하고\n지금 10만원 할인쿠폰팩 받으세요!!", preference.remoteConfigTextLoginText01)
         assertEquals("지금 회원가입하면 *10만원 할인쿠폰팩*을 드려요!", preference.remoteConfigTextSignUpText01)
-        assertEquals("데일리호텔 회원이 되어주셔서\\n진심으로 감사합니다!", preference.remoteConfigTextSignUpText02)
+        assertEquals("데일리호텔 회원이 되어주셔서\n진심으로 감사합니다!", preference.remoteConfigTextSignUpText02)
         assertTrue(preference.isRemoteConfigHomeMessageAreaLoginEnabled)
         assertTrue(preference.isRemoteConfigHomeMessageAreaLogoutEnabled)
         assertEquals("회원가입하고 15,000 쿠폰 받으세요!", preference.remoteConfigHomeMessageAreaLogoutTitle)
@@ -161,5 +161,117 @@ class DailyRemoteConfigTest {
 
         assertEquals("데일리, 추천을 발견하다", preference.remoteConfigHomeEventTitle)
         assertEquals("http://m.dailyhotel.co.kr/banner/170215default", preference.remoteConfigHomeEventUrl)
+    }
+
+    @Test
+    fun testSetConfig() {
+        val testJson01 = "{\"boutiqueBusinessModelEnabled\":true,\"operationLunchTime\":{\"startTime\":\"11:50\",\"endTime\":\"13:00\"},\"detailTrueReviewProductNameVisible\":{\"stay\":true,\"stayOutbound\":true,\"gourmet\":true}}"
+
+        remoteConfig.setConfig(context, testJson01)
+
+        assertTrue(preference.isRemoteConfigBoutiqueBMEnabled)
+        assertEquals("11:50,13:00", preference.remoteConfigOperationLunchTime)
+        assertTrue(preference.isKeyRemoteConfigStayDetailTrueReviewProductVisible)
+        assertTrue(preference.isKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible)
+        assertTrue(preference.isKeyRemoteConfigGourmetDetailTrueReviewProductVisible)
+
+        val testJson02 = "{\"boutiqueBusinessModelEnabled\":false,\"operationLunchTime\":{\"startTime\":\"10:50\",\"endTime\":\"11:00\"},\"detailTrueReviewProductNameVisible\":{\"stay\":false,\"stayOutbound\":false,\"gourmet\":false}}"
+
+        remoteConfig.setConfig(context, testJson02)
+
+        assertFalse(preference.isRemoteConfigBoutiqueBMEnabled)
+        assertEquals("10:50,11:00", preference.remoteConfigOperationLunchTime)
+        assertFalse(preference.isKeyRemoteConfigStayDetailTrueReviewProductVisible)
+        assertFalse(preference.isKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible)
+        assertFalse(preference.isKeyRemoteConfigGourmetDetailTrueReviewProductVisible)
+
+        val testJson03 = ""
+
+        remoteConfig.setConfig(context, testJson03)
+
+        assertFalse(preference.isRemoteConfigBoutiqueBMEnabled)
+        assertEquals("10:50,11:00", preference.remoteConfigOperationLunchTime)
+        assertFalse(preference.isKeyRemoteConfigStayDetailTrueReviewProductVisible)
+        assertFalse(preference.isKeyRemoteConfigStayOutboundDetailTrueReviewProductVisible)
+        assertFalse(preference.isKeyRemoteConfigGourmetDetailTrueReviewProductVisible)
+    }
+
+    @Test
+    fun testSetStaticUrl() {
+        val testJson01 = "{\"version\":\"2018-01-17T11:00:00+09:00\",\"privacy\":\"https://prod-policies.dailyhotel.me/privacy/\",\"collectPersonalInformation\":\"https://prod-policies.dailyhotel.me/join_privacy/\",\"terms\":\"https://prod-policies.dailyhotel.me/terms/\",\"about\":\"https://prod-policies.dailyhotel.me/about/\",\"location\":\"https://prod-policies.dailyhotel.me/location/\",\"childProtect\":\"https://prod-policies.dailyhotel.me/child_protect_160404/\",\"bonus\":\"http://dailyhotel.kr/webview_cnote/bonus\",\"coupon\":\"http://dailyhotel.kr/webview_cnote/coupon\",\"prodCouponNote\":\"http://dailyhotel.kr/webview_coupon_note/\",\"devCouponNote\":\"http://dev-extranet-hotel.dailyhotel.me/webview_coupon_note/\",\"faq\":\"http://dailyhotel.co.kr/wp/webview/faq.html\",\"license\":\"http://wp.me/P7uuuR-4Z1\",\"stamp\":\"http://hotel.dailyhotel.kr/webview_cnote/stamp\",\"review\":\"https://prod-policies.dailyhotel.me/review/\",\"lifeStyleProject\":\"http://m.dailyhotel.co.kr/banner/lifestyleproject/\",\"dailyStampHome\":\"http://m.dailyhotel.co.kr/banner/dailystamp_home\",\"dailyReward\":\"http://m.dailyhotel.co.kr/banner/dailyrewards\",\"dailyRewardTerms\":\"http://m.dailyhotel.co.kr/banner/dailyrewards_notice/\",\"dailyRewardCouponTerms\":\"https://hotel.dailyhotel.kr/webview_cnote/reward_coupon\",\"dailyTrueAwards\":\"http://m.dailyhotel.co.kr/banner/dailytrueawards_fixed\"}"
+
+        remoteConfig.setStaticUlr(context, testJson01)
+
+        assertEquals("https://prod-policies.dailyhotel.me/privacy/", preference.keyRemoteConfigStaticUrlPrivacy)
+        assertEquals("https://prod-policies.dailyhotel.me/terms/", preference.keyRemoteConfigStaticUrlTerms)
+        assertEquals("https://prod-policies.dailyhotel.me/about/", preference.keyRemoteConfigStaticUrlAbout)
+        assertEquals("https://prod-policies.dailyhotel.me/location/", preference.keyRemoteConfigStaticUrlLocation)
+        assertEquals("https://prod-policies.dailyhotel.me/child_protect_160404/", preference.keyRemoteConfigStaticUrlChildProtect)
+        assertEquals("http://dailyhotel.kr/webview_cnote/bonus", preference.keyRemoteConfigStaticUrlBonus)
+        assertEquals("http://dailyhotel.kr/webview_cnote/coupon", preference.keyRemoteConfigStaticUrlCoupon)
+        assertEquals("http://dailyhotel.kr/webview_coupon_note/", preference.keyRemoteConfigStaticUrlProdCouponNote)
+        assertEquals("http://dev-extranet-hotel.dailyhotel.me/webview_coupon_note/", preference.keyRemoteConfigStaticUrlDevCouponNote)
+        assertEquals("http://dailyhotel.co.kr/wp/webview/faq.html", preference.keyRemoteConfigStaticUrlFaq)
+        assertEquals("http://wp.me/P7uuuR-4Z1", preference.keyRemoteConfigStaticUrlLicense)
+        assertEquals("https://prod-policies.dailyhotel.me/review/", preference.keyRemoteConfigStaticUrlReview)
+        assertEquals("http://m.dailyhotel.co.kr/banner/lifestyleproject/", preference.keyRemoteConfigStaticUrlLifeStyleProject)
+        assertEquals("https://prod-policies.dailyhotel.me/join_privacy/", preference.keyRemoteConfigStaticUrlCollectPersonalInformation)
+        assertEquals("http://m.dailyhotel.co.kr/banner/dailyrewards", preference.keyRemoteConfigStaticUrlDailyReward)
+        assertEquals("http://m.dailyhotel.co.kr/banner/dailyrewards_notice/", preference.keyRemoteConfigStaticUrlDailyRewardTerms)
+        assertEquals("https://hotel.dailyhotel.kr/webview_cnote/reward_coupon", preference.keyRemoteConfigStaticUrlDailyRewardCouponTerms)
+        assertEquals("http://m.dailyhotel.co.kr/banner/dailytrueawards_fixed", preference.keyRemoteConfigStaticUrlDailyTrueAwards)
+
+        val testJson02 = "{\"version\":\"2018-01-17T11:00:00+09:00\",\"privacy\":\"privacy\",\"collectPersonalInformation\":\"collectPersonalInformation\"" +
+                ",\"terms\":\"terms\",\"about\":\"about\",\"location\":\"location\",\"childProtect\":\"childProtect\",\"bonus\":\"bonus\"" +
+                ",\"coupon\":\"coupon\",\"prodCouponNote\":\"prodCouponNote\",\"devCouponNote\":\"devCouponNote\",\"faq\":\"faq\",\"license\":\"license\"" +
+                ",\"stamp\":\"stamp\",\"review\":\"review\",\"lifeStyleProject\":\"lifeStyleProject\",\"dailyStampHome\":\"dailyStampHome\",\"dailyReward\":\"dailyReward\"" +
+                ",\"dailyRewardTerms\":\"dailyRewardTerms\",\"dailyRewardCouponTerms\":\"dailyRewardCouponTerms\",\"dailyTrueAwards\":\"dailyTrueAwards\"}"
+
+        remoteConfig.setStaticUlr(context, testJson02)
+
+        assertEquals("privacy", preference.keyRemoteConfigStaticUrlPrivacy)
+        assertEquals("terms", preference.keyRemoteConfigStaticUrlTerms)
+        assertEquals("about", preference.keyRemoteConfigStaticUrlAbout)
+        assertEquals("location", preference.keyRemoteConfigStaticUrlLocation)
+        assertEquals("childProtect", preference.keyRemoteConfigStaticUrlChildProtect)
+        assertEquals("bonus", preference.keyRemoteConfigStaticUrlBonus)
+        assertEquals("coupon", preference.keyRemoteConfigStaticUrlCoupon)
+        assertEquals("prodCouponNote", preference.keyRemoteConfigStaticUrlProdCouponNote)
+        assertEquals("devCouponNote", preference.keyRemoteConfigStaticUrlDevCouponNote)
+        assertEquals("faq", preference.keyRemoteConfigStaticUrlFaq)
+        assertEquals("license", preference.keyRemoteConfigStaticUrlLicense)
+        assertEquals("review", preference.keyRemoteConfigStaticUrlReview)
+        assertEquals("lifeStyleProject", preference.keyRemoteConfigStaticUrlLifeStyleProject)
+        assertEquals("collectPersonalInformation", preference.keyRemoteConfigStaticUrlCollectPersonalInformation)
+        assertEquals("dailyReward", preference.keyRemoteConfigStaticUrlDailyReward)
+        assertEquals("dailyRewardTerms", preference.keyRemoteConfigStaticUrlDailyRewardTerms)
+        assertEquals("dailyRewardCouponTerms", preference.keyRemoteConfigStaticUrlDailyRewardCouponTerms)
+        assertEquals("dailyTrueAwards", preference.keyRemoteConfigStaticUrlDailyTrueAwards)
+    }
+
+    @Test
+    fun testSetSearch() {
+        val testJson01 = "{\"suggestHint\":{\"stay\":\"국내스테이명 또는 지역명 입력\",\"stayOutbound\":\"해외스테이명 또는 지역명 입력\",\"gourmet\":\"국내 레스토랑명 또는 지역명 입력\"},\"gourmetRelatedKeywords\":[\"빕스\",\"vips\",\"라세느\",\"무스쿠스\"],\"stayOutboundRelatedKeywords\":[\"오사카\",\"후쿠오카\",\"홍콩\"]}"
+
+        remoteConfig.setSearch(context, testJson01)
+
+        assertEquals("국내스테이명 또는 지역명 입력", preference.keyRemoteConfigSearchStaySuggestHint)
+        assertEquals("해외스테이명 또는 지역명 입력", preference.keyRemoteConfigSearchStayOutboundSuggestHint)
+        assertEquals("국내 레스토랑명 또는 지역명 입력", preference.keyRemoteConfigSearchGourmetSuggestHint)
+
+        assertEquals("[\"오사카\",\"후쿠오카\",\"홍콩\"]", preference.keyRemoteConfigObSearchKeyword)
+        assertEquals("[\"빕스\",\"vips\",\"라세느\",\"무스쿠스\"]", preference.keyRemoteConfigGourmetSearchKeyword)
+
+
+        val testJson02 = "{\"suggestHint\":{\"stay\":\"\",\"stayOutbound\":\"\",\"gourmet\":\"\"},\"gourmetRelatedKeywords\":[],\"stayOutboundRelatedKeywords\":[]}"
+
+        remoteConfig.setSearch(context, testJson02)
+
+        assertTrue(preference.keyRemoteConfigSearchStaySuggestHint.isNullOrEmpty())
+        assertTrue(preference.keyRemoteConfigSearchStayOutboundSuggestHint.isNullOrEmpty())
+        assertTrue(preference.keyRemoteConfigSearchGourmetSuggestHint.isNullOrEmpty())
+
+        assertEquals("[]", preference.keyRemoteConfigObSearchKeyword)
+        assertEquals("[]", preference.keyRemoteConfigGourmetSearchKeyword)
     }
 }

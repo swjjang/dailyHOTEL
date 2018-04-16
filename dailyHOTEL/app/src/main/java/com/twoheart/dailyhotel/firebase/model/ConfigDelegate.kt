@@ -48,7 +48,7 @@ class ConfigDelegate(jsonString: String) {
         @JsonField(name = arrayOf("boutiqueBusinessModelEnabled"))
         var boutiqueBusinessModelEnabled: Boolean? = null
 
-        @JsonField(name = arrayOf("messages"))
+        @JsonField(name = arrayOf("operationLunchTime"))
         var operationLunchTime: OperationLunchTime? = null
 
         @JsonField(name = arrayOf("detailTrueReviewProductNameVisible"))
@@ -69,10 +69,10 @@ class ConfigDelegate(jsonString: String) {
         @JsonField(name = arrayOf("stay"))
         var stay: Boolean? = null
 
-        @JsonField(name = arrayOf("stay"))
+        @JsonField(name = arrayOf("stayOutbound"))
         var stayOutbound: Boolean? = null
 
-        @JsonField(name = arrayOf("stay"))
+        @JsonField(name = arrayOf("gourmet"))
         var gourmet: Boolean? = null
     }
 }

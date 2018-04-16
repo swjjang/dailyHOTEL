@@ -182,7 +182,7 @@ class DailyRemoteConfig(private val context: Context) {
         }
     }
 
-    private fun setConfig(context: Context, jsonString: String) {
+    internal fun setConfig(context: Context, jsonString: String) {
         jsonString.takeNotEmpty {
             try {
                 val configDelegate = ConfigDelegate(it)
@@ -200,7 +200,7 @@ class DailyRemoteConfig(private val context: Context) {
         }
     }
 
-    private fun setStaticUlr(context: Context, jsonString: String) {
+    internal fun setStaticUlr(context: Context, jsonString: String) {
         jsonString.takeNotEmpty {
             try {
                 val staticUrl = StaticUrlDelegate(it)
@@ -229,7 +229,7 @@ class DailyRemoteConfig(private val context: Context) {
         }
     }
 
-    private fun setSearch(context: Context, jsonString: String) {
+    internal fun setSearch(context: Context, jsonString: String) {
         jsonString.takeNotEmpty {
             try {
                 val searchDelegate = SearchDelegate(it)
