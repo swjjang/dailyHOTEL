@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.payment.coupon;
 
+import android.app.Activity;
+
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
@@ -25,5 +27,8 @@ public interface SelectStayOutboundCouponDialogInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onEventConfirm(Activity activity, String couponName);
+
+        void onEventCancel(Activity activity);
     }
 }

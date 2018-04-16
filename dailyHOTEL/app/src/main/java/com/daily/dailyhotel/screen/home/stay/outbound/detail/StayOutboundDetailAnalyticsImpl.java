@@ -125,6 +125,12 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
             params.put(AnalyticsManager.KeyType.NRD, hasNRD ? "y" : "n");
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
+
+            if (stayOutboundDetail.couponPrice > 0)
+            {
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.DETAIL_PAGE_COUPON//
+                    , "ob", Integer.toString(stayOutboundDetail.index), null);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -254,6 +260,30 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
             , AnalyticsManager.Action.OB_ITEM_SHARE, AnalyticsManager.ValueType.ETC, null);
+    }
+
+    @Override
+    public void onEventDownloadCouponClick(Activity activity, String stayName)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , "OB_HotelCouponDownload", stayName, null);
+    }
+
+    @Override
+    public void onEventDownloadCouponByLogin(Activity activity, boolean login)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+            , AnalyticsManager.Action.COUPON_LOGIN, login ? AnalyticsManager.Label.LOGIN : AnalyticsManager.Label.CLOSED, null);
     }
 
     @Override

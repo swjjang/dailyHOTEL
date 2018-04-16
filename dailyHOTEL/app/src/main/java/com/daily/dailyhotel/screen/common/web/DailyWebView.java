@@ -12,7 +12,6 @@ import android.webkit.WebViewClient;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityWebDataBinding;
@@ -23,30 +22,9 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class DailyWebView extends BaseDialogView<DailyWebView.OnEventListener, ActivityWebDataBinding> implements DailyWebInterface
+public class DailyWebView extends BaseDialogView<DailyWebInterface.OnEventListener, ActivityWebDataBinding> implements DailyWebInterface.ViewInterface
 {
-    public interface OnEventListener extends OnBaseEventListener
-    {
-        void onDialog(String message, android.webkit.JsResult result);
-
-        void onReceivedError(String message);
-
-        void onBrowseToExternalBrowser(String url);
-
-        void onKakaoTalk(String url);
-
-        void onKakaoLink(String url);
-
-        boolean onIntent(String url);
-
-        void onMailTo(String url);
-
-        void onScrollTop();
-
-        void onHomeClick();
-    }
-
-    public DailyWebView(BaseActivity baseActivity, DailyWebView.OnEventListener listener)
+    public DailyWebView(BaseActivity baseActivity, DailyWebInterface.OnEventListener listener)
     {
         super(baseActivity, listener);
     }

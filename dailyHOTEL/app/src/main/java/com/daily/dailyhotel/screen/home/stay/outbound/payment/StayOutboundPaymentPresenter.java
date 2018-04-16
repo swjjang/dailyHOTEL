@@ -150,6 +150,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         void setPaymentParam(HashMap<String, String> param);
 
+        void onEventCouponClick(Activity activity, boolean selected);
+
+        void onEventNotAvailableCoupon(Activity activity, String stayName, int roomPrice);
+
         HashMap<String, String> getPaymentParam();
     }
 
@@ -642,6 +646,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 }
 
                 unLockAll();
+
+                mAnalytics.onEventNotAvailableCoupon(getActivity(), mStayName, mRoomPrice);
             }
         }, new Consumer<Throwable>()
         {
@@ -810,6 +816,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mStayOutboundPayment.rateCode, mStayOutboundPayment.rateKey, mStayOutboundPayment.roomTypeCode, mVendorType);
 
                     startActivityForResult(intent, StayOutboundPaymentActivity.REQUEST_CODE_COUPON_LIST);
+
+                    mAnalytics.onEventCouponClick(getActivity(), true);
                 } else
                 {
                     getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
@@ -821,6 +829,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                                 setSaleType(hasDepositSticker() ? STICKER : NONE);
 
                                 notifyStayOutboundPaymentChanged();
+
+                                mAnalytics.onEventCouponClick(getActivity(), false);
                             }
                         }, null);
                 }

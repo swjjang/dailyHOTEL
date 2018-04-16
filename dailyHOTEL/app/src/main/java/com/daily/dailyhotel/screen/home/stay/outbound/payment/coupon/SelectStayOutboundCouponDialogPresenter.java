@@ -155,6 +155,8 @@ public class SelectStayOutboundCouponDialogPresenter//
     @Override
     public boolean onBackPressed()
     {
+        mAnalytics.onEventCancel(getActivity());
+
         return super.onBackPressed();
     }
 
@@ -249,7 +251,9 @@ public class SelectStayOutboundCouponDialogPresenter//
         intent.putExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, mMaxCouponAmount);
 
         setResult(Activity.RESULT_OK, intent);
-        onBackClick();
+        finish();
+
+        mAnalytics.onEventConfirm(getActivity(), coupon.title);
     }
 
     @Override

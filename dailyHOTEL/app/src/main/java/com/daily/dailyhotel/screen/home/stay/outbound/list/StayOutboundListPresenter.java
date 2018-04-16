@@ -157,7 +157,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onScreen(Activity activity, boolean empty);
 
-        void onEventStayClick(Activity activity, int index, boolean provideRewardSticker, boolean dailyChoice);
+        void onEventStayClick(Activity activity, int index, boolean provideRewardSticker, boolean dailyChoice, boolean hasCoupon);
 
         void onEventDestroy(Activity activity);
 
@@ -1099,7 +1099,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
-        mAnalytics.onEventStayClick(getActivity(), stayOutbound.index, stayOutbound.provideRewardSticker, stayOutbound.dailyChoice);
+        mAnalytics.onEventStayClick(getActivity(), stayOutbound.index, stayOutbound.provideRewardSticker//
+            , stayOutbound.dailyChoice, DailyTextUtils.isTextEmpty(stayOutbound.couponDiscountPriceText) == false);
     }
 
     @Override

@@ -16,8 +16,8 @@ import com.twoheart.dailyhotel.R;
  */
 public class DailyWebActivity extends BaseActivity<DailyWebPresenter>
 {
-    static final String INTENT_EXTRA_DATA_TITLE_TEXT = "titleText";
-    static final String INTENT_EXTRA_DATA_URL = "url";
+    public static final String INTENT_EXTRA_DATA_TITLE_TEXT = "titleText";
+    public static final String INTENT_EXTRA_DATA_URL = "url";
 
     public static Intent newInstance(Context context, String titleText, String url)
     {
