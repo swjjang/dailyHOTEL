@@ -44,7 +44,7 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onEventStayClick(Activity activity, int index, boolean provideRewardSticker, boolean dailyChoice)
+    public void onEventStayClick(Activity activity, int index, boolean provideRewardSticker, boolean dailyChoice, boolean hasCoupon)
     {
         if (activity == null)
         {
@@ -62,6 +62,12 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , dailyChoice ? AnalyticsManager.Action.OB_STAY_DAILYCHOICE_CLICK_Y : AnalyticsManager.Action.OB_STAY_DAILYCHOICE_CLICK_N, Integer.toString(index), null);
+
+        if (hasCoupon == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , "coupon", Integer.toString(index), null);
+        }
     }
 
     @Override
