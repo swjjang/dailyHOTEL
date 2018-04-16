@@ -1587,7 +1587,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             DetailImageInformation detailImageInformation = stayOutboundDetail.getImageList().get(0);
             ImageMap imageMap = detailImageInformation.getImageMap();
 
-            if (mImageUrl.equalsIgnoreCase(imageMap.smallUrl) == true)
+            if (mImageUrl != null && mImageUrl.equalsIgnoreCase(imageMap.smallUrl) == true)
             {
                 imageMap.bigUrl = null;
                 imageMap.mediumUrl = null;
