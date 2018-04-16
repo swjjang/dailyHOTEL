@@ -24,7 +24,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_INTRO_NEW_VERSION = "2";
     private static final String KEY_REMOTE_CONFIG_INTRO_NEW_URL = "3";
 
-    private static final String KEY_REMOTE_CONFIG_TEXT_VERSION = "100";
+//    private static final String KEY_REMOTE_CONFIG_TEXT_VERSION = "100";
     private static final String KEY_REMOTE_CONFIG_TEXT_LOGINTEXT01 = "101";
     private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01 = "102";
     private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT02 = "103";
@@ -435,16 +435,6 @@ public class DailyRemoteConfigPreference
     public String getRemoteConfigText()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT, null);
-    }
-
-    public void setRemoteConfigTextVersion(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_TEXT_VERSION, value);
-    }
-
-    public String getRemoteConfigTextVersion()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT_VERSION, null);
     }
 
     public void setRemoteConfigTextLoginText01(String value)
@@ -1059,7 +1049,7 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_MESSAGE, null);
     }
 
-    public void setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(int value)
+    public void setKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights(int value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_FREE_NIGHTS, value);
     }
