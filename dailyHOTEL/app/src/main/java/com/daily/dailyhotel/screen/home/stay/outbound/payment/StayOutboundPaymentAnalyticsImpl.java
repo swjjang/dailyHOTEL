@@ -12,11 +12,13 @@ import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPresenter.StayOutboundPaymentAnalyticsInterface
 {
     private StayOutboundPaymentAnalyticsParam mAnalyticsParam;
+    private HashMap<String, String> mPaymentParamMap;
 
     @Override
     public void setAnalyticsParam(StayOutboundPaymentAnalyticsParam analyticsParam)
@@ -200,13 +202,44 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     @Override
     public void setPaymentParam(HashMap<String, String> param)
     {
+        mPaymentParamMap = param;
+    }
 
+    @Override
+    public void onEventCouponClick(Activity activity, boolean selected)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                "OB_HotelUsingCouponClicked", AnalyticsManager.Label.HOTEL_USING_COUPON_CLICKED, null);
+        } else
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                "OB_HotelUsingCouponCancel", AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL_CLICKED, null);
+        }
+    }
+
+    @Override
+    public void onEventNotAvailableCoupon(Activity activity, String stayName, int roomPrice)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+            "OB_HotelCouponNotFound", String.format(Locale.KOREA, "Hotel-%s-%d", stayName, roomPrice), null);
     }
 
     @Override
     public HashMap<String, String> getPaymentParam()
     {
-        return null;
+        return mPaymentParamMap;
     }
 
     private String getPaymentType(DailyBookingPaymentTypeView.PaymentType paymentType)
