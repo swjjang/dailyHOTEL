@@ -10,11 +10,16 @@ class RegisterCouponActivity : BaseActivity<RegisterCouponPresenter>() {
 
     companion object {
         @JvmStatic
-        fun newInstance(context: Context): Intent {
+        fun newInstance(context: Context, callByScreen: String?): Intent {
             val intent = Intent(context, RegisterCouponActivity::class.java)
+            callByScreen?.let {
+                intent.putExtra(EXTRA_DATA_CALL_BY_SCREEN, callByScreen)
+            }
 
             return intent
         }
+
+        const val EXTRA_DATA_CALL_BY_SCREEN = "callByScreen"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

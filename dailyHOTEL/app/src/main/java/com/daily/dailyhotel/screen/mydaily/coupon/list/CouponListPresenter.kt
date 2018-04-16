@@ -12,11 +12,11 @@ import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.CouponTermActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity
+import com.daily.dailyhotel.screen.mydaily.coupon.register.RegisterCouponActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.Constants
 import com.twoheart.dailyhotel.util.DailyDeepLink

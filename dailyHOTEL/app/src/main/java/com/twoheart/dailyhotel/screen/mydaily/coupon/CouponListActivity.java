@@ -13,6 +13,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity;
+import com.daily.dailyhotel.screen.mydaily.coupon.register.RegisterCouponActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.DailyHotel;
