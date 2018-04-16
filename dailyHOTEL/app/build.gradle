@@ -299,8 +299,9 @@ dependencies {
     androidTestDebugImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     testDebugImplementation 'org.hamcrest:hamcrest-library:1.3'
 
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    androidTestDebugImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    androidTestDebugImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    androidTestDebugImplementation 'org.skyscreamer:jsonassert:1.5.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

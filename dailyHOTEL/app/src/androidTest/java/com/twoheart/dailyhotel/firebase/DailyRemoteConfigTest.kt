@@ -7,11 +7,13 @@ import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
 import com.twoheart.dailyhotel.firebase.model.SplashDelegate
+import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.skyscreamer.jsonassert.JSONAssert
 
 @RunWith(AndroidJUnit4::class)
 class DailyRemoteConfigTest {
@@ -40,8 +42,8 @@ class DailyRemoteConfigTest {
         assertEquals("2010501", pair01?.first)
         assertEquals("2010501", pair01?.second)
 
-        assertEquals("{\"title\":\"업데이트 알림\",\"message\":\"지금 업데이트하여\\n더욱 편리해진 데일리호텔을 경험해보세요!\"}", preference.remoteConfigUpdateOptional)
-        assertEquals("{\"title\":\"필수 업데이트 알림\",\"message\":\"지금 업데이트하여\\n더욱 편리해진 데일리호텔을 경험해보세요!\"}", preference.remoteConfigUpdateForce)
+        JSONAssert.assertEquals("{\"title\":\"업데이트 알림\",\"message\":\"지금 업데이트하여\\n더욱 편리해진 데일리호텔을 경험해보세요!\"}", preference.remoteConfigUpdateOptional, true)
+        JSONAssert.assertEquals("{\"title\":\"필수 업데이트 알림\",\"message\":\"지금 업데이트하여\\n더욱 편리해진 데일리호텔을 경험해보세요!\"}", preference.remoteConfigUpdateForce, true)
 
         val testJson02 = "{}"
         val pair02 = remoteConfig.getVersionNsetMessages(context, testJson02)
@@ -285,7 +287,7 @@ class DailyRemoteConfigTest {
         assertEquals("스티커 다 모을 때마다\n1박 무료!", preference.keyRemoteConfigRewardStickerRewardTitleMessage)
         assertTrue(preference.isKeyRemoteConfigRewardStickerCampaignEnabled)
 
-        assertEquals("[{\"titleMessage\":\"데일리 리워드 기본 안내 사항\",\"descriptionMessage\":\"- 스티커 적립일: 체크아웃일 기준 3일 후 적립\\n- 1박 무료 리워드 쿠폰 발행일: 스티커 적립 완성 후 익일 발행\\n- 1박 무료 리워드 쿠폰 금액: 실제 예약하신 박수의 평균 결제 금액 (세금, 봉사료 및 제반 수수료 제외)\\n- 1박 무료 리워드 쿠폰 유효기간: 발행일 포함 30일 동안 사용 가능합니다.\\n- 1박 무료 리워드 쿠폰 사용 범위: 안드로이드 앱 버전 v2.2.0 iOS 앱 버전 v2.2.9 이상에서만 해외 스테이에서도 1박 무료 리워드 쿠폰이 사용 가능합니다. (해당 버전 이하 사용 시, 국내 스테이만 1박 무료 리워드 쿠폰이 사용 가능합니다.)\\n- 데일리 리워드 적립 상세 조건은 아래 링크로 확인하세요.\"},{\"titleMessage\":\"7박 하면 1박 무료 안내\",\"descriptionMessage\":\"- 기존 고객 신규 고객 모두에게 데일리 리워드 런칭 기념으로 스티커 2개를 1회에 한하여 적립해드립니다.\\n- 스티커 9개를 모을 때마다 스티커 2개를 드립니다.\\n- 데일리가 스티커 2개는 계속 드리니 7박 하면 1박 무료 혜택을 누려보세요!\"}]", preference.keyRemoteConfigRewardStickerGuides)
+        JSONAssert.assertEquals("[{\"titleMessage\":\"데일리 리워드 기본 안내 사항\",\"descriptionMessage\":\"- 스티커 적립일: 체크아웃일 기준 3일 후 적립\\n- 1박 무료 리워드 쿠폰 발행일: 스티커 적립 완성 후 익일 발행\\n- 1박 무료 리워드 쿠폰 금액: 실제 예약하신 박수의 평균 결제 금액 (세금, 봉사료 및 제반 수수료 제외)\\n- 1박 무료 리워드 쿠폰 유효기간: 발행일 포함 30일 동안 사용 가능합니다.\\n- 1박 무료 리워드 쿠폰 사용 범위: 안드로이드 앱 버전 v2.2.0 iOS 앱 버전 v2.2.9 이상에서만 해외 스테이에서도 1박 무료 리워드 쿠폰이 사용 가능합니다. (해당 버전 이하 사용 시, 국내 스테이만 1박 무료 리워드 쿠폰이 사용 가능합니다.)\\n- 데일리 리워드 적립 상세 조건은 아래 링크로 확인하세요.\"},{\"titleMessage\":\"7박 하면 1박 무료 안내\",\"descriptionMessage\":\"- 기존 고객 신규 고객 모두에게 데일리 리워드 런칭 기념으로 스티커 2개를 1회에 한하여 적립해드립니다.\\n- 스티커 9개를 모을 때마다 스티커 2개를 드립니다.\\n- 데일리가 스티커 2개는 계속 드리니 7박 하면 1박 무료 혜택을 누려보세요!\"}]", preference.keyRemoteConfigRewardStickerGuides, true)
         assertEquals("지금 회원가입하고 스티커를 모아보세요!", preference.keyRemoteConfigRewardStickerNonMemberDefaultMessage)
         assertEquals("지금 회원가입하고 스티커 2개를 바로 적립하세요!", preference.keyRemoteConfigRewardStickerNonMemberCampaignMessage)
         assertTrue(preference.keyRemoteConfigRewardStickerNonMemberCampaignFreeNights == 2)
@@ -352,7 +354,7 @@ class DailyRemoteConfigTest {
 
         remoteConfig.setPaymentCardEvent(context, testJson01)
 
-        assertEquals("[{\"enabled\":true,\"startDateTime\":\"2017-12-31T09:00:00+09:00\",\"endDateTime\":\"2017-12-31T09:00:00+09:00\",\"title\":\"BC 카드 결제시 할인\",\"messages\":[\"10만원 이상 결제시 10,000원 할인\"]},{\"enabled\":false,\"startDateTime\":\"2018-01-02T09:00:00+09:00\",\"endDateTime\":\"2018-03-20T09:00:00+09:00\",\"title\":\"PAYCO 결제시 할인\",\"messages\":[\"생애 첫 결제 7,000원 즉시 할이\",\"10만원 이상 결제시 10,000원 할인\"]}]", preference.keyRemoteConfigPaymentCardEvent)
+        JSONAssert.assertEquals("[{\"enabled\":true,\"startDateTime\":\"2017-12-31T09:00:00+09:00\",\"endDateTime\":\"2017-12-31T09:00:00+09:00\",\"title\":\"BC 카드 결제시 할인\",\"messages\":[\"10만원 이상 결제시 10,000원 할인\"]},{\"enabled\":false,\"startDateTime\":\"2018-01-02T09:00:00+09:00\",\"endDateTime\":\"2018-03-20T09:00:00+09:00\",\"title\":\"PAYCO 결제시 할인\",\"messages\":[\"생애 첫 결제 7,000원 즉시 할이\",\"10만원 이상 결제시 10,000원 할인\"]}]", preference.keyRemoteConfigPaymentCardEvent, true)
 
         val testJson02 = "{\"enabled\":false,\"events\":[{\"enabled\":true,\"startDateTime\":\"2017-12-31T09:00:00+09:00\",\"endDateTime\":\"2017-12-31T09:00:00+09:00\",\"title\":\"BC 카드 결제시 할인\",\"messages\":[\"10만원 이상 결제시 10,000원 할인\"]},{\"enabled\":false,\"startDateTime\":\"2018-01-02T09:00:00+09:00\",\"endDateTime\":\"2018-03-20T09:00:00+09:00\",\"title\":\"PAYCO 결제시 할인\",\"messages\":[\"생애 첫 결제 7,000원 즉시 할이\",\"10만원 이상 결제시 10,000원 할인\"]}]}"
 
