@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.util.StringFilter;
 /**
  * Created by android_sam on 2016. 9. 19..
  */
+@Deprecated
 public class RegisterCouponLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
 {
     private View mTitleView;

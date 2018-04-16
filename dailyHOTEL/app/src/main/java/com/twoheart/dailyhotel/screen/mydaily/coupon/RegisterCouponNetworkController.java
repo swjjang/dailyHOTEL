@@ -16,6 +16,7 @@ import retrofit2.Response;
 /**
  * Created by android_sam on 2016. 9. 20..
  */
+@Deprecated
 public class RegisterCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
