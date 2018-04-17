@@ -191,7 +191,7 @@ public class DailyGourmetMapCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.wishImageView.setVectorImageResource(wish ? R.drawable.vector_list_ic_heart_on : R.drawable.vector_list_ic_heart_off);
+        mViewDataBinding.wishImageView.setVectorImageResource(wish ? R.drawable.vector_navibar_ic_heart_on_strokefill : R.drawable.vector_navibar_ic_heart_off_white);
     }
 
     public void setOnWishClickListener(View.OnClickListener onClickListener)

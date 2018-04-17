@@ -67,7 +67,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         addressTextView.setText(gourmet.addressSummary);
         name.setText(gourmet.name);
-        wishImageView.setVectorImageResource(gourmet.myWish ? R.drawable.vector_list_ic_heart_on : R.drawable.vector_list_ic_heart_off);
+        wishImageView.setVectorImageResource(gourmet.myWish ? R.drawable.vector_navibar_ic_heart_on_strokefill : R.drawable.vector_navibar_ic_heart_off_white);
 
         // D.benefit
         if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)

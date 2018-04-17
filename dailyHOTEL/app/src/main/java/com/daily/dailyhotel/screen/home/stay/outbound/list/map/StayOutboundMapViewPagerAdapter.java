@@ -70,7 +70,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         dataBinding.addressTextView.setText(stayOutbound.locationDescription);
         dataBinding.nameTextView.setText(stayOutbound.name);
-        dataBinding.wishImageView.setVectorImageResource(stayOutbound.myWish ? R.drawable.vector_list_ic_heart_on : R.drawable.vector_list_ic_heart_off);
+        dataBinding.wishImageView.setVectorImageResource(stayOutbound.myWish ? R.drawable.vector_navibar_ic_heart_on_strokefill : R.drawable.vector_navibar_ic_heart_off_white);
 
         // 가격
         if (stayOutbound.nightlyRate < stayOutbound.nightlyBaseRate)
