@@ -373,4 +373,10 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                 }
             });
     }
+
+    @Override
+    public Observable<CouponsData> getStayCouponListByDetail(int stayIndex, String checkIn, int nights)
+    {
+        return null;
+    }
 }
