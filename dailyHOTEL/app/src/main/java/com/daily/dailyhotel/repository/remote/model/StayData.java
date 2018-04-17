@@ -125,7 +125,7 @@ public class StayData
         stay.latitude = latitude;
         stay.longitude = longitude;
         stay.dailyChoice = isDailyChoice;
-        stay.soldOut = isSoldOut;
+        stay.soldOut = isSoldOut || availableRooms == 0 || discount == 0;
         stay.satisfaction = rating;
         stay.districtName = districtName;
         stay.trueVR = isTrueVr;

@@ -124,5 +124,7 @@ public interface SearchGourmetResultListFragmentInterface
 
         void onEventSearchResult(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetSuggest suggest, String inputKeyword//
             , int searchCount, int searchMaxCount);
+
+        void onEventSearchResultCountOneAndSoldOut(Activity activity, String gourmetName);
     }
 }

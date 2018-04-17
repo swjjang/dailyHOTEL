@@ -615,6 +615,16 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                 {
                     mEmptyList = false;
 
+                    if (size == 1)
+                    {
+                        Gourmet gourmet = objectItemList.get(0).getItem();
+
+                        if (gourmet.soldOut == true)
+                        {
+                            mAnalytics.onEventSearchResultCountOneAndSoldOut(getActivity(), gourmet.name);
+                        }
+                    }
+
                     getViewInterface().setSearchResultCount(gourmets.totalCount, gourmets.searchMaxCount);
 
                     getViewInterface().setFloatingActionViewVisible(true);
