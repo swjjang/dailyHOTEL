@@ -749,7 +749,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private void refreshAllSortTypeDistance()
     {
-        if(StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
+        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
         {
             notifyFilterChanged();
             onRefreshAll(true);

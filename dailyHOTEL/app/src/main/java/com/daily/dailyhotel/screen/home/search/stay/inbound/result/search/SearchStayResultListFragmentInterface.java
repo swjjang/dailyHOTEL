@@ -126,5 +126,7 @@ public interface SearchStayResultListFragmentInterface
 
         void onEventSearchResult(Activity activity, StayBookDateTime bookDateTime, StaySuggest suggest, String inputKeyword//
             , int searchCount, int searchMaxCount);
+
+        void onEventSearchResultCountOneAndSoldOut(Activity activity, String stayName);
     }
 }

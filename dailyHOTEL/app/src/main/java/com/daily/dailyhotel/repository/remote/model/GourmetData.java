@@ -121,7 +121,7 @@ public class GourmetData
         gourmet.latitude = latitude;
         gourmet.longitude = longitude;
         gourmet.dailyChoice = isDailyChoice;
-        gourmet.soldOut = availableTicketNumbers == 0 || availableTicketNumbers < minimumOrderQuantity || isExpired;
+        gourmet.soldOut = availableTicketNumbers == 0 || availableTicketNumbers < minimumOrderQuantity || isExpired || isSoldOut;
         gourmet.rating = rating;
         gourmet.districtName = districtName;
         //        gourmet.entryPosition;

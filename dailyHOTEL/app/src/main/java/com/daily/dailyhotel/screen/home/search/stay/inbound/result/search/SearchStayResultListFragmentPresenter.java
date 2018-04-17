@@ -663,6 +663,16 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                     fragmentObservable = Observable.just(true);
                 } else
                 {
+                    if (size == 1)
+                    {
+                        Stay stay = objectItemList.get(0).getItem();
+
+                        if (stay.discountPrice == 0 || stay.availableRooms == 0)
+                        {
+                            mAnalytics.onEventSearchResultCountOneAndSoldOut(getActivity(), stay.name);
+                        }
+                    }
+
                     setResultList(stays, objectItemList, applyFilter);
 
                     if (mViewModel.resetCategory == true && Category.ALL.code.equalsIgnoreCase(mCategory.code) == true)

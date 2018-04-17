@@ -185,6 +185,18 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
         }
     }
 
+    @Override
+    public void onEventSearchResultCountOneAndSoldOut(Activity activity, String gourmetName)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , "gourmet_selling_completion", gourmetName, null);
+    }
+
     private void recordEventSearchResultByRecentKeyword(Activity activity, String displayName, boolean empty, Map<String, String> params)
     {
         String action = empty ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
