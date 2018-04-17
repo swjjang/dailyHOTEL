@@ -1573,14 +1573,23 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        ObjectItem objectItem = getViewInterface().getObjectItem(position);
-
-        if (objectItem.mType == ObjectItem.TYPE_ENTRY)
+        switch (mViewState)
         {
-            ((StayOutbound) objectItem.getItem()).myWish = wish;
-        }
+            case LIST:
+                ObjectItem objectItem = getViewInterface().getObjectItem(position);
 
-        getViewInterface().setWish(position, wish);
+                if (objectItem.mType == ObjectItem.TYPE_ENTRY)
+                {
+                    ((StayOutbound) objectItem.getItem()).myWish = wish;
+                }
+
+                getViewInterface().setWish(position, wish);
+                break;
+
+            case MAP:
+                getViewInterface().setMapWish(position, wish);
+                break;
+        }
     }
 
     private void onStayOutbounds(StayOutbounds stayOutbounds)

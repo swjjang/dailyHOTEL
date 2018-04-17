@@ -124,14 +124,14 @@
             android:textSize="12dp"
             dailyFont:style="DemiLight"/>
 
-        <ImageView
-            android:id="@+id/closeView"
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/wishImageView"
             android:layout_width="39dp"
             android:layout_height="39dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_delete"/>
+            android:background="@drawable/img_list_heart_gradient"
+            app:srcCompat="@drawable/vector_list_ic_heart_off"/>
 
         <ImageView
             android:id="@+id/stickerImageView"

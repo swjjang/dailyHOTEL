@@ -42,14 +42,14 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         PlaceViewItem item = mPlaceViewItemList.get(position);
 
-        makeLayout(view, item.getItem());
+        makeLayout(position, view, item.getItem());
 
         container.addView(view, 0);
 
         return view;
     }
 
-    private void makeLayout(final View view, final Gourmet gourmet)
+    private void makeLayout(int position, final View view, final Gourmet gourmet)
     {
         //        View gradientView = view.findViewById(R.id.gradientView);
         com.facebook.drawee.view.SimpleDraweeView placeImageView = view.findViewById(R.id.imageView);
@@ -144,7 +144,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
+                    mOnPlaceMapViewPagerAdapterListener.onWishClick(position, gourmet);
                 }
             }
         });

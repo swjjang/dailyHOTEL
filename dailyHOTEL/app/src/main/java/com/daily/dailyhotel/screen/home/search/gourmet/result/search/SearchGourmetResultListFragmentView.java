@@ -349,9 +349,9 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
                 }
 
                 @Override
-                public void onCloseClick()
+                public void onWishClick(int position, Gourmet gourmet)
                 {
-                    getEventListener().onMapClick();
+                    getEventListener().onWishClick(position, gourmet);
                 }
             });
         }
@@ -645,6 +645,18 @@ public class SearchGourmetResultListFragmentView extends BaseBlurFragmentView<Se
                 }
             }
         });
+    }
+
+    @Override
+    public void setMapWish(int position, boolean wish)
+    {
+        if (getViewDataBinding() == null || mViewPagerAdapter == null)
+        {
+            return;
+        }
+
+        mViewPagerAdapter.getItem(position).myWish = wish;
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -99,6 +99,8 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public abstract void notifyWishChanged(int position, boolean wish);
 
+    public abstract void notifyMapWishChanged(int position, boolean wish);
+
     public abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage);
 
     //    protected abstract EventBanner getEventBanner(int index);
@@ -279,6 +281,16 @@ public abstract class PlaceListLayout extends BaseLayout
     //    {
     //        return mBannerVisibility;
     //    }
+
+    public PlaceViewItem getMapItem(int position)
+    {
+        if (mRecyclerView == null || mPlaceListMapFragment == null)
+        {
+            return null;
+        }
+
+        return mListAdapter.getItem(position);
+    }
 
     public void setBottomOptionLayout(View view)
     {
@@ -546,6 +558,12 @@ public abstract class PlaceListLayout extends BaseLayout
                     public void onInformationClick(View view, PlaceViewItem placeViewItem)
                     {
                         PlaceListLayout.this.onInformationClick(view, placeViewItem);
+                    }
+
+                    @Override
+                    public void onWishClick(int position, PlaceViewItem placeViewItem)
+                    {
+                        ((OnEventListener) mOnEventListener).onWishClick(position, placeViewItem);
                     }
                 });
 

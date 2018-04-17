@@ -24,6 +24,8 @@ public abstract class PlaceMapViewPagerAdapter extends PagerAdapter
     {
         void onInformationClick(View view, Place place);
 
+        void onWishClick(int position, Place place);
+
         void onCloseClick();
     }
 

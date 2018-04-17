@@ -99,6 +99,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     public interface OnPlaceListMapFragmentListener
     {
         void onInformationClick(View view, PlaceViewItem placeViewItem);
+
+        void onWishClick(int position, PlaceViewItem placeViewItem);
     }
 
     protected abstract PlaceMapViewPagerAdapter getPlaceListMapViewPagerAdapter(Context context);
@@ -310,6 +312,11 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 break;
             }
         }
+    }
+
+    public PlaceViewItem getItem(int position)
+    {
+        return mPlaceViewItemViewPagerList == null ? null : mPlaceViewItemViewPagerList.get(position);
     }
 
     public int getPlaceViewItemListSize()
@@ -664,6 +671,16 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         showPlaceDetailAnimation();
+    }
+
+    public void notifyViewPagerDataSetChanged()
+    {
+        if (mPlaceMapViewPagerAdapter == null)
+        {
+            return;
+        }
+
+        mPlaceMapViewPagerAdapter.notifyDataSetChanged();
     }
 
     public void setMenuBarLayoutTranslationY(float dy)
@@ -1256,7 +1273,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 return;
             }
 
-            for (PlaceViewItem placeViewItem : mPlaceViewItemList)
+            for (PlaceViewItem placeViewItem : mPlaceViewItemViewPagerList)
             {
                 if (placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
                 {
@@ -1269,9 +1286,37 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                     if (mOnPlaceListMapFragmentListener != null)
                     {
-
                         mSelectedPlaceViewItem = placeViewItem;
                         mOnPlaceListMapFragmentListener.onInformationClick(view, placeViewItem);
+                    }
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onWishClick(int position, Place place)
+        {
+            if (place == null)
+            {
+                return;
+            }
+
+            for (PlaceViewItem placeViewItem : mPlaceViewItemViewPagerList)
+            {
+                if (placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+                {
+                    continue;
+                }
+
+                if (place.equals(placeViewItem.getItem()) == true)
+                {
+                    mSelectedPlaceViewItem = placeViewItem;
+
+                    if (mOnPlaceListMapFragmentListener != null)
+                    {
+                        mSelectedPlaceViewItem = placeViewItem;
+                        mOnPlaceListMapFragmentListener.onWishClick(position, placeViewItem);
                     }
                     break;
                 }

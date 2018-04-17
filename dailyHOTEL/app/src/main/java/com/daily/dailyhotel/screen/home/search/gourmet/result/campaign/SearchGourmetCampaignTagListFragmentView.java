@@ -326,9 +326,9 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
                 }
 
                 @Override
-                public void onCloseClick()
+                public void onWishClick(int position, Gourmet gourmet)
                 {
-                    getEventListener().onMapClick();
+                    getEventListener().onWishClick(position, gourmet);
                 }
             });
         }

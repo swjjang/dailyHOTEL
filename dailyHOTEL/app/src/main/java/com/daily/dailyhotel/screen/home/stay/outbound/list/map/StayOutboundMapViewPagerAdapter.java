@@ -37,7 +37,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
     {
         void onStayClick(View view, StayOutbound stayOutbound);
 
-        void onCloseClick();
+        void onWishClick(int position, StayOutbound stayOutbound);
     }
 
     public StayOutboundMapViewPagerAdapter(Context context)
@@ -163,14 +163,14 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 
-        dataBinding.closeView.setOnClickListener(new View.OnClickListener()
+        dataBinding.wishImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
+                    mOnPlaceMapViewPagerAdapterListener.onWishClick(position, stayOutbound);
                 }
             }
         });

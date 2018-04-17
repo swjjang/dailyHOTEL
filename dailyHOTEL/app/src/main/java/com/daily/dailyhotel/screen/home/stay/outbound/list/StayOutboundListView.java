@@ -488,9 +488,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 }
 
                 @Override
-                public void onCloseClick()
+                public void onWishClick(int position, StayOutbound stayOutbound)
                 {
-                    onMapClick();
+                    getEventListener().onWishClick(position, stayOutbound);
                 }
             });
         }
@@ -998,6 +998,18 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 }
             }
         });
+    }
+
+    @Override
+    public void setMapWish(int position, boolean wish)
+    {
+        if (getViewDataBinding() == null || mViewPagerAdapter == null)
+        {
+            return;
+        }
+
+        mViewPagerAdapter.getItem(position).myWish = wish;
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     @Override

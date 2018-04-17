@@ -22,7 +22,7 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
     {
         void onGourmetClick(View view, Gourmet gourmet);
 
-        void onCloseClick();
+        void onWishClick(int position, Gourmet gourmet);
     }
 
     public GourmetMapViewPagerAdapter(Context context)
@@ -83,7 +83,7 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
+                    mOnPlaceMapViewPagerAdapterListener.onWishClick(position, gourmet);
                 }
             }
         });

@@ -83,6 +83,8 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void setWish(int position, boolean wish);
 
+    void setMapWish(int position, boolean wish);
+
     ObjectItem getObjectItem(int position);
 
     void setMapProgressBarVisible(boolean visible);

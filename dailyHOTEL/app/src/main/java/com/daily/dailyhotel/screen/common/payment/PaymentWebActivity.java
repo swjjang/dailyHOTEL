@@ -78,6 +78,11 @@ public class PaymentWebActivity extends BasePaymentWebActivity
     {
         int msgCode;
 
+        if (DEBUG)
+        {
+            ExLog.d("pinkred : " + jsonString);
+        }
+
         try
         {
             JSONObject jsonObject = new JSONObject(jsonString);

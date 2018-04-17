@@ -543,6 +543,18 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     }
 
     @Override
+    public void setMapWish(int position, boolean wish)
+    {
+        if (getViewDataBinding() == null || mViewPagerAdapter == null)
+        {
+            return;
+        }
+
+        mViewPagerAdapter.getItem(position).myWish = wish;
+        mViewPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void scrollTop()
     {
         if (getViewDataBinding() == null || mListAdapter == null)
