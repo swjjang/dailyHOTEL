@@ -11,7 +11,7 @@ class SelectStayCouponDialogAnalyticsImpl : SelectStayCouponDialogInterface.Anal
                 0 -> {
                     // empty list
                     val label = "$categoryCode-$stayName-$roomPrice"
-                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND)
+                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null)
                 }
 
                 else -> {
