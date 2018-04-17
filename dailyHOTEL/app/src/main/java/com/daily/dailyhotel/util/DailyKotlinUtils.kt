@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.util
 
 inline fun String?.takeNotEmpty(block: (String) -> Unit) {
-    this?.takeIf { it.isTextEmpty() }?.let { block(it) }
+    this?.takeIf { !it.isTextEmpty() }?.let { block(it) }
 }
 
 inline fun <T> Collection<T>?.takeNotEmpty(block: (Collection<T>) -> Unit) {
