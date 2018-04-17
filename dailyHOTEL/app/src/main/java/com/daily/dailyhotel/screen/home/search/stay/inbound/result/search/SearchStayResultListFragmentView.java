@@ -351,9 +351,9 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
                 }
 
                 @Override
-                public void onWishClick()
+                public void onWishClick(int position, Stay stay)
                 {
-
+                    getEventListener().onWishClick(position, stay);
                 }
             });
         }
@@ -649,6 +649,18 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
                 }
             }
         });
+    }
+
+    @Override
+    public void setMapWish(int position, boolean wish)
+    {
+        if (getViewDataBinding() == null || mViewPagerAdapter == null)
+        {
+            return;
+        }
+
+        mViewPagerAdapter.getItem(position).myWish = wish;
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     @Override

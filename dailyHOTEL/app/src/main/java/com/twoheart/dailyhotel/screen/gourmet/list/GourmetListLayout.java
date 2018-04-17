@@ -79,6 +79,17 @@ public class GourmetListLayout extends PlaceListLayout
     }
 
     @Override
+    public void notifyMapWishChanged(int position, boolean wish)
+    {
+        if (mPlaceListMapFragment == null)
+        {
+            return;
+        }
+
+        mPlaceListMapFragment.notifyViewPagerDataSetChanged();
+    }
+
+    @Override
     protected void onInformationClick(View view, PlaceViewItem placeViewItem)
     {
         ((OnEventListener) mOnEventListener).onPlaceClick(-1, view, placeViewItem);

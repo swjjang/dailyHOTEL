@@ -1178,7 +1178,16 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             return;
         }
 
-        getViewInterface().setWish(position, wish);
+        switch(mViewType)
+        {
+            case LIST:
+                getViewInterface().setWish(position, wish);
+                break;
+
+            case MAP:
+                getViewInterface().setMapWish(position, wish);
+                break;
+        }
     }
 
     Map<String, Object> getQueryMap(int page)

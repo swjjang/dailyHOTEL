@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.widget.DailyImageView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -42,14 +43,14 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         PlaceViewItem item = mPlaceViewItemList.get(position);
 
-        makeLayout(view, item.getItem());
+        makeLayout(position, view, item.getItem());
 
         container.addView(view, 0);
 
         return view;
     }
 
-    private void makeLayout(final View view, final Gourmet gourmet)
+    private void makeLayout(int position, final View view, final Gourmet gourmet)
     {
         //        View gradientView = view.findViewById(R.id.gradientView);
         com.facebook.drawee.view.SimpleDraweeView placeImageView = view.findViewById(R.id.imageView);
@@ -59,13 +60,14 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         TextView discountTextView = view.findViewById(R.id.discountPriceTextView);
         TextView addressTextView = view.findViewById(R.id.addressTextView);
         TextView grade = view.findViewById(R.id.gradeTextView);
-        View closeView = view.findViewById(R.id.closeImageView);
         TextView persons = view.findViewById(R.id.personsTextView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = view.findViewById(R.id.dBenefitTextView);
+        DailyImageView wishImageView = view.findViewById(R.id.wishImageView);
 
         addressTextView.setText(gourmet.addressSummary);
         name.setText(gourmet.name);
+        wishImageView.setVectorImageResource(gourmet.myWish ? R.drawable.vector_navibar_ic_heart_on_strokefill : R.drawable.vector_navibar_ic_heart_off_white);
 
         // D.benefit
         if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
@@ -137,14 +139,14 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         placeImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, placeImageView, gourmet.imageUrl);
 
-        closeView.setOnClickListener(new View.OnClickListener()
+        wishImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
+                    mOnPlaceMapViewPagerAdapterListener.onWishClick(position, gourmet);
                 }
             }
         });

@@ -191,16 +191,38 @@ public class GourmetListFragment extends PlaceListFragment
             return;
         }
 
-        PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
-
-        if (placeViewItem == null)
+        switch (mViewType)
         {
-            return;
-        }
+            case LIST:
+            {
+                PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
 
-        Gourmet gourmet = placeViewItem.getItem();
-        gourmet.myWish = wish;
-        mPlaceListLayout.notifyWishChanged(position, wish);
+                if (placeViewItem == null)
+                {
+                    return;
+                }
+
+                Gourmet gourmet = placeViewItem.getItem();
+                gourmet.myWish = wish;
+                mPlaceListLayout.notifyWishChanged(position, wish);
+                break;
+            }
+
+            case MAP:
+            {
+                PlaceViewItem placeViewItem = mPlaceListLayout.getMapItem(position);
+
+                if (placeViewItem == null)
+                {
+                    return;
+                }
+
+                Gourmet gourmet = placeViewItem.getItem();
+                gourmet.myWish = wish;
+                mPlaceListLayout.notifyMapWishChanged(position, wish);
+                break;
+            }
+        }
     }
 
     protected void onGourmetList(List<Gourmet> list, int page, int totalCount, int maxCount, //

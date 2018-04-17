@@ -1150,7 +1150,16 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             return;
         }
 
-        getViewInterface().setWish(position, wish);
+        switch (mViewType)
+        {
+            case LIST:
+                getViewInterface().setWish(position, wish);
+                break;
+
+            case MAP:
+                getViewInterface().setMapWish(position, wish);
+                break;
+        }
     }
 
     /**

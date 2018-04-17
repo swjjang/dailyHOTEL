@@ -128,6 +128,11 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mList.get(position);
     }
 
+    public List<ObjectItem> getItemList()
+    {
+        return mList;
+    }
+
     @Override
     public int getItemViewType(int position)
     {

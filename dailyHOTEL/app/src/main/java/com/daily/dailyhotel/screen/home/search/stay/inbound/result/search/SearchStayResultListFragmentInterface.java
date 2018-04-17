@@ -63,6 +63,8 @@ public interface SearchStayResultListFragmentInterface
 
         void setWish(int position, boolean wish);
 
+        void setMapWish(int position, boolean wish);
+
         void scrollTop();
 
         void scrollStop();

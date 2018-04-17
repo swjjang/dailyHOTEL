@@ -22,7 +22,7 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
     {
         void onGourmetClick(View view, Gourmet gourmet);
 
-        void onCloseClick();
+        void onWishClick(int position, Gourmet gourmet);
     }
 
     public GourmetMapViewPagerAdapter(Context context)
@@ -45,6 +45,8 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
         gourmetMapCardView.setAddressText(gourmet.addressSummary);
         gourmetMapCardView.setNameText(gourmet.name);
         gourmetMapCardView.setBenefitText(gourmet.dBenefitText);
+        gourmetMapCardView.setWishVisible(true);
+        gourmetMapCardView.setWish(gourmet.myWish);
 
         // 인원
         if (gourmet.persons > 0)
@@ -76,14 +78,14 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
 
         gourmetMapCardView.setImage(gourmet.imageUrl);
 
-        gourmetMapCardView.setOnCloseClickListener(new View.OnClickListener()
+        gourmetMapCardView.setOnWishClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
+                    mOnPlaceMapViewPagerAdapterListener.onWishClick(position, gourmet);
                 }
             }
         });

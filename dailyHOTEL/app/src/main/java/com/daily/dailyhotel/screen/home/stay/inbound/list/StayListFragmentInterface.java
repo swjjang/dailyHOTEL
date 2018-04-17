@@ -55,6 +55,8 @@ public interface StayListFragmentInterface
 
         void setWish(int position, boolean wish);
 
+        void setMapWish(int position, boolean wish);
+
         void scrollTop();
 
         void scrollStop();
