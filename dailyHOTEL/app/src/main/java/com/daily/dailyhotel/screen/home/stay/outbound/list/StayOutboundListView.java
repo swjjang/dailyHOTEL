@@ -1024,6 +1024,17 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
+    public List<ObjectItem> getObjectItemList()
+    {
+        if (getViewDataBinding() == null || mListAdapter == null)
+        {
+            return null;
+        }
+
+        return mListAdapter.getItemList();
+    }
+
+    @Override
     public void setMapProgressBarVisible(boolean visible)
     {
         if (getViewDataBinding() == null)

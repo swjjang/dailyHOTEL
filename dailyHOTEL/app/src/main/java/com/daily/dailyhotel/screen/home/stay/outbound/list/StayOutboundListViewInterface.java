@@ -87,6 +87,8 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     ObjectItem getObjectItem(int position);
 
+    List<ObjectItem> getObjectItemList();
+
     void setMapProgressBarVisible(boolean visible);
 
     void setPopularAreaList(List<StayOutboundSuggest> popularAreaList);

@@ -209,6 +209,7 @@ public class GourmetListFragment extends PlaceListFragment
             }
 
             case MAP:
+            {
                 PlaceViewItem placeViewItem = mPlaceListLayout.getMapItem(position);
 
                 if (placeViewItem == null)
@@ -220,6 +221,7 @@ public class GourmetListFragment extends PlaceListFragment
                 gourmet.myWish = wish;
                 mPlaceListLayout.notifyMapWishChanged(position, wish);
                 break;
+            }
         }
     }
 

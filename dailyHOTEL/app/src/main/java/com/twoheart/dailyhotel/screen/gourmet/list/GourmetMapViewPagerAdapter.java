@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.widget.DailyImageView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -59,13 +60,14 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         TextView discountTextView = view.findViewById(R.id.discountPriceTextView);
         TextView addressTextView = view.findViewById(R.id.addressTextView);
         TextView grade = view.findViewById(R.id.gradeTextView);
-        View closeView = view.findViewById(R.id.closeImageView);
         TextView persons = view.findViewById(R.id.personsTextView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = view.findViewById(R.id.dBenefitTextView);
+        DailyImageView wishImageView = view.findViewById(R.id.wishImageView);
 
         addressTextView.setText(gourmet.addressSummary);
         name.setText(gourmet.name);
+        wishImageView.setVectorImageResource(gourmet.myWish ? R.drawable.vector_list_ic_heart_on : R.drawable.vector_list_ic_heart_off);
 
         // D.benefit
         if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
@@ -137,7 +139,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         placeImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, placeImageView, gourmet.imageUrl);
 
-        closeView.setOnClickListener(new View.OnClickListener()
+        wishImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

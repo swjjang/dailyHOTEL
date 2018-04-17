@@ -568,7 +568,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             int position = data.getIntExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION, -1);
                             boolean wish = data.getBooleanExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH, false);
 
-                            onChangedWish(position, wish);
+                            onChangedWish(position, wish, mWishStayIndex);
                         }
                         break;
 
@@ -587,7 +587,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         {
                             boolean isWish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
 
-                            onChangedWish(mWishPosition, isWish);
+                            onChangedWish(mWishPosition, isWish, mWishStayIndex);
 
                             mAnalytics.onEventWishClick(getActivity(), mWishStayIndex, isWish);
                         }
@@ -1317,7 +1317,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (DailyHotel.isLogin() == true)
         {
-            onChangedWish(position, !currentWish);
+            onChangedWish(position, !currentWish, mWishStayIndex);
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
@@ -1566,7 +1566,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mStayOutboundFilters.longitude = longitude;
     }
 
-    protected void onChangedWish(int position, boolean wish)
+    protected void onChangedWish(int position, boolean wish, int stayIndex)
     {
         if (position < 0)
         {
@@ -1576,6 +1576,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         switch (mViewState)
         {
             case LIST:
+            {
                 ObjectItem objectItem = getViewInterface().getObjectItem(position);
 
                 if (objectItem.mType == ObjectItem.TYPE_ENTRY)
@@ -1585,9 +1586,24 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                 getViewInterface().setWish(position, wish);
                 break;
+            }
 
             case MAP:
                 getViewInterface().setMapWish(position, wish);
+
+                for (ObjectItem objectItem : getViewInterface().getObjectItemList())
+                {
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
+                    {
+                        StayOutbound stayOutbound = objectItem.getItem();
+
+                        if (stayOutbound.index == stayIndex)
+                        {
+                            stayOutbound.myWish = wish;
+                            getViewInterface().setWish(position, wish);
+                        }
+                    }
+                }
                 break;
         }
     }

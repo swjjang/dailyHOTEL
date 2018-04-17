@@ -289,7 +289,7 @@ public abstract class PlaceListLayout extends BaseLayout
             return null;
         }
 
-        return mListAdapter.getItem(position);
+        return mPlaceListMapFragment.getItem(position);
     }
 
     public void setBottomOptionLayout(View view)

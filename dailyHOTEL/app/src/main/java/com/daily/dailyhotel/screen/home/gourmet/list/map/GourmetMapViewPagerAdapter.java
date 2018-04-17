@@ -45,6 +45,8 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
         gourmetMapCardView.setAddressText(gourmet.addressSummary);
         gourmetMapCardView.setNameText(gourmet.name);
         gourmetMapCardView.setBenefitText(gourmet.dBenefitText);
+        gourmetMapCardView.setWishVisible(true);
+        gourmetMapCardView.setWish(gourmet.myWish);
 
         // 인원
         if (gourmet.persons > 0)
@@ -76,7 +78,7 @@ public class GourmetMapViewPagerAdapter extends PagerAdapter
 
         gourmetMapCardView.setImage(gourmet.imageUrl);
 
-        gourmetMapCardView.setOnCloseClickListener(new View.OnClickListener()
+        gourmetMapCardView.setOnWishClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
