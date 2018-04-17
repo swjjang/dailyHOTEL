@@ -76,88 +76,88 @@ class RewardDelegate(jsonString: String) {
 
     @JsonObject
     internal class Reward {
-        @JsonField(name = arrayOf("cardTitleMessage"))
+        @JsonField(name = ["cardTitleMessage"])
         var cardTitleMessage: String? = null
 
-        @JsonField(name = arrayOf("rewardTitleMessage"))
+        @JsonField(name = ["rewardTitleMessage"])
         var rewardTitleMessage: String? = null
 
-        @JsonField(name = arrayOf("campaignEnabled"))
+        @JsonField(name = ["campaignEnabled"])
         var campaignEnabled: Boolean? = null
 
-        @JsonField(name = arrayOf("nonMember"))
+        @JsonField(name = ["nonMember"])
         var nonMember: NonMember? = null
 
-        @JsonField(name = arrayOf("member"))
+        @JsonField(name = ["member"])
         var member: Member? = null
 
-        @JsonField(name = arrayOf("guides"))
+        @JsonField(name = ["guides"])
         var guides: List<Guide>? = null
     }
 
     @JsonObject
     internal class NonMember {
-        @JsonField(name = arrayOf("message"))
+        @JsonField(name = ["message"])
         var message: Message? = null
 
-        @JsonField(name = arrayOf("campaignFreeNights"))
+        @JsonField(name = ["campaignFreeNights"])
         var campaignFreeNights: Int? = null
 
         @JsonObject
         internal class Message {
-            @JsonField(name = arrayOf("campaign"))
+            @JsonField(name = ["campaign"])
             var campaign: String? = null
 
-            @JsonField(name = arrayOf("default"))
+            @JsonField(name = ["default"])
             var defaultMessage: String? = null // default 라는 변수명을 사용할수가 없다.
         }
     }
 
     @JsonObject
     internal class Member {
-        @JsonField(name = arrayOf("messages"))
+        @JsonField(name = ["messages"])
         var messages: Messages? = null
 
         @JsonObject
         internal class Messages {
-            @JsonField(name = arrayOf("0"))
+            @JsonField(name = ["0"])
             var nights0: String? = null
 
-            @JsonField(name = arrayOf("1"))
+            @JsonField(name = ["1"])
             var nights1: String? = null
 
-            @JsonField(name = arrayOf("2"))
+            @JsonField(name = ["2"])
             var nights2: String? = null
 
-            @JsonField(name = arrayOf("3"))
+            @JsonField(name = ["3"])
             var nights3: String? = null
 
-            @JsonField(name = arrayOf("4"))
+            @JsonField(name = ["4"])
             var nights4: String? = null
 
-            @JsonField(name = arrayOf("5"))
+            @JsonField(name = ["5"])
             var nights5: String? = null
 
-            @JsonField(name = arrayOf("6"))
+            @JsonField(name = ["6"])
             var nights6: String? = null
 
-            @JsonField(name = arrayOf("7"))
+            @JsonField(name = ["7"])
             var nights7: String? = null
 
-            @JsonField(name = arrayOf("8"))
+            @JsonField(name = ["8"])
             var nights8: String? = null
 
-            @JsonField(name = arrayOf("9"))
+            @JsonField(name = ["9"])
             var nights9: String? = null
         }
     }
 
     @JsonObject
     internal class Guide {
-        @JsonField(name = arrayOf("titleMessage"))
+        @JsonField(name = ["titleMessage"])
         var titleMessage: String? = null
 
-        @JsonField(name = arrayOf("descriptionMessage"))
+        @JsonField(name = ["descriptionMessage"])
         var descriptionMessage: String? = null
     }
 }

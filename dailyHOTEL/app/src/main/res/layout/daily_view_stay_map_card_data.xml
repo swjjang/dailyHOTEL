@@ -154,14 +154,15 @@
             app:layout_constraintLeft_toRightOf="@id/gradeTextView"
             dailyFont:style="DemiLight"/>
 
-        <ImageView
-            android:id="@+id/closeImageView"
-            android:layout_width="39dp"
-            android:layout_height="39dp"
-            android:scaleType="center"
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/wishImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/img_list_heart_gradient"
+            android:visibility="visible"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_delete"/>
+            app:srcCompat="@drawable/vector_list_ic_heart_off"/>
 
         <ImageView
             android:id="@+id/stickerImageView"

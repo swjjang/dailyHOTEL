@@ -56,70 +56,70 @@ class MessagesDelegate(jsonString: String) {
 
     @JsonObject
     internal class Messages {
-        @JsonField(name = arrayOf("login"))
+        @JsonField(name = ["login"])
         var login: Login? = null
 
-        @JsonField(name = arrayOf("signup"))
+        @JsonField(name = ["signup"])
         var signup: Signup? = null
 
-        @JsonField(name = arrayOf("home"))
+        @JsonField(name = ["home"])
         var home: Home? = null
     }
 
     @JsonObject
     internal class Login {
-        @JsonField(name = arrayOf("text01"))
+        @JsonField(name = ["text01"])
         var text01: String? = null
     }
 
     @JsonObject
     internal class Signup {
-        @JsonField(name = arrayOf("text01"))
+        @JsonField(name = ["text01"])
         var text01: String? = null
 
-        @JsonField(name = arrayOf("text02"))
+        @JsonField(name = ["text02"])
         var text02: String? = null
     }
 
     @JsonObject
     internal class Home {
-        @JsonField(name = arrayOf("messageArea"))
+        @JsonField(name = ["messageArea"])
         var messageArea: MessageArea? = null
 
-        @JsonField(name = arrayOf("categoryArea"))
+        @JsonField(name = ["categoryArea"])
         var categoryArea: CategoryArea? = null
     }
 
     @JsonObject
     internal class MessageArea {
-        @JsonField(name = arrayOf("login"))
+        @JsonField(name = ["login"])
         var login: Login? = null
 
-        @JsonField(name = arrayOf("logout"))
+        @JsonField(name = ["logout"])
         var logout: Logout? = null
 
         @JsonObject
         internal class Login {
-            @JsonField(name = arrayOf("enabled"))
+            @JsonField(name = ["enabled"])
             var enabled: Boolean? = null
         }
 
         @JsonObject
         internal class Logout {
-            @JsonField(name = arrayOf("enabled"))
+            @JsonField(name = ["enabled"])
             var enabled: Boolean? = null
 
-            @JsonField(name = arrayOf("title"))
+            @JsonField(name = ["title"])
             var title: String? = null
 
-            @JsonField(name = arrayOf("callToAction"))
+            @JsonField(name = ["callToAction"])
             var callToAction: String? = null
         }
     }
 
     @JsonObject
     internal class CategoryArea {
-        @JsonField(name = arrayOf("enabled"))
+        @JsonField(name = ["enabled"])
         var enabled: Boolean? = null
     }
 }

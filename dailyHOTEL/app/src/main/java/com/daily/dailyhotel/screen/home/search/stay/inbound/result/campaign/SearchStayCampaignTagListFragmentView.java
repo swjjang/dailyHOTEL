@@ -328,9 +328,9 @@ public class SearchStayCampaignTagListFragmentView extends BaseBlurFragmentView<
                 }
 
                 @Override
-                public void onCloseClick()
+                public void onWishClick()
                 {
-                    getEventListener().onMapClick();
+
                 }
             });
         }

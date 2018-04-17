@@ -62,7 +62,7 @@ class RegisterCouponView(activity: RegisterCouponActivity, listener: RegisterCou
         v?.let {
             when (it.id) {
                 R.id.registerCouponCompleteView -> {
-                    val text = viewDataBinding.couponEditText?.let {
+                    val text = viewDataBinding.couponEditText.let {
                         it.text.toString()
                     }
 

@@ -106,58 +106,58 @@ class StaticUrlDelegate(jsonString: String) {
 
     @JsonObject
     internal class StaticUrl {
-        @JsonField(name = arrayOf("privacy"))
+        @JsonField(name = ["privacy"])
         var privacy: String? = null
 
-        @JsonField(name = arrayOf("collectPersonalInformation"))
+        @JsonField(name = ["collectPersonalInformation"])
         var collectPersonalInformation: String? = null
 
-        @JsonField(name = arrayOf("terms"))
+        @JsonField(name = ["terms"])
         var terms: String? = null
 
-        @JsonField(name = arrayOf("about"))
+        @JsonField(name = ["about"])
         var about: String? = null
 
-        @JsonField(name = arrayOf("location"))
+        @JsonField(name = ["location"])
         var location: String? = null
 
-        @JsonField(name = arrayOf("childProtect"))
+        @JsonField(name = ["childProtect"])
         var childProtect: String? = null
 
-        @JsonField(name = arrayOf("bonus"))
+        @JsonField(name = ["bonus"])
         var bonus: String? = null
 
-        @JsonField(name = arrayOf("coupon"))
+        @JsonField(name = ["coupon"])
         var coupon: String? = null
 
-        @JsonField(name = arrayOf("prodCouponNote"))
+        @JsonField(name = ["prodCouponNote"])
         var prodCouponNote: String? = null
 
-        @JsonField(name = arrayOf("devCouponNote"))
+        @JsonField(name = ["devCouponNote"])
         var devCouponNote: String? = null
 
-        @JsonField(name = arrayOf("faq"))
+        @JsonField(name = ["faq"])
         var faq: String? = null
 
-        @JsonField(name = arrayOf("license"))
+        @JsonField(name = ["license"])
         var license: String? = null
 
-        @JsonField(name = arrayOf("review"))
+        @JsonField(name = ["review"])
         var review: String? = null
 
-        @JsonField(name = arrayOf("lifeStyleProject"))
+        @JsonField(name = ["lifeStyleProject"])
         var lifeStyleProject: String? = null
 
-        @JsonField(name = arrayOf("dailyReward"))
+        @JsonField(name = ["dailyReward"])
         var dailyReward: String? = null
 
-        @JsonField(name = arrayOf("dailyRewardTerms"))
+        @JsonField(name = ["dailyRewardTerms"])
         var dailyRewardTerms: String? = null
 
-        @JsonField(name = arrayOf("dailyRewardCouponTerms"))
+        @JsonField(name = ["dailyRewardCouponTerms"])
         var dailyRewardCouponTerms: String? = null
 
-        @JsonField(name = arrayOf("dailyTrueAwards"))
+        @JsonField(name = ["dailyTrueAwards"])
         var dailyTrueAwards: String? = null
     }
 }

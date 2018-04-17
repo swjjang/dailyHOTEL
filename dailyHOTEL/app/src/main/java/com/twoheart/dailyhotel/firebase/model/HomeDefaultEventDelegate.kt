@@ -35,29 +35,29 @@ class HomeDefaultEventDelegate(jsonString: String) {
         }
 
     fun getImageUrl(context: Context): String? {
-        val densityDpi = context.resources.displayMetrics.densityDpi;
+        val densityDpi = context.resources.displayMetrics.densityDpi
 
         return if (densityDpi < 480) homeDefaultEvent?.lowResolution else homeDefaultEvent?.highResolution
     }
 
     @JsonObject
     internal class HomeDefaultEvent {
-        @JsonField(name = arrayOf("updateTime"))
+        @JsonField(name = ["updateTime"])
         var updateTime: String? = null
 
-        @JsonField(name = arrayOf("index"))
+        @JsonField(name = ["index"])
         var index: Int? = null
 
-        @JsonField(name = arrayOf("title"))
+        @JsonField(name = ["title"])
         var title: String? = null
 
-        @JsonField(name = arrayOf("eventUrl"))
+        @JsonField(name = ["eventUrl"])
         var eventUrl: String? = null
 
-        @JsonField(name = arrayOf("lowResolution"))
+        @JsonField(name = ["lowResolution"])
         var lowResolution: String? = null
 
-        @JsonField(name = arrayOf("highResolution"))
+        @JsonField(name = ["highResolution"])
         var highResolution: String? = null
     }
 }

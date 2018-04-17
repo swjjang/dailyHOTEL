@@ -75,34 +75,34 @@ class PaymentDelegate(jsonString: String) {
 
     @JsonObject
     internal class Payment {
-        @JsonField(name = arrayOf("paymentTypeEnabled"))
+        @JsonField(name = ["paymentTypeEnabled"])
         var paymentTypeEnabled: PaymentTypeEnabled? = null
     }
 
     @JsonObject
     internal class PaymentTypeEnabled {
-        @JsonField(name = arrayOf("stay"))
+        @JsonField(name = ["stay"])
         var stay: PaymentType? = null
 
-        @JsonField(name = arrayOf("gourmet"))
+        @JsonField(name = ["gourmet"])
         var gourmet: PaymentType? = null
 
-        @JsonField(name = arrayOf("stayOutbound"))
+        @JsonField(name = ["stayOutbound"])
         var stayOutbound: PaymentType? = null
     }
 
     @JsonObject
     internal class PaymentType {
-        @JsonField(name = arrayOf("easyCard"))
+        @JsonField(name = ["easyCard"])
         var easyCard: Boolean? = null
 
-        @JsonField(name = arrayOf("card"))
+        @JsonField(name = ["card"])
         var card: Boolean? = null
 
-        @JsonField(name = arrayOf("phoneBill"))
+        @JsonField(name = ["phoneBill"])
         var phoneBill: Boolean? = null
 
-        @JsonField(name = arrayOf("virtualAccount"))
+        @JsonField(name = ["virtualAccount"])
         var virtualAccount: Boolean? = null
     }
 }

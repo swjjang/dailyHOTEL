@@ -52,25 +52,25 @@ class SearchDelegate(jsonString: String) {
 
     @JsonObject
     internal class Search {
-        @JsonField(name = arrayOf("suggestHint"))
+        @JsonField(name = ["suggestHint"])
         var suggestHint: SuggestHint? = null
 
-        @JsonField(name = arrayOf("gourmetRelatedKeywords"))
+        @JsonField(name = ["gourmetRelatedKeywords"])
         var gourmetRelatedKeywords: List<String>? = null
 
-        @JsonField(name = arrayOf("stayOutboundRelatedKeywords"))
+        @JsonField(name = ["stayOutboundRelatedKeywords"])
         var stayOutboundRelatedKeywords: List<String>? = null
     }
 
     @JsonObject
     internal class SuggestHint {
-        @JsonField(name = arrayOf("stay"))
+        @JsonField(name = ["stay"])
         var stay: String? = null
 
-        @JsonField(name = arrayOf("stayOutbound"))
+        @JsonField(name = ["stayOutbound"])
         var stayOutbound: String? = null
 
-        @JsonField(name = arrayOf("gourmet"))
+        @JsonField(name = ["gourmet"])
         var gourmet: String? = null
     }
 }

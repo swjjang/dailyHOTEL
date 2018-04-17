@@ -55,28 +55,28 @@ class CompanyDelegate(jsonString: String) {
 
     @JsonObject
     internal class Company {
-        @JsonField(name = arrayOf("name"))
+        @JsonField(name = ["name"])
         var name: String? = null
 
-        @JsonField(name = arrayOf("ceo"))
+        @JsonField(name = ["ceo"])
         var ceo: String? = null
 
-        @JsonField(name = arrayOf("bizRegNumber"))
+        @JsonField(name = ["bizRegNumber"])
         var bizRegNumber: String? = null
 
-        @JsonField(name = arrayOf("itcRegNumber"))
+        @JsonField(name = ["itcRegNumber"])
         var itcRegNumber: String? = null
 
-        @JsonField(name = arrayOf("address1"))
+        @JsonField(name = ["address1"])
         var address1: String? = null
 
-        @JsonField(name = arrayOf("phoneNumber1"))
+        @JsonField(name = ["phoneNumber1"])
         var phoneNumber1: String? = null
 
-        @JsonField(name = arrayOf("fax1"))
+        @JsonField(name = ["fax1"])
         var fax1: String? = null
 
-        @JsonField(name = arrayOf("privacyManager"))
+        @JsonField(name = ["privacyManager"])
         var privacyManager: String? = null
     }
 }

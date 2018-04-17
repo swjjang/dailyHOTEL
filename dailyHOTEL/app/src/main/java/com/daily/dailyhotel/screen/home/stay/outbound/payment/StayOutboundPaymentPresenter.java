@@ -95,7 +95,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     {
     }
 
-    private StayOutboundPaymentAnalyticsInterface mAnalytics;
+    StayOutboundPaymentAnalyticsInterface mAnalytics;
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
@@ -105,7 +105,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     StayBookDateTime mStayBookDateTime;
     int mStayIndex, mRoomPrice, mRoomBedTypeId;
     private People mPeople;
-    private String mStayName, mRoomType, mVendorType, mImageUrl;
+    String mStayName, mRoomType, mVendorType, mImageUrl;
     private String mRateCode, mRateKey, mRoomTypeCode;
     StayOutboundPayment mStayOutboundPayment;
     Card mSelectedCard;

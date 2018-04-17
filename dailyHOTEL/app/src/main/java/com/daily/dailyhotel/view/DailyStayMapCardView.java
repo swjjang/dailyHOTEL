@@ -45,16 +45,6 @@ public class DailyStayMapCardView extends ConstraintLayout
         mViewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
     }
 
-    public void setOnCloseClickListener(View.OnClickListener listener)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.closeImageView.setOnClickListener(listener);
-    }
-
     /**
      * @param benefit null이거나 비어있으면 항목 삭제.
      */
@@ -174,6 +164,36 @@ public class DailyStayMapCardView extends ConstraintLayout
         }
 
         mViewDataBinding.averageTextView.setVisibility(nightsEnabled ? VISIBLE : GONE);
+    }
+
+    public void setWishVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.wishImageView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void setWish(boolean wish)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.wishImageView.setVectorImageResource(wish ? R.drawable.vector_list_ic_heart_on : R.drawable.vector_list_ic_heart_off);
+    }
+
+    public void setOnWishClickListener(View.OnClickListener onClickListener)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.wishImageView.setOnClickListener(onClickListener);
     }
 
     public Pair[] getOptionsCompat()

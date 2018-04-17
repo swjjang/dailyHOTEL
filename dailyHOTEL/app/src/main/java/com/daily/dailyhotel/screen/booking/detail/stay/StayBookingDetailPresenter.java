@@ -70,7 +70,6 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
@@ -614,8 +613,10 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             long currentDateTime = DailyCalendar.convertStringToDate(mCommonDateTime.currentDateTime).getTime();
             long checkInDateTime = DailyCalendar.convertStringToDate(mStayBookingDetail.checkInDateTime).getTime();
 
+            final int DEFAULT_CALENDAR_DAY_OF_MAX_COUNT = 30;
+
             if (currentDateTime > checkInDateTime || (mStayBookingDetail.latitude == 0.0d && mStayBookingDetail.longitude == 0.0d)//
-                || DailyCalendar.compareDateDay(mStayBookingDetail.checkInDateTime, mCommonDateTime.dailyDateTime) >= GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT)
+                || DailyCalendar.compareDateDay(mStayBookingDetail.checkInDateTime, mCommonDateTime.dailyDateTime) >= DEFAULT_CALENDAR_DAY_OF_MAX_COUNT)
             {
                 // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
                 getViewInterface().setRecommendGourmetLayoutVisible(false);

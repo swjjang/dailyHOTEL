@@ -252,9 +252,9 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
                 }
 
                 @Override
-                public void onCloseClick()
+                public void onWishClick()
                 {
-                    getEventListener().onMapClick();
+
                 }
             });
         }

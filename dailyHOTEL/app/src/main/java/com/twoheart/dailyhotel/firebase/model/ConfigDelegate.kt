@@ -45,34 +45,34 @@ class ConfigDelegate(jsonString: String) {
 
     @JsonObject
     internal class Config {
-        @JsonField(name = arrayOf("boutiqueBusinessModelEnabled"))
+        @JsonField(name = ["boutiqueBusinessModelEnabled"])
         var boutiqueBusinessModelEnabled: Boolean? = null
 
-        @JsonField(name = arrayOf("operationLunchTime"))
+        @JsonField(name = ["operationLunchTime"])
         var operationLunchTime: OperationLunchTime? = null
 
-        @JsonField(name = arrayOf("detailTrueReviewProductNameVisible"))
+        @JsonField(name = ["detailTrueReviewProductNameVisible"])
         var detailTrueReviewProductNameVisible: DetailTrueReviewProductNameVisible? = null
     }
 
     @JsonObject
     internal class OperationLunchTime {
-        @JsonField(name = arrayOf("startTime"))
+        @JsonField(name = ["startTime"])
         var startTime: String? = null
 
-        @JsonField(name = arrayOf("endTime"))
+        @JsonField(name = ["endTime"])
         var endTime: String? = null
     }
 
     @JsonObject
     internal class DetailTrueReviewProductNameVisible {
-        @JsonField(name = arrayOf("stay"))
+        @JsonField(name = ["stay"])
         var stay: Boolean? = null
 
-        @JsonField(name = arrayOf("stayOutbound"))
+        @JsonField(name = ["stayOutbound"])
         var stayOutbound: Boolean? = null
 
-        @JsonField(name = arrayOf("gourmet"))
+        @JsonField(name = ["gourmet"])
         var gourmet: Boolean? = null
     }
 }

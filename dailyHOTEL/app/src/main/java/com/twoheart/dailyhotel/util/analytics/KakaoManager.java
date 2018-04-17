@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.Map;
@@ -218,7 +219,7 @@ public class KakaoManager extends BaseAnalyticsManager
         product.price = event.total_price;
         product.quantity = 1;
 
-        event.setProducts(new ArrayList(Arrays.asList(product)));
+        event.setProducts(new ArrayList(Collections.singletonList(product)));
 
         KakaoAdTracker.getInstance().sendEvent(event);
 
@@ -242,7 +243,7 @@ public class KakaoManager extends BaseAnalyticsManager
         product.price = event.total_price;
         product.quantity = 1;
 
-        event.setProducts(new ArrayList(Arrays.asList(product)));
+        event.setProducts(new ArrayList(Collections.singletonList(product)));
 
         KakaoAdTracker.getInstance().sendEvent(event);
 
@@ -266,7 +267,7 @@ public class KakaoManager extends BaseAnalyticsManager
         product.price = event.total_price;
         product.quantity = 1;
 
-        event.setProducts(new ArrayList(Arrays.asList(product)));
+        event.setProducts(new ArrayList(Collections.singletonList(product)));
 
         KakaoAdTracker.getInstance().sendEvent(event);
 

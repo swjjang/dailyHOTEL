@@ -16,23 +16,23 @@ class VersionDelegate(jsonString: String) {
 
     val optional: String?
         get() {
-            when (Setting.getStore()) {
-                Setting.Stores.PLAY_STORE -> return version?.stores?.play?.versionCode?.optional
+            return when (Setting.getStore()) {
+                Setting.Stores.PLAY_STORE -> version?.stores?.play?.versionCode?.optional
 
-                Setting.Stores.T_STORE -> return version?.stores?.one?.versionCode?.optional
+                Setting.Stores.T_STORE -> version?.stores?.one?.versionCode?.optional
 
-                else -> return null
+                else -> null
             }
         }
 
     val force: String?
         get() {
-            when (Setting.getStore()) {
-                Setting.Stores.PLAY_STORE -> return version?.stores?.play?.versionCode?.force
+            return when (Setting.getStore()) {
+                Setting.Stores.PLAY_STORE -> version?.stores?.play?.versionCode?.force
 
-                Setting.Stores.T_STORE -> return version?.stores?.one?.versionCode?.force
+                Setting.Stores.T_STORE -> version?.stores?.one?.versionCode?.force
 
-                else -> return null
+                else -> null
             }
         }
 
@@ -48,54 +48,54 @@ class VersionDelegate(jsonString: String) {
 
     @JsonObject
     internal class Version {
-        @JsonField(name = arrayOf("stores"))
+        @JsonField(name = ["stores"])
         var stores: Stores? = null
 
-        @JsonField(name = arrayOf("messages"))
+        @JsonField(name = ["messages"])
         var messages: Messages? = null
     }
 
 
     @JsonObject
     internal class Stores {
-        @JsonField(name = arrayOf("play"))
+        @JsonField(name = ["play"])
         var play: Store? = null
 
-        @JsonField(name = arrayOf("one"))
+        @JsonField(name = ["one"])
         var one: Store? = null
     }
 
     @JsonObject
     internal class Store {
-        @JsonField(name = arrayOf("versionCode"))
+        @JsonField(name = ["versionCode"])
         var versionCode: VersionCode? = null
     }
 
     @JsonObject
     internal class VersionCode {
-        @JsonField(name = arrayOf("optional"))
+        @JsonField(name = ["optional"])
         var optional: String? = null
 
-        @JsonField(name = arrayOf("force"))
+        @JsonField(name = ["force"])
         var force: String? = null
     }
 
 
     @JsonObject
     internal class Messages {
-        @JsonField(name = arrayOf("optional"))
+        @JsonField(name = ["optional"])
         var optional: Message? = null
 
-        @JsonField(name = arrayOf("force"))
+        @JsonField(name = ["force"])
         var force: Message? = null
     }
 
     @JsonObject
     internal class Message {
-        @JsonField(name = arrayOf("title"))
+        @JsonField(name = ["title"])
         var title: String? = null
 
-        @JsonField(name = arrayOf("message"))
+        @JsonField(name = ["message"])
         var message: String? = null
     }
 }

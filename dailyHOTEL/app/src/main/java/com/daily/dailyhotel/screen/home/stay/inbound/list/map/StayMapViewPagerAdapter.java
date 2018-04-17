@@ -24,7 +24,7 @@ public class StayMapViewPagerAdapter extends PagerAdapter
     {
         void onStayClick(View view, Stay stay);
 
-        void onCloseClick();
+        void onWishClick();
     }
 
     public StayMapViewPagerAdapter(Context context)
@@ -57,6 +57,8 @@ public class StayMapViewPagerAdapter extends PagerAdapter
         stayMapCardView.setAddressText(stay.addressSummary);
         stayMapCardView.setStayNameText(stay.name);
         stayMapCardView.setBenefitText(stay.dBenefitText);
+        stayMapCardView.setWishVisible(true);
+        stayMapCardView.setWish(stay.myWish);
 
         if (stay.soldOut == true)
         {
@@ -71,14 +73,14 @@ public class StayMapViewPagerAdapter extends PagerAdapter
         stayMapCardView.setImage(stay.imageUrl);
         stayMapCardView.setStickerVisible(mRewardEnabled && stay.provideRewardSticker);
 
-        stayMapCardView.setOnCloseClickListener(new View.OnClickListener()
+        stayMapCardView.setOnWishClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onCloseClick();
+                    mOnPlaceMapViewPagerAdapterListener.onWishClick();
                 }
             }
         });

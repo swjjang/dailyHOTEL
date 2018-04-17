@@ -20,7 +20,7 @@ class SplashDelegate(jsonString: String) {
         }
 
     fun getUrl(context: Context): String? {
-        val densityDpi = context.resources.displayMetrics.densityDpi;
+        val densityDpi = context.resources.displayMetrics.densityDpi
 
         return when {
             densityDpi < 240 -> splash?.imageUpdate?.url?.hdpi
@@ -31,28 +31,28 @@ class SplashDelegate(jsonString: String) {
 
     @JsonObject
     internal class Splash {
-        @JsonField(name = arrayOf("imageUpdate"))
+        @JsonField(name = ["imageUpdate"])
         var imageUpdate: ImageUpdate? = null
     }
 
     @JsonObject
     internal class ImageUpdate {
-        @JsonField(name = arrayOf("updateTime"))
+        @JsonField(name = ["updateTime"])
         var updateTime: String? = null
 
-        @JsonField(name = arrayOf("url"))
+        @JsonField(name = ["url"])
         var url: ImgaeUrl? = null
     }
 
     @JsonObject
     internal class ImgaeUrl {
-        @JsonField(name = arrayOf("hdpi"))
+        @JsonField(name = ["hdpi"])
         var hdpi: String? = null
 
-        @JsonField(name = arrayOf("xhdpi"))
+        @JsonField(name = ["xhdpi"])
         var xhdpi: String? = null
 
-        @JsonField(name = arrayOf("xxxhdpi"))
+        @JsonField(name = ["xxxhdpi"])
         var xxxhdpi: String? = null
     }
 }

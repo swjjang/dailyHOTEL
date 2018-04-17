@@ -35,9 +35,9 @@ class DailyRemoteConfig(private val context: Context) {
             setCompany(context, context.getString(R.string.default_company_information))
         }
 
-        var fetchTime = if (Constants.DEBUG) 0L else 600L
+        val fetchTime = if (Constants.DEBUG) 0L else 600L
 
-        remoteConfig.fetch(fetchTime).addOnCompleteListener(com.google.android.gms.tasks.OnCompleteListener {
+        remoteConfig.fetch(fetchTime).addOnCompleteListener({
             if (it.isSuccessful) {
                 remoteConfig.activateFetched()
                 setRemoteConfig(listener)

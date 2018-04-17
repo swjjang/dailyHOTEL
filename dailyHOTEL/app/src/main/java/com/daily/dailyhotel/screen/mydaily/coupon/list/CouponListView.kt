@@ -82,7 +82,7 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
     }
 
     override fun setSelectionSpinner(sortType: CouponListActivity.SortType) {
-        var position = when (sortType) {
+        val position = when (sortType) {
             CouponListActivity.SortType.STAY -> 1
             CouponListActivity.SortType.GOURMET -> 2
             else -> 0

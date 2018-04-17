@@ -52,7 +52,6 @@ import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
@@ -412,7 +411,9 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
                     setRewardInformation(rewardInformation);
 
-                    return DailyCalendar.compareDateDay(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), commonDateTime.dailyDateTime) < GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT;
+                    final int DEFAULT_CALENDAR_DAY_OF_MAX_COUNT = 30;
+
+                    return DailyCalendar.compareDateDay(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), commonDateTime.dailyDateTime) < DEFAULT_CALENDAR_DAY_OF_MAX_COUNT;
                 }
             }).flatMap(new Function<Boolean, ObservableSource<List<Gourmet>>>()
         {
