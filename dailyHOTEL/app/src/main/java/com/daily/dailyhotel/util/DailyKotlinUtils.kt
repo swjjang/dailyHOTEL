@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.util
 
 inline fun String?.takeNotEmpty(block: (String) -> Unit) {
-    this?.takeIf { it.isNotEmpty() && "null" != it }?.let { block(it) }
+    this?.takeIf { it.isTextEmpty() }?.let { block(it) }
 }
 
 inline fun <T> Collection<T>?.takeNotEmpty(block: (Collection<T>) -> Unit) {
@@ -9,7 +9,7 @@ inline fun <T> Collection<T>?.takeNotEmpty(block: (Collection<T>) -> Unit) {
 }
 
 fun CharSequence?.isTextEmpty(): Boolean {
-    return this == null || isBlank() || "null" == trim()
+    return this == null || isBlank() || this == "null"
 }
 
 fun isTextEmpty(vararg textArray: CharSequence?): Boolean {
