@@ -891,7 +891,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.event.list.kotlin.EventListActivity"
+            android:name="com.daily.dailyhotel.screen.event.list.EventListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

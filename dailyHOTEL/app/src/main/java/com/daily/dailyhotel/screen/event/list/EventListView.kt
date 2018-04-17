@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.event.list.kotlin
+package com.daily.dailyhotel.screen.event.list
 
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View

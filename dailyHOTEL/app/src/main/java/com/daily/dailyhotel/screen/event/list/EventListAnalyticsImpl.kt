@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.event.list.kotlin
+package com.daily.dailyhotel.screen.event.list
 
 import android.app.Activity
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager

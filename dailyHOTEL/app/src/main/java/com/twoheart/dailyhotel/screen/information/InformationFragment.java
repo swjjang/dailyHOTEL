@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
-import com.daily.dailyhotel.screen.event.list.kotlin.EventListActivity;
+import com.daily.dailyhotel.screen.event.list.EventListActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;

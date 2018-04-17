@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.event.list.kotlin
+package com.daily.dailyhotel.screen.event.list
 
 import android.content.Context
 import android.content.Intent
