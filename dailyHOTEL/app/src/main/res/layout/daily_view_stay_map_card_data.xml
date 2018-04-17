@@ -23,7 +23,6 @@
             app:layout_constraintTop_toTopOf="parent"
             fresco:actualImageScaleType="centerCrop"/>
 
-
         <View
             android:id="@+id/gradientTopView"
             android:layout_width="0dp"
@@ -33,7 +32,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-
 
         <View
             android:id="@+id/gradientBottomView"
@@ -46,7 +44,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/discountPriceTextView"
@@ -156,8 +153,8 @@
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/wishImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
             android:background="@drawable/img_list_heart_gradient"
             android:visibility="visible"
             app:layout_constraintRight_toRightOf="parent"

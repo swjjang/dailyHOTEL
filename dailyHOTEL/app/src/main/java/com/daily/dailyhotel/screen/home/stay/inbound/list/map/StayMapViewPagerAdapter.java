@@ -24,7 +24,7 @@ public class StayMapViewPagerAdapter extends PagerAdapter
     {
         void onStayClick(View view, Stay stay);
 
-        void onWishClick();
+        void onWishClick(int position, Stay stay);
     }
 
     public StayMapViewPagerAdapter(Context context)
@@ -80,7 +80,7 @@ public class StayMapViewPagerAdapter extends PagerAdapter
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onWishClick();
+                    mOnPlaceMapViewPagerAdapterListener.onWishClick(position, stay);
                 }
             }
         });

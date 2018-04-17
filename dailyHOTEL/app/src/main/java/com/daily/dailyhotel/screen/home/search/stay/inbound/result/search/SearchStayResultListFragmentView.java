@@ -351,9 +351,9 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
                 }
 
                 @Override
-                public void onWishClick()
+                public void onWishClick(int position, Stay stay)
                 {
-
+                    getEventListener().onWishClick(position, stay);
                 }
             });
         }
