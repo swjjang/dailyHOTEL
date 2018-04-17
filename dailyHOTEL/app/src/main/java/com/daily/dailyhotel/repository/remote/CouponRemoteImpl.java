@@ -375,8 +375,38 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<CouponsData> getStayCouponListByDetail(int stayIndex, String checkIn, int nights)
+    public Observable<Coupons> getStayCouponListByDetail(int stayIndex, String checkIn, int nights)
     {
-        return null;
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/coupons"//
+            : "NDAkMzIkMTkkMjMkMTAkNzgkODckNiQyOCQxNyQ4NyQyMyQwJDExJDE2JDc4JA==$YMEQxMDTIyOITBEyFQ0MMwOEICMwOTKdETNTgwMzE3GMkRGNEYwKQURBNDg1NzAzOTlFRDFDNEFDQzXhBREI2OLDNCRUAIxQWTI2Mg==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelIdx}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getStayCouponListByDetail(Crypto.getUrlDecoderEx(URL, urlParams), checkIn, nights) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
+            {
+                @Override
+                public Coupons apply(BaseDto<CouponsData> couponsDataBaseDto) throws Exception
+                {
+                    Coupons coupons;
+
+                    if (couponsDataBaseDto != null)
+                    {
+                        if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
+                        {
+                            coupons = couponsDataBaseDto.data.getCoupons();
+                        } else
+                        {
+                            throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return coupons;
+                }
+            });
     }
 }

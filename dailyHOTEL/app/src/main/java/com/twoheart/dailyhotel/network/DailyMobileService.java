@@ -1103,6 +1103,11 @@ public interface DailyMobileService
     @POST("{mobileAPI}")
     Observable<BaseDto<Object>> setRegisterKeywordCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("keyword") String keyword);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<CouponsData>> getStayCouponListByDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                       @Query("dateCheckIn") String date, @Query("stays") int nights);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RewardRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////

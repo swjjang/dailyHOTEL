@@ -5,7 +5,6 @@ import android.content.Context;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.DownloadCouponResult;
-import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import java.util.List;
@@ -36,5 +35,5 @@ public interface CouponInterface
 
     Observable<BaseDto<Object>> setRegisterCoupon(String couponCode);
 
-    Observable<CouponsData> getStayCouponListByDetail(int stayIndex, String checkIn, int nights);
+    Observable<Coupons> getStayCouponListByDetail(int stayIndex, String checkIn, int nights);
 }
