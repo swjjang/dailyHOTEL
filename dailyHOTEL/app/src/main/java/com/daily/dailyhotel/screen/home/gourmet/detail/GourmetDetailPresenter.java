@@ -239,7 +239,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         mAnalytics = new GourmetDetailAnalyticsImpl();
 
-        mAppResearch = new AppResearch(activity);
+        mAppResearch = new AppResearch();
 
         mGourmetRemoteImpl = new GourmetRemoteImpl();
         mCommonRemoteImpl = new CommonRemoteImpl();
@@ -439,7 +439,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             }));
         }
 
-        mAppResearch.onResume("고메", mGourmetIndex);
+        mAppResearch.onResume(getActivity(), "고메", mGourmetIndex);
     }
 
     @Override
@@ -447,7 +447,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         super.onPause();
 
-        mAppResearch.onPause("고메", mGourmetIndex);
+        mAppResearch.onPause(getActivity(), "고메", mGourmetIndex);
     }
 
     @Override

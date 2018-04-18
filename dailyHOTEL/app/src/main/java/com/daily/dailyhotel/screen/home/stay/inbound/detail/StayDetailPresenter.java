@@ -223,7 +223,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         mAnalytics = new StayDetailAnalyticsImpl();
 
-        mAppResearch = new AppResearch(activity);
+        mAppResearch = new AppResearch();
 
         mStayRemoteImpl = new StayRemoteImpl();
         mCommonRemoteImpl = new CommonRemoteImpl();
@@ -279,8 +279,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                         DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-                        int nights = 1;
-
                         try
                         {
                             mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
@@ -292,7 +290,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             return;
                         }
 
-                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
                         setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         mShowCalendar = externalDeepLink.isShowCalendar();
@@ -423,7 +421,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             getViewInterface().startCampaignStickerAnimation();
         }
 
-        mAppResearch.onResume("스테이", mStayIndex);
+        mAppResearch.onResume(getActivity(), "스테이", mStayIndex);
     }
 
     @Override
@@ -433,7 +431,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         getViewInterface().stopCampaignStickerAnimation();
 
-        mAppResearch.onPause("스테이", mStayIndex);
+        mAppResearch.onPause(getActivity(), "스테이", mStayIndex);
     }
 
     @Override

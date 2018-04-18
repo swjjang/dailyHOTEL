@@ -24,16 +24,13 @@ class StayPreviewActivity : BaseActivity<StayPreviewPresenter>() {
         @JvmStatic
         fun newInstance(context: Context, checkDateTime: String, checkOutDateTime: String, index: Int, name: String, grade: String
                         , viewPrice: Int = SKIP_CHECK_PRICE_VALUE): Intent {
-            val intent = Intent(context, StayPreviewActivity::class.java)
-
-            intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkDateTime)
-            intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime)
-            intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, index)
-            intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, name)
-            intent.putExtra(INTENT_EXTRA_DATA_STAY_GRADE, grade)
-            intent.putExtra(INTENT_EXTRA_DATA_STAY_VIEW_PRICE, viewPrice)
-
-            return intent
+            return Intent(context, StayPreviewActivity::class.java)
+                    .putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkDateTime)
+                    .putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime)
+                    .putExtra(INTENT_EXTRA_DATA_STAY_INDEX, index)
+                    .putExtra(INTENT_EXTRA_DATA_STAY_NAME, name)
+                    .putExtra(INTENT_EXTRA_DATA_STAY_GRADE, grade)
+                    .putExtra(INTENT_EXTRA_DATA_STAY_VIEW_PRICE, viewPrice)
         }
     }
 

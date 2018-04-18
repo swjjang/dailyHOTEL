@@ -16,8 +16,7 @@ public class StayBookDateTime extends PlaceBookDateTime
 
     public StayBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
     {
-        setCheckInDateTime(checkInDateTime);
-        setCheckOutDateTime(checkOutDateTime);
+        setBookDateTime(checkInDateTime, checkOutDateTime);
     }
 
     /**
@@ -34,6 +33,18 @@ public class StayBookDateTime extends PlaceBookDateTime
     public void setCheckInDateTime(String dateTime, int afterDay) throws Exception
     {
         setTimeInString(dateTime, afterDay);
+    }
+
+    public void setBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
+    {
+        setCheckInDateTime(checkInDateTime);
+        setCheckOutDateTime(checkOutDateTime);
+    }
+
+    public void setBookDateTime(StayBookDateTime stayBookDateTime) throws Exception
+    {
+        setCheckInDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+        setCheckOutDateTime(stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
     }
 
     public String getCheckInDateTime(String format)

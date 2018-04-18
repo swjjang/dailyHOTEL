@@ -212,7 +212,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         mAnalytics = new StayOutboundDetailAnalyticsImpl();
 
-        mAppResearch = new AppResearch(activity);
+        mAppResearch = new AppResearch();
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl();
         mCommonRemoteImpl = new CommonRemoteImpl();
@@ -421,7 +421,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().startCampaignStickerAnimation();
         }
 
-        mAppResearch.onResume("outbound_스테이", mStayIndex);
+        mAppResearch.onResume(getActivity(),"outbound_스테이", mStayIndex);
     }
 
     @Override
@@ -431,7 +431,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         getViewInterface().stopCampaignStickerAnimation();
 
-        mAppResearch.onPause("outbound_스테이", mStayIndex);
+        mAppResearch.onPause(getActivity(), "outbound_스테이", mStayIndex);
     }
 
     @Override

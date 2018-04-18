@@ -4,6 +4,10 @@ inline fun String?.takeNotEmpty(block: (String) -> Unit) {
     this?.takeIf { !it.isTextEmpty() }?.let { block(it) }
 }
 
+inline fun <R> String?.letNotEmpty(block: (String) -> R): R? {
+    return this?.takeIf { !it.isTextEmpty() }?.let { block(it) }
+}
+
 inline fun <T> Collection<T>?.takeNotEmpty(block: (Collection<T>) -> Unit) {
     this?.takeIf { it.isNotEmpty() }?.let { block(it) }
 }
