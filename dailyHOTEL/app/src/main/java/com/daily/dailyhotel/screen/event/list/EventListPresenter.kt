@@ -147,7 +147,7 @@ class EventListPresenter(activity: EventListActivity)//
         }
     }
 
-    private fun startEventWeb(url: String, eventName: String, eventDescription: String, imageUrl: String) {
+    private fun startEventWeb(url: String, eventName: String, eventDescription: String?, imageUrl: String?) {
         if (DailyTextUtils.isTextEmpty(url)) {
             return
         }
