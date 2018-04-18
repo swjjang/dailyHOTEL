@@ -37,17 +37,13 @@ class CopyPresenter(activity: CopyActivity)//
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        if (isRefresh) onRefresh(true)
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        if (isRefresh) onRefresh(true)
     }
 
     override fun onDestroy() {

@@ -85,7 +85,7 @@ public class StayDetail extends Configurations
         return mDetailImageInformationList;
     }
 
-    public boolean hasImageInformations()
+    public boolean hasImageInformation()
     {
         return mDetailImageInformationList != null && mDetailImageInformationList.size() > 0;
     }
@@ -93,6 +93,11 @@ public class StayDetail extends Configurations
     public void setImageInformationList(List<DetailImageInformation> detailImageInformationList)
     {
         mDetailImageInformationList = detailImageInformationList;
+    }
+
+    public String getDefaultImageUrl()
+    {
+        return hasImageInformation() ? mDetailImageInformationList.get(0).mImageMap.smallUrl : null;
     }
 
     public List<String> getBenefitContentList()

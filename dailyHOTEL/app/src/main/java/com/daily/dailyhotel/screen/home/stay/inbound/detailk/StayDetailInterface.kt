@@ -2,18 +2,14 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
 
 import android.app.Activity
 import android.content.DialogInterface
-import android.view.View
-import android.widget.CompoundButton
 import com.daily.base.BaseAnalyticsInterface
 import com.daily.base.BaseDialogViewInterface
 import com.daily.base.OnBaseEventListener
 import com.daily.dailyhotel.entity.StayBookDateTime
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.entity.StayRoom
-import com.daily.dailyhotel.entity.TrueAwards
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailPresenter
 import io.reactivex.Observable
 
 interface StayDetailInterface {
@@ -25,9 +21,70 @@ interface StayDetailInterface {
         fun setTransitionVisible(visible: Boolean)
 
         fun setSharedElementTransitionEnabled(enabled: Boolean, gradientType: StayDetailActivity.TransGradientType)
+
+        fun showWishTooltip()
+
+        fun hideWishTooltip()
+
+        fun startCampaignStickerAnimation()
+
+        fun stopCampaignStickerAnimation()
+
+        fun scrollTop()
+
+        fun showShareDialog(listener: DialogInterface.OnDismissListener)
     }
 
     interface OnEventListener : OnBaseEventListener {
+        fun onShareClick()
+
+        fun onWishClick()
+
+        fun onShareKakaoClick()
+
+        fun onCopyLinkClick()
+
+        fun onMoreShareClick()
+
+        fun onImageClick(position: Int)
+
+        fun onCalendarClick()
+
+        fun onMapClick()
+
+        fun onClipAddressClick(address: String)
+
+        fun onNavigatorClick()
+
+        fun onConciergeClick()
+
+        fun onMoreRoomListClick()
+
+        fun onPriceTypeClick(priceType: StayDetailPresenter.PriceType)
+
+        fun onConciergeFaqClick()
+
+        fun onConciergeHappyTalkClick()
+
+        fun onConciergeCallClick()
+
+        fun onRoomClick(stayRoom: StayRoom)
+
+        fun onTrueReviewClick()
+
+        fun onTrueVRClick()
+
+        fun onDownloadCouponClick()
+
+        fun onHideWishTooltipClick()
+
+        fun onLoginClick()
+
+        fun onRewardClick()
+
+        fun onRewardGuideClick()
+
+        fun onTrueAwardsClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {
@@ -35,7 +92,7 @@ interface StayDetailInterface {
 
         fun getStayPaymentAnalyticsParam(stayDetail: StayDetail, stayRoom: StayRoom): StayPaymentAnalyticsParam
 
-        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int)
+        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int)
 
         fun onScreenRoomList(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int)
 

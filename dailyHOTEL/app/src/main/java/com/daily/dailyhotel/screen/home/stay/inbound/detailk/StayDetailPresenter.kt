@@ -1,25 +1,35 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
 
+import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import com.crashlytics.android.Crashlytics
 import com.daily.base.BaseActivity
+import com.daily.base.util.DailyTextUtils
+import com.daily.base.util.ExLog
+import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.CommonDateTime
 import com.daily.dailyhotel.entity.StayBookDateTime
 import com.daily.dailyhotel.entity.StayDetail
+import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl
 import com.daily.dailyhotel.repository.remote.CalendarImpl
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
+import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity
+import com.daily.dailyhotel.storage.preference.DailyPreference
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
+import com.daily.dailyhotel.util.isTextEmpty
+import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.util.AppResearch
-import com.twoheart.dailyhotel.util.Constants
-import com.twoheart.dailyhotel.util.DailyDeepLink
-import com.twoheart.dailyhotel.util.DailyExternalDeepLink
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
+import com.twoheart.dailyhotel.util.*
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -186,8 +196,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         viewInterface.setSharedElementTransitionEnabled(isTransitionEnabled(), gradientType)
         viewInterface.setInitializedLayout(stayName, defaultImageUrl)
 
-        writeRecentlyViewedPlace()
-
         if (isUsedMultiTransition) {
             isRefresh = true
             screenLock(false)
@@ -204,11 +212,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return !hasDeepLink && isUsedMultiTransition
     }
 
-    private fun writeRecentlyViewedPlace() {
-        addCompositeDisposable(recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
-                stayIndex, stayName, null, defaultImageUrl, null, true).subscribe())
-    }
-
     private fun screenLockDelay(delay: Int) {
         addCompositeDisposable(Completable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe { screenLock(true) })
@@ -217,24 +220,68 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        if (isRefresh) onRefresh(true)
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
+        if (isRefresh) onRefresh(true)
+
+        if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled) {
+            viewInterface.startCampaignStickerAnimation()
         }
+
+        appResearch.onResume(activity, getString(R.string.label_stay), stayIndex)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        viewInterface.stopCampaignStickerAnimation()
+
+        appResearch.onPause(activity, getString(R.string.label_stay), stayIndex)
     }
 
     override fun onDestroy() {
         super.onDestroy()
     }
 
+    override fun onFinish() {
+        super.onFinish()
+
+        if (!isUsedMultiTransition) activity.overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
     override fun onBackPressed(): Boolean {
+        when (status) {
+            Status.BOOKING -> return true
+
+            Status.FINISH -> return super.onBackPressed()
+
+            else -> {
+                status = Status.FINISH
+
+                if (resultCode == BaseActivity.RESULT_CODE_REFRESH) {
+                    finish()
+                    return true
+                }
+
+                if (isUsedMultiTransition) {
+                    if (lock()) return true
+
+                    viewInterface.setTransitionVisible(true)
+                    viewInterface.scrollTop()
+
+                    Completable.timer(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe { onBackPressed() }
+
+                    return true
+                }
+            }
+        }
+
+        analytics.onScreen(activity, bookDateTime, stayDetail, viewPrice)
+
         return super.onBackPressed()
     }
 
@@ -244,20 +291,90 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
+
+        Util.restartApp(activity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         unLockAll()
+
+        when (requestCode) {
+            StayDetailActivity.REQUEST_CODE_CALENDAR -> onCalendarActivityResult(resultCode, intent)
+
+            StayDetailActivity.REQUEST_CODE_PAYMENT -> isRefresh = true
+
+            StayDetailActivity.REQUEST_CODE_LOGIN -> onLoginActivityResult(resultCode, intent)
+
+            StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH -> onLoginByWishActivityResult(resultCode, intent)
+
+            StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON -> onLoginByCouponActivityResult(resultCode, intent)
+        }
+    }
+
+    private fun onCalendarActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                intent?.let {
+                    try {
+                        val checkInDateTime = it.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATETIME)
+                        val checkOutDateTime = it.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATETIME)
+
+                        if (isTextEmpty(checkInDateTime, checkOutDateTime)) return
+
+                        bookDateTime.setBookDateTime(checkInDateTime, checkOutDateTime)
+                        isRefresh = true
+                    } catch (e: Exception) {
+                        ExLog.e(e.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onLoginActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                setResult(BaseActivity.RESULT_CODE_REFRESH)
+                isRefresh = true
+            }
+        }
+    }
+
+    private fun onLoginByWishActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                onWishClick()
+
+                setResult(BaseActivity.RESULT_CODE_REFRESH)
+                isRefresh = true
+            }
+        }
+    }
+
+    private fun onLoginByCouponActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                onDownloadCouponClick()
+
+                setResult(BaseActivity.RESULT_CODE_REFRESH)
+                isRefresh = true
+            }
+        }
     }
 
     @Synchronized
     override fun onRefresh(showProgress: Boolean) {
-        if (isFinish || !isRefresh) {
+        if (isFinish || !isRefresh) return
+
+        if (bookDateTime == null || !bookDateTime.validate()) {
+            Util.restartApp(activity)
             return
         }
 
         isRefresh = false
         screenLock(showProgress)
+
+        onRefresh(Observable.just(true))
     }
 
     private fun onRefresh(observable: Observable<Boolean>) {
@@ -266,25 +383,174 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 stayRemoteImpl.getDetail(stayIndex, bookDateTime),
                 calendarImpl.getStayUnavailableCheckInDates(stayIndex, DAYS_OF_MAX_COUNT, false),
                 commonRemoteImpl.commonDateTime, object : Function4<Boolean, StayDetail, List<String>, CommonDateTime, StayDetail> {
-            override fun apply(sharedElementTransition: Boolean, stayDetail: StayDetail, soldOutDayList: List<String>, commonDateTime: CommonDateTime): StayDetail {
 
+            override fun apply(sharedElementTransition: Boolean, stayDetail: StayDetail, soldOutDayList: List<String>, commonDateTime: CommonDateTime): StayDetail {
                 this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
                 this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replaceAfter('-', "").toInt() }.toTypedArray()
                 this@StayDetailPresenter.stayDetail = stayDetail
 
+                writeRecentlyViewedPlace(stayDetail)
+
                 return stayDetail
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            //
 
+            if (DailyPreference.getInstance(activity).isWishTooltip) showWishTooltip()
 
+//            if(reviewdafsdf) analytics.onEventShowTrueReview(activity, it.index)
 
+            if (it.couponPrice > 0) analytics.onEventShowCoupon(activity, it.index)
+
+            if (!DailyTextUtils.isTextEmpty(it.awards?.title)) analytics.onEventShowCoupon(activity, it.index)
+
+            unLockAll()
 
         }, {
-
+            onHandleErrorAndFinish(it)
         }))
+    }
+
+    private fun writeRecentlyViewedPlace(stayDetail: StayDetail) {
+        addCompositeDisposable(recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
+                stayDetail.index, stayDetail.name, null,
+                if (defaultImageUrl.isTextEmpty()) stayDetail.defaultImageUrl else defaultImageUrl,
+                null, true).subscribe())
+    }
+
+    private fun showWishTooltip() {
+        viewInterface.showWishTooltip()
+
+        addCompositeDisposable(Completable.timer(3, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    DailyPreference.getInstance(activity).isWishTooltip = false
+                    viewInterface.hideWishTooltip()
+                })
     }
 
     override fun onBackClick() {
         activity.onBackPressed()
+    }
+
+    override fun onShareClick() {
+        if (lock()) return
+
+        viewInterface.showShareDialog(DialogInterface.OnDismissListener { unLockAll() })
+
+        analytics.onEventShare(activity)
+    }
+
+    override fun onWishClick() {
+        if (lock()) return
+
+        if (!DailyHotel.isLogin()) {
+            DailyToast.showToast(activity, R.string.toast_msg_please_login, DailyToast.LENGTH_LONG)
+
+            startActivityForResult(LoginActivity.newInstance(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL),
+                    StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH)
+
+            return
+        }
+
+        stayDetail?.let {
+            val wish = !it.myWish
+            val wishCount = it.wishCount + if(wish) 1 else - 1
+
+            notifyWishChanged(wishCount, wish)
+
+
+        }
+    }
+
+    override fun onShareKakaoClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onCopyLinkClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMoreShareClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onImageClick(position: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onCalendarClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMapClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClipAddressClick(address: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onNavigatorClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onConciergeClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMoreRoomListClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onPriceTypeClick(priceType: PriceType) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onConciergeFaqClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onConciergeHappyTalkClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onConciergeCallClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onRoomClick(stayRoom: StayRoom) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onTrueReviewClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onTrueVRClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onDownloadCouponClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onHideWishTooltipClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onLoginClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onRewardClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onRewardGuideClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onTrueAwardsClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -20,7 +20,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         return StayPaymentAnalyticsParam()
     }
 
-    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int) {
+    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int) {
     }
 
     override fun onScreenRoomList(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int) {
