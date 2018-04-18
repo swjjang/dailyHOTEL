@@ -40,10 +40,11 @@ class SelectStayCouponDialogView(activity: SelectStayCouponDialogActivity, liste
             confirmTextView.setOnClickListener(this@SelectStayCouponDialogView)
 
             punchMaskLayout.run {
+                    val drawable = BackgroundDrawable(context, this)
                 if (VersionUtils.isOverAPI16()) {
-                    background = BackgroundDrawable(context, this)
+                    background = drawable
                 } else {
-                    setBackgroundDrawable(BackgroundDrawable(context, this))
+                    setBackgroundDrawable(background)
                 }
             }
 
@@ -149,7 +150,7 @@ class SelectStayCouponDialogView(activity: SelectStayCouponDialogActivity, liste
         }
     }
 
-    private inner class BackgroundDrawable(val context: Context, val view: View) : Drawable() {
+    private inner class BackgroundDrawable(context: Context, val view: View) : Drawable() {
         private val circleBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.circle)
         private val paint = Paint()
         private val overPaint = Paint()
