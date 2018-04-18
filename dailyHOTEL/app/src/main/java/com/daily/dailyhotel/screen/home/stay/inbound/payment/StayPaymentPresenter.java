@@ -30,6 +30,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayPayment;
 import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
+import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -39,6 +40,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.payment.PaymentWebActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
+import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -46,7 +48,6 @@ import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Coupon;
-import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
@@ -557,7 +558,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                     if (resultCode == Activity.RESULT_OK)
                     {
-                        Coupon coupon = data.getParcelableExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                        CouponParcel couponParcel = data.getParcelableExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                        Coupon coupon = new Coupon(couponParcel.getCoupon());
                         setCoupon(coupon);
                     } else
                     {

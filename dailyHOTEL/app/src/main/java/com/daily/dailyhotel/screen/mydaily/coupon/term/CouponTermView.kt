@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.coupon
+package com.daily.dailyhotel.screen.mydaily.coupon.term
 
 
 import com.daily.base.BaseActivity

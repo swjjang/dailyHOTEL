@@ -10,7 +10,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.Coupon
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
-import com.daily.dailyhotel.screen.mydaily.coupon.CouponTermActivity
+import com.daily.dailyhotel.screen.mydaily.coupon.term.CouponTermActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.register.RegisterCouponActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
