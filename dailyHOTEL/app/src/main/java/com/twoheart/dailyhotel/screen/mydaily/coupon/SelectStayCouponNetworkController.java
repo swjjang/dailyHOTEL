@@ -20,6 +20,7 @@ import retrofit2.Response;
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
+@Deprecated
 public class SelectStayCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
