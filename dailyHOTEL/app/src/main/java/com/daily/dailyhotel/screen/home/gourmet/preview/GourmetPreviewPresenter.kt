@@ -246,7 +246,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
 
         screenLock(true)
 
-        val name = DailyUserPreference.getInstance(activity).name
+        val name: String? = DailyUserPreference.getInstance(activity).name
         val urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_kakaotalk"
         val longUrl = String.format(Locale.KOREA, urlFormat, gourmetIndex
                 , bookDateTime.getVisitDateTime("yyyy-MM-dd"))
@@ -260,7 +260,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
         }))
     }
 
-    private fun startKakaoLinkApplication(userName: String, detail: GourmetDetail, bookDateTime: GourmetBookDateTime, url: String) {
+    private fun startKakaoLinkApplication(userName: String?, detail: GourmetDetail, bookDateTime: GourmetBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareGourmet(userName
                 , detail.name, detail.address, detail.index
                 , detail.imageInformationList?.get(0)?.imageMap?.mediumUrl

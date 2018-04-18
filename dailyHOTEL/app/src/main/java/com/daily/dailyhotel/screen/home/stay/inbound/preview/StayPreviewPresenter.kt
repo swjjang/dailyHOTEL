@@ -246,7 +246,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
         screenLock(true)
 
-        val name = DailyUserPreference.getInstance(activity).name
+        val name: String? = DailyUserPreference.getInstance(activity).name
         val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
         val longUrl = String.format(Locale.KOREA, urlFormat, stayIndex
                 , bookDateTime.getCheckInDateTime("yyyy-MM-dd")
@@ -262,7 +262,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         }))
     }
 
-    private fun startKakaoLinkApplication(userName: String, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
+    private fun startKakaoLinkApplication(userName: String?, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareStay(userName
                 , detail.name, detail.address, detail.index
                 , detail.imageInformationList?.get(0)?.imageMap?.mediumUrl
