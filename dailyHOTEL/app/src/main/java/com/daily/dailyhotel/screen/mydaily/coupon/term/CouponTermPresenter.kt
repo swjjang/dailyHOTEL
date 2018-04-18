@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.coupon
+package com.daily.dailyhotel.screen.mydaily.coupon.term
 
 import android.content.Intent
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity

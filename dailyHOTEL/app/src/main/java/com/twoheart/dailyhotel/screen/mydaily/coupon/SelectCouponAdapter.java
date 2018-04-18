@@ -22,6 +22,7 @@ import java.util.Locale;
 /**
  * Created by android_sam on 2016. 5. 26..
  */
+@Deprecated
 public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapter.SelectCouponViewHolder>
 {
     private Context mContext;

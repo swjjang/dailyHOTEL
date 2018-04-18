@@ -29,6 +29,7 @@ import java.util.List;
 /**
  * Created by android_sam on 2016. 5. 26..
  */
+@Deprecated
 public class SelectCouponDialogLayout extends BaseLayout implements View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener

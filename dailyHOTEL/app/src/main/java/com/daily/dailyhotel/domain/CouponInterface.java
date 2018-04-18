@@ -34,4 +34,6 @@ public interface CouponInterface
     Observable<List<Coupon>> getCouponList();
 
     Observable<BaseDto<Object>> setRegisterCoupon(String couponCode);
+
+    Observable<Coupons> getStayCouponListByDetail(int stayIndex, String checkIn, int nights);
 }

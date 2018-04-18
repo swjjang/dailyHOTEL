@@ -29,6 +29,7 @@ import retrofit2.Response;
 /**
  * Created by android_sam on 2016. 5. 26..
  */
+@Deprecated
 public class SelectStayCouponDialogActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
