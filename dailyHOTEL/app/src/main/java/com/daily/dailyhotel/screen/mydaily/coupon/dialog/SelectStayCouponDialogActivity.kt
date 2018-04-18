@@ -40,10 +40,10 @@ class SelectStayCouponDialogActivity : BaseActivity<SelectStayCouponDialogPresen
             }
         }
 
-        const val INTENT_EXTRA_STAY_IDX = "hotelIdx"
+        const val INTENT_EXTRA_STAY_IDX = "stayIdx"
         const val INTENT_EXTRA_ROOM_IDX = "roomIdx"
         const val INTENT_EXTRA_CATEGORY_CODE = "categoryCode"
-        const val INTENT_EXTRA_STAY_NAME = "hotelName"
+        const val INTENT_EXTRA_STAY_NAME = "stayName"
         const val INTENT_EXTRA_ROOM_PRICE = "roomPrice"
         const val INTENT_EXTRA_CHECK_IN_DATE = "checkInDate"
         const val INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate"
@@ -52,10 +52,10 @@ class SelectStayCouponDialogActivity : BaseActivity<SelectStayCouponDialogPresen
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold)
+        overridePendingTransition(R.anim.hold, R.anim.hold)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
 
         super.onCreate(savedInstanceState)
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 
     override fun createInstancePresenter(): SelectStayCouponDialogPresenter {
@@ -65,6 +65,6 @@ class SelectStayCouponDialogActivity : BaseActivity<SelectStayCouponDialogPresen
     override fun finish() {
         super.finish()
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right)
+        overridePendingTransition(R.anim.hold, R.anim.hold)
     }
 }

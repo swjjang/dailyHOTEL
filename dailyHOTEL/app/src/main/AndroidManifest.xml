@@ -915,6 +915,13 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
