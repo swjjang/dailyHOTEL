@@ -522,7 +522,7 @@ public class SearchStayCampaignTagListFragmentPresenter extends BasePagerFragmen
                                 return;
 
                             case 200: // 종료된 캠페인 태그
-                                showExpireTagDialog();
+                                showExpireTagDialog(baseException.getMessage());
                                 return;
                         }
                     }
@@ -532,10 +532,15 @@ public class SearchStayCampaignTagListFragmentPresenter extends BasePagerFragmen
             }));
     }
 
-    void showExpireTagDialog()
+    void showExpireTagDialog(String message)
     {
+        if (DailyTextUtils.isTextEmpty(message) == true)
+        {
+            message = getString(R.string.message_campaign_tag_finished);
+        }
+
         getViewInterface().showSimpleDialog(null //
-            , getString(R.string.message_campaign_tag_finished) //
+            , message//
             , getString(R.string.dialog_btn_text_confirm) //
             , null, new DialogInterface.OnDismissListener()
             {
