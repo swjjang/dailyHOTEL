@@ -90,32 +90,6 @@ public class CampaignTagRemoteImpl extends BaseRemoteImpl implements CampaignTag
                         if (stayCampaignTagsDataBaseDto.msgCode == 100 && stayCampaignTagsDataBaseDto.data != null)
                         {
                             stayCampaignTags = stayCampaignTagsDataBaseDto.data.getStayCampaigns();
-
-                            if (stayCampaignTags == null)
-                            {
-                                stayCampaignTags = new StayCampaignTags();
-                            }
-
-                            stayCampaignTags.msgCode = stayCampaignTagsDataBaseDto.msgCode;
-                        } else if (stayCampaignTagsDataBaseDto.msgCode == -101)
-                        {
-                            if (stayCampaignTagsDataBaseDto.data != null)
-                            {
-                                stayCampaignTags = stayCampaignTagsDataBaseDto.data.getStayCampaigns();
-                            }
-
-                            // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
-                            if (stayCampaignTags == null)
-                            {
-                                stayCampaignTags = new StayCampaignTags();
-                            }
-
-                            stayCampaignTags.msgCode = stayCampaignTagsDataBaseDto.msgCode;
-                        } else if (stayCampaignTagsDataBaseDto.msgCode == 200)
-                        {
-                            // 종료된 캠페인 태그
-                            stayCampaignTags = new StayCampaignTags();
-                            stayCampaignTags.msgCode = stayCampaignTagsDataBaseDto.msgCode;
                         } else
                         {
                             throw new BaseException(stayCampaignTagsDataBaseDto.msgCode, stayCampaignTagsDataBaseDto.msg);
