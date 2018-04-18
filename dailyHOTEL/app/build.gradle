@@ -52,7 +52,7 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 2020300
+        versionCode 2020301
         versionName "2.2.3"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -208,7 +208,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // kotlin
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     kapt "com.android.databinding:compiler:$android_gradle_version"
 
     implementation 'com.android.support:support-v4:27.1.1'
@@ -283,8 +283,6 @@ dependencies {
 
     // 카카오 광고 SDK
     implementation 'com.kakao.ad:tracker:0.2.6@aar'
-
-
 
     //
 //    debugCompile 'com.facebook.stetho:stetho:1.4.1'
