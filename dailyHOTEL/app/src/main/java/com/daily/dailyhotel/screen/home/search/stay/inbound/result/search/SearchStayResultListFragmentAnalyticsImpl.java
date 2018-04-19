@@ -293,6 +293,18 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             , "stay_selling_completion", stayName, null);
     }
 
+    @Override
+    public void onEventSearchResultAllSoldOut(Activity activity, String inputKeyword)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , "stay_selling_completion", inputKeyword, null);
+    }
+
     private void recordEventSearchResultByRecentKeyword(Activity activity, String displayName, boolean empty, Map<String, String> params)
     {
         String action = empty ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;

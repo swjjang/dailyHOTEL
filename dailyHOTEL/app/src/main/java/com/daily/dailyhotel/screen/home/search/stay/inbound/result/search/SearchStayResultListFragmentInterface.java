@@ -130,5 +130,7 @@ public interface SearchStayResultListFragmentInterface
             , int searchCount, int searchMaxCount);
 
         void onEventSearchResultCountOneAndSoldOut(Activity activity, String stayName);
+
+        void onEventSearchResultAllSoldOut(Activity activity, String inputKeyword);
     }
 }

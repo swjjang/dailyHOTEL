@@ -773,6 +773,11 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
 
         boolean allSoldOut = isAllSoldOut(stays.getStayList());
 
+        if (allSoldOut == true)
+        {
+            mAnalytics.onEventSearchResultAllSoldOut(getActivity(), mViewModel.getInputKeyword());
+        }
+
         getViewInterface().setFloatingActionViewTypeMapEnabled(allSoldOut == false);
 
         if (size < MAXIMUM_NUMBER_PER_PAGE)

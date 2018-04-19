@@ -639,6 +639,11 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
                         }
                     }
 
+                    if (allSoldOut == true)
+                    {
+                        mAnalytics.onEventSearchResultAllSoldOut(getActivity(), mViewModel.getInputKeyword());
+                    }
+
                     getViewInterface().setFloatingActionViewTypeMapEnabled(allSoldOut == false);
 
                     if (size < MAXIMUM_NUMBER_PER_PAGE)
@@ -1178,7 +1183,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
             return;
         }
 
-        switch(mViewType)
+        switch (mViewType)
         {
             case LIST:
                 getViewInterface().setWish(position, wish);
