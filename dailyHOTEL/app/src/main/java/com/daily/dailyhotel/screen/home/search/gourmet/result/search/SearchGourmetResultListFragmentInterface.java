@@ -128,5 +128,7 @@ public interface SearchGourmetResultListFragmentInterface
             , int searchCount, int searchMaxCount);
 
         void onEventSearchResultCountOneAndSoldOut(Activity activity, String gourmetName);
+
+        void onEventSearchResultAllSoldOut(Activity activity, String inputKeyword);
     }
 }
