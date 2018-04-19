@@ -259,7 +259,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     private fun startKakaoLinkApplication(userName: String?, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareStay(userName
                 , detail.name, detail.address, detail.index
-                , detail.imageInformationList?.get(0)?.imageMap?.mediumUrl
+                , detail.defaultImageUrl
                 , url, bookDateTime)
     }
 

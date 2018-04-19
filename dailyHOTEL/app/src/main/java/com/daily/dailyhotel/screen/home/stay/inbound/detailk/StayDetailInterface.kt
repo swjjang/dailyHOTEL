@@ -2,12 +2,15 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
 
 import android.app.Activity
 import android.content.DialogInterface
+import android.view.View
+import android.widget.CompoundButton
 import com.daily.base.BaseAnalyticsInterface
 import com.daily.base.BaseDialogViewInterface
 import com.daily.base.OnBaseEventListener
 import com.daily.dailyhotel.entity.StayBookDateTime
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.entity.StayRoom
+import com.daily.dailyhotel.entity.TrueAwards
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
 import io.reactivex.Observable
@@ -33,6 +36,16 @@ interface StayDetailInterface {
         fun scrollTop()
 
         fun showShareDialog(listener: DialogInterface.OnDismissListener)
+
+        fun showWishView(myWish: Boolean): Observable<Boolean>
+
+        fun showConciergeDialog(listener: DialogInterface.OnDismissListener)
+
+        fun showTrueVRDialog(checkedChangeListener: CompoundButton.OnCheckedChangeListener,
+                             positiveListener: View.OnClickListener,
+                             onDismissListener: DialogInterface.OnDismissListener)
+
+        fun showTrueAwardsDialog(trueAwards: TrueAwards, onDismissListener: DialogInterface.OnDismissListener)
     }
 
     interface OnEventListener : OnBaseEventListener {

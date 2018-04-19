@@ -257,7 +257,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     private fun startKakaoLinkApplication(userName: String?, detail: GourmetDetail, bookDateTime: GourmetBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareGourmet(userName
                 , detail.name, detail.address, detail.index
-                , detail.imageInformationList?.get(0)?.imageMap?.mediumUrl
+                , detail.defaultImageUrl
                 , url, bookDateTime)
     }
 

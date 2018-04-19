@@ -1,20 +1,22 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import com.crashlytics.android.Crashlytics
 import com.daily.base.BaseActivity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.CommonDateTime
-import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.entity.StayRoom
+import com.daily.dailyhotel.entity.*
+import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl
 import com.daily.dailyhotel.repository.remote.CalendarImpl
@@ -22,11 +24,24 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity
+import com.daily.dailyhotel.screen.common.event.EventWebActivity
+import com.daily.dailyhotel.screen.common.images.ImageListActivity
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity
+import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
+import com.daily.dailyhotel.storage.preference.DailyUserPreference
+import com.daily.dailyhotel.util.filterIf
 import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.takeNotEmptyThisAddStringButDefaultString
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity
+import com.twoheart.dailyhotel.screen.information.FAQActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.*
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
@@ -35,6 +50,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class StayDetailPresenter(activity: StayDetailActivity)//
@@ -87,7 +103,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var isUsedMultiTransition = false
     private var hasDeepLink = false
     private var gradientType = StayDetailActivity.TransGradientType.NONE
-    private var soldOutDays: Array<Int>? = null
+    private var soldOutDays: IntArray? = null
     private var showCalendar = false
     private var showTrueVR = false
     private var deepLink: DailyDeepLink? = null
@@ -386,7 +402,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             override fun apply(sharedElementTransition: Boolean, stayDetail: StayDetail, soldOutDayList: List<String>, commonDateTime: CommonDateTime): StayDetail {
                 this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
-                this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replaceAfter('-', "").toInt() }.toTypedArray()
+                this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replaceAfter('-', "").toInt() }.toIntArray()
                 this@StayDetailPresenter.stayDetail = stayDetail
 
                 writeRecentlyViewedPlace(stayDetail)
@@ -448,54 +464,261 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             startActivityForResult(LoginActivity.newInstance(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL),
                     StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH)
+        } else {
+            stayDetail?.let {
+                val wish = !it.myWish
+                val wishCount = it.wishCount + if (wish) 1 else -1
 
-            return
+                notifyWishChanged(wishCount, wish)
+
+                processWish(it.index, wish)
+            }
         }
+    }
 
-        stayDetail?.let {
-            val wish = !it.myWish
-            val wishCount = it.wishCount + if(wish) 1 else - 1
+    private fun processWish(stayIndex: Int, wish: Boolean) {
+        addCompositeDisposable(getWishObservable(stayIndex, wish).observeOn(AndroidSchedulers.mainThread()).subscribe({ wishResult ->
 
-            notifyWishChanged(wishCount, wish)
+            setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, wish))
 
+            stayDetail?.let {
+                if (wishResult.success) {
+                    it.myWish = wish
+                    it.wishCount += if (wish) 1 else -1
 
-        }
+                    notifyWishChanged()
+
+                    addCompositeDisposable(viewInterface.showWishView(it.myWish).subscribeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+
+                    analytics.onEventWishClick(activity, bookDateTime, it, viewPrice, wish)
+                } else {
+                    notifyWishChanged(wishCount, wish)
+
+                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message, getString(R.string.dialog_btn_text_confirm), null);
+
+                    unLockAll()
+                }
+            }
+        }, {
+            onHandleError(it)
+
+            stayDetail?.let { notifyWishChanged(it.wishCount, it.myWish) }
+        }))
+    }
+
+    private fun getWishObservable(stayIndex: Int, wish: Boolean): Observable<WishResult> {
+        return if (wish) stayRemoteImpl.removeWish(stayIndex) else stayRemoteImpl.addWish(stayIndex)
     }
 
     override fun onShareKakaoClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            try {
+                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
+
+                val name: String? = DailyUserPreference.getInstance(activity).name
+                val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
+                val longUrl = String.format(Locale.KOREA, urlFormat, stayDetail.index, bookDateTime.getCheckInDateTime("yyyy-MM-dd"), bookDateTime.nights)
+
+                addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
+                    unLockAll()
+
+                    KakaoLinkManager.newInstance(activity).shareStay(name, stayDetail.name, stayDetail.address,
+                            stayDetail.index, stayDetail.defaultImageUrl, shortUrl, bookDateTime)
+                }, {
+                    unLockAll()
+
+                    KakaoLinkManager.newInstance(activity).shareStay(name, stayDetail.name, stayDetail.address, stayDetail.index,
+                            stayDetail.defaultImageUrl, "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index, bookDateTime)
+                }))
+
+                analytics.onEventShareKakaoClick(activity, DailyHotel.isLogin(), DailyUserPreference.getInstance(activity).type,
+                        DailyUserPreference.getInstance(activity).isBenefitAlarm, stayDetail.index, stayDetail.name, stayDetail.overseas)
+            } catch (e: Exception) {
+                unLockAll()
+
+                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk),
+                        getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
+                        View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }, null)
+            }
+        } ?: Util.restartApp(activity)
     }
 
     override fun onCopyLinkClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            try {
+                val longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                        , stayDetail.index, bookDateTime.getCheckInDateTime("yyyy-MM-dd"), bookDateTime.nights)
+
+                addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).subscribe({
+                    DailyTextUtils.clipText(activity, it)
+                    DailyToast.showToast(activity, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG)
+                    unLockAll()
+                }, {
+                    DailyTextUtils.clipText(activity, "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index)
+                    DailyToast.showToast(activity, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG)
+                    unLockAll()
+                }))
+
+                analytics.onEventLinkCopyClick(activity)
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+
+                unLockAll()
+            }
+        } ?: Util.restartApp(activity)
     }
 
     override fun onMoreShareClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            try {
+                val longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_moretab",
+                        stayDetail.index, bookDateTime.getCheckInDateTime("yyyy-MM-dd"), bookDateTime.nights)
+                val name = DailyUserPreference.getInstance(activity).name.takeNotEmptyThisAddStringButDefaultString(getString(R.string.label_friend) + "가", "님이")
+                val message = getString(R.string.message_detail_stay_share_sms, name, stayDetail.name,
+                        bookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"),
+                        bookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"),
+                        bookDateTime.nights, bookDateTime.nights + 1, stayDetail.address)
+
+                addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).subscribe({
+                    startActivity(Intent.createChooser(Intent(android.content.Intent.ACTION_SEND)
+                            .apply { type = "text/plain" }
+                            .putExtra(Intent.EXTRA_SUBJECT, "")
+                            .putExtra(Intent.EXTRA_TEXT, message + it),
+                            getString(R.string.label_doshare)))
+
+                    unLockAll()
+                }, {
+                    startActivity(Intent.createChooser(Intent(android.content.Intent.ACTION_SEND)
+                            .apply { type = "text/plain" }
+                            .putExtra(Intent.EXTRA_SUBJECT, "")
+                            .putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index),
+                            getString(R.string.label_doshare)))
+                    unLockAll()
+                }))
+
+                analytics.onEventMoreShareClick(activity)
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+
+                unLockAll()
+            }
+        } ?: Util.restartApp(activity)
     }
 
     override fun onImageClick(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (stayDetail.filterIf({ it.hasImageInformation() }) && lock()) return
+
+        stayDetail?.let {
+            startActivityForResult(ImageListActivity.newInstance(activity, it.name,
+                    it.imageInformationList, position,
+                    ImageListAnalyticsParam().apply { serviceType = Constants.ServiceType.HOTEL }),
+                    StayDetailActivity.REQUEST_CODE_IMAGE_LIST)
+
+            analytics.onEventImageClick(activity, it.name)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onCalendarClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let {
+            val calendar = DailyCalendar.getInstance(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT)
+            val startDateTime = DailyCalendar.format(calendar.time, DailyCalendar.ISO_8601_FORMAT)
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1)
+            val endDateTime = DailyCalendar.format(calendar.time, DailyCalendar.ISO_8601_FORMAT)
+            val callByScreen = if (equalsCallingActivity(EventWebActivity::class.java)) AnalyticsManager.Label.EVENT else AnalyticsManager.ValueType.DETAIL
+
+            startActivityForResult(StayCalendarActivity.newInstance(activity,
+                    startDateTime, endDateTime,
+                    if (it.singleStay) 1 else DAYS_OF_MAX_COUNT - 1,
+                    bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
+                    bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
+                    it.index, soldOutDays, callByScreen, !isSoldOut(),
+                    0, true), StayDetailActivity.REQUEST_CODE_CALENDAR)
+
+            analytics.onEventCalendarClick(activity)
+        } ?: Util.restartApp(activity)
+    }
+
+    private fun isSoldOut(): Boolean {
+        return stayDetail.filterIf({ it.hasRooms() }, true)
     }
 
     override fun onMapClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let {
+            if (Util.isInstallGooglePlayService(activity)) {
+                startActivityForResult(ZoomMapActivity.newInstance(activity, ZoomMapActivity.SourceType.HOTEL,
+                        it.name, it.address, it.latitude, it.longitude, false), StayDetailActivity.REQUEST_CODE_MAP)
+            } else {
+                viewInterface.showSimpleDialog(getString(R.string.dialog_title_googleplayservice),
+                        getString(R.string.dialog_msg_install_update_googleplayservice),
+                        getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel),
+                        View.OnClickListener {
+                            try {
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms")).apply {
+                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+                                    `package` = "com.android.vending"
+                                })
+                            } catch (e: ActivityNotFoundException) {
+                                try {
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms")).apply {
+                                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+                                        `package` = "com.android.vending"
+                                    })
+                                } catch (f: ActivityNotFoundException) {
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms")).apply {
+                                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+                                    })
+                                }
+                            }
+                        }, null, true)
+
+                unLockAll()
+            }
+
+            analytics.onEventMapClick(activity, it.name)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onClipAddressClick(address: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        DailyTextUtils.clipText(activity, address)
+        DailyToast.showToast(activity, R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT)
+
+        stayDetail?.let {
+            analytics.onEventClipAddressClick(activity, it.name)
+        }
     }
 
     override fun onNavigatorClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let {
+            val analyticsParam = NavigatorAnalyticsParam().apply {
+                category = AnalyticsManager.Category.HOTEL_BOOKINGS
+                action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED
+            }
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(activity, it.name,
+                    it.latitude, it.longitude, false, analyticsParam), StayDetailActivity.REQUEST_CODE_NAVIGATOR)
+        }
     }
 
     override fun onConciergeClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        viewInterface.showConciergeDialog(DialogInterface.OnDismissListener { unLockAll() })
+
+        analytics.onEventConciergeClick(activity)
     }
 
     override fun onMoreRoomListClick() {
@@ -507,15 +730,33 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onConciergeFaqClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        startActivity(FAQActivity.newInstance(activity))
+
+        analytics.onEventFaqClick(activity)
     }
 
     override fun onConciergeHappyTalkClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        stayDetail?.let {
+            try {
+                // 카카오톡 패키지 설치 여부
+                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
+
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(activity, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL
+                        , it.index, 0, it.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK)
+            } catch (e: Exception) {
+                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk),
+                        getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
+                        View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }, null)
+            }
+
+            analytics.onEventHappyTalkClick(activity)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onConciergeCallClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        startActivityForResult(CallDialogActivity.newInstance(activity), StayDetailActivity.REQUEST_CODE_CALL)
+
+        analytics.onEventCallClick(activity)
     }
 
     override fun onRoomClick(stayRoom: StayRoom) {
@@ -523,34 +764,100 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onTrueReviewClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        if(lock()) return
+//
+//        stayDetail?.let {
+//            val analyticsParam = TrueReviewAnalyticsParam().apply {
+//                category = it.category
+//            }
+//
+//            startActivityForResult(StayTrueReviewActivity.newInstance(activity, it.index,
+//                    mReviewScores, analyticsParam), StayDetailActivity.REQUEST_CODE_TRUE_VIEW)
+//
+//            analytics.onEventTrueReviewClick(activity)
+//        } ?: Util.restartApp(activity)
     }
 
     override fun onTrueVRClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        if (lock()) return
+//
+//        stayDetail?.let { stayDetail ->
+//            if (DailyPreference.getInstance(activity).isTrueVRCheckDataGuide) {
+//                startActivityForResult(TrueVRActivity.newInstance(activity, stayDetail.index, mTrueVRList,
+//                        Constants.PlaceType.HOTEL, stayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR)
+//            } else {
+//                viewInterface.showTrueVRDialog(CompoundButton.OnCheckedChangeListener { buttonView, checked ->
+//                    DailyPreference.getInstance(activity).isTrueVRCheckDataGuide = checked
+//                }, View.OnClickListener {
+//                    startActivityForResult(TrueVRActivity.newInstance(activity, stayDetail.index, mTrueVRList,
+//                            Constants.PlaceType.HOTEL, stayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR)
+//                }, DialogInterface.OnDismissListener { unLockAll() })
+//            }
+//
+//            analytics.onEventTrueVRClick(activity, stayDetail.index)
+//        } ?: Util.restartApp(activity)
     }
 
     override fun onDownloadCouponClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            if (DailyHotel.isLogin()) {
+                val intent = SelectStayCouponDialogActivity.newInstance(activity, stayDetail.index,
+                        bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
+                        bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), stayDetail.category, stayDetail.name)
+                startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON)
+
+            } else {
+                viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_detail_please_login),
+                        getString(R.string.dialog_btn_login_for_benefit), getString(R.string.dialog_btn_text_close), {
+                    startActivityForResult(LoginActivity.newInstance(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL),
+                            StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON)
+                    analytics.onEventDownloadCouponByLogin(activity, true)
+                }, {
+                    analytics.onEventDownloadCouponByLogin(activity, false)
+                }, {
+                    analytics.onEventDownloadCouponByLogin(activity, false)
+                }, { unLockAll() }, true)
+            }
+
+            analytics.onEventDownloadCoupon(activity, stayDetail.name)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onHideWishTooltipClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        DailyPreference.getInstance(activity).isWishTooltip = false
+        viewInterface.hideWishTooltip()
     }
 
     override fun onLoginClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        startActivityForResult(LoginActivity.newInstance(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL), StayDetailActivity.REQUEST_CODE_LOGIN)
     }
 
     override fun onRewardClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        startActivityForResult(RewardActivity.newInstance(activity), StayDetailActivity.REQUEST_CODE_REWARD)
     }
 
     override fun onRewardGuideClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        startActivityForResult(DailyWebActivity.newInstance(activity, getString(R.string.label_daily_reward),
+                DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigStaticUrlDailyReward), StayDetailActivity.REQUEST_CODE_WEB)
     }
 
     override fun onTrueAwardsClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let {
+            viewInterface.showTrueAwardsDialog(it.awards, DialogInterface.OnDismissListener { unLockAll() })
+
+            analytics.onEventTrueAwardsClick(activity, it.index)
+        } ?: Util.restartApp(activity)
     }
+
+
 }

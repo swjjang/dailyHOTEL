@@ -8,6 +8,10 @@ inline fun <R> String?.letNotEmpty(block: (String) -> R): R? {
     return this?.takeIf { !it.isTextEmpty() }?.let { block(it) }
 }
 
+inline fun <T> T?.filterIf(block: (T) -> Boolean, defaultNull: Boolean = false): Boolean {
+    return if (this == null) defaultNull else this.let { block(it) }
+}
+
 inline fun <T> Collection<T>?.takeNotEmpty(block: (Collection<T>) -> Unit) {
     this?.takeIf { it.isNotEmpty() }?.let { block(it) }
 }
@@ -18,4 +22,8 @@ fun CharSequence?.isTextEmpty(): Boolean {
 
 fun isTextEmpty(vararg textArray: CharSequence?): Boolean {
     return textArray.any { it.isTextEmpty() }
+}
+
+fun String?.takeNotEmptyThisAddStringButDefaultString(defaultString: String, addString: String?): String {
+    return if (isTextEmpty()) defaultString else this!! + addString.takeNotEmptyThisAddStringButDefaultString("", null)
 }
