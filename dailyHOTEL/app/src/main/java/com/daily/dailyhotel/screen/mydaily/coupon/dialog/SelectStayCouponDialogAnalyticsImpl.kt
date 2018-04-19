@@ -41,43 +41,37 @@ class SelectStayCouponDialogAnalyticsImpl : SelectStayCouponDialogInterface.Anal
 
     override fun onDownloadCoupon(activity: Activity, callByScreen: String, coupon: Coupon) {
         try {
-            val paramsMap = HashMap<String, String>()
+            val paramsMap = HashMap<String, String>().apply {
+                put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title)
+                put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem)
+                put(AnalyticsManager.KeyType.PRICE_OFF, coupon.amount.toString())
+                put(AnalyticsManager.KeyType.DOWNLOAD_DATE, DailyCalendar.format(Date(), "yyyyMMddHHmm"))
+                put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"))
+                put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode)
 
-            paramsMap[AnalyticsManager.KeyType.COUPON_NAME] = coupon.title
-            paramsMap[AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM] = coupon.availableItem
-            paramsMap[AnalyticsManager.KeyType.PRICE_OFF] = Integer.toString(coupon.amount)
-            paramsMap[AnalyticsManager.KeyType.DOWNLOAD_DATE] = DailyCalendar.format(Date(), "yyyyMMddHHmm")
-            paramsMap[AnalyticsManager.KeyType.EXPIRATION_DATE] = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm")
-            paramsMap[AnalyticsManager.KeyType.COUPON_CODE] = coupon.couponCode
+                // TODO : emily 가 상태에 대한 처리 하면 KIND_OF_COUPON 값 넣는거 수정 필요...
+                if (coupon.availableInGourmet && coupon.availableInStay) {
+                    put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.ALL)
+                } else if (coupon.availableInStay) {
+                    put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.STAY)
+                } else if (coupon.availableInGourmet) {
+                    put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.GOURMET)
+                }
 
+                val downloadFrom = when (callByScreen) {
+                    AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE -> "booking"
 
-            // TODO : emily 가 상태에 대한 처리 하면 KIND_OF_COUPON 값 넣는거 수정 필요...
-            if (coupon.availableInGourmet && coupon.availableInStay && coupon.availableInOutboundHotel) {
-                paramsMap[AnalyticsManager.KeyType.KIND_OF_COUPON] = AnalyticsManager.ValueType.ALL
-            } else if (coupon.availableInStay) {
-                paramsMap[AnalyticsManager.KeyType.KIND_OF_COUPON] = AnalyticsManager.ValueType.STAY
-            } else if (coupon.availableInGourmet) {
-                paramsMap[AnalyticsManager.KeyType.KIND_OF_COUPON] = AnalyticsManager.ValueType.GOURMET
+                    AnalyticsManager.Screen.DAILYHOTEL_DETAIL -> "detail"
+
+                    else -> ""
+                }
+
+                put(AnalyticsManager.KeyType.DOWNLOAD_FROM, downloadFrom)
+
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.COUPON_BOX
+                        , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "$downloadFrom-${coupon.title}", this)
             }
 
-            val downloadFrom = when (callByScreen) {
-                AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE -> {
-                    "booking"
-                }
-
-                AnalyticsManager.Screen.DAILYHOTEL_DETAIL -> {
-                    "detail"
-                }
-
-                else -> {
-                    ""
-                }
-            }
-
-            paramsMap[AnalyticsManager.KeyType.DOWNLOAD_FROM] = downloadFrom
-
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.COUPON_BOX
-                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "$downloadFrom-${coupon.title}", paramsMap)
         } catch (e: ParseException) {
             Crashlytics.log("Select Coupon::coupon.validTo: ${if (coupon != null) coupon.validTo else ""}")
             ExLog.d(e.toString())

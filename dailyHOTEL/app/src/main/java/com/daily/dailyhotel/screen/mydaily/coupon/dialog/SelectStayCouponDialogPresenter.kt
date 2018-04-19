@@ -146,6 +146,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
     @Synchronized
     override fun onRefresh(showProgress: Boolean) {
         if (isFinish || !isRefresh) {
+            unLockAll()
             return
         }
 
@@ -168,6 +169,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
 
         if (observable == null) {
             ExLog.d("sam : observable is null. check callByScreen = $callByScreen")
+            unLockAll()
             showEmptyCouponListDialog()
             return
         }

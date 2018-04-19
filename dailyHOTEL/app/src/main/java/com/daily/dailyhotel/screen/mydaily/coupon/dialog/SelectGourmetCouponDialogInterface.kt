@@ -30,7 +30,7 @@ interface SelectGourmetCouponDialogInterface {
     interface AnalyticsInterface : BaseAnalyticsInterface {
         fun onScreen(activity: Activity, emptyList: Boolean)
 
-        fun onCancelByPayment(activity: Activity, couponCount: Int, categoryCode: String, stayName: String, roomPrice: Int)
+        fun onCancelByPayment(activity: Activity, couponCount: Int)
 
         fun onSelectedCouponResult(activity: Activity, title: String)
 
