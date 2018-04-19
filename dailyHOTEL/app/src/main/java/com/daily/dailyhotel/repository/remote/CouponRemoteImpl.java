@@ -409,4 +409,40 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                 }
             });
     }
+
+    @Override
+    public Observable<Coupons> getGourmetCouponListByDetail(int gourmetIndex, String visitDay)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/coupons"//
+            : "NTkkNTQkMTA0JDkxJDExNCQ4JDEyMiQxNiQxMjUkMTIzJDI0JDExJDEwNCQxMTMkMTMyJDEwMSQ=$MzI0MTk1POUBM3OEUE1NjQ5RTFAwMDJBOTNGNjVDOEVCOUYxNzU3OEQxNzLkwNTEDwMzE1MTVCRTZFMkY3RDAyM0RBM0JCNHTE2ODXRCRPTkyM0WU4QMkU0Q0UFEMjZGPJQCzFA1RTE5Q0Q4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
+
+        return mDailyMobileService.getGourmetCouponListByDetail(Crypto.getUrlDecoderEx(URL, urlParams), visitDay) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
+            {
+                @Override
+                public Coupons apply(BaseDto<CouponsData> couponsDataBaseDto) throws Exception
+                {
+                    Coupons coupons;
+
+                    if (couponsDataBaseDto != null)
+                    {
+                        if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
+                        {
+                            coupons = couponsDataBaseDto.data.getCoupons();
+                        } else
+                        {
+                            throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return coupons;
+                }
+            });
+    }
 }

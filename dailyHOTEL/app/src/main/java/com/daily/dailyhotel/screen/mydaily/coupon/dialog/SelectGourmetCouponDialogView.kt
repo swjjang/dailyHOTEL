@@ -15,9 +15,9 @@ import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivitySelectCouponDialogDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 
-class SelectStayCouponDialogView(activity: SelectStayCouponDialogActivity, listener: SelectStayCouponDialogInterface.OnEventListener)//
-    : BaseDialogView<SelectStayCouponDialogInterface.OnEventListener, ActivitySelectCouponDialogDataBinding>(activity, listener)
-        , SelectStayCouponDialogInterface.ViewInterface, View.OnClickListener {
+class SelectGourmetCouponDialogView(activity: SelectGourmetCouponDialogActivity, listener: SelectGourmetCouponDialogInterface.OnEventListener)//
+    : BaseDialogView<SelectGourmetCouponDialogInterface.OnEventListener, ActivitySelectCouponDialogDataBinding>(activity, listener)
+        , SelectGourmetCouponDialogInterface.ViewInterface, View.OnClickListener {
 
     private lateinit var listAdapter: SelectCouponAdapter
 
@@ -35,12 +35,12 @@ class SelectStayCouponDialogView(activity: SelectStayCouponDialogActivity, liste
 
             positiveTextView.isEnabled = false
 
-            negativeTextView.setOnClickListener(this@SelectStayCouponDialogView)
-            positiveTextView.setOnClickListener(this@SelectStayCouponDialogView)
-            confirmTextView.setOnClickListener(this@SelectStayCouponDialogView)
+            negativeTextView.setOnClickListener(this@SelectGourmetCouponDialogView)
+            positiveTextView.setOnClickListener(this@SelectGourmetCouponDialogView)
+            confirmTextView.setOnClickListener(this@SelectGourmetCouponDialogView)
 
             punchMaskLayout.run {
-                    val drawable = BackgroundDrawable(context, this)
+                val drawable = BackgroundDrawable(context, this)
                 if (VersionUtils.isOverAPI16()) {
                     background = drawable
                 } else {

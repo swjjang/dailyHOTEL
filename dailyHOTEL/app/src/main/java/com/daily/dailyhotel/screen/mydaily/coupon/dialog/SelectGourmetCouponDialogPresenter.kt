@@ -12,42 +12,37 @@ import com.daily.dailyhotel.parcel.CouponParcel
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
 import com.daily.dailyhotel.util.isTextEmpty
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.model.time.StayBookingDay
 import com.twoheart.dailyhotel.util.Constants
-import com.twoheart.dailyhotel.util.DailyCalendar
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)//
-    : BaseExceptionPresenter<SelectStayCouponDialogActivity, SelectStayCouponDialogInterface.ViewInterface>(activity), SelectStayCouponDialogInterface.OnEventListener {
+class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActivity)//
+    : BaseExceptionPresenter<SelectGourmetCouponDialogActivity, SelectGourmetCouponDialogInterface.ViewInterface>(activity), SelectGourmetCouponDialogInterface.OnEventListener {
 
-    private val analytics: SelectStayCouponDialogInterface.AnalyticsInterface by lazy {
-        SelectStayCouponDialogAnalyticsImpl()
+    private val analytics: SelectGourmetCouponDialogInterface.AnalyticsInterface by lazy {
+        SelectGourmetCouponDialogAnalyticsImpl()
     }
 
     private var isSetOk: Boolean = false
-    private var stayIndex: Int = -1
-    private var roomIndex: Int = -1
-    private var roomPrice: Int = 0
-    private var maxCouponAmount: Int = 0
-    private var categoryCode: String = ""
-    private var stayName: String = ""
+    private var gourmetIndex: Int = -1
+    private var ticketIndexes: IntArray = IntArray(0)
+    private var ticketCounts: IntArray = IntArray(0)
+    private var visitDay: String = ""
+    private var gourmetName: String = ""
     private lateinit var callByScreen: String
-    private val stayBookingDay: StayBookingDay by lazy {
-        StayBookingDay()
-    }
+    private var maxCouponAmount: Int = 0
 
     private val couponRemoteImpl: CouponRemoteImpl by lazy {
         CouponRemoteImpl()
     }
 
-    override fun createInstanceViewInterface(): SelectStayCouponDialogInterface.ViewInterface {
-        return SelectStayCouponDialogView(activity, this)
+    override fun createInstanceViewInterface(): SelectGourmetCouponDialogInterface.ViewInterface {
+        return SelectGourmetCouponDialogView(activity, this)
     }
 
-    override fun constructorInitialize(activity: SelectStayCouponDialogActivity) {
+    override fun constructorInitialize(activity: SelectGourmetCouponDialogActivity) {
         setContentView(R.layout.activity_select_coupon_dialog_data)
 
         isRefresh = true
@@ -64,27 +59,17 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
                 false
             }
 
-            try {
-                stayBookingDay.setCheckInDay(getStringExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_CHECK_IN_DATE))
-                stayBookingDay.setCheckOutDay(getStringExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_CHECK_OUT_DATE))
-            } catch (e: Exception) {
-                ExLog.e(e.toString())
+            visitDay = getStringExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_VISIT_DAY)
+            gourmetIndex = getIntExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_GOURMET_INDEX, -1)
+            gourmetName = getStringExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_GOURMET_NAME)
 
-                Util.restartApp(activity)
-                false
-            }
-
-            stayIndex = getIntExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_STAY_IDX, -1)
-            categoryCode = getStringExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_CATEGORY_CODE)
-            stayName = getStringExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_STAY_NAME)
-
-            if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equals(callByScreen, true)) {
-                roomIndex = getIntExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_ROOM_IDX, -1)
-                roomPrice = getIntExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_ROOM_PRICE, 0)
+            if (AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equals(callByScreen, true)) {
+                ticketIndexes = getIntArrayExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_TICKET_INDEXES)
+                ticketCounts = getIntArrayExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_TICKET_COUNTS)
             }
 
             true
-        } ?: false
+        } ?: true
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -109,17 +94,16 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
     override fun onFinish() {
         super.onFinish()
 
-        if (!isSetOk) {
-
-            if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equals(callByScreen, true)) {
-                analytics.onCancelByPayment(activity, viewInterface.getCouponCount(), categoryCode, stayName, roomPrice)
+        if (isSetOk) {
+            if (AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equals(callByScreen, true)) {
+                analytics.onCancelByPayment(activity, viewInterface.getCouponCount())
             }
 
-            val intent = Intent().apply {
-                putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+            val intent: Intent = Intent().apply {
+                putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
             }
 
-            activity.setResult(Activity.RESULT_CANCELED, intent)
+            activity.setResult(Activity.RESULT_OK, intent)
         }
     }
 
@@ -150,16 +134,21 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
             return
         }
 
+        if (visitDay.isTextEmpty()) {
+            Util.restartApp(activity)
+            return
+        }
+
         isRefresh = false
         screenLock(showProgress)
 
         var observable: Observable<Coupons>? = when (callByScreen) {
-            AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE -> {
-                couponRemoteImpl.getStayCouponListByPayment(stayIndex, roomIndex, stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT))
+            AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE -> {
+                couponRemoteImpl.getGourmetCouponListByPayment(ticketIndexes, ticketCounts)
             }
 
-            AnalyticsManager.Screen.DAILYHOTEL_DETAIL -> {
-                couponRemoteImpl.getStayCouponListByDetail(stayIndex, stayBookingDay.getCheckInDay("yyyy-MM-dd"), stayBookingDay.nights)
+            AnalyticsManager.Screen.DAILYGOURMET_DETAIL -> {
+                couponRemoteImpl.getGourmetCouponListByDetail(gourmetIndex, visitDay)
             }
 
             else -> {
@@ -179,7 +168,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
             maxCouponAmount = it.maxCouponAmount
 
             when (callByScreen) {
-                AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE -> {
+                AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE -> {
                     if (list.isEmpty()) {
                         showEmptyCouponListDialog()
                     } else {
@@ -193,7 +182,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
                     analytics.onScreen(activity, list.isEmpty())
                 }
 
-                AnalyticsManager.Screen.DAILYHOTEL_DETAIL -> {
+                AnalyticsManager.Screen.DAILYGOURMET_DETAIL -> {
                     viewInterface.setVisibility(true)
 
                     var hasDownloadable = list.any {
@@ -211,7 +200,6 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
             }
 
             unLockAll()
-
         }, {
             onHandleErrorAndFinish(it)
         }))
@@ -229,8 +217,8 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
         isSetOk = true
 
         val intent = Intent().apply {
-            putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, CouponParcel(coupon))
-            putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+            putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, CouponParcel(coupon))
+            putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
         }
 
         setResult(Activity.RESULT_OK, intent)
@@ -248,13 +236,13 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
 
         addCompositeDisposable(couponRemoteImpl.getDownloadCoupon(coupon.couponCode)
                 .observeOn(AndroidSchedulers.mainThread()).subscribe({
-            analytics.onDownloadCoupon(activity, callByScreen, coupon)
+                    analytics.onDownloadCoupon(activity, callByScreen, coupon)
 
-            isRefresh = true
-            onRefresh(true)
-        }, {
-            onHandleError(it)
-        }))
+                    isRefresh = true
+                    onRefresh(true)
+                }, {
+                    onHandleError(it)
+                }))
     }
 
     private fun showEmptyCouponListDialog() {
