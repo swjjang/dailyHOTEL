@@ -17,7 +17,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     }
 
     override fun constructorInitialize(activity: StayRoomsActivity) {
-        setContentView(R.layout.activity_copy_data)
+        setContentView(R.layout.activity_stay_rooms_data)
 
         isRefresh = true
     }
