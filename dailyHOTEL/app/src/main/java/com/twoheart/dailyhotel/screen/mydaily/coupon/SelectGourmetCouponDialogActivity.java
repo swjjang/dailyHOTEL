@@ -31,6 +31,7 @@ import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class SelectGourmetCouponDialogActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
