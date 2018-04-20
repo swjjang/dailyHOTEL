@@ -637,6 +637,7 @@ public class AnalyticsManager
         public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
         public static final String DAILY_HOTEL_UNAVAILABLE_COUPON_LIST = "DailyHotel_UnavailableCouponList";
         public static final String DAILY_GOURMET_AVAILABLE_COUPON_LIST = "DailyGourmet_AvailableCouponList";
+        public static final String DAILY_GOURMET_UNAVAILABLE_COUPON_LIST = "DailyGourmet_UnavailableCouponList";
         public static final String MENU_COUPON_REGISTRATION = "Menu_CouponRegistration";
         //
         public static final String SEARCH_MAIN = "SearchScreenView";

@@ -1,5 +1,9 @@
 package com.daily.dailyhotel.repository.remote;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -11,10 +15,13 @@ import com.twoheart.dailyhotel.network.dto.GoogleMapListDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -163,5 +170,48 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
         }
 
         return null;
+    }
+
+    @Override
+    public Observable<String> getLocationRegionName(Context context, String regionName //
+        , double latitude, double longitude, boolean isCountryName)
+    {
+        if (!DailyTextUtils.isTextEmpty(regionName)) {
+            return Observable.just(regionName);
+        }
+
+        return Observable.defer(new Callable<ObservableSource<String>>()
+        {
+            @Override
+            public ObservableSource<String> call() throws Exception
+            {
+                Geocoder geocoder = new Geocoder(context, Locale.KOREA);
+
+                String result = "";
+
+                try
+                {
+                    List<Address> list = geocoder.getFromLocation(latitude, longitude, 10);
+                    if (list != null && list.size() > 0)
+                    {
+                        for (Address address : list)
+                        {
+                            String checkString = isCountryName ? address.getCountryName() : address.getLocality();
+
+                            if (DailyTextUtils.isTextEmpty(checkString) == false)
+                            {
+                                result = checkString;
+                                break;
+                            }
+                        }
+                    }
+                } catch (IOException e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                return Observable.just(result);
+            }
+        }).subscribeOn(Schedulers.io());
     }
 }

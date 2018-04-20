@@ -6,8 +6,6 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,6 +39,7 @@ import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
@@ -52,6 +51,7 @@ import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivit
 import com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectGourmetCouponDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -61,7 +61,6 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
-import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -74,7 +73,6 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -83,11 +81,13 @@ import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
 
@@ -124,6 +124,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
+    private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
     CartLocalImpl mCartLocalImpl;
 
     int mGourmetIndex, mPriceFromList;
@@ -247,6 +248,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mCalendarImpl = new CalendarImpl();
         mRecentlyLocalImpl = new RecentlyLocalImpl();
         mCartLocalImpl = new CartLocalImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         setStatus(STATUS_NONE);
 
@@ -1634,33 +1636,32 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         String regionName = mGourmetDetail.province == null ? null : mGourmetDetail.province.name;
 
-        if (DailyTextUtils.isTextEmpty(regionName))
+        addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationRegionName(getActivity(), regionName //
+            , mGourmetDetail.latitude, mGourmetDetail.longitude, false) //
+            .flatMap(new Function<String, ObservableSource<Boolean>>()
         {
-            Geocoder geocoder = new Geocoder(getActivity(), Locale.KOREA);
-
-            try
+            @Override
+            public ObservableSource<Boolean> apply(String regionString) throws Exception
             {
-                List<Address> list = geocoder.getFromLocation(mGourmetDetail.latitude, mGourmetDetail.longitude, 10);
-                if (list != null && list.size() > 0)
-                {
-                    for (Address address : list)
-                    {
-                        if (DailyTextUtils.isTextEmpty(address.getLocality()) == false)
-                        {
-                            regionName = address.getLocality();
-                            break;
-                        }
-                    }
-                }
-            } catch (IOException e)
-            {
-                ExLog.d(e.toString());
+                return mRecentlyLocalImpl.addRecentlyItem(getActivity(), Constants.ServiceType.GOURMET //
+                    , mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, regionString, true);
             }
-        }
+        }).observeOn(Schedulers.io()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    // nothing
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onReportError(throwable);
+                }
+            }));
 
-        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
-            , Constants.ServiceType.GOURMET, mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, regionName, true) //
-            .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);

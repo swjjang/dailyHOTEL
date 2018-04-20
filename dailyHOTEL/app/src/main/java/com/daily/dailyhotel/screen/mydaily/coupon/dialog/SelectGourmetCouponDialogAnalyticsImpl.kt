@@ -9,25 +9,23 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
 import java.text.ParseException
 import java.util.*
 
-class SelectStayCouponDialogAnalyticsImpl : SelectStayCouponDialogInterface.AnalyticsInterface {
+class SelectGourmetCouponDialogAnalyticsImpl : SelectGourmetCouponDialogInterface.AnalyticsInterface {
     override fun onScreen(activity: Activity, emptyList: Boolean) {
-        val screen = if (emptyList) AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST else AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST
-
+        val screen : String  = if(emptyList) AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST else AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST
         AnalyticsManager.getInstance(activity).recordScreen(activity, screen, null)
     }
 
-    override fun onCancelByPayment(activity: Activity, couponCount: Int, categoryCode: String, stayName: String, roomPrice: Int) {
+    override fun onCancelByPayment(activity: Activity, couponCount: Int) {
         try {
             when (couponCount) {
                 0 -> {
                     // empty list
-                    val label = "$categoryCode-$stayName-$roomPrice"
-                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_COUPON_NOT_FOUND, label, null)
                 }
 
                 else -> {
-                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,
-                            AnalyticsManager.Action.HOTEL_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CANCEL, null)
+                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS
+                            , AnalyticsManager.Action.GOURMET_USING_COUPON_CANCEL_CLICKED, AnalyticsManager.Label.GOURMET_USING_COUPON_CANCEL, null)
+
                 }
             }
         } catch (e: Exception) {
@@ -36,11 +34,13 @@ class SelectStayCouponDialogAnalyticsImpl : SelectStayCouponDialogInterface.Anal
     }
 
     override fun onSelectedCouponResult(activity: Activity, title: String) {
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_COUPON_SELECTED, title, null)
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS
+                , AnalyticsManager.Action.GOURMET_COUPON_SELECTED, title, null)
     }
 
     override fun onDownloadCoupon(activity: Activity, callByScreen: String, coupon: Coupon) {
         try {
+
             val paramsMap = HashMap<String, String>().apply {
                 put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title)
                 put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem)
@@ -59,25 +59,28 @@ class SelectStayCouponDialogAnalyticsImpl : SelectStayCouponDialogInterface.Anal
                 }
 
                 val downloadFrom = when (callByScreen) {
-                    AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE -> "booking"
+                    AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE -> "booking"
 
-                    AnalyticsManager.Screen.DAILYHOTEL_DETAIL -> "detail"
+                    AnalyticsManager.Screen.DAILYGOURMET_DETAIL -> "detail"
 
                     else -> ""
                 }
 
                 put(AnalyticsManager.KeyType.DOWNLOAD_FROM, downloadFrom)
 
-                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.COUPON_BOX
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.COUPON_BOX//
                         , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "$downloadFrom-${coupon.title}", this)
             }
 
+            if (AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equals(callByScreen, true)) {
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                        , AnalyticsManager.Action.GOURMET_COUPON_DOWNLOADED, coupon.title, null)
+            }
         } catch (e: ParseException) {
             Crashlytics.log("Select Coupon::coupon.validTo: ${if (coupon != null) coupon.validTo else ""}")
             ExLog.d(e.toString())
         } catch (e: Exception) {
             ExLog.d(e.toString())
         }
-
     }
 }

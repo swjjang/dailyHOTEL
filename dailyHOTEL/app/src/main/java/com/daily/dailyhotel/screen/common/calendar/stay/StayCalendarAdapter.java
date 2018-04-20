@@ -316,7 +316,7 @@ public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // checkIn만 체크된 경우
-        if (yyyyMMdd > mCheckInDay && mCheckOutDay == 0)
+        if (mCheckInDay > 0 && yyyyMMdd > mCheckInDay && mCheckOutDay == 0)
         {
             if (firstSoldOutDayAfterCheckInDay == 0)
             {

@@ -31,6 +31,7 @@ import com.daily.dailyhotel.entity.GourmetPaymentMenu;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
+import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
@@ -42,6 +43,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.payment.PaymentWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
+import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectGourmetCouponDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -51,7 +53,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
@@ -518,7 +519,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                     if (resultCode == Activity.RESULT_OK)
                     {
-                        Coupon coupon = data.getParcelableExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                        CouponParcel couponParcel = data.getParcelableExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                        Coupon coupon = new Coupon(couponParcel.getCoupon());
                         setCoupon(coupon);
                     } else
                     {

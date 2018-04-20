@@ -17,7 +17,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
+@Deprecated
 public class SelectGourmetCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
