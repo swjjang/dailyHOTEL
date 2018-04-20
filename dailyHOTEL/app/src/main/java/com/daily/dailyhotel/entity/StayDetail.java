@@ -115,6 +115,11 @@ public class StayDetail extends Configurations
         return false;
     }
 
+    public List<StayRoom> getRoom(String filter)
+    {
+        return null;
+    }
+
     public enum Pictogram
     {
         PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),

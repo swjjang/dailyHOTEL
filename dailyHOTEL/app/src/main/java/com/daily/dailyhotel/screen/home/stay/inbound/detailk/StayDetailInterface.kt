@@ -7,10 +7,7 @@ import android.widget.CompoundButton
 import com.daily.base.BaseAnalyticsInterface
 import com.daily.base.BaseDialogViewInterface
 import com.daily.base.OnBaseEventListener
-import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.entity.StayRoom
-import com.daily.dailyhotel.entity.TrueAwards
+import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
 import io.reactivex.Observable
@@ -28,33 +25,67 @@ interface StayDetailInterface {
         fun setSharedElementTransitionEnabled(enabled: Boolean, gradientType: StayDetailActivity.TransGradientType)
 
 
-
-
         fun showWishTooltip()
 
         fun hideWishTooltip()
 
 
+        fun setWishCount(count: Int)
 
+        fun setWishSelected(selected: Boolean)
+
+        fun setVRVisible(visible: Boolean)
+
+        fun setMoreImageVisible(visible: Boolean)
+
+        fun setImageList(imageList: List<DetailImageInformation>)
+
+        fun setBaseInformation()
+
+        fun setTrueAwardsVisible(visible: Boolean)
+
+        fun setTrueReview()
+
+        fun setBenefit()
+
+        fun setRoomFilter()
+
+        fun setRoomList()
+
+        fun setDailyComment()
+
+        fun setAmenities()
+
+        fun setAddress()
+
+        fun setCheckDateInformation()
+
+        fun setDetailInformation()
+
+        fun setBreakfastInformation()
+
+        fun setCancellationAndRefundPolicy()
+
+        fun setWaitingBookingVisible()
 
         fun setRewardVisible(visible: Boolean)
 
-        fun setRewardMember(titleText: String, optionText: String, nights: Int, descriptionText: String)
+        fun setRewardMemberInformation(titleText: String, optionText: String, nights: Int, descriptionText: String)
 
-        fun setRewardNonMember(titleText: String, optionText: String, campaignFreeNights: Int, descriptionText: String)
+        fun setRewardNonMemberInformation(titleText: String, optionText: String, campaignFreeNights: Int, descriptionText: String)
 
         fun startRewardStickerAnimation()
 
         fun stopRewardStickerAnimation()
 
-
+        fun setConciergeInformation()
 
 
         fun scrollTop()
 
         fun showShareDialog(listener: DialogInterface.OnDismissListener)
 
-        fun showWishView(myWish: Boolean): Observable<Boolean>
+        fun showWishPopup(myWish: Boolean): Observable<Boolean>
 
         fun showConciergeDialog(listener: DialogInterface.OnDismissListener)
 
@@ -64,22 +95,10 @@ interface StayDetailInterface {
 
         fun showTrueAwardsDialog(trueAwards: TrueAwards, onDismissListener: DialogInterface.OnDismissListener)
 
-        fun setTrueVRVisible(visible: Boolean)
 
+        fun setActionButtonText(text: String)
 
-
-        fun setWishCount(count: Int)
-
-        fun setWishSelected(selected: Boolean)
-
-
-
-
-
-
-
-
-
+        fun setActionButtonEnabled(enabled: Boolean)
     }
 
     interface OnEventListener : OnBaseEventListener {

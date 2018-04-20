@@ -282,7 +282,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             return;
                         }
 
-                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
                         setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         mShowCalendar = externalDeepLink.isShowCalendar();

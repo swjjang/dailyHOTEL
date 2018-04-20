@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
 
+import android.content.DialogInterface
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.graphics.drawable.PaintDrawable
@@ -8,7 +9,10 @@ import android.graphics.drawable.shapes.RectShape
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.view.View
+import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
+import com.daily.dailyhotel.entity.DetailImageInformation
+import com.daily.dailyhotel.entity.TrueAwards
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding
 import io.reactivex.Observable
@@ -28,8 +32,15 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.toolbarView.setOnBackClickListener { eventListener.onBackClick() }
     }
 
-    override fun getSharedElementTransition(gradientType: Int): Observable<Boolean>? {
-        return null
+    override fun setInitializedLayout(name: String?, url: String?) {
+
+    }
+
+    override fun setTransitionVisible(visible: Boolean) {
+    }
+
+    override fun getSharedElementTransition(gradientType: StayDetailActivity.TransGradientType): Observable<Boolean> {
+        return Observable.just(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -57,11 +68,110 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
-    override fun setInitializedLayout(name: String?, url: String?) {
-
+    override fun showWishTooltip() {
     }
 
-    override fun setTransitionVisible(visible: Boolean) {
+    override fun hideWishTooltip() {
+    }
+
+    override fun setWishCount(count: Int) {
+    }
+
+    override fun setWishSelected(selected: Boolean) {
+    }
+
+    override fun setVRVisible(visible: Boolean) {
+    }
+
+    override fun setMoreImageVisible(visible: Boolean) {
+    }
+
+    override fun setImageList(imageList: List<DetailImageInformation>) {
+    }
+
+    override fun setBaseInformation() {
+    }
+
+    override fun setTrueAwardsVisible(visible: Boolean) {
+    }
+
+    override fun setTrueReview() {
+    }
+
+    override fun setBenefit() {
+    }
+
+    override fun setRoomFilter() {
+    }
+
+    override fun setRoomList() {
+    }
+
+    override fun setDailyComment() {
+    }
+
+    override fun setAmenities() {
+    }
+
+    override fun setAddress() {
+    }
+
+    override fun setCheckDateInformation() {
+    }
+
+    override fun setDetailInformation() {
+    }
+
+    override fun setBreakfastInformation() {
+    }
+
+    override fun setCancellationAndRefundPolicy() {
+    }
+
+    override fun setWaitingBookingVisible() {
+    }
+
+    override fun setRewardVisible(visible: Boolean) {
+    }
+
+    override fun setRewardMemberInformation(titleText: String, optionText: String, nights: Int, descriptionText: String) {
+    }
+
+    override fun setRewardNonMemberInformation(titleText: String, optionText: String, campaignFreeNights: Int, descriptionText: String) {
+    }
+
+    override fun startRewardStickerAnimation() {
+    }
+
+    override fun stopRewardStickerAnimation() {
+    }
+
+    override fun setConciergeInformation() {
+    }
+
+    override fun scrollTop() {
+    }
+
+    override fun showShareDialog(listener: DialogInterface.OnDismissListener) {
+    }
+
+    override fun showWishPopup(myWish: Boolean): Observable<Boolean> {
+        return Observable.just(true)
+    }
+
+    override fun showConciergeDialog(listener: DialogInterface.OnDismissListener) {
+    }
+
+    override fun showTrueVRDialog(checkedChangeListener: CompoundButton.OnCheckedChangeListener, positiveListener: View.OnClickListener, onDismissListener: DialogInterface.OnDismissListener) {
+    }
+
+    override fun showTrueAwardsDialog(trueAwards: TrueAwards, onDismissListener: DialogInterface.OnDismissListener) {
+    }
+
+    override fun setActionButtonText(text: String) {
+    }
+
+    override fun setActionButtonEnabled(enabled: Boolean) {
     }
 
 
