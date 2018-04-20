@@ -7,8 +7,6 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +43,7 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
@@ -84,17 +83,18 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
@@ -131,6 +131,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
+    private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
 
     int mStayIndex, mListTotalPrice;
     private String mStayName, mStayEnglishName;
@@ -218,6 +219,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mCommonRemoteImpl = new CommonRemoteImpl();
         mProfileRemoteImpl = new ProfileRemoteImpl();
         mRecentlyLocalImpl = new RecentlyLocalImpl();
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl();
 
         setPeople(People.DEFAULT_ADULTS, null);
 
@@ -1609,25 +1611,32 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         try
         {
-            String regionName = null;
-            Geocoder geocoder = new Geocoder(getActivity(), Locale.KOREA);
-
-            List<Address> list = geocoder.getFromLocation(stayOutboundDetail.latitude, stayOutboundDetail.longitude, 10);
-            if (list != null && list.size() > 0)
-            {
-                for (Address address : list)
+            addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationRegionName(getActivity() //
+                , null, stayOutboundDetail.latitude, stayOutboundDetail.longitude, true) //
+                .flatMap(new Function<String, ObservableSource<Boolean>>()
                 {
-                    if (DailyTextUtils.isTextEmpty(address.getCountryName()) == false)
+                    @Override
+                    public ObservableSource<Boolean> apply(String regionString) throws Exception
                     {
-                        regionName = address.getCountryName();
-                        break;
+                        return mRecentlyLocalImpl.addRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY //
+                            , stayOutboundDetail.index,  stayOutboundDetail.name, null, mImageUrl //
+                            , regionString, false);
                     }
-                }
-            }
-
-            addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
-                , Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, regionName, false) //
-                .observeOn(Schedulers.io()).subscribe());
+                }).observeOn(Schedulers.io()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+                        // nothing
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onReportError(throwable);
+                    }
+                }));
         } catch (Exception e)
         {
             ExLog.d(e.getMessage());

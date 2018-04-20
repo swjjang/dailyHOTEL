@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import android.content.Context;
+
 import com.daily.dailyhotel.entity.GoogleAddress;
 
 import io.reactivex.Observable;
@@ -11,4 +13,7 @@ import io.reactivex.Observable;
 public interface GoogleAddressInterface
 {
     Observable<GoogleAddress> getLocationAddress(double latitude, double longitude);
+
+    Observable<String> getLocationRegionName(Context context, String regionName //
+        , double latitude, double longitude, boolean isCountryName);
 }
