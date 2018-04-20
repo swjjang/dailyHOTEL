@@ -12,8 +12,8 @@ inline fun <T> T?.filterIf(block: (T) -> Boolean, defaultNull: Boolean = false):
     return if (this == null) defaultNull else this.let { block(it) }
 }
 
-inline fun <T> Collection<T>?.takeNotEmpty(block: (Collection<T>) -> Unit) {
-    this?.takeIf { it.isNotEmpty() }?.let { block(it) }
+inline fun <R> Boolean?.runTrue(block: () -> R?): R? {
+    return this.takeIf { it == true }?.let { block() }
 }
 
 fun CharSequence?.isTextEmpty(): Boolean {

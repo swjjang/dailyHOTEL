@@ -17,21 +17,38 @@ import io.reactivex.Observable
 
 interface StayDetailInterface {
     interface ViewInterface : BaseDialogViewInterface {
-        fun getSharedElementTransition(gradientType: StayDetailActivity.TransGradientType): Observable<Boolean>
+
 
         fun setInitializedLayout(name: String?, url: String?)
 
         fun setTransitionVisible(visible: Boolean)
 
+        fun getSharedElementTransition(gradientType: StayDetailActivity.TransGradientType): Observable<Boolean>
+
         fun setSharedElementTransitionEnabled(enabled: Boolean, gradientType: StayDetailActivity.TransGradientType)
+
+
+
 
         fun showWishTooltip()
 
         fun hideWishTooltip()
 
-        fun startCampaignStickerAnimation()
 
-        fun stopCampaignStickerAnimation()
+
+
+        fun setRewardVisible(visible: Boolean)
+
+        fun setRewardMember(titleText: String, optionText: String, nights: Int, descriptionText: String)
+
+        fun setRewardNonMember(titleText: String, optionText: String, campaignFreeNights: Int, descriptionText: String)
+
+        fun startRewardStickerAnimation()
+
+        fun stopRewardStickerAnimation()
+
+
+
 
         fun scrollTop()
 
@@ -46,6 +63,23 @@ interface StayDetailInterface {
                              onDismissListener: DialogInterface.OnDismissListener)
 
         fun showTrueAwardsDialog(trueAwards: TrueAwards, onDismissListener: DialogInterface.OnDismissListener)
+
+        fun setTrueVRVisible(visible: Boolean)
+
+
+
+        fun setWishCount(count: Int)
+
+        fun setWishSelected(selected: Boolean)
+
+
+
+
+
+
+
+
+
     }
 
     interface OnEventListener : OnBaseEventListener {

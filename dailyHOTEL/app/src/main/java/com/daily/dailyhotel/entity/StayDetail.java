@@ -110,6 +110,11 @@ public class StayDetail extends Configurations
         mBenefitContentList = benefitContentList;
     }
 
+    public boolean hasTrueVR()
+    {
+        return false;
+    }
+
     public enum Pictogram
     {
         PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),

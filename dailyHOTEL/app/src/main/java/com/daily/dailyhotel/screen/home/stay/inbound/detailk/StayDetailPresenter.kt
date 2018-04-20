@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -34,9 +35,7 @@ import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
 import com.daily.dailyhotel.storage.preference.DailyUserPreference
-import com.daily.dailyhotel.util.filterIf
-import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.takeNotEmptyThisAddStringButDefaultString
+import com.daily.dailyhotel.util.*
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog
@@ -45,9 +44,10 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.*
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
-import io.reactivex.Completable
+import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Function
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -428,10 +428,30 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun writeRecentlyViewedPlace(stayDetail: StayDetail) {
-        addCompositeDisposable(recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
-                stayDetail.index, stayDetail.name, null,
-                if (defaultImageUrl.isTextEmpty()) stayDetail.defaultImageUrl else defaultImageUrl,
-                null, true).subscribe())
+
+        val regionName = stayDetail.province?.name
+        val singleObservable: Single<String> = if (regionName.isTextEmpty()) {
+            Single.create(SingleOnSubscribe<String> { emitter ->
+                try {
+                    Geocoder(activity, Locale.KOREA).getFromLocation(stayDetail.latitude, stayDetail.longitude, 10)?.forEach {
+                        it.locality?.takeNotEmpty {
+                            emitter.onSuccess(it)
+                        } ?: emitter.onSuccess("")
+                    }
+                } catch (e: Exception) {
+                    ExLog.e(e.toString())
+                }
+            }).subscribeOn(Schedulers.io())
+        } else {
+            Single.just(regionName)
+        }
+
+        addCompositeDisposable(singleObservable.flatMapObservable(Function<String, ObservableSource<Boolean>> {
+            recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
+                    stayDetail.index, stayDetail.name, null,
+                    if (defaultImageUrl.isTextEmpty()) stayDetail.defaultImageUrl else defaultImageUrl,
+                    it, false)
+        }).subscribe())
     }
 
     private fun showWishTooltip() {
@@ -859,5 +879,88 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         } ?: Util.restartApp(activity)
     }
 
+    private fun notifyDetailDataSetChanged() {
+        stayDetail?.let {
 
+            if (defaultImageUrl.isTextEmpty() && it.hasImageInformation()) {
+                defaultImageUrl = it.defaultImageUrl
+            }
+
+            status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
+
+            if (DailyPreference.getInstance(activity).trueVRSupport > 0 && it.hasTrueVR()) {
+            } else {
+                viewInterface.setTrueVRVisible(false)
+            }
+
+            when {
+                showCalendar -> {
+                    showCalendar = false
+
+                    if (it.hasRooms()) onCalendarClick()
+                }
+
+                showTrueVR -> {
+                    showTrueVR = false
+
+                    if (DailyPreference.getInstance(activity).trueVRSupport > 0) {
+                        onTrueVRClick()
+                    } else {
+                        viewInterface.showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null)
+                    }
+                }
+            }
+
+
+
+            hasDeepLink = false
+        } ?: Util.restartApp(activity)
+    }
+
+    private fun notifyRewardDataSetChanged() {
+        stayDetail?.let {
+            if (it.activeReward && it.provideRewardSticker) {
+                viewInterface.setRewardVisible(true)
+
+                if (DailyHotel.isLogin()) {
+                    viewInterface.setRewardMember(DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerCardTitleMessage,
+                            getString(R.string.label_reward_go_reward), it.rewardStickerCount,
+                            DailyRemoteConfigPreference.getInstance(activity).getKeyRemoteConfigRewardStickerMemberMessage(it.rewardStickerCount))
+
+                    viewInterface.stopCampaignStickerAnimation()
+                } else {
+                    val campaignEnabled = DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled
+                    val campaignFreeNights: Int;
+                    val descriptionText: String;
+
+                    if (campaignEnabled) {
+                        campaignFreeNights = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberCampaignFreeNights
+                        descriptionText = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberCampaignMessage
+                    } else {
+                        campaignFreeNights = 0
+                        descriptionText = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberDefaultMessage)
+                    }
+
+                    viewInterface.setRewardNonMember(DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerCardTitleMessage,
+                            getString(R.string.label_reward_login), campaignFreeNights, descriptionText)
+                            .also { campaignEnabled.runTrue { viewInterface.startCampaignStickerAnimation() } }
+                }
+            } else {
+                viewInterface.setRewardVisible(false)
+            }
+        } ?: Util.restartApp(activity)
+    }
+
+    private fun notifyWishDataSetChanged() {
+        stayDetail?.let {
+            notifyWishDataSetChanged(it.wishCount, it.myWish)
+        } ?: Util.restartApp(activity)
+    }
+
+    private fun notifyWishDataSetChanged(wishCount: Int, myWish: Boolean) {
+        stayDetail?.let {
+            viewInterface.setWishCount(wishCount)
+            viewInterface.setWishSelected(myWish)
+        } ?: Util.restartApp(activity)
+    }
 }
