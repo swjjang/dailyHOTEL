@@ -36,16 +36,16 @@ class DailyKotlinUtilsKtTest {
 
     @Test
     fun testReturnString() {
-        val name01 = "babo".returnString("suggest", null)
+        val name01 = "babo".takeNotEmptyThisAddStringButDefaultString("suggest", null)
         assertEquals("babao", name01)
 
-        val name02 = "babo".returnString("suggest", " me")
+        val name02 = "babo".takeNotEmptyThisAddStringButDefaultString("suggest", " me")
         assertEquals("babao me", name02)
 
-        val name03 = null.returnString("suggest", " me")
+        val name03 = null.takeNotEmptyThisAddStringButDefaultString("suggest", " me")
         assertEquals("suggest", name03)
 
-        val name04 = "".returnString("suggest", " me")
+        val name04 = "".takeNotEmptyThisAddStringButDefaultString("suggest", " me")
         assertEquals("suggest", name04)
     }
 }
