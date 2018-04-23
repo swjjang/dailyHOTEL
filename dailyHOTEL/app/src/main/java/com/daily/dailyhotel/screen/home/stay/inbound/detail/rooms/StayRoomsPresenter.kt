@@ -1,12 +1,16 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
 
 import android.content.Intent
-import android.os.Bundle
 import com.daily.dailyhotel.base.BaseExceptionPresenter
+import com.daily.dailyhotel.entity.Room
+import com.daily.dailyhotel.parcel.RoomParcel
 import com.twoheart.dailyhotel.R
 
 class StayRoomsPresenter(activity: StayRoomsActivity)//
     : BaseExceptionPresenter<StayRoomsActivity, StayRoomsInterface.ViewInterface>(activity), StayRoomsInterface.OnEventListener {
+
+    private val roomList = mutableListOf<Room>()
+    private var activeReward:Boolean = false
 
     private val analytics: StayRoomsInterface.AnalyticsInterface by lazy {
         StayRoomsAnalyticsImpl()
@@ -27,6 +31,12 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
     override fun onIntent(intent: Intent?): Boolean {
         return intent?.let {
+            val parcelList: ArrayList<RoomParcel> = it.getParcelableArrayListExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_LIST)
+            for (parcel in parcelList) {
+                roomList += parcel.room
+            }
+
+            activeReward = it.getBooleanExtra(StayRoomsActivity.INTENT_EXTRA_ACTIVE_REWARD, false)
             true
         } ?: true
     }
@@ -48,22 +58,6 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         if (isRefresh) {
             onRefresh(true)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    override fun onBackPressed(): Boolean {
-        return super.onBackPressed()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
