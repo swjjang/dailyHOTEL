@@ -21,6 +21,17 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/closeImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/navibar_ic_x"/>
+
         <com.daily.base.widget.DailyTextView
             android:id="@+id/menuIndicatorTextView"
             android:layout_width="wrap_content"
