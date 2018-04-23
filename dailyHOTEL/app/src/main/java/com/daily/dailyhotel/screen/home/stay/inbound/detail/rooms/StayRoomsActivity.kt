@@ -1,19 +1,32 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.daily.base.BaseActivity
+import com.daily.dailyhotel.entity.Room
+import com.daily.dailyhotel.parcel.RoomParcel
 import com.twoheart.dailyhotel.R
 
 class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
 
     companion object {
         @JvmStatic
-        fun newInstance(context: Context): Intent {
-            val intent = Intent(context, StayRoomsActivity::class.java)
+        fun newInstance(context: Context, roomList: ArrayList<Room> = ArrayList<Room>(), activeReward: Boolean = false): Intent {
+            return Intent(context, StayRoomsActivity::class.java).apply {
 
-            return intent
+                val list = arrayListOf<RoomParcel>()
+                for (room in roomList) {
+                    list.add(RoomParcel(room))
+                }
+
+                putParcelableArrayListExtra(INTENT_EXTRA_ROOM_LIST, list)
+                putExtra(INTENT_EXTRA_ACTIVE_REWARD, activeReward)
+            }
         }
+
+        const val INTENT_EXTRA_ROOM_LIST = "roomList"
+        const val INTENT_EXTRA_ACTIVE_REWARD = "activeReward"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
