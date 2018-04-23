@@ -97,6 +97,8 @@ public class DailyPreference
     private static final String KEY_STAY_OUTBOUND_SEARCH_CHECK_OUT_DATE = "223"; // 아웃바운드 검색 Check Out Date
     private static final String KEY_STAY_OUTBOUND_SEARCH_PEOPLE = "224"; // 아웃바운드 검색 숙박인원
 
+    private static final String KEY_STAY_PRODUCT_DETAIL_GUIDE = "225"; // 최초에 1회 스테이 객실 상세 가이드 띄우기
+
     // ----> DailyPreference 로 이동
     //    private static final String KEY_AUTHORIZATION = "1000";
     // <-----
@@ -776,6 +778,16 @@ public class DailyPreference
     public boolean getGourmetProductDetailGuide()
     {
         return getValue(mPreferences, KEY_GOURMET_PRODUCT_DETAIL_GUIDE, true);
+    }
+
+    public void setStayProductDetailGuide(boolean value)
+    {
+        setValue(mEditor, KEY_STAY_PRODUCT_DETAIL_GUIDE, value);
+    }
+
+    public boolean getStayProductDetailGuide()
+    {
+        return getValue(mPreferences, KEY_STAY_PRODUCT_DETAIL_GUIDE, true);
     }
 
     public void setStayOutboundSearchCheckInDate(String checkInDate)
