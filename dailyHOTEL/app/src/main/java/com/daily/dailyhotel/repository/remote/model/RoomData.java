@@ -78,7 +78,7 @@ public class RoomData
     public VrData vr;
 
     @JsonObject
-    public class AmountData
+    public static class AmountData
     {
         //        discountAverage (integer, optional): 연박 일일 결제 금액 ,
         @JsonField(name = "discountAverage")
@@ -98,7 +98,7 @@ public class RoomData
     }
 
     @JsonObject
-    public class CheckTimeData
+    public static class CheckTimeData
     {
         @JsonField(name = "checkIn")
         public String checkIn;
@@ -108,7 +108,7 @@ public class RoomData
     }
 
     @JsonObject
-    public class ConsecutiveData
+    public static class ConsecutiveData
     {
         @JsonField(name = "charge")
         public int charge;
@@ -120,15 +120,15 @@ public class RoomData
         {
             Room.Consecutive conse = new Room.Consecutive();
 
-            conse.charge = consecutive.charge;
-            conse.enable = consecutive.enable;
+            conse.charge = charge;
+            conse.enable = enable;
 
             return conse;
         }
     }
 
     @JsonObject
-    public class ImageData
+    public static class ImageData
     {
         @JsonField(name = "description")
         public String description;
@@ -143,16 +143,16 @@ public class RoomData
         {
             Room.Image roomImage = new Room.Image();
 
-            roomImage.description = image.description;
-            roomImage.url = image.url;
-            roomImage.primary = image.primary;
+            roomImage.description = description;
+            roomImage.url = url;
+            roomImage.primary = primary;
 
             return roomImage;
         }
     }
 
     @JsonObject
-    public class PersonData
+    public static class PersonData
     {
         //    fixed (integer, optional): 연박 일일 결제 금액
         @JsonField(name = "fixed")
@@ -174,17 +174,17 @@ public class RoomData
         {
             Room.Person person = new Room.Person();
 
-            person.fixed = persons.fixed;
-            person.extra = persons.extra;
-            person.extraCharge = persons.extraCharge;
-            person.breakfast = persons.breakfast;
+            person.fixed = fixed;
+            person.extra = extra;
+            person.extraCharge = extraCharge;
+            person.breakfast = breakfast;
 
             return person;
         }
     }
 
     @JsonObject
-    public class RoomChargeData
+    public static class RoomChargeData
     {
         //    descriptions (string, optional),
         @JsonField(name = "descriptions")
@@ -210,18 +210,18 @@ public class RoomData
         {
             Room.RoomCharge charge = new Room.RoomCharge();
 
-            charge.descriptions = roomCharge.descriptions;
-            charge.extraBed = roomCharge.extraBed;
-            charge.extraBedEnable = roomCharge.extraBedEnable;
-            charge.extraBedding = roomCharge.extraBedding;
-            charge.extraBeddingEnable = roomCharge.extraBeddingEnable;
+            charge.descriptions = descriptions;
+            charge.extraBed = extraBed;
+            charge.extraBedEnable = extraBedEnable;
+            charge.extraBedding = extraBedding;
+            charge.extraBeddingEnable = extraBeddingEnable;
 
             return charge;
         }
     }
 
     @JsonObject
-    public class VrData
+    public static class VrData
     {
         //    urls (Array[string], optional)
         @JsonField(name = "urls")
