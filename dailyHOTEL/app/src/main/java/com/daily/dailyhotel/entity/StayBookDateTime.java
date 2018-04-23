@@ -22,17 +22,21 @@ public class StayBookDateTime extends PlaceBookDateTime
     /**
      * @param dateTime ISO-8601
      */
-    public void setCheckInDateTime(String dateTime) throws Exception
+    public StayBookDateTime setCheckInDateTime(String dateTime) throws Exception
     {
         setTimeInString(dateTime);
+
+        return this;
     }
 
     /**
      * @param dateTime ISO-8601
      */
-    public void setCheckInDateTime(String dateTime, int afterDay) throws Exception
+    public StayBookDateTime setCheckInDateTime(String dateTime, int afterDay) throws Exception
     {
         setTimeInString(dateTime, afterDay);
+
+        return this;
     }
 
     public void setBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
@@ -55,14 +59,18 @@ public class StayBookDateTime extends PlaceBookDateTime
     /**
      * @param dateTime ISO-8601
      */
-    public void setCheckOutDateTime(String dateTime) throws Exception
+    public StayBookDateTime setCheckOutDateTime(String dateTime) throws Exception
     {
         DailyCalendar.setCalendarDateString(mCheckOutCalendar, dateTime);
+
+        return this;
     }
 
-    public void setCheckOutDateTime(String dateTime, int afterDay) throws Exception
+    public StayBookDateTime setCheckOutDateTime(String dateTime, int afterDay) throws Exception
     {
         DailyCalendar.setCalendarDateString(mCheckOutCalendar, dateTime, afterDay);
+
+        return this;
     }
 
     public String getCheckOutDateTime(String format)

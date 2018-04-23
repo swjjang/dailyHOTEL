@@ -684,7 +684,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             throw new NullPointerException("externalDeepLink == null || commonDateTime == null");
         }
 
-        StayBookDateTime bookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+        StayBookDateTime bookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
 
         int index;
         try
@@ -716,7 +716,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             throw new NullPointerException("externalDeepLink == null || commonDateTime == null");
         }
 
-        StayBookDateTime bookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+        StayBookDateTime bookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
         String word = externalDeepLink.getSearchWord();
 
         if (bookDateTime == null || DailyTextUtils.isTextEmpty(word) == true)

@@ -34,15 +34,13 @@ import java.util.*
 class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     : BaseExceptionPresenter<GourmetPreviewActivity, GourmetPreviewInterface.ViewInterface>(activity), GourmetPreviewInterface.OnEventListener {
 
-    private val gourmetRemoteImpl: GourmetRemoteImpl by lazy {
-        GourmetRemoteImpl()
-    }
-
-    private val commonRemoteImpl: CommonRemoteImpl by lazy {
+    private val analytics = GourmetPreviewAnalyticsImpl()
+    private val gourmetRemoteImpl = GourmetRemoteImpl()
+    private val commonRemoteImpl by lazy {
         CommonRemoteImpl()
     }
 
-    private lateinit var bookDateTime: GourmetBookDateTime
+    private val bookDateTime = GourmetBookDateTime()
     private var gourmetIndex: Int = 0
     private lateinit var gourmetName: String
     private lateinit var gourmetCategory: String
@@ -50,10 +48,6 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
 
     private lateinit var detail: GourmetDetail
     private var trueReviewCount: Int = 0
-
-    private val analytics: GourmetPreviewInterface.AnalyticsInterface by lazy {
-        GourmetPreviewAnalyticsImpl()
-    }
 
     override fun createInstanceViewInterface(): GourmetPreviewInterface.ViewInterface {
         return GourmetPreviewView(activity, this)
@@ -70,7 +64,7 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
             val visitDateTime = it.getStringExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME)
 
             try {
-                bookDateTime = GourmetBookDateTime(visitDateTime)
+                bookDateTime.setVisitDateTime(visitDateTime)
             } catch (e: Exception) {
                 return false
             }

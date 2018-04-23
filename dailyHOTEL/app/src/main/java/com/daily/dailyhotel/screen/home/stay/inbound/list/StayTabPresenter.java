@@ -1240,7 +1240,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefault() == false);
 
-            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
 
@@ -1301,7 +1301,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefault() == false);
 
-            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
             int stationIndex = externalDeepLink.getStationIndex();

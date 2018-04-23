@@ -16,6 +16,10 @@ inline fun <R> Boolean?.runTrue(block: () -> R?): R? {
     return this.takeIf { it == true }?.let { block() }
 }
 
+inline fun <R> Boolean?.runFalse(block: () -> R?): R? {
+    return this.takeIf { it == false }?.let { block() }
+}
+
 fun CharSequence?.isTextEmpty(): Boolean {
     return this == null || isBlank() || this == "null"
 }

@@ -1618,7 +1618,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 mGourmetCuration.setProvince(selectedProvince);
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
 
-                GourmetBookingDay gourmetBookingDay = externalDeepLink.getGourmetBookDateTime(todayDateTime.getCommonDateTime(), externalDeepLink).getGourmetBookingDay();
+                GourmetBookingDay gourmetBookingDay = externalDeepLink.getGourmetBookDateTime(todayDateTime.getCommonDateTime()).getGourmetBookingDay();
                 mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
 
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);

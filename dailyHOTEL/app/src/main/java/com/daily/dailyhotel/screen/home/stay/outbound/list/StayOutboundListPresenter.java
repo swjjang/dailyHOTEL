@@ -261,7 +261,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         stayOutboundSuggest.displayText = externalDeepLink.getTitle();
                         setSuggest(stayOutboundSuggest);
 
-                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
                         setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         setPeople(People.DEFAULT_ADULTS, null);

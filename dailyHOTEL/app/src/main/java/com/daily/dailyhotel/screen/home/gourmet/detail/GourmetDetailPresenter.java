@@ -307,7 +307,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         mShowCalendar = externalDeepLink.isShowCalendar();
                         mShowTrueVR = externalDeepLink.isShowVR();
 
-                        setGourmetBookDateTime(externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink).getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+                        setGourmetBookDateTime(externalDeepLink.getGourmetBookDateTime(commonDateTime).getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;

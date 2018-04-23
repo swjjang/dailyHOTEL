@@ -66,33 +66,16 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         AVERAGE, TOTAL
     }
 
-    private val analytics: StayDetailInterface.AnalyticsInterface by lazy {
-        StayDetailAnalyticsImpl()
-    }
-
-    private val stayRemoteImpl: StayRemoteImpl by lazy {
-        StayRemoteImpl()
-    }
-
-    private val commonRemoteImpl: CommonRemoteImpl by lazy {
-        CommonRemoteImpl()
-    }
-
-    private val profileRemoteImpl: ProfileRemoteImpl by lazy {
+    private val analytics = StayDetailAnalyticsImpl()
+    private val stayRemoteImpl = StayRemoteImpl()
+    private val commonRemoteImpl = CommonRemoteImpl()
+    private val profileRemoteImpl by lazy {
         ProfileRemoteImpl()
     }
 
-    private val calendarImpl: CalendarImpl by lazy {
-        CalendarImpl()
-    }
-
-    private val recentlyLocalImpl: RecentlyLocalImpl by lazy {
-        RecentlyLocalImpl()
-    }
-
-    private val appResearch: AppResearch by lazy {
-        AppResearch()
-    }
+    private val calendarImpl = CalendarImpl()
+    private val recentlyLocalImpl = RecentlyLocalImpl()
+    private val appResearch = AppResearch()
 
     private var stayIndex: Int = 0
     private var viewPrice: Int = 0
@@ -123,7 +106,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     override fun onIntent(intent: Intent?): Boolean {
         return intent?.let {
-
             if (it.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)) {
                 processDeepLink(it.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK))
             } else {
@@ -193,9 +175,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             defaultImageUrl = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL)
             viewPrice = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayDetailActivity.NONE_PRICE)
 
-            val checkInDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME)
-            val checkOutDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)
-            bookDateTime.setBookDateTime(checkInDateTime, checkOutDateTime)
+            bookDateTime.setCheckInDateTime(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME))
+                    .setCheckOutDateTime(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME))
+                    .validate().runFalse { throw IllegalArgumentException() }
 
             analytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS))
         } catch (e: Exception) {
@@ -245,7 +227,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (isRefresh) onRefresh(true)
 
         if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled) {
-            viewInterface.startCampaignStickerAnimation()
+            viewInterface.startRewardStickerAnimation()
         }
 
         appResearch.onResume(activity, getString(R.string.label_stay), stayIndex)
@@ -254,7 +236,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onPause() {
         super.onPause()
 
-        viewInterface.stopCampaignStickerAnimation()
+        viewInterface.stopRewardStickerAnimation()
 
         appResearch.onPause(activity, getString(R.string.label_stay), stayIndex)
     }
@@ -489,7 +471,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 val wish = !it.myWish
                 val wishCount = it.wishCount + if (wish) 1 else -1
 
-                notifyWishChanged(wishCount, wish)
+                notifyWishDataSetChanged(wishCount, wish)
 
                 processWish(it.index, wish)
             }
@@ -506,13 +488,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     it.myWish = wish
                     it.wishCount += if (wish) 1 else -1
 
-                    notifyWishChanged()
+                    notifyWishDataSetChanged()
 
-                    addCompositeDisposable(viewInterface.showWishView(it.myWish).subscribeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+                    addCompositeDisposable(viewInterface.showWishPopup(it.myWish).subscribeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
 
                     analytics.onEventWishClick(activity, bookDateTime, it, viewPrice, wish)
                 } else {
-                    notifyWishChanged(wishCount, wish)
+                    notifyWishDataSetChanged(it.wishCount, wish)
 
                     viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message, getString(R.string.dialog_btn_text_confirm), null);
 
@@ -522,7 +504,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }, {
             onHandleError(it)
 
-            stayDetail?.let { notifyWishChanged(it.wishCount, it.myWish) }
+            stayDetail?.let { notifyWishDataSetChanged(it.wishCount, it.myWish) }
         }))
     }
 
@@ -714,9 +696,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         DailyTextUtils.clipText(activity, address)
         DailyToast.showToast(activity, R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT)
 
-        stayDetail?.let {
-            analytics.onEventClipAddressClick(activity, it.name)
-        }
+        stayDetail?.let { analytics.onEventClipAddressClick(activity, it.name) }
     }
 
     override fun onNavigatorClick() {
@@ -890,7 +870,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             if (DailyPreference.getInstance(activity).trueVRSupport > 0 && it.hasTrueVR()) {
             } else {
-                viewInterface.setTrueVRVisible(false)
+                viewInterface.setVRVisible(false)
             }
 
             when {
@@ -923,11 +903,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 viewInterface.setRewardVisible(true)
 
                 if (DailyHotel.isLogin()) {
-                    viewInterface.setRewardMember(DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerCardTitleMessage,
+                    viewInterface.setRewardMemberInformation(DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerCardTitleMessage,
                             getString(R.string.label_reward_go_reward), it.rewardStickerCount,
                             DailyRemoteConfigPreference.getInstance(activity).getKeyRemoteConfigRewardStickerMemberMessage(it.rewardStickerCount))
 
-                    viewInterface.stopCampaignStickerAnimation()
+                    viewInterface.stopRewardStickerAnimation()
                 } else {
                     val campaignEnabled = DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled
                     val campaignFreeNights: Int;
@@ -938,12 +918,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         descriptionText = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberCampaignMessage
                     } else {
                         campaignFreeNights = 0
-                        descriptionText = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberDefaultMessage)
+                        descriptionText = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberDefaultMessage
                     }
 
-                    viewInterface.setRewardNonMember(DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerCardTitleMessage,
+                    viewInterface.setRewardNonMemberInformation(DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerCardTitleMessage,
                             getString(R.string.label_reward_login), campaignFreeNights, descriptionText)
-                            .also { campaignEnabled.runTrue { viewInterface.startCampaignStickerAnimation() } }
+                            .also { campaignEnabled.runTrue { viewInterface.startRewardStickerAnimation() } }
                 }
             } else {
                 viewInterface.setRewardVisible(false)
