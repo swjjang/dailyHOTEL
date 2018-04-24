@@ -229,17 +229,22 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onEventWishClick(Activity activity, int stayIndex, boolean isWish)
+    public void onEventWishClick(Activity activity, int stayIndex, String stayName, boolean isWish, boolean isListViewState)
     {
         if (activity == null)
         {
             return;
         }
 
-        String action = isWish ? AnalyticsManager.Action.WISHLIST_ON_LIST : AnalyticsManager.Action.WISHLIST_OFF_LIST;
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            , action, Integer.toString(stayIndex), null);
+        if (isListViewState)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                , isWish ? AnalyticsManager.Action.WISHLIST_ON_LIST : AnalyticsManager.Action.WISHLIST_OFF_LIST, Integer.toString(stayIndex), null);
+        } else
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                , "ob_" + (isWish ? "WishListOn_mapview" : "WishListOff_mapview"), stayName, null);
+        }
     }
 
     @Override

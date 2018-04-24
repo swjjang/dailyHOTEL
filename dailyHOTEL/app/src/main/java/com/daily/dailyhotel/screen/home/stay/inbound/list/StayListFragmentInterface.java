@@ -110,7 +110,7 @@ public interface StayListFragmentInterface
 
         void onEventStayClick(Activity activity, DailyCategoryType categoryType, StayTabPresenter.ViewType viewType, Stay stay);
 
-        void onEventWishClick(Activity activity, DailyCategoryType categoryType, boolean wish);
+        void onEventWishClick(Activity activity, DailyCategoryType categoryType, String stayName, boolean wish, boolean isListViewType);
 
         void onEventMarkerClick(Activity activity, DailyCategoryType categoryType, String name);
     }

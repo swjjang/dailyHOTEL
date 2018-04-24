@@ -120,15 +120,22 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     }
 
     @Override
-    public void onEventWishClick(Activity activity, boolean wish)
+    public void onEventWishClick(Activity activity, String stayName, boolean wish, boolean isListViewType)
     {
         if (activity == null)
         {
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-            , AnalyticsManager.Action.WISH_STAY, wish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        if (isListViewType)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.WISH_STAY, wish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        } else
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                , "stay_" + (wish ? "WishListOn_mapview" : "WishListOff_mapview"), stayName, null);
+        }
     }
 
     @Override

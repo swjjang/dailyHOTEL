@@ -254,7 +254,7 @@ public class DailyDeepLinkTest
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 3000));
+            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 4000));
             onView(withId(R.id.titleTextView)).check(matches(withText(searchKeyword)));
             onView(withId(R.id.subTitleTextView)).check(matches(withText(String.format(Locale.KOREA, "%s - %s, %d박 돋 성인2, 아동0"//
                 , bookDateTime.getCheckInDateTime("M.d(EEE)")//
@@ -269,7 +269,7 @@ public class DailyDeepLinkTest
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 3000));
+            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 4000));
             onView(withId(R.id.titleTextView)).check(matches(withText(searchKeyword)));
             onView(withId(R.id.subTitleTextView)).check(matches(withText(String.format(Locale.KOREA, "%s - %s, %d박 돋 성인2, 아동0"//
                 , bookDateTime.getCheckInDateTime("M.d(EEE)")//
@@ -285,7 +285,7 @@ public class DailyDeepLinkTest
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 3000));
+            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 4000));
             onView(withId(R.id.titleTextView)).check(matches(withText(searchKeyword)));
             onView(withId(R.id.subTitleTextView)).check(matches(withText(String.format(Locale.KOREA, "%s - %s, %d박 돋 성인2, 아동0"//
                 , weekBookDateTime.getCheckInDateTime("M.d(EEE)")//
@@ -299,7 +299,7 @@ public class DailyDeepLinkTest
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 3000));
+            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 4000));
             onView(withId(R.id.titleTextView)).check(matches(withText(searchKeyword)));
             onView(withId(R.id.subTitleTextView)).check(matches(withText(String.format(Locale.KOREA, "%s - %s, %d박 돋 성인2, 아동0"//
                 , bookDateTime.getCheckInDateTime("M.d(EEE)")//
@@ -314,7 +314,7 @@ public class DailyDeepLinkTest
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 3000));
+            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 4000));
             onView(withId(R.id.titleTextView)).check(matches(withText(searchKeyword)));
             onView(withId(R.id.subTitleTextView)).check(matches(withText(String.format(Locale.KOREA, "%s - %s, %d박 돋 성인2, 아동0"//
                 , bookDateTime.getCheckInDateTime("M.d(EEE)")//
@@ -330,7 +330,7 @@ public class DailyDeepLinkTest
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 3000));
+            onView(isRoot()).perform(waitFor(DELAY_SECONDS * 4000));
             onView(withId(R.id.titleTextView)).check(matches(withText(searchKeyword)));
             onView(withId(R.id.subTitleTextView)).check(matches(withText(String.format(Locale.KOREA, "%s - %s, %d박 돋 성인2, 아동0"//
                 , weekBookDateTime.getCheckInDateTime("M.d(EEE)")//
