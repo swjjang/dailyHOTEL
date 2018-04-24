@@ -1141,7 +1141,7 @@ public class SearchGourmetResultListFragmentPresenter extends BasePagerFragmentP
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
             , gourmet.index, !currentWish, AnalyticsManager.Screen.DAILYGOURMET_LIST), SearchGourmetResultTabActivity.REQUEST_CODE_WISH_DIALOG);
 
-        mAnalytics.onEventWishClick(getActivity(), !currentWish);
+        mAnalytics.onEventWishClick(getActivity(), gourmet.name, !currentWish, mViewType == SearchGourmetResultTabPresenter.ViewType.LIST);
     }
 
     void setViewType(SearchGourmetResultTabPresenter.ViewType viewType)

@@ -991,7 +991,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !currentWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
 
-        mAnalytics.onEventWishClick(getActivity(), mStayViewModel.categoryType, !currentWish);
+        mAnalytics.onEventWishClick(getActivity(), mStayViewModel.categoryType, stay.name, !currentWish, mViewType == StayTabPresenter.ViewType.LIST);
     }
 
     @Override

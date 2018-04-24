@@ -203,16 +203,22 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
     }
 
     @Override
-    public void onEventWishClick(Activity activity, DailyCategoryType categoryType, boolean wish)
+    public void onEventWishClick(Activity activity, DailyCategoryType categoryType, String stayName, boolean wish, boolean isListViewType)
     {
         if (activity == null)
         {
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-            , AnalyticsManager.Action.WISH_STAY, wish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
-
+        if (isListViewType)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.WISH_STAY, wish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        } else
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                , "stay_" + (wish ? "WishListOn_mapview" : "WishListOff_mapview"), stayName, null);
+        }
     }
 
     @Override

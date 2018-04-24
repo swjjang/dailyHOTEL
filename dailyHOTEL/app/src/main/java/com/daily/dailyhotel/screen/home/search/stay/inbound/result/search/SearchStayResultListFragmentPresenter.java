@@ -1269,7 +1269,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !currentWish, AnalyticsManager.Screen.DAILYHOTEL_LIST), SearchStayResultTabActivity.REQUEST_CODE_WISH_DIALOG);
 
-        mAnalytics.onEventWishClick(getActivity(), !currentWish);
+        mAnalytics.onEventWishClick(getActivity(), stay.name, !currentWish, mViewType == SearchStayResultTabPresenter.ViewType.LIST);
     }
 
     void setViewType(SearchStayResultTabPresenter.ViewType viewType)
