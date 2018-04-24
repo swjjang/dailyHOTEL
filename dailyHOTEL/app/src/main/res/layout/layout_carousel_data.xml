@@ -62,9 +62,7 @@
             android:transitionGroup="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleTextView">
-
-        </android.support.v7.widget.RecyclerView>
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
         <!-- 레이아웃 에니메이션이 동작할때 recyclerView 의 하단 마진이 가장 마지막에 동작함으로... 아래 뷰로 대신함 -->
         <View
