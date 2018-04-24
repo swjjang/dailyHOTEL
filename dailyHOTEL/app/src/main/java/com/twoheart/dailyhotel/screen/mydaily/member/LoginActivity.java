@@ -50,6 +50,7 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -124,6 +125,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+
+        if (DailyHotel.isLogin() == true)
+        {
+            finish();
+            return;
+        }
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
@@ -346,12 +353,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         Session.getCurrentSession().removeCallback(mKakaoSessionCallback);
 
-        if (VersionUtils.isOverAPI16() == true)
+        if (mScrollView != null)
         {
-            mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
-        } else
-        {
-            mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+            if (VersionUtils.isOverAPI16() == true)
+            {
+                mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
+            } else
+            {
+                mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+            }
         }
     }
 

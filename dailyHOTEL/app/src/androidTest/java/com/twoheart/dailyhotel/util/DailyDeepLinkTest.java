@@ -493,8 +493,8 @@ public class DailyDeepLinkTest
     @Test
     public void test_DeepLink_검색결과_캠페인태그_고메() throws Exception
     {
-        final String campaignTag = "#빕스할인";
-        final int campaignTagIndex = 185;
+        final String campaignTag = "#호텔뷔페";
+        final int campaignTagIndex = 207;
 
         final int randomDay = new Random(System.currentTimeMillis()).nextInt(30) + 1;
 
@@ -1383,7 +1383,7 @@ public class DailyDeepLinkTest
     public void test_DeepLink_예약상세_국내스테이() throws InterruptedException
     {
         final String aggregationId = "272b7cb5-a587-4d5b-9d45-a14f1f23f573";
-        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=20&v=bd&agi=" + aggregationId + "&pt=stay";
+        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=25&v=bd&agi=" + aggregationId + "&pt=stay";
 
         launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
@@ -1392,7 +1392,7 @@ public class DailyDeepLinkTest
 
         if (DailyHotel.isLogin() == true)
         {
-            onView(withId(R.id.placeNameTextView)).check(matches(withText("삼성 캘리포니아")));
+            onView(Matchers.allOf(withId(R.id.placeNameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.placeInformationLayout))))).check(matches(withText("삼성 캘리포니아")));
         }
     }
 
@@ -1400,7 +1400,7 @@ public class DailyDeepLinkTest
     public void test_DeepLink_예약상세_해외스테이() throws InterruptedException
     {
         final String aggregationId = "d6cb3662-9e75-4100-af04-9b92226d290b";
-        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=20&v=bd&agi=" + aggregationId + "&pt=stayOutbound";
+        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=25&v=bd&agi=" + aggregationId + "&pt=stayOutbound";
 
         launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
@@ -1417,16 +1417,16 @@ public class DailyDeepLinkTest
     public void test_DeepLink_예약상세_고메() throws InterruptedException
     {
         final String aggregationId = "a28a351a-5a73-46f7-8e50-7797dd3e9e63";
-        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=20&v=bd&agi=" + aggregationId + "&pt=gourmet";
+        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=25&v=bd&agi=" + aggregationId + "&pt=gourmet";
 
         launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-        onView(isRoot()).perform(waitFor(DELAY_SECONDS * 1000));
+        onView(isRoot()).perform(waitFor(DELAY_SECONDS * 2000));
         onView(withId(R.id.daily_titleTextView)).check(matches(withText("예약내역")));
 
         if (DailyHotel.isLogin() == true)
         {
-            onView(withId(R.id.placeNameTextView)).check(matches(withText("탑클라우드 23")));
+            onView(Matchers.allOf(withId(R.id.placeNameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.placeInformationLayout))))).check(matches(withText("탑클라우드 23")));
         }
     }
 
@@ -1444,7 +1444,7 @@ public class DailyDeepLinkTest
     @Test
     public void test_DeepLink_적립금() throws InterruptedException
     {
-        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=24&v=login";
+        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=b";
 
         launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
@@ -1488,7 +1488,7 @@ public class DailyDeepLinkTest
 
         if (DailyHotel.isLogin() == true)
         {
-            onView(withId(R.id.daily_titleTextView)).check(matches(withText("마이데일리")));
+            onView(withId(R.id.homeContentLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         } else
         {
             onView(withId(R.id.daily_titleTextView)).check(matches(withText("회원가입(1/2)")));

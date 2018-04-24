@@ -317,7 +317,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
     void startSignUp()
     {
-        if (isLockUiComponent() == true || mIsAttach == false)
+        if (mIsAttach == false || isLockUiComponent() == true)
         {
             return;
         }
@@ -350,7 +350,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
     public void onStartEditProfile(DailyDeepLink dailyDeepLink)
     {
-        if (isLockUiComponent() == true || mIsAttach == false)
+        if (mIsAttach == false || isLockUiComponent() == true)
         {
             return;
         }
@@ -365,7 +365,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
     public void onStartCouponList(CouponListActivity.SortType sortType, DailyDeepLink dailyDeepLink)
     {
-        if (isLockUiComponent() == true || mIsAttach == false)
+        if (mIsAttach == false || isLockUiComponent() == true)
         {
             return;
         }
@@ -391,7 +391,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         @Override
         public void startLogin()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
+            if (mIsAttach == false || isLockUiComponent() == true)
             {
                 return;
             }
@@ -430,7 +430,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         @Override
         public void startBonusList()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
+            if (mIsAttach == false || isLockUiComponent() == true)
             {
                 return;
             }
@@ -447,7 +447,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         @Override
         public void onRewardClick()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
+            if (mIsAttach == false || isLockUiComponent() == true)
             {
                 return;
             }
@@ -481,7 +481,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         @Override
         public void startWishList(PlaceType placeType)
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
+            if (mIsAttach == false || isLockUiComponent() == true)
             {
                 return;
             }
@@ -497,7 +497,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         @Override
         public void startRecentPlaces(PlaceType placeType)
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
+            if (mIsAttach == false || isLockUiComponent() == true)
             {
                 return;
             }
@@ -513,7 +513,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         @Override
         public void onPushClick()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
+            if (mIsAttach == false || isLockUiComponent() == true)
             {
                 return;
             }

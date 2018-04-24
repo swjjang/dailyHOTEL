@@ -215,7 +215,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
             if (externalDeepLink.isCampaignTagListView() == true)
             {
-
             } else if (externalDeepLink.isGourmetSearchResultView() == true)
             {
 
