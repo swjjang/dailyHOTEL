@@ -10,9 +10,9 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.Coupon
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
-import com.daily.dailyhotel.screen.mydaily.coupon.term.CouponTermActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.register.RegisterCouponActivity
+import com.daily.dailyhotel.screen.mydaily.coupon.term.CouponTermActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
 import com.twoheart.dailyhotel.DailyHotel
@@ -87,12 +87,12 @@ class CouponListPresenter(activity: CouponListActivity)//
             dailyDeepLink!!.clear()
             dailyDeepLink = null
         } else {
-            if (!DailyHotel.isLogin()) {
-                showLoginDialog()
-            } else {
+            if (DailyHotel.isLogin()) {
                 if (isRefresh) {
                     onRefresh(true)
                 }
+            } else {
+                showLoginDialog()
             }
         }
     }
@@ -100,10 +100,8 @@ class CouponListPresenter(activity: CouponListActivity)//
     override fun onResume() {
         super.onResume()
 
-        DailyHotel.isLogin().let {
-            if (isRefresh) {
-                onRefresh(true)
-            }
+        if (DailyHotel.isLogin() && isRefresh) {
+            onRefresh(true)
         }
     }
 

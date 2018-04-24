@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.ObjectItem;
@@ -204,6 +205,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         {
             return;
         }
+
+        ExLog.d("pinkred : " + titleText);
 
         getViewDataBinding().toolbarView.setTitleText(titleText);
         getViewDataBinding().toolbarView.setSubTitleText(subTitleText);
