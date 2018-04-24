@@ -195,6 +195,17 @@
 
                     </android.support.constraint.ConstraintLayout>
 
+                    <android.support.v7.widget.GridLayout
+                        android:id="@+id/roomSummaryGridLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        app:columnCount="3"/>
+
+
                     <!--<RelativeLayout-->
                         <!--android:id="@+id/benefitLayout"-->
                         <!--android:layout_width="match_parent"-->
