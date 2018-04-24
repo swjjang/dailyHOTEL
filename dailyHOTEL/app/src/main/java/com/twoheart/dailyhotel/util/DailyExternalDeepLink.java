@@ -141,6 +141,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private static final String PARAM_V25_DESCRIPTION = "desc";
     private static final String PARAM_V25_IMAGE_URL = "iurl";
+    private static final String PARAM_V25_AGGREGATION_ID = "agi";
 
 
     // Version
@@ -274,6 +275,11 @@ public class DailyExternalDeepLink extends DailyDeepLink
     public String getImageUrl()
     {
         return getStringValue(12, PARAM_V25_IMAGE_URL);
+    }
+
+    public String getAggregationId()
+    {
+        return getStringValue(25, PARAM_V25_AGGREGATION_ID);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

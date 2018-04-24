@@ -29,39 +29,34 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AppResearch
 {
-    Context mContext;
     boolean mIsMyProcessInTheForeground;
     String[] WATCH_LIST;
 
-    public AppResearch(Context context)
+    public AppResearch()
     {
-        mContext = context;
-
         mIsMyProcessInTheForeground = true;
-
-        if (WATCH_LIST == null)
-        {
-            WATCH_LIST = getWatchList();
-        }
     }
 
-    String[] getWatchList()
+    String[] getWatchList(Context context)
     {
-        String[] watchList = null;
+        if (WATCH_LIST != null)
+        {
+            return WATCH_LIST;
+        }
 
         try
         {
-            JSONArray jsonArray = new JSONArray(DailyRemoteConfigPreference.getInstance(mContext).getKeyRemoteConfigAppResearch());
+            JSONArray jsonArray = new JSONArray(DailyRemoteConfigPreference.getInstance(context).getKeyRemoteConfigAppResearch());
 
             if (jsonArray != null && jsonArray.length() > 0)
             {
                 int length = jsonArray.length();
 
-                watchList = new String[length];
+                WATCH_LIST = new String[length];
 
                 for (int i = 0; i < length; i++)
                 {
-                    watchList[i] = jsonArray.getString(i);
+                    WATCH_LIST[i] = jsonArray.getString(i);
                 }
             }
         } catch (Exception e)
@@ -69,12 +64,12 @@ public class AppResearch
 
         }
 
-        return watchList;
+        return WATCH_LIST;
     }
 
-    public void onResume(String placeType, int placeIndex)
+    public void onResume(Context context, String placeType, int placeIndex)
     {
-        if (VersionUtils.isOverAPI24() == true || mContext == null || mIsMyProcessInTheForeground == true)
+        if (VersionUtils.isOverAPI24() == true || context == null || mIsMyProcessInTheForeground == true)
         {
             return;
         }
@@ -90,35 +85,27 @@ public class AppResearch
                 List<Map<String, String>> mapList = new ArrayList<>();
 
                 Map<String, String> packageMap = new HashMap<>();
-                PackageManager packageManager = mContext.getPackageManager();
+                PackageManager packageManager = context.getPackageManager();
 
-                if (WATCH_LIST == null)
+                for (AndroidAppProcess androidAppProcess : androidAppProcessList)
                 {
-                    WATCH_LIST = getWatchList();
-                }
-
-                if (WATCH_LIST != null)
-                {
-                    for (AndroidAppProcess androidAppProcess : androidAppProcessList)
+                    for (String packageName : getWatchList(context))
                     {
-                        for (String packageName : WATCH_LIST)
+                        if (androidAppProcess.getPackageName().contains(packageName) == true)
                         {
-                            if (androidAppProcess.getPackageName().contains(packageName) == true)
+                            try
                             {
-                                try
-                                {
-                                    packageMap.put(androidAppProcess.getPackageName(), androidAppProcess.getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
-                                } catch (Exception e)
-                                {
-                                    ExLog.e(e.toString());
-                                }
+                                packageMap.put(androidAppProcess.getPackageName(), androidAppProcess.getPackageInfo(context, 0).applicationInfo.loadLabel(packageManager).toString());
+                            } catch (Exception e)
+                            {
+                                ExLog.e(e.toString());
                             }
                         }
                     }
                 }
 
                 mapList.add(packageMap);
-                mapList.add(recentlyApp(androidAppProcessList));
+                mapList.add(recentlyApp(context, androidAppProcessList));
 
                 observer.onNext(mapList);
                 observer.onComplete();
@@ -138,10 +125,10 @@ public class AppResearch
                     Map<String, String> unknownPackageMap = mapList.get(1);
 
                     // known
-                    recordEvent(new ArrayList<>(knownPackageMap.values()), "App_Switch_To_Foreground", placeType, placeIndex);
+                    recordEvent(context, new ArrayList<>(knownPackageMap.values()), "App_Switch_To_Foreground", placeType, placeIndex);
 
                     // unknown
-                    recordEvent(new ArrayList<>(unknownPackageMap.values()), "App_Switch", "Entire", placeIndex);
+                    recordEvent(context, new ArrayList<>(unknownPackageMap.values()), "App_Switch", "Entire", placeIndex);
                 }
             }
         }, new Consumer<Throwable>()
@@ -154,9 +141,9 @@ public class AppResearch
         });
     }
 
-    public void onPause(String placeType, int placeIndex)
+    public void onPause(Context context, String placeType, int placeIndex)
     {
-        if (VersionUtils.isOverAPI24() == true || mContext == null)
+        if (VersionUtils.isOverAPI24() == true || context == null)
         {
             return;
         }
@@ -171,38 +158,30 @@ public class AppResearch
 
                 Map<String, String> packageMap = new HashMap<>();
 
-                PackageManager packageManager = mContext.getPackageManager();
+                PackageManager packageManager = context.getPackageManager();
 
-                if (WATCH_LIST == null)
+                for (AndroidAppProcess androidAppProcess : androidAppProcessList)
                 {
-                    WATCH_LIST = getWatchList();
-                }
-
-                if (WATCH_LIST != null)
-                {
-                    for (AndroidAppProcess androidAppProcess : androidAppProcessList)
+                    for (String packageName : getWatchList(context))
                     {
-                        for (String packageName : WATCH_LIST)
+                        if (androidAppProcess.getPackageName().contains(packageName) == true)
                         {
-                            if (androidAppProcess.getPackageName().contains(packageName) == true)
+                            try
                             {
-                                try
+                                if (androidAppProcess.foreground == true)
                                 {
-                                    if (androidAppProcess.foreground == true)
-                                    {
-                                        packageMap.put(androidAppProcess.getPackageName(), androidAppProcess.getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
-                                    }
-                                } catch (Exception e)
-                                {
-                                    ExLog.e(e.toString());
+                                    packageMap.put(androidAppProcess.getPackageName(), androidAppProcess.getPackageInfo(context, 0).applicationInfo.loadLabel(packageManager).toString());
                                 }
+                            } catch (Exception e)
+                            {
+                                ExLog.e(e.toString());
                             }
                         }
                     }
                 }
 
                 mapList.add(packageMap);
-                mapList.add(recentlyApp(androidAppProcessList));
+                mapList.add(recentlyApp(context, androidAppProcessList));
 
                 observer.onNext(mapList);
                 observer.onComplete();
@@ -231,10 +210,10 @@ public class AppResearch
 
 
                     // known
-                    recordEvent(new ArrayList<>(knownPackageMap.values()), "App_Switch_To_Background", placeType, placeIndex);
+                    recordEvent(context, new ArrayList<>(knownPackageMap.values()), "App_Switch_To_Background", placeType, placeIndex);
 
                     // unknown
-                    recordEvent(new ArrayList<>(unknownPackageMap.values()), "App_Switch", "Entire", placeIndex);
+                    recordEvent(context, new ArrayList<>(unknownPackageMap.values()), "App_Switch", "Entire", placeIndex);
                 }
             }
         }, new Consumer<Throwable>()
@@ -247,7 +226,7 @@ public class AppResearch
         });
     }
 
-    Map<String, String> recentlyApp(List<AndroidAppProcess> androidAppProcessList)
+    Map<String, String> recentlyApp(Context context, List<AndroidAppProcess> androidAppProcessList)
     {
         Map<String, String> unknownPackageMap = new HashMap<>();
 
@@ -256,7 +235,7 @@ public class AppResearch
             return unknownPackageMap;
         }
 
-        PackageManager packageManager = mContext.getPackageManager();
+        PackageManager packageManager = context.getPackageManager();
 
         int size = androidAppProcessList.size();
         int count = 0;
@@ -275,7 +254,7 @@ public class AppResearch
 
             try
             {
-                unknownPackageMap.put(androidAppProcessList.get(i).getPackageName(), androidAppProcessList.get(i).getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
+                unknownPackageMap.put(androidAppProcessList.get(i).getPackageName(), androidAppProcessList.get(i).getPackageInfo(context, 0).applicationInfo.loadLabel(packageManager).toString());
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
@@ -285,7 +264,7 @@ public class AppResearch
         return unknownPackageMap;
     }
 
-    void recordEvent(List<String> packageList, String categoryName, String placeType, int placeIndex)
+    void recordEvent(Context context, List<String> packageList, String categoryName, String placeType, int placeIndex)
     {
         if (packageList == null || packageList.size() == 0 || DailyTextUtils.isTextEmpty(categoryName) == true)
         {
@@ -304,15 +283,15 @@ public class AppResearch
 
         if (Constants.DEBUG == true)
         {
-            DailyToast.showToast(mContext, stringBuilder.toString(), DailyToast.LENGTH_LONG);
+            DailyToast.showToast(context, stringBuilder.toString(), DailyToast.LENGTH_LONG);
         }
 
         if (placeIndex > 0)
         {
-            AnalyticsManager.getInstance(mContext).recordEvent(categoryName, placeType + '_' + placeIndex, stringBuilder.toString(), null);
+            AnalyticsManager.getInstance(context).recordEvent(categoryName, placeType + '_' + placeIndex, stringBuilder.toString(), null);
         } else
         {
-            AnalyticsManager.getInstance(mContext).recordEvent(categoryName, placeType, stringBuilder.toString(), null);
+            AnalyticsManager.getInstance(context).recordEvent(categoryName, placeType, stringBuilder.toString(), null);
         }
     }
 }

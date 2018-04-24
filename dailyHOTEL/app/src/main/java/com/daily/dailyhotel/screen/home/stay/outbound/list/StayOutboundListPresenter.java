@@ -261,7 +261,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         stayOutboundSuggest.displayText = externalDeepLink.getTitle();
                         setSuggest(stayOutboundSuggest);
 
-                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
                         setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         setPeople(People.DEFAULT_ADULTS, null);
@@ -1591,8 +1591,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             case MAP:
                 getViewInterface().setMapWish(position, wish);
 
-                for (ObjectItem objectItem : getViewInterface().getObjectItemList())
+                List<ObjectItem> objectItemList = getViewInterface().getObjectItemList();
+                int size = objectItemList.size();
+                ObjectItem objectItem;
+
+                for (int i = 0; i < size; i++)
                 {
+                    objectItem = objectItemList.get(i);
+
                     if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         StayOutbound stayOutbound = objectItem.getItem();
@@ -1600,7 +1606,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         if (stayOutbound.index == stayIndex)
                         {
                             stayOutbound.myWish = wish;
-                            getViewInterface().setWish(position, wish);
+                            getViewInterface().setWish(i, wish);
                         }
                     }
                 }

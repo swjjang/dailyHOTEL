@@ -22,15 +22,12 @@ class GourmetPreviewActivity : BaseActivity<GourmetPreviewPresenter>() {
 
         @JvmStatic
         fun newInstance(context: Context, visitDateTime: String, index: Int, name: String, category: String, viewPrice: Int = SKIP_CHECK_PRICE_VALUE): Intent {
-            val intent = Intent(context, GourmetPreviewActivity::class.java)
-
-            intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime)
-            intent.putExtra(INTENT_EXTRA_DATA_GOURMET_INDEX, index)
-            intent.putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, name)
-            intent.putExtra(INTENT_EXTRA_DATA_GOURMET_CATEGORY, category)
-            intent.putExtra(INTENT_EXTRA_DATA_GOURMET_VIEW_PRICE, viewPrice)
-
-            return intent
+            return Intent(context, GourmetPreviewActivity::class.java)
+                    .putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime)
+                    .putExtra(INTENT_EXTRA_DATA_GOURMET_INDEX, index)
+                    .putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, name)
+                    .putExtra(INTENT_EXTRA_DATA_GOURMET_CATEGORY, category)
+                    .putExtra(INTENT_EXTRA_DATA_GOURMET_VIEW_PRICE, viewPrice)
         }
     }
 

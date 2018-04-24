@@ -31,6 +31,14 @@ public class CommonDateTime
         this.dailyDateTime = dailyDateTime;
     }
 
+    public void setDateTime(CommonDateTime commonDateTime)
+    {
+        openDateTime = commonDateTime.openDateTime;
+        closeDateTime = commonDateTime.closeDateTime;
+        currentDateTime = commonDateTime.currentDateTime;
+        dailyDateTime = commonDateTime.dailyDateTime;
+    }
+
     public TodayDateTime getTodayDateTime()
     {
         return new TodayDateTime(openDateTime, closeDateTime, currentDateTime, dailyDateTime);

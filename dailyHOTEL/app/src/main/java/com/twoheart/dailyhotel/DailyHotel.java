@@ -239,7 +239,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
         DailyActivityLifecycleCallbacks()
         {
-            mAppResearch = new AppResearch(getApplicationContext());
+            mAppResearch = new AppResearch();
         }
 
         @Override
@@ -285,20 +285,20 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 || activity instanceof StayPaymentActivity//
                 || activity instanceof StayThankYouActivity)
             {
-                mAppResearch.onResume("스테이", -1);
+                mAppResearch.onResume(activity, "스테이", -1);
             } else if (activity instanceof GourmetMainActivity//
                 || activity instanceof GourmetPaymentActivity//
                 || activity instanceof GourmetThankYouActivity)
             {
-                mAppResearch.onResume("고메", -1);
+                mAppResearch.onResume(activity, "고메", -1);
             } else if (activity instanceof StayOutboundListActivity//
                 || activity instanceof StayOutboundPaymentActivity//
                 || activity instanceof StayOutboundThankYouActivity)
             {
-                mAppResearch.onResume("outbound_스테이", -1);
+                mAppResearch.onResume(activity, "outbound_스테이", -1);
             } else
             {
-                mAppResearch.onResume("etc", -1);
+                mAppResearch.onResume(activity, "etc", -1);
             }
         }
 
@@ -316,20 +316,20 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 || activity instanceof StayPaymentActivity//
                 || activity instanceof StayThankYouActivity)
             {
-                mAppResearch.onPause("스테이", -1);
+                mAppResearch.onPause(activity, "스테이", -1);
             } else if (activity instanceof GourmetMainActivity//
                 || activity instanceof GourmetPaymentActivity//
                 || activity instanceof GourmetThankYouActivity)
             {
-                mAppResearch.onPause("고메", -1);
+                mAppResearch.onPause(activity, "고메", -1);
             } else if (activity instanceof StayOutboundListActivity//
                 || activity instanceof StayOutboundPaymentActivity//
                 || activity instanceof StayOutboundThankYouActivity)
             {
-                mAppResearch.onPause("outbound_스테이", -1);
+                mAppResearch.onPause(activity, "outbound_스테이", -1);
             } else
             {
-                mAppResearch.onPause("etc", -1);
+                mAppResearch.onPause(activity, "etc", -1);
             }
         }
 

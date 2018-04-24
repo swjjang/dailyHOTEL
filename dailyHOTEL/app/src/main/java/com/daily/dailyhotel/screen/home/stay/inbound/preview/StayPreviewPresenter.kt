@@ -34,15 +34,13 @@ import java.util.*
 class StayPreviewPresenter(activity: StayPreviewActivity)
     : BaseExceptionPresenter<StayPreviewActivity, StayPreviewInterface.ViewInterface>(activity), StayPreviewInterface.OnEventListener {
 
-    private val stayRemoteImpl: StayRemoteImpl by lazy {
-        StayRemoteImpl()
-    }
-
-    private val commonRemoteImpl: CommonRemoteImpl by lazy {
+    private val analytics = StayPreviewAnalyticsImpl()
+    private val stayRemoteImpl = StayRemoteImpl()
+    private val commonRemoteImpl by lazy {
         CommonRemoteImpl()
     }
 
-    private lateinit var bookDateTime: StayBookDateTime
+    private val bookDateTime = StayBookDateTime()
     private var stayIndex: Int = 0
     private lateinit var stayName: String
     private lateinit var stayGrade: String
@@ -50,10 +48,6 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     private lateinit var detail: StayDetail
     private var trueReviewCount: Int = 0
-
-    private val analytics: StayPreviewInterface.AnalyticsInterface by lazy {
-        StayPreviewAnalyticsImpl()
-    }
 
     override fun createInstanceViewInterface(): StayPreviewInterface.ViewInterface {
         return StayPreviewView(activity, this)
@@ -71,7 +65,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             val checkOutDateTime = it.getStringExtra(StayPreviewActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)
 
             try {
-                bookDateTime = StayBookDateTime(checkInDateTime, checkOutDateTime)
+                bookDateTime.setBookDateTime(checkInDateTime, checkOutDateTime)
             } catch (e: Exception) {
                 return false
             }
@@ -259,7 +253,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     private fun startKakaoLinkApplication(userName: String?, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareStay(userName
                 , detail.name, detail.address, detail.index
-                , detail.imageInformationList?.get(0)?.imageMap?.mediumUrl
+                , detail.defaultImageUrl
                 , url, bookDateTime)
     }
 
