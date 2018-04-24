@@ -206,8 +206,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        ExLog.d("pinkred : " + titleText);
-
         getViewDataBinding().toolbarView.setTitleText(titleText);
         getViewDataBinding().toolbarView.setSubTitleText(subTitleText);
     }
