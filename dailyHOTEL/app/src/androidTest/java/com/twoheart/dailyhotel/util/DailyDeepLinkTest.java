@@ -1461,7 +1461,7 @@ public class DailyDeepLinkTest
             onView(withId(R.id.daily_titleTextView)).check(matches(withText("적립금")));
         } else
         {
-            onView(withId(R.id.daily_titleTextView)).check(matches(withText("로그인")));
+            onView(withId(R.id.messageTextView)).check(matches(withText("로그인 후 적립금을 확인할 수 있습니다.\n로그인 할까요?")));
         }
     }
 
