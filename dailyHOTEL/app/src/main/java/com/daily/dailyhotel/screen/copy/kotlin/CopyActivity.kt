@@ -11,9 +11,7 @@ class CopyActivity : BaseActivity<CopyPresenter>() {
     companion object {
         @JvmStatic
         fun newInstance(context: Context): Intent {
-            val intent = Intent(context, CopyActivity::class.java)
-
-            return intent
+            return Intent(context, CopyActivity::class.java)
         }
     }
 

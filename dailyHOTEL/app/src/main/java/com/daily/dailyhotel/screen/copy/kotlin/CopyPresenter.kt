@@ -22,9 +22,6 @@ class CopyPresenter(activity: CopyActivity)//
         isRefresh = true
     }
 
-    override fun onPostCreate() {
-    }
-
     override fun onIntent(intent: Intent?): Boolean {
         return intent?.let {
             true
@@ -34,20 +31,19 @@ class CopyPresenter(activity: CopyActivity)//
     override fun onNewIntent(intent: Intent?) {
     }
 
+    override fun onPostCreate() {
+    }
+
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        if (isRefresh) onRefresh(true)
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        if (isRefresh) onRefresh(true)
     }
 
     override fun onDestroy() {

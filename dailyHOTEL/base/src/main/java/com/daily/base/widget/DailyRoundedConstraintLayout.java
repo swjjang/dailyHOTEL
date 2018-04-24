@@ -67,7 +67,7 @@ public class DailyRoundedConstraintLayout extends ConstraintLayout
 //    }
 
     @Override
-    protected void dispatchDraw(Canvas canvas)
+    public void dispatchDraw(Canvas canvas)
     {
         if (mRoundPath != null && mRoundPath.isEmpty() == true)
         {

@@ -1240,9 +1240,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefault() == false);
 
-            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-
 
             int provinceIndex = externalDeepLink.getProvinceIndex();
             int areaIndex = externalDeepLink.getAreaIndex();
@@ -1270,7 +1269,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             if (areaGroup.index == areaGroupIndex)
             {
-                if (areaIndex > 0 && areaGroup.getAreaCount() > 0)
+                if (areaIndex == 0)
+                {
+                    return new Pair(new StayRegion(PreferenceRegion.AreaType.AREA, areaGroup, new StayArea(StayArea.ALL, areaGroup.name)), areaGroup.getCategoryList());
+                } else if (areaIndex > 0 && areaGroup.getAreaCount() > 0)
                 {
                     for (StayArea area : areaGroup.getAreaList())
                     {
@@ -1301,7 +1303,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefault() == false);
 
-            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+            StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
             setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
             int stationIndex = externalDeepLink.getStationIndex();

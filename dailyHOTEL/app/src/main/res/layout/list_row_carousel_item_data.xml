@@ -12,14 +12,13 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/contentImageView"
-            android:layout_width="0dp"
+            android:layout_width="239dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_max="239dp"
             fresco:actualImageScaleType="centerCrop"
             fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
 
@@ -27,19 +26,19 @@
             android:id="@+id/gradientTopView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,16:9"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="@+id/contentImageView"
+            app:layout_constraintRight_toRightOf="@+id/contentImageView"
+            app:layout_constraintTop_toTopOf="@+id/contentImageView"
+            app:layout_constraintBottom_toBottomOf="@+id/contentImageView"/>
 
         <View
             android:id="@+id/gradientBottomView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,16:9"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="@+id/contentImageView"
+            app:layout_constraintRight_toRightOf="@+id/contentImageView"
+            app:layout_constraintTop_toTopOf="@+id/contentImageView"
+            app:layout_constraintBottom_toBottomOf="@+id/contentImageView"/>
 
         <ImageView
             android:id="@+id/soldoutView"
@@ -48,10 +47,10 @@
             android:background="@color/textView_textColor_shadow_soldout"
             android:scaleType="centerInside"
             android:visibility="gone"
-            app:layout_constraintDimensionRatio="H,16:9"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/contentImageView"
+            app:layout_constraintRight_toRightOf="@+id/contentImageView"
+            app:layout_constraintTop_toTopOf="@+id/contentImageView"
+            app:layout_constraintBottom_toBottomOf="@+id/contentImageView"
             app:srcCompat="@drawable/soldout"/>
 
         <com.daily.base.widget.DailyTextView

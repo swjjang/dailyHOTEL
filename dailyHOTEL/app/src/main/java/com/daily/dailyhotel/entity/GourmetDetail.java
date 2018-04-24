@@ -85,7 +85,7 @@ public class GourmetDetail
         mMenuList = gourmetMenuList;
     }
 
-    public boolean hasImageInformations()
+    public boolean hasImageInformation()
     {
         return mDetailImageInformationList != null && mDetailImageInformationList.size() > 0;
     }
@@ -93,6 +93,11 @@ public class GourmetDetail
     public List<DetailImageInformation> getImageInformationList()
     {
         return mDetailImageInformationList;
+    }
+
+    public String getDefaultImageUrl()
+    {
+        return hasImageInformation() ? mDetailImageInformationList.get(0).mImageMap.smallUrl : null;
     }
 
     public void setImageInformationList(List<DetailImageInformation> detailImageInformationList)

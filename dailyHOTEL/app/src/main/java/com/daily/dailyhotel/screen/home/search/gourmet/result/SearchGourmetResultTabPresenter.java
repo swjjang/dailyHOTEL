@@ -215,7 +215,6 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
 
             if (externalDeepLink.isCampaignTagListView() == true)
             {
-
             } else if (externalDeepLink.isGourmetSearchResultView() == true)
             {
 
@@ -625,7 +624,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             throw new NullPointerException("externalDeepLink == null || commonDateTime == null");
         }
 
-        GourmetBookDateTime gourmetBookDateTime = externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink);
+        GourmetBookDateTime gourmetBookDateTime = externalDeepLink.getGourmetBookDateTime(commonDateTime);
 
         int index;
         try
@@ -657,7 +656,7 @@ public class SearchGourmetResultTabPresenter extends BaseExceptionPresenter<Sear
             throw new NullPointerException("externalDeepLink == null || commonDateTime == null");
         }
 
-        GourmetBookDateTime gourmetBookDateTime = externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink);
+        GourmetBookDateTime gourmetBookDateTime = externalDeepLink.getGourmetBookDateTime(commonDateTime);
         String word = externalDeepLink.getSearchWord();
 
         if (gourmetBookDateTime == null || DailyTextUtils.isTextEmpty(word) == true)

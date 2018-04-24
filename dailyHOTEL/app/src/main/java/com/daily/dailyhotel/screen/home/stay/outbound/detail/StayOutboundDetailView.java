@@ -1111,8 +1111,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         int flag = visible ? View.VISIBLE : View.GONE;
 
-        getViewDataBinding().recommendAroundTopLineView.setVisibility(flag);
         getViewDataBinding().recommendAroundListLayout.setVisibility(flag);
+        getViewDataBinding().recommendAroundTopLineView.setVisibility(flag);
     }
 
     @Override

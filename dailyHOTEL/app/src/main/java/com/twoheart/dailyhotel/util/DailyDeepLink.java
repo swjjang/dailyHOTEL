@@ -88,21 +88,21 @@ public abstract class DailyDeepLink
         return this instanceof DailyInternalDeepLink;
     }
 
-    public StayBookDateTime getStayBookDateTime(CommonDateTime commonDateTime, DailyDeepLink dailyDeepLink)
+    public StayBookDateTime getStayBookDateTime(CommonDateTime commonDateTime)
     {
-        if (commonDateTime == null || dailyDeepLink == null)
+        if (commonDateTime == null)
         {
             return null;
         }
 
         StayBookDateTime stayBookDateTime = null;
 
-        if (dailyDeepLink.isInternalDeepLink() == true)
+        if (isInternalDeepLink() == true)
         {
 
-        } else if (dailyDeepLink.isExternalDeepLink() == true)
+        } else if (isExternalDeepLink() == true)
         {
-            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) this;
 
             int nights = 1;
 
@@ -176,22 +176,21 @@ public abstract class DailyDeepLink
         return stayBookDateTime;
     }
 
-    public GourmetBookDateTime getGourmetBookDateTime(CommonDateTime commonDateTime, DailyDeepLink dailyDeepLink)
+    public GourmetBookDateTime getGourmetBookDateTime(CommonDateTime commonDateTime)
     {
-        if (commonDateTime == null || dailyDeepLink == null)
+        if (commonDateTime == null)
         {
             return null;
         }
 
         GourmetBookDateTime gourmetBookDateTime = null;
 
-        if (dailyDeepLink.isInternalDeepLink() == true)
+        if (isInternalDeepLink() == true)
         {
 
-        } else if (dailyDeepLink.isExternalDeepLink() == true)
+        } else if (isExternalDeepLink() == true)
         {
-            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
+            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) this;
 
             String date = externalDeepLink.getDate();
             int datePlus = externalDeepLink.getDatePlus();

@@ -14,6 +14,11 @@ public class GourmetBookDateTime extends PlaceBookDateTime
         setVisitDateTime(visitDateTime);
     }
 
+    public void setBookDateTime(GourmetBookDateTime bookDateTime) throws Exception
+    {
+        setVisitDateTime(bookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+    }
+
     /**
      * @param dateTime ISO-8601
      */

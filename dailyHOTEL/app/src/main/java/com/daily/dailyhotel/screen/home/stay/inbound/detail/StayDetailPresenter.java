@@ -79,11 +79,18 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
 
@@ -223,7 +230,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         mAnalytics = new StayDetailAnalyticsImpl();
 
-        mAppResearch = new AppResearch(activity);
+        mAppResearch = new AppResearch();
 
         mStayRemoteImpl = new StayRemoteImpl();
         mCommonRemoteImpl = new CommonRemoteImpl();
@@ -279,8 +286,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                         DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-                        int nights = 1;
-
                         try
                         {
                             mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
@@ -292,7 +297,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             return;
                         }
 
-                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime);
                         setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         mShowCalendar = externalDeepLink.isShowCalendar();
@@ -423,7 +428,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             getViewInterface().startCampaignStickerAnimation();
         }
 
-        mAppResearch.onResume("스테이", mStayIndex);
+        mAppResearch.onResume(getActivity(), "스테이", mStayIndex);
     }
 
     @Override
@@ -433,7 +438,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         getViewInterface().stopCampaignStickerAnimation();
 
-        mAppResearch.onPause("스테이", mStayIndex);
+        mAppResearch.onPause(getActivity(), "스테이", mStayIndex);
     }
 
     @Override

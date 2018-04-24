@@ -1205,17 +1205,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             throw new NullPointerException("Booking.PlaceType placeType = null");
                     }
 
-                    final int reservationIndex = externalDeepLink.getReservationIndex();
-
+                    String aggregationId = externalDeepLink.getAggregationId();
+                    int reservationIndex = 0;
                     String imageUrl = null;
-                    String aggregationId = null;
 
                     for (Booking booking : bookingList)
                     {
-                        if (booking.reservationIndex == reservationIndex)
+                        if (aggregationId.equalsIgnoreCase(booking.aggregationId))
                         {
+                            reservationIndex = booking.reservationIndex;
                             imageUrl = booking.imageUrl;
-                            aggregationId = booking.aggregationId;
                             break;
                         }
                     }

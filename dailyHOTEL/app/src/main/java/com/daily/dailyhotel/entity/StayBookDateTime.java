@@ -16,24 +16,39 @@ public class StayBookDateTime extends PlaceBookDateTime
 
     public StayBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
     {
+        setBookDateTime(checkInDateTime, checkOutDateTime);
+    }
+
+    /**
+     * @param dateTime ISO-8601
+     */
+    public StayBookDateTime setCheckInDateTime(String dateTime) throws Exception
+    {
+        setTimeInString(dateTime);
+
+        return this;
+    }
+
+    /**
+     * @param dateTime ISO-8601
+     */
+    public StayBookDateTime setCheckInDateTime(String dateTime, int afterDay) throws Exception
+    {
+        setTimeInString(dateTime, afterDay);
+
+        return this;
+    }
+
+    public void setBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
+    {
         setCheckInDateTime(checkInDateTime);
         setCheckOutDateTime(checkOutDateTime);
     }
 
-    /**
-     * @param dateTime ISO-8601
-     */
-    public void setCheckInDateTime(String dateTime) throws Exception
+    public void setBookDateTime(StayBookDateTime stayBookDateTime) throws Exception
     {
-        setTimeInString(dateTime);
-    }
-
-    /**
-     * @param dateTime ISO-8601
-     */
-    public void setCheckInDateTime(String dateTime, int afterDay) throws Exception
-    {
-        setTimeInString(dateTime, afterDay);
+        setCheckInDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+        setCheckOutDateTime(stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
     }
 
     public String getCheckInDateTime(String format)
@@ -44,14 +59,18 @@ public class StayBookDateTime extends PlaceBookDateTime
     /**
      * @param dateTime ISO-8601
      */
-    public void setCheckOutDateTime(String dateTime) throws Exception
+    public StayBookDateTime setCheckOutDateTime(String dateTime) throws Exception
     {
         DailyCalendar.setCalendarDateString(mCheckOutCalendar, dateTime);
+
+        return this;
     }
 
-    public void setCheckOutDateTime(String dateTime, int afterDay) throws Exception
+    public StayBookDateTime setCheckOutDateTime(String dateTime, int afterDay) throws Exception
     {
         DailyCalendar.setCalendarDateString(mCheckOutCalendar, dateTime, afterDay);
+
+        return this;
     }
 
     public String getCheckOutDateTime(String format)
