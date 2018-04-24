@@ -45,7 +45,7 @@ public class DailyDeepLinkTest
     @Rule
     public ActivityTestRule<com.twoheart.dailyhotel.LauncherActivity> launcherActivityActivityTestRule = new ActivityTestRule(com.twoheart.dailyhotel.LauncherActivity.class);
 
-    final int DELAY_SECONDS = 8;
+    final int DELAY_SECONDS = 5;
     final int NIGHTS_RANGE = 4;
     final int DAYS_RANGE = 20;
 
@@ -743,8 +743,8 @@ public class DailyDeepLinkTest
         final GourmetBookDateTime bookDateTime = new GourmetBookDateTime();
         bookDateTime.setVisitDateTime(DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT), randomDay);
 
-        final int index = 294;
-        final String name = "빕스 15,900원";
+        final int index = 300;
+        final String name = "벚꽃 옆 레스토랑";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // d=yyyyMMMdd
@@ -1074,7 +1074,13 @@ public class DailyDeepLinkTest
                 onView(isRoot()).perform(waitFor(5000));
             }
 
-            onView(withId(R.id.backView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            try
+            {
+                onView(withId(R.id.messageTextView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            } catch (NoMatchingViewException e)
+            {
+                onView(withId(R.id.backView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            }
         }
     }
 
@@ -1421,7 +1427,7 @@ public class DailyDeepLinkTest
 
         launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
-        onView(isRoot()).perform(waitFor(DELAY_SECONDS * 2000));
+        onView(isRoot()).perform(waitFor(DELAY_SECONDS * 1000));
         onView(withId(R.id.daily_titleTextView)).check(matches(withText("예약내역")));
 
         if (DailyHotel.isLogin() == true)
