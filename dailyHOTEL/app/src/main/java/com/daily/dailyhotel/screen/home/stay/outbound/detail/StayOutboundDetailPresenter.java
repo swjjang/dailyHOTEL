@@ -1749,12 +1749,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         boolean hasRecommendAroundList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
 
-        getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
-
         if (hasRecommendAroundList == true)
         {
             getViewInterface().setRecommendAroundList(mRecommendAroundList, mStayBookDateTime);
         }
+
+        getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
     }
 
     void notifyRewardChanged()
@@ -1970,7 +1970,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 }
             }));
 
-        addCompositeDisposable(mStayOutboundRemoteImpl.getRecommendAroundList(getActivity(), mStayIndex, mStayBookDateTime, mPeople).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
+        addCompositeDisposable(mStayOutboundRemoteImpl.getRecommendAroundList(getActivity(), mStayIndex, mStayBookDateTime, mPeople) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
         {
             @Override
             public void accept(StayOutbounds stayOutbounds) throws Exception
