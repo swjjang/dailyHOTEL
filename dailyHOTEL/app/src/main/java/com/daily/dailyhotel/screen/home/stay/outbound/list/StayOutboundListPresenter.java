@@ -121,7 +121,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private ViewState mViewState = ViewState.LIST;
     private int mWishPosition;
     private int mWishStayIndex;
-    private String mWishStayName;
 
     StayOutbound mStayOutboundByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
@@ -164,7 +163,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onEventList(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundSuggest suggest, int size);
 
-        void onEventWishClick(Activity activity, int stayIndex, String stayName, boolean isWish, boolean isListViewState);
+        void onEventWishClick(Activity activity, int stayIndex, boolean isWish, boolean isListViewState);
 
         void onEventMapClick(Activity activity);
 
@@ -590,7 +589,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                             onChangedWish(mWishPosition, isWish, mWishStayIndex);
 
-                            mAnalytics.onEventWishClick(getActivity(), mWishStayIndex, mWishStayName, isWish, mViewState == ViewState.LIST);
+                            mAnalytics.onEventWishClick(getActivity(), mWishStayIndex, isWish, mViewState == ViewState.LIST);
                         }
                         break;
 
@@ -1313,7 +1312,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         mWishPosition = position;
         mWishStayIndex = stayOutbound.index;
-        mWishStayName = stayOutbound.name;
 
         boolean currentWish = stayOutbound.myWish;
 

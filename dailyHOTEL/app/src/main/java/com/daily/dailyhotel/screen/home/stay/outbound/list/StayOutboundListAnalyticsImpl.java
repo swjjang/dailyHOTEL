@@ -229,7 +229,7 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onEventWishClick(Activity activity, int stayIndex, String stayName, boolean isWish, boolean isListViewState)
+    public void onEventWishClick(Activity activity, int stayIndex, boolean isWish, boolean isListViewState)
     {
         if (activity == null)
         {
@@ -243,7 +243,7 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
         } else
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , "ob_" + (isWish ? "WishListOn_mapview" : "WishListOff_mapview"), stayName, null);
+                , "ob_" + (isWish ? "WishListOn_mapview" : "WishListOff_mapview"), Integer.toString(stayIndex), null);
         }
     }
 

@@ -41,7 +41,7 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
     }
 
     @Override
-    public void onEventWishClick(Activity activity, String gourmetName, boolean wish, boolean isListViewType)
+    public void onEventWishClick(Activity activity, int gourmetIndex, boolean wish, boolean isListViewType)
     {
         if (activity == null)
         {
@@ -55,7 +55,7 @@ public class SearchGourmetResultListFragmentAnalyticsImpl implements SearchGourm
         } else
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , "gourmet_" + (wish ? "WishListOn_mapview" : "WishListOff_mapview"), gourmetName, null);
+                , "gourmet_" + (wish ? "WishListOn_mapview" : "WishListOff_mapview"), Integer.toString(gourmetIndex), null);
         }
     }
 

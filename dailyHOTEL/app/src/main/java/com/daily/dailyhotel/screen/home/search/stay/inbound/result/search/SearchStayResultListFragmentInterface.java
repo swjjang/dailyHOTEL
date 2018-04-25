@@ -120,7 +120,7 @@ public interface SearchStayResultListFragmentInterface
 
         void onEventStayClick(Activity activity, Stay stay, StaySuggest suggest);
 
-        void onEventWishClick(Activity activity, String stayName, boolean wish, boolean isListViewType);
+        void onEventWishClick(Activity activity, int stayIndex, boolean wish, boolean isListViewType);
 
         void onEventMarkerClick(Activity activity, String name);
 

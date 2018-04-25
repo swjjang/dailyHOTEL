@@ -120,7 +120,7 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
     }
 
     @Override
-    public void onEventWishClick(Activity activity, String stayName, boolean wish, boolean isListViewType)
+    public void onEventWishClick(Activity activity, int stayIndex, boolean wish, boolean isListViewType)
     {
         if (activity == null)
         {
@@ -134,7 +134,7 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
         } else
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , "stay_" + (wish ? "WishListOn_mapview" : "WishListOff_mapview"), stayName, null);
+                , "stay_" + (wish ? "WishListOn_mapview" : "WishListOff_mapview"), Integer.toString(stayIndex), null);
         }
     }
 

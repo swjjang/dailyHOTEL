@@ -542,7 +542,7 @@ public class GourmetListFragment extends PlaceListFragment
             } else
             {
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , "gourmet_" + (!currentWish ? "WishListOn_mapview" : "WishListOff_mapview"), gourmet.name, null);
+                    , "gourmet_" + (!currentWish ? "WishListOn_mapview" : "WishListOff_mapview"), Integer.toString(gourmet.index), null);
             }
         }
 
