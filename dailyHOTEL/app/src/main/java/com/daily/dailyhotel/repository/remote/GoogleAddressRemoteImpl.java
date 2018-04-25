@@ -88,7 +88,7 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
 
         GoogleAddressComponentsData countryData = getComponentsData(KEY_COUNTRY, googleAddressDataList);
         GoogleAddressComponentsData subLocalityData = getComponentsData(KEY_SUBLOCALITY_LEVEL_2, googleAddressDataList);
-        GoogleAddressComponentsData adminstrativeData = getComponentsData(KEY_ADMINISTRATIVE_AREA_LEVEL_1, googleAddressDataList);
+        GoogleAddressComponentsData administrativeData = getComponentsData(KEY_ADMINISTRATIVE_AREA_LEVEL_1, googleAddressDataList);
 
         googleAddress.country = countryData == null ? null : countryData.longName;
         googleAddress.shortCountry = countryData == null ? null : countryData.shortName;
@@ -106,15 +106,15 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
             if (subLocalityData != null)
             {
                 googleAddress.shortAddress = subLocalityData.longName;
-            } else if (adminstrativeData != null)
+            } else if (administrativeData != null)
             {
-                googleAddress.shortAddress = adminstrativeData.longName;
+                googleAddress.shortAddress = administrativeData.longName;
             }
         } else
         {
-            if (adminstrativeData != null)
+            if (administrativeData != null)
             {
-                googleAddress.shortAddress = adminstrativeData.longName;
+                googleAddress.shortAddress = administrativeData.longName;
             } else if (subLocalityData != null)
             {
                 googleAddress.shortAddress = subLocalityData.longName;

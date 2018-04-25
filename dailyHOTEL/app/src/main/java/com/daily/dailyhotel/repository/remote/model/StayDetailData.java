@@ -2,135 +2,85 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.DetailImageInformation;
-import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.PlaceDetailProvince;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
-import com.twoheart.dailyhotel.model.Stay;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @JsonObject
 public class StayDetailData
 {
+    @JsonField(name = "category")
+    public String category;
+
     @JsonField(name = "idx")
     public int index;
 
     @JsonField(name = "name")
     public String name;
 
-    @JsonField(name = "latitude")
-    public double latitude;
-
-    @JsonField(name = "longitude")
-    public double longitude;
-
-    @JsonField(name = "address")
-    public String address;
-
-    @JsonField(name = "category")
-    public String category;
-
-    @JsonField(name = "imgPath")
-    public LinkedHashMap<String, List<ImageInformationData>> imgPath;
-
     @JsonField(name = "grade")
     public String grade;
-
-    @JsonField(name = "price")
-    public int price;
 
     @JsonField(name = "discount")
     public int discount;
 
-    @JsonField(name = "ratingPersons")
-    public int ratingPersons;
+    @JsonField(name = "provideRewardSticker")
+    public boolean provideRewardSticker;
 
-    @JsonField(name = "ratingValue")
-    public int ratingValue;
+    @JsonField(name = "coupon")
+    public CouponData coupon;
 
-    @JsonField(name = "ratingShow")
-    public boolean ratingShow;
+    @JsonField(name = "rating")
+    public RatingData rating;
 
-    @JsonField(name = "parking")
-    public boolean parking;
-
-    @JsonField(name = "noParking")
-    public boolean noParking;
-
-    @JsonField(name = "pool")
-    public boolean pool;
-
-    @JsonField(name = "fitness")
-    public boolean fitness;
-
-    @JsonField(name = "pet")
-    public boolean pet;
-
-    @JsonField(name = "sharedBbq")
-    public boolean sharedBBQ;
-
-    @JsonField(name = "businessCenter")
-    public boolean businessCenter;
-
-    @JsonField(name = "sauna")
-    public boolean sauna;
-
-    @JsonField(name = "kidsPlayroom")
-    public boolean kidsPlayRoom;
-
-    @JsonField(name = "benefitWarning")
-    public String benefitWarning;
-
-    @JsonField(name = "rooms")
-    public List<RoomData> rooms;
-
-    @JsonField(name = "singleStay")
-    public boolean singleStay; // 연박 불가 여부
-
-    @JsonField(name = "overseas")
-    public boolean overseas; // 0 : 국내 , 1 : 해외
-
-    @JsonField(name = "waitingForBooking")
-    public boolean waitingForBooking; // 예약 대기
-
-    @JsonField(name = "details")
-    public List<LinkedHashMap<String, List<String>>> details;
-
-    @JsonField(name = "imgUrl")
-    public String imgUrl;
-
-    @JsonField(name = "benefit")
-    public String benefit;
-
-    @JsonField(name = "benefitContents")
-    public List<String> benefitContents;
-
-    @JsonField(name = "wishCount")
-    public int wishCount;
-
-    @JsonField(name = "myWish")
-    public boolean myWish;
-
-    @JsonField(name = "couponDiscount")
-    public int couponDiscount;
-
-    @JsonField(name = "rewardCard")
-    public RewardCardData rewardCard;
+    @JsonField(name = "awards")
+    public AwardsData awards;
 
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
 
-    @JsonField(name = "awards")
-    public TrueAwardsData awards;
+    @JsonField(name = "checkTime")
+    public CheckTimeData checkTime;
+
+    @JsonField(name = "address")
+    public String address;
+
+    @JsonField(name = "facilities")
+    public List<String> facilities;
+
+    @JsonField(name = "benefit")
+    public String benefit;
+
+    @JsonField(name = "details")
+    public List<DetailData> details;
+
+    @JsonField(name = "wishCount")
+    public int wishCount;
+
+    @JsonField(name = "waitingForBooking")
+    public boolean waitingForBooking;
+
+    @JsonField(name = "breakfast")
+    public BreakfastData breakfast;
+
+    @JsonField(name = "location")
+    public LocationData location;
+
+    @JsonField(name = "images")
+    public List<ImageData> images;
 
     @JsonField(name = "province")
     public ProvinceData province;
+
+    @JsonField(name = "rooms")
+    public List<RoomData> rooms;
+
+    @JsonField(name = "vr")
+    public List<VRData> vr;
+
+    @JsonField(name = "statistic")
+    public StatisticData statistic;
 
     public StayDetailData()
     {
@@ -141,196 +91,131 @@ public class StayDetailData
     {
         StayDetail stayDetail = new StayDetail();
 
-        stayDetail.index = index;
-        stayDetail.name = name;
-        stayDetail.latitude = latitude;
-        stayDetail.longitude = longitude;
-        stayDetail.address = address;
-        stayDetail.category = category;
-
-        try
-        {
-            stayDetail.grade = Stay.Grade.valueOf(grade);
-        } catch (Exception e)
-        {
-            stayDetail.grade = Stay.Grade.etc;
-        }
-
-        stayDetail.price = price;
-        stayDetail.discount = discount;
-        stayDetail.ratingPersons = ratingPersons;
-        stayDetail.ratingValue = ratingValue;
-        stayDetail.ratingShow = ratingShow;
-        stayDetail.benefit = benefit;
-        stayDetail.wishCount = wishCount;
-        stayDetail.myWish = myWish;
-        stayDetail.singleStay = singleStay;
-        stayDetail.overseas = overseas;
-        stayDetail.waitingForBooking = waitingForBooking;
-        stayDetail.couponPrice = couponDiscount;
-
-        if (DailyTextUtils.isTextEmpty(benefit) == false)
-        {
-            List<String> benefitContentList = new ArrayList<>();
-
-            if (benefitContents != null && benefitContents.size() > 0)
-            {
-                benefitContentList.addAll(benefitContents);
-            }
-
-            if (DailyTextUtils.isTextEmpty(benefitWarning) == false)
-            {
-                benefitContentList.add(benefitWarning);
-            }
-
-            stayDetail.setBenefitContentList(benefitContentList);
-        }
-
-        // Pictogram
-        List<StayDetail.Pictogram> pictogramList = new ArrayList<>();
-
-        // 주차
-        if (parking == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.PARKING);
-        }
-
-        // 주차금지
-        if (noParking == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.NO_PARKING);
-        }
-
-        // 수영장
-        if (pool == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.POOL);
-        }
-
-        // 피트니스
-        if (fitness == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.FITNESS);
-        }
-
-        // 사우나
-        if (sauna == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.SAUNA);
-        }
-
-        // 비지니스 센터
-        if (businessCenter == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.BUSINESS_CENTER);
-        }
-
-        // 키즈 플레이 룸
-        if (kidsPlayRoom == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.KIDS_PLAY_ROOM);
-        }
-
-        // 바베큐
-        if (sharedBBQ == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.SHARED_BBQ);
-        }
-
-        // 애완동물
-        if (pet == true)
-        {
-            pictogramList.add(StayDetail.Pictogram.PET);
-        }
-
-        stayDetail.setPictogramList(pictogramList);
-
-        // 이미지
-        List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
-
-        if (imgPath != null && imgPath.size() > 0)
-        {
-            Iterator<String> keyList = imgPath.keySet().iterator();
-
-            while (keyList.hasNext())
-            {
-                String key = keyList.next();
-
-                for (ImageInformationData imageInformationData : imgPath.get(key))
-                {
-                    DetailImageInformation detailImageInformation = new DetailImageInformation();
-
-                    ImageMap imageMap = new ImageMap();
-                    imageMap.bigUrl = imageMap.mediumUrl = imageMap.smallUrl = imgUrl + key + imageInformationData.name;
-
-                    detailImageInformation.caption = imageInformationData.description;
-                    detailImageInformation.setImageMap(imageMap);
-
-                    detailImageInformationList.add(detailImageInformation);
-                }
-            }
-        }
-
-        stayDetail.setImageInformationList(detailImageInformationList);
-
-        // Room
-        List<StayRoom> stayRoomList = new ArrayList<>();
-
-        if (rooms != null && rooms.size() > 0)
-        {
-            for (RoomData roomData : rooms)
-            {
-                stayRoomList.add(roomData.getRoom());
-
-                if (roomData.provideRewardSticker == true)
-                {
-                    stayDetail.provideRewardSticker = true;
-                }
-            }
-        }
-
-        stayDetail.setRoomList(stayRoomList);
-
-        // Detail
-        stayDetail.setDescriptionList(details);
-
-        // 리워드
-        if (rewardCard != null)
-        {
-            stayDetail.rewardStickerCount = rewardCard.rewardStickerCount;
-        }
-
-        if (configurations != null)
-        {
-            stayDetail.activeReward = configurations.activeReward;
-        }
-
-        if (awards != null)
-        {
-            stayDetail.awards = awards.getTrueAwards();
-        }
-
-        if (province != null)
-        {
-            stayDetail.province = province.getProvince();
-        }
-
         return stayDetail;
     }
 
     @JsonObject
-    static class ImageInformationData
+    static class CouponData
+    {
+        @JsonField(name = "couponDiscount")
+        public int couponDiscount;
+
+        @JsonField(name = "isDownloaded")
+        public boolean isDownloaded;
+    }
+
+    @JsonObject
+    static class RatingData
+    {
+        @JsonField(name = "persons")
+        public int persons;
+
+        @JsonField(name = "values")
+        public int values;
+
+        @JsonField(name = "show")
+        public boolean show;
+    }
+
+    @JsonObject
+    static class AwardsData
+    {
+        @JsonField(name = "idx")
+        public int index;
+
+        @JsonField(name = "serviceType")
+        public String serviceType;
+
+        @JsonField(name = "title")
+        public String title;
+
+        @JsonField(name = "description")
+        public String description;
+
+        @JsonField(name = "imgUrl")
+        public String imgUrl;
+    }
+
+    @JsonObject
+    static class CheckTimeData
+    {
+        @JsonField(name = "checkIn")
+        public String checkIn;
+
+        @JsonField(name = "checkOut")
+        public String checkOut;
+
+        @JsonField(name = "description")
+        public String description;
+    }
+
+    @JsonObject
+    static class DetailData
+    {
+        @JsonField(name = "type")
+        public String type;
+
+        @JsonField(name = "title")
+        public String title;
+
+        @JsonField(name = "contents")
+        public List<String> contents;
+    }
+
+    @JsonObject
+    static class BreakfastData
     {
         @JsonField(name = "description")
         public String description;
 
+        @JsonField(name = "items")
+        public List<ItemData> items;
+
+        @JsonObject
+        static class ItemData
+        {
+            @JsonField(name = "amount")
+            public int amount;
+
+            @JsonField(name = "maxAge")
+            public int maxAge;
+
+            @JsonField(name = "minAge")
+            public int minAge;
+
+            @JsonField(name = "title")
+            public String title;
+        }
+    }
+
+    @JsonObject
+    static class LocationData
+    {
+        @JsonField(name = "latitude")
+        public double latitude;
+
+        @JsonField(name = "longitude")
+        public double longitude;
+    }
+
+    @JsonObject
+    static class ImageData
+    {
+        @JsonField(name = "url")
+        public String url;
+
+        @JsonField(name = "primary")
+        public boolean primary;
+    }
+
+    @JsonObject
+    static class ProvinceData
+    {
+        @JsonField(name = "idx")
+        public int index;
+
         @JsonField(name = "name")
         public String name;
-
-        public ImageInformationData()
-        {
-
-        }
     }
 
     @JsonObject
@@ -342,47 +227,47 @@ public class StayDetailData
         @JsonField(name = "roomName")
         public String roomName;
 
-        @JsonField(name = "price")
-        public int price;
+        @JsonField(name = "roomType")
+        public String roomType;
 
-        @JsonField(name = "roomBenefit")
-        public String roomBenefit;
+        @JsonField(name = "image")
+        public ImageData image;
 
-        @JsonField(name = "tv")
-        public boolean hasTV;
+        @JsonField(name = "amount")
+        public AmountData amount;
 
-        @JsonField(name = "pc")
-        public boolean hasPC;
+        @JsonField(name = "persons")
+        public List<PersonData> persons;
 
-        @JsonField(name = "spaWallpool")
-        public boolean hasSpaWhirlpool;
-
-        @JsonField(name = "karaoke")
-        public boolean hasKaraoke;
-
-        @JsonField(name = "partyRoom")
-        public boolean hasPartyRoom;
-
-        @JsonField(name = "privateBbq")
-        public boolean hasPrivateBBQ;
-
-        @JsonField(name = "discountAverage")
-        public int discountAverage;
-
-        @JsonField(name = "discountTotal")
-        public int discountTotal;
-
-        @JsonField(name = "description1")
-        public String description1;
-
-        @JsonField(name = "description2")
-        public String description2;
-
-        @JsonField(name = "refundType")
-        public String refundType;
+        @JsonField(name = "benefit")
+        public String benefit;
 
         @JsonField(name = "provideRewardSticker")
         public boolean provideRewardSticker;
+
+        @JsonField(name = "amenities")
+        public List<String> amenities;
+
+        @JsonField(name = "checkTime")
+        public CheckTimeData checkTime;
+
+        @JsonField(name = "descriptions")
+        public List<String> descriptions;
+
+        @JsonField(name = "squareMeter")
+        public String squareMeter;
+
+        @JsonField(name = "needToKnows")
+        public List<String> needToKnows;
+
+        @JsonField(name = "consecutive")
+        public ConsecutiveData consecutive;
+
+        @JsonField(name = "roomCharge")
+        public RoomChargeData roomCharge;
+
+        @JsonField(name = "refundType")
+        public String refundType;
 
         public RoomData()
         {
@@ -395,44 +280,105 @@ public class StayDetailData
 
             StayRoom stayRoom = new StayRoom();
 
-            stayRoom.index = roomIndex;
-            stayRoom.name = roomName;
-            stayRoom.price = price;
-            stayRoom.benefit = roomBenefit;
-            stayRoom.hasTV = hasTV;
-            stayRoom.hasPC = hasPC;
-            stayRoom.hasSpaWhirlpool = hasSpaWhirlpool;
-            stayRoom.hasKaraoke = hasKaraoke;
-            stayRoom.hasPartyRoom = hasPartyRoom;
-            stayRoom.hasPrivateBBQ = hasPrivateBBQ;
-            stayRoom.discountAverage = discountAverage;
-            stayRoom.discountTotal = discountTotal;
-            stayRoom.description1 = description1;
-            stayRoom.description2 = description2;
-            stayRoom.refundType = refundType;
-            stayRoom.nrd = DailyTextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true;
-            stayRoom.provideRewardSticker = provideRewardSticker;
 
             return stayRoom;
+        }
+
+        @JsonObject
+        static class AmountData
+        {
+            @JsonField(name = "discountAverage")
+            public int discountAverage;
+
+            @JsonField(name = "discountRate")
+            public int discountRate;
+
+            @JsonField(name = "discountTotal")
+            public int discountTotal;
+
+            @JsonField(name = "priceAverage")
+            public int priceAverage;
+        }
+
+        @JsonObject
+        static class PersonData
+        {
+            @JsonField(name = "fixed")
+            public int fixed;
+
+            @JsonField(name = "extra")
+            public int extra;
+
+            @JsonField(name = "extraCharge")
+            public boolean extraCharge;
+
+            @JsonField(name = "breakfast")
+            public int breakfast;
+        }
+
+        @JsonObject
+        static class ConsecutiveData
+        {
+            @JsonField(name = "charge")
+            public int charge;
+
+            @JsonField(name = "enable")
+            public boolean enable;
+        }
+
+        @JsonObject
+        static class RoomChargeData
+        {
+            @JsonField(name = "descriptions")
+            public String descriptions;
+
+            @JsonField(name = "extraBed")
+            public int extraBed;
+
+            @JsonField(name = "extraBedEnable")
+            public boolean extraBedEnable;
+
+            @JsonField(name = "extraBedding")
+            public int extraBedding;
+
+            @JsonField(name = "extraBeddingEnable")
+            public boolean extraBeddingEnable;
         }
     }
 
     @JsonObject
-    static class ProvinceData
+    static class VRData
     {
-        @JsonField(name = "id")
-        public int index;
-
         @JsonField(name = "name")
         public String name;
 
-        public PlaceDetailProvince getProvince()
-        {
-            PlaceDetailProvince province = new PlaceDetailProvince();
-            province.index = index;
-            province.name = name;
+        @JsonField(name = "type")
+        public String type;
 
-            return province;
+        @JsonField(name = "typeIdx")
+        public int typeIdx;
+
+        @JsonField(name = "url")
+        public String url;
+    }
+
+    @JsonObject
+    static class StatisticData
+    {
+        @JsonField(name = "reviewScoreAvgs")
+        public List<ReviewScoreAvgData> reviewScoreAvgs;
+
+        @JsonField(name = "reviewScoreTotalCount")
+        public int reviewScoreTotalCount;
+
+        @JsonObject
+        static class ReviewScoreAvgData
+        {
+            @JsonField(name = "type")
+            public String type;
+
+            @JsonField(name = "scoreAvg")
+            public float scoreAvg;
         }
     }
 }

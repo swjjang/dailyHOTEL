@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -20,10 +19,7 @@ import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl
-import com.daily.dailyhotel.repository.remote.CalendarImpl
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
-import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
-import com.daily.dailyhotel.repository.remote.StayRemoteImpl
+import com.daily.dailyhotel.repository.remote.*
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity
@@ -44,9 +40,11 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.*
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
-import io.reactivex.*
+import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
@@ -69,6 +67,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private val analytics = StayDetailAnalyticsImpl()
     private val stayRemoteImpl = StayRemoteImpl()
     private val commonRemoteImpl = CommonRemoteImpl()
+
+    private val googleAddressRemoteImpl by lazy {
+        GoogleAddressRemoteImpl()
+    }
+
     private val profileRemoteImpl by lazy {
         ProfileRemoteImpl()
     }
@@ -101,7 +104,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun constructorInitialize(activity: StayDetailActivity) {
         setContentView(R.layout.activity_stay_detailk_data)
 
-        isRefresh = true
+        isRefresh = false
     }
 
     override fun onIntent(intent: Intent?): Boolean {
@@ -163,6 +166,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private fun processIntent(intent: Intent): Boolean {
         try {
             isUsedMultiTransition = intent.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false)
+            isRefresh = true
 
             try {
                 gradientType = StayDetailActivity.TransGradientType.valueOf(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE))
@@ -195,14 +199,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         viewInterface.setInitializedLayout(stayName, defaultImageUrl)
 
         if (isUsedMultiTransition) {
-            isRefresh = true
             screenLock(false)
 
-            screenLockDelay(2)
-
-            onRefresh(viewInterface.getSharedElementTransition(gradientType))
+            onRefresh(viewInterface.getSharedElementTransition(gradientType), screenLockDelay(2))
         } else {
-
         }
     }
 
@@ -210,9 +210,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return !hasDeepLink && isUsedMultiTransition
     }
 
-    private fun screenLockDelay(delay: Int) {
-        addCompositeDisposable(Completable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { screenLock(true) })
+    private fun screenLockDelay(delay: Int): Disposable {
+
+        val disposable = Completable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe { screenLock(true) }
+
+        addCompositeDisposable(disposable)
+
+        return disposable
     }
 
     override fun onStart() {
@@ -372,10 +377,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         isRefresh = false
         screenLock(showProgress)
 
-        onRefresh(Observable.just(true))
+        onRefresh(Observable.just(true), null)
     }
 
-    private fun onRefresh(observable: Observable<Boolean>) {
+    private fun onRefresh(observable: Observable<Boolean>, disposable: Disposable?) {
         addCompositeDisposable(Observable.zip(observable,
                 stayRemoteImpl.getDetail(stayIndex, bookDateTime),
                 calendarImpl.getStayUnavailableCheckInDates(stayIndex, DAYS_OF_MAX_COUNT, false),
@@ -399,6 +404,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             if (!DailyTextUtils.isTextEmpty(it.awards?.title)) analytics.onEventShowCoupon(activity, it.index)
 
             unLockAll()
+            disposable?.dispose()
 
         }, {
             onHandleErrorAndFinish(it)
@@ -406,30 +412,17 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun writeRecentlyViewedPlace(stayDetail: StayDetail) {
-
         val regionName = stayDetail.province?.name
-        val singleObservable: Single<String> = if (regionName.isTextEmpty()) {
-            Single.create(SingleOnSubscribe<String> { emitter ->
-                try {
-                    Geocoder(activity, Locale.KOREA).getFromLocation(stayDetail.latitude, stayDetail.longitude, 10)?.forEach {
-                        it.locality?.takeNotEmpty {
-                            emitter.onSuccess(it)
-                        } ?: emitter.onSuccess("")
-                    }
-                } catch (e: Exception) {
-                    ExLog.e(e.toString())
-                }
-            }).subscribeOn(Schedulers.io())
-        } else {
-            Single.just(regionName)
-        }
+        val observable: Observable<String> = if (regionName.isTextEmpty())
+            googleAddressRemoteImpl.getLocationAddress(stayDetail.latitude, stayDetail.longitude).map(Function<GoogleAddress, String> { it.address })
+        else Observable.just(regionName)
 
-        addCompositeDisposable(singleObservable.flatMapObservable(Function<String, ObservableSource<Boolean>> {
+        addCompositeDisposable(observable.flatMap(Function<String, ObservableSource<Boolean>> {
             recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
                     stayDetail.index, stayDetail.name, null,
                     if (defaultImageUrl.isTextEmpty()) stayDetail.defaultImageUrl else defaultImageUrl,
                     it, false)
-        }).subscribe())
+        }).subscribe({}, { ExLog.e(it.toString()) }))
     }
 
     private fun showWishTooltip() {

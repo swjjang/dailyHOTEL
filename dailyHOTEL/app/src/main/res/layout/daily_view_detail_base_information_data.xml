@@ -14,9 +14,9 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="15dp"
-        tools:parentTag="com.daily.base.widget.DailyRoundedConstraintLayout">
+        tools:parentTag="android.support.constraint.ConstraintLayout">
 
-        <!--<com.daily.base.widget.DailyRoundedConstraintLayout-->
+        <!--<android.support.constraint.ConstraintLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:background="@color/white"-->
@@ -176,6 +176,6 @@
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="dailyTrueAwardsLineView,awardsNameView, awardsDetailView, awardsQuestionView"/>
 
-        <!--</com.daily.base.widget.DailyRoundedConstraintLayout>-->
+        <!--</android.support.constraint.ConstraintLayout>-->
     </merge>
 </layout>
