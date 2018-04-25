@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp">
+
+        <ImageView
+            android:id="@+id/iconView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="19dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/info_ic_text_dot_black"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:freezesText="true"
+            android:lineSpacingExtra="-2dp"
+            android:textColor="@color/default_background_section_c323232"
+            android:textSize="13dp"
+            app:layout_constraintLeft_toRightOf="@+id/iconView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginLeft="19dp"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>

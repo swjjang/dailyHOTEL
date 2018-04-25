@@ -4,13 +4,14 @@ import android.content.Intent
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.parcel.RoomParcel
+import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.twoheart.dailyhotel.R
 
 class StayRoomsPresenter(activity: StayRoomsActivity)//
     : BaseExceptionPresenter<StayRoomsActivity, StayRoomsInterface.ViewInterface>(activity), StayRoomsInterface.OnEventListener {
 
     private val roomList = mutableListOf<Room>()
-    private var activeReward:Boolean = false
+    private var activeReward: Boolean = false
 
     private val analytics: StayRoomsInterface.AnalyticsInterface by lazy {
         StayRoomsAnalyticsImpl()
@@ -27,6 +28,10 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     }
 
     override fun onPostCreate() {
+        if (DailyPreference.getInstance(activity).stayProductDetailGuide) {
+            DailyPreference.getInstance(activity).stayProductDetailGuide = false
+            viewInterface.setGuideVisible(true)
+        }
     }
 
     override fun onIntent(intent: Intent?): Boolean {
@@ -34,6 +39,10 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             val parcelList: ArrayList<RoomParcel> = it.getParcelableArrayListExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_LIST)
             for (parcel in parcelList) {
                 roomList += parcel.room
+            }
+
+            if (roomList.size == 0) {
+                false
             }
 
             activeReward = it.getBooleanExtra(StayRoomsActivity.INTENT_EXTRA_ACTIVE_REWARD, false)
@@ -76,5 +85,16 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
     override fun onBackClick() {
         activity.onBackPressed()
+    }
+
+
+
+
+
+
+
+
+    override fun onScrolled(position: Int, real: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
