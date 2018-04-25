@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.databinding.DataBindingUtil
-import android.graphics.Color
 import android.support.v7.widget.GridLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -41,7 +40,6 @@ class DailyRoomGridInfoView : LinearLayout {
         }
 
         orientation = LinearLayout.VERTICAL
-        setBackgroundColor(Color.RED)
 
         viewDataBinding.moreTextView.setOnClickListener({
             showMoreList()
