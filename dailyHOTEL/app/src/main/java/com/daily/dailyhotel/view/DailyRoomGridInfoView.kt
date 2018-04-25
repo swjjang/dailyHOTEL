@@ -70,67 +70,68 @@ class DailyRoomGridInfoView : LinearLayout {
     }
 
     fun setData(type: ItemType, list: MutableList<String> = mutableListOf()) {
-        if (list.isEmpty()) {
-            viewDataBinding.gridLayout.visibility = View.GONE
-            viewDataBinding.moreGridLayout.visibility = View.GONE
-            viewDataBinding.moreTextView.visibility = View.GONE
-            return
-        }
-
-        viewDataBinding.moreGridLayout.removeAllViews()
-
-        viewDataBinding.gridLayout.visibility = View.VISIBLE
-        viewDataBinding.moreGridLayout.visibility = View.VISIBLE
-        viewDataBinding.moreTextView.visibility = View.VISIBLE
-
-        val columnCount = viewDataBinding.gridLayout.columnCount
-        val maxIndex = DEFAULT_SHOW_LINE_COUNT * columnCount
-        val hasMore = list.size > maxIndex
-
-        list.forEachIndexed { index, text ->
-            if (index < maxIndex) {
-                viewDataBinding.gridLayout.addView(getItemView(type, text))
-            } else {
-                viewDataBinding.moreGridLayout.addView(getItemView(type, text))
+        viewDataBinding.run {
+            if (list.isEmpty()) {
+                gridLayout.visibility = View.GONE
+                moreGridLayout.visibility = View.GONE
+                moreTextView.visibility = View.GONE
+                return
             }
-        }
 
-        val remainder = list.size % columnCount
-        if (remainder != 0) {
-            for (index in 1..columnCount - remainder) {
-                if (hasMore) {
-                    viewDataBinding.moreGridLayout.addView(getItemView(NONE, ""))
+            moreGridLayout.removeAllViews()
+
+            gridLayout.visibility = View.VISIBLE
+            moreGridLayout.visibility = View.VISIBLE
+            moreTextView.visibility = View.VISIBLE
+
+            val columnCount = gridLayout.columnCount
+            val maxIndex = DEFAULT_SHOW_LINE_COUNT * columnCount
+            val hasMore = list.size > maxIndex
+
+            list.forEachIndexed { index, text ->
+                if (index < maxIndex) {
+                    gridLayout.addView(getItemView(type, text))
                 } else {
-                    viewDataBinding.gridLayout.addView(getItemView(NONE, ""))
+                    moreGridLayout.addView(getItemView(type, text))
                 }
             }
-        }
 
-        viewDataBinding.moreGridLayout.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                try {
-                    viewDataBinding.moreGridLayout.viewTreeObserver.removeOnPreDrawListener(this)
-                    viewDataBinding.moreGridLayout.tag = viewDataBinding.moreGridLayout.height
-
-                    val params = viewDataBinding.moreGridLayout.layoutParams as LinearLayout.LayoutParams
-                    if (params != null) {
-                        params.height = 0
-                        viewDataBinding.moreGridLayout.layoutParams = params
+            val remainder = list.size % columnCount
+            if (remainder != 0) {
+                for (index in 1..columnCount - remainder) {
+                    if (hasMore) {
+                        moreGridLayout.addView(getItemView(NONE, ""))
+                    } else {
+                        gridLayout.addView(getItemView(NONE, ""))
                     }
-                } catch (e: Exception) {
-                    ExLog.e(e.toString())
                 }
-
-                return false
             }
-        })
+
+            moreGridLayout.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    try {
+                        moreGridLayout.viewTreeObserver.removeOnPreDrawListener(this)
+                        moreGridLayout.tag = moreGridLayout.height
+
+                        (moreGridLayout.layoutParams as LinearLayout.LayoutParams)?.apply {
+                            height = 0
+                            moreGridLayout.layoutParams = this
+                        }
+                    } catch (e: Exception) {
+                        ExLog.e(e.toString())
+                    }
+
+                    return false
+                }
+            })
+        }
     }
 
     private fun isShowMoreList(): Boolean {
         return viewDataBinding.moreGridLayout.height > 0
     }
 
-    fun showMoreList() {
+    private fun showMoreList() {
 
         val height = viewDataBinding.moreGridLayout.tag as Int
         if (height == 0) {
@@ -141,38 +142,39 @@ class DailyRoomGridInfoView : LinearLayout {
             return
         }
 
-        val valueAnimator = ValueAnimator.ofInt(0, height)
-        valueAnimator.addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
-            if (valueAnimator == null) {
-                return@AnimatorUpdateListener
-            }
+        val valueAnimator = ValueAnimator.ofInt(0, height).apply {
+            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+                if (valueAnimator == null) {
+                    return@AnimatorUpdateListener
+                }
 
-            val value = valueAnimator.animatedValue as Int
-            val layoutParams = viewDataBinding.moreGridLayout.layoutParams
-            layoutParams.height = value
-            viewDataBinding.moreGridLayout.requestLayout()
-        })
+                val value = valueAnimator.animatedValue as Int
+                val layoutParams = viewDataBinding.moreGridLayout.layoutParams
+                layoutParams.height = value
+                viewDataBinding.moreGridLayout.requestLayout()
+            })
 
-        valueAnimator.duration = 200
-        valueAnimator.interpolator = AccelerateDecelerateInterpolator()
-        valueAnimator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                viewDataBinding.moreTextView.visibility = View.GONE
-            }
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    viewDataBinding.moreTextView.visibility = View.GONE
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                valueAnimator.removeAllUpdateListeners()
-                valueAnimator.removeAllListeners()
-            }
+                override fun onAnimationEnd(animation: Animator) {
+                    removeAllUpdateListeners()
+                    removeAllListeners()
+                }
 
-            override fun onAnimationCancel(animation: Animator) {
+                override fun onAnimationCancel(animation: Animator) {
 
-            }
+                }
 
-            override fun onAnimationRepeat(animation: Animator) {
+                override fun onAnimationRepeat(animation: Animator) {
 
-            }
-        })
+                }
+            })
+        }
 
         valueAnimator.start()
     }
@@ -213,9 +215,6 @@ class DailyRoomGridInfoView : LinearLayout {
 
         return dataBinding.root.apply {
             val params = GridLayout.LayoutParams().apply {
-//                width = GridLayout.LayoutParams.WRAP_CONTENT
-//                height = GridLayout.LayoutParams.WRAP_CONTENT
-
                 width = 0
                 height = ViewGroup.LayoutParams.WRAP_CONTENT
                 columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f)
