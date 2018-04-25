@@ -369,6 +369,17 @@
                     android:textSize="12dp"/>
 
                 <com.daily.base.widget.DailyTextView
+                    android:id="@+id/alphaServerTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/shape_dialog_button01"
+                    android:padding="10dp"
+                    android:text="국내알파서버, 해외데브서버"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"/>
+
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/debugTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

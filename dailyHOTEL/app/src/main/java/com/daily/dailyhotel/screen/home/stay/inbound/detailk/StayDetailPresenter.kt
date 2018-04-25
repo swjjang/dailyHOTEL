@@ -99,7 +99,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun constructorInitialize(activity: StayDetailActivity) {
-        setContentView(R.layout.activity_stay_detail_data)
+        setContentView(R.layout.activity_stay_detailk_data)
 
         isRefresh = true
     }
@@ -376,21 +376,17 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun onRefresh(observable: Observable<Boolean>) {
-
         addCompositeDisposable(Observable.zip(observable,
                 stayRemoteImpl.getDetail(stayIndex, bookDateTime),
                 calendarImpl.getStayUnavailableCheckInDates(stayIndex, DAYS_OF_MAX_COUNT, false),
-                commonRemoteImpl.commonDateTime, object : Function4<Boolean, StayDetail, List<String>, CommonDateTime, StayDetail> {
+                commonRemoteImpl.commonDateTime, Function4<Boolean, StayDetail, List<String>, CommonDateTime, StayDetail> { _, stayDetail, soldOutDayList, commonDateTime ->
+            this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
+            this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replaceAfter('-', "").toInt() }.toIntArray()
+            this@StayDetailPresenter.stayDetail = stayDetail
 
-            override fun apply(sharedElementTransition: Boolean, stayDetail: StayDetail, soldOutDayList: List<String>, commonDateTime: CommonDateTime): StayDetail {
-                this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
-                this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replaceAfter('-', "").toInt() }.toIntArray()
-                this@StayDetailPresenter.stayDetail = stayDetail
+            writeRecentlyViewedPlace(stayDetail)
 
-                writeRecentlyViewedPlace(stayDetail)
-
-                return stayDetail
-            }
+            stayDetail
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({
             //
 

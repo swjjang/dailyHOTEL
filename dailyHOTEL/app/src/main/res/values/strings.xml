@@ -10,6 +10,7 @@
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
+    <string name="label_currency_more">원~</string>
     <string name="currency_format">###,##0원</string>
     <string name="currency_format_prefix">₩ ###,##0</string>
     <string name="label_map">지도</string>
@@ -1263,6 +1264,7 @@
     <string name="label_detail_view_total_price">총가격</string>
     <string name="label_detail_view_review_go">%1$s개 트루리뷰 보기</string>
     <string name="label_gourmet_detail_full_time_menu">전체시간 메뉴</string>
+    <string name="label_stay_detail_view_room_detail">객실 상세보기</string>
 
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>

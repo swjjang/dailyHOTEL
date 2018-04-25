@@ -15,12 +15,13 @@ import com.daily.dailyhotel.entity.DetailImageInformation
 import com.daily.dailyhotel.entity.TrueAwards
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding
+import com.twoheart.dailyhotel.databinding.ActivityStayDetailkDataBinding
 import io.reactivex.Observable
 
 class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface.OnEventListener)//
-    : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
+    : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailkDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
 
-    override fun setContentView(viewDataBinding: ActivityStayDetailDataBinding) {
+    override fun setContentView(viewDataBinding: ActivityStayDetailkDataBinding) {
         initToolbar(viewDataBinding)
     }
 
@@ -28,7 +29,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.toolbarView.setTitleText(title)
     }
 
-    private fun initToolbar(viewDataBinding: ActivityStayDetailDataBinding) {
+    private fun initToolbar(viewDataBinding: ActivityStayDetailkDataBinding) {
         viewDataBinding.toolbarView.setOnBackClickListener { eventListener.onBackClick() }
     }
 
@@ -48,7 +49,6 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         if (enabled) {
             viewDataBinding.transImageView.visibility = View.VISIBLE
             viewDataBinding.transGradientBottomView.visibility = View.VISIBLE
-            viewDataBinding.transNameTextView.visibility = View.VISIBLE
 
             viewDataBinding.transImageView.transitionName = getString(R.string.transition_place_image);
             viewDataBinding.transGradientBottomView.transitionName = getString(R.string.transition_gradient_bottom_view);
@@ -64,7 +64,6 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         } else {
             viewDataBinding.transImageView.visibility = View.GONE
             viewDataBinding.transGradientBottomView.visibility = View.GONE
-            viewDataBinding.transNameTextView.visibility = View.GONE
         }
     }
 
