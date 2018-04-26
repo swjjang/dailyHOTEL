@@ -628,7 +628,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             @Override
                             public void onDismiss(DialogInterface dialogInterface)
                             {
-                                onBackClick();
+                                mNeedOverwritePrice = true;
+                                setRefresh(true);
+                                onRefresh(true);
                             }
                         });
                 } else if (mStayOutboundPayment.availableRooms == 0) // 솔드 아웃인 경우
