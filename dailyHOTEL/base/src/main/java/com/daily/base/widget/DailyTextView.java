@@ -3,10 +3,13 @@ package com.daily.base.widget;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatTextView;
@@ -19,6 +22,7 @@ import com.daily.base.util.VersionUtils;
 public class DailyTextView extends AppCompatTextView
 {
     private int mCurMaxLine = 0;
+    private boolean mDrawableCompatLeftFixedFirstLine = false;
 
     public DailyTextView(Context context)
     {
@@ -60,6 +64,8 @@ public class DailyTextView extends AppCompatTextView
         {
             return;
         }
+
+        mDrawableCompatLeftFixedFirstLine = context.obtainStyledAttributes(attrs, R.styleable.app).getBoolean(R.styleable.app_drawableCompatLeftFixedFirstLine, false);
 
         setCompoundDrawablesWithIntrinsicBounds(drawableCompatLeftResId, drawableCompatTopResId, drawableCompatRightResId, drawableCompatBottomResId);
     }
@@ -156,13 +162,26 @@ public class DailyTextView extends AppCompatTextView
         super.setTypeface(typeface);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint({"RestrictedApi", "ResourceType"})
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
     {
         if (VersionUtils.isOverAPI21() == true)
         {
-            super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+            final Context context = getContext();
+
+            Drawable leftDrawable = left != 0 ? context.getDrawable(left) : null;
+
+            if (leftDrawable != null && mDrawableCompatLeftFixedFirstLine)
+            {
+                leftDrawable = new GravityCompoundDrawable(leftDrawable, mDrawableCompatLeftFixedFirstLine);
+            }
+
+            setCompoundDrawablesWithIntrinsicBounds(leftDrawable,//
+                top != 0 ? context.getDrawable(top) : null,//
+                right != 0 ? context.getDrawable(right) : null,//
+                bottom != 0 ? context.getDrawable(bottom) : null);
         } else
         {
             Context context = getContext();
@@ -170,6 +189,11 @@ public class DailyTextView extends AppCompatTextView
             Drawable topDrawable = top == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, top);
             Drawable rightDrawable = right == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, right);
             Drawable bottomDrawable = bottom == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, bottom);
+
+            if (leftDrawable != null && mDrawableCompatLeftFixedFirstLine)
+            {
+                leftDrawable = new GravityCompoundDrawable(leftDrawable, mDrawableCompatLeftFixedFirstLine);
+            }
 
             super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
         }
@@ -232,6 +256,70 @@ public class DailyTextView extends AppCompatTextView
                     drawable.setTint(getResources().getColor(colorResId));
                 }
             }
+        }
+    }
+
+    class GravityCompoundDrawable extends Drawable
+    {
+        private final Drawable mDrawable;
+        private final boolean mFixedFirstLine;
+
+        public GravityCompoundDrawable(Drawable drawable, boolean fixedFirstLine)
+        {
+            mDrawable = drawable;
+            mFixedFirstLine = fixedFirstLine;
+
+            drawable.setBounds(0, 0, mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight());
+            setBounds(0, 0, mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight());
+        }
+
+        @Override
+        public int getIntrinsicWidth()
+        {
+            return mDrawable.getIntrinsicWidth();
+        }
+
+        @Override
+        public int getIntrinsicHeight()
+        {
+            return mDrawable.getIntrinsicHeight();
+        }
+
+        @Override
+        public void draw(Canvas canvas)
+        {
+            int halfCanvas = canvas.getHeight() / 2;
+            int halfDrawable = mDrawable.getIntrinsicHeight() / 2;
+            Paint.FontMetrics fontMetrics = getPaint().getFontMetrics();
+            int fontHeight = (int) (fontMetrics.bottom - fontMetrics.top);
+
+            canvas.save();
+
+            if (mFixedFirstLine == true)
+            {
+                canvas.translate(0, -halfCanvas + halfDrawable + (fontHeight - mDrawable.getIntrinsicHeight()) / 2);
+            }
+
+            mDrawable.draw(canvas);
+            canvas.restore();
+        }
+
+        @Override
+        public void setAlpha(int alpha)
+        {
+            mDrawable.setAlpha(alpha);
+        }
+
+        @Override
+        public void setColorFilter(@Nullable ColorFilter colorFilter)
+        {
+            mDrawable.setColorFilter(colorFilter);
+        }
+
+        @Override
+        public int getOpacity()
+        {
+            return mDrawable.getOpacity();
         }
     }
 }
