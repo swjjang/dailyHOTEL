@@ -8,6 +8,10 @@ inline fun <R> String?.letNotEmpty(block: (String) -> R): R? {
     return this?.takeIf { !it.isTextEmpty() }?.let { block(it) }
 }
 
+inline fun <T> Array<T>?.takeNotEmpty(block: (Array<T>) -> Unit) {
+    this?.takeIf { it.isNotEmpty() }?.let { it }
+}
+
 inline fun <T> T?.filterIf(block: (T) -> Boolean, defaultNull: Boolean = false): Boolean {
     return if (this == null) defaultNull else this.let { block(it) }
 }
