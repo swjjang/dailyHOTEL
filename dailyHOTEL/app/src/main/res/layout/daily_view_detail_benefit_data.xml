@@ -20,7 +20,7 @@
         android:paddingTop="20dp">
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/nameTextView"
+            android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:freezesText="true"
@@ -38,7 +38,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/benefitContentsLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView"/>
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/benefitTitleTextView"
@@ -111,7 +111,7 @@
                 android:layout_marginTop="20dp"
                 android:drawablePadding="3dp"
                 app:drawableCompatLeft="@drawable/ic_check_xs"
-                app:drawableCompatLeftFixedFirstLine="true"/>
+                app:drawableCompatLeftAndRightFixedFirstLine="true"/>
         </LinearLayout>
 
         <com.daily.base.widget.DailyTextView

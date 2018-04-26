@@ -20,7 +20,7 @@
         android:paddingTop="20dp">
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/nameTextView"
+            android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:freezesText="true"
@@ -41,7 +41,7 @@
             android:textSize="13dp"
             app:drawableCompatLeft="@drawable/vector_ic_question"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView"/>
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/ratingCountTextView"

@@ -1267,6 +1267,9 @@
     <string name="label_gourmet_detail_full_time_menu">전체시간 메뉴</string>
     <string name="label_stay_detail_view_room_detail">객실 상세보기</string>
     <string name="label_business_benefit">업장 혜택</string>
+    <string name="label_select_room">객실 선택</string>
+    <string name="label_total_price">총 가격</string>
+    <string name="label_available_coupon">쿠폰 적용 가능</string>
 
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
