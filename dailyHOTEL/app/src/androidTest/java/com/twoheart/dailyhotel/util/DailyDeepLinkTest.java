@@ -77,7 +77,7 @@ public class DailyDeepLinkTest
     }
 
     @Test
-    public void test_DeepLink_검색홈_국내스테이() throws InterruptedException
+    public void test_01_DeepLink_검색홈_국내스테이() throws InterruptedException
     {
         final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=23&v=searchHome&pt=stay";
 
