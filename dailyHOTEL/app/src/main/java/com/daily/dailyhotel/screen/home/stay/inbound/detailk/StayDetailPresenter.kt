@@ -407,7 +407,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             disposable?.dispose()
 
         }, {
-            onHandleErrorAndFinish(it)
+            unLockAll()
+            disposable?.dispose()
+//            onHandleErrorAndFinish(it)
         }))
     }
 

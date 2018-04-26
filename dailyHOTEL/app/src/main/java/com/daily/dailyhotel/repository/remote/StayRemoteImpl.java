@@ -8,6 +8,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.StayInterface;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.ReviewScores;
+import com.daily.dailyhotel.entity.RoomImageInformation;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
@@ -17,6 +18,7 @@ import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
+import com.daily.dailyhotel.repository.remote.model.RoomImageInformationData;
 import com.daily.dailyhotel.repository.remote.model.SubwayAreasData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -164,8 +166,8 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     @Override
     public Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}"//
-            : "MTYkMTEkODEkMzMkMTUkMjIkODMkMzEkNjMkNDkkNzgkODgkNDIkNTEkMjkkMjgk$QTY3QjIxODBGFNzIU2MMzFWENzRFQMCTcX3MkNJBRjZBHOEYzRjEMDzMUM2NzkxNzc1RHUQwREY0MTIwRjSAyQkI3ODPWkU0OEQ4QQ==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/hotel/{stayIndex}"//
+            : "MzkkMTckNTgkNDMkOTAkNDgkMTckMzMkOSQ3MyQ3OCQyNSQyOCQyJDc1JDUwJA==$NkVMxNTg1NUzg0MzU4QIL0U1OUJY2DOEYyOTgS0MkVBMjkYwMCFzIyMJ0RBNTMzQzZFYMzlCNzA4BRNThCQDkEwN0I1M0JFQzI3MAW==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
@@ -206,6 +208,41 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                 }
 
                 return stayDetail;
+            });
+    }
+
+    @Override
+    public Observable<List<RoomImageInformation>> getRoomImages(int stayIndex, int roomIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/hotel/{stayIndex}/{roomIndex}/images"//
+            : "MTAwJDEwOSQyNCQxMTIkNTIkODUkNzgkMTUkMzYkMTE1JDEwNSQxMjEkMzAkMTIwJDcwJDExMCQ=$QkQ4RTcyQzdGODgU0NERDODhFQQUExRNkVCQjNg4RTc3NzI4MEMyNkZLDNDU5QzNGMzk4MLEE2QzYxQjY1KOEQyODkKwNUUwNUQ5RjhCODJEBECMTcxOEJDEFNSBEVU2QkM4QUREREI2REM4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+        urlParams.put("{roomIndex}", Integer.toString(roomIndex));
+
+        return mDailyMobileService.getRoomImages(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(baseListDto -> {
+                List<RoomImageInformation> roomImageInformationList = new ArrayList<>();
+
+                if (baseListDto != null)
+                {
+                    if (baseListDto.msgCode == 100 && baseListDto.data != null)
+                    {
+                        for (RoomImageInformationData roomImageInformationData : baseListDto.data)
+                        {
+                            roomImageInformationList.add(roomImageInformationData.getRoomImageInformation());
+                        }
+                    } else
+                    {
+                        throw new BaseException(baseListDto.msgCode, baseListDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return roomImageInformationList;
             });
     }
 
