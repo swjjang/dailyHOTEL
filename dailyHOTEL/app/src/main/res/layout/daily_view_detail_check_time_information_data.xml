@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    >
+
+    <!--<merge-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="20dp">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:freezesText="true"
+            android:text="@string/label_default_check_in_time_check_out_time"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyFont:style="Medium"/>
+
+        <View
+            android:id="@+id/verticalLinetView"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="@color/default_background_c929292"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/checkInTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="체크인"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@+id/verticalLinetView"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/checkInTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15:00"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@+id/verticalLinetView"
+            app:layout_constraintTop_toBottomOf="@+id/checkInTextView"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/checkOutTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="체크아웃"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="@+id/verticalLinetView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/checkOutTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:00"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toLeftOf="@+id/verticalLinetView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkInTextView"
+            dailyFont:style="Medium"/>
+
+        <LinearLayout
+            android:id="@+id/informationLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+    </android.support.constraint.ConstraintLayout>
+    <!--</merge>-->
+</layout>

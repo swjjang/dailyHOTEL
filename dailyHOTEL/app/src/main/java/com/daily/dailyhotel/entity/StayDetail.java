@@ -120,6 +120,14 @@ public class StayDetail extends Configurations
         return null;
     }
 
+    public static class DetailInformation {
+        public List<String> mContentList;
+    }
+
+    public static class BreakfastInformation {
+        public List<String> mContentList;
+    }
+
     public enum Pictogram
     {
         PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),

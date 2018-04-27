@@ -6,15 +6,16 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.databinding.DailyViewDetailBenefitDataBinding
+import com.twoheart.dailyhotel.databinding.DailyViewDetailCheckTimeInformationDataBinding
 
-class DailyDetailBenefitView : ConstraintLayout {
-    private lateinit var viewDataBinding: DailyViewDetailBenefitDataBinding
+class DailyDetailCheckTimeInformationView : ConstraintLayout {
+    private lateinit var viewDataBinding: DailyViewDetailCheckTimeInformationDataBinding
 
     constructor(context: Context) : super(context) {
         initLayout(context)
@@ -29,38 +30,32 @@ class DailyDetailBenefitView : ConstraintLayout {
     }
 
     private fun initLayout(context: Context) {
-        viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_benefit_data, this, true)
+        viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_check_time_information_data, this, true)
+
     }
 
-    fun setTitleText(title: String?) {
-        viewDataBinding.benefitTitleTextView.text = title
+    fun setCheckTimeText(checkInTime: String?, checkOutTime: String?) {
+        checkInTime.takeNotEmpty { viewDataBinding.checkInTextView.text = it }
+        checkOutTime.takeNotEmpty { viewDataBinding.checkOutTimeTextView.text = it }
     }
 
-    fun setContents(contents: Array<String>?) {
-        viewDataBinding.benefitContentsLayout.removeAllViews()
+    fun setInformation(information: Array<String>?) {
+        viewDataBinding.informationLayout.removeAllViews()
 
-        contents.takeNotEmpty {
+        information.takeNotEmpty {
             it.filter { !it.isTextEmpty() }.forEach {
-                viewDataBinding.benefitContentsLayout.addView(getContentView(it), ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                viewDataBinding.informationLayout.addView(getInformationView(it), ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
     }
 
-    private fun getContentView(text: String): DailyTextView {
+    private fun getInformationView(text: String): View {
         return DailyTextView(context).apply {
             this.text = text
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
             setTextColor(context.resources.getColor(R.color.default_text_c323232))
             setDrawableCompatLeftAndRightFixedFirstLine(true)
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_xs, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_ic_text_dot_black, 0, 0, 0)
         }
-    }
-
-    fun setButtonEnabled(enabled: Boolean) {
-        viewDataBinding.downloadCouponTextView.isEnabled = enabled
-    }
-
-    fun setButtonText(text: String) {
-        viewDataBinding.downloadCouponTextView.text = text
     }
 }
