@@ -175,7 +175,7 @@
             android:textColor="@color/white"
             android:textSize="11dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/closeImageView"
+            app:layout_constraintRight_toLeftOf="@id/wishImageView"
             app:layout_constraintTop_toTopOf="parent"/>
         <!--</android.support.constraint.ConstraintLayout>-->
     </merge>
