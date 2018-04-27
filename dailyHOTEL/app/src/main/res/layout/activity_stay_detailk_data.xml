@@ -215,6 +215,46 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/checkTimeInformationView"/>
 
+                <View
+                    android:id="@+id/refundInformationTopLineView"
+                    android:layout_width="0dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"
+                    android:visibility="visible"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detailInformationView"/>
+
+                <com.daily.dailyhotel.view.DailyDetailRefundInformationView
+                    android:id="@+id/refundInformationView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="15dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/refundInformationTopLineView"/>
+
+                <View
+                    android:id="@+id/checkInformationTopLineView"
+                    android:layout_width="0dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"
+                    android:visibility="visible"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/refundInformationView"/>
+
+                <com.daily.dailyhotel.view.DailyDetailCheckInformationView
+                    android:id="@+id/checkInformationView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="15dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/checkInformationTopLineView"/>
+
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/rewardCardLayout"
                     android:layout_width="0dp"
@@ -224,7 +264,7 @@
                     android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/detailInformationView">
+                    app:layout_constraintTop_toBottomOf="@+id/checkInformationView">
 
                     <View
                         android:id="@+id/rewardTopLineView"

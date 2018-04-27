@@ -141,7 +141,7 @@ public class StayDetailData_d
     {
         StayDetail stayDetail = new StayDetail();
 
-        stayDetail.index = index;
+        stayDetail.setIndex(index);
         stayDetail.name = name;
         stayDetail.latitude = latitude;
         stayDetail.longitude = longitude;
@@ -162,9 +162,9 @@ public class StayDetailData_d
         stayDetail.ratingValue = ratingValue;
         stayDetail.ratingShow = ratingShow;
         stayDetail.benefit = benefit;
-        stayDetail.wishCount = wishCount;
-        stayDetail.myWish = myWish;
-        stayDetail.singleStay = singleStay;
+        stayDetail.setWishCount(wishCount);
+        stayDetail.setMyWish(myWish);
+        stayDetail.setSingleStay(singleStay);
         stayDetail.overseas = overseas;
         stayDetail.waitingForBooking = waitingForBooking;
         stayDetail.couponPrice = couponDiscount;
@@ -297,7 +297,7 @@ public class StayDetailData_d
         // 리워드
         if (rewardCard != null)
         {
-            stayDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+            stayDetail.setRewardStickerCount(rewardCard.rewardStickerCount);
         }
 
         if (configurations != null)
