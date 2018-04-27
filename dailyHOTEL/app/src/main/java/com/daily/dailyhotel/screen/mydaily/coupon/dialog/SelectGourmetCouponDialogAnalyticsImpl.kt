@@ -11,7 +11,7 @@ import java.util.*
 
 class SelectGourmetCouponDialogAnalyticsImpl : SelectGourmetCouponDialogInterface.AnalyticsInterface {
     override fun onScreen(activity: Activity, emptyList: Boolean) {
-        val screen : String  = if(emptyList) AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST else AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST
+        val screen: String = if (emptyList) AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST else AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST
         AnalyticsManager.getInstance(activity).recordScreen(activity, screen, null)
     }
 

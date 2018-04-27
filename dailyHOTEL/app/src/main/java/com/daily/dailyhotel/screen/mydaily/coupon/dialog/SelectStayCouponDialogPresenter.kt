@@ -11,6 +11,7 @@ import com.daily.dailyhotel.entity.Coupons
 import com.daily.dailyhotel.parcel.CouponParcel
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
 import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.model.time.StayBookingDay
 import com.twoheart.dailyhotel.util.Constants
@@ -93,17 +94,13 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onFinish() {
@@ -248,13 +245,13 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
 
         addCompositeDisposable(couponRemoteImpl.getDownloadCoupon(coupon.couponCode)
                 .observeOn(AndroidSchedulers.mainThread()).subscribe({
-            analytics.onDownloadCoupon(activity, callByScreen, coupon)
+                    analytics.onDownloadCoupon(activity, callByScreen, coupon)
 
-            isRefresh = true
-            onRefresh(true)
-        }, {
-            onHandleError(it)
-        }))
+                    isRefresh = true
+                    onRefresh(true)
+                }, {
+                    onHandleError(it)
+                }))
     }
 
     private fun showEmptyCouponListDialog() {

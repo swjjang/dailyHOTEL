@@ -5,6 +5,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.parcel.RoomParcel
 import com.daily.dailyhotel.storage.preference.DailyPreference
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 
 class StayRoomsPresenter(activity: StayRoomsActivity)//
@@ -56,17 +57,13 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -86,12 +83,6 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onBackClick() {
         activity.onBackPressed()
     }
-
-
-
-
-
-
 
 
     override fun onScrolled(position: Int, real: Boolean) {

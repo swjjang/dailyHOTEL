@@ -66,12 +66,12 @@ public class Room
     //    vr (Vr, optional): 객실 VR
     public List<String> vrUrlList;
 
-//    public class CheckTime
-//    {
-//        public String checkIn;
-//
-//        public String checkOut;
-//    }
+    //    public class CheckTime
+    //    {
+    //        public String checkIn;
+    //
+    //        public String checkOut;
+    //    }
 
     public static class Consecutive
     {

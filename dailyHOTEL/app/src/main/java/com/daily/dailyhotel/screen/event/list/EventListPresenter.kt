@@ -7,6 +7,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.repository.remote.EventRemoteImpl
 import com.daily.dailyhotel.screen.common.event.EventWebActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.network.model.Event
 import com.twoheart.dailyhotel.util.Constants
@@ -71,18 +72,14 @@ class EventListPresenter(activity: EventListActivity)//
             dailyDeepLink?.clear()
             dailyDeepLink = null
         } else {
-            if (isRefresh) {
-                onRefresh(true)
-            }
+            isRefresh.runTrue { onRefresh(true) }
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

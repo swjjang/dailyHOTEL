@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.copy.kotlin
 import android.content.Intent
 import android.os.Bundle
 import com.daily.dailyhotel.base.BaseExceptionPresenter
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 
 class CopyPresenter(activity: CopyActivity)//
@@ -37,13 +38,13 @@ class CopyPresenter(activity: CopyActivity)//
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) onRefresh(true)
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) onRefresh(true)
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onDestroy() {

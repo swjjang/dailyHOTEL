@@ -15,6 +15,7 @@ import com.daily.dailyhotel.screen.mydaily.coupon.register.RegisterCouponActivit
 import com.daily.dailyhotel.screen.mydaily.coupon.term.CouponTermActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
@@ -88,9 +89,7 @@ class CouponListPresenter(activity: CouponListActivity)//
             dailyDeepLink = null
         } else {
             if (DailyHotel.isLogin()) {
-                if (isRefresh) {
-                    onRefresh(true)
-                }
+                isRefresh.runTrue { onRefresh(true) }
             } else {
                 showLoginDialog()
             }

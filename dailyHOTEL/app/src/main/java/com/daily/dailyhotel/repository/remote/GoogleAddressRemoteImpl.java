@@ -176,7 +176,8 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
     public Observable<String> getLocationRegionName(Context context, String regionName //
         , double latitude, double longitude, boolean isCountryName)
     {
-        if (!DailyTextUtils.isTextEmpty(regionName)) {
+        if (!DailyTextUtils.isTextEmpty(regionName))
+        {
             return Observable.just(regionName);
         }
 

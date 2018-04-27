@@ -40,7 +40,7 @@ class SelectStayCouponDialogView(activity: SelectStayCouponDialogActivity, liste
             confirmTextView.setOnClickListener(this@SelectStayCouponDialogView)
 
             punchMaskLayout.run {
-                    val drawable = BackgroundDrawable(context, this)
+                val drawable = BackgroundDrawable(context, this)
                 if (VersionUtils.isOverAPI16()) {
                     background = drawable
                 } else {

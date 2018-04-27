@@ -367,7 +367,8 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                     if (objectBaseDto != null)
                     {
                         return objectBaseDto;
-                    } else {
+                    } else
+                    {
                         throw new BaseException(-1, null);
                     }
                 }

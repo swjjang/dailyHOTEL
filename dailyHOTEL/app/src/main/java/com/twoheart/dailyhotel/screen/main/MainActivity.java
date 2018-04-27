@@ -1464,43 +1464,43 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             if (DailyTextUtils.isTextEmpty(title, message) == true)
             {
                 addCompositeDisposable(new CommonRemoteImpl().getConfigurations().observeOn(Schedulers.newThread()).subscribe(new Consumer<Configurations>()
+                {
+                    @Override
+                    public void accept(Configurations configurations) throws Exception
                     {
-                        @Override
-                        public void accept(Configurations configurations) throws Exception
+                        DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
+                        new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
                         {
-                            DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
-                            new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
+                            @Override
+                            public void onComplete(String currentVersion, String forceVersion)
                             {
-                                @Override
-                                public void onComplete(String currentVersion, String forceVersion)
+                                runOnUiThread(new Runnable()
                                 {
-                                    runOnUiThread(new Runnable()
+                                    @Override
+                                    public void run()
                                     {
-                                        @Override
-                                        public void run()
+                                        if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
                                         {
-                                            if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
-                                            {
-                                                mNetworkController.requestVersion();
-                                            } else
-                                            {
-                                                checkAppVersion(currentVersion, forceVersion);
-                                            }
-
-                                            analyticsRankABTest();
+                                            mNetworkController.requestVersion();
+                                        } else
+                                        {
+                                            checkAppVersion(currentVersion, forceVersion);
                                         }
-                                    });
-                                }
-                            });
-                        }
-                    }, new Consumer<Throwable>()
+
+                                        analyticsRankABTest();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
                     {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception
-                        {
-                            onHandleError(throwable);
-                        }
-                    }));
+                        onHandleError(throwable);
+                    }
+                }));
             } else
             {
                 unLockUI();

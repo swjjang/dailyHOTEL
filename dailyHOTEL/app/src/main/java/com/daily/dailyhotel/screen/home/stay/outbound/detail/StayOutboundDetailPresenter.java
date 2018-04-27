@@ -423,7 +423,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().startCampaignStickerAnimation();
         }
 
-        mAppResearch.onResume(getActivity(),"outbound_스테이", mStayIndex);
+        mAppResearch.onResume(getActivity(), "outbound_스테이", mStayIndex);
     }
 
     @Override
@@ -1619,7 +1619,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     public ObservableSource<Boolean> apply(String regionString) throws Exception
                     {
                         return mRecentlyLocalImpl.addRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY //
-                            , stayOutboundDetail.index,  stayOutboundDetail.name, null, mImageUrl //
+                            , stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl //
                             , regionString, false);
                     }
                 }).observeOn(Schedulers.io()).subscribe(new Consumer<Boolean>()
@@ -1972,41 +1972,41 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         addCompositeDisposable(mStayOutboundRemoteImpl.getRecommendAroundList(getActivity(), mStayIndex, mStayBookDateTime, mPeople) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
-        {
-            @Override
-            public void accept(StayOutbounds stayOutbounds) throws Exception
             {
-                setRecommendAroundList(stayOutbounds);
-                notifyRecommendAroundList();
-                notifyRewardChanged();
-
-                boolean hasRecommendList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
-
-                mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
-
-                if (hasRecommendList == true)
+                @Override
+                public void accept(StayOutbounds stayOutbounds) throws Exception
                 {
-                    List<Integer> recommendIndexList = new ArrayList<>();
-                    for (CarouselListItem carouselListItem : mRecommendAroundList)
-                    {
-                        StayOutbound stayOutbound = carouselListItem.getItem();
-                        if (stayOutbound != null)
-                        {
-                            recommendIndexList.add(stayOutbound.index);
-                        }
-                    }
+                    setRecommendAroundList(stayOutbounds);
+                    notifyRecommendAroundList();
+                    notifyRewardChanged();
 
-                    mAnalytics.onEventRecommendItemList(getActivity(), mStayIndex, recommendIndexList);
+                    boolean hasRecommendList = mRecommendAroundList != null && mRecommendAroundList.size() > 0;
+
+                    mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
+
+                    if (hasRecommendList == true)
+                    {
+                        List<Integer> recommendIndexList = new ArrayList<>();
+                        for (CarouselListItem carouselListItem : mRecommendAroundList)
+                        {
+                            StayOutbound stayOutbound = carouselListItem.getItem();
+                            if (stayOutbound != null)
+                            {
+                                recommendIndexList.add(stayOutbound.index);
+                            }
+                        }
+
+                        mAnalytics.onEventRecommendItemList(getActivity(), mStayIndex, recommendIndexList);
+                    }
                 }
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+            }, new Consumer<Throwable>()
             {
-                ExLog.e(throwable.toString());
-                notifyRewardChanged();
-            }
-        }));
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    ExLog.e(throwable.toString());
+                    notifyRewardChanged();
+                }
+            }));
     }
 }

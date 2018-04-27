@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
@@ -55,9 +56,7 @@ class RegisterCouponPresenter(activity: RegisterCouponActivity)//
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
 
         if (!DailyHotel.isLogin()) {
             showLoginDialog()
@@ -67,9 +66,7 @@ class RegisterCouponPresenter(activity: RegisterCouponActivity)//
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onDestroy() {

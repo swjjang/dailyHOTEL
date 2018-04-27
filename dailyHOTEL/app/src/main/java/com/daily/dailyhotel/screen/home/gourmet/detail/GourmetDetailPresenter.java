@@ -1639,14 +1639,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationRegionName(getActivity(), regionName //
             , mGourmetDetail.latitude, mGourmetDetail.longitude, false) //
             .flatMap(new Function<String, ObservableSource<Boolean>>()
-        {
-            @Override
-            public ObservableSource<Boolean> apply(String regionString) throws Exception
             {
-                return mRecentlyLocalImpl.addRecentlyItem(getActivity(), Constants.ServiceType.GOURMET //
-                    , mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, regionString, true);
-            }
-        }).observeOn(Schedulers.io()).subscribe(new Consumer<Boolean>()
+                @Override
+                public ObservableSource<Boolean> apply(String regionString) throws Exception
+                {
+                    return mRecentlyLocalImpl.addRecentlyItem(getActivity(), Constants.ServiceType.GOURMET //
+                        , mGourmetDetail.index, mGourmetDetail.name, null, mImageUrl, regionString, true);
+                }
+            }).observeOn(Schedulers.io()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception

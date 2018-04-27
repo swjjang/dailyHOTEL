@@ -24,7 +24,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_INTRO_NEW_VERSION = "2";
     private static final String KEY_REMOTE_CONFIG_INTRO_NEW_URL = "3";
 
-//    private static final String KEY_REMOTE_CONFIG_TEXT_VERSION = "100";
+    //    private static final String KEY_REMOTE_CONFIG_TEXT_VERSION = "100";
     private static final String KEY_REMOTE_CONFIG_TEXT_LOGINTEXT01 = "101";
     private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01 = "102";
     private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT02 = "103";
