@@ -48,7 +48,7 @@ class DailyDetailBenefitView : ConstraintLayout {
             this.text = text
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
             setTextColor(context.resources.getColor(R.color.default_text_c323232))
-            setDrawableCompatLeftFixedFirstLine(true)
+            setDrawableCompatLeftAndRightFixedFirstLine(true)
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_xs, 0, 0, 0)
         }
     }
