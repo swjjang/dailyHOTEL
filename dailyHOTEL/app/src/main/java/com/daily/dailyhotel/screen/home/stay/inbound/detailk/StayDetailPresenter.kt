@@ -223,13 +223,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) onRefresh(true)
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) onRefresh(true)
+        isRefresh.runTrue { onRefresh(true) }
 
         if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled) {
             viewInterface.startRewardStickerAnimation()

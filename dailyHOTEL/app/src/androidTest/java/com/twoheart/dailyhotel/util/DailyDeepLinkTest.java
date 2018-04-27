@@ -19,9 +19,11 @@ import com.twoheart.dailyhotel.R;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +42,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DailyDeepLinkTest
 {
     @Rule
@@ -74,7 +77,7 @@ public class DailyDeepLinkTest
     }
 
     @Test
-    public void test_DeepLink_검색홈_국내스테이() throws InterruptedException
+    public void test_01_DeepLink_검색홈_국내스테이() throws InterruptedException
     {
         final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=23&v=searchHome&pt=stay";
 

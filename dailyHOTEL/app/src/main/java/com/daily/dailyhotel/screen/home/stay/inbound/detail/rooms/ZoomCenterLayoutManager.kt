@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.twoheart.dailyhotel.R
 
-class ZoomCenterLayoutManager  : LinearLayoutManager {
+class ZoomCenterLayoutManager : LinearLayoutManager {
 
     constructor(context: Context) : super(context) {
 

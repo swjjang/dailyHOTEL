@@ -36,7 +36,7 @@ class CouponTermPresenter(activity: DailyWebActivity) : DailyWebPresenter(activi
         } else {
             mTitleText = getString(R.string.coupon_notice_text)
 
-            mUrl = if (Constants.DEBUG ) {
+            mUrl = if (Constants.DEBUG) {
                 // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
                 if (DailyPreference.getInstance(activity).baseUrl.startsWith("https://prod-")) {
                     DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigStaticUrlProdCouponNote + mCouponIndex

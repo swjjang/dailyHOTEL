@@ -7,7 +7,7 @@ import com.daily.dailyhotel.entity.Room
 
 interface StayRoomsInterface {
     interface ViewInterface : BaseDialogViewInterface {
-        fun setRoomList(roomList : MutableList<Room>, position: Int)
+        fun setRoomList(roomList: MutableList<Room>, position: Int)
 
         fun setGuideVisible(visible: Boolean)
     }

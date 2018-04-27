@@ -11,6 +11,7 @@ import com.daily.dailyhotel.entity.Coupons
 import com.daily.dailyhotel.parcel.CouponParcel
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl
 import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.util.Constants
 import com.twoheart.dailyhotel.util.Util
@@ -78,17 +79,13 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onFinish() {

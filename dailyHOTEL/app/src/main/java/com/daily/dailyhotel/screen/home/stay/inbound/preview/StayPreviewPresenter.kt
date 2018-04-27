@@ -20,6 +20,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
 import com.daily.dailyhotel.storage.preference.DailyUserPreference
+import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.util.Constants
 import com.twoheart.dailyhotel.util.KakaoLinkManager
@@ -96,17 +97,13 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
     override fun onStart() {
         super.onStart()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isRefresh) {
-            onRefresh(true)
-        }
+        isRefresh.runTrue { onRefresh(true) }
     }
 
     override fun onDestroy() {
