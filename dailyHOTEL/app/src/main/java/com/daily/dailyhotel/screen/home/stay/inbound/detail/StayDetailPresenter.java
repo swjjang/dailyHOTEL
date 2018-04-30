@@ -26,6 +26,7 @@ import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.User;
@@ -711,14 +712,14 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH);
         } else
         {
-            boolean wish = !mStayDetail.getMyWish();
-            int wishCount = wish ? mStayDetail.getWishCount() + 1 : mStayDetail.getWishCount() - 1;
+            boolean wish = !mStayDetail.myWish;
+            int wishCount = wish ? mStayDetail.wishCount + 1 : mStayDetail.wishCount - 1;
 
             notifyWishChanged(wishCount, wish);
 
             if (wish == true)
             {
-                addCompositeDisposable(mStayRemoteImpl.addWish(mStayDetail.getIndex())//
+                addCompositeDisposable(mStayRemoteImpl.addWish(mStayDetail.index)//
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
                     {
                         @Override
@@ -730,12 +731,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                             if (wishResult.success == true)
                             {
-                                mStayDetail.setMyWish(true);
-                                mStayDetail.setWishCount(mStayDetail.getWishCount() + 1);
+                                mStayDetail.myWish = true;
+                                mStayDetail.wishCount++;
 
                                 notifyWishChanged();
 
-                                Observable<Boolean> observable = getViewInterface().showWishView(mStayDetail.getMyWish());
+                                Observable<Boolean> observable = getViewInterface().showWishView(mStayDetail.myWish);
 
                                 if (observable != null)
                                 {
@@ -755,7 +756,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                                 mAnalytics.onEventWishClick(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList, true);
                             } else
                             {
-                                notifyWishChanged(mStayDetail.getWishCount(), mStayDetail.getMyWish());
+                                notifyWishChanged(mStayDetail.wishCount, mStayDetail.myWish);
 
                                 getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
                                     , getString(R.string.dialog_btn_text_confirm), null);
@@ -770,12 +771,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                         {
                             onHandleError(throwable);
 
-                            notifyWishChanged(mStayDetail.getWishCount(), mStayDetail.getMyWish());
+                            notifyWishChanged(mStayDetail.wishCount, mStayDetail.myWish);
                         }
                     }));
             } else
             {
-                addCompositeDisposable(mStayRemoteImpl.removeWish(mStayDetail.getIndex())//
+                addCompositeDisposable(mStayRemoteImpl.removeWish(mStayDetail.index)//
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
                     {
                         @Override
@@ -787,12 +788,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                             if (wishResult.success == true)
                             {
-                                mStayDetail.setMyWish(false);
-                                mStayDetail.setWishCount(mStayDetail.getWishCount() - 1);
+                                mStayDetail.myWish = false;
+                                mStayDetail.wishCount -= 1;
 
                                 notifyWishChanged();
 
-                                Observable<Boolean> observable = getViewInterface().showWishView(mStayDetail.getMyWish());
+                                Observable<Boolean> observable = getViewInterface().showWishView(mStayDetail.myWish);
 
                                 if (observable != null)
                                 {
@@ -812,7 +813,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                                 mAnalytics.onEventWishClick(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList, false);
                             } else
                             {
-                                notifyWishChanged(mStayDetail.getWishCount(), mStayDetail.getMyWish());
+                                notifyWishChanged(mStayDetail.wishCount, mStayDetail.myWish);
 
                                 getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
                                     , getString(R.string.dialog_btn_text_confirm), null);
@@ -827,7 +828,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                         {
                             onHandleError(throwable);
 
-                            notifyWishChanged(mStayDetail.getWishCount(), mStayDetail.getMyWish());
+                            notifyWishChanged(mStayDetail.wishCount, mStayDetail.myWish);
                         }
                     }));
             }
@@ -849,7 +850,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             String name = DailyUserPreference.getInstance(getActivity()).getName();
             String urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk";
-            String longUrl = String.format(Locale.KOREA, urlFormat, mStayDetail.getIndex() //
+            String longUrl = String.format(Locale.KOREA, urlFormat, mStayDetail.index //
                 , mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), mStayBookDateTime.getNights());
 
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
@@ -862,7 +863,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     KakaoLinkManager.newInstance(getActivity()).shareStay(name//
                         , mStayDetail.name//
                         , mStayDetail.address//
-                        , mStayDetail.getIndex()//
+                        , mStayDetail.index//
                         , mStayDetail.getImageInformationList() == null || mStayDetail.getImageInformationList().size() == 0 ? null : mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
                         , shortUrl //
                         , mStayBookDateTime);
@@ -877,16 +878,16 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     KakaoLinkManager.newInstance(getActivity()).shareStay(name//
                         , mStayDetail.name//
                         , mStayDetail.address//
-                        , mStayDetail.getIndex()//
+                        , mStayDetail.index//
                         , mStayDetail.getImageInformationList() == null || mStayDetail.getImageInformationList().size() == 0 ? null : mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
-                        , "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.getIndex() //
+                        , "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index //
                         , mStayBookDateTime);
                 }
             }));
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
                 , DailyUserPreference.getInstance(getActivity()).getType()//
-                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.getIndex(), mStayDetail.name, mStayDetail.overseas);
+                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -916,7 +917,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             int nights = mStayBookDateTime.getNights();
             String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
-                , mStayDetail.getIndex(), mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
 
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
             {
@@ -936,7 +937,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     unLockAll();
 
-                    DailyTextUtils.clipText(getActivity(), "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.getIndex());
+                    DailyTextUtils.clipText(getActivity(), "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
 
                     DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
                 }
@@ -958,7 +959,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             int nights = mStayBookDateTime.getNights();
             String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_moretab"//
-                , mStayDetail.getIndex(), mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
 
             String name = DailyUserPreference.getInstance(getActivity()).getName();
 
@@ -1003,7 +1004,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_SUBJECT, "");
-                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.getIndex());
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
                     Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
                     startActivity(chooser);
                 }
@@ -1254,7 +1255,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
             startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
-                , mStayDetail.getIndex(), 0, mStayDetail.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK);
+                , mStayDetail.index, 0, mStayDetail.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -1291,7 +1292,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         TrueReviewAnalyticsParam analyticsParam = new TrueReviewAnalyticsParam();
         analyticsParam.category = mStayDetail.category;
 
-        startActivityForResult(StayTrueReviewActivity.newInstance(getActivity(), mStayDetail.getIndex(), mReviewScores, analyticsParam), StayDetailActivity.REQUEST_CODE_TRUE_VIEW);
+        startActivityForResult(StayTrueReviewActivity.newInstance(getActivity(), mStayDetail.index, mReviewScores, analyticsParam), StayDetailActivity.REQUEST_CODE_TRUE_VIEW);
 
         mAnalytics.onEventTrueReviewClick(getActivity());
     }
@@ -1318,7 +1319,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 @Override
                 public void onClick(View v)
                 {
-                    startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.getIndex(), mTrueVRList//
+                    startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, mTrueVRList//
                         , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
                 }
             }, new DialogInterface.OnDismissListener()
@@ -1331,11 +1332,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             });
         } else
         {
-            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.getIndex(), mTrueVRList//
+            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, mTrueVRList//
                 , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
         }
 
-        mAnalytics.onEventTrueVRClick(getActivity(), mStayDetail.getIndex());
+        mAnalytics.onEventTrueVRClick(getActivity(), mStayDetail.index);
     }
 
     @Override
@@ -1386,7 +1387,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }, true);
         } else
         {
-            Intent intent = SelectStayCouponDialogActivity.newInstance(getActivity(), mStayDetail.getIndex() //
+            Intent intent = SelectStayCouponDialogActivity.newInstance(getActivity(), mStayDetail.index //
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), mStayDetail.category, mStayDetail.name);
             startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON);
@@ -1453,7 +1454,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             }
         });
 
-        mAnalytics.onEventTrueAwardsClick(getActivity(), mStayDetail.getIndex());
+        mAnalytics.onEventTrueAwardsClick(getActivity(), mStayDetail.index);
     }
 
     @Override
@@ -1574,7 +1575,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }
 
         addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem(getActivity() //
-            , Constants.ServiceType.HOTEL, mStayDetail.getIndex(), mStayDetail.name, null, mImageUrl, regionName, false) //
+            , Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, regionName, false) //
             .observeOn(Schedulers.io()).subscribe());
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
@@ -1673,8 +1674,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             } else
             {
                 getViewInterface().setRewardMember(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
-                    , getString(R.string.label_reward_go_reward), mStayDetail.getRewardStickerCount()//
-                    , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mStayDetail.getRewardStickerCount()));
+                    , getString(R.string.label_reward_go_reward), mStayDetail.rewardStickerCount//
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mStayDetail.rewardStickerCount));
 
                 getViewInterface().stopCampaignStickerAnimation();
             }
@@ -1739,8 +1740,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
-        getViewInterface().setWishCount(mStayDetail.getWishCount());
-        getViewInterface().setWishSelected(mStayDetail.getMyWish());
+        getViewInterface().setWishCount(mStayDetail.wishCount);
+        getViewInterface().setWishSelected(mStayDetail.myWish);
     }
 
     void notifyWishChanged(int wishCount, boolean myWish)
@@ -1789,7 +1790,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
                 , startDateTime, endDateTime//
-                , mStayDetail.getSingleStay() ? 1 : DAYS_OF_MAX_COUNT - 1//
+                , mStayDetail.singleStay ? 1 : DAYS_OF_MAX_COUNT - 1//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayIndex, soldOutDays, callByScreen, soldOut == false//
@@ -1884,11 +1885,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             , mStayRemoteImpl.getReviewScores(mStayIndex)//
             , mStayRemoteImpl.getTrueVR(mStayIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function6<Boolean, StayDetail, List<String>, ReviewScores, List<TrueVR>, CommonDateTime, StayDetail>()
+            , new Function6<Boolean, StayDetailk, List<String>, ReviewScores, List<TrueVR>, CommonDateTime, StayDetail>()
             {
                 @Override
                 public StayDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
-                    , @io.reactivex.annotations.NonNull StayDetail stayDetail//
+                    , @io.reactivex.annotations.NonNull StayDetailk stayDetail//
                     , @io.reactivex.annotations.NonNull List<String> unavailableDates//
                     , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
                     , @io.reactivex.annotations.NonNull List<TrueVR> trueVRList//
@@ -1898,9 +1899,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
                     setTrueVRList(trueVRList);
-                    setStayDetail(stayDetail);
+                    setStayDetail(stayDetail.toStayDetail());
 
-                    return stayDetail;
+                    return stayDetail.toStayDetail();
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayDetail>()
         {
@@ -1925,17 +1926,17 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                 if (mReviewScores != null && mReviewScores.reviewScoreTotalCount > 0)
                 {
-                    mAnalytics.onEventShowTrueReview(getActivity(), stayDetail.getIndex());
+                    mAnalytics.onEventShowTrueReview(getActivity(), stayDetail.index);
                 }
 
                 if (stayDetail.couponPrice > 0)
                 {
-                    mAnalytics.onEventShowCoupon(getActivity(), stayDetail.getIndex());
+                    mAnalytics.onEventShowCoupon(getActivity(), stayDetail.index);
                 }
 
                 if (stayDetail.awards != null && DailyTextUtils.isTextEmpty(stayDetail.awards.title) == false)
                 {
-                    mAnalytics.onEventTrueAwards(getActivity(), stayDetail.getIndex());
+                    mAnalytics.onEventTrueAwards(getActivity(), stayDetail.index);
                 }
             }
         }, new Consumer<Throwable>()
@@ -2006,7 +2007,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             }));
         }
 
-        mAnalytics.onEventBookingClick(getActivity(), mStayBookDateTime, mStayDetail.getIndex(), mStayDetail.name//
+        mAnalytics.onEventBookingClick(getActivity(), mStayBookDateTime, mStayDetail.index, mStayDetail.name//
             , mSelectedRoom.name, mSelectedRoom.discountAverage, mStayDetail.category //
             , mStayDetail.activeReward && mSelectedRoom.provideRewardSticker, mStayDetail.overseas);
     }
@@ -2036,7 +2037,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
         }
 
-        Intent intent = StayPaymentActivity.newInstance(getActivity(), stayDetail.getIndex()//
+        Intent intent = StayPaymentActivity.newInstance(getActivity(), stayDetail.index//
             , stayDetail.name, imageUrl, stayRoom.index, stayRoom.discountTotal, stayRoom.name//
             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//

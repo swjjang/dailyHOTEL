@@ -93,7 +93,7 @@ interface StayDetailInterface {
                              positiveListener: View.OnClickListener,
                              onDismissListener: DialogInterface.OnDismissListener)
 
-        fun showTrueAwardsDialog(trueAwards: TrueAwards, onDismissListener: DialogInterface.OnDismissListener)
+        fun showTrueAwardsDialog(trueAwards: TrueAwards?, onDismissListener: DialogInterface.OnDismissListener)
 
 
         fun setActionButtonText(text: String)
@@ -156,11 +156,11 @@ interface StayDetailInterface {
     interface AnalyticsInterface : BaseAnalyticsInterface {
         fun setAnalyticsParam(analyticsParam: StayDetailAnalyticsParam)
 
-        fun getStayPaymentAnalyticsParam(stayDetail: StayDetail, stayRoom: StayRoom): StayPaymentAnalyticsParam
+        fun getStayPaymentAnalyticsParam(stayDetail: StayDetailk, stayRoom: StayRoom): StayPaymentAnalyticsParam
 
-        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int)
+        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int)
 
-        fun onScreenRoomList(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int)
+        fun onScreenRoomList(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk, priceFromList: Int)
 
         fun onEventRoomListOpenClick(activity: Activity, stayName: String)
 
@@ -169,13 +169,13 @@ interface StayDetailInterface {
         fun onEventRoomClick(activity: Activity, roomName: String)
 
         fun onEventShareKakaoClick(activity: Activity, login: Boolean, userType: String, benefitAlarm: Boolean//
-                                   , stayIndex: Int, stayName: String, overseas: Boolean)
+                                   , stayIndex: Int, stayName: String?)
 
         fun onEventLinkCopyClick(activity: Activity)
 
         fun onEventMoreShareClick(activity: Activity)
 
-        fun onEventDownloadCoupon(activity: Activity, stayName: String)
+        fun onEventDownloadCoupon(activity: Activity, stayName: String?)
 
         fun onEventDownloadCouponByLogin(activity: Activity, login: Boolean)
 
@@ -193,15 +193,15 @@ interface StayDetailInterface {
 
         fun onEventTrueVRClick(activity: Activity, stayIndex: Int)
 
-        fun onEventImageClick(activity: Activity, stayName: String)
+        fun onEventImageClick(activity: Activity, stayName: String?)
 
         fun onEventConciergeClick(activity: Activity)
 
-        fun onEventMapClick(activity: Activity, stayName: String)
+        fun onEventMapClick(activity: Activity, stayName: String?)
 
-        fun onEventClipAddressClick(activity: Activity, stayName: String)
+        fun onEventClipAddressClick(activity: Activity, stayName: String?)
 
-        fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int, myWish: Boolean)
+        fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk, priceFromList: Int, myWish: Boolean)
 
         fun onEventCallClick(activity: Activity)
 

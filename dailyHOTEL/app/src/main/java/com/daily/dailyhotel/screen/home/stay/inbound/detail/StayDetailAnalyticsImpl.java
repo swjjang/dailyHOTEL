@@ -66,7 +66,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
                     int nights = stayBookDateTime.getNights();
 
                     params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
-                    params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.getIndex())); // 15
+                    params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index)); // 15
 
                     params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")); // 1
                     params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")); // 2
@@ -144,7 +144,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             int nights = stayBookDateTime.getNights();
 
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.getIndex())); // 15
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index)); // 15
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")); // 1
             params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")); // 2
@@ -187,7 +187,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && stayDetail.provideRewardSticker == true)
             {
                 AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
-                    , AnalyticsManager.Action.ROOM_SELECTION, Integer.toString(stayDetail.getIndex()), null);
+                    , AnalyticsManager.Action.ROOM_SELECTION, Integer.toString(stayDetail.index), null);
             }
         } catch (Exception e)
         {
@@ -518,7 +518,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
             params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(activity));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.getIndex()));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index));
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
 
             String listIndex = mAnalyticsParam.entryPosition == -1 //

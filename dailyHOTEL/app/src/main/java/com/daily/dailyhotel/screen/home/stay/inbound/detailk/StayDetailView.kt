@@ -164,7 +164,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun showTrueVRDialog(checkedChangeListener: CompoundButton.OnCheckedChangeListener, positiveListener: View.OnClickListener, onDismissListener: DialogInterface.OnDismissListener) {
     }
 
-    override fun showTrueAwardsDialog(trueAwards: TrueAwards, onDismissListener: DialogInterface.OnDismissListener) {
+    override fun showTrueAwardsDialog(trueAwards: TrueAwards?, onDismissListener: DialogInterface.OnDismissListener) {
     }
 
     override fun setActionButtonText(text: String) {

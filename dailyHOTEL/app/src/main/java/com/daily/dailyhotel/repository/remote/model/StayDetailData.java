@@ -2,9 +2,11 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.Room;
 import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.TrueAwards;
 
 import org.json.JSONArray;
@@ -107,18 +109,36 @@ public class StayDetailData
 
     }
 
-    public StayDetail getStayDetail()
+    public StayDetailk getStayDetail()
     {
-        StayDetail stayDetail = new StayDetail();
+        StayDetailk stayDetail = new StayDetailk();
 
         stayDetail.setIndex(index);
         stayDetail.setWishCount(wishCount);
         stayDetail.setWish(myWish);
         stayDetail.setSingleStay(singleStay);
 
+        if (images != null && images.size() > 0)
+        {
+            List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
+
+            for (ImageData imageData : images)
+            {
+                if (imageData.primary)
+                {
+                    detailImageInformationList.add(0, imageData.getDetailImageInformation());
+                } else
+                {
+                    detailImageInformationList.add(imageData.getDetailImageInformation());
+                }
+            }
+
+            stayDetail.setImageList(detailImageInformationList);
+        }
+
         if (vr != null && vr.size() > 0)
         {
-            List<StayDetail.VRInformation> vrInformationList = new ArrayList<>();
+            List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
 
             for (VRData vrData : vr)
             {
@@ -128,7 +148,7 @@ public class StayDetailData
             stayDetail.setVrInformation(vrInformationList);
         }
 
-        StayDetail.BaseInformation baseInformation = new StayDetail.BaseInformation();
+        StayDetailk.BaseInformation baseInformation = new StayDetailk.BaseInformation();
         baseInformation.setCategory(category);
 
         try
@@ -153,7 +173,7 @@ public class StayDetailData
 
         if (rating != null)
         {
-            StayDetail.TrueReviewInformation trueReviewInformation = new StayDetail.TrueReviewInformation();
+            StayDetailk.TrueReviewInformation trueReviewInformation = new StayDetailk.TrueReviewInformation();
 
             trueReviewInformation.setRatingCount(rating.persons);
             trueReviewInformation.setRatingPercent(rating.values);
@@ -161,7 +181,7 @@ public class StayDetailData
 
             if (rating.primary != null)
             {
-                StayDetail.TrueReviewInformation.PrimaryReview primaryReview = new StayDetail.TrueReviewInformation.PrimaryReview();
+                StayDetailk.TrueReviewInformation.PrimaryReview primaryReview = new StayDetailk.TrueReviewInformation.PrimaryReview();
                 primaryReview.setScore(rating.primary.avgScore);
                 primaryReview.setComment(rating.primary.comment);
                 primaryReview.setUserId(rating.primary.userId);
@@ -172,7 +192,7 @@ public class StayDetailData
             stayDetail.setTrueReviewInformation(trueReviewInformation);
         }
 
-        StayDetail.BenefitInformation benefitInformation = new StayDetail.BenefitInformation();
+        StayDetailk.BenefitInformation benefitInformation = new StayDetailk.BenefitInformation();
 
         if (benefit != null)
         {
@@ -185,7 +205,7 @@ public class StayDetailData
             benefitInformation.setCoupon(coupon.getCoupon());
         }
 
-        StayDetail.RoomInformation roomInformation = new StayDetail.RoomInformation();
+        StayDetailk.RoomInformation roomInformation = new StayDetailk.RoomInformation();
 
         if (rooms != null && rooms.size() > 0)
         {
@@ -215,7 +235,7 @@ public class StayDetailData
         stayDetail.setTotalRoomCount(roomCount);
         stayDetail.setFacilityList(facilities);
 
-        StayDetail.AddressInformation addressInformation = new StayDetail.AddressInformation();
+        StayDetailk.AddressInformation addressInformation = new StayDetailk.AddressInformation();
 
         addressInformation.setAddress(address);
 
@@ -229,7 +249,7 @@ public class StayDetailData
 
         if (checkTime != null)
         {
-            StayDetail.CheckTimeInformation checkTimeInformation = new StayDetail.CheckTimeInformation();
+            StayDetailk.CheckTimeInformation checkTimeInformation = new StayDetailk.CheckTimeInformation();
 
             checkTimeInformation.setCheckIn(checkTime.checkIn);
             checkTimeInformation.setCheckOut(checkTime.checkOut);
@@ -238,11 +258,11 @@ public class StayDetailData
             stayDetail.setCheckTimeInformation(checkTimeInformation);
         }
 
-        StayDetail.DetailInformation detailInformation = new StayDetail.DetailInformation();
+        StayDetailk.DetailInformation detailInformation = new StayDetailk.DetailInformation();
 
         if (details != null && details.size() > 0)
         {
-            List<StayDetail.DetailInformation.Item> itemList = new ArrayList<>();
+            List<StayDetailk.DetailInformation.Item> itemList = new ArrayList<>();
 
             for (DetailData detailData : details)
             {
@@ -259,7 +279,7 @@ public class StayDetailData
 
         if (refundPolicy != null)
         {
-            StayDetail.RefundInformation refundInformation = new StayDetail.RefundInformation();
+            StayDetailk.RefundInformation refundInformation = new StayDetailk.RefundInformation();
 
             refundInformation.setTitle(refundPolicy.title);
             refundInformation.setContentList(refundPolicy.contents);
@@ -268,7 +288,7 @@ public class StayDetailData
             stayDetail.setRefundInformation(refundInformation);
         }
 
-        StayDetail.CheckInformation checkInformation = new StayDetail.CheckInformation();
+        StayDetailk.CheckInformation checkInformation = new StayDetailk.CheckInformation();
 
         checkInformation.setWaitingForBooking(waitingForBooking);
 
@@ -286,9 +306,9 @@ public class StayDetailData
         @JsonField(name = "isDownloaded")
         public boolean isDownloaded;
 
-        public StayDetail.BenefitInformation.Coupon getCoupon()
+        public StayDetailk.BenefitInformation.Coupon getCoupon()
         {
-            StayDetail.BenefitInformation.Coupon coupon = new StayDetail.BenefitInformation.Coupon();
+            StayDetailk.BenefitInformation.Coupon coupon = new StayDetailk.BenefitInformation.Coupon();
             coupon.setCouponDiscount(couponDiscount);
             coupon.setDownloaded(isDownloaded);
 
@@ -428,9 +448,9 @@ public class StayDetailData
         @JsonField(name = "contents")
         public List<String> contents;
 
-        public StayDetail.DetailInformation.Item getItem()
+        public StayDetailk.DetailInformation.Item getItem()
         {
-            StayDetail.DetailInformation.Item item = new StayDetail.DetailInformation.Item();
+            StayDetailk.DetailInformation.Item item = new StayDetailk.DetailInformation.Item();
 
             item.setTitle(title);
             item.setContentList(contents);
@@ -463,9 +483,9 @@ public class StayDetailData
             @JsonField(name = "title")
             public String title;
 
-            StayDetail.DetailInformation.BreakfastInformation.Item getItem()
+            StayDetailk.DetailInformation.BreakfastInformation.Item getItem()
             {
-                StayDetail.DetailInformation.BreakfastInformation.Item item = new StayDetail.DetailInformation.BreakfastInformation.Item();
+                StayDetailk.DetailInformation.BreakfastInformation.Item item = new StayDetailk.DetailInformation.BreakfastInformation.Item();
 
                 item.setAmount(amount);
                 item.setMaxAge(maxAge);
@@ -476,15 +496,15 @@ public class StayDetailData
             }
         }
 
-        public StayDetail.DetailInformation.BreakfastInformation getBreakfastInformation()
+        public StayDetailk.DetailInformation.BreakfastInformation getBreakfastInformation()
         {
-            StayDetail.DetailInformation.BreakfastInformation breakfastInformation = new StayDetail.DetailInformation.BreakfastInformation();
+            StayDetailk.DetailInformation.BreakfastInformation breakfastInformation = new StayDetailk.DetailInformation.BreakfastInformation();
 
             breakfastInformation.setDescription(description);
 
             if (items != null && items.size() > 0)
             {
-                List<StayDetail.DetailInformation.BreakfastInformation.Item> itemList = new ArrayList<>();
+                List<StayDetailk.DetailInformation.BreakfastInformation.Item> itemList = new ArrayList<>();
 
                 for (ItemData itemData : items)
                 {
@@ -514,8 +534,24 @@ public class StayDetailData
         @JsonField(name = "url")
         public String url;
 
+        @JsonField(name = "description")
+        public String description;
+
         @JsonField(name = "primary")
         public boolean primary;
+
+        public DetailImageInformation getDetailImageInformation()
+        {
+            DetailImageInformation detailImageInformation = new DetailImageInformation();
+            detailImageInformation.caption = description;
+
+            ImageMap imageMap = new ImageMap();
+            imageMap.smallUrl = imageMap.mediumUrl = imageMap.bigUrl = url;
+
+            detailImageInformation.setImageMap(imageMap);
+
+            return detailImageInformation;
+        }
     }
 
     @JsonObject
@@ -679,9 +715,9 @@ public class StayDetailData
         @JsonField(name = "url")
         public String url;
 
-        StayDetail.VRInformation getVRInformation()
+        StayDetailk.VRInformation getVRInformation()
         {
-            StayDetail.VRInformation vrInformation = new StayDetail.VRInformation();
+            StayDetailk.VRInformation vrInformation = new StayDetailk.VRInformation();
 
             vrInformation.setName(name);
             vrInformation.setType(type);

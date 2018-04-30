@@ -12,10 +12,7 @@ import com.daily.base.BaseActivity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.ReviewScores
-import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.entity.StayRoom
+import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
@@ -169,10 +166,10 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             screenLock(showProgress)
 
             addCompositeDisposable(Observable.zip(stayRemoteImpl.getDetail(stayIndex, bookDateTime), stayRemoteImpl.getReviewScores(stayIndex)
-                    , BiFunction<StayDetail, ReviewScores, Int> { stayDetail, reviewScores ->
-                this@StayPreviewPresenter.detail = stayDetail
+                    , BiFunction<StayDetailk, ReviewScores, Int> { stayDetail, reviewScores ->
+                this@StayPreviewPresenter.detail = stayDetail.toStayDetail()
 
-                analytics.onScreen(activity, stayDetail.category)
+                analytics.onScreen(activity, stayDetail.toStayDetail().category)
 
                 reviewScores.reviewScoreTotalCount
             }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->

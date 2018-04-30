@@ -3,11 +3,12 @@ package com.daily.dailyhotel.entity
 import android.content.Context
 import com.twoheart.dailyhotel.R
 
-class StayDetail : Configurations() {
+class StayDetailk : Configurations() {
     var index: Int = 0
     var wishCount: Int = 0
     var wish: Boolean = false
     var singleStay: Boolean = false
+    var imageList: List<DetailImageInformation>? = null
     var vrInformation: List<VRInformation>? = null
 
     var baseInformation: BaseInformation? = null
@@ -28,6 +29,10 @@ class StayDetail : Configurations() {
     var rewardStickerCount: Int = 0
 
     var province: Province? = null
+
+    fun toStayDetail(): StayDetail {
+        return StayDetail()
+    }
 
     enum class Pictogram private constructor(private val mNameResId: Int, val imageResId: Int) {
         PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),

@@ -9,6 +9,7 @@ import com.daily.dailyhotel.entity.RoomImageInformation;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.entity.Stays;
@@ -33,7 +34,7 @@ public interface StayInterface
 
     Observable<StayFilterCount> getLocalPlusListCountByFilter(Context context, Map<String, Object> queryMap);
 
-    Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime);
+    Observable<StayDetailk> getDetail(int stayIndex, StayBookDateTime stayBookDateTime);
 
     Observable<List<RoomImageInformation>> getRoomImages(int stayIndex, int roomIndex);
 

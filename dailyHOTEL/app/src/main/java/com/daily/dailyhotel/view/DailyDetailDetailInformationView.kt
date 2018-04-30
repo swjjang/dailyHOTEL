@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import com.daily.base.util.FontManager
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.StayDetail
+import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
@@ -40,12 +41,12 @@ class DailyDetailDetailInformationView : LinearLayout {
         orientation = LinearLayout.VERTICAL
     }
 
-    fun setInformation(information: Array<StayDetail.DetailInformation>, waitBookingInformationVisible: Boolean) {
+    fun setInformation(information: Array<StayDetailk.DetailInformation>, waitBookingInformationVisible: Boolean) {
 
     }
 
 
-    fun getInformationView(information: StayDetail.DetailInformation): View {
+    fun getInformationView(information: StayDetailk.DetailInformation): View {
 
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
 
