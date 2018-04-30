@@ -113,7 +113,7 @@ class DailyRoomGridInfoView : LinearLayout {
                         moreGridLayout.viewTreeObserver.removeOnPreDrawListener(this)
                         moreGridLayout.tag = moreGridLayout.height
 
-                        (moreGridLayout.layoutParams as LinearLayout.LayoutParams)?.apply {
+                        (moreGridLayout.layoutParams as LinearLayout.LayoutParams).apply {
                             height = 0
                             moreGridLayout.layoutParams = this
                         }

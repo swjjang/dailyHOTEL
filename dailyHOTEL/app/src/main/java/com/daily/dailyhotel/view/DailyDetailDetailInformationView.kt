@@ -12,11 +12,9 @@ import android.view.View
 import android.widget.LinearLayout
 import com.daily.base.util.FontManager
 import com.daily.base.widget.DailyTextView
-import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
-import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBreakfastInformationDataBinding
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDetailInformationDataBinding

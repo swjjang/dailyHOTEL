@@ -6,8 +6,6 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import com.daily.base.util.ScreenUtils
-import com.daily.base.widget.DailyRoundedConstraintLayout
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBaseInformationDataBinding
 

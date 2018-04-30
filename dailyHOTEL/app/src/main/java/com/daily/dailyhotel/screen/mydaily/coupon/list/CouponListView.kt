@@ -14,7 +14,6 @@ import com.daily.dailyhotel.entity.ObjectItem
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityCouponListDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
-import kotlinx.android.synthetic.main.activity_coupon_list_data.view.*
 
 class CouponListView(activity: CouponListActivity, listener: CouponListInterface.OnEventListener)//
     : BaseDialogView<CouponListInterface.OnEventListener, ActivityCouponListDataBinding>(activity, listener), CouponListInterface.ViewInterface {

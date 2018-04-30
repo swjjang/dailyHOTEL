@@ -124,13 +124,13 @@ public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
                 @Override
                 public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
                 {
-                    List<String> availableDateList = new ArrayList<>();
+                    List<String> availableDateList;
 
                     if (stringBaseListDto != null)
                     {
                         if (stringBaseListDto.msgCode == 100 && stringBaseListDto.data != null)
                         {
-                            availableDateList.addAll(stringBaseListDto.data);
+                            availableDateList = new ArrayList<>(stringBaseListDto.data);
                         } else
                         {
                             throw new BaseException(stringBaseListDto.msgCode, stringBaseListDto.msg);

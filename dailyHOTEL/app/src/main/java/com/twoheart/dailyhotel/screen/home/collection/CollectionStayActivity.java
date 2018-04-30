@@ -764,8 +764,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     switch (baseDto.msgCode)
                     {
                         case 100:
-                            ArrayList<RecommendationStay> stayList = new ArrayList<>();
-                            stayList.addAll(baseDto.data.items);
+                            ArrayList<RecommendationStay> stayList = new ArrayList<>(baseDto.data.items);
 
                             onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList, baseDto.data.stickers//
                                 , baseDto.data.configurations != null && baseDto.data.configurations.activeReward);

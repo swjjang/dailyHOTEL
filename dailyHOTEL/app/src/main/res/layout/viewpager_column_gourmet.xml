@@ -141,7 +141,7 @@
         android:layout_height="19dp"
         android:layout_marginLeft="11dp"
         android:layout_marginTop="8dp"
-        android:layout_toLeftOf="@+id/closeImageView"
+        android:layout_toLeftOf="@+id/wishImageView"
         android:orientation="horizontal"
         android:visibility="visible">
 

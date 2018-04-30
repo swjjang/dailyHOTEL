@@ -123,13 +123,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
-    private RecentlyLocalImpl mRecentlyLocalImpl;
+    RecentlyLocalImpl mRecentlyLocalImpl;
     private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
     CartLocalImpl mCartLocalImpl;
 
     int mGourmetIndex, mPriceFromList;
     private String mGourmetName, mCategory;
-    private String mImageUrl;
+    String mImageUrl;
     GourmetBookDateTime mGourmetBookDateTime;
     private CommonDateTime mCommonDateTime;
     GourmetDetail mGourmetDetail;

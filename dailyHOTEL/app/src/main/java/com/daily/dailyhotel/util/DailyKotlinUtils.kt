@@ -25,7 +25,7 @@ fun <T> List<T>?.isNotNullAndNotEmpty(): Boolean {
 }
 
 inline fun <T> T?.filterIf(block: (T) -> Boolean, defaultNull: Boolean = false): Boolean {
-    return if (this == null) defaultNull else this.let { block(it) }
+    return this?.let { block(it) } ?: defaultNull
 }
 
 inline fun <R> Boolean?.runTrue(block: () -> R?): R? {

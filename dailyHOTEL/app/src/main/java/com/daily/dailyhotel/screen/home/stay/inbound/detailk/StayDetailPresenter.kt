@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
+package com.daily.dailyhotel.screen.home.stay.inbound.detailk
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -42,10 +42,8 @@ import com.twoheart.dailyhotel.util.*
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Function
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -168,10 +166,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             isUsedMultiTransition = intent.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false)
             isRefresh = true
 
-            try {
-                gradientType = StayDetailActivity.TransGradientType.valueOf(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE))
+            gradientType = try {
+                StayDetailActivity.TransGradientType.valueOf(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE))
             } catch (e: Exception) {
-                gradientType = StayDetailActivity.TransGradientType.NONE
+                StayDetailActivity.TransGradientType.NONE
             }
 
             stayIndex = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
@@ -253,7 +251,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onFinish() {
         super.onFinish()
 
-        if (!isUsedMultiTransition) activity.overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        if (!isUsedMultiTransition) activity.overridePendingTransition(R.anim.hold, R.anim.slide_out_right)
     }
 
     override fun onBackPressed(): Boolean {
@@ -415,13 +413,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         val regionName = stayDetail.province?.name
         val observable: Observable<String> =
                 if (regionName.isTextEmpty())
-                    googleAddressRemoteImpl.getLocationAddress(stayDetail.addressInformation?.latitude ?: 0.0
-                            , stayDetail.addressInformation?.longitude ?: 0.0).map(Function<GoogleAddress, String> { it.address })
+                    googleAddressRemoteImpl.getLocationAddress(stayDetail.addressInformation?.latitude
+                            ?: 0.0
+                            , stayDetail.addressInformation?.longitude ?: 0.0).map({ it.address })
                 else Observable.just(regionName)
 
         val imageUrl = if (defaultImageUrl.isTextEmpty()) stayDetail.imageList?.get(0)?.imageMap?.bigUrl else defaultImageUrl
 
-        addCompositeDisposable(observable.flatMap(Function<String, ObservableSource<Boolean>> {
+        addCompositeDisposable(observable.flatMap({
             recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
                     stayDetail.index, stayDetail.baseInformation?.name, null,
                     imageUrl, it, false)
@@ -488,7 +487,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 } else {
                     notifyWishDataSetChanged(it.wishCount, wish)
 
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message, getString(R.string.dialog_btn_text_confirm), null);
+                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message, getString(R.string.dialog_btn_text_confirm), null)
 
                     unLockAll()
                 }
@@ -652,7 +651,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             if (Util.isInstallGooglePlayService(activity)) {
                 startActivityForResult(ZoomMapActivity.newInstance(activity, ZoomMapActivity.SourceType.HOTEL,
                         it.baseInformation?.name, it.addressInformation?.address,
-                        it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude ?: 0.0, false), StayDetailActivity.REQUEST_CODE_MAP)
+                        it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude
+                        ?: 0.0, false), StayDetailActivity.REQUEST_CODE_MAP)
             } else {
                 viewInterface.showSimpleDialog(getString(R.string.dialog_title_googleplayservice),
                         getString(R.string.dialog_msg_install_update_googleplayservice),
@@ -703,7 +703,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             }
 
             startActivityForResult(NavigatorDialogActivity.newInstance(activity, it.baseInformation?.name,
-                    it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude ?: 0.0, false, analyticsParam), StayDetailActivity.REQUEST_CODE_NAVIGATOR)
+                    it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude
+                    ?: 0.0, false, analyticsParam), StayDetailActivity.REQUEST_CODE_NAVIGATOR)
         }
     }
 
@@ -800,7 +801,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 val intent = SelectStayCouponDialogActivity.newInstance(activity, stayDetail.index,
                         bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
                         bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
-                        stayDetail.baseInformation?.category ?:toString(), stayDetail.baseInformation?.name ?: "")
+                        stayDetail.baseInformation?.category
+                                ?: toString(), stayDetail.baseInformation?.name ?: "")
                 startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON)
 
             } else {
@@ -905,8 +907,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     viewInterface.stopRewardStickerAnimation()
                 } else {
                     val campaignEnabled = DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled
-                    val campaignFreeNights: Int;
-                    val descriptionText: String;
+                    val campaignFreeNights: Int
+                    val descriptionText: String
 
                     if (campaignEnabled) {
                         campaignFreeNights = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberCampaignFreeNights

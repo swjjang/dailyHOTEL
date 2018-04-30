@@ -34,7 +34,7 @@ class StayDetailk : Configurations() {
         return StayDetail()
     }
 
-    enum class Pictogram private constructor(private val mNameResId: Int, val imageResId: Int) {
+    enum class Pictogram constructor(private val mNameResId: Int, val imageResId: Int) {
         PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),
         NO_PARKING(R.string.label_unabled_parking, R.drawable.f_ic_facilities_05_no_parking),
         POOL(R.string.label_pool, R.drawable.f_ic_facilities_06),

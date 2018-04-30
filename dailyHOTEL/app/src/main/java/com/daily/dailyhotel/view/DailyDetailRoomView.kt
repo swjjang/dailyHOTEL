@@ -29,7 +29,7 @@ class DailyDetailRoomView : ConstraintLayout {
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_data, this, true)
 
-        viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder)
+        viewDataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_placeholder)
     }
 
     fun setImageUrl(url: String?) {
@@ -56,7 +56,7 @@ class DailyDetailRoomView : ConstraintLayout {
         text.takeNotEmpty { viewDataBinding.discountPriceTextView.text = it }
     }
 
-    fun setAvailableCouponVisible(visible :Boolean) {
-        viewDataBinding.couponTextView.visibility = if(visible) View.VISIBLE else View.GONE
+    fun setAvailableCouponVisible(visible: Boolean) {
+        viewDataBinding.couponTextView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

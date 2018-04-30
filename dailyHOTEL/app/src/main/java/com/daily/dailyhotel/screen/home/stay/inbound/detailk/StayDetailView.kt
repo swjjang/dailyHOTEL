@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
+package com.daily.dailyhotel.screen.home.stay.inbound.detailk
 
 import android.content.DialogInterface
 import android.graphics.LinearGradient
@@ -14,7 +14,6 @@ import com.daily.base.BaseDialogView
 import com.daily.dailyhotel.entity.DetailImageInformation
 import com.daily.dailyhotel.entity.TrueAwards
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailkDataBinding
 import io.reactivex.Observable
 
@@ -50,12 +49,12 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             viewDataBinding.transImageView.visibility = View.VISIBLE
             viewDataBinding.transGradientBottomView.visibility = View.VISIBLE
 
-            viewDataBinding.transImageView.transitionName = getString(R.string.transition_place_image);
-            viewDataBinding.transGradientBottomView.transitionName = getString(R.string.transition_gradient_bottom_view);
-            viewDataBinding.imageLoopView.transitionName = getString(R.string.transition_gradient_top_view);
+            viewDataBinding.transImageView.transitionName = getString(R.string.transition_place_image)
+            viewDataBinding.transGradientBottomView.transitionName = getString(R.string.transition_gradient_bottom_view)
+            viewDataBinding.imageLoopView.transitionName = getString(R.string.transition_gradient_top_view)
 
             when (gradientType) {
-                StayDetailActivity.TransGradientType.LIST -> viewDataBinding.transGradientBottomView.background = getGradientBottomDrawable();
+                StayDetailActivity.TransGradientType.LIST -> viewDataBinding.transGradientBottomView.background = getGradientBottomDrawable()
 
                 StayDetailActivity.TransGradientType.MAP -> viewDataBinding.transGradientBottomView.setBackgroundResource(R.color.black_a28)
 

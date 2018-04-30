@@ -11,7 +11,6 @@ import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.RoomImageInformation;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;

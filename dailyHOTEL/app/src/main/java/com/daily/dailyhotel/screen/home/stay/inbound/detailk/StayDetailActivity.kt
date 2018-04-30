@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
+package com.daily.dailyhotel.screen.home.stay.inbound.detailk
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,7 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
     }
 
     companion object {
-        const val NONE_PRICE = -1;
+        const val NONE_PRICE = -1
 
         internal const val REQUEST_CODE_CALENDAR = 10000
         internal const val REQUEST_CODE_HAPPYTALK = 10002

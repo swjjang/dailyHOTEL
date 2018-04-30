@@ -39,13 +39,13 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
         return mDailyMobileService.getGourmetList(Crypto.getUrlDecoderEx(URL), gourmetParams.toParamsMap() //
             , gourmetParams.getCategoryList(), gourmetParams.getTimeList(), gourmetParams.getLuxuryList()) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
-                List<Gourmet> gourmetList = new ArrayList<>();
+                List<Gourmet> gourmetList;
 
                 if (baseDto != null)
                 {
                     if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        gourmetList.addAll(baseDto.data.getGourmetList(context));
+                        gourmetList = new ArrayList<>(baseDto.data.getGourmetList(context));
                     } else
                     {
                         throw new BaseException(baseDto.msgCode, baseDto.msg);
