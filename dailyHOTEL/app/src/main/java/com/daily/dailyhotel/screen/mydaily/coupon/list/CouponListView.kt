@@ -64,8 +64,8 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
 
     private fun initRecyclerView(viewDataBinding: ActivityCouponListDataBinding) {
         with(viewDataBinding.emptyView) {
-            couponUseNoticeTextView.setOnClickListener { eventListener.startNotice() }
-            couponHistoryTextView.setOnClickListener { eventListener.startCouponHistory() }
+            viewDataBinding.couponUseNoticeTextView.setOnClickListener { eventListener.startNotice() }
+            viewDataBinding.couponHistoryTextView.setOnClickListener { eventListener.startCouponHistory() }
 
             viewDataBinding.recyclerView.layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.VERTICAL

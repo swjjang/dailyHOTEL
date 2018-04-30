@@ -306,7 +306,7 @@ public class StayDetailData
         @JsonField(name = "isDownloaded")
         public boolean isDownloaded;
 
-        public StayDetailk.BenefitInformation.Coupon getCoupon()
+        StayDetailk.BenefitInformation.Coupon getCoupon()
         {
             StayDetailk.BenefitInformation.Coupon coupon = new StayDetailk.BenefitInformation.Coupon();
             coupon.setCouponDiscount(couponDiscount);
@@ -331,6 +331,7 @@ public class StayDetailData
         @JsonField(name = "primary")
         public ReviewData primary;
 
+        @JsonObject
         static class ReviewData
         {
             @JsonField(name = "avgScore")
@@ -448,7 +449,7 @@ public class StayDetailData
         @JsonField(name = "contents")
         public List<String> contents;
 
-        public StayDetailk.DetailInformation.Item getItem()
+        StayDetailk.DetailInformation.Item getItem()
         {
             StayDetailk.DetailInformation.Item item = new StayDetailk.DetailInformation.Item();
 
@@ -496,7 +497,7 @@ public class StayDetailData
             }
         }
 
-        public StayDetailk.DetailInformation.BreakfastInformation getBreakfastInformation()
+        StayDetailk.DetailInformation.BreakfastInformation getBreakfastInformation()
         {
             StayDetailk.DetailInformation.BreakfastInformation breakfastInformation = new StayDetailk.DetailInformation.BreakfastInformation();
 
@@ -540,7 +541,7 @@ public class StayDetailData
         @JsonField(name = "primary")
         public boolean primary;
 
-        public DetailImageInformation getDetailImageInformation()
+        DetailImageInformation getDetailImageInformation()
         {
             DetailImageInformation detailImageInformation = new DetailImageInformation();
             detailImageInformation.caption = description;
@@ -620,7 +621,7 @@ public class StayDetailData
 
         }
 
-        public Room getRoom()
+        Room getRoom()
         {
             Room room = new Room();
 
