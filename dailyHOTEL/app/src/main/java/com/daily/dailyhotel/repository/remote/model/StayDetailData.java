@@ -77,8 +77,11 @@ public class StayDetailData
     @JsonField(name = "myWish")
     public boolean myWish;
 
-    @JsonField(name = "dailyComments")
-    public List<String> dailyComments;
+    @JsonField(name = "dailyComment")
+    public DetailData dailyComment;
+
+    @JsonField(name = "checkList")
+    public DetailData checkList;
 
     @JsonField(name = "waitingForBooking")
     public boolean waitingForBooking;
@@ -227,9 +230,9 @@ public class StayDetailData
             stayDetail.setRoomInformation(roomInformation);
         }
 
-        if (dailyComments != null && dailyComments.size() > 0)
+        if (dailyComment != null && dailyComment.contents != null && dailyComment.contents.size() > 0)
         {
-            stayDetail.setDailyCommentList(dailyComments);
+            stayDetail.setDailyCommentList(dailyComment.contents);
         }
 
         stayDetail.setTotalRoomCount(roomCount);
@@ -290,6 +293,11 @@ public class StayDetailData
 
         StayDetailk.CheckInformation checkInformation = new StayDetailk.CheckInformation();
 
+        if (checkList != null && checkList.contents != null && checkList.contents.size() > 0)
+        {
+            checkInformation.setContentList(checkList.contents);
+        }
+
         checkInformation.setWaitingForBooking(waitingForBooking);
 
         stayDetail.setCheckInformation(checkInformation);
@@ -323,7 +331,7 @@ public class StayDetailData
         public int persons;
 
         @JsonField(name = "values")
-        public float values;
+        public int values;
 
         @JsonField(name = "show")
         public boolean show;

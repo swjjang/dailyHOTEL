@@ -6,12 +6,14 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBenefitDataBinding
+import java.text.DecimalFormat
 
 class DailyDetailBenefitView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailBenefitDataBinding
@@ -36,7 +38,7 @@ class DailyDetailBenefitView : ConstraintLayout {
         viewDataBinding.benefitTitleTextView.text = title
     }
 
-    fun setContents(contents: Array<String>?) {
+    fun setContents(contents: List<String>?) {
         viewDataBinding.benefitContentsLayout.removeAllViews()
 
         contents.takeNotEmpty {
@@ -56,11 +58,15 @@ class DailyDetailBenefitView : ConstraintLayout {
         }
     }
 
-    fun setButtonEnabled(enabled: Boolean) {
+    fun setCouponButtonEnabled(enabled: Boolean) {
         viewDataBinding.downloadCouponTextView.isEnabled = enabled
     }
 
-    fun setButtonText(text: String) {
-        viewDataBinding.downloadCouponTextView.text = text
+    fun setCouponButtonVisible(visible: Boolean) {
+        viewDataBinding.downloadCouponTextView.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    fun setCouponButtonText(price: Int) {
+        viewDataBinding.downloadCouponTextView.text = context.getString(R.string.label_detail_download_coupon, DecimalFormat("###,##0").format(price))
     }
 }

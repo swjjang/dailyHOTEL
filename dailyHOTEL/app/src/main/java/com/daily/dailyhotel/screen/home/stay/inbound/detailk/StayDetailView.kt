@@ -299,7 +299,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
         viewDataBinding.vrImageView.visibility = flag
         viewDataBinding.fakeVRImageView.visibility = flag
-        viewDataBinding.fakeVRImageView.setOnClickListener { v -> eventListener.onTrueVRClick() }
+        viewDataBinding.fakeVRImageView.setOnClickListener { eventListener.onTrueVRClick() }
     }
 
     override fun setMoreImageVisible(visible: Boolean) {
@@ -310,26 +310,49 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean) {
-        viewDataBinding.baseInformationView.setCategoryName(baseInformation.category)
-        viewDataBinding.baseInformationView.setRewardsVisible(baseInformation.provideRewardSticker)
-        viewDataBinding.baseInformationView.setNameText(baseInformation.name)
-        viewDataBinding.baseInformationView.setNightsEnabled(nightsEnabled)
-
-        viewDataBinding.baseInformationView.setAwardsVisible(baseInformation.awards.letReturnTrueElseReturnFalse {
-            viewDataBinding.baseInformationView.setAwardsTitle(it.title)
-        })
+        viewDataBinding.baseInformationView.apply {
+            setCategoryName(baseInformation.category)
+            setRewardsVisible(baseInformation.provideRewardSticker)
+            setNameText(baseInformation.name)
+            setNightsEnabled(nightsEnabled)
+            setAwardsVisible(baseInformation.awards.letReturnTrueElseReturnFalse { setAwardsTitle(it.title) })
+        }
     }
 
     override fun setTrueReviewInformationVisible(visible: Boolean) {
+        viewDataBinding.trueReviewGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setTrueReviewInformation(trueReviewInformation: StayDetailk.TrueReviewInformation) {
+        viewDataBinding.trueReviewView.apply {
+            setSatisfactionVisible((trueReviewInformation.ratingPercent > 0 || trueReviewInformation.ratingCount > 0).letReturnTrueElseReturnFalse {
+                setSatisfaction(trueReviewInformation.ratingPercent, trueReviewInformation.ratingCount)
+            })
+
+            setPreviewTrueReviewVisible(trueReviewInformation.review.letReturnTrueElseReturnFalse {
+                setPreviewTrueReview(it.comment, it.score?.toString(), it.userId)
+            })
+
+            setShowTrueReviewButtonVisible((trueReviewInformation.reviewTotalCount > 0).letReturnTrueElseReturnFalse {
+                setShowTrueReviewButtonText(trueReviewInformation.reviewTotalCount)
+            })
+        }
     }
 
     override fun setBenefitInformationVisible(visible: Boolean) {
+        viewDataBinding.businessBenefitGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation) {
+        viewDataBinding.businessBenefitView.apply {
+            setTitleText(benefitInformation.title)
+            setContents(benefitInformation.contentList)
+
+            setCouponButtonVisible(benefitInformation.coupon.letReturnTrueElseReturnFalse {
+                setCouponButtonEnabled(!it.isDownloaded)
+                setCouponButtonText(it.couponDiscount)
+            })
+        }
     }
 
     override fun setRoomFilterInformation(checkDateTime: CharSequence, bedTypeFilterList: List<String>?, RoomTypeFilterList: List<String>?) {

@@ -73,7 +73,7 @@ class StayDetailk : Configurations() {
 
     class TrueReviewInformation {
         var ratingCount: Int = 0
-        var ratingPercent: Float = 0.0f
+        var ratingPercent: Int = 0
         var showRating: Boolean = false
 
         var review: PrimaryReview? = null

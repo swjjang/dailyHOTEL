@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailTrueReviewExDataBinding
+import java.text.DecimalFormat
 
 class DailyDetailTrueReviewExView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailTrueReviewExDataBinding
@@ -32,16 +33,16 @@ class DailyDetailTrueReviewExView : ConstraintLayout {
         viewDataBinding.satisfactionGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setSatisfaction(satisfaction: String, ratingCount: String) {
-        viewDataBinding.satisfactionTextView.text = satisfaction
-        viewDataBinding.ratingCountTextView.text = ratingCount
+    fun setSatisfaction(satisfaction: Int, ratingCount: Int) {
+        viewDataBinding.satisfactionTextView.text = if (satisfaction > 0) context.getString(R.string.label_stay_detail_satisfaction, satisfaction) else null
+        viewDataBinding.ratingCountTextView.text = if (ratingCount > 0) context.getString(R.string.label_stay_detail_rating, DecimalFormat("###,##0").format(ratingCount)) else null
     }
 
     fun setPreviewTrueReviewVisible(visible: Boolean) {
         viewDataBinding.previewTrueReviewGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setPreviewTrueReview(review: String, ratingValue: String, reviewer: String) {
+    fun setPreviewTrueReview(review: String?, ratingValue: String?, reviewer: String?) {
         viewDataBinding.previewTrueReviewTextView.text = review
         viewDataBinding.ratingValueTextView.text = ratingValue
         viewDataBinding.reviewerTextView.text = reviewer

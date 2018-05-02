@@ -121,6 +121,12 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/trueReviewViewTopLineView"/>
 
+                <android.support.constraint.Group
+                    android:id="@+id/trueReviewGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="trueReviewViewTopLineView, trueReviewView"/>
+
                 <View
                     android:id="@+id/businessBenefitTopLineView"
                     android:layout_width="0dp"
@@ -132,7 +138,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/trueReviewView"/>
 
                 <com.daily.dailyhotel.view.DailyDetailBenefitView
-                    android:id="@+id/benefitView"
+                    android:id="@+id/businessBenefitView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -144,6 +150,12 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/businessBenefitTopLineView"/>
 
+                <android.support.constraint.Group
+                    android:id="@+id/businessBenefitGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="businessBenefitTopLineView, businessBenefitView"/>
+
                 <View
                     android:id="@+id/roomInformationTopLineView"
                     android:layout_width="0dp"
@@ -152,7 +164,7 @@
                     android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/benefitView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/businessBenefitView"/>
 
                 <com.daily.dailyhotel.view.DailyDetailRoomInformationView
                     android:id="@+id/roomInformationView"

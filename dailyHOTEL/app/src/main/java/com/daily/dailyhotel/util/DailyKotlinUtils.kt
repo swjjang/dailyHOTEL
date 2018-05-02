@@ -13,11 +13,11 @@ inline fun Int?.takeGreaterThanZero(block: (Int) -> Unit) {
 }
 
 inline fun <T> Array<T>?.takeNotEmpty(block: (Array<T>) -> Unit) {
-    this?.takeIf { it.isNotEmpty() }?.let { it }
+    this?.takeIf { it.isNotEmpty() }?.let { block(it) }
 }
 
 inline fun <T> List<T>?.takeNotEmpty(block: (List<T>) -> Unit) {
-    this?.takeIf { it.isNotEmpty() }?.let { it }
+    this?.takeIf { it.isNotEmpty() }?.let { block(it) }
 }
 
 inline fun <T> T?.letReturnTrueElseReturnFalse(block: (T) -> Unit): Boolean {
