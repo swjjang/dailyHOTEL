@@ -72,14 +72,14 @@ class StayDetailk : Configurations() {
 
     class TrueReviewInformation {
         var ratingCount: Int = 0
-        var ratingPercent: Int = 0
+        var ratingPercent: Float = 0.0f
         var showRating: Boolean = false
 
         var review: PrimaryReview? = null
         var reviewTotalCount: Int = 0
 
         class PrimaryReview {
-            var score: Int = 0
+            var score: Float = 0.0f
             var comment: String? = null
             var userId: String? = null
         }
@@ -132,6 +132,7 @@ class StayDetailk : Configurations() {
             class Item {
                 var amount: Int = 0
                 var maxAge: Int = 0
+                var maxPersons: Int = 0
                 var minAge: Int = 0
                 var title: String? = null
             }

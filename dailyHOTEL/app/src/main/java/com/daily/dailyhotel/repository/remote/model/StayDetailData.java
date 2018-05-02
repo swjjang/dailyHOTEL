@@ -98,8 +98,8 @@ public class StayDetailData
     @JsonField(name = "rooms")
     public List<RoomData> rooms;
 
-    @JsonField(name = "vr")
-    public List<VRData> vr;
+    @JsonField(name = "vrs")
+    public List<VRData> vrs;
 
     @JsonField(name = "statistic")
     public ReviewStatisticData statistic;
@@ -136,11 +136,11 @@ public class StayDetailData
             stayDetail.setImageList(detailImageInformationList);
         }
 
-        if (vr != null && vr.size() > 0)
+        if (vrs != null && vrs.size() > 0)
         {
             List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
 
-            for (VRData vrData : vr)
+            for (VRData vrData : vrs)
             {
                 vrInformationList.add(vrData.getVRInformation());
             }
@@ -283,7 +283,7 @@ public class StayDetailData
 
             refundInformation.setTitle(refundPolicy.title);
             refundInformation.setContentList(refundPolicy.contents);
-            refundInformation.setNrdWarningMessage(refundPolicy.nrdWarning);
+            refundInformation.setNrdWarningMessage(refundPolicy.warring);
 
             stayDetail.setRefundInformation(refundInformation);
         }
@@ -323,7 +323,7 @@ public class StayDetailData
         public int persons;
 
         @JsonField(name = "values")
-        public int values;
+        public float values;
 
         @JsonField(name = "show")
         public boolean show;
@@ -335,7 +335,7 @@ public class StayDetailData
         static class ReviewData
         {
             @JsonField(name = "avgScore")
-            public int avgScore;
+            public float avgScore;
 
             @JsonField(name = "comment")
             public String comment;
@@ -364,7 +364,7 @@ public class StayDetailData
         public String description;
 
         @JsonField(name = "imgUrl")
-        public String imgUrl;
+        public String imageUrl;
 
         TrueAwards getTrueAwards()
         {
@@ -373,7 +373,7 @@ public class StayDetailData
             trueAwards.description = description;
             trueAwards.serviceType = serviceType;
             trueAwards.title = title;
-            trueAwards.imageUrl = imgUrl;
+            trueAwards.imageUrl = imageUrl;
 
             return trueAwards;
         }
@@ -398,11 +398,14 @@ public class StayDetailData
         @JsonField(name = "title")
         public String title;
 
+        @JsonField(name = "type")
+        public String type;
+
         @JsonField(name = "contents")
         public List<String> contents;
 
-        @JsonField(name = "nrdWarning")
-        public String nrdWarning;
+        @JsonField(name = "warring")
+        public String warring;
     }
 
     @JsonObject
@@ -478,6 +481,9 @@ public class StayDetailData
             @JsonField(name = "maxAge")
             public int maxAge;
 
+            @JsonField(name = "maxPersons")
+            public int maxPersons;
+
             @JsonField(name = "minAge")
             public int minAge;
 
@@ -491,6 +497,7 @@ public class StayDetailData
                 item.setAmount(amount);
                 item.setMaxAge(maxAge);
                 item.setMinAge(minAge);
+                item.setMaxPersons(maxPersons);
                 item.setTitle(title);
 
                 return item;
@@ -532,6 +539,9 @@ public class StayDetailData
     @JsonObject
     static class ImageData
     {
+        @JsonField(name = "count")
+        public int count;
+
         @JsonField(name = "url")
         public String url;
 
@@ -589,6 +599,15 @@ public class StayDetailData
         @JsonField(name = "benefit")
         public String benefit;
 
+        @JsonField(name = "bedCount")
+        public int bedCount;
+
+        @JsonField(name = "bedInfo")
+        public BedInfoData bedInfo;
+
+        @JsonField(name = "hasUsableCoupon")
+        public boolean hasUsableCoupon;
+
         @JsonField(name = "provideRewardSticker")
         public boolean provideRewardSticker;
 
@@ -602,19 +621,22 @@ public class StayDetailData
         public List<String> descriptions;
 
         @JsonField(name = "squareMeter")
-        public String squareMeter;
+        public float squareMeter;
 
         @JsonField(name = "needToKnows")
         public List<String> needToKnows;
-
-        @JsonField(name = "consecutive")
-        public ConsecutiveData consecutive;
 
         @JsonField(name = "roomCharge")
         public RoomChargeData roomCharge;
 
         @JsonField(name = "refundType")
         public String refundType;
+
+        @JsonField(name = "attribute")
+        public AttributeData attribute;
+
+        @JsonField(name = "vrs")
+        public List<VRData> vrs;
 
         public RoomData()
         {
@@ -662,42 +684,78 @@ public class StayDetailData
         }
 
         @JsonObject
-        static class ConsecutiveData
-        {
-            @JsonField(name = "charge")
-            public int charge;
-
-            @JsonField(name = "enable")
-            public boolean enable;
-        }
-
-        @JsonObject
         static class RoomChargeData
         {
-            @JsonField(name = "descriptions")
-            public String descriptions;
+            @JsonField(name = "consecutive")
+            public ConsecutiveData consecutive;
 
-            @JsonField(name = "extraBed")
-            public int extraBed;
+            @JsonField(name = "extra")
+            public ExtraData extra;
 
-            @JsonField(name = "extraBedEnable")
-            public boolean extraBedEnable;
+            @JsonField(name = "persons")
+            public List<PersonData> persons;
 
-            @JsonField(name = "extraBedding")
-            public int extraBedding;
+            @JsonObject
+            static class ConsecutiveData
+            {
+                @JsonField(name = "charge")
+                public int charge;
 
-            @JsonField(name = "extraBeddingEnable")
-            public boolean extraBeddingEnable;
+                @JsonField(name = "enable")
+                public boolean enable;
+            }
+
+            @JsonObject
+            static class ExtraData
+            {
+                @JsonField(name = "descriptions")
+                public String descriptions;
+
+                @JsonField(name = "extraBed")
+                public int extraBed;
+
+                @JsonField(name = "extraBedEnable")
+                public boolean extraBedEnable;
+
+                @JsonField(name = "extraBedding")
+                public int extraBedding;
+
+                @JsonField(name = "extraBeddingEnable")
+                public int extraBeddingEnable;
+            }
         }
 
         @JsonObject
-        static class BedTypeData
+        static class AttributeData
         {
-            @JsonField(name = "bedType")
-            public String bedType;
+            @JsonField(name = "isDuplex")
+            public boolean isDuplex;
 
-            @JsonField(name = "count")
-            public int count;
+            @JsonField(name = "isEntireHouse")
+            public boolean isEntireHouse;
+
+            @JsonField(name = "roomStructure")
+            public String roomStructure;
+        }
+
+        @JsonObject
+        static class BedInfoData
+        {
+            @JsonField(name = "bedTypes")
+            public BedTypeData bedTypes;
+
+            @JsonField(name = "filters")
+            public List<String> filters;
+
+            @JsonObject
+            static class BedTypeData
+            {
+                @JsonField(name = "bedType")
+                public String bedType;
+
+                @JsonField(name = "count")
+                public int count;
+            }
         }
     }
 

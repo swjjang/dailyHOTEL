@@ -20,6 +20,10 @@ inline fun <T> List<T>?.takeNotEmpty(block: (List<T>) -> Unit) {
     this?.takeIf { it.isNotEmpty() }?.let { it }
 }
 
+inline fun <T> T?.letReturnTrueElseReturnFalse(block: (T) -> Unit): Boolean {
+    return this?.let { block(it); return true } == true
+}
+
 fun <T> List<T>?.isNotNullAndNotEmpty(): Boolean {
     return this != null && this.isNotEmpty()
 }
