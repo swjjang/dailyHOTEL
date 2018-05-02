@@ -274,7 +274,7 @@ public class StayDetailData
 
         if (breakfast != null)
         {
-            detailInformation.setBreakfastInformation(breakfast.getBreakfastInformation());
+            stayDetail.setBreakfastInformation(breakfast.getBreakfastInformation());
         }
 
         if (refundPolicy != null)
@@ -490,9 +490,9 @@ public class StayDetailData
             @JsonField(name = "title")
             public String title;
 
-            StayDetailk.DetailInformation.BreakfastInformation.Item getItem()
+            StayDetailk.BreakfastInformation.Item getItem()
             {
-                StayDetailk.DetailInformation.BreakfastInformation.Item item = new StayDetailk.DetailInformation.BreakfastInformation.Item();
+                StayDetailk.BreakfastInformation.Item item = new StayDetailk.BreakfastInformation.Item();
 
                 item.setAmount(amount);
                 item.setMaxAge(maxAge);
@@ -504,15 +504,15 @@ public class StayDetailData
             }
         }
 
-        StayDetailk.DetailInformation.BreakfastInformation getBreakfastInformation()
+        StayDetailk.BreakfastInformation getBreakfastInformation()
         {
-            StayDetailk.DetailInformation.BreakfastInformation breakfastInformation = new StayDetailk.DetailInformation.BreakfastInformation();
+            StayDetailk.BreakfastInformation breakfastInformation = new StayDetailk.BreakfastInformation();
 
             breakfastInformation.setDescription(description);
 
             if (items != null && items.size() > 0)
             {
-                List<StayDetailk.DetailInformation.BreakfastInformation.Item> itemList = new ArrayList<>();
+                List<StayDetailk.BreakfastInformation.Item> itemList = new ArrayList<>();
 
                 for (ItemData itemData : items)
                 {

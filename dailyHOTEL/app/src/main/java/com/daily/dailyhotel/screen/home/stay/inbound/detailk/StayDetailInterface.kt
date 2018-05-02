@@ -40,33 +40,51 @@ interface StayDetailInterface {
 
         fun setImageList(imageList: List<DetailImageInformation>)
 
-        fun setBaseInformation()
+        fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean)
 
-        fun setTrueAwardsVisible(visible: Boolean)
+        fun setTrueReviewInformationVisible(visible: Boolean)
 
-        fun setTrueReview()
+        fun setTrueReviewInformation(trueReviewInformation: StayDetailk.TrueReviewInformation)
 
-        fun setBenefit()
+        fun setBenefitInformationVisible(visible: Boolean)
 
-        fun setRoomFilter()
+        fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation)
 
-        fun setRoomList()
+        fun setRoomFilterInformation(checkDateTime: CharSequence, bedTypeFilterList: List<String>?, RoomTypeFilterList: List<String>?)
 
-        fun setDailyComment()
+        fun setRoomList(roomList: List<Room>?)
 
-        fun setAmenities()
+        fun setRoomPriceType(priceType: StayDetailPresenter.PriceType)
 
-        fun setAddress()
+        fun setDailyCommentVisible(visible: Boolean)
 
-        fun setCheckDateInformation()
+        fun setDailyComment(dailyCommentList: List<String>)
 
-        fun setDetailInformation()
+        fun setAmenities(roomCount: Int, Amenities: List<String>?)
 
-        fun setBreakfastInformation()
+        fun setAddressInformationVisible(visible: Boolean)
 
-        fun setCancellationAndRefundPolicy()
+        fun setAddressInformation(addressInformation: StayDetailk.AddressInformation)
 
-        fun setWaitingBookingVisible()
+        fun setCheckTimeInformationVisible(visible: Boolean)
+
+        fun setCheckTimeInformation(checkTimeInformation: StayDetailk.CheckTimeInformation)
+
+        fun setDetailInformationVisible(visible: Boolean)
+
+        fun setDetailInformation(detailInformation: StayDetailk.DetailInformation)
+
+        fun setBreakfastInformationVisible(visible: Boolean)
+
+        fun setBreakfastInformation(breakfastInformation: StayDetailk.BreakfastInformation)
+
+        fun setCancellationAndRefundPolicyVisible(visible: Boolean)
+
+        fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation)
+
+        fun setCheckInformationVisible(visible: Boolean)
+
+        fun setCheckInformation(checkTimeInformation: StayDetailk.CheckInformation)
 
         fun setRewardVisible(visible: Boolean)
 
@@ -89,9 +107,9 @@ interface StayDetailInterface {
 
         fun showConciergeDialog(listener: DialogInterface.OnDismissListener)
 
-        fun showTrueVRDialog(checkedChangeListener: CompoundButton.OnCheckedChangeListener,
-                             positiveListener: View.OnClickListener,
-                             onDismissListener: DialogInterface.OnDismissListener)
+        fun showVRDialog(checkedChangeListener: CompoundButton.OnCheckedChangeListener,
+                         positiveListener: View.OnClickListener,
+                         onDismissListener: DialogInterface.OnDismissListener)
 
         fun showTrueAwardsDialog(trueAwards: TrueAwards?, onDismissListener: DialogInterface.OnDismissListener)
 
@@ -151,6 +169,8 @@ interface StayDetailInterface {
         fun onRewardGuideClick()
 
         fun onTrueAwardsClick()
+
+        fun onShowRoomClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

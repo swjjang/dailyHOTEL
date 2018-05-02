@@ -115,7 +115,7 @@
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="4dp"
             android:freezesText="true"
-            android:text="/1박"
+            android:text="@string/label_stay_detail_slash_one_nights"
             android:textColor="@color/default_text_c323232"
             android:textSize="10dp"
             android:visibility="visible"
@@ -145,13 +145,12 @@
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/awardsDetailView"
+            android:id="@+id/awardsTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:drawablePadding="2dp"
             android:gravity="center"
-            android:text="클래스가 다른 가성비"
             android:textColor="@color/default_text_cbe945b"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/vector_detail_ic_trueawards_l"

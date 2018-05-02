@@ -24,6 +24,10 @@ inline fun <T> T?.letReturnTrueElseReturnFalse(block: (T) -> Unit): Boolean {
     return this?.let { block(it); return true } == true
 }
 
+inline fun <T> List<T>?.letReturnTrueElseReturnFalse(block: (List<T>) -> Unit): Boolean {
+    return this?.takeIf { it.isNotEmpty() }?.let { block(it); return true } == true
+}
+
 fun <T> List<T>?.isNotNullAndNotEmpty(): Boolean {
     return this != null && this.isNotEmpty()
 }

@@ -7,9 +7,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.view.View
 import com.crashlytics.android.Crashlytics
 import com.daily.base.BaseActivity
+import com.daily.base.util.DailyImageSpan
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.base.widget.DailyToast
@@ -49,12 +52,12 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+private const val DAYS_OF_MAX_COUNT = 60
+
 class StayDetailPresenter(activity: StayDetailActivity)//
     : BaseExceptionPresenter<StayDetailActivity, StayDetailInterface.ViewInterface>(activity), StayDetailInterface.OnEventListener {
 
-    val DAYS_OF_MAX_COUNT = 60
-
-    enum class Status {
+    internal enum class Status {
         NONE, BOOKING, SOLD_OUT, FINISH
     }
 
@@ -91,6 +94,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showCalendar = false
     private var showTrueVR = false
     private var deepLink: DailyDeepLink? = null
+    private var showRoomPriceType: PriceType = PriceType.AVERAGE
 
     private val bookDateTime = StayBookDateTime()
     private val commonDateTime = CommonDateTime()
@@ -229,7 +233,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
         isRefresh.runTrue { onRefresh(true) }
 
-        if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled) {
+        if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled && stayDetail != null) {
             viewInterface.startRewardStickerAnimation()
         }
 
@@ -391,9 +395,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             stayDetail
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({ stayDetail ->
-            //
+            notifyDetailDataSetChanged()
+            notifyWishDataSetChanged()
+            notifyRewardDataSetChanged()
 
-            if (DailyPreference.getInstance(activity).isWishTooltip) showWishTooltip()
+            DailyPreference.getInstance(activity).isWishTooltip.runTrue { showWishTooltip() }
 
             stayDetail.trueReviewInformation?.reviewTotalCount.takeGreaterThanZero { analytics.onEventShowTrueReview(activity, stayDetail.index) }
             stayDetail.benefitInformation?.coupon?.couponDiscount.takeGreaterThanZero { analytics.onEventShowCoupon(activity, stayDetail.index) }
@@ -403,9 +409,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             disposable?.dispose()
 
         }, {
-            unLockAll()
-            disposable?.dispose()
-//            onHandleErrorAndFinish(it)
+            onHandleErrorAndFinish(it)
         }))
     }
 
@@ -856,6 +860,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         } ?: Util.restartApp(activity)
     }
 
+    override fun onShowRoomClick() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun notifyDetailDataSetChanged() {
         stayDetail?.let {
 
@@ -863,12 +871,40 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
             }
 
-            status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
+            viewInterface.apply {
+                setVRVisible(DailyPreference.getInstance(activity).trueVRSupport > 0 && it.vrInformation.isNotNullAndNotEmpty())
+                setMoreImageVisible(it.imageList.isNotNullAndNotEmpty() && it.imageList!!.size > 1)
 
-            if (DailyPreference.getInstance(activity).trueVRSupport > 0 && it.vrInformation.isNotNullAndNotEmpty()) {
-            } else {
-                viewInterface.setVRVisible(false)
+                it.imageList.takeNotEmpty { setImageList(it) }
+                it.baseInformation?.let { setBaseInformation(it, bookDateTime.nights > 1) }
+
+                setTrueReviewInformationVisible(it.trueReviewInformation.letReturnTrueElseReturnFalse { setTrueReviewInformation(it) })
+                setBenefitInformationVisible(it.benefitInformation.letReturnTrueElseReturnFalse { setBenefitInformation(it) })
+
+                val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
+                        bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                        bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                        bookDateTime.nights)
+
+                val startIndex = calendarText.indexOf('돋')
+                val spannableString = SpannableString(calendarText)
+                spannableString.setSpan(DailyImageSpan(activity, R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                setRoomFilterInformation(spannableString, it.roomInformation?.bedTypeList, it.roomInformation?.facilityList)
+                setRoomList(it.roomInformation?.roomList)
+                setRoomPriceType(showRoomPriceType)
+
+                setDailyCommentVisible(it.dailyCommentList.letReturnTrueElseReturnFalse { setDailyComment(it) })
+                setAmenities(it.totalRoomCount, it.facilityList)
+                setAddressInformationVisible(it.addressInformation.letReturnTrueElseReturnFalse { setAddressInformation(it) })
+                setCheckTimeInformationVisible(it.checkTimeInformation.letReturnTrueElseReturnFalse { setCheckTimeInformation(it) })
+                setDetailInformationVisible(it.detailInformation.letReturnTrueElseReturnFalse { setDetailInformation(it) })
+                setBreakfastInformationVisible(it.breakfastInformation.letReturnTrueElseReturnFalse { setBreakfastInformation(it) })
+                setCancellationAndRefundPolicyVisible(it.refundInformation.letReturnTrueElseReturnFalse { setCancellationAndRefundPolicy(it) })
+                setCheckInformationVisible(it.checkInformation.letReturnTrueElseReturnFalse { setCheckInformation(it) })
             }
+
+            status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
 
             when {
                 showCalendar -> {
@@ -881,14 +917,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     showTrueVR = false
 
                     if (DailyPreference.getInstance(activity).trueVRSupport > 0) {
-                        onTrueVRClick()
+                        it.vrInformation.isNotNullAndNotEmpty().runTrue { onTrueVRClick() }
                     } else {
                         viewInterface.showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null)
                     }
                 }
             }
-
-
 
             hasDeepLink = false
         } ?: Util.restartApp(activity)

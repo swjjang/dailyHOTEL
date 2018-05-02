@@ -40,7 +40,19 @@ class DailyDetailBaseInformationView : ConstraintLayout {
         viewDataBinding.nameTextView.text = text
     }
 
+    fun setPrice(text: String?) {
+        viewDataBinding.discountPriceTextView.text = text
+    }
+
+    fun setNightsEnabled(enable : Boolean) {
+        viewDataBinding.discountPriceWonTextView
+    }
+
     fun setAwardsVisible(visible: Boolean) {
         viewDataBinding.awardsGroup.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    fun setAwardsTitle(text: String?) {
+        viewDataBinding.awardsTitleTextView.text = text
     }
 }

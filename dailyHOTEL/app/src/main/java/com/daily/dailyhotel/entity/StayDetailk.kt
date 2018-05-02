@@ -24,6 +24,7 @@ class StayDetailk : Configurations() {
     var addressInformation: AddressInformation? = null
     var checkTimeInformation: CheckTimeInformation? = null
     var detailInformation: DetailInformation? = null
+    var breakfastInformation: BreakfastInformation? = null
     var refundInformation: RefundInformation? = null
     var checkInformation: CheckInformation? = null
     var rewardStickerCount: Int = 0
@@ -116,26 +117,26 @@ class StayDetailk : Configurations() {
 
     class DetailInformation {
         var itemList: List<Item>? = null
-        var breakfastInformation: BreakfastInformation? = null
+
 
         class Item {
             var type: String? = null
             var title: String? = null
             var contentList: List<String>? = null
         }
+    }
 
-        class BreakfastInformation {
-            var description: String? = null
+    class BreakfastInformation {
+        var description: String? = null
 
-            var items: List<Item>? = null
+        var items: List<Item>? = null
 
-            class Item {
-                var amount: Int = 0
-                var maxAge: Int = 0
-                var maxPersons: Int = 0
-                var minAge: Int = 0
-                var title: String? = null
-            }
+        class Item {
+            var amount: Int = 0
+            var maxAge: Int = 0
+            var maxPersons: Int = 0
+            var minAge: Int = 0
+            var title: String? = null
         }
     }
 
