@@ -4,6 +4,10 @@ import java.util.List;
 
 public class Room
 {
+    public String name;
+
+    public BedInformation bedInformation;
+
     //    amenities (Array[string], optional): 객실 내 편의시설 ,
     public List<String> amemities;
 
@@ -72,6 +76,18 @@ public class Room
     //
     //        public String checkOut;
     //    }
+
+
+    public static class BedInformation
+    {
+        public List<BedType> bedTypeList;
+
+        public static class BedType
+        {
+            public String bedType;
+            public int count;
+        }
+    }
 
     public static class Consecutive
     {

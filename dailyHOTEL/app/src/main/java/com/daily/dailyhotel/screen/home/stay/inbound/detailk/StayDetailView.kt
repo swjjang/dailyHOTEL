@@ -355,12 +355,20 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
-    override fun setRoomFilterInformation(checkDateTime: CharSequence, bedTypeFilterList: List<String>?, RoomTypeFilterList: List<String>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setPriceAverageType(isAverageType: Boolean) {
+        viewDataBinding.roomInformationView.setPriceAverageType(isAverageType)
+    }
+
+    override fun setRoomFilterInformation(calendarText: CharSequence, bedTypeFilterCount: Int, facilitiesFilterCount: Int) {
+        viewDataBinding.roomInformationView.apply {
+            setCalendar(calendarText)
+            setBedTypeFilterCount(bedTypeFilterCount)
+            setFacilitiesTypeFilterCount(facilitiesFilterCount)
+        }
     }
 
     override fun setRoomList(roomList: List<Room>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.roomInformationView.setRoomList(roomList)
     }
 
     override fun setRoomPriceType(priceType: StayDetailPresenter.PriceType) {

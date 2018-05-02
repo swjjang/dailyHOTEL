@@ -95,6 +95,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showTrueVR = false
     private var deepLink: DailyDeepLink? = null
     private var showRoomPriceType: PriceType = PriceType.AVERAGE
+    private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
+    private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
 
     private val bookDateTime = StayBookDateTime()
     private val commonDateTime = CommonDateTime()
@@ -890,7 +892,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 val spannableString = SpannableString(calendarText)
                 spannableString.setSpan(DailyImageSpan(activity, R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-                setRoomFilterInformation(spannableString, it.roomInformation?.bedTypeList, it.roomInformation?.facilityList)
+                setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
                 setRoomList(it.roomInformation?.roomList)
                 setRoomPriceType(showRoomPriceType)
 

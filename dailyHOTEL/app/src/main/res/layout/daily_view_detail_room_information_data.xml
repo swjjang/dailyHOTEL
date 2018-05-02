@@ -69,6 +69,19 @@
             app:layout_constraintTop_toTopOf="@+id/calendarTextView"/>
 
         <com.daily.base.widget.DailyTextView
+            android:id="@+id/bedTypeFilterCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dh_theme_color"
+            android:freezesText="true"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/calendarTextView"
+            app:layout_constraintLeft_toRightOf="@+id/bedTypeFilterTextView"
+            app:layout_constraintTop_toTopOf="@+id/calendarTextView"/>
+
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/facilitiesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +92,20 @@
             android:textColor="@color/white"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/bedTypeFilterTextView"
-            app:layout_constraintLeft_toRightOf="@+id/bedTypeFilterTextView"
+            app:layout_constraintLeft_toRightOf="@+id/bedTypeFilterCountTextView"
+            app:layout_constraintTop_toTopOf="@+id/bedTypeFilterTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/facilitiesFilterCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dh_theme_color"
+            android:freezesText="true"
+            android:text="2"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bedTypeFilterTextView"
+            app:layout_constraintLeft_toRightOf="@+id/facilitiesTextView"
             app:layout_constraintTop_toTopOf="@+id/bedTypeFilterTextView"/>
 
         <View

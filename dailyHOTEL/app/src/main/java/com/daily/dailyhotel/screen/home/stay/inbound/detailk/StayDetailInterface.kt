@@ -50,7 +50,9 @@ interface StayDetailInterface {
 
         fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation)
 
-        fun setRoomFilterInformation(checkDateTime: CharSequence, bedTypeFilterList: List<String>?, RoomTypeFilterList: List<String>?)
+        fun setRoomFilterInformation(calendarText: CharSequence, bedTypeFilterCount: Int, facilitiesFilterCount: Int)
+
+        fun setPriceAverageType(isAverageType: Boolean)
 
         fun setRoomList(roomList: List<Room>?)
 
