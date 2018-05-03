@@ -54,7 +54,7 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
     }
 
     private fun initToolbar(viewDataBinding: ActivityCouponListDataBinding) {
-        with(viewDataBinding.toolbarView) {
+        viewDataBinding.toolbarView.apply {
             setTitleText(R.string.actionbar_title_coupon_list)
             setOnBackClickListener { eventListener.onBackClick() }
         }
@@ -63,16 +63,16 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
     }
 
     private fun initRecyclerView(viewDataBinding: ActivityCouponListDataBinding) {
-        with(viewDataBinding.emptyView) {
-            viewDataBinding.couponUseNoticeTextView.setOnClickListener { eventListener.startNotice() }
-            viewDataBinding.couponHistoryTextView.setOnClickListener { eventListener.startCouponHistory() }
+        viewDataBinding.apply {
+            couponUseNoticeTextView.setOnClickListener { eventListener.startNotice() }
+            couponHistoryTextView.setOnClickListener { eventListener.startCouponHistory() }
 
-            viewDataBinding.recyclerView.layoutManager = LinearLayoutManager(context).apply {
+            recyclerView.layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.VERTICAL
                 scrollToPosition(0)
             }
 
-            EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, context.resources.getColor(R.color.default_over_scroll_edge))
+            EdgeEffectColor.setEdgeGlowColor(recyclerView, context.resources.getColor(R.color.default_over_scroll_edge))
         }
     }
 
@@ -92,7 +92,7 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
     }
 
     override fun setData(list: List<Coupon>, sortType: CouponListActivity.SortType, isScrollTop: Boolean) {
-        with(viewDataBinding) {
+        viewDataBinding.apply {
             emptyView.visibility = if (list.isNotEmpty()) View.GONE else View.VISIBLE
 
             if (list.isEmpty() && sortType == CouponListActivity.SortType.ALL) {
