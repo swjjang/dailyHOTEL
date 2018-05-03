@@ -39,12 +39,12 @@ class DailyDetailDetailInformationView : LinearLayout {
         orientation = LinearLayout.VERTICAL
     }
 
-    fun setInformation(information: Array<StayDetailk.DetailInformation>, waitBookingInformationVisible: Boolean) {
+    fun setInformation(information: List<StayDetailk.DetailInformation.Item>?) {
 
     }
 
 
-    fun getInformationView(information: StayDetailk.DetailInformation): View {
+    private fun getInformationView(information: StayDetailk.DetailInformation): View {
 
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
 
@@ -61,7 +61,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         return viewDataBinding.root
     }
 
-    fun getContentBoldView(content: String): DailyTextView? {
+    private fun getContentBoldView(content: String): DailyTextView? {
         return content.letNotEmpty {
             DailyTextView(context).apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
@@ -89,6 +89,10 @@ class DailyDetailDetailInformationView : LinearLayout {
             setDrawableCompatLeftAndRightFixedFirstLine(true)
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_ic_text_dot_black, 0, 0, 0)
         }
+    }
+
+    fun setBreakfastInfomration(information: StayDetailk.BreakfastInformation?) {
+
     }
 
     private fun getBreakfastView(): View {

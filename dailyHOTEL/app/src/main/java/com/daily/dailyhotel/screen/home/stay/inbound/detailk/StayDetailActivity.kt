@@ -24,7 +24,6 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
         internal const val REQUEST_CODE_LOGIN = 10008
         internal const val REQUEST_CODE_PROFILE_UPDATE = 10009
         internal const val REQUEST_CODE_DOWNLOAD_COUPON = 10010
-        internal const val REQUEST_CODE_LOGIN_IN_BY_WISH = 10011
         internal const val REQUEST_CODE_LOGIN_IN_BY_COUPON = 10012
         internal const val REQUEST_CODE_LOGIN_IN_BY_BOOKING = 10013
         internal const val REQUEST_CODE_TRUE_VIEW = 10014
@@ -32,6 +31,7 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
         internal const val REQUEST_CODE_NAVIGATOR = 10016
         internal const val REQUEST_CODE_REWARD = 10017
         internal const val REQUEST_CODE_WEB = 10018
+        internal const val REQUEST_CODE_WISH_DIALOG = 10019
 
         internal const val INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex"
         internal const val INTENT_EXTRA_DATA_STAY_NAME = "stayName"

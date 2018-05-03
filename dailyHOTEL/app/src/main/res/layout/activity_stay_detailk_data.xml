@@ -247,6 +247,12 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/refundInformationTopLineView"/>
 
+                <android.support.constraint.Group
+                    android:id="@+id/refundInformationGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="refundInformationTopLineView, refundInformationView"/>
+
                 <View
                     android:id="@+id/checkInformationTopLineView"
                     android:layout_width="0dp"
@@ -266,6 +272,12 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/checkInformationTopLineView"/>
+
+                <android.support.constraint.Group
+                    android:id="@+id/checkInformationGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="checkInformationTopLineView, checkInformationView"/>
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/rewardCardLayout"

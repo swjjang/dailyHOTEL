@@ -56,13 +56,11 @@ interface StayDetailInterface {
 
         fun setRoomList(roomList: List<Room>?)
 
-        fun setRoomPriceType(priceType: StayDetailPresenter.PriceType)
-
         fun setDailyCommentVisible(visible: Boolean)
 
-        fun setDailyComment(dailyCommentList: List<String>)
+        fun setDailyComment(commentList: List<String>)
 
-        fun setAmenities(roomCount: Int, Amenities: List<String>?)
+        fun setFacilities(roomCount: Int, facilities: List<String>?)
 
         fun setAddressInformationVisible(visible: Boolean)
 
@@ -74,11 +72,7 @@ interface StayDetailInterface {
 
         fun setDetailInformationVisible(visible: Boolean)
 
-        fun setDetailInformation(detailInformation: StayDetailk.DetailInformation)
-
-        fun setBreakfastInformationVisible(visible: Boolean)
-
-        fun setBreakfastInformation(breakfastInformation: StayDetailk.BreakfastInformation)
+        fun setDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?)
 
         fun setCancellationAndRefundPolicyVisible(visible: Boolean)
 
@@ -90,9 +84,9 @@ interface StayDetailInterface {
 
         fun setRewardVisible(visible: Boolean)
 
-        fun setRewardMemberInformation(titleText: String, optionText: String, nights: Int, descriptionText: String)
+        fun setRewardMemberInformation(titleText: String, optionText: String?, nights: Int, descriptionText: String)
 
-        fun setRewardNonMemberInformation(titleText: String, optionText: String, campaignFreeNights: Int, descriptionText: String)
+        fun setRewardNonMemberInformation(titleText: String, optionText: String?, campaignFreeNights: Int, descriptionText: String)
 
         fun startRewardStickerAnimation()
 
@@ -104,8 +98,6 @@ interface StayDetailInterface {
         fun scrollTop()
 
         fun showShareDialog(listener: DialogInterface.OnDismissListener)
-
-        fun showWishPopup(myWish: Boolean): Observable<Boolean>
 
         fun showConciergeDialog(listener: DialogInterface.OnDismissListener)
 
@@ -138,7 +130,7 @@ interface StayDetailInterface {
 
         fun onMapClick()
 
-        fun onClipAddressClick(address: String)
+        fun onClipAddressClick()
 
         fun onNavigatorClick()
 

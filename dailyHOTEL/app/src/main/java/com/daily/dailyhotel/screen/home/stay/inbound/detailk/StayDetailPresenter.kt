@@ -17,7 +17,10 @@ import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.*
+import com.daily.dailyhotel.entity.CommonDateTime
+import com.daily.dailyhotel.entity.StayBookDateTime
+import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
@@ -26,6 +29,7 @@ import com.daily.dailyhotel.repository.remote.*
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
 import com.daily.dailyhotel.screen.common.event.EventWebActivity
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
@@ -312,9 +316,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             StayDetailActivity.REQUEST_CODE_LOGIN -> onLoginActivityResult(resultCode, intent)
 
-            StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH -> onLoginByWishActivityResult(resultCode, intent)
-
             StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON -> onLoginByCouponActivityResult(resultCode, intent)
+
+            StayDetailActivity.REQUEST_CODE_WISH_DIALOG -> onWishDialogActivityResult(resultCode, intent)
         }
     }
 
@@ -347,17 +351,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }
     }
 
-    private fun onLoginByWishActivityResult(resultCode: Int, intent: Intent?) {
-        when (resultCode) {
-            Activity.RESULT_OK -> {
-                onWishClick()
-
-                setResult(BaseActivity.RESULT_CODE_REFRESH)
-                isRefresh = true
-            }
-        }
-    }
-
     private fun onLoginByCouponActivityResult(resultCode: Int, intent: Intent?) {
         when (resultCode) {
             Activity.RESULT_OK -> {
@@ -366,6 +359,27 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setResult(BaseActivity.RESULT_CODE_REFRESH)
                 isRefresh = true
             }
+        }
+    }
+
+    private fun onWishDialogActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                intent?.let {
+                    val wish = it.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false)
+
+                    stayDetail?.let {
+                        it.wish = wish
+                        it.wishCount += if (wish) 1 else -1
+
+                        notifyWishDataSetChanged();
+
+                        setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
+                    }
+                }
+            }
+
+            else -> notifyWishDataSetChanged();
         }
     }
 
@@ -458,55 +472,17 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onWishClick() {
         if (lock()) return
 
-        if (!DailyHotel.isLogin()) {
-            DailyToast.showToast(activity, R.string.toast_msg_please_login, DailyToast.LENGTH_LONG)
+        stayDetail?.let {
+            val wish = !it.wish
+            val wishCount = it.wishCount + if (wish) 1 else -1
 
-            startActivityForResult(LoginActivity.newInstance(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL),
-                    StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH)
-        } else {
-            stayDetail?.let {
-                val wish = !it.wish
-                val wishCount = it.wishCount + if (wish) 1 else -1
+            notifyWishDataSetChanged(wishCount, wish)
 
-                notifyWishDataSetChanged(wishCount, wish)
+            startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.HOTEL,
+                    stayIndex, wish, AnalyticsManager.Screen.DAILYHOTEL_DETAIL), StayDetailActivity.REQUEST_CODE_WISH_DIALOG)
 
-                processWish(it.index, wish)
-            }
-        }
-    }
-
-    private fun processWish(stayIndex: Int, wish: Boolean) {
-        addCompositeDisposable(getWishObservable(stayIndex, wish).observeOn(AndroidSchedulers.mainThread()).subscribe({ wishResult ->
-
-            setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, wish))
-
-            stayDetail?.let {
-                if (wishResult.success) {
-                    it.wish = wish
-                    it.wishCount += if (wish) 1 else -1
-
-                    notifyWishDataSetChanged()
-
-                    addCompositeDisposable(viewInterface.showWishPopup(it.wish).subscribeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
-
-                    analytics.onEventWishClick(activity, bookDateTime, it, viewPrice, wish)
-                } else {
-                    notifyWishDataSetChanged(it.wishCount, wish)
-
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message, getString(R.string.dialog_btn_text_confirm), null)
-
-                    unLockAll()
-                }
-            }
-        }, {
-            onHandleError(it)
-
-            stayDetail?.let { notifyWishDataSetChanged(it.wishCount, it.wish) }
-        }))
-    }
-
-    private fun getWishObservable(stayIndex: Int, wish: Boolean): Observable<WishResult> {
-        return if (wish) stayRemoteImpl.removeWish(stayIndex) else stayRemoteImpl.addWish(stayIndex)
+            analytics.onEventWishClick(activity, bookDateTime, it, viewPrice, wish)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onShareKakaoClick() {
@@ -690,10 +666,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         } ?: Util.restartApp(activity)
     }
 
-    override fun onClipAddressClick(address: String) {
+    override fun onClipAddressClick() {
         if (lock()) return
 
-        DailyTextUtils.clipText(activity, address)
+        DailyTextUtils.clipText(activity, stayDetail?.addressInformation?.address)
         DailyToast.showToast(activity, R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT)
 
         stayDetail?.let { analytics.onEventClipAddressClick(activity, it.baseInformation?.name) }
@@ -894,14 +870,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                 setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
                 setRoomList(it.roomInformation?.roomList)
-                setRoomPriceType(showRoomPriceType)
+                setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
 
                 setDailyCommentVisible(it.dailyCommentList.letReturnTrueElseReturnFalse { setDailyComment(it) })
-                setAmenities(it.totalRoomCount, it.facilityList)
+                setFacilities(it.totalRoomCount, it.facilityList)
                 setAddressInformationVisible(it.addressInformation.letReturnTrueElseReturnFalse { setAddressInformation(it) })
                 setCheckTimeInformationVisible(it.checkTimeInformation.letReturnTrueElseReturnFalse { setCheckTimeInformation(it) })
-                setDetailInformationVisible(it.detailInformation.letReturnTrueElseReturnFalse { setDetailInformation(it) })
-                setBreakfastInformationVisible(it.breakfastInformation.letReturnTrueElseReturnFalse { setBreakfastInformation(it) })
+                setDetailInformationVisible((it.detailInformation != null || it.breakfastInformation != null).letReturnTrueElseReturnFalse { _ -> setDetailInformation(it.detailInformation, it.breakfastInformation) })
                 setCancellationAndRefundPolicyVisible(it.refundInformation.letReturnTrueElseReturnFalse { setCancellationAndRefundPolicy(it) })
                 setCheckInformationVisible(it.checkInformation.letReturnTrueElseReturnFalse { setCheckInformation(it) })
             }

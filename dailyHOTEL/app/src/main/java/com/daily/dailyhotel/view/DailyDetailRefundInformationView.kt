@@ -30,12 +30,12 @@ class DailyDetailRefundInformationView : LinearLayout {
         orientation = LinearLayout.VERTICAL
     }
 
-    fun setInformation(information: Array<StayDetailk.RefundInformation>) {
+    fun setInformation(information: StayDetailk.RefundInformation) {
 
     }
 
 
-    fun getInformationView(information: StayDetailk.DetailInformation): View {
+    private fun getInformationView(information: StayDetailk.DetailInformation): View {
 
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
 

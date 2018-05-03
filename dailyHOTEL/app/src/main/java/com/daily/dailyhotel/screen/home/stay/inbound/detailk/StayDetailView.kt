@@ -19,9 +19,15 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
+import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.*
+import com.daily.dailyhotel.storage.preference.DailyPreference
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
+import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letReturnTrueElseReturnFalse
+import com.daily.dailyhotel.util.runTrue
+import com.daily.dailyhotel.view.DailyDetailAddressView
 import com.daily.dailyhotel.view.DailyDetailEmptyView
 import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -31,7 +37,9 @@ import com.facebook.drawee.view.DraweeTransition
 import com.facebook.imagepipeline.image.ImageInfo
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailkDataBinding
+import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding
 import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding
+import com.twoheart.dailyhotel.databinding.DialogShareDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 import com.twoheart.dailyhotel.widget.AlphaTransition
 import io.reactivex.Observable
@@ -371,99 +379,210 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.roomInformationView.setRoomList(roomList)
     }
 
-    override fun setRoomPriceType(priceType: StayDetailPresenter.PriceType) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun setDailyCommentVisible(visible: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.dailyCommentView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setDailyComment(dailyCommentList: List<String>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setDailyComment(commentList: List<String>) {
+        viewDataBinding.dailyCommentView.setComments(commentList)
     }
 
-    override fun setAmenities(roomCount: Int, Amenities: List<String>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setFacilities(roomCount: Int, facilities: List<String>?) {
+        viewDataBinding.facilitiesView.apply {
+            if (roomCount <= 0 && !facilities.isNotNullAndNotEmpty()) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
+                setRoomCountVisible(roomCount.letReturnTrueElseReturnFalse { setRoomCount(roomCount) })
+                setFacilities(facilities)
+            }
+        }
     }
 
     override fun setAddressInformationVisible(visible: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.addressView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setAddressInformation(addressInformation: StayDetailk.AddressInformation) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.addressView.apply {
+            setAddressText(addressInformation.address)
+            setOnAddressClickListener(object : DailyDetailAddressView.OnAddressClickListener {
+                override fun onMapClick() {
+                    eventListener.onMapClick()
+                }
+
+                override fun onCopyAddressClick() {
+                    eventListener.onClipAddressClick()
+                }
+
+                override fun onSearchAddressClick() {
+                    eventListener.onNavigatorClick()
+                }
+            })
+        }
     }
 
     override fun setCheckTimeInformationVisible(visible: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.checkTimeInformationView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setCheckTimeInformation(checkTimeInformation: StayDetailk.CheckTimeInformation) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.checkTimeInformationView.apply {
+            setCheckTimeText(checkTimeInformation.checkIn, checkTimeInformation.checkOut)
+            setInformation(checkTimeInformation.description)
+        }
     }
 
     override fun setDetailInformationVisible(visible: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.detailInformationView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setDetailInformation(detailInformation: StayDetailk.DetailInformation) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun setBreakfastInformationVisible(visible: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun setBreakfastInformation(breakfastInformation: StayDetailk.BreakfastInformation) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?) {
+        viewDataBinding.detailInformationView.setInformation(detailInformation?.itemList)
+        viewDataBinding.detailInformationView.setBreakfastInfomration(breakfastInformation)
     }
 
     override fun setCancellationAndRefundPolicyVisible(visible: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.refundInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.refundInformationView.setInformation(refundInformation)
     }
 
     override fun setCheckInformationVisible(visible: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        viewDataBinding.checkInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCheckInformation(checkTimeInformation: StayDetailk.CheckInformation) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setCheckInformation(checkInformation: StayDetailk.CheckInformation) {
+        viewDataBinding.checkInformationView.setInformation(checkInformation)
     }
 
     override fun setRewardVisible(visible: Boolean) {
+        if (visible) {
+            viewDataBinding.rewardCardLayout.visibility = View.VISIBLE
+            viewDataBinding.conciergeTopLineView.layoutParams.height = ScreenUtils.dpToPx(context, 1.0)
+        } else {
+            viewDataBinding.rewardCardLayout.visibility = View.GONE
+            viewDataBinding.conciergeTopLineView.layoutParams.height = ScreenUtils.dpToPx(context, 12.0)
+        }
+
+        viewDataBinding.conciergeTopLineView.requestLayout()
     }
 
-    override fun setRewardMemberInformation(titleText: String, optionText: String, nights: Int, descriptionText: String) {
+    override fun setRewardMemberInformation(titleText: String, optionText: String?, nights: Int, descriptionText: String) {
+        viewDataBinding.rewardCardView.apply {
+            setGuideVisible(true)
+            setOnGuideClickListener { eventListener.onRewardGuideClick() }
+
+            setOptionVisible((!optionText.isTextEmpty()).letReturnTrueElseReturnFalse {
+                setOptionText(optionText)
+                setOnOptionClickListener { eventListener.onRewardClick() }
+            })
+
+            setRewardTitleText(titleText)
+            setDescriptionText(descriptionText)
+            setStickerCount(nights)
+        }
     }
 
-    override fun setRewardNonMemberInformation(titleText: String, optionText: String, campaignFreeNights: Int, descriptionText: String) {
+
+    override fun setRewardNonMemberInformation(titleText: String, optionText: String?, campaignFreeNights: Int, descriptionText: String) {
+        viewDataBinding.rewardCardView.apply {
+            setGuideVisible(true)
+            setOnGuideClickListener { eventListener.onRewardGuideClick() }
+
+            setOptionVisible((!optionText.isTextEmpty()).letReturnTrueElseReturnFalse {
+                setOptionText(optionText)
+                setOnOptionClickListener { eventListener.onLoginClick() }
+            })
+
+            setRewardTitleText(titleText)
+            setDescriptionText(descriptionText)
+            setCampaignFreeStickerCount(campaignFreeNights)
+        }
     }
 
     override fun startRewardStickerAnimation() {
+        (viewDataBinding.rewardCardLayout.visibility == View.VISIBLE).runTrue { viewDataBinding.rewardCardView.startCampaignStickerAnimation() }
     }
 
     override fun stopRewardStickerAnimation() {
+        (viewDataBinding.rewardCardLayout.visibility == View.VISIBLE).runTrue { viewDataBinding.rewardCardView.stopCampaignStickerAnimation() }
     }
 
     override fun setConciergeInformation() {
+        val hour = DailyPreference.getInstance(context).operationTime.split("\\,".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val startHour = hour[0]
+        val endHour = hour[1]
+        val lunchTimes = DailyRemoteConfigPreference.getInstance(context).remoteConfigOperationLunchTime.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val startLunchTime = lunchTimes[0]
+        val endLunchTime = lunchTimes[1]
+
+        viewDataBinding.conciergeViewDataBinding?.conciergeTimeTextView?.text = getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime)
+        viewDataBinding.conciergeViewDataBinding?.conciergeLayout?.setOnClickListener { eventListener.onConciergeClick() }
     }
 
     override fun scrollTop() {
+        viewDataBinding.nestedScrollView.scrollTo(0, 0)
+        viewDataBinding.nestedScrollView.smoothScrollTo(0, 0)
     }
 
     override fun showShareDialog(listener: DialogInterface.OnDismissListener) {
-    }
 
-    override fun showWishPopup(myWish: Boolean): Observable<Boolean> {
-        return Observable.just(true)
+        DataBindingUtil.inflate<DialogShareDataBinding>(LayoutInflater.from(context), R.layout.dialog_share_data, null, false).apply {
+            kakaoShareView.setOnClickListener {
+                hideSimpleDialog()
+
+                eventListener.onShareKakaoClick()
+            }
+
+            copyLinkView.setOnClickListener {
+                hideSimpleDialog()
+
+                eventListener.onCopyLinkClick()
+            }
+
+            moreShareView.setOnClickListener {
+                hideSimpleDialog()
+
+                eventListener.onMoreShareClick()
+            }
+
+            closeTextView.setOnClickListener { hideSimpleDialog() }
+
+            showSimpleDialog(root, null, listener, true)
+        }
     }
 
     override fun showConciergeDialog(listener: DialogInterface.OnDismissListener) {
+        DataBindingUtil.inflate<DialogConciergeDataBinding>(LayoutInflater.from(context), R.layout.dialog_concierge_data, null, false).apply {
+            contactUs02Layout.visibility = View.GONE
+            contactUs01TextView.setText(R.string.frag_faqs)
+            contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0)
+
+            contactUs01Layout.setOnClickListener {
+                hideSimpleDialog()
+
+                eventListener.onConciergeFaqClick()
+            }
+
+            kakaoDailyView.setOnClickListener {
+                hideSimpleDialog()
+
+                eventListener.onConciergeHappyTalkClick()
+            }
+
+            callDailyView.setOnClickListener {
+                hideSimpleDialog()
+
+                eventListener.onConciergeCallClick()
+            }
+
+            closeView.setOnClickListener { hideSimpleDialog() }
+
+            showSimpleDialog(root, null, listener, true)
+        }
     }
 
     override fun showVRDialog(checkedChangeListener: CompoundButton.OnCheckedChangeListener,
@@ -498,11 +617,12 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun setActionButtonText(text: String) {
+        viewDataBinding.showRoomTextView.text = text
     }
 
     override fun setActionButtonEnabled(enabled: Boolean) {
+        viewDataBinding.showRoomTextView.isEnabled = enabled
     }
-
 
     /**
      * 리스트에서 사용하는것과 동일한다.

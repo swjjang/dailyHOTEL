@@ -34,11 +34,11 @@ class DailyDetailFacilitiesView : ConstraintLayout {
         viewDataBinding.roomCountTextView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setRoomCountText(text: String?) {
-        text.takeNotEmpty { viewDataBinding.roomCountTextView.text = it }
+    fun setRoomCount(count: Int) {
+        viewDataBinding.roomCountTextView.text = context.getString(R.string.label_stay_detail_room_total_count, count)
     }
 
-    fun setFacilities(facilities: Array<String>?) {
+    fun setFacilities(facilities: List<String>?) {
         viewDataBinding.facilitiesGridLayout.removeAllViews()
 
         facilities.takeNotEmpty {

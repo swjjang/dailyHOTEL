@@ -31,7 +31,7 @@ class DailyDetailDailyCommentView : ConstraintLayout {
 
     }
 
-    fun setComments(comments: Array<String>?) {
+    fun setComments(comments: List<String>?) {
         viewDataBinding.dailyCommentsLayout.removeAllViews()
 
         comments.takeNotEmpty {

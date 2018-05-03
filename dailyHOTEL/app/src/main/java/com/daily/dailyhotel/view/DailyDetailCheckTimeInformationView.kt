@@ -35,11 +35,11 @@ class DailyDetailCheckTimeInformationView : ConstraintLayout {
     }
 
     fun setCheckTimeText(checkInTime: String?, checkOutTime: String?) {
-        checkInTime.takeNotEmpty { viewDataBinding.checkInTextView.text = it }
-        checkOutTime.takeNotEmpty { viewDataBinding.checkOutTimeTextView.text = it }
+        viewDataBinding.checkInTextView.text = checkInTime
+        viewDataBinding.checkOutTimeTextView.text = checkOutTime
     }
 
-    fun setInformation(information: Array<String>?) {
+    fun setInformation(information: List<String>?) {
         viewDataBinding.informationLayout.removeAllViews()
 
         information.takeNotEmpty {
