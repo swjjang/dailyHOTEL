@@ -40,6 +40,8 @@ interface StayDetailInterface {
 
         fun setImageList(imageList: List<DetailImageInformation>)
 
+        fun setScrollViewVisible(visible: Boolean)
+
         fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean)
 
         fun setTrueReviewInformationVisible(visible: Boolean)

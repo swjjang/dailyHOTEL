@@ -460,7 +460,6 @@
             android:id="@+id/showRoomGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             app:constraint_referenced_ids="showRoomGradientView, showRoomBackgroundView, showRoomBackgroundView, showRoomTopLineView"/>
 
         <View

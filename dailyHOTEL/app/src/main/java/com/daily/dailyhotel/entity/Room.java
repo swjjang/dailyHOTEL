@@ -6,10 +6,11 @@ public class Room
 {
     public String name;
 
-    public BedInformation bedInformation;
+    public List<BedType> bedTypeList;
+    public Attribute attribute;
 
     //    amenities (Array[string], optional): 객실 내 편의시설 ,
-    public List<String> amemities;
+    public List<String> amenities;
 
     //    amount (AmountData, optional): 객실 가격 ,
     //        discountAverage (integer, optional): 연박 일일 결제 금액 ,
@@ -22,7 +23,7 @@ public class Room
     public int discountRate;
 
     //        price (integer, optional): 정가
-    public int price;
+    public int priceAverage;
 
     //    bedCount (integer, optional): 침대 수 ,
     public int bedCount;
@@ -34,79 +35,55 @@ public class Room
     public String checkInTime;
     public String checkOutTime;
 
-    //    consecutive (Consecutive, optional): 연박 추가 요금 ,
-    public Consecutive consecutive;
-
     //    descriptions (string, optional): 객실 설명 ,
-    public String descriptions;
+    public List<String> descriptions;
 
     //    hasUsableCoupon (boolean, optional): 쿠폰 사용 가능 여부 ,
     public boolean hasUsableCoupon;
 
     //    image (Image, optional): 객실 이미지 ,
-    public Image image;
+    public DetailImageInformation image;
 
     //    needToKnows (Array[string], optional): 필수 확인사항 ,
     public List<String> needToKnows;
 
     //    persons (Person, optional): 객실 이용 인원수 정보 ,
-    public Person persons;
+    public Persons persons;
 
     //    provideRewardSticker (boolean, optional): 리워드 스티커 적립 여부 ,
     public boolean provideRewardSticker;
 
     //    roomCharge (RoomCharge, optional),
-    public RoomCharge roomCharge;
+    public Charge charge;
 
     //    roomIdx (integer, optional): 객실 Index ,
-    public int roomIdx;
+    public int index;
 
     //    roomType (string, optional): 객실 유형 ,
-    public String roomType;
+    public String type;
 
     //    squareMeter (number, optional): 객실 크기 ,
-    public int squareMeter;
+    public float squareMeter;
 
     //    vr (Vr, optional): 객실 VR
-    public List<String> vrUrlList;
+    public List<StayDetailk.VRInformation> vrInformationList;
 
-    //    public class CheckTime
-    //    {
-    //        public String checkIn;
-    //
-    //        public String checkOut;
-    //    }
+    public StayDetailk.RefundInformation refundInformation;
 
-
-    public static class BedInformation
+    public static class BedType
     {
-        public List<BedType> bedTypeList;
-
-        public static class BedType
-        {
-            public String bedType;
-            public int count;
-        }
+        public String bedType;
+        public int count;
     }
 
-    public static class Consecutive
+    public static class Attribute
     {
-        public int charge;
-
-        public boolean enable;
+        public String roomStructure;
+        public boolean isEntireHouse;
+        public boolean isDuplex;
     }
 
-    public static class Image
-    {
-        public String description;
-
-        public String url;
-
-        public boolean primary;
-    }
-
-
-    public static class Person
+    public static class Persons
     {
         //    fixed (integer, optional): 연박 일일 결제 금액
         public int fixed;
@@ -121,21 +98,25 @@ public class Room
         public int breakfast;
     }
 
-    public static class RoomCharge
+    public static class Charge
     {
-        //    descriptions (string, optional),
-        public String descriptions;
+        public Consecutive consecutive;
+        public Extra extra;
+        public Persons persons;
 
-        //        extraBed (integer, optional),
-        public int extraBed;
+        public static class Consecutive
+        {
+            public int charge;
+            public boolean enable;
+        }
 
-        //        extraBedEnable (boolean, optional),
-        public boolean extraBedEnable;
-
-        //    extraBedding (integer, optional),
-        public int extraBedding;
-
-        //        extraBeddingEnable (boolean, optional)
-        public boolean extraBeddingEnable;
+        public static class Extra
+        {
+            public String descriptions;
+            public int extraBed;
+            public boolean extraBedEnable;
+            public int extraBedding;
+            public int extraBeddingEnable;
+        }
     }
 }

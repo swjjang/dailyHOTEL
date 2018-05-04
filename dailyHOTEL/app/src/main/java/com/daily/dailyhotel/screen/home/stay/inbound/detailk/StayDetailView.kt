@@ -19,6 +19,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
+import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -52,7 +53,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun setContentView(viewDataBinding: ActivityStayDetailkDataBinding) {
         initToolbar(viewDataBinding)
 
-        viewDataBinding.nestedScrollView.visibility = View.INVISIBLE
+        setScrollViewVisible(false)
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
             if (getViewDataBinding().scrollLayout.childCount < 2) {
                 getViewDataBinding().toolbarView.visibility = View.GONE
@@ -95,6 +96,10 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.fakeToolbarView.clearMenuItem()
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null) { eventListener.onWishClick() }
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null) { eventListener.onShareClick() }
+    }
+
+    override fun setScrollViewVisible(visible: Boolean) {
+        viewDataBinding.nestedScrollView.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     override fun setInitializedLayout(name: String?, url: String?) {
@@ -322,6 +327,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setCategoryName(baseInformation.category)
             setRewardsVisible(baseInformation.provideRewardSticker)
             setNameText(baseInformation.name)
+            setPrice(DailyTextUtils.getPriceFormat(context, baseInformation.discount, false))
             setNightsEnabled(nightsEnabled)
             setAwardsVisible(baseInformation.awards.letReturnTrueElseReturnFalse { setAwardsTitle(it.title) })
         }

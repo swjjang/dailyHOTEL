@@ -12,6 +12,7 @@ import com.daily.dailyhotel.entity.TrueAwards;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @JsonObject
@@ -34,6 +35,9 @@ public class StayDetailData
 
     @JsonField(name = "singleStay")
     public boolean singleStay;
+
+    @JsonField(name = "primaryReview")
+    public PrimaryReviewData primaryReview;
 
     @JsonField(name = "provideRewardSticker")
     public boolean provideRewardSticker;
@@ -121,6 +125,16 @@ public class StayDetailData
         stayDetail.setWish(myWish);
         stayDetail.setSingleStay(singleStay);
 
+        if (province != null)
+        {
+            stayDetail.setProvince(province.getProvince());
+        }
+
+        if (configurations != null)
+        {
+            stayDetail.activeReward = configurations.activeReward;
+        }
+
         if (images != null && images.size() > 0)
         {
             List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
@@ -173,27 +187,38 @@ public class StayDetailData
 
         stayDetail.setBaseInformation(baseInformation);
 
+        StayDetailk.TrueReviewInformation trueReviewInformation = new StayDetailk.TrueReviewInformation();
 
         if (rating != null)
         {
-            StayDetailk.TrueReviewInformation trueReviewInformation = new StayDetailk.TrueReviewInformation();
-
             trueReviewInformation.setRatingCount(rating.persons);
             trueReviewInformation.setRatingPercent(rating.values);
             trueReviewInformation.setShowRating(rating.show);
-
-            if (rating.primary != null)
-            {
-                StayDetailk.TrueReviewInformation.PrimaryReview primaryReview = new StayDetailk.TrueReviewInformation.PrimaryReview();
-                primaryReview.setScore(rating.primary.avgScore);
-                primaryReview.setComment(rating.primary.comment);
-                primaryReview.setUserId(rating.primary.userId);
-
-                trueReviewInformation.setReview(primaryReview);
-            }
-
-            stayDetail.setTrueReviewInformation(trueReviewInformation);
         }
+
+        if (primaryReview != null)
+        {
+            trueReviewInformation.setReview(primaryReview.getPrimaryReview());
+        }
+
+        if (statistic != null)
+        {
+            trueReviewInformation.setReviewTotalCount(statistic.reviewScoreTotalCount);
+
+            if (statistic.reviewScoreAvgs != null && statistic.reviewScoreAvgs.size() > 0)
+            {
+                List<StayDetailk.TrueReviewInformation.ReviewScore> reviewScoreList = new ArrayList<>();
+
+                for (ReviewStatisticData.ReviewScoreAvgData reviewScoreAvgData : statistic.reviewScoreAvgs)
+                {
+                    reviewScoreList.add(reviewScoreAvgData.getReviewScore());
+                }
+
+                trueReviewInformation.setReviewScores(reviewScoreList);
+            }
+        }
+
+        stayDetail.setTrueReviewInformation(trueReviewInformation);
 
         StayDetailk.BenefitInformation benefitInformation = new StayDetailk.BenefitInformation();
 
@@ -213,18 +238,34 @@ public class StayDetailData
         if (rooms != null && rooms.size() > 0)
         {
             List<Room> roomList = new ArrayList<>();
-            List<String> bedTypeList = new ArrayList<>();
-            List<String> facilityList = new ArrayList<>();
+            HashSet<String> bedTypeSet = new HashSet<>();
+            HashSet<String> amenitiesSet = new HashSet<>();
 
             for (RoomData roomData : rooms)
             {
+                List<String> bedTypeFilterList = roomData.getBedTypeFilter();
+
+                if (bedTypeFilterList != null && bedTypeFilterList.size() > 0)
+                {
+                    for (String bedTypeFilter : bedTypeFilterList)
+                    {
+                        bedTypeSet.add(bedTypeFilter);
+                    }
+                }
+
+                if (roomData.amenities != null && roomData.amenities.size() > 0)
+                {
+                    for (String amenitiesFilter : roomData.amenities)
+                    {
+                        amenitiesSet.add(amenitiesFilter);
+                    }
+                }
+
                 roomList.add(roomData.getRoom());
-
-
             }
 
-            roomInformation.setBedTypeList(bedTypeList);
-            roomInformation.setFacilityList(facilityList);
+            roomInformation.setBedTypeList(bedTypeSet);
+            roomInformation.setFacilityList(amenitiesSet);
             roomInformation.setRoomList(roomList);
 
             stayDetail.setRoomInformation(roomInformation);
@@ -239,7 +280,6 @@ public class StayDetailData
         stayDetail.setFacilityList(facilities);
 
         StayDetailk.AddressInformation addressInformation = new StayDetailk.AddressInformation();
-
         addressInformation.setAddress(address);
 
         if (location != null)
@@ -252,13 +292,7 @@ public class StayDetailData
 
         if (checkTime != null)
         {
-            StayDetailk.CheckTimeInformation checkTimeInformation = new StayDetailk.CheckTimeInformation();
-
-            checkTimeInformation.setCheckIn(checkTime.checkIn);
-            checkTimeInformation.setCheckOut(checkTime.checkOut);
-            checkTimeInformation.setDescription(checkTime.description);
-
-            stayDetail.setCheckTimeInformation(checkTimeInformation);
+            stayDetail.setCheckTimeInformation(checkTime.getCheckTimeInformation());
         }
 
         StayDetailk.DetailInformation detailInformation = new StayDetailk.DetailInformation();
@@ -282,13 +316,7 @@ public class StayDetailData
 
         if (refundPolicy != null)
         {
-            StayDetailk.RefundInformation refundInformation = new StayDetailk.RefundInformation();
-
-            refundInformation.setTitle(refundPolicy.title);
-            refundInformation.setContentList(refundPolicy.contents);
-            refundInformation.setNrdWarningMessage(refundPolicy.warring);
-
-            stayDetail.setRefundInformation(refundInformation);
+            stayDetail.setRefundInformation(refundPolicy.getRefundInformation());
         }
 
         StayDetailk.CheckInformation checkInformation = new StayDetailk.CheckInformation();
@@ -303,6 +331,33 @@ public class StayDetailData
         stayDetail.setCheckInformation(checkInformation);
 
         return stayDetail;
+    }
+
+    @JsonObject
+    static class PrimaryReviewData
+    {
+        @JsonField(name = "avgScore")
+        public float avgScore;
+
+        @JsonField(name = "comment")
+        public String comment;
+
+        @JsonField(name = "createdAt")
+        public String createdAt;
+
+        @JsonField(name = "userId")
+        public String userId;
+
+        StayDetailk.TrueReviewInformation.PrimaryReview getPrimaryReview()
+        {
+            StayDetailk.TrueReviewInformation.PrimaryReview primaryReview = new StayDetailk.TrueReviewInformation.PrimaryReview();
+            primaryReview.setScore(avgScore);
+            primaryReview.setComment(comment);
+            primaryReview.setUserId(userId);
+            primaryReview.setCreatedAt(createdAt);
+
+            return primaryReview;
+        }
     }
 
     @JsonObject
@@ -335,25 +390,6 @@ public class StayDetailData
 
         @JsonField(name = "show")
         public boolean show;
-
-        @JsonField(name = "primary")
-        public ReviewData primary;
-
-        @JsonObject
-        static class ReviewData
-        {
-            @JsonField(name = "avgScore")
-            public float avgScore;
-
-            @JsonField(name = "comment")
-            public String comment;
-
-            @JsonField(name = "createdAt")
-            public String createdAt;
-
-            @JsonField(name = "userId")
-            public String userId;
-        }
     }
 
     @JsonObject
@@ -398,6 +434,16 @@ public class StayDetailData
 
         @JsonField(name = "description")
         public List<String> description;
+
+        StayDetailk.CheckTimeInformation getCheckTimeInformation()
+        {
+            StayDetailk.CheckTimeInformation checkTimeInformation = new StayDetailk.CheckTimeInformation();
+            checkTimeInformation.setCheckIn(checkIn);
+            checkTimeInformation.setCheckOut(checkOut);
+            checkTimeInformation.setDescription(description);
+
+            return checkTimeInformation;
+        }
     }
 
     @JsonObject
@@ -412,8 +458,19 @@ public class StayDetailData
         @JsonField(name = "contents")
         public List<String> contents;
 
-        @JsonField(name = "warring")
-        public String warring;
+        @JsonField(name = "warning")
+        public String warning;
+
+        StayDetailk.RefundInformation getRefundInformation()
+        {
+            StayDetailk.RefundInformation refundInformation = new StayDetailk.RefundInformation();
+            refundInformation.setTitle(title);
+            refundInformation.setType(type);
+            refundInformation.setWarningMessage(warning);
+            refundInformation.setContentList(contents);
+
+            return refundInformation;
+        }
     }
 
     @JsonObject
@@ -581,13 +638,22 @@ public class StayDetailData
 
         @JsonField(name = "name")
         public String name;
+
+        StayDetailk.Province getProvince()
+        {
+            StayDetailk.Province province = new StayDetailk.Province();
+            province.setIndex(index);
+            province.setName(name);
+
+            return province;
+        }
     }
 
     @JsonObject
     static class RoomData
     {
         @JsonField(name = "roomIdx")
-        public int roomIndex;
+        public int roomIdx;
 
         @JsonField(name = "roomName")
         public String roomName;
@@ -602,7 +668,7 @@ public class StayDetailData
         public AmountData amount;
 
         @JsonField(name = "persons")
-        public List<PersonData> persons;
+        public PersonsData persons;
 
         @JsonField(name = "benefit")
         public String benefit;
@@ -646,15 +712,99 @@ public class StayDetailData
         @JsonField(name = "vrs")
         public List<VRData> vrs;
 
+        @JsonField(name = "refundPolicy")
+        public RefundPolicyData refundPolicy;
+
         public RoomData()
         {
 
+        }
+
+        List<String> getBedTypeFilter()
+        {
+            return bedInfo != null ? bedInfo.filters : null;
         }
 
         Room getRoom()
         {
             Room room = new Room();
 
+            room.index = roomIdx;
+            room.name = roomName;
+            room.type = roomType;
+            room.bedCount = bedCount;
+            room.benefit = benefit;
+            room.provideRewardSticker = provideRewardSticker;
+            room.amenities = amenities;
+            room.descriptions = descriptions;
+            room.squareMeter = squareMeter;
+            room.needToKnows = needToKnows;
+
+            if (amount != null)
+            {
+                room.discountAverage = amount.discountAverage;
+                room.discountRate = amount.discountRate;
+                room.discountTotal = amount.discountTotal;
+                room.priceAverage = amount.priceAverage;
+            }
+
+            if (bedInfo != null)
+            {
+                if (bedInfo.bedTypes != null && bedInfo.bedTypes.size() > 0)
+                {
+                    List<Room.BedType> bedTypeList = new ArrayList<>();
+
+                    for (BedInfoData.BedTypeData bedTypeData : bedInfo.bedTypes)
+                    {
+                        bedTypeList.add(bedTypeData.getBedType());
+                    }
+
+                    room.bedTypeList = bedTypeList;
+                }
+            }
+
+            if (attribute != null)
+            {
+                room.attribute = attribute.getAttribute();
+            }
+
+            if (image != null)
+            {
+                room.image = image.getDetailImageInformation();
+            }
+
+            if (persons != null)
+            {
+                room.persons = persons.getPerson();
+            }
+
+            if (checkTime != null)
+            {
+                room.checkInTime = checkTime.checkIn;
+                room.checkInTime = checkTime.checkOut;
+            }
+
+            if (vrs != null && vrs.size() > 0)
+            {
+                List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
+
+                for (VRData vrData : vrs)
+                {
+                    vrInformationList.add(vrData.getVRInformation());
+                }
+
+                room.vrInformationList = vrInformationList;
+            }
+
+            if (refundPolicy != null)
+            {
+                room.refundInformation = refundPolicy.getRefundInformation();
+            }
+
+            if (roomCharge != null)
+            {
+                room.charge = roomCharge.getRoomCharge();
+            }
 
             return room;
         }
@@ -676,7 +826,7 @@ public class StayDetailData
         }
 
         @JsonObject
-        static class PersonData
+        static class PersonsData
         {
             @JsonField(name = "fixed")
             public int fixed;
@@ -689,6 +839,17 @@ public class StayDetailData
 
             @JsonField(name = "breakfast")
             public int breakfast;
+
+            Room.Persons getPerson()
+            {
+                Room.Persons person = new Room.Persons();
+                person.fixed = fixed;
+                person.extra = extra;
+                person.extraCharge = extraCharge;
+                person.breakfast = breakfast;
+
+                return person;
+            }
         }
 
         @JsonObject
@@ -701,7 +862,7 @@ public class StayDetailData
             public ExtraData extra;
 
             @JsonField(name = "persons")
-            public List<PersonData> persons;
+            public PersonsData persons;
 
             @JsonObject
             static class ConsecutiveData
@@ -711,6 +872,15 @@ public class StayDetailData
 
                 @JsonField(name = "enable")
                 public boolean enable;
+
+                Room.Charge.Consecutive getConsecutive()
+                {
+                    Room.Charge.Consecutive consecutive = new Room.Charge.Consecutive();
+                    consecutive.charge = charge;
+                    consecutive.enable = enable;
+
+                    return consecutive;
+                }
             }
 
             @JsonObject
@@ -730,6 +900,40 @@ public class StayDetailData
 
                 @JsonField(name = "extraBeddingEnable")
                 public int extraBeddingEnable;
+
+                Room.Charge.Extra getExtra()
+                {
+                    Room.Charge.Extra extra = new Room.Charge.Extra();
+                    extra.descriptions = descriptions;
+                    extra.extraBed = extraBed;
+                    extra.extraBedEnable = extraBedEnable;
+                    extra.extraBedding = extraBedding;
+                    extra.extraBeddingEnable = extraBeddingEnable;
+
+                    return extra;
+                }
+            }
+
+            Room.Charge getRoomCharge()
+            {
+                Room.Charge roomCharge = new Room.Charge();
+
+                if (consecutive != null)
+                {
+                    roomCharge.consecutive = this.consecutive.getConsecutive();
+                }
+
+                if (extra != null)
+                {
+                    roomCharge.extra = extra.getExtra();
+                }
+
+                if (persons != null)
+                {
+                    roomCharge.persons = persons.getPerson();
+                }
+
+                return roomCharge;
             }
         }
 
@@ -744,13 +948,24 @@ public class StayDetailData
 
             @JsonField(name = "roomStructure")
             public String roomStructure;
+
+            Room.Attribute getAttribute()
+            {
+                Room.Attribute attribute = new Room.Attribute();
+
+                attribute.isDuplex = isDuplex;
+                attribute.isEntireHouse = isEntireHouse;
+                attribute.roomStructure = roomStructure;
+
+                return attribute;
+            }
         }
 
         @JsonObject
         static class BedInfoData
         {
             @JsonField(name = "bedTypes")
-            public BedTypeData bedTypes;
+            public List<BedTypeData> bedTypes;
 
             @JsonField(name = "filters")
             public List<String> filters;
@@ -763,6 +978,16 @@ public class StayDetailData
 
                 @JsonField(name = "count")
                 public int count;
+
+                Room.BedType getBedType()
+                {
+                    Room.BedType bedType = new Room.BedType();
+
+                    bedType.bedType = this.bedType;
+                    bedType.count = this.count;
+
+                    return bedType;
+                }
             }
         }
     }
@@ -788,7 +1013,7 @@ public class StayDetailData
 
             vrInformation.setName(name);
             vrInformation.setType(type);
-            vrInformation.setTypeIdx(typeIdx);
+            vrInformation.setTypeIndex(typeIdx);
             vrInformation.setUrl(url);
 
             return vrInformation;
@@ -812,6 +1037,15 @@ public class StayDetailData
 
             @JsonField(name = "scoreAvg")
             public float scoreAvg;
+
+            StayDetailk.TrueReviewInformation.ReviewScore getReviewScore()
+            {
+                StayDetailk.TrueReviewInformation.ReviewScore reviewScore = new StayDetailk.TrueReviewInformation.ReviewScore();
+                reviewScore.setType(type);
+                reviewScore.setAverage(scoreAvg);
+
+                return reviewScore;
+            }
         }
     }
 }

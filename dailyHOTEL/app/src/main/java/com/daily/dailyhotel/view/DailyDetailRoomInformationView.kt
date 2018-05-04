@@ -61,7 +61,9 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         if (viewDataBinding.roomsLayout.childCount > 0) {
             for (i in 0..viewDataBinding.roomsLayout.childCount) {
                 DataBindingUtil.bind<DailyViewDetailRoomDataBinding>(viewDataBinding.roomsLayout.getChildAt(i))?.let {
-                    it.discountPriceTextView.text = (if (isPriceAverageType) it.discountPriceTextView.getTag(PRICE_AVERAGE_TAG) else it.discountPriceTextView.getTag(PRICE_TOTAL_TAG)) as? String
+                    it.discountPriceTextView.text = (if (isPriceAverageType) it.discountPriceTextView.getTag(it.discountPriceTextView.id + PRICE_AVERAGE_TAG)
+                    else
+                        it.discountPriceTextView.getTag(it.discountPriceTextView.id + PRICE_TOTAL_TAG)) as? String
                 }
             }
         }
@@ -69,7 +71,9 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         if (viewDataBinding.moreRoomsLayout.childCount > 0) {
             for (i in 0..viewDataBinding.moreRoomsLayout.childCount) {
                 DataBindingUtil.bind<DailyViewDetailRoomDataBinding>(viewDataBinding.moreRoomsLayout.getChildAt(i))?.let {
-                    it.discountPriceTextView.text = (if (isPriceAverageType) it.discountPriceTextView.getTag(PRICE_AVERAGE_TAG) else it.discountPriceTextView.getTag(PRICE_TOTAL_TAG)) as? String
+                    it.discountPriceTextView.text = (if (isPriceAverageType) it.discountPriceTextView.getTag(it.discountPriceTextView.id + PRICE_AVERAGE_TAG)
+                    else
+                        it.discountPriceTextView.getTag(it.discountPriceTextView.id + PRICE_TOTAL_TAG)) as? String
                 }
             }
         }
@@ -97,7 +101,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
         roomViewDataBinding.roomNameTextView.text = room.name;
 
-        val bedTypeText = getBedType(room.bedInformation)
+        val bedTypeText = getBedType(room.bedTypeList)
         if (bedTypeText.isTextEmpty()) {
             roomViewDataBinding.bedTypeTextView.visibility = View.GONE
         } else {
@@ -131,18 +135,18 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         val priceTotal = DecimalFormat("###,##0").format(room.discountTotal)
 
         roomViewDataBinding.discountPriceTextView.text = if (isPriceAverageType) priceAverage else priceTotal
-        roomViewDataBinding.discountPriceTextView.setTag(PRICE_AVERAGE_TAG, priceAverage)
-        roomViewDataBinding.discountPriceTextView.setTag(PRICE_TOTAL_TAG, priceTotal)
+        roomViewDataBinding.discountPriceTextView.setTag(roomViewDataBinding.discountPriceTextView.id + PRICE_AVERAGE_TAG, priceAverage)
+        roomViewDataBinding.discountPriceTextView.setTag(roomViewDataBinding.discountPriceTextView.id + PRICE_TOTAL_TAG, priceTotal)
 
         roomViewDataBinding.couponTextView.visibility = if (room.hasUsableCoupon) View.VISIBLE else View.GONE
 
         return roomViewDataBinding.root
     }
 
-    private fun getBedType(bedInformation: Room.BedInformation): String? {
+    private fun getBedType(bedTypeList: List<Room.BedType>): String? {
         val bedStringBuilder = StringBuilder()
 
-        bedInformation.bedTypeList.takeNotEmpty {
+        bedTypeList.takeNotEmpty {
             it.forEach {
                 if (bedStringBuilder.isNotEmpty()) {
                     bedStringBuilder.append(',')
@@ -156,7 +160,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         return bedStringBuilder.toString()
     }
 
-    private fun getPersons(personInformation: Room.Person): String? {
+    private fun getPersons(personInformation: Room.Persons): String? {
         return if (personInformation.fixed > 0) {
             context.getString(R.string.label_stay_detail_person_information,
                     personInformation.fixed,

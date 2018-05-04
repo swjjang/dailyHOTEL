@@ -58,7 +58,7 @@ class StayDetailk : Configurations() {
     class VRInformation {
         var name: String? = null
         var type: String? = null
-        var typeIdx: Int = 0
+        var typeIndex: Int = 0
         var url: String? = null
     }
 
@@ -79,10 +79,18 @@ class StayDetailk : Configurations() {
         var review: PrimaryReview? = null
         var reviewTotalCount: Int = 0
 
+        var reviewScores: List<ReviewScore>? = null
+
         class PrimaryReview {
             var score: Float = 0.0f
             var comment: String? = null
             var userId: String? = null
+            var createdAt: String? = null
+        }
+
+        class ReviewScore {
+            var type: String? = null
+            var average: Float = 0.0f
         }
     }
 
@@ -98,8 +106,8 @@ class StayDetailk : Configurations() {
     }
 
     class RoomInformation {
-        var bedTypeList: List<String>? = null
-        var facilityList: List<String>? = null
+        var bedTypeList: HashSet<String>? = null
+        var facilityList: HashSet<String>? = null
         var roomList: List<Room>? = null
     }
 
@@ -142,8 +150,9 @@ class StayDetailk : Configurations() {
 
     class RefundInformation {
         var title: String? = null
+        var type: String? = null
         var contentList: List<String>? = null
-        var nrdWarningMessage: String? = null
+        var warningMessage: String? = null
     }
 
     class CheckInformation {

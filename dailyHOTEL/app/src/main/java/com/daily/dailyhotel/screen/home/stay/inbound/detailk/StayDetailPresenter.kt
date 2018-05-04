@@ -33,6 +33,7 @@ import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
 import com.daily.dailyhotel.screen.common.event.EventWebActivity
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms.StayRoomsActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -174,7 +175,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private fun processIntent(intent: Intent): Boolean {
         try {
             isUsedMultiTransition = intent.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false)
-            isRefresh = true
 
             gradientType = try {
                 StayDetailActivity.TransGradientType.valueOf(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE))
@@ -182,7 +182,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 StayDetailActivity.TransGradientType.NONE
             }
 
-            stayIndex = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
+            stayIndex = 1158//intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
             stayName = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_NAME)
             defaultImageUrl = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL)
             viewPrice = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayDetailActivity.NONE_PRICE)
@@ -206,11 +206,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         viewInterface.setSharedElementTransitionEnabled(isTransitionEnabled(), gradientType)
         viewInterface.setInitializedLayout(stayName, defaultImageUrl)
 
-        if (isUsedMultiTransition) {
+        if (isTransitionEnabled()) {
             screenLock(false)
 
             onRefresh(viewInterface.getSharedElementTransition(gradientType), screenLockDelay(2))
-        } else {
+        } else if (!hasDeepLink) {
+            isRefresh = true
         }
     }
 
@@ -404,7 +405,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 calendarImpl.getStayUnavailableCheckInDates(stayIndex, DAYS_OF_MAX_COUNT, false),
                 commonRemoteImpl.commonDateTime, Function4<Boolean, StayDetailk, List<String>, CommonDateTime, StayDetailk> { _, stayDetail, soldOutDayList, commonDateTime ->
             this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
-            this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replaceAfter('-', "").toInt() }.toIntArray()
+            this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replace("-".toRegex(), "").toInt() }.toIntArray()
             this@StayDetailPresenter.stayDetail = stayDetail
 
             writeRecentlyViewedPlace(stayDetail)
@@ -425,6 +426,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             disposable?.dispose()
 
         }, {
+            ExLog.e(it.toString())
+
             onHandleErrorAndFinish(it)
         }))
     }
@@ -839,17 +842,25 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onShowRoomClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            stayDetail.roomInformation?.let {
+                it.roomList.takeNotEmpty {
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, it, stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
+                }
+            }
+        } ?: Util.restartApp(activity)
     }
 
     private fun notifyDetailDataSetChanged() {
         stayDetail?.let {
-
             if (defaultImageUrl.isTextEmpty() && it.imageList.isNotNullAndNotEmpty()) {
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
             }
 
             viewInterface.apply {
+                setScrollViewVisible(true)
                 setVRVisible(DailyPreference.getInstance(activity).trueVRSupport > 0 && it.vrInformation.isNotNullAndNotEmpty())
                 setMoreImageVisible(it.imageList.isNotNullAndNotEmpty() && it.imageList!!.size > 1)
 
@@ -860,7 +871,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setBenefitInformationVisible(it.benefitInformation.letReturnTrueElseReturnFalse { setBenefitInformation(it) })
 
                 val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
-                        bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                        bookDateTime.getCheckInDateTime("M.d(EEE)"),
                         bookDateTime.getCheckOutDateTime("M.d(EEE)"),
                         bookDateTime.nights)
 

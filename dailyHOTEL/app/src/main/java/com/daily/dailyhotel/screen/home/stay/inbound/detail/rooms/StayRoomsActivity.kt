@@ -12,13 +12,11 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
 
     companion object {
         @JvmStatic
-        fun newInstance(context: Context, roomList: ArrayList<Room> = ArrayList<Room>(), activeReward: Boolean = false): Intent {
+        fun newInstance(context: Context, roomList: List<Room> = ArrayList<Room>(), activeReward: Boolean = false): Intent {
             return Intent(context, StayRoomsActivity::class.java).apply {
 
                 val list = arrayListOf<RoomParcel>()
-                for (room in roomList) {
-                    list.add(RoomParcel(room))
-                }
+                roomList.forEach { list.add(RoomParcel(it)) }
 
                 putParcelableArrayListExtra(INTENT_EXTRA_ROOM_LIST, list)
                 putExtra(INTENT_EXTRA_ACTIVE_REWARD, activeReward)

@@ -32,6 +32,7 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
         internal const val REQUEST_CODE_REWARD = 10017
         internal const val REQUEST_CODE_WEB = 10018
         internal const val REQUEST_CODE_WISH_DIALOG = 10019
+        internal const val REQUEST_CODE_ROOM = 10020
 
         internal const val INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex"
         internal const val INTENT_EXTRA_DATA_STAY_NAME = "stayName"
