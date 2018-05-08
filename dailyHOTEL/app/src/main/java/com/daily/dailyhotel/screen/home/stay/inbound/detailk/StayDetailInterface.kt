@@ -30,6 +30,11 @@ interface StayDetailInterface {
         fun hideWishTooltip()
 
 
+        fun showTabLayout()
+
+        fun hideTabLayout()
+
+
         fun setWishCount(count: Int)
 
         fun setWishSelected(selected: Boolean)
@@ -113,6 +118,10 @@ interface StayDetailInterface {
         fun setActionButtonText(text: String)
 
         fun setActionButtonEnabled(enabled: Boolean)
+
+        fun scrollRoomInformation()
+
+        fun scrollStayInformation()
     }
 
     interface OnEventListener : OnBaseEventListener {
@@ -167,6 +176,10 @@ interface StayDetailInterface {
         fun onTrueAwardsClick()
 
         fun onShowRoomClick()
+
+        fun onRoomInformationClick()
+
+        fun onStayInformationClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

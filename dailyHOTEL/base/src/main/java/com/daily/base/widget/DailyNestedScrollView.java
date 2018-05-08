@@ -6,8 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.OverScroller;
 
 import com.daily.base.R;
+import com.daily.base.util.ExLog;
+
+import java.lang.reflect.Field;
 
 public class DailyNestedScrollView extends android.support.v4.widget.NestedScrollView
 {
@@ -127,5 +131,19 @@ public class DailyNestedScrollView extends android.support.v4.widget.NestedScrol
     public boolean isScrollingEnabled()
     {
         return mIsScrollingEnabled;
+    }
+
+    public void abortScrolling()
+    {
+        try
+        {
+            Field field = android.support.v4.widget.NestedScrollView.class.getDeclaredField("mScroller");
+            field.setAccessible(true);
+            OverScroller scroller = (OverScroller) field.get(this);
+            scroller.abortAnimation();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 }

@@ -4,11 +4,17 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailFacilitiesDataBinding
+import android.view.ViewGroup
+
+
 
 class DailyDetailFacilitiesView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailFacilitiesDataBinding
@@ -50,6 +56,18 @@ class DailyDetailFacilitiesView : ConstraintLayout {
     }
 
     private fun getFacilitiesView(text: String): View {
-        return View(context)
+        return DailyTextView(context).apply {
+            this.text = text
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11.0f)
+            setGravity(Gravity.CENTER_HORIZONTAL)
+            setTextColor(context.resources.getColor(R.color.default_text_c323232))
+
+            val layoutParams = android.support.v7.widget.GridLayout.LayoutParams()
+            layoutParams.width = 0
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f)
+
+            setLayoutParams(layoutParams)
+        }
     }
 }

@@ -173,7 +173,7 @@
             android:id="@+id/awardsGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="dailyTrueAwardsLineView, awardsNameView, awardsDetailView, awardsQuestionView"/>
+            app:constraint_referenced_ids="dailyTrueAwardsLineView, awardsNameView, awardsTitleTextView, awardsQuestionView"/>
 
         <!--</android.support.constraint.ConstraintLayout>-->
     </merge>

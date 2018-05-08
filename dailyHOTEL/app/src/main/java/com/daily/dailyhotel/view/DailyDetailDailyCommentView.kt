@@ -4,9 +4,11 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDailyCommentDataBinding
@@ -42,6 +44,12 @@ class DailyDetailDailyCommentView : ConstraintLayout {
     }
 
     private fun getCommentView(comment: String): View {
-        return View(context)
+        return DailyTextView(context).apply {
+            text = comment
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
+            setTextColor(context.resources.getColor(R.color.default_text_c323232))
+            setDrawableCompatLeftAndRightFixedFirstLine(true)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_xs, 0, 0, 0)
+        }
     }
 }

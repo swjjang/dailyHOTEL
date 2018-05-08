@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDetailInformationDataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayDetailWaitforbookingDataBinding
@@ -33,13 +34,24 @@ class DailyDetailCheckInformationView : LinearLayout {
     }
 
     fun setInformation(information: StayDetailk.CheckInformation) {
+        addView(getInformationView(information))
 
+        if (information.waitingForBooking) {
+            getWaitForBookingInformationView()
+        }
     }
 
 
-    private fun getInformationView(information: StayDetailk.DetailInformation): View {
-
+    private fun getInformationView(information: StayDetailk.CheckInformation): View {
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
+
+        viewDataBinding.titleTextView.text = information.title
+
+        information.contentList.takeNotEmpty {
+            it.forEach {
+                viewDataBinding.informationLayout.addView(getContentBulletView(it))
+            }
+        }
 
         return viewDataBinding.root
     }

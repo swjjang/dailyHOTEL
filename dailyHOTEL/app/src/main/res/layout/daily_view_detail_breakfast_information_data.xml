@@ -53,116 +53,121 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <!--<TableRow-->
+                <!--android:id="@+id/tableRow1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/babyTextView"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:background="@color/dialog_inputmobile_line"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:text="유아 (0~3세 이하)"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="14dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:id="@+id/babyTextView"-->
+                    <!--android:layout_width="150dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/dialog_inputmobile_line"-->
+                    <!--android:freezesText="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="유아 (0~3세 이하)"-->
+                    <!--android:textColor="@color/default_text_c929292"-->
+                    <!--android:textSize="14dp"-->
+                    <!--app:layout_constraintRight_toRightOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="40dp"
-                    android:background="@color/default_text_c323232"/>
+                <!--<View-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/default_text_c323232"/>-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/babyPriceTextView"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:text="무료"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="14dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-            </TableRow>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:id="@+id/babyPriceTextView"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:freezesText="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="무료"-->
+                    <!--android:textColor="@color/default_text_c323232"-->
+                    <!--android:textSize="14dp"-->
+                    <!--app:layout_constraintRight_toRightOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--</TableRow>-->
 
-            <View
-                android:layout_height="1dp"
-                android:background="@color/default_text_c323232"/>
+            <!--<View-->
+                <!--android:id="@+id/tableRow2TopLineView"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/default_text_c323232"/>-->
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <!--<TableRow-->
+                <!--android:id="@+id/tableRow2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/childTextView"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:background="@color/dialog_inputmobile_line"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:text="소아 (4~12세 이하)"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="14dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:id="@+id/childTextView"-->
+                    <!--android:layout_width="150dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/dialog_inputmobile_line"-->
+                    <!--android:freezesText="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="소아 (4~12세 이하)"-->
+                    <!--android:textColor="@color/default_text_c929292"-->
+                    <!--android:textSize="14dp"-->
+                    <!--app:layout_constraintRight_toRightOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="40dp"
-                    android:background="@color/default_text_c323232"/>
+                <!--<View-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/default_text_c323232"/>-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/childPriceTextView"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:text="25,000원"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="14dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-            </TableRow>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:id="@+id/childPriceTextView"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:freezesText="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="25,000원"-->
+                    <!--android:textColor="@color/default_text_c323232"-->
+                    <!--android:textSize="14dp"-->
+                    <!--app:layout_constraintRight_toRightOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--</TableRow>-->
 
-            <View
-                android:layout_height="1dp"
-                android:background="@color/default_text_c323232"/>
+            <!--<View-->
+                <!--android:id="@+id/tableRow3TopLineView"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/default_text_c323232"/>-->
 
-            <TableRow>
+            <!--<TableRow-->
+                <!--android:id="@+id/tableRow3">-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/adultTextView"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:background="@color/dialog_inputmobile_line"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:text="성인 (13세 이상)"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="14dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:id="@+id/adultTextView"-->
+                    <!--android:layout_width="150dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/dialog_inputmobile_line"-->
+                    <!--android:freezesText="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="성인 (13세 이상)"-->
+                    <!--android:textColor="@color/default_text_c929292"-->
+                    <!--android:textSize="14dp"-->
+                    <!--app:layout_constraintRight_toRightOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="40dp"
-                    android:background="@color/default_text_c323232"/>
+                <!--<View-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/default_text_c323232"/>-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/adultPriceTextView"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:text="59,000원"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="14dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-            </TableRow>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:id="@+id/adultPriceTextView"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:freezesText="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="59,000원"-->
+                    <!--android:textColor="@color/default_text_c323232"-->
+                    <!--android:textSize="14dp"-->
+                    <!--app:layout_constraintRight_toRightOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--</TableRow>-->
         </TableLayout>
 
         <LinearLayout

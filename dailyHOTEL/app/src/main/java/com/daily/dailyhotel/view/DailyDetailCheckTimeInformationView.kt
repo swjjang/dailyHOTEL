@@ -35,7 +35,7 @@ class DailyDetailCheckTimeInformationView : ConstraintLayout {
     }
 
     fun setCheckTimeText(checkInTime: String?, checkOutTime: String?) {
-        viewDataBinding.checkInTextView.text = checkInTime
+        viewDataBinding.checkInTimeTextView.text = checkInTime
         viewDataBinding.checkOutTimeTextView.text = checkOutTime
     }
 

@@ -9,8 +9,6 @@ import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.TrueAwards;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -225,13 +223,15 @@ public class StayDetailData
         if (benefit != null)
         {
             benefitInformation.setTitle(benefit.title);
-            benefitInformation.setContentList(benefit.getContents());
+            benefitInformation.setContentList(benefit.contents);
         }
 
         if (coupon != null)
         {
             benefitInformation.setCoupon(coupon.getCoupon());
         }
+
+        stayDetail.setBenefitInformation(benefitInformation);
 
         StayDetailk.RoomInformation roomInformation = new StayDetailk.RoomInformation();
 
@@ -309,6 +309,8 @@ public class StayDetailData
             detailInformation.setItemList(itemList);
         }
 
+        stayDetail.setDetailInformation(detailInformation);
+
         if (breakfast != null)
         {
             stayDetail.setBreakfastInformation(breakfast.getBreakfastInformation());
@@ -323,6 +325,7 @@ public class StayDetailData
 
         if (checkList != null && checkList.contents != null && checkList.contents.size() > 0)
         {
+            checkInformation.setTitle(checkList.title);
             checkInformation.setContentList(checkList.contents);
         }
 
@@ -480,29 +483,7 @@ public class StayDetailData
         public String title;
 
         @JsonField(name = "contents")
-        public String contents;
-
-        List<String> getContents()
-        {
-            List<String> contentList = new ArrayList<>();
-
-            try
-            {
-                JSONArray jsonArray = new JSONArray(contents);
-
-                int length = jsonArray.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    contentList.add(jsonArray.getString(i));
-                }
-            } catch (Exception e)
-            {
-
-            }
-
-            return contentList;
-        }
+        public List<String> contents;
     }
 
     @JsonObject
@@ -532,7 +513,7 @@ public class StayDetailData
     static class BreakfastData
     {
         @JsonField(name = "description")
-        public String description;
+        public List<String> description;
 
         @JsonField(name = "items")
         public List<ItemData> items;

@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDetailInformationDataBinding
 
@@ -31,14 +32,19 @@ class DailyDetailRefundInformationView : LinearLayout {
     }
 
     fun setInformation(information: StayDetailk.RefundInformation) {
-
+        addView(getInformationView(information))
     }
 
-
-    private fun getInformationView(information: StayDetailk.DetailInformation): View {
-
+    private fun getInformationView(information: StayDetailk.RefundInformation): View {
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
 
+        viewDataBinding.titleTextView.text = information.title
+
+        information.contentList.takeNotEmpty {
+            it.forEach {
+                viewDataBinding.informationLayout.addView(getContentBulletView(it))
+            }
+        }
 
         return viewDataBinding.root
     }
