@@ -847,7 +847,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let { stayDetail ->
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, it, stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, it
+                            , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
+                            ,bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
+                            , stayDetail.index
+                            , stayDetail.baseInformation?.category
+                            , stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
                 }
             }
         } ?: Util.restartApp(activity)
