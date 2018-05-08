@@ -746,8 +746,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     switch (baseDto.msgCode)
                     {
                         case 100:
-                            ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>();
-                            gourmetList.addAll(baseDto.data.items);
+                            ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>(baseDto.data.items);
 
                             onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, gourmetList, baseDto.data.stickers, false);
                             break;

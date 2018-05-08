@@ -62,8 +62,8 @@ class ZoomCenterLayoutManager : LinearLayoutManager {
     }
 
     companion object {
-        private val MIN_SCALE = 0.90f
-        private val AMOUNT = 1.0f - MIN_SCALE // 1.0f - AMOUNT = MIN_SCALE
-        private val DISTANCE = 0.75f
+        private const val MIN_SCALE = 0.90f
+        private const val AMOUNT = 1.0f - MIN_SCALE // 1.0f - AMOUNT = MIN_SCALE
+        private const val DISTANCE = 0.75f
     }
 }

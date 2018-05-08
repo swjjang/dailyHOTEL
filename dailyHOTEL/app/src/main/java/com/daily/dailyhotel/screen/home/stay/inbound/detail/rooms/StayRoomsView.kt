@@ -31,7 +31,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
 
-                    val view = pagerSnapHelper.findSnapView(viewDataBinding.recyclerView.layoutManager);
+                    val view = pagerSnapHelper.findSnapView(viewDataBinding.recyclerView.layoutManager)
                     eventListener.onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true)
                 }
             })

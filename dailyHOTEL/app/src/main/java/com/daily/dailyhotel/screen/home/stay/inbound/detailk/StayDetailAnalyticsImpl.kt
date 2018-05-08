@@ -1,8 +1,8 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
+package com.daily.dailyhotel.screen.home.stay.inbound.detailk
 
 import android.app.Activity
 import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.StayDetail
+import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
@@ -15,15 +15,15 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         this.analyticsParam = analyticsParam
     }
 
-    override fun getStayPaymentAnalyticsParam(stayDetail: StayDetail, stayRoom: StayRoom): StayPaymentAnalyticsParam {
+    override fun getStayPaymentAnalyticsParam(stayDetail: StayDetailk, stayRoom: StayRoom): StayPaymentAnalyticsParam {
 
         return StayPaymentAnalyticsParam()
     }
 
-    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int) {
+    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int) {
     }
 
-    override fun onScreenRoomList(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int) {
+    override fun onScreenRoomList(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk, priceFromList: Int) {
     }
 
     override fun onEventRoomListOpenClick(activity: Activity, stayName: String) {
@@ -35,7 +35,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
     override fun onEventRoomClick(activity: Activity, roomName: String) {
     }
 
-    override fun onEventShareKakaoClick(activity: Activity, login: Boolean, userType: String, benefitAlarm: Boolean, stayIndex: Int, stayName: String, overseas: Boolean) {
+    override fun onEventShareKakaoClick(activity: Activity, login: Boolean, userType: String, benefitAlarm: Boolean, stayIndex: Int, stayName: String?) {
     }
 
     override fun onEventLinkCopyClick(activity: Activity) {
@@ -44,7 +44,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
     override fun onEventMoreShareClick(activity: Activity) {
     }
 
-    override fun onEventDownloadCoupon(activity: Activity, stayName: String) {
+    override fun onEventDownloadCoupon(activity: Activity, stayName: String?) {
     }
 
     override fun onEventDownloadCouponByLogin(activity: Activity, login: Boolean) {
@@ -70,19 +70,19 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
     override fun onEventTrueVRClick(activity: Activity, stayIndex: Int) {
     }
 
-    override fun onEventImageClick(activity: Activity, stayName: String) {
+    override fun onEventImageClick(activity: Activity, stayName: String?) {
     }
 
     override fun onEventConciergeClick(activity: Activity) {
     }
 
-    override fun onEventMapClick(activity: Activity, stayName: String) {
+    override fun onEventMapClick(activity: Activity, stayName: String?) {
     }
 
-    override fun onEventClipAddressClick(activity: Activity, stayName: String) {
+    override fun onEventClipAddressClick(activity: Activity, stayName: String?) {
     }
 
-    override fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail, priceFromList: Int, myWish: Boolean) {
+    override fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk, priceFromList: Int, myWish: Boolean) {
     }
 
     override fun onEventCallClick(activity: Activity) {

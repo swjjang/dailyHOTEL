@@ -38,6 +38,7 @@ import com.daily.dailyhotel.repository.remote.model.RewardCardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
+import com.daily.dailyhotel.repository.remote.model.RoomImageInformationData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayAreasData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
@@ -777,6 +778,10 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<StayDetailData>> getStayDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @Query("dateCheckIn") String date, @Query("stays") int nights);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<RoomImageInformationData>> getRoomImages(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

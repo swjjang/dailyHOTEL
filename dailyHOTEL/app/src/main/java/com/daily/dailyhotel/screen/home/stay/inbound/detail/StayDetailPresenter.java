@@ -26,6 +26,7 @@ import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.User;
@@ -788,7 +789,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             if (wishResult.success == true)
                             {
                                 mStayDetail.myWish = false;
-                                mStayDetail.wishCount--;
+                                mStayDetail.wishCount -= 1;
 
                                 notifyWishChanged();
 
@@ -1884,11 +1885,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             , mStayRemoteImpl.getReviewScores(mStayIndex)//
             , mStayRemoteImpl.getTrueVR(mStayIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function6<Boolean, StayDetail, List<String>, ReviewScores, List<TrueVR>, CommonDateTime, StayDetail>()
+            , new Function6<Boolean, StayDetailk, List<String>, ReviewScores, List<TrueVR>, CommonDateTime, StayDetail>()
             {
                 @Override
                 public StayDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
-                    , @io.reactivex.annotations.NonNull StayDetail stayDetail//
+                    , @io.reactivex.annotations.NonNull StayDetailk stayDetail//
                     , @io.reactivex.annotations.NonNull List<String> unavailableDates//
                     , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
                     , @io.reactivex.annotations.NonNull List<TrueVR> trueVRList//
@@ -1898,9 +1899,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
                     setTrueVRList(trueVRList);
-                    setStayDetail(stayDetail);
+                    setStayDetail(stayDetail.toStayDetail());
 
-                    return stayDetail;
+                    return stayDetail.toStayDetail();
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayDetail>()
         {

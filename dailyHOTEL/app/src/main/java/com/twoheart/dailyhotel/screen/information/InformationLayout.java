@@ -129,6 +129,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             TextView productServerTextView = debugLayout.findViewById(R.id.productServerTextView);
             TextView stagingServerTextView = debugLayout.findViewById(R.id.stagingServerTextView);
             TextView devServerTextView = debugLayout.findViewById(R.id.devServerTextView);
+            TextView alphaServerTextView = debugLayout.findViewById(R.id.alphaServerTextView);
 
             productServerTextView.setOnClickListener(new View.OnClickListener()
             {
@@ -162,6 +163,18 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                     Intent intent = new Intent(mContext, LauncherActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fdev-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fdev-silo.dailyhotel.me%2F"));
+                    mContext.startActivity(intent);
+                }
+            });
+
+            alphaServerTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Intent intent = new Intent(mContext, LauncherActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fdev-alpha-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fdev-silo.dailyhotel.me%2F"));
                     mContext.startActivity(intent);
                 }
             });

@@ -226,10 +226,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
                     bookingCancelList.addAll(stayOutboundBookingCancelList);
 
-                    List<BookingCancel> cancelSortList = new ArrayList<>();
-                    cancelSortList.addAll(getBookingCancelSortList(bookingCancelList));
-
-                    return cancelSortList;
+                    return new ArrayList<>(getBookingCancelSortList(bookingCancelList));
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<BookingCancel>>()
         {
@@ -335,10 +332,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
         Collections.reverse(list);
 
-        List<BookingCancel> cancelSortList = new ArrayList<>();
-        cancelSortList.addAll(list);
-
-        return cancelSortList;
+        return new ArrayList<>(list);
     }
 
     private boolean startBookingCancelDetail(BookingCancel.PlaceType placeType, int reservationIndex, String aggregationId, String imageUrl)

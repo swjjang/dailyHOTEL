@@ -1,35 +1,39 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk;
+package com.daily.dailyhotel.screen.home.stay.inbound.detailk
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.view.View
 import com.crashlytics.android.Crashlytics
 import com.daily.base.BaseActivity
+import com.daily.base.util.DailyImageSpan
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.*
+import com.daily.dailyhotel.entity.CommonDateTime
+import com.daily.dailyhotel.entity.StayBookDateTime
+import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl
-import com.daily.dailyhotel.repository.remote.CalendarImpl
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
-import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
-import com.daily.dailyhotel.repository.remote.StayRemoteImpl
+import com.daily.dailyhotel.repository.remote.*
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
 import com.daily.dailyhotel.screen.common.event.EventWebActivity
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms.StayRoomsActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -44,21 +48,21 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.*
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager
-import io.reactivex.*
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+private const val DAYS_OF_MAX_COUNT = 60
+
 class StayDetailPresenter(activity: StayDetailActivity)//
     : BaseExceptionPresenter<StayDetailActivity, StayDetailInterface.ViewInterface>(activity), StayDetailInterface.OnEventListener {
 
-    val DAYS_OF_MAX_COUNT = 60
-
-    enum class Status {
+    internal enum class Status {
         NONE, BOOKING, SOLD_OUT, FINISH
     }
 
@@ -69,6 +73,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private val analytics = StayDetailAnalyticsImpl()
     private val stayRemoteImpl = StayRemoteImpl()
     private val commonRemoteImpl = CommonRemoteImpl()
+
+    private val googleAddressRemoteImpl by lazy {
+        GoogleAddressRemoteImpl()
+    }
+
     private val profileRemoteImpl by lazy {
         ProfileRemoteImpl()
     }
@@ -81,7 +90,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var viewPrice: Int = 0
     private var stayName: String? = null
     private var defaultImageUrl: String? = null
-    private var stayDetail: StayDetail? = null
+    private var stayDetail: StayDetailk? = null
     private var status = Status.NONE
     private var isUsedMultiTransition = false
     private var hasDeepLink = false
@@ -90,6 +99,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showCalendar = false
     private var showTrueVR = false
     private var deepLink: DailyDeepLink? = null
+    private var showRoomPriceType: PriceType = PriceType.AVERAGE
+    private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
+    private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
 
     private val bookDateTime = StayBookDateTime()
     private val commonDateTime = CommonDateTime()
@@ -99,9 +111,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun constructorInitialize(activity: StayDetailActivity) {
-        setContentView(R.layout.activity_stay_detail_data)
+        setContentView(R.layout.activity_stay_detailk_data)
 
-        isRefresh = true
+        isRefresh = false
     }
 
     override fun onIntent(intent: Intent?): Boolean {
@@ -164,13 +176,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         try {
             isUsedMultiTransition = intent.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false)
 
-            try {
-                gradientType = StayDetailActivity.TransGradientType.valueOf(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE))
+            gradientType = try {
+                StayDetailActivity.TransGradientType.valueOf(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE))
             } catch (e: Exception) {
-                gradientType = StayDetailActivity.TransGradientType.NONE
+                StayDetailActivity.TransGradientType.NONE
             }
 
-            stayIndex = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
+            stayIndex = 1158//intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
             stayName = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_NAME)
             defaultImageUrl = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL)
             viewPrice = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayDetailActivity.NONE_PRICE)
@@ -194,15 +206,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         viewInterface.setSharedElementTransitionEnabled(isTransitionEnabled(), gradientType)
         viewInterface.setInitializedLayout(stayName, defaultImageUrl)
 
-        if (isUsedMultiTransition) {
-            isRefresh = true
+        if (isTransitionEnabled()) {
             screenLock(false)
 
-            screenLockDelay(2)
-
-            onRefresh(viewInterface.getSharedElementTransition(gradientType))
-        } else {
-
+            onRefresh(viewInterface.getSharedElementTransition(gradientType), screenLockDelay(2))
+        } else if (!hasDeepLink) {
+            isRefresh = true
         }
     }
 
@@ -210,9 +219,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return !hasDeepLink && isUsedMultiTransition
     }
 
-    private fun screenLockDelay(delay: Int) {
-        addCompositeDisposable(Completable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { screenLock(true) })
+    private fun screenLockDelay(delay: Int): Disposable {
+
+        val disposable = Completable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe { screenLock(true) }
+
+        addCompositeDisposable(disposable)
+
+        return disposable
     }
 
     override fun onStart() {
@@ -226,7 +240,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
         isRefresh.runTrue { onRefresh(true) }
 
-        if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled) {
+        if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled && stayDetail != null) {
             viewInterface.startRewardStickerAnimation()
         }
 
@@ -248,7 +262,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onFinish() {
         super.onFinish()
 
-        if (!isUsedMultiTransition) activity.overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        if (!isUsedMultiTransition) activity.overridePendingTransition(R.anim.hold, R.anim.slide_out_right)
     }
 
     override fun onBackPressed(): Boolean {
@@ -303,9 +317,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             StayDetailActivity.REQUEST_CODE_LOGIN -> onLoginActivityResult(resultCode, intent)
 
-            StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH -> onLoginByWishActivityResult(resultCode, intent)
-
             StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON -> onLoginByCouponActivityResult(resultCode, intent)
+
+            StayDetailActivity.REQUEST_CODE_WISH_DIALOG -> onWishDialogActivityResult(resultCode, intent)
         }
     }
 
@@ -338,17 +352,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }
     }
 
-    private fun onLoginByWishActivityResult(resultCode: Int, intent: Intent?) {
-        when (resultCode) {
-            Activity.RESULT_OK -> {
-                onWishClick()
-
-                setResult(BaseActivity.RESULT_CODE_REFRESH)
-                isRefresh = true
-            }
-        }
-    }
-
     private fun onLoginByCouponActivityResult(resultCode: Int, intent: Intent?) {
         when (resultCode) {
             Activity.RESULT_OK -> {
@@ -357,6 +360,27 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setResult(BaseActivity.RESULT_CODE_REFRESH)
                 isRefresh = true
             }
+        }
+    }
+
+    private fun onWishDialogActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                intent?.let {
+                    val wish = it.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false)
+
+                    stayDetail?.let {
+                        it.wish = wish
+                        it.wishCount += if (wish) 1 else -1
+
+                        notifyWishDataSetChanged();
+
+                        setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
+                    }
+                }
+            }
+
+            else -> notifyWishDataSetChanged();
         }
     }
 
@@ -372,68 +396,58 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         isRefresh = false
         screenLock(showProgress)
 
-        onRefresh(Observable.just(true))
+        onRefresh(Observable.just(true), null)
     }
 
-    private fun onRefresh(observable: Observable<Boolean>) {
-
+    private fun onRefresh(observable: Observable<Boolean>, disposable: Disposable?) {
         addCompositeDisposable(Observable.zip(observable,
                 stayRemoteImpl.getDetail(stayIndex, bookDateTime),
                 calendarImpl.getStayUnavailableCheckInDates(stayIndex, DAYS_OF_MAX_COUNT, false),
-                commonRemoteImpl.commonDateTime, object : Function4<Boolean, StayDetail, List<String>, CommonDateTime, StayDetail> {
+                commonRemoteImpl.commonDateTime, Function4<Boolean, StayDetailk, List<String>, CommonDateTime, StayDetailk> { _, stayDetail, soldOutDayList, commonDateTime ->
+            this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
+            this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replace("-".toRegex(), "").toInt() }.toIntArray()
+            this@StayDetailPresenter.stayDetail = stayDetail
 
-            override fun apply(sharedElementTransition: Boolean, stayDetail: StayDetail, soldOutDayList: List<String>, commonDateTime: CommonDateTime): StayDetail {
-                this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
-                this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replaceAfter('-', "").toInt() }.toIntArray()
-                this@StayDetailPresenter.stayDetail = stayDetail
+            writeRecentlyViewedPlace(stayDetail)
 
-                writeRecentlyViewedPlace(stayDetail)
+            stayDetail
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe({ stayDetail ->
+            notifyDetailDataSetChanged()
+            notifyWishDataSetChanged()
+            notifyRewardDataSetChanged()
 
-                return stayDetail
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe({
-            //
+            DailyPreference.getInstance(activity).isWishTooltip.runTrue { showWishTooltip() }
 
-            if (DailyPreference.getInstance(activity).isWishTooltip) showWishTooltip()
-
-//            if(reviewdafsdf) analytics.onEventShowTrueReview(activity, it.index)
-
-            if (it.couponPrice > 0) analytics.onEventShowCoupon(activity, it.index)
-
-            if (!DailyTextUtils.isTextEmpty(it.awards?.title)) analytics.onEventShowCoupon(activity, it.index)
+            stayDetail.trueReviewInformation?.reviewTotalCount.takeGreaterThanZero { analytics.onEventShowTrueReview(activity, stayDetail.index) }
+            stayDetail.benefitInformation?.coupon?.couponDiscount.takeGreaterThanZero { analytics.onEventShowCoupon(activity, stayDetail.index) }
+            stayDetail.baseInformation?.awards?.title.takeNotEmpty { analytics.onEventTrueAwards(activity, stayDetail.index) }
 
             unLockAll()
+            disposable?.dispose()
 
         }, {
+            ExLog.e(it.toString())
+
             onHandleErrorAndFinish(it)
         }))
     }
 
-    private fun writeRecentlyViewedPlace(stayDetail: StayDetail) {
-
+    private fun writeRecentlyViewedPlace(stayDetail: StayDetailk) {
         val regionName = stayDetail.province?.name
-        val singleObservable: Single<String> = if (regionName.isTextEmpty()) {
-            Single.create(SingleOnSubscribe<String> { emitter ->
-                try {
-                    Geocoder(activity, Locale.KOREA).getFromLocation(stayDetail.latitude, stayDetail.longitude, 10)?.forEach {
-                        it.locality?.takeNotEmpty {
-                            emitter.onSuccess(it)
-                        } ?: emitter.onSuccess("")
-                    }
-                } catch (e: Exception) {
-                    ExLog.e(e.toString())
-                }
-            }).subscribeOn(Schedulers.io())
-        } else {
-            Single.just(regionName)
-        }
+        val observable: Observable<String> =
+                if (regionName.isTextEmpty())
+                    googleAddressRemoteImpl.getLocationAddress(stayDetail.addressInformation?.latitude
+                            ?: 0.0
+                            , stayDetail.addressInformation?.longitude ?: 0.0).map({ it.address })
+                else Observable.just(regionName)
 
-        addCompositeDisposable(singleObservable.flatMapObservable(Function<String, ObservableSource<Boolean>> {
+        val imageUrl = if (defaultImageUrl.isTextEmpty()) stayDetail.imageList?.get(0)?.imageMap?.bigUrl else defaultImageUrl
+
+        addCompositeDisposable(observable.flatMap({
             recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
-                    stayDetail.index, stayDetail.name, null,
-                    if (defaultImageUrl.isTextEmpty()) stayDetail.defaultImageUrl else defaultImageUrl,
-                    it, false)
-        }).subscribe())
+                    stayDetail.index, stayDetail.baseInformation?.name, null,
+                    imageUrl, it, false)
+        }).subscribe({}, { ExLog.e(it.toString()) }))
     }
 
     private fun showWishTooltip() {
@@ -461,55 +475,17 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onWishClick() {
         if (lock()) return
 
-        if (!DailyHotel.isLogin()) {
-            DailyToast.showToast(activity, R.string.toast_msg_please_login, DailyToast.LENGTH_LONG)
+        stayDetail?.let {
+            val wish = !it.wish
+            val wishCount = it.wishCount + if (wish) 1 else -1
 
-            startActivityForResult(LoginActivity.newInstance(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL),
-                    StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH)
-        } else {
-            stayDetail?.let {
-                val wish = !it.myWish
-                val wishCount = it.wishCount + if (wish) 1 else -1
+            notifyWishDataSetChanged(wishCount, wish)
 
-                notifyWishDataSetChanged(wishCount, wish)
+            startActivityForResult(WishDialogActivity.newInstance(activity, Constants.ServiceType.HOTEL,
+                    stayIndex, wish, AnalyticsManager.Screen.DAILYHOTEL_DETAIL), StayDetailActivity.REQUEST_CODE_WISH_DIALOG)
 
-                processWish(it.index, wish)
-            }
-        }
-    }
-
-    private fun processWish(stayIndex: Int, wish: Boolean) {
-        addCompositeDisposable(getWishObservable(stayIndex, wish).observeOn(AndroidSchedulers.mainThread()).subscribe({ wishResult ->
-
-            setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, wish))
-
-            stayDetail?.let {
-                if (wishResult.success) {
-                    it.myWish = wish
-                    it.wishCount += if (wish) 1 else -1
-
-                    notifyWishDataSetChanged()
-
-                    addCompositeDisposable(viewInterface.showWishPopup(it.myWish).subscribeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
-
-                    analytics.onEventWishClick(activity, bookDateTime, it, viewPrice, wish)
-                } else {
-                    notifyWishDataSetChanged(it.wishCount, wish)
-
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message, getString(R.string.dialog_btn_text_confirm), null);
-
-                    unLockAll()
-                }
-            }
-        }, {
-            onHandleError(it)
-
-            stayDetail?.let { notifyWishDataSetChanged(it.wishCount, it.myWish) }
-        }))
-    }
-
-    private fun getWishObservable(stayIndex: Int, wish: Boolean): Observable<WishResult> {
-        return if (wish) stayRemoteImpl.removeWish(stayIndex) else stayRemoteImpl.addWish(stayIndex)
+            analytics.onEventWishClick(activity, bookDateTime, it, viewPrice, wish)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onShareKakaoClick() {
@@ -526,17 +502,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe({ shortUrl ->
                     unLockAll()
 
-                    KakaoLinkManager.newInstance(activity).shareStay(name, stayDetail.name, stayDetail.address,
-                            stayDetail.index, stayDetail.defaultImageUrl, shortUrl, bookDateTime)
+                    KakaoLinkManager.newInstance(activity).shareStay(name, stayDetail.baseInformation?.name, stayDetail.addressInformation?.address,
+                            stayDetail.index, stayDetail.imageList?.get(0)?.imageMap?.smallUrl, shortUrl, bookDateTime)
                 }, {
                     unLockAll()
 
-                    KakaoLinkManager.newInstance(activity).shareStay(name, stayDetail.name, stayDetail.address, stayDetail.index,
-                            stayDetail.defaultImageUrl, "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index, bookDateTime)
+                    KakaoLinkManager.newInstance(activity).shareStay(name, stayDetail.baseInformation?.name, stayDetail.addressInformation?.address,
+                            stayDetail.index, stayDetail.imageList?.get(0)?.imageMap?.smallUrl,
+                            "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index, bookDateTime)
                 }))
 
                 analytics.onEventShareKakaoClick(activity, DailyHotel.isLogin(), DailyUserPreference.getInstance(activity).type,
-                        DailyUserPreference.getInstance(activity).isBenefitAlarm, stayDetail.index, stayDetail.name, stayDetail.overseas)
+                        DailyUserPreference.getInstance(activity).isBenefitAlarm, stayDetail.index, stayDetail.baseInformation?.name)
             } catch (e: Exception) {
                 unLockAll()
 
@@ -582,10 +559,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 val longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_moretab",
                         stayDetail.index, bookDateTime.getCheckInDateTime("yyyy-MM-dd"), bookDateTime.nights)
                 val name = DailyUserPreference.getInstance(activity).name.takeNotEmptyThisAddStringButDefaultString(getString(R.string.label_friend) + "가", "님이")
-                val message = getString(R.string.message_detail_stay_share_sms, name, stayDetail.name,
+                val message = getString(R.string.message_detail_stay_share_sms, name, stayDetail.baseInformation?.name,
                         bookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"),
                         bookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"),
-                        bookDateTime.nights, bookDateTime.nights + 1, stayDetail.address)
+                        bookDateTime.nights, bookDateTime.nights + 1, stayDetail.addressInformation?.address)
 
                 addCompositeDisposable(commonRemoteImpl.getShortUrl(longUrl).subscribe({
                     startActivity(Intent.createChooser(Intent(android.content.Intent.ACTION_SEND)
@@ -614,15 +591,15 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onImageClick(position: Int) {
-        if (stayDetail.filterIf({ it.hasImageInformation() }) && lock()) return
+        if (stayDetail.filterIf({ it.imageList.isNotNullAndNotEmpty() }) && lock()) return
 
         stayDetail?.let {
-            startActivityForResult(ImageListActivity.newInstance(activity, it.name,
-                    it.imageInformationList, position,
+            startActivityForResult(ImageListActivity.newInstance(activity, it.baseInformation?.name,
+                    it.imageList, position,
                     ImageListAnalyticsParam().apply { serviceType = Constants.ServiceType.HOTEL }),
                     StayDetailActivity.REQUEST_CODE_IMAGE_LIST)
 
-            analytics.onEventImageClick(activity, it.name)
+            analytics.onEventImageClick(activity, it.baseInformation?.name)
         } ?: Util.restartApp(activity)
     }
 
@@ -649,7 +626,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun isSoldOut(): Boolean {
-        return stayDetail.filterIf({ it.hasRooms() }, true)
+        return stayDetail.filterIf({ it.roomInformation?.roomList.isNotNullAndNotEmpty() }, true)
     }
 
     override fun onMapClick() {
@@ -658,7 +635,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let {
             if (Util.isInstallGooglePlayService(activity)) {
                 startActivityForResult(ZoomMapActivity.newInstance(activity, ZoomMapActivity.SourceType.HOTEL,
-                        it.name, it.address, it.latitude, it.longitude, false), StayDetailActivity.REQUEST_CODE_MAP)
+                        it.baseInformation?.name, it.addressInformation?.address,
+                        it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude
+                        ?: 0.0, false), StayDetailActivity.REQUEST_CODE_MAP)
             } else {
                 viewInterface.showSimpleDialog(getString(R.string.dialog_title_googleplayservice),
                         getString(R.string.dialog_msg_install_update_googleplayservice),
@@ -686,17 +665,17 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 unLockAll()
             }
 
-            analytics.onEventMapClick(activity, it.name)
+            analytics.onEventMapClick(activity, it.baseInformation?.name)
         } ?: Util.restartApp(activity)
     }
 
-    override fun onClipAddressClick(address: String) {
+    override fun onClipAddressClick() {
         if (lock()) return
 
-        DailyTextUtils.clipText(activity, address)
+        DailyTextUtils.clipText(activity, stayDetail?.addressInformation?.address)
         DailyToast.showToast(activity, R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT)
 
-        stayDetail?.let { analytics.onEventClipAddressClick(activity, it.name) }
+        stayDetail?.let { analytics.onEventClipAddressClick(activity, it.baseInformation?.name) }
     }
 
     override fun onNavigatorClick() {
@@ -708,8 +687,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED
             }
 
-            startActivityForResult(NavigatorDialogActivity.newInstance(activity, it.name,
-                    it.latitude, it.longitude, false, analyticsParam), StayDetailActivity.REQUEST_CODE_NAVIGATOR)
+            startActivityForResult(NavigatorDialogActivity.newInstance(activity, it.baseInformation?.name,
+                    it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude
+                    ?: 0.0, false, analyticsParam), StayDetailActivity.REQUEST_CODE_NAVIGATOR)
         }
     }
 
@@ -742,7 +722,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
 
                 startActivityForResult(HappyTalkCategoryDialog.newInstance(activity, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL
-                        , it.index, 0, it.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK)
+                        , it.index, 0, it.baseInformation?.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK)
             } catch (e: Exception) {
                 viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk),
                         getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
@@ -805,7 +785,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             if (DailyHotel.isLogin()) {
                 val intent = SelectStayCouponDialogActivity.newInstance(activity, stayDetail.index,
                         bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
-                        bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), stayDetail.category, stayDetail.name)
+                        bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
+                        stayDetail.baseInformation?.category
+                                ?: toString(), stayDetail.baseInformation?.name ?: "")
                 startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON)
 
             } else {
@@ -821,7 +803,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }, { unLockAll() }, true)
             }
 
-            analytics.onEventDownloadCoupon(activity, stayDetail.name)
+            analytics.onEventDownloadCoupon(activity, stayDetail.baseInformation?.name)
         } ?: Util.restartApp(activity)
     }
 
@@ -853,45 +835,82 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (lock()) return
 
         stayDetail?.let {
-            viewInterface.showTrueAwardsDialog(it.awards, DialogInterface.OnDismissListener { unLockAll() })
+            viewInterface.showTrueAwardsDialog(it.baseInformation?.awards, DialogInterface.OnDismissListener { unLockAll() })
 
             analytics.onEventTrueAwardsClick(activity, it.index)
         } ?: Util.restartApp(activity)
     }
 
+    override fun onShowRoomClick() {
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            stayDetail.roomInformation?.let {
+                it.roomList.takeNotEmpty {
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, it, stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
+                }
+            }
+        } ?: Util.restartApp(activity)
+    }
+
     private fun notifyDetailDataSetChanged() {
         stayDetail?.let {
+            if (defaultImageUrl.isTextEmpty() && it.imageList.isNotNullAndNotEmpty()) {
+                defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
+            }
 
-            if (defaultImageUrl.isTextEmpty() && it.hasImageInformation()) {
-                defaultImageUrl = it.defaultImageUrl
+            viewInterface.apply {
+                setScrollViewVisible(true)
+                setVRVisible(DailyPreference.getInstance(activity).trueVRSupport > 0 && it.vrInformation.isNotNullAndNotEmpty())
+                setMoreImageVisible(it.imageList.isNotNullAndNotEmpty() && it.imageList!!.size > 1)
+
+                it.imageList.takeNotEmpty { setImageList(it) }
+                it.baseInformation?.let { setBaseInformation(it, bookDateTime.nights > 1) }
+
+                setTrueReviewInformationVisible(it.trueReviewInformation.letReturnTrueElseReturnFalse { setTrueReviewInformation(it) })
+                setBenefitInformationVisible(it.benefitInformation.letReturnTrueElseReturnFalse { setBenefitInformation(it) })
+
+                val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
+                        bookDateTime.getCheckInDateTime("M.d(EEE)"),
+                        bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                        bookDateTime.nights)
+
+                val startIndex = calendarText.indexOf('돋')
+                val spannableString = SpannableString(calendarText)
+                spannableString.setSpan(DailyImageSpan(activity, R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
+                setRoomList(it.roomInformation?.roomList)
+                setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
+
+                setDailyCommentVisible(it.dailyCommentList.letReturnTrueElseReturnFalse { setDailyComment(it) })
+                setFacilities(it.totalRoomCount, it.facilityList)
+                setAddressInformationVisible(it.addressInformation.letReturnTrueElseReturnFalse { setAddressInformation(it) })
+                setCheckTimeInformationVisible(it.checkTimeInformation.letReturnTrueElseReturnFalse { setCheckTimeInformation(it) })
+                setDetailInformationVisible((it.detailInformation != null || it.breakfastInformation != null).letReturnTrueElseReturnFalse { _ -> setDetailInformation(it.detailInformation, it.breakfastInformation) })
+                setCancellationAndRefundPolicyVisible(it.refundInformation.letReturnTrueElseReturnFalse { setCancellationAndRefundPolicy(it) })
+                setCheckInformationVisible(it.checkInformation.letReturnTrueElseReturnFalse { setCheckInformation(it) })
             }
 
             status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
-
-            if (DailyPreference.getInstance(activity).trueVRSupport > 0 && it.hasTrueVR()) {
-            } else {
-                viewInterface.setVRVisible(false)
-            }
 
             when {
                 showCalendar -> {
                     showCalendar = false
 
-                    if (it.hasRooms()) onCalendarClick()
+                    if (!isSoldOut()) onCalendarClick()
                 }
 
                 showTrueVR -> {
                     showTrueVR = false
 
                     if (DailyPreference.getInstance(activity).trueVRSupport > 0) {
-                        onTrueVRClick()
+                        it.vrInformation.isNotNullAndNotEmpty().runTrue { onTrueVRClick() }
                     } else {
                         viewInterface.showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null)
                     }
                 }
             }
-
-
 
             hasDeepLink = false
         } ?: Util.restartApp(activity)
@@ -899,7 +918,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private fun notifyRewardDataSetChanged() {
         stayDetail?.let {
-            if (it.activeReward && it.provideRewardSticker) {
+            if (it.activeReward && it.baseInformation?.provideRewardSticker == true) {
                 viewInterface.setRewardVisible(true)
 
                 if (DailyHotel.isLogin()) {
@@ -910,8 +929,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     viewInterface.stopRewardStickerAnimation()
                 } else {
                     val campaignEnabled = DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled
-                    val campaignFreeNights: Int;
-                    val descriptionText: String;
+                    val campaignFreeNights: Int
+                    val descriptionText: String
 
                     if (campaignEnabled) {
                         campaignFreeNights = DailyRemoteConfigPreference.getInstance(activity).keyRemoteConfigRewardStickerNonMemberCampaignFreeNights
@@ -932,9 +951,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun notifyWishDataSetChanged() {
-        stayDetail?.let {
-            notifyWishDataSetChanged(it.wishCount, it.myWish)
-        } ?: Util.restartApp(activity)
+        stayDetail?.let { notifyWishDataSetChanged(it.wishCount, it.wish) }
+                ?: Util.restartApp(activity)
     }
 
     private fun notifyWishDataSetChanged(wishCount: Int, myWish: Boolean) {

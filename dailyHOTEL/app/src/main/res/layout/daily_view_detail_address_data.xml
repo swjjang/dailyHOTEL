@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <!--<merge-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="20dp">
+
+
+        <View
+            android:id="@+id/rectView"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:background="@color/actionbar_border"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/addressTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:text="서울 특별시 종구 동호로 249"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalLineView"
+            app:layout_constraintLeft_toLeftOf="@+id/rectView"
+            app:layout_constraintRight_toLeftOf="@+id/mapImageView"
+            app:layout_constraintTop_toTopOf="@+id/rectView"/>
+
+        <ImageView
+            android:id="@+id/mapImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalLineView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rectView"
+            app:srcCompat="@drawable/ic_naver"/>
+
+        <View
+            android:id="@+id/horizontalLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="60dp"
+            android:background="@color/default_text_c323232"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/verticalLineView"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/default_text_c323232"
+            app:layout_constraintBottom_toBottomOf="@+id/rectView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/copyAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text="주소복사"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            app:layout_constraintBottom_toBottomOf="@+id/rectView"
+            app:layout_constraintLeft_toLeftOf="@+id/rectView"
+            app:layout_constraintRight_toLeftOf="@+id/verticalLineView"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/searchAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text="길찾기"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            app:layout_constraintBottom_toBottomOf="@+id/rectView"
+            app:layout_constraintLeft_toRightOf="@+id/verticalLineView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView"/>
+    </android.support.constraint.ConstraintLayout>
+    <!--</merge>-->
+</layout>

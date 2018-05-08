@@ -38,9 +38,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onIntent(intent: Intent?): Boolean {
         return intent?.let {
             val parcelList: ArrayList<RoomParcel> = it.getParcelableArrayListExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_LIST)
-            for (parcel in parcelList) {
-                roomList += parcel.room
-            }
+            parcelList.forEach { roomList += it.room }
 
             if (roomList.size == 0) {
                 false
