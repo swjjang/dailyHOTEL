@@ -44,8 +44,8 @@ class DailyDetailBaseInformationView : ConstraintLayout {
         viewDataBinding.discountPriceTextView.text = text
     }
 
-    fun setNightsEnabled(enable : Boolean) {
-        viewDataBinding.discountPriceWonTextView
+    fun setNightsEnabled(enable: Boolean) {
+        viewDataBinding.discountPriceWonTextView.text = if (enable) "원~/1박" else "원~"
     }
 
     fun setAwardsVisible(visible: Boolean) {

@@ -41,7 +41,6 @@ class DailyDetailCheckInformationView : LinearLayout {
         }
     }
 
-
     private fun getInformationView(information: StayDetailk.CheckInformation): View {
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
 
@@ -52,6 +51,8 @@ class DailyDetailCheckInformationView : LinearLayout {
                 viewDataBinding.informationLayout.addView(getContentBulletView(it))
             }
         }
+
+        viewDataBinding.moreTextView.visibility = View.GONE
 
         return viewDataBinding.root
     }

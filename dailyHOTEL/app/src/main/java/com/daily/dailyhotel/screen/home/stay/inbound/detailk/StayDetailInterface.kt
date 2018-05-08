@@ -122,6 +122,10 @@ interface StayDetailInterface {
         fun scrollRoomInformation()
 
         fun scrollStayInformation()
+
+        fun showMoreRooms()
+
+        fun hideMoreRooms()
     }
 
     interface OnEventListener : OnBaseEventListener {

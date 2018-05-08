@@ -46,6 +46,8 @@ class DailyDetailRefundInformationView : LinearLayout {
             }
         }
 
+        viewDataBinding.moreTextView.visibility = View.GONE
+
         return viewDataBinding.root
     }
 

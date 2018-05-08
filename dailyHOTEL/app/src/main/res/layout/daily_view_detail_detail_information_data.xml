@@ -35,6 +35,16 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
+        <LinearLayout
+            android:id="@+id/moreInformationLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/informationLayout"/>
+
         <com.daily.base.widget.DailyTextView
             android:id="@+id/moreTextView"
             android:layout_width="wrap_content"
@@ -43,6 +53,6 @@
             android:textColor="@color/dh_theme_color"
             android:textSize="12dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/informationLayout"/>
+            app:layout_constraintTop_toBottomOf="@+id/moreInformationLayout"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

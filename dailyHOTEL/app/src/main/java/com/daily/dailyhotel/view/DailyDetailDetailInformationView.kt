@@ -1,8 +1,9 @@
 package com.daily.dailyhotel.view
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.databinding.DataBindingUtil
-import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
@@ -10,9 +11,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import com.daily.base.util.DailyTextUtils
+import com.daily.base.util.ExLog
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
@@ -24,7 +28,6 @@ import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBreakfastInformationDataBinding
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBreakfastInformationTableRowDataBinding
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDetailInformationDataBinding
-import com.twoheart.dailyhotel.databinding.LayoutStayDetailWaitforbookingDataBinding
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import java.util.*
 
@@ -47,11 +50,7 @@ class DailyDetailDetailInformationView : LinearLayout {
     }
 
     fun setInformation(information: List<StayDetailk.DetailInformation.Item>?) {
-        information.takeNotEmpty {
-            it.forEach {
-                addView(getInformationView(it))
-            }
-        }
+        information.takeNotEmpty { it.forEach { addView(getInformationView(it)) } }
     }
 
     private fun getInformationView(information: StayDetailk.DetailInformation.Item): View {
@@ -60,9 +59,45 @@ class DailyDetailDetailInformationView : LinearLayout {
         viewDataBinding.titleTextView.text = information.title
 
         information.contentList.takeNotEmpty {
-            it.forEach {
-                viewDataBinding.informationLayout.addView(if (it.startsWith("**")) getContentBoldView(it) else getContentBulletView(it))
+            it.forEachIndexed { index, content ->
+                if (index < 3) {
+                    viewDataBinding.informationLayout.addView(if (content.startsWith("**")) getContentBoldView(content) else getContentBulletView(content))
+                } else {
+                    viewDataBinding.moreInformationLayout.addView(if (content.startsWith("**")) getContentBoldView(content) else getContentBulletView(content))
+                }
             }
+        }
+
+        if (viewDataBinding.moreInformationLayout.childCount > 0) {
+            viewDataBinding.moreTextView.visibility = View.VISIBLE
+            viewDataBinding.moreTextView.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View?) {
+                    v?.setOnClickListener(null)
+
+                    showMoreInformation(viewDataBinding)
+                }
+            })
+
+            viewDataBinding.moreInformationLayout.apply {
+                visibility = View.INVISIBLE
+
+                viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        try {
+                            viewTreeObserver.removeOnPreDrawListener(this)
+                            tag = viewDataBinding.moreInformationLayout.height
+                            layoutParams.height = 0
+                            requestLayout()
+                        } catch (e: Exception) {
+                            ExLog.e(e.toString())
+                        }
+
+                        return false
+                    }
+                })
+            }
+        } else {
+            viewDataBinding.moreTextView.visibility = View.GONE
         }
 
         return viewDataBinding.root
@@ -124,7 +159,7 @@ class DailyDetailDetailInformationView : LinearLayout {
     private fun getBreakfastItemView(viewGroup: ViewGroup, item: StayDetailk.BreakfastInformation.Item) {
         val viewDataBinding: DailyViewDetailBreakfastInformationTableRowDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_breakfast_information_table_row_data, viewGroup, true)
 
-        var leftText: String? = null
+        val leftText: String?
 
         when {
             item.minAge < 0 && item.maxAge < 0 -> {
@@ -148,5 +183,44 @@ class DailyDetailDetailInformationView : LinearLayout {
         return View(context).apply {
             setBackgroundColor(context.resources.getColor(R.color.default_text_c323232))
         }
+    }
+
+    private fun showMoreInformation(viewDataBinding: DailyViewDetailDetailInformationDataBinding) {
+        val height = viewDataBinding.moreInformationLayout.tag as Int
+        if (height == 0 || viewDataBinding.moreInformationLayout.visibility == View.VISIBLE) {
+            return
+        }
+
+        ValueAnimator.ofInt(0, height).apply {
+            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+                valueAnimator?.let {
+                    viewDataBinding.moreInformationLayout.apply {
+                        layoutParams.height = valueAnimator.animatedValue as Int
+                        requestLayout()
+                    }
+                }
+            })
+
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    viewDataBinding.moreTextView.visibility = View.GONE
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    removeAllUpdateListeners()
+                    removeAllListeners()
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                    viewDataBinding.moreInformationLayout.visibility = View.VISIBLE
+                }
+            })
+        }.start()
     }
 }

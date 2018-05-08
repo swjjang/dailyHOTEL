@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.view
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
@@ -7,6 +9,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.animation.AccelerateDecelerateInterpolator
+import com.daily.base.util.ExLog
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
@@ -24,6 +29,11 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailRoomInformationDataBinding
 
     private var isPriceAverageType = true
+    private var listener: OnDailyDetailRoomInformationListener? = null
+
+    interface OnDailyDetailRoomInformationListener {
+        fun onMoreRoomsClick(expanded: Boolean)
+    }
 
     constructor(context: Context) : super(context) {
         initLayout(context)
@@ -39,6 +49,18 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_information_data, this, true)
+
+        viewDataBinding.showMoreRoomsTextView.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                listener?.let {
+                    it.onMoreRoomsClick(viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE)
+                }
+            }
+        })
+    }
+
+    fun setRoomInformationListener(listener: OnDailyDetailRoomInformationListener) {
+        this.listener = listener
     }
 
     fun setCalendar(text: CharSequence) {
@@ -82,13 +104,29 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     fun setRoomList(roomList: List<Room>?) {
         viewDataBinding.roomsLayout.removeAllViews()
         viewDataBinding.moreRoomsLayout.removeAllViews()
+        viewDataBinding.moreRoomsLayout.visibility = View.INVISIBLE
 
         if (roomList.isNotNullAndNotEmpty()) {
             roomList!!.forEachIndexed { index, room ->
-                if (index < 5) {
-                    createRoomView(viewDataBinding.roomsLayout, room)
-                } else {
-                    createRoomView(viewDataBinding.moreRoomsLayout, room)
+                createRoomView(getViewGroupRoom(index), room)
+            }
+
+            if (viewDataBinding.moreRoomsLayout.childCount > 0) {
+                viewDataBinding.moreRoomsLayout.apply {
+                    viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                        override fun onPreDraw(): Boolean {
+                            try {
+                                viewTreeObserver.removeOnPreDrawListener(this)
+                                tag = viewDataBinding.moreRoomsLayout.height
+                                layoutParams.height = 0
+                                requestLayout()
+                            } catch (e: Exception) {
+                                ExLog.e(e.toString())
+                            }
+
+                            return false
+                        }
+                    })
                 }
             }
         } else {
@@ -96,8 +134,12 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         }
     }
 
-    private fun createRoomView(parentView: ViewGroup, room: Room): View {
-        val roomViewDataBinding = DataBindingUtil.inflate<DailyViewDetailRoomDataBinding>(LayoutInflater.from(context), R.layout.daily_view_detail_room_data, parentView, true)
+    private fun getViewGroupRoom(index: Int): ViewGroup {
+        return if (index < 5) viewDataBinding.roomsLayout else viewDataBinding.moreRoomsLayout
+    }
+
+    private fun createRoomView(viewGroup: ViewGroup, room: Room) {
+        val roomViewDataBinding = DataBindingUtil.inflate<DailyViewDetailRoomDataBinding>(LayoutInflater.from(context), R.layout.daily_view_detail_room_data, viewGroup, true)
 
         roomViewDataBinding.roomNameTextView.text = room.name;
 
@@ -139,8 +181,6 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         roomViewDataBinding.discountPriceTextView.setTag(roomViewDataBinding.discountPriceTextView.id + PRICE_TOTAL_TAG, priceTotal)
 
         roomViewDataBinding.couponTextView.visibility = if (room.hasUsableCoupon) View.VISIBLE else View.GONE
-
-        return roomViewDataBinding.root
     }
 
     private fun getBedType(bedTypeList: List<Room.BedType>): String? {
@@ -169,11 +209,56 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         } else null
     }
 
-    fun setMoreRoomVisible(visible: Boolean) {
+    fun setMoreRoomButtonVisible(visible: Boolean) {
         viewDataBinding.showMoreRoomsTextView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setMoreRoomCount(roomCount: Int) {
         viewDataBinding.showMoreRoomsTextView.text = context.getString(R.string.label_stay_detail_show_more_rooms, roomCount)
+    }
+
+    fun showMoreRoom() {
+        val height = viewDataBinding.moreRoomsLayout.tag as Int
+        if (height == 0 || viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE) {
+            return
+        }
+
+        ValueAnimator.ofInt(0, height).apply {
+            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+                valueAnimator?.let {
+                    viewDataBinding.moreRoomsLayout.apply {
+                        layoutParams.height = valueAnimator.animatedValue as Int
+                        requestLayout()
+                    }
+                }
+            })
+
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    removeAllUpdateListeners()
+                    removeAllListeners()
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                }
+            })
+        }.start()
+    }
+
+    fun hideMoreRoom() {
+        viewDataBinding.moreRoomsLayout.apply {
+            visibility = View.INVISIBLE
+            layoutParams.height = 0
+            requestLayout()
+        }
     }
 }

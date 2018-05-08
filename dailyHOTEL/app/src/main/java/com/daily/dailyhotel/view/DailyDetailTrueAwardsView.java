@@ -18,7 +18,7 @@ import com.twoheart.dailyhotel.databinding.DailyViewDetailTrueAwardDataBinding;
 public class DailyDetailTrueAwardsView extends ConstraintLayout
 {
     private DailyViewDetailTrueAwardDataBinding mDataBinding;
-    OnDailyDetailTrueAwardsListener mListener;
+    private OnDailyDetailTrueAwardsListener mListener;
 
     public interface OnDailyDetailTrueAwardsListener
     {

@@ -33,6 +33,7 @@ import com.daily.dailyhotel.util.letNotNullTrueElseNullFalse
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyDetailAddressView
 import com.daily.dailyhotel.view.DailyDetailEmptyView
+import com.daily.dailyhotel.view.DailyDetailRoomInformationView
 import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
@@ -133,7 +134,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             imageList.add(detailImage)
 
             viewDataBinding.imageLoopView.setImageList(imageList)
-            viewDataBinding.transImageView.setImageURI(Uri.parse(url))
+            viewDataBinding.transImageView.setImageURI(url)
         }
     }
 
@@ -484,6 +485,12 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setRoomList(roomList: List<Room>?) {
         viewDataBinding.roomInformationView.setRoomList(roomList)
+
+        viewDataBinding.roomInformationView.setRoomInformationListener(object : DailyDetailRoomInformationView.OnDailyDetailRoomInformationListener {
+            override fun onMoreRoomsClick(expanded: Boolean) {
+               if(expanded) hideMoreRooms() else showMoreRooms()
+            }
+        })
     }
 
     override fun setDailyCommentVisible(visible: Boolean) {
@@ -756,6 +763,15 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
         viewDataBinding.nestedScrollView.abortScrolling();
         viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.dailyCommentView.y.toInt() - toolBarHeight - toolBarHeight)
+    }
+
+    override fun showMoreRooms() {
+        viewDataBinding.roomInformationView.showMoreRoom()
+    }
+
+    override fun hideMoreRooms() {
+        scrollRoomInformation()
+        viewDataBinding.roomInformationView.hideMoreRoom()
     }
 
     /**
