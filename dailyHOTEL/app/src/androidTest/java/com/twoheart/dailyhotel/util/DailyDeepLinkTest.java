@@ -683,7 +683,7 @@ public class DailyDeepLinkTest
     {
         final String title = "7박 하면 1박 무료";
         final String description = "클래스가 다른 혜택, 7박 하면 1박 무료! 얼마나 강력한 혜택인지 지금 확인해보세요!";
-        final String url = "http://img.dailyhotel.me/resources/images/home_event/7days_sm.jpg";
+        final String url = "http://m.dailyhotel.co.kr/banner/dailyrewardevent/";
         final String imageUrl = "http://img.dailyhotel.me/resources/images/home_event/7days_sm.jpg";
         final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=hed&t=" + title + "&url=" + url + "&desc=" + description + "&iurl=" + imageUrl;
 
