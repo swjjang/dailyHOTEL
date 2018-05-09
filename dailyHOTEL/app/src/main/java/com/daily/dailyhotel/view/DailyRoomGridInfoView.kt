@@ -13,12 +13,12 @@ import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import com.daily.base.util.ExLog
-import com.daily.dailyhotel.view.DailyRoomGridInfoView.ItemType.*
+import com.daily.base.widget.DailyTextView
+import com.daily.dailyhotel.view.DailyRoomInfoGridView.ItemType.*
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewRoomGridInfoDataBinding
-import com.twoheart.dailyhotel.databinding.DailyViewRoomGridItemDataBinding
 
-class DailyRoomGridInfoView : LinearLayout {
+class DailyRoomInfoGridView : LinearLayout {
 
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -56,6 +56,10 @@ class DailyRoomGridInfoView : LinearLayout {
 
     fun setTitleText(text: String) {
         viewDataBinding.titleTextView.text = text
+    }
+
+    fun setTitleVisible(visible: Boolean) {
+        viewDataBinding.titleTextView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setColumnCount(count: Int) {
@@ -200,20 +204,15 @@ class DailyRoomGridInfoView : LinearLayout {
             }
         }
 
-        val dataBinding: DailyViewRoomGridItemDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)
-                , R.layout.daily_view_room_grid_item_data, null, false)
+        return DailyTextView(context).apply {
+            if (iconResId != 0) {
+                setDrawableCompatLeftAndRightFixedFirstLine(true)
+                setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
+            }
 
-        if (iconResId == 0) {
-            dataBinding.iconView.visibility = View.GONE
-        } else {
-            dataBinding.iconView.visibility = View.VISIBLE
-            dataBinding.iconView.setImageResource(iconResId)
-        }
+            setTextColor(context.resources.getColor(textColorResId))
+            this.text = text
 
-        dataBinding.textView.setTextColor(context.resources.getColor(textColorResId))
-        dataBinding.textView.text = text
-
-        return dataBinding.root.apply {
             val params = GridLayout.LayoutParams().apply {
                 width = 0
                 height = ViewGroup.LayoutParams.WRAP_CONTENT
