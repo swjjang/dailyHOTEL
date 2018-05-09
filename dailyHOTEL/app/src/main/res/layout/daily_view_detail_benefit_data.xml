@@ -14,27 +14,43 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="20dp">
+        android:background="@color/white">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/leftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/rightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:freezesText="true"
             android:text="@string/label_business_benefit"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="18dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintTop_toTopOf="parent"
             dailyFont:style="Medium"/>
 
         <View
+            android:id="@+id/benefitBackgroundView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/default_background_c99cfad80"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/product_detail_benefit"
             app:layout_constraintBottom_toBottomOf="@+id/benefitContentsLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -44,91 +60,67 @@
             android:id="@+id/benefitTitleTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="17dp"
-            android:gravity="center_horizontal"
-            android:lineSpacingExtra="-2dp"
-            android:text="DAILY HAPPY PRICE + 80,000원 할인 쿠폰 디페네핏 타이틀 "
-            android:textColor="@color/default_text_cbe945b"
-            android:textSize="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
+            android:layout_marginTop="26dp"
+            android:textColor="@color/default_text_ccf9e5e"
+            android:textSize="16dp"
+            app:layout_constraintLeft_toLeftOf="@+id/benefitBackgroundView"
+            app:layout_constraintRight_toRightOf="@+id/benefitBackgroundView"
+            app:layout_constraintTop_toTopOf="@+id/benefitBackgroundView"
             dailyFont:style="Medium"/>
 
         <LinearLayout
             android:id="@+id/benefitContentsLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
+            android:layout_marginTop="2dp"
             android:orientation="vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/benefitTitleTextView">
+            android:paddingBottom="28dp"
+            app:layout_constraintLeft_toLeftOf="@+id/benefitBackgroundView"
+            app:layout_constraintRight_toRightOf="@+id/benefitBackgroundView"
+            app:layout_constraintTop_toBottomOf="@+id/benefitTitleTextView"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="-2dp"
-                android:text="예약 가능 기간 : 2018.03.08 ~ 2018.03.31"
-                android:textColor="@color/default_background_section_c323232"
-                android:textSize="12dp"
-                app:drawableCompatLeft="@drawable/ic_check_xs"/>
+        <android.support.constraint.Group
+            android:id="@+id/benefitGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="benefitBackgroundView, benefitTitleTextView, benefitContentsLayout"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="-2dp"
-                android:text="예약 가능 기간 : 2018.03.08 ~ 2018.03.31"
-                android:textColor="@color/default_background_section_c323232"
-                android:textSize="12dp"
-                app:drawableCompatLeft="@drawable/ic_check_xs"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="-2dp"
-                android:text="예약 가능 기간 : 2018.03.08 ~ 2018.03.31"
-                android:textColor="@color/default_background_section_c323232"
-                android:textSize="12dp"
-                app:drawableCompatLeft="@drawable/ic_check_xs"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="-2dp"
-                android:text="즉시 할인 쿠폰 80,000원 적용시, 고객 실결제가 109,900~ 원으로 아주 싼가격에 대응가능"
-                android:textColor="@color/default_background_section_c323232"
-                android:textSize="12dp"
-                android:layout_marginTop="20dp"
-                android:drawablePadding="3dp"
-                app:drawableCompatLeft="@drawable/ic_check_xs"
-                app:drawableCompatLeftAndRightFixedFirstLine="true"/>
-        </LinearLayout>
+        <View
+            android:id="@+id/downloadCouponView"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/selector_detail_coupon_button_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/benefitBackgroundView"
+            app:layout_goneMarginTop="20dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/downloadCouponTextView"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape_rect_defaultcolor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="7dp"
             android:gravity="center"
-            android:text="80,000원 할인쿠폰 다운받기"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/benefitContentsLayout"/>
+            android:textColor="@drawable/selector_text_color_cc5c5c5_cffffff"
+            android:textSize="14dp"
+            app:drawableCompatLeft="@drawable/vector_detail_ic_coupon_small_white"
+            app:layout_constraintBottom_toBottomOf="@+id/downloadCouponView"
+            app:layout_constraintLeft_toLeftOf="@+id/downloadCouponView"
+            app:layout_constraintRight_toRightOf="@+id/downloadCouponView"
+            app:layout_constraintTop_toTopOf="@+id/downloadCouponView"
+            dailyFont:style="Medium"/>
+
+        <android.support.constraint.Group
+            android:id="@+id/downloadCouponGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="downloadCouponView, downloadCouponTextView"/>
     </android.support.constraint.ConstraintLayout>
     <!--</merge>-->
 </layout>

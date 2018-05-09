@@ -10,7 +10,6 @@ import android.graphics.Shader
 import android.graphics.drawable.PaintDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
-import android.net.Uri
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.widget.NestedScrollView
@@ -22,7 +21,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
-import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -61,6 +59,10 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         initToolbar(viewDataBinding)
 
         setScrollViewVisible(false)
+
+        val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
+        val tabLayoutHeight = ScreenUtils.dpToPx(context, 40.0)
+
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
             if (getViewDataBinding().scrollLayout.childCount < 2) {
                 getViewDataBinding().toolbarView.visibility = View.GONE
@@ -68,17 +70,17 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             }
 
             val titleLayout = getViewDataBinding().scrollLayout.getChildAt(1)
-            val TOOLBAR_HEIGHT = getDimensionPixelSize(R.dimen.toolbar_height)
 
-            if (titleLayout.y - TOOLBAR_HEIGHT > scrollY) {
+
+            if (titleLayout.y - toolbarHeight > scrollY) {
                 getViewDataBinding().toolbarView.hideAnimation()
             } else {
                 getViewDataBinding().toolbarView.showAnimation()
             }
 
-            getViewDataBinding().fakeVRImageView.isEnabled = scrollY <= TOOLBAR_HEIGHT
+            getViewDataBinding().fakeVRImageView.isEnabled = scrollY <= toolbarHeight
 
-            if (getViewDataBinding().roomInformationTopLineView.y >= scrollY + TOOLBAR_HEIGHT + TOOLBAR_HEIGHT) {
+            if (getViewDataBinding().roomInformationTopLineView.y >= scrollY + toolbarHeight + tabLayoutHeight) {
                 hideTabLayout()
             } else {
                 showTabLayout()
@@ -402,8 +404,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun setVRVisible(visible: Boolean) {
         val flag = if (visible) View.VISIBLE else View.GONE
 
-        viewDataBinding.vrImageView.visibility = flag
-        viewDataBinding.fakeVRImageView.visibility = flag
+        viewDataBinding.vrGroup.visibility = flag
         viewDataBinding.fakeVRImageView.setOnClickListener { eventListener.onTrueVRClick() }
     }
 
@@ -419,7 +420,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setCategoryName(baseInformation.category)
             setRewardsVisible(baseInformation.provideRewardSticker)
             setNameText(baseInformation.name)
-            setPrice(DailyTextUtils.getPriceFormat(context, baseInformation.discount, false))
+            setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
             setNightsEnabled(nightsEnabled)
             setAwardsVisible(baseInformation.awards.letNotNullTrueElseNullFalse { setAwardsTitle(it.title) })
         }
@@ -488,7 +489,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
         viewDataBinding.roomInformationView.setRoomInformationListener(object : DailyDetailRoomInformationView.OnDailyDetailRoomInformationListener {
             override fun onMoreRoomsClick(expanded: Boolean) {
-               if(expanded) hideMoreRooms() else showMoreRooms()
+                if (expanded) hideMoreRooms() else showMoreRooms()
             }
         })
     }

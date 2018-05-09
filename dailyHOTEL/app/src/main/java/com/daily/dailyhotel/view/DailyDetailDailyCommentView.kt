@@ -49,7 +49,7 @@ class DailyDetailDailyCommentView : ConstraintLayout {
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
             setTextColor(context.resources.getColor(R.color.default_text_c323232))
             setDrawableCompatLeftAndRightFixedFirstLine(true)
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_xs, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_check_xs, 0, 0, 0)
         }
     }
 }

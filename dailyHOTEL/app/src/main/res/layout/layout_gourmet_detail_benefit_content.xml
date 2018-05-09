@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="15dp"
             android:layout_marginLeft="9dp"
-            app:srcCompat="@drawable/ic_check_xs"/>
+            app:srcCompat="@drawable/vector_ic_check_xs"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/textView"
