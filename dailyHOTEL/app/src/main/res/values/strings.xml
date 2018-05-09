@@ -1843,4 +1843,5 @@
 
     <!-- Stay Room -->
     <string name="label_stay_room_average_nights">(1박 기준)</string>
+    <string name="label_stay_room_check_time_title">객실 체크인/체크아웃 시간</string>
 </resources>
