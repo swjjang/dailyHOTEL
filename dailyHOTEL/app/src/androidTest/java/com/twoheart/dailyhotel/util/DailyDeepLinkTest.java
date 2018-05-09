@@ -710,7 +710,7 @@ public class DailyDeepLinkTest
         // d=yyyyMMMdd
         {
 
-            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=hrpl&i=" + index + "&pt=stay&d=" + bookDateTime.getCheckInDateTime("yyyyMMdd") + "&n=" + nights;
+            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=18&v=hrpl&i=" + index + "&pt=stay&d=" + bookDateTime.getCheckInDateTime("yyyyMMdd") + "&n=" + nights;
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
@@ -726,7 +726,7 @@ public class DailyDeepLinkTest
         // dp=0~
         {
             final int dp = DailyCalendar.compareDateDay(bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT));
-            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=hrpl&i=" + index + "&pt=stay&dp=" + dp + "&n=" + nights;
+            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=18&v=hrpl&i=" + index + "&pt=stay&dp=" + dp + "&n=" + nights;
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
@@ -753,7 +753,7 @@ public class DailyDeepLinkTest
         // d=yyyyMMMdd
         {
 
-            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=hrpl&i=" + index + "&pt=gourmet&d=" + bookDateTime.getVisitDateTime("yyyyMMdd");
+            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=18&v=hrpl&i=" + index + "&pt=gourmet&d=" + bookDateTime.getVisitDateTime("yyyyMMdd");
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
@@ -778,7 +778,7 @@ public class DailyDeepLinkTest
         // dp=0~
         {
             final int dp = DailyCalendar.compareDateDay(bookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT));
-            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=hrpl&i=" + index + "&pt=gourmet&dp=" + dp;
+            final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=18&v=hrpl&i=" + index + "&pt=gourmet&dp=" + dp;
 
             launcherActivityActivityTestRule.launchActivity(new Intent().setData(Uri.parse(deepLink)));
 
