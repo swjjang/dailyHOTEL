@@ -11,12 +11,11 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import android.widget.TableLayout
+import androidx.core.view.doOnPreDraw
 import com.daily.base.util.DailyTextUtils
-import com.daily.base.util.ExLog
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
@@ -78,23 +77,11 @@ class DailyDetailDetailInformationView : LinearLayout {
                 }
             })
 
-            viewDataBinding.moreInformationLayout.apply {
-                visibility = View.INVISIBLE
-
-                viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-                    override fun onPreDraw(): Boolean {
-                        try {
-                            viewTreeObserver.removeOnPreDrawListener(this)
-                            tag = viewDataBinding.moreInformationLayout.height
-                            layoutParams.height = 0
-                            requestLayout()
-                        } catch (e: Exception) {
-                            ExLog.e(e.toString())
-                        }
-
-                        return false
-                    }
-                })
+            viewDataBinding.moreInformationLayout.visibility = View.INVISIBLE
+            viewDataBinding.moreInformationLayout.doOnPreDraw {
+                it.tag = it.height
+                it.layoutParams.height = 0
+                it.requestLayout()
             }
         } else {
             viewDataBinding.moreTextView.visibility = View.GONE

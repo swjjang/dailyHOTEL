@@ -472,6 +472,10 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
+    override fun setPriceAverageTypeVisible(visible: Boolean) {
+        viewDataBinding.roomInformationView.setPriceAverageTypeVisible(visible)
+    }
+
     override fun setPriceAverageType(isAverageType: Boolean) {
         viewDataBinding.roomInformationView.setPriceAverageType(isAverageType)
     }

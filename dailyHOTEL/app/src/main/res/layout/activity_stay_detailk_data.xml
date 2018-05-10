@@ -148,8 +148,8 @@
                 <View
                     android:id="@+id/roomInformationTopLineView"
                     android:layout_width="0dp"
-                    android:layout_height="12dp"
-                    android:background="@drawable/layerlist_divider"
+                    android:layout_height="11dp"
+                    android:background="@drawable/layerlist_top_line_divider_le7e7e7"
                     android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"

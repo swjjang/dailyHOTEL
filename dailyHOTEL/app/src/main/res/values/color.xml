@@ -275,6 +275,7 @@
     <color name="default_text_ce9a230">#e9a230</color>
     <color name="default_text_cf6675e">#f6675e</color>
     <color name="default_text_ceb2135">#eb2135</color>
+    <color name="default_text_cfb234a">#fb234a</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
@@ -316,6 +317,7 @@
     <color name="default_background_cdb2353_alpha_92">#eadb2353</color>
     <color name="default_background_cfff9ef">#fff9ef</color>
     <color name="default_background_ceb2135">#eb2135</color>
+    <color name="default_background_cfdf1f1">#fdf1f1</color>
 
     <color name="default_popup_button_background_cb70038">#B70038</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
@@ -344,6 +346,7 @@
     <color name="default_line_cfaae37">#faae37</color>
     <color name="default_line_cf3ebde">#f3ebde</color>
     <color name="default_line_cd2d2d2">#d2d2d2</color>
+    <color name="default_line_ceb2135">#eb2135</color>
 
 
     <color name="cababab">#ababab</color>

@@ -1498,7 +1498,14 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        onHandleError(throwable);
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                onHandleError(throwable);
+                            }
+                        });
                     }
                 }));
             } else

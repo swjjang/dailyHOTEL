@@ -120,7 +120,7 @@
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/shape_rect_ce7e7e7_r3"
+            android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r3"
             android:gravity="center"
             android:textColor="@color/default_text_ceb2135"
             android:textSize="14dp"

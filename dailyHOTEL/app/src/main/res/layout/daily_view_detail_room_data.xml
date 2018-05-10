@@ -3,13 +3,8 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    >
-
-    <!--<merge-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,118 +13,146 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/simpleDraweeView"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
+            android:layout_width="112dp"
+            android:layout_height="168dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             fresco:actualImageScaleType="centerCrop"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/leftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="125dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/rightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="31dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/roomNameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
             android:ellipsize="end"
+            android:maxHeight="40dp"
             android:maxLines="2"
-            android:textSize="15dp"
-            android:textColor="@color/default_text_c323232"
             android:text="[패키지A] 스탠다드 시티뷰 로얄 스위티ㅡ 오션 테랴스뷰"
-            app:drawableCompatLeftAndRightFixedFirstLine="true"
-            app:drawableCompatRight="@drawable/vector_home_shortcut_nearby"
-            app:layout_constraintLeft_toRightOf="@+id/simpleDraweeView"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="16dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/bedTypeTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginTop="6dp"
+            android:drawablePadding="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="12dp"
-            android:textColor="@color/default_text_c929292"
             android:text="더블 1개, 싱글 2개"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"
+            app:drawableCompatLeft="@drawable/vector_ic_detail_bed"
             app:drawableCompatLeftAndRightFixedFirstLine="true"
-            app:drawableCompatRight="@drawable/vector_home_shortcut_nearby"
-            app:layout_constraintLeft_toRightOf="@+id/simpleDraweeView"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/roomNameTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/personsTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
+            android:drawablePadding="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="12dp"
-            android:textColor="@color/default_text_c929292"
             android:text="2인기준, 최대 3인(유료)"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"
+            app:drawableCompatLeft="@drawable/vector_ic_detail_people"
             app:drawableCompatLeftAndRightFixedFirstLine="true"
-            app:drawableCompatRight="@drawable/vector_home_shortcut_nearby"
-            app:layout_constraintLeft_toRightOf="@+id/simpleDraweeView"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/breakfastTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="12dp"
-            android:textColor="@color/default_text_ce9a230"
             android:text="조식 2인 포함"
-            app:layout_constraintLeft_toRightOf="@+id/simpleDraweeView"
-            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/default_text_ccf9e5e"
+            android:textSize="13dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/personsTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/benefitTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="12dp"
-            android:textColor="@color/default_text_ce9a230"
             android:text="RelaxationZone 입장 혜택 2인 제공"
-            app:layout_constraintLeft_toRightOf="@+id/simpleDraweeView"
-            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/default_text_ccf9e5e"
+            android:textSize="13dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/breakfastTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/discountPriceTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:textColor="@color/default_text_c323232"
+            android:layout_height="20dp"
+            android:layout_marginBottom="10dp"
             android:text="542,400"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/benefitTextView"
-            app:layout_constraintLeft_toRightOf="@+id/simpleDraweeView"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            dailyFont:style="Bold"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/wonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11dp"
-            android:textColor="@color/default_text_c323232"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
             android:text="@string/currency"
-            android:layout_marginBottom="2dp"
-            app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"
-            app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"/>
+            android:textColor="@color/default_text_c323232"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
+            app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/couponTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11dp"
-            android:background="@color/floating_action_button_pressed"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/dh_theme_color"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/shape_fillrect_bfdf1f1_r2"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
             android:text="@string/label_available_coupon"
-            android:layout_marginBottom="2dp"
-            app:layout_constraintLeft_toRightOf="@+id/wonTextView"
-            app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"/>
-
+            android:textColor="@color/default_text_cfb234a"
+            android:textSize="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
+            app:layout_constraintLeft_toRightOf="@+id/wonTextView"/>
     </android.support.constraint.ConstraintLayout>
-    <!--</merge>-->
 </layout>

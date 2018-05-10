@@ -889,6 +889,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                 setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
                 setRoomList(it.roomInformation?.roomList)
+
+                setPriceAverageTypeVisible(bookDateTime.nights > 1)
                 setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
 
                 setDailyCommentVisible(it.dailyCommentList.letNotNullTrueElseNullFalse { setDailyComment(it) })

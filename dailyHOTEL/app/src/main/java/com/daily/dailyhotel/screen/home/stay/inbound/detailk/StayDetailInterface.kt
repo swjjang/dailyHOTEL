@@ -59,6 +59,8 @@ interface StayDetailInterface {
 
         fun setRoomFilterInformation(calendarText: CharSequence, bedTypeFilterCount: Int, facilitiesFilterCount: Int)
 
+        fun setPriceAverageTypeVisible(visible: Boolean)
+
         fun setPriceAverageType(isAverageType: Boolean)
 
         fun setRoomList(roomList: List<Room>?)
