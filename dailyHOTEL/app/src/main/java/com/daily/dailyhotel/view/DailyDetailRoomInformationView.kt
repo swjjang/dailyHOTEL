@@ -48,7 +48,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_information_data, this, true)
 
-        viewDataBinding.showMoreRoomsTextView.setOnClickListener(object : View.OnClickListener {
+        viewDataBinding.actionButtonView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 listener?.let {
                     it.onMoreRoomsClick(viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE)
@@ -118,9 +118,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         if (roomList.isNotNullAndNotEmpty()) {
             roomList!!.forEachIndexed { index, room ->
                 getViewGroupRoom(index).apply {
-                    if (index > 0) {
-                        addView(createDividerView(), LinearLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, 11.0))
-                    }
+                    if (index > 0) addView(createDividerView(), LinearLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, 11.0))
 
                     addView(DailyDetailRoomView(context).apply {
                         setPriceAverageType(isPriceAverageType)
@@ -157,12 +155,13 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         }
     }
 
-    fun setMoreRoomButtonVisible(visible: Boolean) {
-        viewDataBinding.showMoreRoomsTextView.visibility = if (visible) View.VISIBLE else View.GONE
+    fun setActionButtonVisible(visible: Boolean) {
+        viewDataBinding.actionButtonGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setMoreRoomCount(roomCount: Int) {
-        viewDataBinding.showMoreRoomsTextView.text = context.getString(R.string.label_stay_detail_show_more_rooms, roomCount)
+    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int) {
+        viewDataBinding.actionButtonTextView.text = text
+        viewDataBinding.actionButtonTextView.setCompoundDrawablesWithIntrinsicBounds(leftResourceId, 0, rightResourceId, 0)
     }
 
     fun showMoreRoom() {

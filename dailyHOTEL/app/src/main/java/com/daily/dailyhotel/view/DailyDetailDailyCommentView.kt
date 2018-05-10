@@ -4,14 +4,14 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDailyCommentDataBinding
+import com.twoheart.dailyhotel.databinding.DailyViewDetailDailyCommentItemDataBinding
+import java.util.*
 
 class DailyDetailDailyCommentView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailDailyCommentDataBinding
@@ -37,19 +37,17 @@ class DailyDetailDailyCommentView : ConstraintLayout {
         viewDataBinding.dailyCommentsLayout.removeAllViews()
 
         comments.takeNotEmpty {
-            it.forEach {
-                viewDataBinding.dailyCommentsLayout.addView(getCommentView(it), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            it.forEachIndexed { index, comment ->
+                viewDataBinding.dailyCommentsLayout.addView(createCommentView(index + 1, comment), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
     }
 
-    private fun getCommentView(comment: String): View {
-        return DailyTextView(context).apply {
-            text = comment
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
-            setTextColor(context.resources.getColor(R.color.default_text_c323232))
-            setDrawableCompatLeftAndRightFixedFirstLine(true)
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_check_xs, 0, 0, 0)
-        }
+    private fun createCommentView(index: Int, comment: String): View {
+        return DataBindingUtil.inflate<DailyViewDetailDailyCommentItemDataBinding>(LayoutInflater.from(context),
+                R.layout.daily_view_detail_daily_comment_item_data, this, true).apply {
+            numberTextView.text = String.format(Locale.KOREA, "%02d", index)
+            commentTextView.text = comment
+        }.root
     }
 }

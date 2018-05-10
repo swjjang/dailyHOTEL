@@ -201,22 +201,37 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/roomsLayout"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/showMoreRoomsTextView"
+        <View
+            android:id="@+id/actionButtonView"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_fillrect_leb2135_bffffff_r3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/moreRoomsLayout"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/actionButtonTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:gravity="center"
             android:text="N개 객실 더보기"
             android:textColor="@color/default_text_ceb2135"
             android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/moreRoomsLayout"
+            app:layout_constraintBottom_toBottomOf="@+id/actionButtonView"
+            app:layout_constraintLeft_toLeftOf="@+id/actionButtonView"
+            app:layout_constraintRight_toRightOf="@+id/actionButtonView"
+            app:layout_constraintTop_toBottomOf="@+id/actionButtonView"
             dailyFont:style="Medium"/>
+
+        <android.support.constraint.Group
+            android:id="@+id/actionButtonGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="actionButtonView, actionButtonTextView"/>
     </android.support.constraint.ConstraintLayout>
     <!--</merge>-->
 </layout>
