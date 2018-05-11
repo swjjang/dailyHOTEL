@@ -1302,7 +1302,7 @@
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
     <string name="message_gourmet_detail_sold_out_has_cart">판매가 완료되어 구매하실 수 없습니다.\n날짜를 변경하시거나 다른 레스토랑을 확인해주세요.</string>
     <string name="message_stay_used_data_guide">3G/LTE 환경에서는\n데이터 사용료가 발생할 수 있습니다.</string>
-    <string name="message_stay_waiting_reservation_guide"><![CDATA[해당 예약은 확정 예약이 아닌 <font color=0xb70038>대기 예약</font>으로, 결제 완료 시 예약대기 상태이며, <font color=0xb70038>예약확정 여부가 문자로 발송됩니다.</font>]]></string>
+    <string name="message_stay_waiting_reservation_guide"><![CDATA[해당 예약은 확정 예약이 아닌 <font color=6185cd>대기 예약</font>으로, 결제 완료 시 예약대기 상태이며, <font color=6185cd>예약확정 여부가 문자로 발송됩니다.</font>]]></string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
     <string name="message_detail_nrd">특가상품으로 변경, 취소, 환불이 불가합니다.</string>

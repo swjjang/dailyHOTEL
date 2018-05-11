@@ -278,7 +278,7 @@
                         android:id="@+id/rewardTopLineView"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/default_line_cf0f0f0"/>
+                        android:background="@color/default_line_ce7e7e7"/>
 
                     <com.daily.dailyhotel.view.DailyRewardCardView
                         android:id="@+id/rewardCardView"
@@ -295,7 +295,7 @@
                     android:id="@+id/conciergeTopLineView"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@drawable/layerlist_divider"
+                    android:background="@drawable/layerlist_top_line_divider_le7e7e7"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rewardCardLayout"/>
@@ -430,7 +430,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="10dp"
-            android:background="@drawable/shape_fillrect_bb70038_r2"
+            android:background="@drawable/shape_fillrect_beb2135_r3"
             android:elevation="2dp"
             android:gravity="center"
             android:text="@string/label_stay_detail_view_room_detail"

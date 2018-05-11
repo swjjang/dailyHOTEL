@@ -572,7 +572,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.refundInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation) {
+    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation, hasNRDRoom: Boolean) {
         viewDataBinding.refundInformationView.setInformation(refundInformation)
     }
 

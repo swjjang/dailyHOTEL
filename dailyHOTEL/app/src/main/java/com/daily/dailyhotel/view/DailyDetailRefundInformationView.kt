@@ -32,8 +32,12 @@ class DailyDetailRefundInformationView : LinearLayout {
         orientation = LinearLayout.VERTICAL
     }
 
-    fun setInformation(information: StayDetailk.RefundInformation) {
+    fun setInformation(information: StayDetailk.RefundInformation, hasNRDRoom: Boolean = false) {
         addView(getInformationView(information))
+
+        if (hasNRDRoom) {
+            addView(getContentBulletView(context.getString(R.string.message_stay_detail_nrd), R.color.default_text_ceb2135))
+        }
     }
 
     private fun getInformationView(information: StayDetailk.RefundInformation): View {
@@ -52,11 +56,11 @@ class DailyDetailRefundInformationView : LinearLayout {
         return viewDataBinding.root
     }
 
-    private fun getContentBulletView(text: String): DailyTextView {
+    private fun getContentBulletView(text: String, textColorResourceId: Int = R.color.default_text_c4d4d4d): DailyTextView {
         return DailyTextView(context).apply {
             this.text = text
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f)
-            setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
+            setTextColor(context.resources.getColor(textColorResourceId))
             setLineSpacing(1.0f, 1.0f)
             setDrawableCompatLeftAndRightFixedFirstLine(true)
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0)

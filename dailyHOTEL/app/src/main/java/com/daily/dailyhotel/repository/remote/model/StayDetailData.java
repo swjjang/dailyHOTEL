@@ -263,6 +263,11 @@ public class StayDetailData
                 }
 
                 roomList.add(roomData.getRoom());
+
+                if (stayDetail.getHasNRDRoom() == false && roomData.refundPolicy != null && "nrd".equalsIgnoreCase(roomData.refundPolicy.type))
+                {
+                    stayDetail.setHasNRDRoom(true);
+                }
             }
 
             roomInformation.setBedTypeList(bedTypeSet);

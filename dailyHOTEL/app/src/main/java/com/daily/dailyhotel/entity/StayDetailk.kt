@@ -30,6 +30,7 @@ class StayDetailk : Configurations() {
     var rewardStickerCount: Int = 0
 
     var province: Province? = null
+    var hasNRDRoom = false
 
     fun toStayDetail(): StayDetail {
         return StayDetail()

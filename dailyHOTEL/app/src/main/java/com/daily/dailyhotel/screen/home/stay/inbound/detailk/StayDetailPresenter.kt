@@ -849,7 +849,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 it.roomList.takeNotEmpty {
                     startActivityForResult(StayRoomsActivity.newInstance(activity, it
                             , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
-                            ,bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
+                            , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
                             , stayDetail.index
                             , stayDetail.baseInformation?.category
                             , stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
@@ -910,7 +910,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setDetailInformation(it.detailInformation, it.breakfastInformation)
                 }
 
-                setCancellationAndRefundPolicyVisible(it.refundInformation.letNotNullTrueElseNullFalse { setCancellationAndRefundPolicy(it) })
+                setCancellationAndRefundPolicyVisible(it.refundInformation.letNotNullTrueElseNullFalse { refundInformation ->
+                    setCancellationAndRefundPolicy(refundInformation, it.hasNRDRoom)
+                })
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
             }

@@ -6,88 +6,104 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="14dp">
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/leftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/rightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"/>
+
+        <View
+            android:id="@+id/topLineView"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:layout_marginTop="30dp"
+            android:background="@color/default_line_cdcdcdd"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
+            android:freezesText="true"
             android:text="@string/label_detail_waiting_reservation_guide"
-            android:textColor="@color/hoteldetail_title_text"
-            android:textSize="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="18dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/topLineView"
             dailyFont:style="Medium"/>
 
-        <LinearLayout
-            android:id="@+id/informationLayout"
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/contentTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titleTextView">
+            android:layout_marginTop="14dp"
+            android:freezesText="true"
+            android:lineSpacingExtra="1dp"
+            android:text="@string/message_stay_waiting_reservation_guide"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/info_ic_text_dot_black"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="-2dp"
-                android:text="@string/message_stay_waiting_reservation_guide"
-                android:textColor="@color/default_background_section_c323232"
-                android:textSize="13dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/waitForBookingLayout"
+        <View
+            android:id="@+id/waitForBookingView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="173dp"
+            android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="14dp"
             android:background="@drawable/shape_list_row_detail_pension_only_background"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/informationLayout">
+            app:layout_constraintTop_toBottomOf="@+id/contentTextView"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/label_stay_detail_pension_only_title"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"/>
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/waitForBookingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/label_stay_detail_pension_only_title"
+            android:textColor="@color/default_text_c4d4d4d"
+            app:layout_constraintLeft_toLeftOf="@+id/waitForBookingView"
+            app:layout_constraintRight_toRightOf="@+id/waitForBookingView"
+            app:layout_constraintTop_toTopOf="@+id/waitForBookingView"
+            android:textSize="14dp"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="@string/label_stay_detail_pension_only_description"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="10dp"/>
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/waitForBookingContentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/label_stay_detail_pension_only_description"
+            android:textColor="@color/default_text_c929292"
+            app:layout_constraintLeft_toLeftOf="@+id/waitForBookingView"
+            app:layout_constraintRight_toRightOf="@+id/waitForBookingView"
+            app:layout_constraintTop_toBottomOf="@+id/waitForBookingTextView"
+            android:textSize="11dp"/>
 
-            <com.daily.base.widget.DailyImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/img_detail_standby_reserve"/>
-        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            app:layout_constraintLeft_toLeftOf="@+id/waitForBookingView"
+            app:layout_constraintRight_toRightOf="@+id/waitForBookingView"
+            app:layout_constraintTop_toBottomOf="@+id/waitForBookingContentTextView"
+            android:src="@drawable/img_detail_standby_reserve"/>
     </android.support.constraint.ConstraintLayout>
 </layout>
