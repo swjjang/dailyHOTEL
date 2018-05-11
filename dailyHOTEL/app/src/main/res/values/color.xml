@@ -318,6 +318,7 @@
     <color name="default_background_cfff9ef">#fff9ef</color>
     <color name="default_background_ceb2135">#eb2135</color>
     <color name="default_background_cfdf1f1">#fdf1f1</color>
+    <color name="default_background_c666666">#666666</color>
 
     <color name="default_popup_button_background_cb70038">#B70038</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>

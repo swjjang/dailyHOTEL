@@ -8,13 +8,12 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.daily.base.widget.DailyTextView
+import com.daily.dailyhotel.entity.FacilitiesPictogram
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailFacilitiesDataBinding
-import android.view.ViewGroup
-
-
 
 class DailyDetailFacilitiesView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailFacilitiesDataBinding
@@ -44,7 +43,7 @@ class DailyDetailFacilitiesView : ConstraintLayout {
         viewDataBinding.roomCountTextView.text = context.getString(R.string.label_stay_detail_room_total_count, count)
     }
 
-    fun setFacilities(facilities: List<String>?) {
+    fun setFacilities(facilities: List<FacilitiesPictogram>?) {
         viewDataBinding.facilitiesGridLayout.removeAllViews()
 
         facilities.takeNotEmpty {
@@ -55,12 +54,13 @@ class DailyDetailFacilitiesView : ConstraintLayout {
         }
     }
 
-    private fun getFacilitiesView(text: String): View {
+    private fun getFacilitiesView(facilities: FacilitiesPictogram): View {
         return DailyTextView(context).apply {
-            this.text = text
+            this.text = facilities.getName(context)
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11.0f)
-            setGravity(Gravity.CENTER_HORIZONTAL)
+            gravity = Gravity.CENTER_HORIZONTAL
             setTextColor(context.resources.getColor(R.color.default_text_c323232))
+            setCompoundDrawablesWithIntrinsicBounds(0, facilities.getImageResourceId(), 0, 0)
 
             val layoutParams = android.support.v7.widget.GridLayout.LayoutParams()
             layoutParams.width = 0
@@ -70,4 +70,5 @@ class DailyDetailFacilitiesView : ConstraintLayout {
             setLayoutParams(layoutParams)
         }
     }
+
 }

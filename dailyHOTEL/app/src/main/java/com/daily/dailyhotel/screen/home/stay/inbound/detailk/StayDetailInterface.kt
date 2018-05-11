@@ -69,7 +69,7 @@ interface StayDetailInterface {
 
         fun setDailyComment(commentList: List<String>)
 
-        fun setFacilities(roomCount: Int, facilities: List<String>?)
+        fun setFacilities(roomCount: Int, facilities: List<FacilitiesPictogram>?)
 
         fun setAddressInformationVisible(visible: Boolean)
 

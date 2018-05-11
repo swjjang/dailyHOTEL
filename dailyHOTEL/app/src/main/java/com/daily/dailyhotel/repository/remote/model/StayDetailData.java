@@ -3,6 +3,7 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.FacilitiesPictogram;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.Room;
 import com.daily.dailyhotel.entity.Stay;
@@ -277,7 +278,18 @@ public class StayDetailData
         }
 
         stayDetail.setTotalRoomCount(roomCount);
-        stayDetail.setFacilityList(facilities);
+
+        if (facilities != null && facilities.size() > 0)
+        {
+            List<FacilitiesPictogram> facilitiesList = new ArrayList<>();
+
+            for (String facilities : facilities)
+            {
+                facilitiesList.add(FacilitiesPictogram.valueOf(facilities.toUpperCase()));
+            }
+
+            stayDetail.setFacilityList(facilitiesList);
+        }
 
         StayDetailk.AddressInformation addressInformation = new StayDetailk.AddressInformation();
         addressInformation.setAddress(address);

@@ -506,7 +506,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.dailyCommentView.setComments(commentList)
     }
 
-    override fun setFacilities(roomCount: Int, facilities: List<String>?) {
+    override fun setFacilities(roomCount: Int, facilities: List<FacilitiesPictogram>?) {
         viewDataBinding.facilitiesView.apply {
             if (roomCount <= 0 && !facilities.isNotNullAndNotEmpty()) {
                 visibility = View.GONE

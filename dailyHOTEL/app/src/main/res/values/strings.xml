@@ -1012,7 +1012,7 @@
     <string name="label_foodtype">음식종류</string>
     <string name="label_amenities">부대시설</string>
     <string name="label_room_amenities">객실 내 시설</string>
-    <string name="label_wifi">무료WIFI</string>
+    <string name="label_wifi">무료WiFi</string>
     <string name="label_breakfast">조식포함</string>
     <string name="label_cooking">취사가능</string>
     <string name="label_bathtub">욕조구비</string>
@@ -1024,10 +1024,14 @@
     <string name="label_allowed_pet">반려동물</string>
     <string name="label_allowed_barbecue">공동바베큐</string>
     <string name="label_valet_available">발렛가능</string>
+    <string name="label_cafeteria">카페테리아</string>
     <string name="label_private_room">프라이빗룸</string>
     <string name="label_group_booking">단체예약</string>
     <string name="label_baby_seat">베이비시트</string>
     <string name="label_corkage">코르키지</string>
+    <string name="label_seminar_room">세미나실</string>
+    <string name="label_breakfast_restaurant">조식당</string>
+    <string name="label_spa_massage">스파마사지</string>
     <string name="label_time_range">시간대</string>
     <string name="label_time_0611">06–11시</string>
     <string name="label_time_1115">11–15시</string>
@@ -1036,15 +1040,19 @@
     <string name="label_time_2106">21시 이후</string>
     <string name="label_view_result">결과 보기</string>
     <string name="label_searching">검색 중…</string>
-    <string name="label_business_center">비즈니스 센터</string>
+    <string name="label_business_center">비즈니스센터</string>
     <string name="label_sauna">사우나</string>
-    <string name="label_kids_play_room">키즈 플레이룸</string>
+    <string name="label_kids_play_room">키즈플레이룸</string>
     <string name="label_computer">PC</string>
     <string name="label_television">TV</string>
     <string name="label_whirlpool">스파/월풀</string>
     <string name="label_private_bbq">개별바베큐</string>
     <string name="label_karaoke">노래방</string>
     <string name="label_party_room">파티룸</string>
+    <string name="label_club_lounge">클럽라운지</string>
+    <string name="label_pickup_available">픽업가능</string>
+    <string name="label_rent_baby_bed">아기침대대여</string>
+    <string name="label_rent_convenience_store">편의점(매점)</string>
     <string name="label_more">더보기</string>
     <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
 
