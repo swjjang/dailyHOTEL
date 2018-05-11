@@ -571,42 +571,49 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     protected void onHandleError(Throwable throwable)
     {
-        unLockUI();
-
-        onReportError(throwable);
-
-        if (isFinishing() == true)
+        runOnUiThread(new Runnable()
         {
-            return;
-        }
-
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> this.onBackPressed(), true);
-        } else if (throwable instanceof HttpException)
-        {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-
-            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            @Override
+            public void run()
             {
-                addCompositeDisposable(new ConfigLocalImpl().clear(this).subscribe(object -> {
-                    new FacebookRemoteImpl().logOut();
-                    new KakaoRemoteImpl().logOut();
+                unLockUI();
 
-                    restartExpiredSession();
-                }));
-            } else
-            {
-                DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+                onReportError(throwable);
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                if (throwable instanceof BaseException)
+                {
+                    // 팝업 에러 보여주기
+                    BaseException baseException = (BaseException) throwable;
+
+                    showSimpleDialog(null, baseException.getMessage()//
+                        , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> onBackPressed(), true);
+                } else if (throwable instanceof HttpException)
+                {
+                    retrofit2.HttpException httpException = (HttpException) throwable;
+
+                    if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+                    {
+                        addCompositeDisposable(new ConfigLocalImpl().clear(BaseActivity.this).subscribe(object -> {
+                            new FacebookRemoteImpl().logOut();
+                            new KakaoRemoteImpl().logOut();
+
+                            restartExpiredSession();
+                        }));
+                    } else
+                    {
+                        DailyToast.showToast(BaseActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+                    }
+                } else
+                {
+                    DailyToast.showToast(BaseActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+                }
             }
-        } else
-        {
-            DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-        }
+        });
     }
 
     protected void onReportError(Throwable throwable)

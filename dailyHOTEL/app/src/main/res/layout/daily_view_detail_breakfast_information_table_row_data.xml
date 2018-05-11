@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/leftTextView"
+            android:layout_width="146dp"
+            android:layout_height="match_parent"
+            android:background="@color/default_background"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:text="유아 (0~3세 이하)"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="12dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/rightTextView"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:text="무료"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </TableRow>
+</layout>

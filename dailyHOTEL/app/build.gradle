@@ -210,6 +210,7 @@ dependencies {
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     kapt "com.android.databinding:compiler:$android_gradle_version"
+    implementation 'androidx.core:core-ktx:0.3'
 
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'

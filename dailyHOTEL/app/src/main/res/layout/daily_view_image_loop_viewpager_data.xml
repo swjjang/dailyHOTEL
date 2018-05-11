@@ -43,38 +43,14 @@
                 app:layout_constraintRight_toRightOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
-        <!--<View-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="112dp"-->
-            <!--android:background="@drawable/img_detail_gradient"-->
-            <!--app:layout_constraintLeft_toLeftOf="parent"-->
-            <!--app:layout_constraintRight_toRightOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager"/>-->
-
-        <!--<View-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:background="@drawable/img_detail_bottom_gradient"-->
-            <!--app:layout_constraintBottom_toBottomOf="@+id/imageLoopViewPager"-->
-            <!--app:layout_constraintLeft_toLeftOf="parent"-->
-            <!--app:layout_constraintRight_toRightOf="parent"/>-->
-
-        <View
-            android:id="@+id/viewPagerBottomLine"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageLoopViewPager"/>
-
         <com.twoheart.dailyhotel.widget.DailyLineIndicator
             android:id="@+id/viewpagerIndicator"
             android:layout_width="0dp"
             android:layout_height="2dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="29dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            app:layout_constraintBottom_toTopOf="@id/viewPagerBottomLine"
+            app:layout_constraintBottom_toBottomOf="@id/imageLoopViewPager"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             dailyLineIndicator:indicatorBackgroundColor="@color/white_a40"
@@ -84,10 +60,10 @@
             android:id="@+id/moreIconView"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="44dp"
             android:layout_marginRight="15dp"
             android:background="@drawable/detail_ic_more_img"
-            app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
+            app:layout_constraintBottom_toBottomOf="@+id/imageLoopViewPager"
             app:layout_constraintRight_toRightOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
@@ -96,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="41dp"
             android:layout_marginLeft="72dp"
             android:layout_marginRight="72dp"
             android:background="@drawable/background_image_information_detail"
@@ -110,7 +86,7 @@
             android:textColor="@color/white"
             android:textSize="12dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
+            app:layout_constraintBottom_toTopOf="@+id/imageLoopViewPager"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 

@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detailk
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.annotation.TargetApi
 import android.content.DialogInterface
 import android.databinding.DataBindingUtil
@@ -8,7 +10,6 @@ import android.graphics.Shader
 import android.graphics.drawable.PaintDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
-import android.net.Uri
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.widget.NestedScrollView
@@ -16,20 +17,21 @@ import android.transition.Transition
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
-import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.letReturnTrueElseReturnFalse
+import com.daily.dailyhotel.util.letNotNullTrueElseNullFalse
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyDetailAddressView
 import com.daily.dailyhotel.view.DailyDetailEmptyView
+import com.daily.dailyhotel.view.DailyDetailRoomInformationView
 import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
@@ -50,10 +52,17 @@ import java.util.*
 class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface.OnEventListener)//
     : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailkDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
 
+    var tabLayoutShowAnimator: ObjectAnimator? = null
+    var tabLayoutHideAnimator: ObjectAnimator? = null
+
     override fun setContentView(viewDataBinding: ActivityStayDetailkDataBinding) {
         initToolbar(viewDataBinding)
 
         setScrollViewVisible(false)
+
+        val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
+        val tabLayoutHeight = ScreenUtils.dpToPx(context, 40.0)
+
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
             if (getViewDataBinding().scrollLayout.childCount < 2) {
                 getViewDataBinding().toolbarView.visibility = View.GONE
@@ -61,15 +70,21 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             }
 
             val titleLayout = getViewDataBinding().scrollLayout.getChildAt(1)
-            val TOOLBAR_HEIGHT = getDimensionPixelSize(R.dimen.toolbar_height)
 
-            if (titleLayout.y - TOOLBAR_HEIGHT > scrollY) {
+
+            if (titleLayout.y - toolbarHeight > scrollY) {
                 getViewDataBinding().toolbarView.hideAnimation()
             } else {
                 getViewDataBinding().toolbarView.showAnimation()
             }
 
-            getViewDataBinding().fakeVRImageView.isEnabled = scrollY <= TOOLBAR_HEIGHT
+            getViewDataBinding().fakeVRImageView.isEnabled = scrollY <= toolbarHeight
+
+            if (getViewDataBinding().roomInformationTopLineView.y >= scrollY + toolbarHeight + tabLayoutHeight) {
+                hideTabLayout()
+            } else {
+                showTabLayout()
+            }
         })
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
@@ -79,6 +94,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.wishTooltipView.setOnClickListener(View.OnClickListener { eventListener.onHideWishTooltipClick() })
 
         setEmptyView()
+        setTabLayout()
     }
 
     override fun setToolbarTitle(title: String?) {
@@ -120,7 +136,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             imageList.add(detailImage)
 
             viewDataBinding.imageLoopView.setImageList(imageList)
-            viewDataBinding.transImageView.setImageURI(Uri.parse(url))
+            viewDataBinding.transImageView.setImageURI(url)
         }
     }
 
@@ -252,6 +268,84 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.wishTooltipGroup.visibility = View.GONE
     }
 
+    private fun setTabLayout() {
+        viewDataBinding.roomInformationTextView.setOnClickListener { eventListener.onRoomInformationClick() }
+        viewDataBinding.stayInformationTextView.setOnClickListener { eventListener.onStayInformationClick() }
+    }
+
+    @Synchronized
+    override fun showTabLayout() {
+        if (tabLayoutShowAnimator != null || viewDataBinding.tabLayout.visibility == View.VISIBLE) {
+            return
+        }
+
+        if (tabLayoutHideAnimator != null) {
+            tabLayoutHideAnimator?.cancel()
+            tabLayoutHideAnimator = null
+        }
+
+        tabLayoutShowAnimator = ObjectAnimator.ofFloat(viewDataBinding.tabLayout, View.ALPHA, viewDataBinding.tabLayout.alpha, 1.0f).apply {
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        tabLayoutShowAnimator?.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                tabLayoutShowAnimator?.removeAllListeners()
+                tabLayoutShowAnimator = null
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+                viewDataBinding.tabLayout.visibility = View.VISIBLE
+            }
+        })
+
+        tabLayoutShowAnimator?.start()
+    }
+
+    @Synchronized
+    override fun hideTabLayout() {
+        if (tabLayoutHideAnimator != null || viewDataBinding.tabLayout.visibility == View.INVISIBLE) {
+            return
+        }
+
+        if (tabLayoutShowAnimator != null) {
+            tabLayoutShowAnimator?.cancel()
+            tabLayoutShowAnimator = null
+        }
+
+        tabLayoutHideAnimator = ObjectAnimator.ofFloat(viewDataBinding.tabLayout, View.ALPHA, viewDataBinding.tabLayout.alpha, 0.0f).apply {
+            duration = 200
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        tabLayoutHideAnimator?.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                tabLayoutHideAnimator?.removeAllListeners()
+                tabLayoutHideAnimator = null
+
+                viewDataBinding.tabLayout.visibility = View.INVISIBLE
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+        })
+
+        tabLayoutHideAnimator?.start()
+    }
+
     override fun setWishCount(count: Int) {
         val wishCountText: String?
 
@@ -310,8 +404,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun setVRVisible(visible: Boolean) {
         val flag = if (visible) View.VISIBLE else View.GONE
 
-        viewDataBinding.vrImageView.visibility = flag
-        viewDataBinding.fakeVRImageView.visibility = flag
+        viewDataBinding.vrGroup.visibility = flag
         viewDataBinding.fakeVRImageView.setOnClickListener { eventListener.onTrueVRClick() }
     }
 
@@ -327,9 +420,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setCategoryName(baseInformation.category)
             setRewardsVisible(baseInformation.provideRewardSticker)
             setNameText(baseInformation.name)
-            setPrice(DailyTextUtils.getPriceFormat(context, baseInformation.discount, false))
+            setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
             setNightsEnabled(nightsEnabled)
-            setAwardsVisible(baseInformation.awards.letReturnTrueElseReturnFalse { setAwardsTitle(it.title) })
+            setAwardsVisible(baseInformation.awards.letNotNullTrueElseNullFalse { setAwardsTitle(it.title) })
         }
     }
 
@@ -339,17 +432,24 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setTrueReviewInformation(trueReviewInformation: StayDetailk.TrueReviewInformation) {
         viewDataBinding.trueReviewView.apply {
-            setSatisfactionVisible((trueReviewInformation.ratingPercent > 0 || trueReviewInformation.ratingCount > 0).letReturnTrueElseReturnFalse {
-                setSatisfaction(trueReviewInformation.ratingPercent, trueReviewInformation.ratingCount)
-            })
 
-            setPreviewTrueReviewVisible(trueReviewInformation.review.letReturnTrueElseReturnFalse {
+            if (trueReviewInformation.ratingPercent > 0 || trueReviewInformation.ratingCount > 0) {
+                setSatisfactionVisible(true)
+                setSatisfaction(trueReviewInformation.ratingPercent, trueReviewInformation.ratingCount)
+            } else {
+                setSatisfactionVisible(false)
+            }
+
+            setPreviewTrueReviewVisible(trueReviewInformation.review.letNotNullTrueElseNullFalse {
                 setPreviewTrueReview(it.comment, it.score?.toString(), it.userId)
             })
 
-            setShowTrueReviewButtonVisible((trueReviewInformation.reviewTotalCount > 0).letReturnTrueElseReturnFalse {
+            if (trueReviewInformation.reviewTotalCount > 0) {
+                setShowTrueReviewButtonVisible(true)
                 setShowTrueReviewButtonText(trueReviewInformation.reviewTotalCount)
-            })
+            } else {
+                setShowTrueReviewButtonVisible(false)
+            }
         }
     }
 
@@ -362,11 +462,18 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setTitleText(benefitInformation.title)
             setContents(benefitInformation.contentList)
 
-            setCouponButtonVisible(benefitInformation.coupon.letReturnTrueElseReturnFalse {
-                setCouponButtonEnabled(!it.isDownloaded)
-                setCouponButtonText(it.couponDiscount)
-            })
+            if (benefitInformation.coupon != null && benefitInformation.coupon!!.couponDiscount > 0) {
+                setCouponButtonVisible(true)
+                setCouponButtonEnabled(!benefitInformation.coupon!!.isDownloaded)
+                setCouponButtonText(benefitInformation.coupon!!.couponDiscount)
+            } else {
+                setCouponButtonVisible(false)
+            }
         }
+    }
+
+    override fun setPriceAverageTypeVisible(visible: Boolean) {
+        viewDataBinding.roomInformationView.setPriceAverageTypeVisible(visible)
     }
 
     override fun setPriceAverageType(isAverageType: Boolean) {
@@ -383,6 +490,12 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setRoomList(roomList: List<Room>?) {
         viewDataBinding.roomInformationView.setRoomList(roomList)
+
+        viewDataBinding.roomInformationView.setRoomInformationListener(object : DailyDetailRoomInformationView.OnDailyDetailRoomInformationListener {
+            override fun onMoreRoomsClick(expanded: Boolean) {
+                if (expanded) hideMoreRooms() else showMoreRooms()
+            }
+        })
     }
 
     override fun setDailyCommentVisible(visible: Boolean) {
@@ -393,13 +506,20 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.dailyCommentView.setComments(commentList)
     }
 
-    override fun setFacilities(roomCount: Int, facilities: List<String>?) {
+    override fun setFacilities(roomCount: Int, facilities: List<FacilitiesPictogram>?) {
         viewDataBinding.facilitiesView.apply {
             if (roomCount <= 0 && !facilities.isNotNullAndNotEmpty()) {
                 visibility = View.GONE
             } else {
                 visibility = View.VISIBLE
-                setRoomCountVisible(roomCount.letReturnTrueElseReturnFalse { setRoomCount(roomCount) })
+
+                if (roomCount > 0) {
+                    setRoomCountVisible(true)
+                    setRoomCount(roomCount)
+                } else {
+                    setRoomCountVisible(false)
+                }
+
                 setFacilities(facilities)
             }
         }
@@ -445,7 +565,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?) {
         viewDataBinding.detailInformationView.setInformation(detailInformation?.itemList)
-        viewDataBinding.detailInformationView.setBreakfastInfomration(breakfastInformation)
+        viewDataBinding.detailInformationView.setBreakfastInformation(breakfastInformation)
     }
 
     override fun setCancellationAndRefundPolicyVisible(visible: Boolean) {
@@ -481,10 +601,13 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setGuideVisible(true)
             setOnGuideClickListener { eventListener.onRewardGuideClick() }
 
-            setOptionVisible((!optionText.isTextEmpty()).letReturnTrueElseReturnFalse {
+            if (optionText.isTextEmpty()) {
+                setOptionVisible(false)
+            } else {
+                setOptionVisible(true)
                 setOptionText(optionText)
                 setOnOptionClickListener { eventListener.onRewardClick() }
-            })
+            }
 
             setRewardTitleText(titleText)
             setDescriptionText(descriptionText)
@@ -498,10 +621,13 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setGuideVisible(true)
             setOnGuideClickListener { eventListener.onRewardGuideClick() }
 
-            setOptionVisible((!optionText.isTextEmpty()).letReturnTrueElseReturnFalse {
+            if (optionText.isTextEmpty()) {
+                setOptionVisible(false)
+            } else {
+                setOptionVisible(true)
                 setOptionText(optionText)
                 setOnOptionClickListener { eventListener.onLoginClick() }
-            })
+            }
 
             setRewardTitleText(titleText)
             setDescriptionText(descriptionText)
@@ -628,6 +754,29 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setActionButtonEnabled(enabled: Boolean) {
         viewDataBinding.showRoomTextView.isEnabled = enabled
+    }
+
+    override fun scrollRoomInformation() {
+        val toolBarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
+
+        viewDataBinding.nestedScrollView.abortScrolling();
+        viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.roomInformationTopLineView.y.toInt() - toolBarHeight - toolBarHeight + 1)
+    }
+
+    override fun scrollStayInformation() {
+        val toolBarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
+
+        viewDataBinding.nestedScrollView.abortScrolling();
+        viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.dailyCommentView.y.toInt() - toolBarHeight - toolBarHeight)
+    }
+
+    override fun showMoreRooms() {
+        viewDataBinding.roomInformationView.showMoreRoom()
+    }
+
+    override fun hideMoreRooms() {
+        scrollRoomInformation()
+        viewDataBinding.roomInformationView.hideMoreRoom()
     }
 
     /**

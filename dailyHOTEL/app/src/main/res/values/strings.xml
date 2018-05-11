@@ -1012,7 +1012,7 @@
     <string name="label_foodtype">음식종류</string>
     <string name="label_amenities">부대시설</string>
     <string name="label_room_amenities">객실 내 시설</string>
-    <string name="label_wifi">무료WIFI</string>
+    <string name="label_wifi">무료WiFi</string>
     <string name="label_breakfast">조식포함</string>
     <string name="label_cooking">취사가능</string>
     <string name="label_bathtub">욕조구비</string>
@@ -1024,10 +1024,14 @@
     <string name="label_allowed_pet">반려동물</string>
     <string name="label_allowed_barbecue">공동바베큐</string>
     <string name="label_valet_available">발렛가능</string>
+    <string name="label_cafeteria">카페테리아</string>
     <string name="label_private_room">프라이빗룸</string>
     <string name="label_group_booking">단체예약</string>
     <string name="label_baby_seat">베이비시트</string>
     <string name="label_corkage">코르키지</string>
+    <string name="label_seminar_room">세미나실</string>
+    <string name="label_breakfast_restaurant">조식당</string>
+    <string name="label_spa_massage">스파마사지</string>
     <string name="label_time_range">시간대</string>
     <string name="label_time_0611">06–11시</string>
     <string name="label_time_1115">11–15시</string>
@@ -1036,15 +1040,19 @@
     <string name="label_time_2106">21시 이후</string>
     <string name="label_view_result">결과 보기</string>
     <string name="label_searching">검색 중…</string>
-    <string name="label_business_center">비즈니스 센터</string>
+    <string name="label_business_center">비즈니스센터</string>
     <string name="label_sauna">사우나</string>
-    <string name="label_kids_play_room">키즈 플레이룸</string>
+    <string name="label_kids_play_room">키즈플레이룸</string>
     <string name="label_computer">PC</string>
     <string name="label_television">TV</string>
     <string name="label_whirlpool">스파/월풀</string>
     <string name="label_private_bbq">개별바베큐</string>
     <string name="label_karaoke">노래방</string>
     <string name="label_party_room">파티룸</string>
+    <string name="label_club_lounge">클럽라운지</string>
+    <string name="label_pickup_available">픽업가능</string>
+    <string name="label_rent_baby_bed">아기침대대여</string>
+    <string name="label_rent_convenience_store">편의점(매점)</string>
     <string name="label_more">더보기</string>
     <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
 
@@ -1264,12 +1272,14 @@
     <string name="label_detail_view_average_price">1박 평균 가격</string>
     <string name="label_detail_view_total_price">총가격</string>
     <string name="label_detail_view_review_go">%1$s개 트루리뷰 보기</string>
-    <string name="label_detail_view_show_true_review">%1$d개 트루리뷰 모두 보기</string>
+    <string name="label_detail_view_show_true_review">%1$d개 리뷰 더보기</string>
     <string name="label_gourmet_detail_full_time_menu">전체시간 메뉴</string>
     <string name="label_stay_detail_view_room_detail">객실 상세보기</string>
     <string name="label_business_benefit">업장 혜택</string>
     <string name="label_select_room">객실 선택</string>
     <string name="label_total_price">총 가격</string>
+    <string name="label_breakfast_information">조식 정보</string>
+    <string name="label_breakfast_precautions">*조식 요금 현장 결제 필요</string>
     <string name="label_available_coupon">쿠폰 적용 가능</string>
     <string name="label_facilities_in_business">업장 내 편의시설</string>
     <string name="label_default_check_in_time_check_out_time">대표 체크인/체크아웃 시간</string>
@@ -1281,6 +1291,7 @@
     <string name="label_stay_detail_include_person_breakfast">조식 %1$d인 포함</string>
     <string name="label_stay_detail_person_information">%1$d인 기준돋최대 %2$d인 (%3$s)</string>
     <string name="label_stay_detail_room_total_count">객실수: %1$d개</string>
+    <string name="label_detail_daily_comment">데일리’s comment</string>
 
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>

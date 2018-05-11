@@ -30,6 +30,11 @@ interface StayDetailInterface {
         fun hideWishTooltip()
 
 
+        fun showTabLayout()
+
+        fun hideTabLayout()
+
+
         fun setWishCount(count: Int)
 
         fun setWishSelected(selected: Boolean)
@@ -54,6 +59,8 @@ interface StayDetailInterface {
 
         fun setRoomFilterInformation(calendarText: CharSequence, bedTypeFilterCount: Int, facilitiesFilterCount: Int)
 
+        fun setPriceAverageTypeVisible(visible: Boolean)
+
         fun setPriceAverageType(isAverageType: Boolean)
 
         fun setRoomList(roomList: List<Room>?)
@@ -62,7 +69,7 @@ interface StayDetailInterface {
 
         fun setDailyComment(commentList: List<String>)
 
-        fun setFacilities(roomCount: Int, facilities: List<String>?)
+        fun setFacilities(roomCount: Int, facilities: List<FacilitiesPictogram>?)
 
         fun setAddressInformationVisible(visible: Boolean)
 
@@ -113,6 +120,14 @@ interface StayDetailInterface {
         fun setActionButtonText(text: String)
 
         fun setActionButtonEnabled(enabled: Boolean)
+
+        fun scrollRoomInformation()
+
+        fun scrollStayInformation()
+
+        fun showMoreRooms()
+
+        fun hideMoreRooms()
     }
 
     interface OnEventListener : OnBaseEventListener {
@@ -167,6 +182,10 @@ interface StayDetailInterface {
         fun onTrueAwardsClick()
 
         fun onShowRoomClick()
+
+        fun onRoomInformationClick()
+
+        fun onStayInformationClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

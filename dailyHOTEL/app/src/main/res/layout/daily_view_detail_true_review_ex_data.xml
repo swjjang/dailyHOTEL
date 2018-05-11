@@ -8,26 +8,38 @@
 
     <!--<merge-->
     <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
     <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="20dp">
+        android:background="@color/white">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/leftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/rightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:freezesText="true"
             android:text="@string/label_truereview"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="18dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintTop_toTopOf="parent"
             dailyFont:style="Medium"/>
 
@@ -35,22 +47,23 @@
             android:id="@+id/satisfactionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="5dp"
-            android:text="실제 투숙객 90% 만족"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            app:drawableCompatLeft="@drawable/vector_ic_question"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+            android:layout_marginTop="16dp"
+            android:drawablePadding="8dp"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="16dp"
+            app:drawableCompatLeft="@drawable/vector_detail_ic_satisfaction"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/ratingCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="(1,5234명 평가)"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="2dp"
             android:textColor="@color/default_text_c929292"
-            android:textSize="11dp"
+            android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/satisfactionTextView"
             app:layout_constraintLeft_toRightOf="@+id/satisfactionTextView"/>
 
@@ -64,37 +77,37 @@
             android:id="@+id/previewTrueReviewTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="14dp"
             android:ellipsize="end"
             android:freezesText="true"
             android:maxLines="3"
-            android:text="호텔자체가 너무 좋아서 좋았으며 체크인 하는 과정에 있어서 진정한 서비스 마인드에 또한번 감동 받았고, 시설또한 훌륭했습니다. 직원들의 섲비스는 직ㄴㄹㅇㅁ나리ㅓㅇ니러아ㅣㅓㅣㅏㅓㅁㄴㅇ리ㅓㅁ리어ㅣㅓㄴ미ㅓㅣㅓㄹ이ㅓㅁ"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/satisfactionTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/ratingValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4.8"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="12dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/previewTrueReviewTextView"/>
+            android:layout_marginTop="6dp"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="13dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/previewTrueReviewTextView"
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/reviewerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="dai*"
-            android:textColor="@color/default_text_c929292"
+            android:layout_marginLeft="6dp"
+            android:lineSpacingExtra="1dp"
+            android:textColor="@color/default_text_cc5c5c5"
             android:textSize="12dp"
-            app:layout_constraintLeft_toRightOf="@+id/ratingValueTextView"
-            app:layout_constraintTop_toBottomOf="@+id/previewTrueReviewTextView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/ratingValueTextView"
+            app:layout_constraintLeft_toRightOf="@+id/ratingValueTextView"/>
 
         <android.support.constraint.Group
             android:id="@+id/previewTrueReviewGroup"
@@ -105,18 +118,17 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/showTrueReviewTextView"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape_rect_defaultcolor"
+            android:layout_height="44dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r3"
             android:gravity="center"
-            android:text="71개 트루리뷰 모두 보기"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
+            android:textColor="@color/default_text_ceb2135"
+            android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/reviewerTextView"/>
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/reviewerTextView"
+            dailyFont:style="Medium"/>
     </android.support.constraint.ConstraintLayout>
     <!--</merge>-->
 </layout>

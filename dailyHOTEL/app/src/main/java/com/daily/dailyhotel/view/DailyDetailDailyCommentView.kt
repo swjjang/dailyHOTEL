@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDailyCommentDataBinding
+import com.twoheart.dailyhotel.databinding.DailyViewDetailDailyCommentItemDataBinding
+import java.util.*
 
 class DailyDetailDailyCommentView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailDailyCommentDataBinding
@@ -35,13 +37,17 @@ class DailyDetailDailyCommentView : ConstraintLayout {
         viewDataBinding.dailyCommentsLayout.removeAllViews()
 
         comments.takeNotEmpty {
-            it.forEach {
-                viewDataBinding.dailyCommentsLayout.addView(getCommentView(it), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            it.forEachIndexed { index, comment ->
+                viewDataBinding.dailyCommentsLayout.addView(createCommentView(index + 1, comment), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
     }
 
-    private fun getCommentView(comment: String): View {
-        return View(context)
+    private fun createCommentView(index: Int, comment: String): View {
+        return DataBindingUtil.inflate<DailyViewDetailDailyCommentItemDataBinding>(LayoutInflater.from(context),
+                R.layout.daily_view_detail_daily_comment_item_data, this, true).apply {
+            numberTextView.text = String.format(Locale.KOREA, "%02d", index)
+            commentTextView.text = comment
+        }.root
     }
 }

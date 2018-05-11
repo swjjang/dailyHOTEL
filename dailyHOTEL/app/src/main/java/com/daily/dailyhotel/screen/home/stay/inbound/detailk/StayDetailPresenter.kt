@@ -858,6 +858,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         } ?: Util.restartApp(activity)
     }
 
+    override fun onRoomInformationClick() {
+        viewInterface.scrollRoomInformation()
+    }
+
+    override fun onStayInformationClick() {
+        viewInterface.scrollStayInformation()
+    }
+
     private fun notifyDetailDataSetChanged() {
         stayDetail?.let {
             if (defaultImageUrl.isTextEmpty() && it.imageList.isNotNullAndNotEmpty()) {
@@ -872,8 +880,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 it.imageList.takeNotEmpty { setImageList(it) }
                 it.baseInformation?.let { setBaseInformation(it, bookDateTime.nights > 1) }
 
-                setTrueReviewInformationVisible(it.trueReviewInformation.letReturnTrueElseReturnFalse { setTrueReviewInformation(it) })
-                setBenefitInformationVisible(it.benefitInformation.letReturnTrueElseReturnFalse { setBenefitInformation(it) })
+                setTrueReviewInformationVisible(it.trueReviewInformation.letNotNullTrueElseNullFalse { setTrueReviewInformation(it) })
+                setBenefitInformationVisible(it.benefitInformation.letNotNullTrueElseNullFalse { setBenefitInformation(it) })
 
                 val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
                         bookDateTime.getCheckInDateTime("M.d(EEE)"),
@@ -886,15 +894,25 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                 setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
                 setRoomList(it.roomInformation?.roomList)
+
+                setPriceAverageTypeVisible(bookDateTime.nights > 1)
                 setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
 
-                setDailyCommentVisible(it.dailyCommentList.letReturnTrueElseReturnFalse { setDailyComment(it) })
+                setDailyCommentVisible(it.dailyCommentList.letNotNullTrueElseNullFalse { setDailyComment(it) })
                 setFacilities(it.totalRoomCount, it.facilityList)
-                setAddressInformationVisible(it.addressInformation.letReturnTrueElseReturnFalse { setAddressInformation(it) })
-                setCheckTimeInformationVisible(it.checkTimeInformation.letReturnTrueElseReturnFalse { setCheckTimeInformation(it) })
-                setDetailInformationVisible((it.detailInformation != null || it.breakfastInformation != null).letReturnTrueElseReturnFalse { _ -> setDetailInformation(it.detailInformation, it.breakfastInformation) })
-                setCancellationAndRefundPolicyVisible(it.refundInformation.letReturnTrueElseReturnFalse { setCancellationAndRefundPolicy(it) })
-                setCheckInformationVisible(it.checkInformation.letReturnTrueElseReturnFalse { setCheckInformation(it) })
+                setAddressInformationVisible(it.addressInformation.letNotNullTrueElseNullFalse { setAddressInformation(it) })
+                setCheckTimeInformationVisible(it.checkTimeInformation.letNotNullTrueElseNullFalse { setCheckTimeInformation(it) })
+
+                if (it.detailInformation == null && it.breakfastInformation == null) {
+                    setDetailInformationVisible(false)
+                } else {
+                    setDetailInformationVisible(true)
+                    setDetailInformation(it.detailInformation, it.breakfastInformation)
+                }
+
+                setCancellationAndRefundPolicyVisible(it.refundInformation.letNotNullTrueElseNullFalse { setCancellationAndRefundPolicy(it) })
+                setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
+                setConciergeInformation()
             }
 
             status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING

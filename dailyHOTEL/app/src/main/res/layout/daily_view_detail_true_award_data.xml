@@ -47,8 +47,7 @@
             app:layout_constraintLeft_toRightOf="@+id/awardsNameView"
             app:layout_constraintRight_toLeftOf="@+id/awardsQuestionView"
             app:layout_constraintTop_toTopOf="parent"
-            dailyFont:style="Medium"
-            />
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/awardsQuestionView"

@@ -8,6 +8,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
@@ -43,7 +45,7 @@ class DailyDetailBenefitView : ConstraintLayout {
 
         contents.takeNotEmpty {
             it.filter { !it.isTextEmpty() }.forEach {
-                viewDataBinding.benefitContentsLayout.addView(getContentView(it), ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                viewDataBinding.benefitContentsLayout.addView(getContentView(it))
             }
         }
     }
@@ -51,19 +53,25 @@ class DailyDetailBenefitView : ConstraintLayout {
     private fun getContentView(text: String): DailyTextView {
         return DailyTextView(context).apply {
             this.text = text
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
-            setTextColor(context.resources.getColor(R.color.default_text_c323232))
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f)
+            setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
             setDrawableCompatLeftAndRightFixedFirstLine(true)
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_xs, 0, 0, 0)
+            compoundDrawablePadding = ScreenUtils.dpToPx(context, 10.0)
+            setLineSpacing(ScreenUtils.dpToPx(context, 1.0).toFloat(), 1.0f)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_check_xs, 0, 0, 0)
+
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                topMargin = ScreenUtils.dpToPx(context, 12.0)
+            }
         }
     }
 
     fun setCouponButtonEnabled(enabled: Boolean) {
-        viewDataBinding.downloadCouponTextView.isEnabled = enabled
+        viewDataBinding.downloadCouponGroup.isEnabled = enabled
     }
 
     fun setCouponButtonVisible(visible: Boolean) {
-        viewDataBinding.downloadCouponTextView.visibility = if (visible) View.VISIBLE else View.GONE
+        viewDataBinding.downloadCouponGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setCouponButtonText(price: Int) {

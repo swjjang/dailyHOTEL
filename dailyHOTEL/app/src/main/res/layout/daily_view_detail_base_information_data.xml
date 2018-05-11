@@ -4,43 +4,49 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    >
 
-    <merge
+    <!--<merge-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/white"-->
+    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="15dp"
-        tools:parentTag="android.support.constraint.ConstraintLayout">
+        android:background="@color/white">
 
-        <!--<android.support.constraint.ConstraintLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/white"-->
-        <!--android:paddingBottom="10dp"-->
-        <!--android:paddingLeft="15dp"-->
-        <!--android:paddingRight="15dp"-->
-        <!--android:paddingTop="15dp">-->
+
+        <android.support.constraint.Guideline
+            android:id="@+id/leftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/rightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/categoryTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:freezesText="true"
-            android:text="특1급"
             android:textColor="@color/default_text_c929292"
             android:textSize="12dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/rewardDotImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingLeft="4dp"
             android:paddingRight="6dp"
             app:layout_constraintBottom_toBottomOf="@+id/categoryTextView"
             app:layout_constraintLeft_toRightOf="@+id/categoryTextView"
@@ -57,7 +63,6 @@
             android:text="@string/label_used_reward"
             android:textColor="@color/default_text_ce9a230"
             android:textSize="12dp"
-            android:visibility="visible"
             app:drawableCompatLeft="@drawable/vector_r_ic_xs_14"
             app:layout_constraintLeft_toRightOf="@+id/rewardDotImageView"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -66,20 +71,21 @@
             android:id="@+id/rewardTextGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:constraint_referenced_ids="rewardDotImageView,rewardTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/nameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
             android:ellipsize="end"
             android:freezesText="true"
             android:maxLines="2"
-            android:text="서울신라호텔 서울 신라호텔 업장명 최대 2줄로 보여줘"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="20dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="22dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/categoryTextView"
             dailyFont:style="Medium"/>
 
@@ -87,13 +93,15 @@
             android:id="@+id/discountPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
             android:freezesText="true"
-            android:text="350,000"
             android:textColor="@color/default_text_c323232"
-            android:textSize="17dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/dailyTrueAwardsLineView"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/nameTextView"
-            dailyFont:style="Medium"/>
+            dailyFont:style="Bold"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/discountPriceWonTextView"
@@ -104,60 +112,59 @@
             android:freezesText="true"
             android:text="@string/label_currency_more"
             android:textColor="@color/default_text_c323232"
-            android:textSize="12dp"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="@id/discountPriceTextView"
-            app:layout_constraintLeft_toRightOf="@id/discountPriceTextView"/>
+            app:layout_constraintLeft_toRightOf="@id/discountPriceTextView"
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/nightsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="3dp"
             android:freezesText="true"
             android:text="@string/label_stay_detail_slash_one_nights"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="10dp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/discountPriceWonTextView"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/discountPriceTextView"
             app:layout_constraintLeft_toRightOf="@id/discountPriceWonTextView"/>
 
         <View
             android:id="@+id/dailyTrueAwardsLineView"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/default_line_ce7e7e7"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nightsTextView"/>
+            android:background="@color/default_line_cf0f0f0"
+            app:layout_constraintBottom_toTopOf="@+id/awardsNameView"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/awardsNameView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
             android:text="@string/label_daily_true_awards"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c929292"
             android:textSize="14dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dailyTrueAwardsLineView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/awardsTitleTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="4dp"
             android:drawablePadding="2dp"
             android:gravity="center"
-            android:textColor="@color/default_text_cbe945b"
-            android:textSize="14dp"
+            android:textColor="@color/default_text_ccf9e5e"
+            android:textSize="12dp"
             app:drawableCompatLeft="@drawable/vector_detail_ic_trueawards_l"
             app:drawableCompatRight="@drawable/vector_detail_ic_trueawards_r"
-            app:layout_constraintBottom_toBottomOf="@+id/awardsNameView"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/awardsNameView"
-            app:layout_constraintTop_toTopOf="@+id/awardsNameView"
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyImageView
@@ -165,7 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/awardsNameView"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toTopOf="@+id/awardsNameView"
             app:srcCompat="@drawable/vector_ic_question"/>
 
@@ -173,8 +180,8 @@
             android:id="@+id/awardsGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="dailyTrueAwardsLineView, awardsNameView, awardsDetailView, awardsQuestionView"/>
-
-        <!--</android.support.constraint.ConstraintLayout>-->
-    </merge>
+            android:visibility="gone"
+            app:constraint_referenced_ids="dailyTrueAwardsLineView, awardsNameView, awardsTitleTextView, awardsQuestionView"/>
+    </android.support.constraint.ConstraintLayout>
+    <!--</merge>-->
 </layout>
