@@ -12,19 +12,32 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
 
     companion object {
         @JvmStatic
-        fun newInstance(context: Context, roomList: List<Room> = ArrayList<Room>(), activeReward: Boolean = false): Intent {
+        fun newInstance(context: Context, roomList: List<Room>? = ArrayList<Room>()
+                        , checkInDate: String?, checkOutDate: String?
+                        , stayIndex: Int?, category: String?
+                        , activeReward: Boolean = false): Intent {
             return Intent(context, StayRoomsActivity::class.java).apply {
 
                 val list = arrayListOf<RoomParcel>()
-                roomList.forEach { list.add(RoomParcel(it)) }
+                roomList?.forEach { list.add(RoomParcel(it)) }
 
                 putParcelableArrayListExtra(INTENT_EXTRA_ROOM_LIST, list)
+                putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate?.let { it } ?: "")
+                putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate?.let { it } ?: "")
+                putExtra(INTENT_EXTRA_STAY_INDEX, stayIndex?.let { it } ?: 0)
+                putExtra(INTENT_EXTRA_STAY_CATEGORY, category?.let { it } ?: "")
                 putExtra(INTENT_EXTRA_ACTIVE_REWARD, activeReward)
             }
         }
 
         const val INTENT_EXTRA_ROOM_LIST = "roomList"
         const val INTENT_EXTRA_ACTIVE_REWARD = "activeReward"
+        const val INTENT_EXTRA_CHECK_IN_DATE = "checkInDate"
+        const val INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate"
+        const val INTENT_EXTRA_STAY_INDEX = "stayIndex"
+        const val INTENT_EXTRA_STAY_CATEGORY = "category"
+
+        const val REQUEST_CODE_TRUE_VR = 10000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

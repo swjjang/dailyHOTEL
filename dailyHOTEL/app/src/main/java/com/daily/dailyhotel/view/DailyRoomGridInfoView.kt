@@ -6,6 +6,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.GridLayout
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +14,13 @@ import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import com.daily.base.util.ExLog
-import com.daily.dailyhotel.view.DailyRoomGridInfoView.ItemType.*
+import com.daily.base.util.ScreenUtils
+import com.daily.base.widget.DailyTextView
+import com.daily.dailyhotel.view.DailyRoomInfoGridView.ItemType.*
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewRoomGridInfoDataBinding
-import com.twoheart.dailyhotel.databinding.DailyViewRoomGridItemDataBinding
 
-class DailyRoomGridInfoView : LinearLayout {
+class DailyRoomInfoGridView : LinearLayout {
 
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -56,6 +58,10 @@ class DailyRoomGridInfoView : LinearLayout {
 
     fun setTitleText(text: String) {
         viewDataBinding.titleTextView.text = text
+    }
+
+    fun setTitleVisible(visible: Boolean) {
+        viewDataBinding.titleTextView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setColumnCount(count: Int) {
@@ -186,34 +192,31 @@ class DailyRoomGridInfoView : LinearLayout {
         when (type) {
             DOT -> {
                 iconResId = R.drawable.info_ic_text_dot_black
-                textColorResId = R.color.default_text_c323232
+                textColorResId = R.color.default_text_c4d4d4d
             }
 
             DOWN_CARET -> {
-                iconResId = R.drawable.info_ic_text_dot_grey
-                textColorResId = R.color.default_text_c929292
+                iconResId = R.drawable.vector_ic_check_xs
+                textColorResId = R.color.default_text_ccf9e5e
             }
 
             else -> {
                 iconResId = 0
-                textColorResId = R.color.default_text_c2284dc
+                textColorResId = R.color.default_text_c929292
             }
         }
 
-        val dataBinding: DailyViewRoomGridItemDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)
-                , R.layout.daily_view_room_grid_item_data, null, false)
+        return DailyTextView(context).apply {
+            if (iconResId != 0) {
+                setDrawableCompatLeftAndRightFixedFirstLine(true)
+                setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
+                compoundDrawablePadding = ScreenUtils.dpToPx(context, 6.0)
+            }
 
-        if (iconResId == 0) {
-            dataBinding.iconView.visibility = View.GONE
-        } else {
-            dataBinding.iconView.visibility = View.VISIBLE
-            dataBinding.iconView.setImageResource(iconResId)
-        }
+            setTextColor(context.resources.getColor(textColorResId))
+            this.text = text
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14F)
 
-        dataBinding.textView.setTextColor(context.resources.getColor(textColorResId))
-        dataBinding.textView.text = text
-
-        return dataBinding.root.apply {
             val params = GridLayout.LayoutParams().apply {
                 width = 0
                 height = ViewGroup.LayoutParams.WRAP_CONTENT
