@@ -7,34 +7,31 @@
     <TableRow
         android:id="@+id/tableRow1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="44dp">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/leftTextView"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:background="@color/dialog_inputmobile_line"
+            android:layout_width="146dp"
+            android:layout_height="match_parent"
+            android:background="@color/default_background"
             android:freezesText="true"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
             android:text="유아 (0~3세 이하)"
             android:textColor="@color/default_text_c929292"
-            android:textSize="14dp"
+            android:textSize="12dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="40dp"
-            android:background="@color/default_text_c323232"/>
-
         <com.daily.base.widget.DailyTextView
             android:id="@+id/rightTextView"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:background="@color/white"
             android:freezesText="true"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
             android:text="무료"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

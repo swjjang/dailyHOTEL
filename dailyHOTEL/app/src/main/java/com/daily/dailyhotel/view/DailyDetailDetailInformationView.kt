@@ -95,8 +95,10 @@ class DailyDetailDetailInformationView : LinearLayout {
     private fun getContentBoldView(content: String): DailyTextView? {
         return content.letNotEmpty {
             DailyTextView(context).apply {
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
-                setTextColor(context.resources.getColor(R.color.default_text_c323232))
+                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16.0f)
+                setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
+                setLineSpacing(1.0f, 1.0f)
+                setPadding(0, ScreenUtils.dpToPx(context, 20.0), 0, 0)
 
                 val spannableStringBuilder = SpannableStringBuilder()
 
@@ -115,10 +117,12 @@ class DailyDetailDetailInformationView : LinearLayout {
     private fun getContentBulletView(text: String): DailyTextView {
         return DailyTextView(context).apply {
             this.text = text
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
-            setTextColor(context.resources.getColor(R.color.default_text_c323232))
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f)
+            setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
+            setLineSpacing(1.0f, 1.0f)
             setDrawableCompatLeftAndRightFixedFirstLine(true)
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_ic_text_dot_black, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0)
+            setPadding(0, ScreenUtils.dpToPx(context, 14.0), 0, 0)
         }
     }
 
@@ -134,7 +138,6 @@ class DailyDetailDetailInformationView : LinearLayout {
 
                     getBreakfastItemView(viewDataBinding.breakfastTableLayout, item)
                 }
-
             }
 
             it.description.takeNotEmpty {
@@ -151,17 +154,17 @@ class DailyDetailDetailInformationView : LinearLayout {
         val leftText: String?
 
         when {
-            item.minAge < 0 && item.maxAge < 0 -> {
-                leftText = "(전연령)"
-            }
+            item.minAge < 0 && item.maxAge < 0 ->
+                leftText = item.title
 
-            item.maxAge < 0 -> {
+            item.minAge < 0 ->
+                leftText = item.title + String.format(Locale.KOREA, "(0 ~ %d세 이하)", item.maxAge)
+
+            item.maxAge < 0 ->
                 leftText = item.title + String.format(Locale.KOREA, "(%d세 이상)", item.minAge)
-            }
 
-            else -> {
+            else ->
                 leftText = item.title + String.format(Locale.KOREA, "(%d ~ %d세 이하)", item.minAge, item.maxAge)
-            }
         }
 
         viewDataBinding.leftTextView.text = leftText
@@ -170,7 +173,7 @@ class DailyDetailDetailInformationView : LinearLayout {
 
     private fun getLineView(): View {
         return View(context).apply {
-            setBackgroundColor(context.resources.getColor(R.color.default_text_c323232))
+            setBackgroundColor(context.resources.getColor(R.color.default_line_cf0f0f0))
         }
     }
 

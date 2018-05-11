@@ -1278,6 +1278,8 @@
     <string name="label_business_benefit">업장 혜택</string>
     <string name="label_select_room">객실 선택</string>
     <string name="label_total_price">총 가격</string>
+    <string name="label_breakfast_information">조식 정보</string>
+    <string name="label_breakfast_precautions">*조식 요금 현장 결제 필요</string>
     <string name="label_available_coupon">쿠폰 적용 가능</string>
     <string name="label_facilities_in_business">업장 내 편의시설</string>
     <string name="label_default_check_in_time_check_out_time">대표 체크인/체크아웃 시간</string>

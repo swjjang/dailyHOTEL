@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.util.takeNotEmpty
@@ -54,10 +55,12 @@ class DailyDetailRefundInformationView : LinearLayout {
     private fun getContentBulletView(text: String): DailyTextView {
         return DailyTextView(context).apply {
             this.text = text
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
-            setTextColor(context.resources.getColor(R.color.default_text_c323232))
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f)
+            setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
+            setLineSpacing(1.0f, 1.0f)
             setDrawableCompatLeftAndRightFixedFirstLine(true)
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_ic_text_dot_black, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0)
+            setPadding(0, ScreenUtils.dpToPx(context, 14.0), 0, 0)
         }
     }
 }
