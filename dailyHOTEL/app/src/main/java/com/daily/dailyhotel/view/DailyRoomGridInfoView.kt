@@ -6,6 +6,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.GridLayout
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import com.daily.base.util.ExLog
+import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.view.DailyRoomInfoGridView.ItemType.*
 import com.twoheart.dailyhotel.R
@@ -190,17 +192,17 @@ class DailyRoomInfoGridView : LinearLayout {
         when (type) {
             DOT -> {
                 iconResId = R.drawable.info_ic_text_dot_black
-                textColorResId = R.color.default_text_c323232
+                textColorResId = R.color.default_text_c4d4d4d
             }
 
             DOWN_CARET -> {
-                iconResId = R.drawable.info_ic_text_dot_grey
-                textColorResId = R.color.default_text_c929292
+                iconResId = R.drawable.vector_ic_check_xs
+                textColorResId = R.color.default_text_ccf9e5e
             }
 
             else -> {
                 iconResId = 0
-                textColorResId = R.color.default_text_c2284dc
+                textColorResId = R.color.default_text_c929292
             }
         }
 
@@ -208,10 +210,12 @@ class DailyRoomInfoGridView : LinearLayout {
             if (iconResId != 0) {
                 setDrawableCompatLeftAndRightFixedFirstLine(true)
                 setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
+                compoundDrawablePadding = ScreenUtils.dpToPx(context, 6.0)
             }
 
             setTextColor(context.resources.getColor(textColorResId))
             this.text = text
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14F)
 
             val params = GridLayout.LayoutParams().apply {
                 width = 0

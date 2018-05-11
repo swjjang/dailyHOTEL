@@ -1844,4 +1844,7 @@
     <!-- Stay Room -->
     <string name="label_stay_room_average_nights">(1박 기준)</string>
     <string name="label_stay_room_check_time_title">객실 체크인/체크아웃 시간</string>
+    <string name="label_stay_room_discount_info_title">할인 및 적립 안내</string>
+    <string name="label_stay_room_extra_charge_info_title">추가 요금 정보</string>
+    <string name="label_stay_room_extra_charge_info_description">*추가 요금 현장 결제 (1박당 부과)</string>
 </resources>

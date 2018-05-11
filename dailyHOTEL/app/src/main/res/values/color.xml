@@ -271,6 +271,10 @@
     <color name="default_text_cda2853">#da2853</color>
     <color name="default_text_ce9a230">#e9a230</color>
     <color name="default_text_cf6675e">#f6675e</color>
+    <color name="default_text_ceb2135">#eb2135</color>
+    <color name="default_text_c4d4d4d">#4d4d4d</color>
+    <color name="default_text_cfb234a">#fb234a</color>
+    <color name="default_text_ccf9e5e">#cf9e5e</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
@@ -311,6 +315,7 @@
     <color name="default_placeholder">#e6e6e7</color>
     <color name="default_background_cdb2353_alpha_92">#eadb2353</color>
     <color name="default_background_cfff9ef">#fff9ef</color>
+    <color name="default_background_cfdf1f1">#fdf1f1</color>
 
     <color name="default_popup_button_background_cb70038">#B70038</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
