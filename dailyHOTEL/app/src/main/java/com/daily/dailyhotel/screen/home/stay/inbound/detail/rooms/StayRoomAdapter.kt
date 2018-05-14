@@ -3,17 +3,26 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daily.base.util.DailyTextUtils
+import com.daily.base.util.ExLog
+import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
-import com.daily.dailyhotel.entity.DetailImageInformation
 import com.daily.dailyhotel.entity.Room
+import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
+import com.twoheart.dailyhotel.util.Util
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 
-class StayRoomAdapter(private val context: Context, private val list: MutableList<Room>) : RecyclerView.Adapter<StayRoomAdapter.RoomViewHolder>() {
+class StayRoomAdapter(private val context: Context, private val list: MutableList<Room>, private var nights: Int = 1) : RecyclerView.Adapter<StayRoomAdapter.RoomViewHolder>() {
 
     companion object {
         const val MENU_WIDTH_RATIO = 0.865f
@@ -38,6 +47,9 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         this.list += list
     }
 
+    fun setNights(nights: Int) {
+        this.nights = nights
+    }
 
     override fun getItemCount(): Int {
         return list.size
@@ -56,6 +68,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val dataBinding: ListRowStayRoomDataBinding = holder.dataBinding
 
         val room = getItem(position) ?: return
+
+        holder.dataBinding.root.setTag(R.id.blurView, holder.dataBinding.blurView)
 
         val margin = getLayoutMargin()
         (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).apply {
@@ -81,14 +95,44 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.defaultImageLayout.visibility = View.GONE
             dataBinding.defaultImageLayout.setOnClickListener(null)
         } else {
-            val imageInfo: DetailImageInformation = room.imageInformation;
-
-
             dataBinding.defaultImageLayout.visibility = View.VISIBLE
             dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_placeholder)
+            Util.requestImageResize(context, dataBinding.simpleDraweeView, room.imageInformation.imageMap.bigUrl)
 
+            dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
+            dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
+        }
 
-//            Util.requestImageResize(context, dataBinding.simpleDraweeView, room.image.imageMap)
+        dataBinding.roomNameTextView.text = room.name
+
+        if (room.amountInformation == null) {
+            dataBinding.discountPercentTextView.visibility = View.GONE
+            dataBinding.priceTextView.visibility = View.GONE
+            dataBinding.discountPriceTextView.setText(R.string.label_soldout)
+
+            ExLog.e("amountInformation is null")
+        } else {
+            dataBinding.discountPercentTextView.visibility = View.VISIBLE
+            dataBinding.priceTextView.visibility = View.VISIBLE
+
+            room.amountInformation.discountRate
+
+            val discountRateSpan = SpannableString("${room.amountInformation.discountRate}%")
+            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length -1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length -1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            dataBinding.discountPercentTextView.text = discountRateSpan
+
+            val nightsString = if (nights > 1) "/1박" else ""
+            val discountPriceString = DailyTextUtils.getPriceFormat(context, room.amountInformation.discountAverage, false)
+
+            val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
+            discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountPriceString.length, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            dataBinding.discountPriceTextView.text = discountPriceSpan
+
+            val priceSpan = SpannableString(DailyTextUtils.getPriceFormat(context, room.amountInformation.priceAverage, false))
+            priceSpan.setSpan(UnderlineSpan(), 0, priceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            dataBinding.priceTextView.text = priceSpan
         }
 
     }
