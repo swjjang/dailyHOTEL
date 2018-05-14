@@ -506,6 +506,14 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         })
     }
 
+    override fun setRoomActionButtonVisible(visible: Boolean) {
+        viewDataBinding.roomInformationView.setActionButtonVisible(visible)
+    }
+
+    override fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int) {
+        viewDataBinding.roomInformationView.setActionButton(text, leftResourceId, rightResourceId)
+    }
+
     override fun setDailyCommentVisible(visible: Boolean) {
         viewDataBinding.dailyCommentView.visibility = if (visible) View.VISIBLE else View.GONE
     }
@@ -785,6 +793,10 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun hideMoreRooms() {
         scrollRoomInformation()
         viewDataBinding.roomInformationView.hideMoreRoom()
+    }
+
+    override fun isShowMoreRooms(): Boolean {
+        return viewDataBinding.roomInformationView.isShowMoreRoom()
     }
 
     /**

@@ -224,7 +224,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/actionButtonView"
             app:layout_constraintLeft_toLeftOf="@+id/actionButtonView"
             app:layout_constraintRight_toRightOf="@+id/actionButtonView"
-            app:layout_constraintTop_toBottomOf="@+id/actionButtonView"
+            app:layout_constraintTop_toTopOf="@+id/actionButtonView"
             dailyFont:style="Medium"/>
 
         <android.support.constraint.Group

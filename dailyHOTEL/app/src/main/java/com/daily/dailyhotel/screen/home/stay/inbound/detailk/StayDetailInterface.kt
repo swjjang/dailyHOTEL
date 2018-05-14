@@ -63,6 +63,10 @@ interface StayDetailInterface {
 
         fun setPriceAverageType(isAverageType: Boolean)
 
+        fun setRoomActionButtonVisible(visible: Boolean)
+
+        fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int)
+
         fun setRoomList(roomList: List<Room>?)
 
         fun setDailyCommentVisible(visible: Boolean)
@@ -128,6 +132,8 @@ interface StayDetailInterface {
         fun showMoreRooms()
 
         fun hideMoreRooms()
+
+        fun isShowMoreRooms(): Boolean
     }
 
     interface OnEventListener : OnBaseEventListener {

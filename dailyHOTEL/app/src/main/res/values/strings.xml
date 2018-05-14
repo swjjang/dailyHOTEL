@@ -1292,6 +1292,7 @@
     <string name="label_stay_detail_person_information">%1$d인 기준돋최대 %2$d인 (%3$s)</string>
     <string name="label_stay_detail_room_total_count">객실수: %1$d개</string>
     <string name="label_detail_daily_comment">데일리’s comment</string>
+    <string name="label_stay_detail_reset_room_filter">필터 초기화하여 모든 객실 보기</string>
 
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>

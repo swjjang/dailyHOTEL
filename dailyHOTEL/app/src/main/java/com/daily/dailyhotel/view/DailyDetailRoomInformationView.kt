@@ -214,4 +214,8 @@ class DailyDetailRoomInformationView : ConstraintLayout {
             requestLayout()
         }
     }
+
+    fun isShowMoreRoom(): Boolean {
+        return viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE
+    }
 }
