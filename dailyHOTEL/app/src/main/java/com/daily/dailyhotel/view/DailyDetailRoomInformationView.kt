@@ -123,11 +123,11 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                     addView(DailyDetailRoomView(context).apply {
                         setPriceAverageType(isPriceAverageType)
                         setName(room.name)
-                        setImageUlr(room.image?.imageMap?.smallUrl)
-                        setBedTypeText(room.bedTypeList)
-                        setPersons(room.persons)
+                        setImageUlr(room.imageInformation?.imageMap?.smallUrl)
+                        setBedTypeText(room.bedInformation.bedTypeList)
+                        setPersons(room.personsInformation)
                         setBenefit(room.benefit)
-                        setPrice(room.discountAverage, room.discountTotal)
+                        setPrice(room.amountInformation.discountAverage, room.amountInformation.discountTotal)
                         setCouponVisible(room.hasUsableCoupon)
                     }, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 }

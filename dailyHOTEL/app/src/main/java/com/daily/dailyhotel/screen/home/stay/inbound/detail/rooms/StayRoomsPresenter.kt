@@ -9,6 +9,8 @@ import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
+import io.reactivex.Observable
+import java.util.concurrent.Callable
 
 class StayRoomsPresenter(activity: StayRoomsActivity)//
     : BaseExceptionPresenter<StayRoomsActivity, StayRoomsInterface.ViewInterface>(activity), StayRoomsInterface.OnEventListener {
@@ -97,6 +99,22 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
         isRefresh = false
         screenLock(showProgress)
+
+        val observable: Observable<Boolean> = Observable.defer(Callable {
+
+            val checkInDate = bookDateTime.getCheckInDateTime("M.d(EEE)")
+            val checkOutDate = bookDateTime.getCheckOutDateTime("M.d(EEE)")
+            if (isTextEmpty(checkInDate, checkOutDate)) {
+                Observable.just(false)
+            }
+
+            viewInterface.setToolbarTitle("$checkInDate - $checkOutDate ${bookDateTime.nights}박")
+
+
+
+
+            Observable.just(true)
+        })
     }
 
     override fun onBackClick() {

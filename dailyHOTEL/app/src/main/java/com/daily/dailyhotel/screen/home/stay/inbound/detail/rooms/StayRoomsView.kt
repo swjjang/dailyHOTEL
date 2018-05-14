@@ -14,6 +14,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     : BaseDialogView<StayRoomsInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
         , StayRoomsInterface.ViewInterface, View.OnClickListener {
 
+    private lateinit var listAdapter: StayRoomAdapter
 
     override fun setContentView(viewDataBinding: ActivityStayRoomsDataBinding) {
         viewDataBinding.run {
@@ -32,9 +33,18 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     super.onScrollStateChanged(recyclerView, newState)
 
                     val view = pagerSnapHelper.findSnapView(viewDataBinding.recyclerView.layoutManager)
-                    eventListener.onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true)
+                    val position = viewDataBinding.recyclerView.getChildAdapterPosition(view)
+
+                    setIndicatorText(position)
+                    eventListener.onScrolled(position, true)
                 }
             })
+
+            if (!::listAdapter.isInitialized) {
+                listAdapter = StayRoomAdapter(context, mutableListOf())
+            }
+
+            recyclerView.adapter = listAdapter
 
             guideLayout.setOnClickListener(this@StayRoomsView)
             guideLayout.visibility = View.GONE
@@ -42,6 +52,14 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     override fun setToolbarTitle(title: String?) {
+        viewDataBinding.titleTextView.text = title
+    }
+
+    override fun setIndicatorText(position: Int) {
+        val count = if (listAdapter.itemCount == 0) 1 else listAdapter.itemCount
+        var pos = if (position < 0) 1 else if (position > count - 1) count - 1 else position + 1
+
+        viewDataBinding.indicatorTextView.text = "$pos / ${if (count == 0) 1 else count}"
     }
 
     override fun onClick(v: View?) {
@@ -53,7 +71,30 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             return
         }
 
+        listAdapter.setData(roomList)
 
+//        listAdapter.setOnEventListener(object : StayRoomAdapter.OnEventListener {
+//            override fun onMoreImageClick(index: Int) {
+//                eventListener.onMoreImageClick(index)
+//            }
+//
+//            override fun onOderCountPlusClick(position: Int) {
+//                eventListener.onMenuOderCountPlusClick(position)
+//            }
+//
+//            override fun onOderCountMinusClick(position: Int) {
+//                eventListener.onMenuOderCountMinusClick(position)
+//            }
+//
+//            override fun onBackClick() {
+//
+//            }
+//        })
+
+        viewDataBinding.recyclerView.post {
+            (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)//
+                    .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
+        }
     }
 
     override fun setGuideVisible(visible: Boolean) {

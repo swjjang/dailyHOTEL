@@ -33,7 +33,7 @@
             app:srcCompat="@drawable/navibar_ic_x"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/menuIndicatorTextView"
+            android:id="@+id/indicatorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
