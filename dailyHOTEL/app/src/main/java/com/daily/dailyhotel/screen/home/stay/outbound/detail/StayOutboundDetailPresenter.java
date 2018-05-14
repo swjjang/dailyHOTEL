@@ -996,7 +996,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onMapClick()
     {
-        if (Util.isInstallGooglePlayService(getActivity()) == true)
+        if (Util.isGooglePlayServicesAvailable(getActivity()))
         {
             if (getActivity().isFinishing() == true || lock() == true)
             {

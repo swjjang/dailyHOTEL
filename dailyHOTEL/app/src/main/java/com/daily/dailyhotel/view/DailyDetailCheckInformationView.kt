@@ -70,7 +70,7 @@ class DailyDetailCheckInformationView : LinearLayout {
     private fun getWaitForBookingInformationView(): View {
         val viewDataBinding = DataBindingUtil.inflate<LayoutStayDetailWaitforbookingDataBinding>(LayoutInflater.from(context), R.layout.layout_stay_detail_waitforbooking_data, this, false)
 
-        viewDataBinding.textView.text = Html.fromHtml(context.getString(R.string.message_stay_waiting_reservation_guide))
+        viewDataBinding.contentTextView.text = Html.fromHtml(context.getString(R.string.message_stay_waiting_reservation_guide))
 
         return viewDataBinding.root
     }

@@ -1060,7 +1060,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void onMapClick()
     {
-        if (Util.isInstallGooglePlayService(getActivity()) == true)
+        if (Util.isGooglePlayServicesAvailable(getActivity()) == true)
         {
             if (mStayDetail == null || lock() == true)
             {

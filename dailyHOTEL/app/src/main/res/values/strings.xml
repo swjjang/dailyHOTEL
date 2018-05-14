@@ -397,7 +397,7 @@
     <string name="dialog_msg_stay_stop_onsale">선택하신 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 스테이를 확인해주세요.</string>
     <string name="dialog_msg_gourmet_stop_onsale">선택하신 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
     <string name="dialog_title_googleplayservice">Google Play Services</string>
-    <string name="dialog_msg_install_update_googleplayservice">맵을 사용하려면 Google Play Services를 설치하거나 업데이트해야 합니다.</string>
+    <string name="dialog_msg_install_update_googleplayservice">맵을 사용하려면 Google Play Services를 설치하거나(사용가능) 업데이트해야 합니다.</string>
     <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족해 앱이 종료됩니다.\n메모리 정리 후 다시 실행해주세요.</string>
     <string name="dialog_msg_facebook_update">신속한 예약 진행을 위해 회원정보를 추가로 입력해주세요.</string>
     <string name="dialog_msg_invalid_email">이메일주소가 잘못 입력되어있습니다.\n수정 후 계속해서 예약을 진행해주세요.</string>

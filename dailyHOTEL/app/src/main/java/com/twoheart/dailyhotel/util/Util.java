@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -18,7 +17,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -50,7 +48,6 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.skt.Tmap.TMapTapi;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -240,37 +237,7 @@ public class Util implements Constants
 
     public static boolean isGooglePlayServicesAvailable(Context context)
     {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int result = googleApiAvailability.isGooglePlayServicesAvailable(context);
-
-        return result == ConnectionResult.SUCCESS;
-    }
-
-    public static boolean isInstallGooglePlayService(Context context)
-    {
-        if (Util.isGooglePlayServicesAvailable(context) == false)
-        {
-            return false;
-        }
-
-        boolean isInstalled;
-
-        try
-        {
-            PackageManager packageManager = context.getPackageManager();
-
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
-            PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
-
-            int version = context.getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version);
-
-            isInstalled = packageInfo.versionCode >= version;
-        } catch (PackageManager.NameNotFoundException e)
-        {
-            isInstalled = false;
-        }
-
-        return isInstalled;
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
     }
 
     public static boolean checkGooglePlayServiceStatus(final BaseActivity activity)
@@ -350,7 +317,6 @@ public class Util implements Constants
 
         switch (status)
         {
-
             case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
             {
                 // 설치된 Google Play 서비스 버전이 오래되었습니다.
@@ -424,47 +390,47 @@ public class Util implements Constants
         void onResult(String registrationId);
     }
 
-    public static void requestGoogleCloudMessaging(final Context context, final OnGoogleCloudMessagingListener listener)
-    {
-        if (Util.isGooglePlayServicesAvailable(context) == false)
-        {
-            if (listener != null)
-            {
-                listener.onResult(null);
-            }
-            return;
-        }
-
-        new AsyncTask<Void, Void, String>()
-        {
-            @Override
-            protected String doInBackground(Void... params)
-            {
-                String registrationId = null;
-
-                try
-                {
-                    GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(context);
-
-                    registrationId = instance.register(GCM_PROJECT_NUMBER);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                }
-
-                return registrationId;
-            }
-
-            @Override
-            protected void onPostExecute(String registrationId)
-            {
-                if (listener != null)
-                {
-                    listener.onResult(registrationId);
-                }
-            }
-        }.execute();
-    }
+    //    public static void requestGoogleCloudMessaging(final Context context, final OnGoogleCloudMessagingListener listener)
+    //    {
+    //        if (Util.isGooglePlayServicesAvailable(context) == false)
+    //        {
+    //            if (listener != null)
+    //            {
+    //                listener.onResult(null);
+    //            }
+    //            return;
+    //        }
+    //
+    //        new AsyncTask<Void, Void, String>()
+    //        {
+    //            @Override
+    //            protected String doInBackground(Void... params)
+    //            {
+    //                String registrationId = null;
+    //
+    //                try
+    //                {
+    //                    GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(context);
+    //
+    //                    registrationId = instance.register(GCM_PROJECT_NUMBER);
+    //                } catch (Exception e)
+    //                {
+    //                    ExLog.e(e.toString());
+    //                }
+    //
+    //                return registrationId;
+    //            }
+    //
+    //            @Override
+    //            protected void onPostExecute(String registrationId)
+    //            {
+    //                if (listener != null)
+    //                {
+    //                    listener.onResult(registrationId);
+    //                }
+    //            }
+    //        }.execute();
+    //    }
 
     public static String getCountryNameNCode(Context context)
     {

@@ -1714,7 +1714,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             LayoutStayDetailWaitforbookingDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
                 , R.layout.layout_stay_detail_waitforbooking_data, getViewDataBinding().descriptionsLayout, true);
 
-            viewDataBinding.textView.setText(Html.fromHtml(getString(R.string.message_stay_waiting_reservation_guide)));
+            viewDataBinding.contentTextView.setText(Html.fromHtml(getString(R.string.message_stay_waiting_reservation_guide)));
         }
     }
 

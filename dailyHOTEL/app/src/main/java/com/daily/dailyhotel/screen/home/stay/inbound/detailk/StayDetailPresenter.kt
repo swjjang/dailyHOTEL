@@ -633,7 +633,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (lock()) return
 
         stayDetail?.let {
-            if (Util.isInstallGooglePlayService(activity)) {
+            if (Util.isGooglePlayServicesAvailable(activity)) {
                 startActivityForResult(ZoomMapActivity.newInstance(activity, ZoomMapActivity.SourceType.HOTEL,
                         it.baseInformation?.name, it.addressInformation?.address,
                         it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude

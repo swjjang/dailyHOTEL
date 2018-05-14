@@ -2,6 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.FacilitiesPictogram;
 import com.daily.dailyhotel.entity.ImageMap;
@@ -11,6 +12,8 @@ import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.TrueAwards;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -290,8 +293,23 @@ public class StayDetailData
 
             for (String facilities : facilities)
             {
-                facilitiesList.add(FacilitiesPictogram.valueOf(facilities.toUpperCase()));
+                try
+                {
+                    facilitiesList.add(FacilitiesPictogram.valueOf(facilities.toUpperCase()));
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
             }
+
+            Collections.sort(facilitiesList, new Comparator<FacilitiesPictogram>()
+            {
+                @Override
+                public int compare(FacilitiesPictogram o1, FacilitiesPictogram o2)
+                {
+                    return o1.ordinal() - o2.ordinal();
+                }
+            });
 
             stayDetail.setFacilityList(facilitiesList);
         }

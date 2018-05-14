@@ -147,14 +147,7 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
         layoutParams.height = (int) height;
 
         viewDataBinding.mapImageView.setLayoutParams(layoutParams);
-
-        if (Util.isInstallGooglePlayService(getContext()) == false)
-        {
-            viewDataBinding.googleMapLayout.setVisibility(View.GONE);
-        } else
-        {
-            viewDataBinding.googleMapLayout.setVisibility(View.VISIBLE);
-        }
+        viewDataBinding.googleMapLayout.setVisibility(View.VISIBLE);
 
         RelativeLayout.LayoutParams placeInformationLayoutParams = (RelativeLayout.LayoutParams) viewDataBinding.placeInformationLayout.getLayoutParams();
         placeInformationLayoutParams.topMargin = (int) (PLACE_INFORMATION_LAYOUT_RATIO * height);
@@ -751,17 +744,8 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
         double width = ScreenUtils.getScreenWidth(context);
         double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(context));
 
-        if (Util.isInstallGooglePlayService(context) == false)
-        {
-            getViewDataBinding().googleMapLayout.setVisibility(View.GONE);
-
-            setImageMapLayout(context, stayBookingDetail.latitude, stayBookingDetail.longitude, (int) width, (int) height);
-        } else
-        {
-            getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
-
-            setGoogleMapLayout(context, stayBookingDetail, (int) width, (int) height);
-        }
+        getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
+        setGoogleMapLayout(context, stayBookingDetail, (int) width, (int) height);
 
         getViewDataBinding().viewDetailView.setOnClickListener(this);
         getViewDataBinding().viewMapView.setOnClickListener(this);

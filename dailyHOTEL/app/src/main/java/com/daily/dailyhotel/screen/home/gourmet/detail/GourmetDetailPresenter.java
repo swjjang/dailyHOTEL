@@ -1102,7 +1102,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onMapClick()
     {
-        if (Util.isInstallGooglePlayService(getActivity()) == true)
+        if (Util.isGooglePlayServicesAvailable(getActivity()))
         {
             if (mGourmetDetail == null || lock() == true)
             {

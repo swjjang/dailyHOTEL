@@ -36,26 +36,6 @@ class StayDetailk : Configurations() {
         return StayDetail()
     }
 
-    enum class Pictogram constructor(private val mNameResId: Int, val imageResId: Int) {
-        PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),
-        NO_PARKING(R.string.label_unabled_parking, R.drawable.f_ic_facilities_05_no_parking),
-        POOL(R.string.label_pool, R.drawable.f_ic_facilities_06),
-        FITNESS(R.string.label_fitness, R.drawable.f_ic_facilities_07),
-        SAUNA(R.string.label_sauna, R.drawable.f_ic_facilities_16),
-        BUSINESS_CENTER(R.string.label_business_center, R.drawable.f_ic_facilities_15),
-        KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.f_ic_facilities_17),
-        SHARED_BBQ(R.string.label_allowed_barbecue, R.drawable.f_ic_facilities_09),
-        PET(R.string.label_allowed_pet, R.drawable.f_ic_facilities_08),
-        NONE(0, 0);
-
-        fun getName(context: Context): String? {
-            return if (mNameResId == 0) {
-                null
-            } else context.getString(mNameResId)
-
-        }
-    }
-
     class VRInformation {
         var name: String? = null
         var type: String? = null

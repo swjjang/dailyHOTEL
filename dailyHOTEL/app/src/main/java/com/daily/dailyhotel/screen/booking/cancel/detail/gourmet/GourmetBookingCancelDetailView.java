@@ -157,14 +157,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         layoutParams.height = (int) height;
 
         viewDataBinding.mapImageView.setLayoutParams(layoutParams);
-
-        if (Util.isInstallGooglePlayService(getContext()) == false)
-        {
-            viewDataBinding.googleMapLayout.setVisibility(View.GONE);
-        } else
-        {
-            viewDataBinding.googleMapLayout.setVisibility(View.VISIBLE);
-        }
+        viewDataBinding.googleMapLayout.setVisibility(View.VISIBLE);
 
         RelativeLayout.LayoutParams placeInformationLayoutParams = (RelativeLayout.LayoutParams) viewDataBinding.placeInformationLayout.getLayoutParams();
         placeInformationLayoutParams.topMargin = (int) (PLACE_INFORMATION_LAYOUT_RATIO * height);
@@ -802,17 +795,8 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         double width = ScreenUtils.getScreenWidth(context);
         double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(context));
 
-        if (Util.isInstallGooglePlayService(context) == false)
-        {
-            getViewDataBinding().googleMapLayout.setVisibility(View.GONE);
-
-            setImageMapLayout(context, restaurantInfo.latitude, restaurantInfo.longitude, (int) width, (int) height);
-        } else
-        {
-            getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
-
-            setGoogleMapLayout(context, gourmetBookingDetail, (int) width, (int) height);
-        }
+        getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
+        setGoogleMapLayout(context, gourmetBookingDetail, (int) width, (int) height);
 
         getViewDataBinding().viewDetailView.setOnClickListener(this);
         getViewDataBinding().viewMapView.setOnClickListener(this);
