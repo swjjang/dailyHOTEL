@@ -3,8 +3,6 @@ package com.daily.dailyhotel.parcel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.daily.dailyhotel.entity.DetailImageInformation;
-import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.Room;
 import com.daily.dailyhotel.entity.StayDetailk;
 
@@ -40,280 +38,60 @@ public class RoomParcel implements Parcelable
     {
         dest.writeInt(room.index);
         dest.writeString(room.name);
-        dest.writeInt(room.discountAverage);
-        dest.writeInt(room.discountTotal);
-        dest.writeInt(room.discountRate);
-        dest.writeInt(room.priceAverage);
-        dest.writeInt(room.bedCount);
+        dest.writeInt(room.imageCount);
+
+        DetailImageInformationParcel detailImageInformationParcel = room.imageInformation == null ? null : new DetailImageInformationParcel(room.imageInformation);
+        dest.writeParcelable(detailImageInformationParcel, flags);
+
+        AmountInformationParcel amountInformationParcel = room.amountInformation == null ? null : new AmountInformationParcel(room.amountInformation);
+        dest.writeParcelable(amountInformationParcel, flags);
+
+        PersonsInformationParcel personsInformationParcel = room.personsInformation == null ? null : new PersonsInformationParcel(room.personsInformation);
+        dest.writeParcelable(personsInformationParcel, flags);
+
         dest.writeString(room.benefit);
-        dest.writeString(room.checkInTime);
-        dest.writeString(room.checkOutTime);
-        dest.writeString(room.type);
-        dest.writeStringList(room.amenities);
-        dest.writeStringList(room.descriptions);
-        dest.writeStringList(room.needToKnows);
-        dest.writeFloat(room.squareMeter);
+
+        BedInformationParcel bedInformationParcel = room.bedInformation == null ? null : new BedInformationParcel(room.bedInformation);
+        dest.writeParcelable(bedInformationParcel, flags);
+
         dest.writeInt(room.hasUsableCoupon ? 1 : 0);
         dest.writeInt(room.provideRewardSticker ? 1 : 0);
 
-        boolean hasBeTypeList = room.bedTypeList != null && room.bedTypeList.size() > 0;
-        dest.writeInt(hasBeTypeList ? 1 : 0);
-        if (hasBeTypeList)
-        {
-            dest.writeInt(room.bedTypeList.size());
+        dest.writeStringList(room.amenityList);
 
-            for (Room.BedType bedType : room.bedTypeList)
+        CheckTimeInformationParcel checkTimeInformationParcel = room.checkTimeInformation == null ? null : new CheckTimeInformationParcel(room.checkTimeInformation);
+        dest.writeParcelable(checkTimeInformationParcel, flags);
+
+        dest.writeStringList(room.descriptionList);
+        dest.writeFloat(room.squareMeter);
+        dest.writeStringList(room.needToKnowList);
+
+        ChargeInformationParcel chargeInformationParcel = room.roomChargeInformation == null ? null : new ChargeInformationParcel(room.roomChargeInformation);
+        dest.writeParcelable(chargeInformationParcel, flags);
+
+        AttributeInformationParcel attributeInformationParcel = room.attributeInformation == null ? null : new AttributeInformationParcel(room.attributeInformation);
+        dest.writeParcelable(attributeInformationParcel, flags);
+
+        List<VrInformationParcel> list = new ArrayList<>();
+
+        if (room.vrInformationList != null)
+        {
+            for (StayDetailk.VRInformation info : room.vrInformationList)
             {
-                dest.writeString(bedType.bedType);
-                dest.writeInt(bedType.count);
+                list.add(new VrInformationParcel(info));
             }
         }
 
-        boolean hasAttribute = room.attribute != null;
-        dest.writeInt(hasAttribute ? 1 : 0);
-        if (hasAttribute)
-        {
-            dest.writeString(room.attribute.roomStructure);
-            dest.writeInt(room.attribute.isEntireHouse ? 1 : 0);
-            dest.writeInt(room.attribute.isDuplex ? 1 : 0);
-        }
+        dest.writeList(list);
 
-        boolean hasImage = room.image != null;
-        dest.writeInt(hasImage ? 1 : 0);
-        if (hasImage)
-        {
-            dest.writeString(room.image.caption);
-
-            ImageMap imageMap = room.image.getImageMap();
-            if (imageMap != null)
-            {
-                dest.writeString(imageMap.smallUrl);
-                dest.writeString(imageMap.mediumUrl);
-                dest.writeString(imageMap.bigUrl);
-            } else
-            {
-                dest.writeString(null);
-                dest.writeString(null);
-                dest.writeString(null);
-            }
-        }
-
-        boolean hasPersons = room.persons != null;
-        dest.writeInt(hasPersons ? 1 : 0);
-        if (hasPersons)
-        {
-            dest.writeInt(room.persons.fixed);
-            dest.writeInt(room.persons.extra);
-            dest.writeInt(room.persons.extraCharge ? 1 : 0);
-            dest.writeInt(room.persons.breakfast);
-        }
-
-        boolean hasRoomCharge = room.charge != null;
-        dest.writeInt(hasRoomCharge ? 1 : 0);
-        if (hasRoomCharge)
-        {
-            boolean hasRoomChargeConsecutive = room.charge.consecutive != null;
-            dest.writeInt(hasRoomChargeConsecutive ? 1 : 0);
-            if (hasRoomChargeConsecutive)
-            {
-                dest.writeInt(room.charge.consecutive.charge);
-                dest.writeInt(room.charge.consecutive.enable ? 1 : 0);
-            }
-
-            boolean hasRoomChargeExtra = room.charge.extra != null;
-            dest.writeInt(hasRoomChargeExtra ? 1 : 0);
-            if (hasRoomChargeExtra)
-            {
-                dest.writeString(room.charge.extra.descriptions);
-                dest.writeInt(room.charge.extra.extraBed);
-                dest.writeInt(room.charge.extra.extraBedEnable ? 1 : 0);
-                dest.writeInt(room.charge.extra.extraBedding);
-                dest.writeInt(room.charge.extra.extraBeddingEnable);
-            }
-
-            boolean hasRoomChargePersons = room.charge.persons != null;
-            dest.writeInt(hasRoomChargePersons ? 1 : 0);
-            if (hasRoomChargePersons)
-            {
-                dest.writeInt(room.charge.persons.fixed);
-                dest.writeInt(room.charge.persons.extra);
-                dest.writeInt(room.charge.persons.extraCharge ? 1 : 0);
-                dest.writeInt(room.charge.persons.breakfast);
-            }
-        }
-
-        boolean hasVRInformation = room.vrInformationList != null && room.vrInformationList.size() > 0;
-        dest.writeInt(hasVRInformation ? 1 : 0);
-        if (hasVRInformation)
-        {
-            dest.writeInt(room.vrInformationList.size());
-
-            for (StayDetailk.VRInformation vrInformation : room.vrInformationList)
-            {
-                dest.writeString(vrInformation.getName());
-                dest.writeString(vrInformation.getType());
-                dest.writeInt(vrInformation.getTypeIndex());
-                dest.writeString(vrInformation.getUrl());
-            }
-        }
-
-        boolean hasRefundInformation = room.refundInformation != null;
-        dest.writeInt(hasRefundInformation ? 1 : 0);
-        if (hasRefundInformation)
-        {
-            dest.writeString(room.refundInformation.getTitle());
-            dest.writeString(room.refundInformation.getType());
-            dest.writeStringList(room.refundInformation.getContentList());
-            dest.writeString(room.refundInformation.getWarningMessage());
-        }
+        RefundInformationParcel refundInformationParcel = room.refundInformation == null ? null : new RefundInformationParcel(room.refundInformation);
+        dest.writeParcelable(refundInformationParcel, flags);
     }
 
     private void readFromParcel(Parcel in)
     {
         room = new Room();
 
-        room.index = in.readInt();
-        room.name = in.readString();
-        room.discountAverage = in.readInt();
-        room.discountTotal = in.readInt();
-        room.discountRate = in.readInt();
-        room.priceAverage = in.readInt();
-        room.bedCount = in.readInt();
-        room.benefit = in.readString();
-        room.checkInTime = in.readString();
-        room.checkOutTime = in.readString();
-        room.type = in.readString();
-        room.amenities = in.createStringArrayList();
-        room.descriptions = in.createStringArrayList();
-        room.needToKnows = in.createStringArrayList();
-        room.squareMeter = in.readFloat();
-        room.hasUsableCoupon = in.readInt() == 1;
-        room.provideRewardSticker = in.readInt() == 1;
-
-        boolean hasBeTypeList = in.readInt() == 1;
-        if (hasBeTypeList)
-        {
-            int bedTypeListSize = in.readInt();
-            List<Room.BedType> bedTypeList = new ArrayList<>();
-
-            for (int i = 0; i < bedTypeListSize; i++)
-            {
-                Room.BedType bedType = new Room.BedType();
-                bedType.bedType = in.readString();
-                bedType.count = in.readInt();
-
-                bedTypeList.add(bedType);
-            }
-        }
-
-        boolean hasAttribute = in.readInt() == 1;
-        if (hasAttribute)
-        {
-            Room.Attribute attribute = new Room.Attribute();
-            attribute.roomStructure = in.readString();
-            attribute.isEntireHouse = in.readInt() == 1;
-            attribute.isDuplex = in.readInt() == 1;
-        }
-
-        boolean hasImage = in.readInt() == 1;
-        if (hasImage)
-        {
-            DetailImageInformation detailImageInformation = new DetailImageInformation();
-            detailImageInformation.caption = in.readString();
-
-            ImageMap imageMap = new ImageMap();
-            imageMap.smallUrl = in.readString();
-            imageMap.mediumUrl = in.readString();
-            imageMap.bigUrl = in.readString();
-
-            room.image = detailImageInformation;
-        }
-
-        boolean hasPersons = in.readInt() == 1;
-        if (hasPersons)
-        {
-            Room.Persons persons = new Room.Persons();
-            persons.fixed = in.readInt();
-            persons.extra = in.readInt();
-            persons.extraCharge = in.readInt() == 1;
-            persons.breakfast = in.readInt();
-
-            room.persons = persons;
-        }
-
-        boolean hasRoomCharge = in.readInt() == 1;
-        if (hasRoomCharge)
-        {
-            Room.Charge charge = new Room.Charge();
-
-            boolean hasRoomChargeConsecutive = in.readInt() == 1;
-            if (hasRoomChargeConsecutive)
-            {
-                Room.Charge.Consecutive consecutive = new Room.Charge.Consecutive();
-                consecutive.charge = in.readInt();
-                consecutive.enable = in.readInt() == 1;
-
-                charge.consecutive = consecutive;
-            }
-
-            boolean hasRoomChargeExtra = in.readInt() == 1;
-            if (hasRoomChargeExtra)
-            {
-                Room.Charge.Extra extra = new Room.Charge.Extra();
-                extra.descriptions = in.readString();
-                extra.extraBed = in.readInt();
-                extra.extraBedEnable = in.readInt() == 1;
-                extra.extraBedding = in.readInt();
-                extra.extraBeddingEnable = in.readInt();
-
-                charge.extra = extra;
-
-            }
-
-            boolean hasRoomChargePersons = in.readInt() == 1;
-            if (hasRoomChargePersons)
-            {
-                Room.Persons persons = new Room.Persons();
-                persons.fixed = in.readInt();
-                persons.extra = in.readInt();
-                persons.extraCharge = in.readInt() == 1;
-                persons.breakfast = in.readInt();
-
-                charge.persons = persons;
-            }
-
-            room.charge = charge;
-        }
-
-        boolean hasVRInformation = in.readInt() == 1;
-        if (hasVRInformation)
-        {
-            int vrListSize = in.readInt();
-            List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
-
-            for (int i = 0; i < vrListSize; i++)
-            {
-                StayDetailk.VRInformation vrInformation = new StayDetailk.VRInformation();
-                vrInformation.setName(in.readString());
-                vrInformation.setType(in.readString());
-                vrInformation.setTypeIndex(in.readInt());
-                vrInformation.setUrl(in.readString());
-
-                vrInformationList.add(vrInformation);
-            }
-
-            room.vrInformationList = vrInformationList;
-        }
-
-        boolean hasRefundInformation = in.readInt() == 1;
-        if (hasRefundInformation)
-        {
-            StayDetailk.RefundInformation refundInformation = new StayDetailk.RefundInformation();
-            refundInformation.setTitle(in.readString());
-            refundInformation.setType(in.readString());
-            refundInformation.setContentList(in.createStringArrayList());
-            refundInformation.setWarningMessage(in.readString());
-        }
     }
 
     @Override
@@ -335,4 +113,799 @@ public class RoomParcel implements Parcelable
             return new RoomParcel[size];
         }
     };
+
+    public static class AmountInformationParcel implements Parcelable
+    {
+        private Room.AmountInformation amountInformation;
+
+        public AmountInformationParcel(Room.AmountInformation amountInformation)
+        {
+            if (amountInformation == null)
+            {
+                throw new NullPointerException("amountInformation == null");
+            }
+
+            this.amountInformation = amountInformation;
+        }
+
+        protected AmountInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.AmountInformation getAmountInformation()
+        {
+            return amountInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeInt(dest.readInt());
+            dest.writeInt(dest.readInt());
+            dest.writeInt(dest.readInt());
+            dest.writeInt(dest.readInt());
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            amountInformation = new Room.AmountInformation();
+            amountInformation.discountAverage = in.readInt();
+            amountInformation.discountRate = in.readInt();
+            amountInformation.discountTotal = in.readInt();
+            amountInformation.priceAverage = in.readInt();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<AmountInformationParcel> CREATOR = new Creator<AmountInformationParcel>()
+        {
+            @Override
+            public AmountInformationParcel createFromParcel(Parcel in)
+            {
+                return new AmountInformationParcel(in);
+            }
+
+            @Override
+            public AmountInformationParcel[] newArray(int size)
+            {
+                return new AmountInformationParcel[size];
+            }
+        };
+    }
+
+    public static class PersonsInformationParcel implements Parcelable
+    {
+        private Room.PersonsInformation personsInformation;
+
+        public PersonsInformationParcel(Room.PersonsInformation personsInformation)
+        {
+            if (personsInformation == null)
+            {
+                throw new NullPointerException("personsInformation == null");
+            }
+
+            this.personsInformation = personsInformation;
+        }
+
+        protected PersonsInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.PersonsInformation getPersonsInformation()
+        {
+            return personsInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeInt(personsInformation.fixed);
+            dest.writeInt(personsInformation.extra);
+            dest.writeInt(personsInformation.extraCharge ? 1 : 0);
+            dest.writeInt(personsInformation.breakfast);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            personsInformation = new Room.PersonsInformation();
+            personsInformation.fixed = in.readInt();
+            personsInformation.extra = in.readInt();
+            personsInformation.extraCharge = in.readInt() == 1;
+            personsInformation.breakfast = in.readInt();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<PersonsInformationParcel> CREATOR = new Creator<PersonsInformationParcel>()
+        {
+            @Override
+            public PersonsInformationParcel createFromParcel(Parcel in)
+            {
+                return new PersonsInformationParcel(in);
+            }
+
+            @Override
+            public PersonsInformationParcel[] newArray(int size)
+            {
+                return new PersonsInformationParcel[size];
+            }
+        };
+    }
+
+    public static class BedInformationParcel implements Parcelable
+    {
+        private Room.BedInformation bedInformation;
+
+        public BedInformationParcel(Room.BedInformation bedInformation)
+        {
+            if (bedInformation == null)
+            {
+                throw new NullPointerException("bedInformation == null");
+            }
+
+            this.bedInformation = bedInformation;
+        }
+
+        protected BedInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.BedInformation getBedInformation()
+        {
+            return bedInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            List<BedTypeInformationParcel> list = new ArrayList<>();
+
+            if (bedInformation.bedTypeList != null)
+            {
+                for (Room.BedInformation.BedTypeInformation info : bedInformation.bedTypeList)
+                {
+                    list.add(new BedTypeInformationParcel(info));
+                }
+            }
+
+            dest.writeList(list);
+
+            dest.writeStringList(bedInformation.filterList);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            bedInformation = new Room.BedInformation();
+
+            List<Room.BedInformation.BedTypeInformation> list = new ArrayList<>();
+            List<BedTypeInformationParcel> typeParcelList = in.readArrayList(BedTypeInformationParcel.class.getClassLoader());
+            if (typeParcelList != null)
+            {
+                for (BedTypeInformationParcel parcel : typeParcelList)
+                {
+                    list.add(parcel.getBedTypeInformation());
+                }
+            }
+
+            bedInformation.bedTypeList = list;
+
+            bedInformation.filterList = new ArrayList<String>();
+            in.readStringList(bedInformation.filterList);
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<BedInformationParcel> CREATOR = new Creator<BedInformationParcel>()
+        {
+            @Override
+            public BedInformationParcel createFromParcel(Parcel in)
+            {
+                return new BedInformationParcel(in);
+            }
+
+            @Override
+            public BedInformationParcel[] newArray(int size)
+            {
+                return new BedInformationParcel[size];
+            }
+        };
+    }
+
+    public static class CheckTimeInformationParcel implements Parcelable
+    {
+        private StayDetailk.CheckTimeInformation checkTimeInformation;
+
+        public CheckTimeInformationParcel(StayDetailk.CheckTimeInformation checkTimeInformation)
+        {
+            if (checkTimeInformation == null)
+            {
+                throw new NullPointerException("checkTimeInformation == null");
+            }
+
+            this.checkTimeInformation = checkTimeInformation;
+        }
+
+        protected CheckTimeInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public StayDetailk.CheckTimeInformation getCheckTimeInformation()
+        {
+            return checkTimeInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(checkTimeInformation.getCheckIn());
+            dest.writeString(checkTimeInformation.getCheckOut());
+            dest.writeStringList(checkTimeInformation.getDescription());
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            checkTimeInformation = new StayDetailk.CheckTimeInformation();
+            checkTimeInformation.setCheckIn(in.readString());
+            checkTimeInformation.setCheckOut(in.readString());
+
+            List<String> descriptionList = new ArrayList<String>();
+            in.readStringList(descriptionList);
+
+            checkTimeInformation.setDescription(descriptionList);
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<CheckTimeInformationParcel> CREATOR = new Creator<CheckTimeInformationParcel>()
+        {
+            @Override
+            public CheckTimeInformationParcel createFromParcel(Parcel in)
+            {
+                return new CheckTimeInformationParcel(in);
+            }
+
+            @Override
+            public CheckTimeInformationParcel[] newArray(int size)
+            {
+                return new CheckTimeInformationParcel[size];
+            }
+        };
+    }
+
+
+    public static class BedTypeInformationParcel implements Parcelable
+    {
+        private Room.BedInformation.BedTypeInformation bedTypeInformation;
+
+        public BedTypeInformationParcel(Room.BedInformation.BedTypeInformation bedTypeInformation)
+        {
+            if (bedTypeInformation == null)
+            {
+                throw new NullPointerException("bedTypeInformation == null");
+            }
+
+            this.bedTypeInformation = bedTypeInformation;
+        }
+
+        protected BedTypeInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.BedInformation.BedTypeInformation getBedTypeInformation()
+        {
+            return bedTypeInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(bedTypeInformation.bedType);
+            dest.writeInt(bedTypeInformation.count);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            bedTypeInformation = new Room.BedInformation.BedTypeInformation();
+            bedTypeInformation.bedType = in.readString();
+            bedTypeInformation.count = in.readInt();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<BedTypeInformationParcel> CREATOR = new Creator<BedTypeInformationParcel>()
+        {
+            @Override
+            public BedTypeInformationParcel createFromParcel(Parcel in)
+            {
+                return new BedTypeInformationParcel(in);
+            }
+
+            @Override
+            public BedTypeInformationParcel[] newArray(int size)
+            {
+                return new BedTypeInformationParcel[size];
+            }
+        };
+    }
+
+    public static class ChargeInformationParcel implements Parcelable
+    {
+        private Room.ChargeInformation chargeInformation;
+
+        public ChargeInformationParcel(Room.ChargeInformation chargeInformation)
+        {
+            if (chargeInformation == null)
+            {
+                throw new NullPointerException("chargeInformation == null");
+            }
+
+            this.chargeInformation = chargeInformation;
+        }
+
+        protected ChargeInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.ChargeInformation getChargeInformation()
+        {
+            return chargeInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            ConsecutiveInformationParcel consecutiveInformationParcel = chargeInformation.consecutiveInformation == null ? null : new ConsecutiveInformationParcel(chargeInformation.consecutiveInformation);
+            ExtraInformationParcel extraInformationParcel = chargeInformation.extraInformation == null ? null : new ExtraInformationParcel(chargeInformation.extraInformation);
+            ExtraPersonInformationParcel extraPersonInformationParcel = chargeInformation.extraPersonInformation == null ? null : new ExtraPersonInformationParcel(chargeInformation.extraPersonInformation);
+
+            dest.writeParcelable(consecutiveInformationParcel, flags);
+            dest.writeParcelable(extraInformationParcel, flags);
+            dest.writeParcelable(extraPersonInformationParcel, flags);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            chargeInformation = new Room.ChargeInformation();
+
+            ConsecutiveInformationParcel consecutiveInformationParcel = in.readParcelable(ConsecutiveInformationParcel.class.getClassLoader());
+            ExtraInformationParcel extraInformationParcel = in.readParcelable(ExtraInformationParcel.class.getClassLoader());
+            ExtraPersonInformationParcel extraPersonInformationParcel = in.readParcelable(ExtraPersonInformationParcel.class.getClassLoader());
+
+            chargeInformation.consecutiveInformation = consecutiveInformationParcel != null ? consecutiveInformationParcel.getConsecutiveInformation() : null;
+            chargeInformation.extraInformation = extraInformationParcel != null ? extraInformationParcel.getExtraInformation() : null;
+            chargeInformation.extraPersonInformation = extraPersonInformationParcel != null ? extraPersonInformationParcel.getExtraPersonInformation() : null;
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<ChargeInformationParcel> CREATOR = new Creator<ChargeInformationParcel>()
+        {
+            @Override
+            public ChargeInformationParcel createFromParcel(Parcel in)
+            {
+                return new ChargeInformationParcel(in);
+            }
+
+            @Override
+            public ChargeInformationParcel[] newArray(int size)
+            {
+                return new ChargeInformationParcel[size];
+            }
+        };
+    }
+
+    public static class ConsecutiveInformationParcel implements Parcelable
+    {
+        private Room.ChargeInformation.ConsecutiveInformation consecutiveInformation;
+
+        public ConsecutiveInformationParcel(Room.ChargeInformation.ConsecutiveInformation consecutiveInformation)
+        {
+            if (consecutiveInformation == null)
+            {
+                throw new NullPointerException("consecutiveInformation == null");
+            }
+
+            this.consecutiveInformation = consecutiveInformation;
+        }
+
+        protected ConsecutiveInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.ChargeInformation.ConsecutiveInformation getConsecutiveInformation()
+        {
+            return consecutiveInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeInt(consecutiveInformation.charge);
+            dest.writeInt(consecutiveInformation.enable ? 1 : 0);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            consecutiveInformation = new Room.ChargeInformation.ConsecutiveInformation();
+            consecutiveInformation.charge = in.readInt();
+            consecutiveInformation.enable = in.readInt() == 1;
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<ConsecutiveInformationParcel> CREATOR = new Creator<ConsecutiveInformationParcel>()
+        {
+            @Override
+            public ConsecutiveInformationParcel createFromParcel(Parcel in)
+            {
+                return new ConsecutiveInformationParcel(in);
+            }
+
+            @Override
+            public ConsecutiveInformationParcel[] newArray(int size)
+            {
+                return new ConsecutiveInformationParcel[size];
+            }
+        };
+    }
+
+    public static class ExtraPersonInformationParcel implements Parcelable
+    {
+        private Room.ChargeInformation.ExtraPersonInformation extraPersonInformation;
+
+        public ExtraPersonInformationParcel(Room.ChargeInformation.ExtraPersonInformation extraPersonInformation)
+        {
+            if (extraPersonInformation == null)
+            {
+                throw new NullPointerException("extraPersonInformation == null");
+            }
+
+            this.extraPersonInformation = extraPersonInformation;
+        }
+
+        protected ExtraPersonInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.ChargeInformation.ExtraPersonInformation getExtraPersonInformation()
+        {
+            return extraPersonInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeInt(extraPersonInformation.minAge);
+            dest.writeInt(extraPersonInformation.maxAge);
+            dest.writeString(extraPersonInformation.title);
+            dest.writeInt(extraPersonInformation.amount);
+            dest.writeInt(extraPersonInformation.maxPersons);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            extraPersonInformation = new Room.ChargeInformation.ExtraPersonInformation();
+            extraPersonInformation.minAge = in.readInt();
+            extraPersonInformation.maxAge = in.readInt();
+            extraPersonInformation.title = in.readString();
+            extraPersonInformation.amount = in.readInt();
+            extraPersonInformation.maxPersons = in.readInt();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<ExtraPersonInformationParcel> CREATOR = new Creator<ExtraPersonInformationParcel>()
+        {
+            @Override
+            public ExtraPersonInformationParcel createFromParcel(Parcel in)
+            {
+                return new ExtraPersonInformationParcel(in);
+            }
+
+            @Override
+            public ExtraPersonInformationParcel[] newArray(int size)
+            {
+                return new ExtraPersonInformationParcel[size];
+            }
+        };
+    }
+
+    public static class ExtraInformationParcel implements Parcelable
+    {
+        private Room.ChargeInformation.ExtraInformation extraInformation;
+
+        public ExtraInformationParcel(Room.ChargeInformation.ExtraInformation extraInformation)
+        {
+            if (extraInformation == null)
+            {
+                throw new NullPointerException("extraInformation == null");
+            }
+
+            this.extraInformation = extraInformation;
+        }
+
+        protected ExtraInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.ChargeInformation.ExtraInformation getExtraInformation()
+        {
+            return extraInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(extraInformation.descriptions);
+            dest.writeInt(extraInformation.extraBed);
+            dest.writeInt(extraInformation.extraBedEnable ? 1 : 0);
+            dest.writeInt(extraInformation.extraBedding);
+            dest.writeInt(extraInformation.extraBeddingEnable ? 1 : 0);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            extraInformation = new Room.ChargeInformation.ExtraInformation();
+            extraInformation.descriptions = in.readString();
+            extraInformation.extraBed = in.readInt();
+            extraInformation.extraBedEnable = in.readInt() == 1;
+            extraInformation.extraBedding = in.readInt();
+            extraInformation.extraBeddingEnable = in.readInt() == 1;
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<ExtraInformationParcel> CREATOR = new Creator<ExtraInformationParcel>()
+        {
+            @Override
+            public ExtraInformationParcel createFromParcel(Parcel in)
+            {
+                return new ExtraInformationParcel(in);
+            }
+
+            @Override
+            public ExtraInformationParcel[] newArray(int size)
+            {
+                return new ExtraInformationParcel[size];
+            }
+        };
+    }
+
+    public static class AttributeInformationParcel implements Parcelable
+    {
+        private Room.AttributeInformation attributeInformation;
+
+        public AttributeInformationParcel(Room.AttributeInformation attributeInformation)
+        {
+            if (attributeInformation == null)
+            {
+                throw new NullPointerException("attributeInformation == null");
+            }
+
+            this.attributeInformation = attributeInformation;
+        }
+
+        protected AttributeInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.AttributeInformation getAttributeInformation()
+        {
+            return attributeInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeInt(attributeInformation.isDuplex ? 1 : 0);
+            dest.writeInt(attributeInformation.isEntireHouse ? 1 : 0);
+            dest.writeString(attributeInformation.roomStructure);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            attributeInformation = new Room.AttributeInformation();
+            attributeInformation.isDuplex = in.readInt() == 1;
+            attributeInformation.isEntireHouse = in.readInt() == 1;
+            attributeInformation.roomStructure = in.readString();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<AttributeInformationParcel> CREATOR = new Creator<AttributeInformationParcel>()
+        {
+            @Override
+            public AttributeInformationParcel createFromParcel(Parcel in)
+            {
+                return new AttributeInformationParcel(in);
+            }
+
+            @Override
+            public AttributeInformationParcel[] newArray(int size)
+            {
+                return new AttributeInformationParcel[size];
+            }
+        };
+    }
+
+    public static class VrInformationParcel implements Parcelable
+    {
+        private StayDetailk.VRInformation vrInformation;
+
+        public VrInformationParcel(StayDetailk.VRInformation vrInformation)
+        {
+            if (vrInformation == null)
+            {
+                throw new NullPointerException("vrInformation == null");
+            }
+
+            this.vrInformation = vrInformation;
+        }
+
+        protected VrInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public StayDetailk.VRInformation getVrInformation()
+        {
+            return vrInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(vrInformation.getName());
+            dest.writeString(vrInformation.getType());
+            dest.writeInt(vrInformation.getTypeIndex());
+            dest.writeString(vrInformation.getUrl());
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            vrInformation = new StayDetailk.VRInformation();
+            vrInformation.setName(in.readString());
+            vrInformation.setType(in.readString());
+            vrInformation.setTypeIndex(in.readInt());
+            vrInformation.setUrl(in.readString());
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<VrInformationParcel> CREATOR = new Creator<VrInformationParcel>()
+        {
+            @Override
+            public VrInformationParcel createFromParcel(Parcel in)
+            {
+                return new VrInformationParcel(in);
+            }
+
+            @Override
+            public VrInformationParcel[] newArray(int size)
+            {
+                return new VrInformationParcel[size];
+            }
+        };
+    }
+
+    public static class RefundInformationParcel implements Parcelable
+    {
+        private StayDetailk.RefundInformation refundInformation;
+
+        public RefundInformationParcel(StayDetailk.RefundInformation refundInformation)
+        {
+            if (refundInformation == null)
+            {
+                throw new NullPointerException("refundInformation == null");
+            }
+
+            this.refundInformation = refundInformation;
+        }
+
+        protected RefundInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public StayDetailk.RefundInformation getRefundInformation()
+        {
+            return refundInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(refundInformation.getTitle());
+            dest.writeString(refundInformation.getType());
+            dest.writeStringList(refundInformation.getContentList());
+            dest.writeString(refundInformation.getWarningMessage());
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            refundInformation = new StayDetailk.RefundInformation();
+            refundInformation.setTitle(in.readString());
+            refundInformation.setType(in.readString());
+
+            List<String> contentList = new ArrayList<String>();
+            in.readStringList(contentList);
+            refundInformation.setContentList(contentList);
+            refundInformation.setWarningMessage(in.readString());
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<RefundInformationParcel> CREATOR = new Creator<RefundInformationParcel>()
+        {
+            @Override
+            public RefundInformationParcel createFromParcel(Parcel in)
+            {
+                return new RefundInformationParcel(in);
+            }
+
+            @Override
+            public RefundInformationParcel[] newArray(int size)
+            {
+                return new RefundInformationParcel[size];
+            }
+        };
+    }
 }

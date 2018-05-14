@@ -61,7 +61,7 @@ class DailyDetailRoomView : ConstraintLayout {
         Util.requestImageResize(context, viewDataBinding.simpleDraweeView, url)
     }
 
-    fun setBedTypeText(bedTypeList: List<Room.BedType>?) {
+    fun setBedTypeText(bedTypeList: List<Room.BedInformation.BedTypeInformation>?) {
         val bedTypeText = getBedType(bedTypeList)
         if (bedTypeText.isTextEmpty()) {
             viewDataBinding.bedTypeTextView.visibility = View.GONE
@@ -71,7 +71,7 @@ class DailyDetailRoomView : ConstraintLayout {
         }
     }
 
-    fun setPersons(persons: Room.Persons?) {
+    fun setPersons(persons: Room.PersonsInformation?) {
         if (persons == null) {
             viewDataBinding.personsTextView.visibility = View.GONE
             viewDataBinding.breakfastTextView.visibility = View.GONE
@@ -117,7 +117,7 @@ class DailyDetailRoomView : ConstraintLayout {
         viewDataBinding.couponTextView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    private fun getBedType(bedTypeList: List<Room.BedType>?): String? {
+    private fun getBedType(bedTypeList: List<Room.BedInformation.BedTypeInformation>?): String? {
         val bedStringBuilder = StringBuilder()
 
         bedTypeList.takeNotEmpty {

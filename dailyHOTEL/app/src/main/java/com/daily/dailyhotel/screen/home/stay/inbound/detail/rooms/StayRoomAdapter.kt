@@ -77,11 +77,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        if (room.image == null) {
+        if (room.imageInformation == null) {
             dataBinding.defaultImageLayout.visibility = View.GONE
             dataBinding.defaultImageLayout.setOnClickListener(null)
         } else {
-            val imageInfo: DetailImageInformation = room.image;
+            val imageInfo: DetailImageInformation = room.imageInformation;
 
 
             dataBinding.defaultImageLayout.visibility = View.VISIBLE

@@ -604,7 +604,7 @@ public class StayDetailData
         public String url;
 
         @JsonField(name = "description")
-        public String description;
+        public String description; //
 
         @JsonField(name = "primary")
         public boolean primary;
@@ -651,9 +651,6 @@ public class StayDetailData
         @JsonField(name = "roomName")
         public String roomName;
 
-        @JsonField(name = "roomType")
-        public String roomType;
-
         @JsonField(name = "image")
         public ImageData image;
 
@@ -696,9 +693,6 @@ public class StayDetailData
         @JsonField(name = "roomCharge")
         public RoomChargeData roomCharge;
 
-        @JsonField(name = "refundType")
-        public String refundType;
-
         @JsonField(name = "attribute")
         public AttributeData attribute;
 
@@ -724,57 +718,39 @@ public class StayDetailData
 
             room.index = roomIdx;
             room.name = roomName;
-            room.type = roomType;
             room.bedCount = bedCount;
             room.benefit = benefit;
             room.provideRewardSticker = provideRewardSticker;
-            room.amenities = amenities;
-            room.descriptions = descriptions;
+            room.amenityList = amenities;
+            room.descriptionList = descriptions;
             room.squareMeter = squareMeter;
-            room.needToKnows = needToKnows;
-
-            if (amount != null)
-            {
-                room.discountAverage = amount.discountAverage;
-                room.discountRate = amount.discountRate;
-                room.discountTotal = amount.discountTotal;
-                room.priceAverage = amount.priceAverage;
-            }
+            room.needToKnowList = needToKnows;
+            room.amountInformation = amount.getAmount();
 
             if (bedInfo != null)
             {
-                if (bedInfo.bedTypes != null && bedInfo.bedTypes.size() > 0)
-                {
-                    List<Room.BedType> bedTypeList = new ArrayList<>();
-
-                    for (BedInfoData.BedTypeData bedTypeData : bedInfo.bedTypes)
-                    {
-                        bedTypeList.add(bedTypeData.getBedType());
-                    }
-
-                    room.bedTypeList = bedTypeList;
-                }
+                room.bedInformation = bedInfo.getBedInfo();
             }
 
             if (attribute != null)
             {
-                room.attribute = attribute.getAttribute();
+                room.attributeInformation = attribute.getAttribute();
             }
 
             if (image != null)
             {
-                room.image = image.getDetailImageInformation();
+                room.imageInformation = image.getDetailImageInformation();
+                room.imageCount = image.count;
             }
 
             if (persons != null)
             {
-                room.persons = persons.getPerson();
+                room.personsInformation = persons.getPerson();
             }
 
             if (checkTime != null)
             {
-                room.checkInTime = checkTime.checkIn;
-                room.checkInTime = checkTime.checkOut;
+                room.checkTimeInformation = checkTime.getCheckTimeInformation();
             }
 
             if (vrs != null && vrs.size() > 0)
@@ -796,7 +772,7 @@ public class StayDetailData
 
             if (roomCharge != null)
             {
-                room.charge = roomCharge.getRoomCharge();
+                room.roomChargeInformation = roomCharge.getRoomCharge();
             }
 
             return room;
@@ -816,6 +792,17 @@ public class StayDetailData
 
             @JsonField(name = "priceAverage")
             public int priceAverage;
+
+            Room.AmountInformation getAmount()
+            {
+                Room.AmountInformation info = new Room.AmountInformation();
+                info.discountAverage = discountAverage;
+                info.discountRate = discountRate;
+                info.discountTotal = discountTotal;
+                info.priceAverage = priceAverage;
+
+                return info;
+            }
         }
 
         @JsonObject
@@ -833,9 +820,9 @@ public class StayDetailData
             @JsonField(name = "breakfast")
             public int breakfast;
 
-            Room.Persons getPerson()
+            Room.PersonsInformation getPerson()
             {
-                Room.Persons person = new Room.Persons();
+                Room.PersonsInformation person = new Room.PersonsInformation();
                 person.fixed = fixed;
                 person.extra = extra;
                 person.extraCharge = extraCharge;
@@ -854,8 +841,8 @@ public class StayDetailData
             @JsonField(name = "extra")
             public ExtraData extra;
 
-            @JsonField(name = "persons")
-            public PersonsData persons;
+            @JsonField(name = "extraPerson")
+            public ExtraPersonData extraPerson;
 
             @JsonObject
             static class ConsecutiveData
@@ -866,13 +853,44 @@ public class StayDetailData
                 @JsonField(name = "enable")
                 public boolean enable;
 
-                Room.Charge.Consecutive getConsecutive()
+                Room.ChargeInformation.ConsecutiveInformation getConsecutive()
                 {
-                    Room.Charge.Consecutive consecutive = new Room.Charge.Consecutive();
+                    Room.ChargeInformation.ConsecutiveInformation consecutive = new Room.ChargeInformation.ConsecutiveInformation();
                     consecutive.charge = charge;
                     consecutive.enable = enable;
 
                     return consecutive;
+                }
+            }
+
+            @JsonObject
+            static class ExtraPersonData
+            {
+                @JsonField(name = "minAge")
+                public int minAge;
+
+                @JsonField(name = "maxAge")
+                public int maxAge;
+
+                @JsonField(name = "title")
+                public String title;
+
+                @JsonField(name = "amount")
+                public int amount;
+
+                @JsonField(name = "maxPersons")
+                public int maxPersons;
+
+                Room.ChargeInformation.ExtraPersonInformation getExtraPerson()
+                {
+                    Room.ChargeInformation.ExtraPersonInformation extraPerson = new Room.ChargeInformation.ExtraPersonInformation();
+                    extraPerson.minAge = minAge;
+                    extraPerson.maxAge = maxAge;
+                    extraPerson.title = title;
+                    extraPerson.amount = amount;
+                    extraPerson.maxPersons = maxPersons;
+
+                    return extraPerson;
                 }
             }
 
@@ -892,11 +910,11 @@ public class StayDetailData
                 public int extraBedding;
 
                 @JsonField(name = "extraBeddingEnable")
-                public int extraBeddingEnable;
+                public boolean extraBeddingEnable;
 
-                Room.Charge.Extra getExtra()
+                Room.ChargeInformation.ExtraInformation getExtra()
                 {
-                    Room.Charge.Extra extra = new Room.Charge.Extra();
+                    Room.ChargeInformation.ExtraInformation extra = new Room.ChargeInformation.ExtraInformation();
                     extra.descriptions = descriptions;
                     extra.extraBed = extraBed;
                     extra.extraBedEnable = extraBedEnable;
@@ -907,23 +925,23 @@ public class StayDetailData
                 }
             }
 
-            Room.Charge getRoomCharge()
+            Room.ChargeInformation getRoomCharge()
             {
-                Room.Charge roomCharge = new Room.Charge();
+                Room.ChargeInformation roomCharge = new Room.ChargeInformation();
 
                 if (consecutive != null)
                 {
-                    roomCharge.consecutive = this.consecutive.getConsecutive();
+                    roomCharge.consecutiveInformation = this.consecutive.getConsecutive();
                 }
 
                 if (extra != null)
                 {
-                    roomCharge.extra = extra.getExtra();
+                    roomCharge.extraInformation = extra.getExtra();
                 }
 
-                if (persons != null)
+                if (extraPerson != null)
                 {
-                    roomCharge.persons = persons.getPerson();
+                    roomCharge.extraPersonInformation = extraPerson.getExtraPerson();
                 }
 
                 return roomCharge;
@@ -942,9 +960,9 @@ public class StayDetailData
             @JsonField(name = "roomStructure")
             public String roomStructure;
 
-            Room.Attribute getAttribute()
+            Room.AttributeInformation getAttribute()
             {
-                Room.Attribute attribute = new Room.Attribute();
+                Room.AttributeInformation attribute = new Room.AttributeInformation();
 
                 attribute.isDuplex = isDuplex;
                 attribute.isEntireHouse = isEntireHouse;
@@ -963,6 +981,22 @@ public class StayDetailData
             @JsonField(name = "filters")
             public List<String> filters;
 
+            Room.BedInformation getBedInfo()
+            {
+                Room.BedInformation info = new Room.BedInformation();
+
+                List<Room.BedInformation.BedTypeInformation> list = new ArrayList<>();
+                for (BedTypeData data : bedTypes)
+                {
+                    list.add(data.getBedType());
+                }
+
+                info.bedTypeList = list;
+                info.filterList = filters;
+
+                return info;
+            }
+
             @JsonObject
             static class BedTypeData
             {
@@ -972,9 +1006,9 @@ public class StayDetailData
                 @JsonField(name = "count")
                 public int count;
 
-                Room.BedType getBedType()
+                Room.BedInformation.BedTypeInformation getBedType()
                 {
-                    Room.BedType bedType = new Room.BedType();
+                    Room.BedInformation.BedTypeInformation bedType = new Room.BedInformation.BedTypeInformation();
 
                     bedType.bedType = this.bedType;
                     bedType.count = this.count;
