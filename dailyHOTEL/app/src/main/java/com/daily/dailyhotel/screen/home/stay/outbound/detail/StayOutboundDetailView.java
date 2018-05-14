@@ -1508,7 +1508,10 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     {
         LayoutGourmetDetailAmenitiesDataBinding viewDataBinding = getViewDataBinding().amenitiesViewDataBinding;
 
-        viewDataBinding.amenitiesGridLayout.removeAllViews();
+        if (viewDataBinding.amenitiesGridLayout.getChildCount() > 0)
+        {
+            viewDataBinding.amenitiesGridLayout.removeAllViews();
+        }
 
         if (stringSparseArray == null || stringSparseArray.size() == 0)
         {
@@ -1645,7 +1648,10 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         Iterator<Map.Entry<String, List<String>>> iterator = informationMap.entrySet().iterator();
 
-        getViewDataBinding().descriptionsLayout.removeAllViews();
+        if (getViewDataBinding().descriptionsLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().descriptionsLayout.removeAllViews();
+        }
 
         while (iterator.hasNext() == true)
         {

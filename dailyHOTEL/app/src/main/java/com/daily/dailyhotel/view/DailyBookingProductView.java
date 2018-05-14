@@ -72,7 +72,10 @@ public class DailyBookingProductView extends LinearLayout
 
     public void removeAllInformation()
     {
-        removeAllViews();
+        if (getChildCount() > 0)
+        {
+            removeAllViews();
+        }
     }
 
     @Override

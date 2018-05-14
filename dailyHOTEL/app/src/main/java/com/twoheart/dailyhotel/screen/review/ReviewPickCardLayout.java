@@ -70,7 +70,11 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
         descriptionTextView.setText(reviewPickQuestion.description);
 
         mGridLayout = view.findViewById(R.id.gridLayout);
-        mGridLayout.removeAllViews();
+
+        if (mGridLayout.getChildCount() > 0)
+        {
+            mGridLayout.removeAllViews();
+        }
 
         ArrayList<ReviewAnswerValue> reviewAnswerValueList = reviewPickQuestion.getAnswerValueList();
 

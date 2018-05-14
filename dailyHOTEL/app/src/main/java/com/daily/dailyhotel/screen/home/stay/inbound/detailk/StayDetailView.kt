@@ -417,7 +417,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean) {
         viewDataBinding.baseInformationView.apply {
-            setCategoryName(baseInformation.category)
+            setGradeName(baseInformation.grade.getName(context))
             setRewardsVisible(baseInformation.provideRewardSticker)
             setNameText(baseInformation.name)
             setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
@@ -459,8 +459,16 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation) {
         viewDataBinding.businessBenefitView.apply {
-            setTitleText(benefitInformation.title)
-            setContents(benefitInformation.contentList)
+            if (benefitInformation.title.isTextEmpty()) {
+                setTitleVisible(false)
+            } else {
+                setTitleVisible(true)
+                setTitleText(benefitInformation.title)
+            }
+
+            setContentsVisible(benefitInformation.contentList.letNotNullTrueElseNullFalse {
+                setContents(it)
+            })
 
             if (benefitInformation.coupon != null && benefitInformation.coupon!!.couponDiscount > 0) {
                 setCouponButtonVisible(true)

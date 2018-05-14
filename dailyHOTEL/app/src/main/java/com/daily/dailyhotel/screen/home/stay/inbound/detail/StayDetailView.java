@@ -1537,7 +1537,11 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         LayoutGourmetDetailAmenitiesDataBinding viewDataBinding = getViewDataBinding().amenitiesViewDataBinding;
-        viewDataBinding.amenitiesGridLayout.removeAllViews();
+
+        if (viewDataBinding.amenitiesGridLayout.getChildCount() > 0)
+        {
+            viewDataBinding.amenitiesGridLayout.removeAllViews();
+        }
 
         if (pictogramList == null || pictogramList.size() == 0)
         {
@@ -1616,7 +1620,10 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         viewDataBinding.benefitLayout.setVisibility(View.VISIBLE);
         viewDataBinding.benefitTitleTextView.setText(benefit);
 
-        viewDataBinding.benefitContentsLayout.removeAllViews();
+        if (viewDataBinding.benefitContentsLayout.getChildCount() > 0)
+        {
+            viewDataBinding.benefitContentsLayout.removeAllViews();
+        }
 
         if (benefitContentList != null && benefitContentList.size() > 0)
         {
@@ -1656,7 +1663,10 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         boolean hasRefundPolicy = false;
 
-        getViewDataBinding().descriptionsLayout.removeAllViews();
+        if (getViewDataBinding().descriptionsLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().descriptionsLayout.removeAllViews();
+        }
 
         for (LinkedHashMap<String, List<String>> descriptionMap : descriptionList)
         {

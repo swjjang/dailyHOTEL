@@ -325,7 +325,11 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     void setTabLayout(int position)
     {
-        mViewPager.removeAllViews();
+        if (mViewPager.getChildCount() > 0)
+        {
+            mViewPager.removeAllViews();
+        }
+
         mViewPager.setOffscreenPageLimit(1);
 
         mViewPager.setAdapter(mPageAdapter);

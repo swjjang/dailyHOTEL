@@ -388,7 +388,11 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
         }
 
         getViewDataBinding().viewPager.setAdapter(null);
-        getViewDataBinding().viewPager.removeAllViews();
+
+        if (getViewDataBinding().viewPager.getChildCount() > 0)
+        {
+            getViewDataBinding().viewPager.removeAllViews();
+        }
 
         if (mFragmentPagerAdapter != null)
         {

@@ -722,7 +722,10 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
             return;
         }
 
-        getViewDataBinding().menusLayout.removeAllViews();
+        if (getViewDataBinding().menusLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().menusLayout.removeAllViews();
+        }
 
         int size = gourmetCartMenuList.size();
         int i = 0;

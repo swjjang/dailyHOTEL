@@ -689,13 +689,21 @@ public class SearchGourmetCampaignTagListFragmentView extends BaseBlurFragmentVi
             mViewPagerAdapter = null;
         }
 
-        getViewDataBinding().mapViewPager.removeAllViews();
+        if (getViewDataBinding().mapViewPager.getChildCount() > 0)
+        {
+            getViewDataBinding().mapViewPager.removeAllViews();
+        }
+
         getViewDataBinding().mapViewPager.setAdapter(null);
         getViewDataBinding().mapViewPager.setVisibility(View.GONE);
 
         fragmentManager.beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
 
-        getViewDataBinding().mapLayout.removeAllViews();
+        if (getViewDataBinding().mapLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().mapLayout.removeAllViews();
+        }
+
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
 
         mMapFragment = null;

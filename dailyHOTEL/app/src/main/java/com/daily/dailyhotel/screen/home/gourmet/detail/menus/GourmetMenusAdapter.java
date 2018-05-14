@@ -443,7 +443,10 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             return;
         }
 
-        viewGroup.removeAllViews();
+        if (viewGroup.getChildCount() > 0)
+        {
+            viewGroup.removeAllViews();
+        }
 
         int size = menuDetailList.size();
 

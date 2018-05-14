@@ -45,7 +45,7 @@ class StayDetailk : Configurations() {
 
     class BaseInformation {
         var category: String? = null
-        var grade: Stay.Grade? = null
+        var grade: Stay.Grade = Stay.Grade.etc
         var provideRewardSticker: Boolean = false
         var name: String? = null
         var discount: Int = 0

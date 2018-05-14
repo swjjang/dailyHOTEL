@@ -565,7 +565,11 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             });
 
             holder.dataBinding.trueReviewGuideTextView.setText(mHeaderTitle);
-            holder.dataBinding.progressBarLayout.removeAllViews();
+
+            if (holder.dataBinding.progressBarLayout.getChildCount() > 0)
+            {
+                holder.dataBinding.progressBarLayout.removeAllViews();
+            }
 
             mProgressBarLayout = holder.dataBinding.progressBarLayout;
 

@@ -103,7 +103,11 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         }
 
         getViewDataBinding().viewPager.setAdapter(null);
-        getViewDataBinding().viewPager.removeAllViews();
+
+        if (getViewDataBinding().viewPager.getChildCount() > 0)
+        {
+            getViewDataBinding().viewPager.removeAllViews();
+        }
 
         getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(null);
 

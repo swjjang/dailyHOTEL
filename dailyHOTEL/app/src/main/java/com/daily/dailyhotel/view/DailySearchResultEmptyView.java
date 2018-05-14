@@ -122,7 +122,11 @@ public class DailySearchResultEmptyView extends ScrollView
         }
 
         mViewDataBinding.popularSearchTagTextView.setText(title);
-        mViewDataBinding.tagFlexboxLayout.removeAllViews();
+
+        if (mViewDataBinding.tagFlexboxLayout.getChildCount() > 0)
+        {
+            mViewDataBinding.tagFlexboxLayout.removeAllViews();
+        }
 
         for (CampaignTag campaignTag : campaignTagList)
         {

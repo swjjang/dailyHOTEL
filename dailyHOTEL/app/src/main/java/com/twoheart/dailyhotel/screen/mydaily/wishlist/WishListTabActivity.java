@@ -289,7 +289,11 @@ public class WishListTabActivity extends BaseActivity
             }
         }
 
-        mViewPager.removeAllViews();
+        if (mViewPager.getChildCount() > 0)
+        {
+            mViewPager.removeAllViews();
+        }
+
         mViewPager.setOffscreenPageLimit(1);
 
         TabLayout.Tab selectedTab = mTabLayout.getTabAt(position);

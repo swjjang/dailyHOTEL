@@ -84,7 +84,9 @@ class DailyRoomInfoGridView : LinearLayout {
                 return
             }
 
-            moreGridLayout.removeAllViews()
+            if (moreGridLayout.childCount > 0) {
+                moreGridLayout.removeAllViews()
+            }
 
             gridLayout.visibility = View.VISIBLE
             moreGridLayout.visibility = View.VISIBLE

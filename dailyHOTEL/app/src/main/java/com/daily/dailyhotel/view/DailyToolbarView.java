@@ -602,7 +602,10 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.dailyMenuItemLayout.removeAllViews();
+        if (mViewDataBinding.dailyMenuItemLayout.getChildCount() > 0)
+        {
+            mViewDataBinding.dailyMenuItemLayout.removeAllViews();
+        }
     }
 
     public boolean hasMenuItem(MenuItem menuItem)

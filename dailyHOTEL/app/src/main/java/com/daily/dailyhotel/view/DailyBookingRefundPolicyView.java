@@ -60,7 +60,11 @@ public class DailyBookingRefundPolicyView extends ConstraintLayout
         {
             mViewDataBinding.refundPolicyTitleLayout.setVisibility(VISIBLE);
             mViewDataBinding.refundPolicyListLayout.setVisibility(VISIBLE);
-            mViewDataBinding.refundPolicyListLayout.removeAllViews();
+
+            if (mViewDataBinding.refundPolicyListLayout.getChildCount() > 0)
+            {
+                mViewDataBinding.refundPolicyListLayout.removeAllViews();
+            }
 
             int size = refundPolicyList.size();
 

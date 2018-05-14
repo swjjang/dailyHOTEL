@@ -274,7 +274,11 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
 
         if (categoryList == null)
         {
-            mViewPager.removeAllViews();
+            if (mViewPager.getChildCount() > 0)
+            {
+                mViewPager.removeAllViews();
+            }
+
             setCategoryTabLayoutVisibility(View.GONE);
             return;
         }
@@ -288,7 +292,11 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
 
             mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
 
-            mViewPager.removeAllViews();
+            if (mViewPager.getChildCount() > 0)
+            {
+                mViewPager.removeAllViews();
+            }
+
             mViewPager.setOffscreenPageLimit(size);
             mViewPager.setAdapter(mFragmentPagerAdapter);
             mViewPager.clearOnPageChangeListeners();
@@ -324,7 +332,11 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
 
             mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
 
-            mViewPager.removeAllViews();
+            if (mViewPager.getChildCount() > 0)
+            {
+                mViewPager.removeAllViews();
+            }
+
             mViewPager.setOffscreenPageLimit(size);
 
             Class reflectionClass = ViewPager.class;

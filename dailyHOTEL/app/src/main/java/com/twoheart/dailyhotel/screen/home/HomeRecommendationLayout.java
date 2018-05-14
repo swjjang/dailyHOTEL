@@ -175,7 +175,7 @@ public class HomeRecommendationLayout extends LinearLayout
     {
         mRecommendationList = null;
 
-        if (mContentLayout != null)
+        if (mContentLayout != null && mContentLayout.getChildCount() > 0)
         {
             mContentLayout.removeAllViews();
         }

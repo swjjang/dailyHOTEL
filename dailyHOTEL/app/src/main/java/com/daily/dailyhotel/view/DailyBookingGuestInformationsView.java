@@ -180,7 +180,11 @@ public class DailyBookingGuestInformationsView extends ConstraintLayout
         }
 
         mInformationTypeList.clear();
-        mViewDataBinding.informationLayout.removeAllViews();
+
+        if (mViewDataBinding.informationLayout.getChildCount() > 0)
+        {
+            mViewDataBinding.informationLayout.removeAllViews();
+        }
     }
 
     /**

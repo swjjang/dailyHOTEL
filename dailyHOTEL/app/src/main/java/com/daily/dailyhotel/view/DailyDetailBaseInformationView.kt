@@ -28,7 +28,7 @@ class DailyDetailBaseInformationView : ConstraintLayout {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_base_information_data, this, true)
     }
 
-    fun setCategoryName(text: String?) {
+    fun setGradeName(text: String?) {
         viewDataBinding.categoryTextView.text = text
     }
 

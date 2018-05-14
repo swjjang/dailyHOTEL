@@ -611,7 +611,10 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             // 해당 카테고리가 없으면 번호가 바뀐다.
             getViewDataBinding().depositStickerTextView.setText("4. " + getString(R.string.label_booking_used_deposit_sticker));
 
-            mBookingDetail03DataBinding.defaultRefundPolicyLayout.removeAllViews();
+            if (mBookingDetail03DataBinding.defaultRefundPolicyLayout.getChildCount() > 0)
+            {
+                mBookingDetail03DataBinding.defaultRefundPolicyLayout.removeAllViews();
+            }
 
             int size = refundPolicyList.size();
 

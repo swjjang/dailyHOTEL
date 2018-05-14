@@ -36,21 +36,31 @@ class DailyDetailBenefitView : ConstraintLayout {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_benefit_data, this, true)
     }
 
+    fun setTitleVisible(visible: Boolean) {
+        viewDataBinding.benefitTitleTextView.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     fun setTitleText(title: String?) {
         viewDataBinding.benefitTitleTextView.text = title
     }
 
+    fun setContentsVisible(visible: Boolean) {
+        viewDataBinding.benefitContentsLayout.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     fun setContents(contents: List<String>?) {
-        viewDataBinding.benefitContentsLayout.removeAllViews()
+        if (viewDataBinding.benefitContentsLayout.childCount > 0) {
+            viewDataBinding.benefitContentsLayout.removeAllViews()
+        }
 
         contents.takeNotEmpty {
             it.filter { !it.isTextEmpty() }.forEach {
-                viewDataBinding.benefitContentsLayout.addView(getContentView(it))
+                viewDataBinding.benefitContentsLayout.addView(createContentView(it))
             }
         }
     }
 
-    private fun getContentView(text: String): DailyTextView {
+    private fun createContentView(text: String): DailyTextView {
         return DailyTextView(context).apply {
             this.text = text
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f)

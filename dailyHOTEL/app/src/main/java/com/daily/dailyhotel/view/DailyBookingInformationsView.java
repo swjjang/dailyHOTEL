@@ -68,7 +68,10 @@ public class DailyBookingInformationsView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.informationLayout.removeAllViews();
+        if (mViewDataBinding.informationLayout.getChildCount() > 0)
+        {
+            mViewDataBinding.informationLayout.removeAllViews();
+        }
     }
 
     public void addInformation(String title, String description)

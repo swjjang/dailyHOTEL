@@ -30,22 +30,24 @@ class DailyDetailDailyCommentView : ConstraintLayout {
 
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_daily_comment_data, this, true)
-
     }
 
     fun setComments(comments: List<String>?) {
-        viewDataBinding.dailyCommentsLayout.removeAllViews()
+        if (viewDataBinding.dailyCommentsLayout.childCount > 0) {
+            viewDataBinding.dailyCommentsLayout.removeAllViews()
+        }
 
         comments.takeNotEmpty {
             it.forEachIndexed { index, comment ->
-                viewDataBinding.dailyCommentsLayout.addView(createCommentView(index + 1, comment), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                viewDataBinding.dailyCommentsLayout.addView(createCommentView(viewDataBinding.dailyCommentsLayout, index + 1, comment),
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
     }
 
-    private fun createCommentView(index: Int, comment: String): View {
+    private fun createCommentView(viewGroup: ViewGroup, index: Int, comment: String): View {
         return DataBindingUtil.inflate<DailyViewDetailDailyCommentItemDataBinding>(LayoutInflater.from(context),
-                R.layout.daily_view_detail_daily_comment_item_data, this, true).apply {
+                R.layout.daily_view_detail_daily_comment_item_data, viewGroup, false).apply {
             numberTextView.text = String.format(Locale.KOREA, "%02d", index)
             commentTextView.text = comment
         }.root

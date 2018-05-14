@@ -290,7 +290,10 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             }
         };
 
-        getViewDataBinding().operationTimesGridLayout.removeAllViews();
+        if (getViewDataBinding().operationTimesGridLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().operationTimesGridLayout.removeAllViews();
+        }
 
         DailyTextView fullTimeTextView = new DailyTextView(getContext());
         fullTimeTextView.setText(R.string.label_all);

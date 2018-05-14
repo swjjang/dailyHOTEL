@@ -51,7 +51,10 @@ class DailyRoomInfoTableView : ConstraintLayout {
     }
 
     fun clearTableLayout() {
-        dataBinding.tableLayout.removeAllViews()
+        if(dataBinding.tableLayout.childCount > 0) {
+            dataBinding.tableLayout.removeAllViews()
+        }
+
         itemCount = 0
     }
 

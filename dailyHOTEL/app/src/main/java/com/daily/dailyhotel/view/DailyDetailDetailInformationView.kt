@@ -49,7 +49,9 @@ class DailyDetailDetailInformationView : LinearLayout {
     }
 
     fun setInformation(information: List<StayDetailk.DetailInformation.Item>?) {
-        removeAllViews()
+        if (childCount > 0) {
+            removeAllViews()
+        }
 
         information.takeNotEmpty { it.forEach { addView(getInformationView(it)) } }
     }

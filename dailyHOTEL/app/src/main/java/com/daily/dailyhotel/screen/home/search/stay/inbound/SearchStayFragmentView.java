@@ -101,7 +101,10 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
             return;
         }
 
-        getViewDataBinding().tagFlexboxLayout.removeAllViews();
+        if (getViewDataBinding().tagFlexboxLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().tagFlexboxLayout.removeAllViews();
+        }
 
         for (CampaignTag campaignTag : tagList)
         {

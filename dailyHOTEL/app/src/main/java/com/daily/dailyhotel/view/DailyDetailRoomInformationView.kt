@@ -111,8 +111,14 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     }
 
     fun setRoomList(roomList: List<Room>?) {
-        viewDataBinding.roomsLayout.removeAllViews()
-        viewDataBinding.moreRoomsLayout.removeAllViews()
+        if (viewDataBinding.roomsLayout.childCount > 0) {
+            viewDataBinding.roomsLayout.removeAllViews()
+        }
+
+        if (viewDataBinding.moreRoomsLayout.childCount > 0) {
+            viewDataBinding.moreRoomsLayout.removeAllViews()
+        }
+
         viewDataBinding.moreRoomsLayout.visibility = View.INVISIBLE
 
         if (roomList.isNotNullAndNotEmpty()) {

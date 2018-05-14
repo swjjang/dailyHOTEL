@@ -98,7 +98,10 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
             return;
         }
 
-        getViewDataBinding().popularAreaLayout.removeAllViews();
+        if (getViewDataBinding().popularAreaLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().popularAreaLayout.removeAllViews();
+        }
 
         final int DP_58 = ScreenUtils.dpToPx(getContext(), 58);
 

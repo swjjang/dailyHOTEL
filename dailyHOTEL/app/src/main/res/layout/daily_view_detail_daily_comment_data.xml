@@ -4,16 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!--<merge-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
-
-    <android.support.constraint.ConstraintLayout
+    <merge
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/dailyCommentTextView"
@@ -41,6 +41,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dailyCommentTextView"/>
-    </android.support.constraint.ConstraintLayout>
-    <!--</merge>-->
+        <!--</android.support.constraint.ConstraintLayout>-->
+    </merge>
 </layout>

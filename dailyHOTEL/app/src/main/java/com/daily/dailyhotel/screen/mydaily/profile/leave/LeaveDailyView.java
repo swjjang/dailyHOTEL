@@ -229,7 +229,10 @@ public class LeaveDailyView extends BaseDialogView<LeaveDailyInterface.OnEventLi
             return;
         }
 
-        getViewDataBinding().leavePolicyInformationLayout.removeAllViews();
+        if (getViewDataBinding().leavePolicyInformationLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().leavePolicyInformationLayout.removeAllViews();
+        }
 
         LayoutLeaveDailyPolicyInformationDataBinding dataBinding = null;
 

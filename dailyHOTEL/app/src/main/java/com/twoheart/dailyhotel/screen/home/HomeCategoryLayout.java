@@ -114,7 +114,10 @@ public class HomeCategoryLayout extends RelativeLayout
             return;
         }
 
-        gridLayout.removeAllViews();
+        if (gridLayout.getChildCount() > 0)
+        {
+            gridLayout.removeAllViews();
+        }
 
         if (categoryTypeList == null || categoryTypeList.length == 0)
         {

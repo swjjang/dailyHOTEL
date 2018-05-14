@@ -68,6 +68,9 @@ public class DailyBookingCardEventView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.cardEventLayout.removeAllViews();
+        if (mViewDataBinding.cardEventLayout.getChildCount() > 0)
+        {
+            mViewDataBinding.cardEventLayout.removeAllViews();
+        }
     }
 }

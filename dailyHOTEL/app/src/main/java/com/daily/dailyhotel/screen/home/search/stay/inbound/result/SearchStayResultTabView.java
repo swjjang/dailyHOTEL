@@ -657,7 +657,11 @@ public class SearchStayResultTabView extends BaseDialogView<SearchStayResultTabI
 
         getViewDataBinding().viewPager.clearOnPageChangeListeners();
         getViewDataBinding().viewPager.setAdapter(null);
-        getViewDataBinding().viewPager.removeAllViews();
+
+        if (getViewDataBinding().viewPager.getChildCount() > 0)
+        {
+            getViewDataBinding().viewPager.removeAllViews();
+        }
 
         if (mFragmentPagerAdapter != null)
         {

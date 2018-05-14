@@ -99,7 +99,10 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
             return;
         }
 
-        getViewDataBinding().tagFlexboxLayout.removeAllViews();
+        if (getViewDataBinding().tagFlexboxLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().tagFlexboxLayout.removeAllViews();
+        }
 
         for (CampaignTag campaignTag : tagList)
         {

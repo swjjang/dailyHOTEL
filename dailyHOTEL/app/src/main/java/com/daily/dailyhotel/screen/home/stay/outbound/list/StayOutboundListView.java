@@ -611,13 +611,21 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         if (mViewPager != null)
         {
-            mViewPager.removeAllViews();
+            if (mViewPager.getChildCount() > 0)
+            {
+                mViewPager.removeAllViews();
+            }
+
             mViewPager = null;
         }
 
         fragmentManager.beginTransaction().remove(mStayOutboundMapFragment).commitAllowingStateLoss();
 
-        getViewDataBinding().mapLayout.removeAllViews();
+        if (getViewDataBinding().mapLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().mapLayout.removeAllViews();
+        }
+
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.VISIBLE);
 
@@ -1053,7 +1061,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().popularAreaLayout.removeAllViews();
+        if (getViewDataBinding().popularAreaLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().popularAreaLayout.removeAllViews();
+        }
 
         final int DP_58 = ScreenUtils.dpToPx(getContext(), 58);
 

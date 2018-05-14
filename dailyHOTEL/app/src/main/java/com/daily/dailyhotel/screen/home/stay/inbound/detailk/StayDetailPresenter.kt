@@ -182,7 +182,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 StayDetailActivity.TransGradientType.NONE
             }
 
-            stayIndex = 1158//intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
+            stayIndex = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
             stayName = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_NAME)
             defaultImageUrl = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL)
             viewPrice = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayDetailActivity.NONE_PRICE)
@@ -881,7 +881,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 it.baseInformation?.let { setBaseInformation(it, bookDateTime.nights > 1) }
 
                 setTrueReviewInformationVisible(it.trueReviewInformation.letNotNullTrueElseNullFalse { setTrueReviewInformation(it) })
-                setBenefitInformationVisible(it.benefitInformation.letNotNullTrueElseNullFalse { setBenefitInformation(it) })
+
+                if (hasBenefitContents(it.benefitInformation)) {
+                    setBenefitInformationVisible(true)
+                    setBenefitInformation(it.benefitInformation!!)
+                } else {
+                    setBenefitInformationVisible(false)
+                }
 
                 val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
                         bookDateTime.getCheckInDateTime("M.d(EEE)"),
@@ -939,6 +945,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             hasDeepLink = false
         } ?: Util.restartApp(activity)
+    }
+
+    private fun hasBenefitContents(benefitInformation: StayDetailk.BenefitInformation?): Boolean {
+        return benefitInformation != null && (!benefitInformation.title.isTextEmpty() || benefitInformation.contentList.isNotNullAndNotEmpty())
     }
 
     private fun notifyRewardDataSetChanged() {

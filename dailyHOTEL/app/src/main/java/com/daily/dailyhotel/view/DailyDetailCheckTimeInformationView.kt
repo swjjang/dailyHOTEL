@@ -40,7 +40,9 @@ class DailyDetailCheckTimeInformationView : ConstraintLayout {
     }
 
     fun setInformation(information: List<String>?) {
-        viewDataBinding.informationLayout.removeAllViews()
+        if (viewDataBinding.informationLayout.childCount > 0) {
+            viewDataBinding.informationLayout.removeAllViews()
+        }
 
         information.takeNotEmpty {
             it.filter { !it.isTextEmpty() }.forEach {

@@ -81,7 +81,10 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
-        getViewDataBinding().foodGridLayout.removeAllViews();
+        if (getViewDataBinding().foodGridLayout.getChildCount() > 0)
+        {
+            getViewDataBinding().foodGridLayout.removeAllViews();
+        }
 
         List<GourmetFilter.Category> categoryList = new ArrayList<>(categoryMap.values());
 

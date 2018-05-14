@@ -44,7 +44,9 @@ class DailyDetailFacilitiesView : ConstraintLayout {
     }
 
     fun setFacilities(facilities: List<FacilitiesPictogram>?) {
-        viewDataBinding.facilitiesGridLayout.removeAllViews()
+        if (viewDataBinding.facilitiesGridLayout.childCount > 0) {
+            viewDataBinding.facilitiesGridLayout.removeAllViews()
+        }
 
         facilities.takeNotEmpty {
             it.forEach {
