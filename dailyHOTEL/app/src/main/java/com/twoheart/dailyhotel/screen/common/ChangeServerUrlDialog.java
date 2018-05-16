@@ -65,5 +65,29 @@ public class ChangeServerUrlDialog extends BaseActivity
                 startActivity(intent);
             }
         });
+
+        mVieDataBinding.alphaServerTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(ChangeServerUrlDialog.this, LauncherActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fdev-alpha-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fdev-silo.dailyhotel.me%2F"));
+                startActivity(intent);
+            }
+        });
+
+        mVieDataBinding.canaryServerTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(ChangeServerUrlDialog.this, LauncherActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fbeta-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fbeta-silo.dailyhotel.me%2F"));
+                startActivity(intent);
+            }
+        });
     }
 }

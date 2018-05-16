@@ -187,7 +187,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fbeta-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fbeta-mobileapi.dailyhotel.me%2F"));
+                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fbeta-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fbeta-silo.dailyhotel.me%2F"));
                     mContext.startActivity(intent);
                 }
             });
