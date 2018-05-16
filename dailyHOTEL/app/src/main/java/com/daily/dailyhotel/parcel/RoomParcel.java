@@ -194,10 +194,10 @@ public class RoomParcel implements Parcelable
         @Override
         public void writeToParcel(Parcel dest, int flags)
         {
-            dest.writeInt(dest.readInt());
-            dest.writeInt(dest.readInt());
-            dest.writeInt(dest.readInt());
-            dest.writeInt(dest.readInt());
+            dest.writeInt(amountInformation.discountAverage);
+            dest.writeInt(amountInformation.discountRate);
+            dest.writeInt(amountInformation.discountTotal);
+            dest.writeInt(amountInformation.priceAverage);
         }
 
         private void readFromParcel(Parcel in)

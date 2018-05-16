@@ -50,7 +50,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             }
 
             val checkInDate = it.getStringExtra(StayRoomsActivity.INTENT_EXTRA_CHECK_IN_DATE)
-            val checkOutDate = it.getStringExtra(StayRoomsActivity.INTENT_EXTRA_CHECK_IN_DATE)
+            val checkOutDate = it.getStringExtra(StayRoomsActivity.INTENT_EXTRA_CHECK_OUT_DATE)
             if (checkInDate.isTextEmpty() || checkOutDate.isTextEmpty()) {
                 false
             }
@@ -110,7 +110,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
             viewInterface.setNights(bookDateTime.nights)
             viewInterface.setRoomList(roomList, 0)
-
+            viewInterface.notifyDataSetChanged()
 
 
 //            Observable.just(true)

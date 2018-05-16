@@ -1858,4 +1858,5 @@
     <string name="label_stay_room_discount_info_title">할인 및 적립 안내</string>
     <string name="label_stay_room_extra_charge_info_title">추가 요금 정보</string>
     <string name="label_stay_room_extra_charge_info_description">*추가 요금 현장 결제 (1박당 부과)</string>
+    <string name="label_stay_room_bed_type_title">베드</string>
 </resources>

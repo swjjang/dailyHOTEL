@@ -13,6 +13,8 @@ interface StayRoomsInterface {
 
         fun setRoomList(roomList: MutableList<Room>, position: Int)
 
+        fun notifyDataSetChanged()
+
         fun setGuideVisible(visible: Boolean)
     }
 
