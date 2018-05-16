@@ -76,6 +76,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
 
         listAdapter.setData(roomList)
+        setIndicatorText(position)
 
 //        listAdapter.setOnEventListener(object : StayRoomAdapter.OnEventListener {
 //            override fun onMoreImageClick(index: Int) {
@@ -99,6 +100,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)//
                     .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
         }
+    }
+
+    override fun notifyDataSetChanged() {
+        listAdapter.notifyDataSetChanged()
     }
 
     override fun setGuideVisible(visible: Boolean) {

@@ -88,13 +88,13 @@ class DailyRoomInfoGridView : LinearLayout {
                 moreGridLayout.removeAllViews()
             }
 
-            gridLayout.visibility = View.VISIBLE
-            moreGridLayout.visibility = View.VISIBLE
-            moreTextView.visibility = View.VISIBLE
-
             val columnCount = gridLayout.columnCount
             val maxIndex = DEFAULT_SHOW_LINE_COUNT * columnCount
             val hasMore = list.size > maxIndex
+
+            gridLayout.visibility = View.VISIBLE
+            moreGridLayout.visibility = View.VISIBLE
+            moreTextView.visibility = if (hasMore) View.VISIBLE else View.GONE
 
             list.forEachIndexed { index, text ->
                 if (index < maxIndex) {

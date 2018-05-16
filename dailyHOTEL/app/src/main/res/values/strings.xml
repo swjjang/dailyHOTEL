@@ -1865,4 +1865,10 @@
     <string name="label_stay_room_discount_info_title">할인 및 적립 안내</string>
     <string name="label_stay_room_extra_charge_info_title">추가 요금 정보</string>
     <string name="label_stay_room_extra_charge_info_description">*추가 요금 현장 결제 (1박당 부과)</string>
+    <string name="label_stay_room_bed_type_title">베드</string>
+    <string name="label_stay_room_benefit_title">객실 혜택</string>
+    <string name="label_stay_room_rewardable">리워드 적립 및 사용</string>
+    <string name="label_stay_room_coupon_useable">할인쿠폰 사용</string>
+    <string name="label_stay_room_reward_coupon_or"> 또는 </string>
+    <string name="label_stay_room_end_description">이 가능한 객실입니다.</string>
 </resources>

@@ -124,5 +124,12 @@ public class Room
         public boolean isDuplex;
         public boolean isEntireHouse;
         public String roomStructure;
+        public List<StructureInformation> structureInformationList;
+
+        public static class StructureInformation
+        {
+            public String type;
+            public int count;
+        }
     }
 }

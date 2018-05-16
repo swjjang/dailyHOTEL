@@ -986,6 +986,9 @@ public class StayDetailData
             @JsonField(name = "roomStructure")
             public String roomStructure;
 
+            @JsonField(name = "structures")
+            public List<StructureInformationData> structures;
+
             Room.AttributeInformation getAttribute()
             {
                 Room.AttributeInformation attribute = new Room.AttributeInformation();
@@ -994,7 +997,35 @@ public class StayDetailData
                 attribute.isEntireHouse = isEntireHouse;
                 attribute.roomStructure = roomStructure;
 
+                List<Room.AttributeInformation.StructureInformation> list = new ArrayList<>();
+                for (StructureInformationData data : structures)
+                {
+                    list.add(data.getStructure());
+                }
+
+                attribute.structureInformationList = list;
+
                 return attribute;
+            }
+
+            @JsonObject
+            static class StructureInformationData
+            {
+                @JsonField(name = "type")
+                public String type;
+
+                @JsonField(name = "count")
+                public int count;
+
+                Room.AttributeInformation.StructureInformation getStructure()
+                {
+                    Room.AttributeInformation.StructureInformation structure = new Room.AttributeInformation.StructureInformation();
+
+                    structure.type = type;
+                    structure.count = count;
+
+                    return structure;
+                }
             }
         }
 
