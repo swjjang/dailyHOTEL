@@ -15,8 +15,11 @@ import com.daily.base.util.ExLog
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
+import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.runTrue
+import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
@@ -29,6 +32,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         const val MENU_WIDTH_RATIO = 0.865f
     }
 
+    enum class RoomType(val roomName: String) {
+        ONE_ROOM("원룸형"),
+        LIVING_ROOM("거실+방")
+    }
+
     enum class BedType(val type: String, val typeName: String = "체크인시 배정", val vectorIconResId: Int = R.drawable.vector_ic_detail_item_bed_double) {
         SINGLE("SINGLE", "싱글", R.drawable.vector_ic_detail_item_bed_single),
         DOUBLE("DOUBLE", "더블", R.drawable.vector_ic_detail_item_bed_double),
@@ -36,7 +44,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         KING("KING", "킹", R.drawable.vector_ic_detail_item_bed_double),
         QUEEN("QUEEN", "퀸", R.drawable.vector_ic_detail_item_bed_double),
         IN_FLOOR_HEATING("IN_FLOOR_HEATING", "온돌", R.drawable.vector_ic_detail_item_bed_heatingroom),
-        ETC("ETC", "채크인시 배정", R.drawable.vector_ic_detail_item_bed_double)
+        UNKNOWN("UNKNOWN", "채크인 시 배정", R.drawable.vector_ic_detail_item_bed_double)
     }
 
     private var onEventListener: OnEventListener? = null
@@ -116,7 +124,17 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         dataBinding.roomNameTextView.text = room.name
 
-        if (room.amountInformation == null) {
+        setAmountInformationView(dataBinding, room.amountInformation)
+
+        setRefundInformationView(dataBinding, room.refundInformation)
+
+        setBaseInformationGridView(dataBinding, room)
+
+        setAttributeInformationView(dataBinding, room.attributeInformation)
+    }
+
+    private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
+        if (amountInformation == null) {
             dataBinding.discountPercentTextView.visibility = View.GONE
             dataBinding.priceTextView.visibility = View.GONE
             dataBinding.discountPriceTextView.setText(R.string.label_soldout)
@@ -126,32 +144,33 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.discountPercentTextView.visibility = View.VISIBLE
             dataBinding.priceTextView.visibility = View.VISIBLE
 
-            val discountRateSpan = SpannableString("${room.amountInformation.discountRate}%")
+            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
             discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             dataBinding.discountPercentTextView.text = discountRateSpan
 
             val nightsString = if (nights > 1) "/1박" else ""
-            val discountPriceString = DailyTextUtils.getPriceFormat(context, room.amountInformation.discountAverage, false)
+            val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
 
             val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
-            discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             dataBinding.discountPriceTextView.text = discountPriceSpan
 
-            val priceSpan = SpannableString(DailyTextUtils.getPriceFormat(context, room.amountInformation.priceAverage, false))
+            val priceSpan = SpannableString(DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false))
+            priceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), 0, priceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             priceSpan.setSpan(StrikethroughSpan(), 0, priceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             dataBinding.priceTextView.text = priceSpan
         }
+    }
 
-        if (room.refundInformation == null || room.refundInformation.warningMessage.isTextEmpty()) {
+    private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetailk.RefundInformation?) {
+        if (refundInformation == null || refundInformation.warningMessage.isTextEmpty()) {
             dataBinding.refundPolicyTextView.visibility = View.GONE
         } else {
             dataBinding.refundPolicyTextView.visibility = View.VISIBLE
-            dataBinding.refundPolicyTextView.text = room.refundInformation.warningMessage
+            dataBinding.refundPolicyTextView.text = refundInformation.warningMessage
         }
-
-        setBaseInformationGridView(dataBinding, room)
     }
 
     private fun setBaseInformationGridView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
@@ -208,7 +227,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             val bedType: BedType = try {
                 BedType.valueOf(bedTypeInformation.bedType.toUpperCase())
             } catch (e: Exception) {
-                BedType.ETC
+                BedType.UNKNOWN
             }
 
             bedVectorIconResId = if (bedVectorIconResId == 0) {
@@ -221,7 +240,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
-            BedType.ETC.vectorIconResId
+            BedType.UNKNOWN.vectorIconResId
         }
 
         dataBinding.bedIconImageView.setVectorImageResource(bedVectorIconResId)
@@ -229,12 +248,77 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setSquareInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
-        val squareMeterSpan = SpannableString("${room.squareMeter}m")
-        squareMeterSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 5.0)), squareMeterSpan.length - 1, squareMeterSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        dataBinding.squareTitleTextView.text = squareMeterSpan
+        dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
 
         val pyoung = Math.round(room.squareMeter / 400 * 121)
         dataBinding.squareDescriptionTextView.text = "${pyoung}평"
+    }
+
+    private fun setAttributeInformationView(dataBinding: ListRowStayRoomDataBinding, attribute: Room.AttributeInformation?) {
+        if (attribute == null) {
+            dataBinding.subInfoGroup.visibility = View.GONE
+            return
+        }
+
+        dataBinding.subInfoGroup.visibility = View.VISIBLE
+
+        val roomType: RoomType = try {
+            RoomType.valueOf(attribute.roomStructure)
+        } catch (e: Exception) {
+            RoomType.ONE_ROOM
+        }
+
+        var titleText = roomType.roomName
+
+        attribute.isEntireHouse.runTrue { titleText += "/독채" }
+        attribute.isDuplex.run { titleText += "/복층" }
+
+        dataBinding.subInfoGridView.setTitleText(titleText)
+        dataBinding.subInfoGridView.setTitleVisible(true)
+        dataBinding.subInfoGridView.setColumnCount(2)
+
+        val stringList = mutableListOf<String>()
+        var roomString = ""
+
+        attribute.structureInformationList?.forEach {
+            when (it.type) {
+                "BED_ROOM" -> {
+                    if (!roomString.isTextEmpty()) {
+                        roomString += ", "
+                    }
+
+                    roomString += "침대룸 ${it.count}개"
+                }
+
+                "IN_FLOOR_HEATING_ROOM" -> {
+                    if (!roomString.isTextEmpty()) {
+                        roomString += ", "
+                    }
+
+                    roomString += "온돌룸 ${it.count}개"
+                }
+
+                "LIVING_ROOM" -> {
+                    stringList += "거실 ${it.count}개"
+                }
+
+                "KITCHEN" -> {
+                    stringList += "주방 ${it.count}개"
+                }
+
+                "REST_ROOM" -> {
+                    stringList += "화장실 ${it.count}개"
+                }
+
+                else -> {
+                    // do nothing
+                }
+            }
+        }
+
+        stringList.add(0, roomString)
+
+        dataBinding.subInfoGridView.setData(DailyRoomInfoGridView.ItemType.NONE, stringList)
     }
 
     fun getLayoutWidth(): Float {

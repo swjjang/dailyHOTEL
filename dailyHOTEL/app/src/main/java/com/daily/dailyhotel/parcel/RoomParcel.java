@@ -130,7 +130,7 @@ public class RoomParcel implements Parcelable
         room.roomChargeInformation = chargeInformationParcel == null ? null : chargeInformationParcel.getChargeInformation();
 
         AttributeInformationParcel attributeInformationParcel = in.readParcelable(AttributeInformationParcel.class.getClassLoader());
-        room.attributeInformation = attributeInformationParcel == null? null : attributeInformationParcel.getAttributeInformation();
+        room.attributeInformation = attributeInformationParcel == null ? null : attributeInformationParcel.getAttributeInformation();
 
         List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
         List<VrInformationParcel> vrParcelList = in.readArrayList(BedTypeInformationParcel.class.getClassLoader());
@@ -444,7 +444,6 @@ public class RoomParcel implements Parcelable
             }
         };
     }
-
 
     public static class BedTypeInformationParcel implements Parcelable
     {
@@ -799,6 +798,18 @@ public class RoomParcel implements Parcelable
             dest.writeInt(attributeInformation.isDuplex ? 1 : 0);
             dest.writeInt(attributeInformation.isEntireHouse ? 1 : 0);
             dest.writeString(attributeInformation.roomStructure);
+
+            List<StructureInformationParcel> list = new ArrayList<>();
+
+            if (attributeInformation.structureInformationList != null)
+            {
+                for (Room.AttributeInformation.StructureInformation info : attributeInformation.structureInformationList)
+                {
+                    list.add(new StructureInformationParcel(info));
+                }
+            }
+
+            dest.writeList(list);
         }
 
         private void readFromParcel(Parcel in)
@@ -807,6 +818,18 @@ public class RoomParcel implements Parcelable
             attributeInformation.isDuplex = in.readInt() == 1;
             attributeInformation.isEntireHouse = in.readInt() == 1;
             attributeInformation.roomStructure = in.readString();
+
+            List<Room.AttributeInformation.StructureInformation> list = new ArrayList<>();
+            List<StructureInformationParcel> parcelList = in.readArrayList(StructureInformationParcel.class.getClassLoader());
+            if (parcelList != null)
+            {
+                for (StructureInformationParcel parcel : parcelList)
+                {
+                    list.add(parcel.getStructureInformation());
+                }
+            }
+
+            attributeInformation.structureInformationList = list;
         }
 
         @Override
@@ -827,6 +850,66 @@ public class RoomParcel implements Parcelable
             public AttributeInformationParcel[] newArray(int size)
             {
                 return new AttributeInformationParcel[size];
+            }
+        };
+    }
+
+    public static class StructureInformationParcel implements Parcelable
+    {
+        private Room.AttributeInformation.StructureInformation structureInformation;
+
+        public StructureInformationParcel(Room.AttributeInformation.StructureInformation structureInformation)
+        {
+            if (structureInformation == null)
+            {
+                throw new NullPointerException("structureInformation == null");
+            }
+
+            this.structureInformation = structureInformation;
+        }
+
+        protected StructureInformationParcel(Parcel in)
+        {
+            readFromParcel(in);
+        }
+
+        public Room.AttributeInformation.StructureInformation getStructureInformation()
+        {
+            return structureInformation;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(structureInformation.type);
+            dest.writeInt(structureInformation.count);
+        }
+
+        private void readFromParcel(Parcel in)
+        {
+            structureInformation = new Room.AttributeInformation.StructureInformation();
+            structureInformation.type = in.readString();
+            structureInformation.count = in.readInt();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        public static final Creator<StructureInformationParcel> CREATOR = new Creator<StructureInformationParcel>()
+        {
+            @Override
+            public StructureInformationParcel createFromParcel(Parcel in)
+            {
+                return new StructureInformationParcel(in);
+            }
+
+            @Override
+            public StructureInformationParcel[] newArray(int size)
+            {
+                return new StructureInformationParcel[size];
             }
         };
     }

@@ -112,8 +112,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/discountPriceTextView"
-                dailyFont:style="Medium"
-                />
+                dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/discountPriceTextView"
@@ -133,12 +132,10 @@
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
                 android:layout_marginLeft="5dp"
-                android:gravity="bottom"
                 android:text="400,000원"
                 android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="12dp"
+                android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
                 app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -153,7 +150,6 @@
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:paddingTop="2dp"
-                android:text="특가상품으로 변경, 취소, 환불 불가"
                 android:textColor="@color/default_text_cfb234a"
                 android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -277,69 +273,12 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:layout_marginTop="5dp"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView"
-                    />
-
-
-                <!--<com.google.android.flexbox.FlexboxLayout-->
-                    <!--android:id="@+id/bedDescriptionLayout"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="7dp"-->
-                    <!--android:layout_marginLeft="4dp"-->
-                    <!--android:layout_marginRight="4dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:gravity="center"-->
-                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                    <!--app:layout_constraintRight_toRightOf="parent"-->
-                    <!--app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView"-->
-                    <!--&gt;-->
-
-                    <!--<com.daily.base.widget.DailyTextView-->
-                        <!--android:id="@+id/firstDescriptionTextView"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@drawable/shape_rect_stay_room_grid_description_background"-->
-                        <!--android:freezesText="true"-->
-                        <!--android:gravity="center"-->
-                        <!--android:text="donadonfoasdn oandofna odnfoansdofno andofnoasnfo dnofnao dnofnaosdno nasosdnf"-->
-                        <!--android:textColor="@color/default_text_c929292"-->
-                        <!--android:textSize="11dp"-->
-                        <!--dailyFont:style="Medium"/>-->
-                <!--</com.google.android.flexbox.FlexboxLayout>-->
-
-                <!--<LinearLayout-->
-                <!--android:id="@+id/bedDescriptionLayout"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="7dp"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginRight="4dp"-->
-                <!--android:layout_marginTop="5dp"-->
-                <!--android:gravity="center"-->
-                <!--android:orientation="vertical"-->
-                <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintRight_toRightOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView">-->
-
-                <!--<com.daily.dailyhotel.view.DailyRoomGridTextView-->
-                <!--android:id="@+id/firstDescriptionTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@drawable/shape_rect_stay_room_grid_description_background"-->
-                <!--android:freezesText="true"-->
-                <!--android:gravity="center"-->
-                <!--android:textColor="@color/default_text_c929292"-->
-                <!--android:textSize="11dp"-->
-                <!--dailyFont:style="Medium"/>-->
-                <!--</LinearLayout>-->
+                    app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView"/>
 
             </android.support.constraint.ConstraintLayout>
 
@@ -379,7 +318,7 @@
                     android:id="@+id/squareIconTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginTop="2dp"
                     android:freezesText="true"
                     android:gravity="center"
                     android:text="2"
