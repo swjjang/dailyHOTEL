@@ -627,6 +627,23 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return stayDetail.filterIf({ it.roomInformation?.roomList.isNotNullAndNotEmpty() }, true)
     }
 
+    override fun onBedTypeFilterClick() {
+        if (lock()) return
+
+        stayDetail?.let {
+            addCompositeDisposable(viewInterface.showBedTypeFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+        } ?: Util.restartApp(activity)
+
+    }
+
+    override fun onFacilitiesFilterClick() {
+        if (lock()) return
+
+        stayDetail?.let {
+            addCompositeDisposable(viewInterface.showFacilitiesFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+        } ?: Util.restartApp(activity)
+    }
+
     override fun onMapClick() {
         if (lock()) return
 
@@ -864,11 +881,22 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         viewInterface.scrollStayInformation()
     }
 
+    override fun onSelectedBedTypeFilter(bedType: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onSelectedFacilitiesFilter(facilities: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun notifyDetailDataSetChanged() {
         stayDetail?.let {
             if (defaultImageUrl.isTextEmpty() && it.imageList.isNotNullAndNotEmpty()) {
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
             }
+
+            bedTypeFilter.clear()
+            facilitiesFilter.clear()
 
             viewInterface.apply {
                 setScrollViewVisible(true)
@@ -898,7 +926,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
 
                 setDailyCommentVisible(it.dailyCommentList.letNotNullTrueElseNullFalse { setDailyComment(it) })
-                setFacilities(it.totalRoomCount, it.facilityList)
+                setFacilities(it.totalRoomCount, it.facilitiesList)
                 setAddressInformationVisible(it.addressInformation.letNotNullTrueElseNullFalse { setAddressInformation(it) })
                 setCheckTimeInformationVisible(it.checkTimeInformation.letNotNullTrueElseNullFalse { setCheckTimeInformation(it) })
 
@@ -914,6 +942,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 })
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
+
+                it.roomInformation?.bedTypeSet?.let { viewInterface.setBedTypeFilter(it, bedTypeFilter) }
+                it.roomInformation?.facilitiesSet?.let { viewInterface.setFacilitiesFilter(it, facilitiesFilter) }
             }
 
             status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING

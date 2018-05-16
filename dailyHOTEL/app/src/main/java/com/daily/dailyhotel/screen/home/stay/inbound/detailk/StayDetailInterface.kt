@@ -10,6 +10,7 @@ import com.daily.base.OnBaseEventListener
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
+import io.reactivex.Completable
 import io.reactivex.Observable
 
 interface StayDetailInterface {
@@ -136,6 +137,18 @@ interface StayDetailInterface {
         fun hideMoreRooms()
 
         fun isShowMoreRooms(): Boolean
+
+        fun setBedTypeFilter(bedTypeList: HashSet<String>, selectedBedType: LinkedHashSet<String>)
+
+        fun showBedTypeFilter(): Completable
+
+        fun hideBedTypeFilter(): Completable
+
+        fun setFacilitiesFilter(facilitiesList: HashSet<String>, selectedFacilities: LinkedHashSet<String>)
+
+        fun showFacilitiesFilter(): Completable
+
+        fun hideFacilitiesFilter(): Completable
     }
 
     interface OnEventListener : OnBaseEventListener {
@@ -152,6 +165,10 @@ interface StayDetailInterface {
         fun onImageClick(position: Int)
 
         fun onCalendarClick()
+
+        fun onBedTypeFilterClick()
+
+        fun onFacilitiesFilterClick()
 
         fun onMapClick()
 
@@ -194,6 +211,10 @@ interface StayDetailInterface {
         fun onRoomInformationClick()
 
         fun onStayInformationClick()
+
+        fun onSelectedBedTypeFilter(bedType: String)
+
+        fun onSelectedFacilitiesFilter(facilities: String)
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

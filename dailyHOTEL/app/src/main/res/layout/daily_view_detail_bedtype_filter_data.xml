@@ -37,9 +37,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-
         <View
-            android:id="@+id/doubleView"
+            android:id="@+id/bedType01View"
             android:layout_width="0dp"
             android:layout_height="67dp"
             android:layout_marginLeft="20dp"
@@ -48,11 +47,11 @@
             android:background="@drawable/selector_fillrect_ceb2135_ce6e6e7_r3"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/twinView"
+            app:layout_constraintRight_toLeftOf="@+id/bedType02View"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/doubleTextView"
+            android:id="@+id/bedType01TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="2dp"
@@ -60,13 +59,13 @@
             android:textColor="@drawable/selector_text_color_c929292_ceb2135"
             android:textSize="12dp"
             app:drawableCompatTop="@drawable/vector_ic_bed_type_double"
-            app:layout_constraintBottom_toBottomOf="@+id/doubleView"
-            app:layout_constraintLeft_toLeftOf="@+id/doubleView"
-            app:layout_constraintRight_toRightOf="@+id/doubleView"
-            app:layout_constraintTop_toTopOf="@+id/doubleView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/bedType01View"
+            app:layout_constraintLeft_toLeftOf="@+id/bedType01View"
+            app:layout_constraintRight_toRightOf="@+id/bedType01View"
+            app:layout_constraintTop_toTopOf="@+id/bedType01View"/>
 
         <View
-            android:id="@+id/twinView"
+            android:id="@+id/bedType02View"
             android:layout_width="0dp"
             android:layout_height="67dp"
             android:layout_marginLeft="5dp"
@@ -74,12 +73,12 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/selector_fillrect_ceb2135_ce6e6e7_r3"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@+id/doubleView"
-            app:layout_constraintRight_toLeftOf="@+id/ondolView"
+            app:layout_constraintLeft_toRightOf="@+id/bedType01View"
+            app:layout_constraintRight_toLeftOf="@+id/bedType03View"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/twinTextView"
+            android:id="@+id/bedType02TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="2dp"
@@ -87,14 +86,14 @@
             android:textColor="@drawable/selector_text_color_c929292_ceb2135"
             android:textSize="12dp"
             app:drawableCompatTop="@drawable/vector_ic_bed_type_twin"
-            app:layout_constraintBottom_toBottomOf="@+id/twinView"
-            app:layout_constraintLeft_toLeftOf="@+id/twinView"
-            app:layout_constraintRight_toRightOf="@+id/twinView"
-            app:layout_constraintTop_toTopOf="@+id/twinView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/bedType02View"
+            app:layout_constraintLeft_toLeftOf="@+id/bedType02View"
+            app:layout_constraintRight_toRightOf="@+id/bedType02View"
+            app:layout_constraintTop_toTopOf="@+id/bedType02View"/>
 
 
         <View
-            android:id="@+id/ondolView"
+            android:id="@+id/bedType03View"
             android:layout_width="0dp"
             android:layout_height="67dp"
             android:layout_marginLeft="5dp"
@@ -102,12 +101,12 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/selector_fillrect_ceb2135_ce6e6e7_r3"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@+id/twinView"
-            app:layout_constraintRight_toLeftOf="@+id/singleView"
+            app:layout_constraintLeft_toRightOf="@+id/bedType02View"
+            app:layout_constraintRight_toLeftOf="@+id/bedType04View"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/ondolTextView"
+            android:id="@+id/bedType03TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="2dp"
@@ -115,13 +114,13 @@
             android:textColor="@drawable/selector_text_color_c929292_ceb2135"
             android:textSize="12dp"
             app:drawableCompatTop="@drawable/vector_ic_bed_type_ondol"
-            app:layout_constraintBottom_toBottomOf="@+id/ondolView"
-            app:layout_constraintLeft_toLeftOf="@+id/ondolView"
-            app:layout_constraintRight_toRightOf="@+id/ondolView"
-            app:layout_constraintTop_toTopOf="@+id/ondolView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/bedType03View"
+            app:layout_constraintLeft_toLeftOf="@+id/bedType03View"
+            app:layout_constraintRight_toRightOf="@+id/bedType03View"
+            app:layout_constraintTop_toTopOf="@+id/bedType03View"/>
 
         <View
-            android:id="@+id/singleView"
+            android:id="@+id/bedType04View"
             android:layout_width="0dp"
             android:layout_height="67dp"
             android:layout_marginLeft="5dp"
@@ -129,12 +128,12 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/selector_fillrect_ceb2135_ce6e6e7_r3"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@+id/ondolView"
+            app:layout_constraintLeft_toRightOf="@+id/bedType03View"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/singleTextView"
+            android:id="@+id/bedType04TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="2dp"
@@ -142,10 +141,10 @@
             android:textColor="@drawable/selector_text_color_c929292_ceb2135"
             android:textSize="12dp"
             app:drawableCompatTop="@drawable/vector_ic_bed_type_ondol"
-            app:layout_constraintBottom_toBottomOf="@+id/singleView"
-            app:layout_constraintLeft_toLeftOf="@+id/singleView"
-            app:layout_constraintRight_toRightOf="@+id/singleView"
-            app:layout_constraintTop_toTopOf="@+id/singleView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/bedType04View"
+            app:layout_constraintLeft_toLeftOf="@+id/bedType04View"
+            app:layout_constraintRight_toRightOf="@+id/bedType04View"
+            app:layout_constraintTop_toTopOf="@+id/bedType04View"/>
 
         <View
             android:id="@+id/underLineView"
@@ -155,7 +154,7 @@
             android:background="@color/default_line_ce7e7e7"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/doubleView"/>
+            app:layout_constraintTop_toBottomOf="@+id/bedType01View"/>
 
 
         <com.daily.base.widget.DailyTextView

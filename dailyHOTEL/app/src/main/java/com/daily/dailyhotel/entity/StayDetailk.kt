@@ -18,7 +18,7 @@ class StayDetailk : Configurations() {
 
     var dailyCommentList: List<String>? = null
 
-    var facilityList: List<FacilitiesPictogram>? = null
+    var facilitiesList: List<FacilitiesPictogram>? = null
     var totalRoomCount: Int = 0
 
     var addressInformation: AddressInformation? = null
@@ -87,8 +87,8 @@ class StayDetailk : Configurations() {
     }
 
     class RoomInformation {
-        var bedTypeList: HashSet<String>? = null
-        var facilityList: HashSet<String>? = null
+        var bedTypeSet: HashSet<String>? = null
+        var facilitiesSet: HashSet<String>? = null
         var roomList: List<Room>? = null
     }
 
