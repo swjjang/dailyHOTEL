@@ -333,16 +333,6 @@ public class AddProfileSocialActivity extends BaseActivity
             DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
         }
 
-        Calendar calendar = mAddProfileSocialLayout.getBirthday();
-
-        if (calendar != null)
-        {
-            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
-        } else
-        {
-            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(null);
-        }
-
         int year = mAddProfileSocialLayout.getPrivacyYear();
         String label = year > 1 ? year + "yrs" : "yr";
 

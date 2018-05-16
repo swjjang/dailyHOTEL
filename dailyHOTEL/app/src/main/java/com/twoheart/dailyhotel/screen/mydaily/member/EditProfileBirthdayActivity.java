@@ -529,12 +529,6 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                 setResult(RESULT_OK);
 
                 unLockUI();
-
-                AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).setUserBirthday(user.birthday);
-
-                // 생일을 입력한 경우 체크
-                AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
-                    , AnalyticsManager.Action.REGISTRATION_CLICKED, user.birthday, null);
             }
         }, new Consumer<Throwable>()
         {

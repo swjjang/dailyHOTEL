@@ -152,20 +152,6 @@ public class AnalyticsManager
         }
     }
 
-    public void setUserBirthday(String birthday)
-    {
-        try
-        {
-            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
-            {
-                analyticsManager.setUserBirthday(birthday);
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(TAG + e.toString());
-        }
-    }
-
     public void setExceedBonus(boolean isExceedBonus)
     {
         try
@@ -398,13 +384,13 @@ public class AnalyticsManager
         }
     }
 
-    public void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen)
+    public void signUpDailyUser(String userIndex, String userType, String recommender, String callByScreen)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.signUpDailyUser(userIndex, birthday, userType, recommender, callByScreen);
+                analyticsManager.signUpDailyUser(userIndex, userType, recommender, callByScreen);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -1161,7 +1147,6 @@ public class AnalyticsManager
         public static final String AUTO_SEARCH = "AutoSearch";
         public static final String AUTO_SEARCH_NOT_FOUND = "AutoSearchNotFound";
         public static final String CALL_BUTTON_CLICKED = "CallButtonClicked";
-        public static final String SET_MY_BIRTHDAY = "SetMyBirthday";
 
         // Review
         public static final String HOTEL_SATISFACTIONEVALUATION = "HotelSatisfactionEvaluation";
@@ -1589,7 +1574,6 @@ public class AnalyticsManager
         public static final String SEARCH_PATH = "search_path";
         public static final String SEARCH_COUNT = "search_count";
         public static final String SEARCH_RESULT = "search_result";
-        public static final String FILL_DATE_OF_BIRTH = "fill_date_of_birth";
         public static final String REASON_CANCELLATION = "reason_cancellation";
         public static final String LIST_TOP5_PLACE_INDEXES = "list_top5_place_indexes";
         public static final String KIND_OF_COUPON = "kind_of_coupon";
