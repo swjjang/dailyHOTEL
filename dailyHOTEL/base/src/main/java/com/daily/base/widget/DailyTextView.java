@@ -323,7 +323,7 @@ public class DailyTextView extends AppCompatTextView
         @Override
         public void draw(Canvas canvas)
         {
-            int halfCanvas = canvas.getHeight() / 2;
+            int halfCanvas = (canvas.getHeight() - getPaddingTop() - getPaddingBottom()) / 2;
             int halfDrawable = mDrawable.getIntrinsicHeight() / 2;
             Paint.FontMetrics fontMetrics = getPaint().getFontMetrics();
             int fontHeight = (int) (fontMetrics.bottom - fontMetrics.top);

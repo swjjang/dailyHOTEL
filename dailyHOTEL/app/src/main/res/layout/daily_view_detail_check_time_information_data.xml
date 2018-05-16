@@ -125,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:orientation="vertical"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/checkBottomGuideLine"/>

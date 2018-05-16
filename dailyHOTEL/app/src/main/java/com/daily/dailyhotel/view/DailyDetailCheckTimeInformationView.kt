@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
@@ -39,6 +40,10 @@ class DailyDetailCheckTimeInformationView : ConstraintLayout {
         viewDataBinding.checkOutTimeTextView.text = checkOutTime
     }
 
+    fun setInformationVisible(visible: Boolean) {
+        viewDataBinding.informationLayout.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     fun setInformation(information: List<String>?) {
         if (viewDataBinding.informationLayout.childCount > 0) {
             viewDataBinding.informationLayout.removeAllViews()
@@ -46,18 +51,21 @@ class DailyDetailCheckTimeInformationView : ConstraintLayout {
 
         information.takeNotEmpty {
             it.filter { !it.isTextEmpty() }.forEach {
-                viewDataBinding.informationLayout.addView(getInformationView(it), ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                viewDataBinding.informationLayout.addView(getContentBulletView(it), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
     }
 
-    private fun getInformationView(text: String): View {
+    private fun getContentBulletView(text: String): DailyTextView {
         return DailyTextView(context).apply {
             this.text = text
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f)
-            setTextColor(context.resources.getColor(R.color.default_text_c323232))
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f)
+            setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
+            setLineSpacing(1.0f, 1.0f)
+            compoundDrawablePadding = ScreenUtils.dpToPx(context, 10.0)
             setDrawableCompatLeftAndRightFixedFirstLine(true)
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_ic_text_dot_black, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0)
+            setPadding(0, ScreenUtils.dpToPx(context, 14.0), 0, 0)
         }
     }
 }

@@ -30,6 +30,12 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     private var listener: OnDailyDetailRoomInformationListener? = null
 
     interface OnDailyDetailRoomInformationListener {
+        fun onCalendarClick()
+
+        fun onBedTypeFilterClick()
+
+        fun onFacilitiesFilterClick()
+
         fun onMoreRoomsClick(expanded: Boolean)
     }
 
@@ -57,6 +63,20 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         })
 
         setPriceAverageType(true)
+
+        viewDataBinding.roomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener{
+            override fun onCalendarClick() {
+                listener?.onCalendarClick()
+            }
+
+            override fun onBedTypeFilterClick() {
+                listener?.onBedTypeFilterClick()
+            }
+
+            override fun onFacilitiesFilterClick() {
+                listener?.onFacilitiesFilterClick()
+            }
+        })
     }
 
     fun setRoomInformationListener(listener: OnDailyDetailRoomInformationListener) {
@@ -71,8 +91,8 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.roomFilterView.setBedTypeFilterCount(count)
     }
 
-    fun setFacilitiesTypeFilterCount(count: Int) {
-        viewDataBinding.roomFilterView.setFacilitiesTypeFilterCount(count)
+    fun setFacilitiesFilterCount(count: Int) {
+        viewDataBinding.roomFilterView.setFacilitiesFilterCount(count)
     }
 
     fun setPriceAverageTypeVisible(visible: Boolean) {

@@ -23,59 +23,27 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="20dp"/>
 
-        <View
-            android:id="@+id/topLineView"
-            android:layout_width="0dp"
-            android:layout_height="1px"
-            android:layout_marginTop="30dp"
-            android:background="@color/default_line_cdcdcdd"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toTopOf="parent"/>
-
         <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:freezesText="true"
-            android:text="업장 프로모션 정보"
+            android:text="@string/label_detail_cancellation_refund_policy"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/topLineView"
+            app:layout_constraintTop_toTopOf="parent"
             dailyFont:style="Medium"/>
 
         <LinearLayout
             android:id="@+id/informationLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
             android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
-
-        <LinearLayout
-            android:id="@+id/moreInformationLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/informationLayout"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/moreTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="10dp"
-            android:paddingTop="14dp"
-            android:text="@string/label_more"
-            android:textColor="@color/default_text_ceb2135"
-            android:textSize="14dp"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/moreInformationLayout"
-            dailyFont:style="Medium"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

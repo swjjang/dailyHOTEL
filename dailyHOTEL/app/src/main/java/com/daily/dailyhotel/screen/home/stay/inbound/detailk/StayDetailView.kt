@@ -30,10 +30,7 @@ import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotNullTrueElseNullFalse
 import com.daily.dailyhotel.util.runTrue
-import com.daily.dailyhotel.view.DailyDetailAddressView
-import com.daily.dailyhotel.view.DailyDetailEmptyView
-import com.daily.dailyhotel.view.DailyDetailRoomInformationView
-import com.daily.dailyhotel.view.DailyToolbarView
+import com.daily.dailyhotel.view.*
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.drawee.drawable.ScalingUtils
@@ -111,6 +108,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         hideWishTooltip()
         viewDataBinding.wishTooltipView.setOnClickListener(View.OnClickListener { eventListener.onHideWishTooltipClick() })
 
+
+
         setEmptyView()
         setTabLayout()
     }
@@ -130,6 +129,34 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.fakeToolbarView.clearMenuItem()
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null) { eventListener.onWishClick() }
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null) { eventListener.onShareClick() }
+    }
+
+    private fun initRoomFilter() {
+        viewDataBinding.filterDimmedBackgroundView.setOnClickListener(View.OnClickListener {
+            if (viewDataBinding.bedTypeFilterView.visibility == View.VISIBLE) {
+                eventListener.onCloseBedTypeFilterClick()
+            } else if (viewDataBinding.facilitiesFilterView.visibility == View.VISIBLE) {
+                eventListener.onCloseFacilitiesFilterClick()
+            }
+        })
+
+        viewDataBinding.bedTypeFilterView.setOnDailyDetailBedTypeFilterListener(object : DailyDetailBedTypeFilterView.OnDailyDetailBedTypeFilterListener {
+            override fun onSelectedFilter(bedType: String) {
+                eventListener.onSelectedBedTypeFilter(bedType)
+            }
+
+            override fun onCloseClick() {
+                eventListener.onCloseBedTypeFilterClick()
+            }
+
+            override fun onResetClick() {
+                eventListener.onResetBedTypeFilterClick()
+            }
+
+            override fun onConfirmClick() {
+                eventListener.onConfirmBedTypeFilterClick()
+            }
+        })
     }
 
     override fun setScrollViewVisible(visible: Boolean) {
@@ -538,12 +565,12 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.roomInformationView.apply {
             setCalendar(calendarText)
             setBedTypeFilterCount(bedTypeFilterCount)
-            setFacilitiesTypeFilterCount(facilitiesFilterCount)
+            setFacilitiesFilterCount(facilitiesFilterCount)
         }
 
         viewDataBinding.stickyRoomFilterView.setCalendar(calendarText)
         viewDataBinding.stickyRoomFilterView.setBedTypeFilterCount(bedTypeFilterCount)
-        viewDataBinding.stickyRoomFilterView.setFacilitiesTypeFilterCount(facilitiesFilterCount)
+        viewDataBinding.stickyRoomFilterView.setFacilitiesFilterCount(facilitiesFilterCount)
     }
 
     override fun setSoldOutRoomVisible(visible: Boolean) {
@@ -554,6 +581,18 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.roomInformationView.setRoomList(roomList)
 
         viewDataBinding.roomInformationView.setRoomInformationListener(object : DailyDetailRoomInformationView.OnDailyDetailRoomInformationListener {
+            override fun onCalendarClick() {
+                eventListener.onCalendarClick()
+            }
+
+            override fun onBedTypeFilterClick() {
+                eventListener.onBedTypeFilterClick()
+            }
+
+            override fun onFacilitiesFilterClick() {
+                eventListener.onFacilitiesFilterClick()
+            }
+
             override fun onMoreRoomsClick(expanded: Boolean) {
                 if (expanded) hideMoreRooms() else showMoreRooms()
             }
@@ -625,7 +664,13 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun setCheckTimeInformation(checkTimeInformation: StayDetailk.CheckTimeInformation) {
         viewDataBinding.checkTimeInformationView.apply {
             setCheckTimeText(checkTimeInformation.checkIn, checkTimeInformation.checkOut)
-            setInformation(checkTimeInformation.description)
+
+            if (checkTimeInformation.description.isNotNullAndNotEmpty()) {
+                setInformationVisible(true)
+                setInformation(checkTimeInformation.description)
+            } else {
+                setInformationVisible(false)
+            }
         }
     }
 
@@ -853,8 +898,13 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         return viewDataBinding.roomInformationView.isShowMoreRoom()
     }
 
-    override fun setBedTypeFilter(bedTypeList: HashSet<String>, selectedBedType: LinkedHashSet<String>) {
+    override fun setBedTypeFilter(bedTypeList: HashSet<String>) {
         viewDataBinding.bedTypeFilterView.setBedType(bedTypeList)
+    }
+
+    override fun setSelectedBedTypeFilter(selectedBedType: LinkedHashSet<String>, selectedRoomCount: Int) {
+        viewDataBinding.bedTypeFilterView.setSelectedBedType(selectedBedType)
+        viewDataBinding.bedTypeFilterView.setFilterCount(selectedRoomCount)
     }
 
     override fun showBedTypeFilter(): Completable {
@@ -871,6 +921,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                     }
 
                     override fun onAnimationEnd(animation: Animator?) {
+                        removeAllListeners()
                         it.onComplete()
                     }
 
@@ -884,6 +935,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 })
 
                 playTogether(dimmedAnimation, transitionAnimation)
+                start()
             }
         }
     }
@@ -902,6 +954,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                     }
 
                     override fun onAnimationEnd(animation: Animator?) {
+                        removeAllListeners()
+
                         viewDataBinding.filterDimmedBackgroundView.visibility = View.INVISIBLE
                         viewDataBinding.bedTypeFilterView.visibility = View.INVISIBLE
 
@@ -916,12 +970,15 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 })
 
                 playTogether(dimmedAnimation, transitionAnimation)
+                start()
             }
         }
     }
 
-    override fun setFacilitiesFilter(facilitiesList: HashSet<String>, selectedFacilities: LinkedHashSet<String>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setFacilitiesFilter(facilitiesList: HashSet<String>) {
+    }
+
+    override fun setSelectedFacilitiesFilter(selectedFacilities: LinkedHashSet<String>, selectedRoomCount: Int) {
     }
 
     override fun showFacilitiesFilter(): Completable {
@@ -951,6 +1008,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 })
 
                 playTogether(dimmedAnimation, transitionAnimation)
+                start()
             }
         }
     }
@@ -983,6 +1041,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 })
 
                 playTogether(dimmedAnimation, transitionAnimation)
+                start()
             }
         }
     }

@@ -138,13 +138,17 @@ interface StayDetailInterface {
 
         fun isShowMoreRooms(): Boolean
 
-        fun setBedTypeFilter(bedTypeList: HashSet<String>, selectedBedType: LinkedHashSet<String>)
+        fun setBedTypeFilter(bedTypeList: HashSet<String>)
+
+        fun setSelectedBedTypeFilter(selectedBedType: LinkedHashSet<String>, selectedRoomCount: Int)
 
         fun showBedTypeFilter(): Completable
 
         fun hideBedTypeFilter(): Completable
 
-        fun setFacilitiesFilter(facilitiesList: HashSet<String>, selectedFacilities: LinkedHashSet<String>)
+        fun setFacilitiesFilter(facilitiesList: HashSet<String>)
+
+        fun setSelectedFacilitiesFilter(selectedFacilities: LinkedHashSet<String>, selectedRoomCount: Int)
 
         fun showFacilitiesFilter(): Completable
 
@@ -215,6 +219,18 @@ interface StayDetailInterface {
         fun onSelectedBedTypeFilter(bedType: String)
 
         fun onSelectedFacilitiesFilter(facilities: String)
+
+        fun onResetBedTypeFilterClick()
+
+        fun onResetFacilitiesFilterClick()
+
+        fun onConfirmBedTypeFilterClick()
+
+        fun onConfirmFacilitiesFilterClick()
+
+        fun onCloseBedTypeFilterClick()
+
+        fun onCloseFacilitiesFilterClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

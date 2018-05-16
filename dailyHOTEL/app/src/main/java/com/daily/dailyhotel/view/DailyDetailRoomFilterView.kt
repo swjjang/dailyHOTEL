@@ -13,11 +13,14 @@ import java.util.*
 class DailyDetailRoomFilterView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailRoomFilterDataBinding
 
-    private var isPriceAverageType = false
-    private var listener: OnDailyDetailRoomInformationListener? = null
+    private var listener: OnDailyDetailRoomFilterListener? = null
 
-    interface OnDailyDetailRoomInformationListener {
-        fun onMoreRoomsClick(expanded: Boolean)
+    interface OnDailyDetailRoomFilterListener {
+        fun onCalendarClick()
+
+        fun onBedTypeFilterClick()
+
+        fun onFacilitiesFilterClick()
     }
 
     constructor(context: Context) : super(context) {
@@ -34,9 +37,13 @@ class DailyDetailRoomFilterView : ConstraintLayout {
 
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_filter_data, this, true)
+
+        viewDataBinding.calendarTextView.setOnClickListener { listener?.onCalendarClick() }
+        viewDataBinding.bedTypeFilterTextView.setOnClickListener { listener?.onBedTypeFilterClick() }
+        viewDataBinding.facilitiesTextView.setOnClickListener { listener?.onFacilitiesFilterClick() }
     }
 
-    fun setRoomInformationListener(listener: OnDailyDetailRoomInformationListener) {
+    fun setRoomFilterListener(listener: OnDailyDetailRoomFilterListener) {
         this.listener = listener
     }
 
@@ -49,7 +56,7 @@ class DailyDetailRoomFilterView : ConstraintLayout {
         else context.getString(R.string.frag_hotel_tab_bed_type)
     }
 
-    fun setFacilitiesTypeFilterCount(count: Int) {
+    fun setFacilitiesFilterCount(count: Int) {
         viewDataBinding.facilitiesTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_room_amenities), count)
         else context.getString(R.string.label_room_amenities)
     }

@@ -537,6 +537,9 @@ public class StayDetailData
         {
             StayDetailk.DetailInformation.Item item = new StayDetailk.DetailInformation.Item();
 
+            contents.addAll(contents);
+            contents.addAll(contents);
+
             item.setTitle(title);
             item.setContentList(contents);
 

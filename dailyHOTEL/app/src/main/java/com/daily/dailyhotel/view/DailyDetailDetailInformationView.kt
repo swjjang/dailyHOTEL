@@ -64,9 +64,11 @@ class DailyDetailDetailInformationView : LinearLayout {
         information.contentList.takeNotEmpty {
             it.forEachIndexed { index, content ->
                 if (index < 3) {
-                    viewDataBinding.informationLayout.addView(if (content.startsWith("**")) getContentBoldView(content) else getContentBulletView(content))
+                    viewDataBinding.informationLayout.addView(if (content.startsWith("**")) getContentBoldView(content) else getContentBulletView(content),
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 } else {
-                    viewDataBinding.moreInformationLayout.addView(if (content.startsWith("**")) getContentBoldView(content) else getContentBulletView(content))
+                    viewDataBinding.moreInformationLayout.addView(if (content.startsWith("**")) getContentBoldView(content) else getContentBulletView(content),
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 }
             }
         }
@@ -122,6 +124,7 @@ class DailyDetailDetailInformationView : LinearLayout {
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f)
             setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
             setLineSpacing(1.0f, 1.0f)
+            compoundDrawablePadding = ScreenUtils.dpToPx(context, 10.0)
             setDrawableCompatLeftAndRightFixedFirstLine(true)
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0)
             setPadding(0, ScreenUtils.dpToPx(context, 14.0), 0, 0)
@@ -135,10 +138,10 @@ class DailyDetailDetailInformationView : LinearLayout {
             it.items.takeNotEmpty {
                 it.forEachIndexed { index, item ->
                     if (index > 0) {
-                        viewDataBinding.breakfastTableLayout.addView(getLineView(), TableLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, 1.0))
+                        viewDataBinding.breakfastTableLayout.addView(createLineView(), TableLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, 1.0))
                     }
 
-                    getBreakfastItemView(viewDataBinding.breakfastTableLayout, item)
+                    createBreakfastView(viewDataBinding.breakfastTableLayout, item)
                 }
             }
 
@@ -150,30 +153,27 @@ class DailyDetailDetailInformationView : LinearLayout {
         }
     }
 
-    private fun getBreakfastItemView(viewGroup: ViewGroup, item: StayDetailk.BreakfastInformation.Item) {
+    private fun createBreakfastView(viewGroup: ViewGroup, item: StayDetailk.BreakfastInformation.Item) {
         val viewDataBinding: DailyViewDetailBreakfastInformationTableRowDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_breakfast_information_table_row_data, viewGroup, true)
-
-        val leftText: String?
-
-        when {
+        val leftText = when {
             item.minAge < 0 && item.maxAge < 0 ->
-                leftText = item.title
+                item.title
 
             item.minAge < 0 ->
-                leftText = item.title + String.format(Locale.KOREA, "(0 ~ %d세 이하)", item.maxAge)
+                item.title + String.format(Locale.KOREA, "(0 ~ %d세 이하)", item.maxAge)
 
             item.maxAge < 0 ->
-                leftText = item.title + String.format(Locale.KOREA, "(%d세 이상)", item.minAge)
+                item.title + String.format(Locale.KOREA, "(%d세 이상)", item.minAge)
 
             else ->
-                leftText = item.title + String.format(Locale.KOREA, "(%d ~ %d세 이하)", item.minAge, item.maxAge)
+                item.title + String.format(Locale.KOREA, "(%d ~ %d세 이하)", item.minAge, item.maxAge)
         }
 
         viewDataBinding.leftTextView.text = leftText
         viewDataBinding.rightTextView.text = DailyTextUtils.getPriceFormat(context, item.amount, false)
     }
 
-    private fun getLineView(): View {
+    private fun createLineView(): View {
         return View(context).apply {
             setBackgroundColor(context.resources.getColor(R.color.default_line_cf0f0f0))
         }
@@ -199,6 +199,7 @@ class DailyDetailDetailInformationView : LinearLayout {
             interpolator = AccelerateDecelerateInterpolator()
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
+                    viewDataBinding.moreInformationLayout.visibility = View.VISIBLE
                     viewDataBinding.moreTextView.visibility = View.GONE
                 }
 
@@ -212,9 +213,10 @@ class DailyDetailDetailInformationView : LinearLayout {
                 }
 
                 override fun onAnimationRepeat(animation: Animator) {
-                    viewDataBinding.moreInformationLayout.visibility = View.VISIBLE
                 }
             })
-        }.start()
+
+            start()
+        }
     }
 }

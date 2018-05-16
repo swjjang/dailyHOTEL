@@ -889,6 +889,39 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onCloseBedTypeFilterClick() {
+        if (lock()) return
+
+        addCompositeDisposable(viewInterface.hideBedTypeFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+    }
+
+    override fun onCloseFacilitiesFilterClick() {
+        if (lock()) return
+
+        addCompositeDisposable(viewInterface.hideFacilitiesFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+    }
+
+    override fun onResetBedTypeFilterClick() {
+        if (lock()) return
+
+        bedTypeFilter.clear()
+
+        stayDetail?.let {
+            viewInterface.setSelectedBedTypeFilter(bedTypeFilter, getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
+        }
+
+        unLockAll()
+    }
+
+    override fun onResetFacilitiesFilterClick() {
+    }
+
+    override fun onConfirmBedTypeFilterClick() {
+    }
+
+    override fun onConfirmFacilitiesFilterClick() {
+    }
+
     private fun notifyDetailDataSetChanged() {
         stayDetail?.let {
             if (defaultImageUrl.isTextEmpty() && it.imageList.isNotNullAndNotEmpty()) {
@@ -918,7 +951,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 if (it.roomInformation?.roomList.isNotNullAndNotEmpty()) {
                     setSoldOutRoomVisible(false)
 
-                    setRoomFilter(bookDateTime, bedTypeFilter, facilitiesFilter, it.roomInformation?.roomList)
+                    setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
                     setPriceAverageTypeVisible(bookDateTime.nights > 1)
                     setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
                 } else {
@@ -943,8 +976,15 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
 
-                it.roomInformation?.bedTypeSet?.let { viewInterface.setBedTypeFilter(it, bedTypeFilter) }
-                it.roomInformation?.facilitiesSet?.let { viewInterface.setFacilitiesFilter(it, facilitiesFilter) }
+                it.roomInformation?.bedTypeSet?.let {
+                    viewInterface.setBedTypeFilter(it)
+                    viewInterface.setSelectedBedTypeFilter(bedTypeFilter, 0)
+                }
+
+                it.roomInformation?.facilitiesSet?.let {
+                    viewInterface.setFacilitiesFilter(it)
+                    viewInterface.setSelectedFacilitiesFilter(facilitiesFilter, 0)
+                }
             }
 
             status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
@@ -1025,7 +1065,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return !bedTypeFilter.isEmpty() || !facilitiesFilter.isEmpty()
     }
 
-    private fun setRoomFilter(bookDateTime: StayBookDateTime, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>, roomList: List<Room>?) {
+    private fun setRoomFilter(bookDateTime: StayBookDateTime, roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>) {
         roomList.takeNotEmpty {
             val filteredRoomList = ArrayList<Room>()
 
@@ -1085,5 +1125,33 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
             }
         }
+    }
+
+    private fun getRoomFilterCount(roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): Int {
+        var filteredRoomCount = 0
+
+        roomList.takeNotEmpty {
+            if (bedTypeFilter.isEmpty() && facilitiesFilter.isEmpty()) {
+                filteredRoomCount = it.size
+            } else {
+                it.forEach loop@{ room ->
+                    bedTypeFilter.forEach {
+                        if (room.bedInformation.filterList.contains(it)) {
+                            filteredRoomCount++
+                            return@loop
+                        }
+                    }
+
+                    facilitiesFilter.forEach {
+                        if (room.amenityList.contains(it)) {
+                            filteredRoomCount++
+                            return@loop
+                        }
+                    }
+                }
+            }
+        }
+
+        return filteredRoomCount
     }
 }
