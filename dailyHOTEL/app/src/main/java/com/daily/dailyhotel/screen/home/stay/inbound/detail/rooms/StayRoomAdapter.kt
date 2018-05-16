@@ -7,17 +7,13 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.StrikethroughSpan
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
-import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
@@ -205,60 +201,31 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
 
         var bedVectorIconResId: Int = 0
-        var bedDescription: String = ""
 
-        bedTypeList?.let {
-            val size = bedTypeList.size
+        val typeStringList = mutableListOf<String>()
 
-            when (size) {
-                0 -> {
-                    bedVectorIconResId = BedType.ETC.vectorIconResId
-                    bedDescription = "${BedType.ETC.typeName} 1개"
-                }
-
-                1 -> {
-                    val count = bedTypeList[0].count
-                    val type = bedTypeList[0].bedType.toUpperCase()
-                    val bedType: BedType = try {
-                        BedType.valueOf(type)
-                    } catch (e: Exception) {
-                        BedType.ETC
-                    }
-
-                    bedVectorIconResId = bedType.vectorIconResId
-                    bedDescription = "${bedType.typeName} ${count}개"
-                }
-
-                else -> {
-                    bedVectorIconResId = R.drawable.vector_ic_detail_item_bed_double
-
-                    bedTypeList.forEachIndexed { index, bedTypeInformation ->
-                        if (index in 1..(size - 1)) {
-                            bedDescription += ", "
-                        }
-
-                        val bedType: BedType = try {
-                            BedType.valueOf(bedTypeInformation.bedType.toUpperCase())
-                        } catch (e: Exception) {
-                            BedType.ETC
-                        }
-
-                        bedDescription += "${bedType.typeName} ${bedTypeInformation.count}"
-
-                        if (index == size - 1) {
-                            bedDescription += "개"
-                        }
-                    }
-                }
+        bedTypeList?.forEach { bedTypeInformation ->
+            val bedType: BedType = try {
+                BedType.valueOf(bedTypeInformation.bedType.toUpperCase())
+            } catch (e: Exception) {
+                BedType.ETC
             }
+
+            bedVectorIconResId = if (bedVectorIconResId == 0) {
+                bedType.vectorIconResId
+            } else {
+                R.drawable.vector_ic_detail_item_bed_double
+            }
+
+            typeStringList += "${bedType.typeName} ${bedTypeInformation.count}"
+        }
+
+        bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
+            BedType.ETC.vectorIconResId
         }
 
         dataBinding.bedIconImageView.setVectorImageResource(bedVectorIconResId)
-        dataBinding.firstDescriptionTextView.text = bedDescription
-
-//        val firstLineEnd = dataBinding.firstDescriptionTextView.layout.getLineEnd(0)
-//
-//        ExLog.d("fullText Length : ${bedDescription.length} , firstLineEnd : ${firstLineEnd}")
+        dataBinding.bedDescriptionLayout.setData(typeStringList)
     }
 
     private fun setSquareInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
@@ -268,22 +235,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         val pyoung = Math.round(room.squareMeter / 400 * 121)
         dataBinding.squareDescriptionTextView.text = "${pyoung}평"
-    }
-
-
-    private fun getDescriptionTextView(showTopMargin: Boolean): DailyTextView {
-        return DailyTextView(context).apply {
-            setBackgroundResource(R.drawable.shape_rect_stay_room_grid_description_background)
-
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                if (showTopMargin) topMargin = ScreenUtils.dpToPx(context, 2.0)
-
-                setTextColor(context.resources.getColor(R.color.default_text_c929292))
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11f)
-                gravity = Gravity.CENTER
-                typeface = FontManager.getInstance(context).mediumTypeface
-            }
-        }
     }
 
     fun getLayoutWidth(): Float {
