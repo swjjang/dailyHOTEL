@@ -3,17 +3,16 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.daily.base.util.DailyTextUtils
-import com.daily.base.util.ExLog
-import com.daily.base.util.FontManager
-import com.daily.base.util.ScreenUtils
+import com.daily.base.util.*
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
@@ -131,6 +130,13 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         setBaseInformationGridView(dataBinding, room)
 
         setAttributeInformationView(dataBinding, room.attributeInformation)
+
+        // TODO : Felix 확인 해야 함 List 로 줄 것인지 단일 텍스트인지.
+        var benefitList = mutableListOf<String>()
+        benefitList.add(room.benefit)
+        setRoomBenefitInformationView(dataBinding, benefitList)
+
+        setRewardAndCouponInformationView(dataBinding, room.provideRewardSticker, room.hasUsableCoupon)
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
@@ -319,6 +325,57 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         stringList.add(0, roomString)
 
         dataBinding.subInfoGridView.setData(DailyRoomInfoGridView.ItemType.NONE, stringList)
+    }
+
+    private fun setRoomBenefitInformationView(dataBinding: ListRowStayRoomDataBinding, benefitList: MutableList<String>) {
+        if (benefitList.isEmpty()) {
+            dataBinding.roomBenefitGroup.visibility = View.GONE
+            return
+        }
+
+        dataBinding.roomBenefitGroup.visibility = View.VISIBLE
+
+        dataBinding.roomAmenityGridView.setTitleText(R.string.label_stay_room_benefit_title)
+        dataBinding.roomBenefitGridView.setColumnCount(1)
+        dataBinding.roomBenefitGridView.setData(DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList)
+    }
+
+    private fun setRewardAndCouponInformationView(dataBinding: ListRowStayRoomDataBinding, rewardable: Boolean, useCoupon: Boolean) {
+        var text = ""
+        val rewardString = context.resources.getString(R.string.label_stay_room_rewardable)
+        val couponString = context.resources.getString(R.string.label_stay_room_coupon_useable)
+
+        if (rewardable) {
+            text = "  $rewardString"
+        }
+
+        if (useCoupon) {
+            if (!text.isTextEmpty()) {
+                text += context.resources.getString(R.string.label_stay_room_reward_coupon_or)
+            }
+
+            text += couponString
+        }
+
+        if (!text.isTextEmpty()) {
+            text += context.resources.getString(R.string.label_stay_room_end_description)
+        }
+
+        val spannableString = SpannableString(text)
+
+        val rewardStart = text.indexOf(rewardString)
+
+        if (rewardStart != -1) {
+            spannableString.setSpan(DailyImageSpan(context, R.drawable.vector_ic_r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_line_cfaae37)), rewardStart, rewardStart + rewardString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        val couponStart = text.indexOf(couponString)
+        if (couponStart != -1) {
+            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_cf27c7a)), couponStart, rewardStart + couponString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        dataBinding.discountInfoTextView.text = spannableString
     }
 
     fun getLayoutWidth(): Float {
