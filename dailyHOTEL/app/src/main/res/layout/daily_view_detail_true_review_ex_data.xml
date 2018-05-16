@@ -81,6 +81,7 @@
             android:ellipsize="end"
             android:freezesText="true"
             android:maxLines="3"
+            android:lineSpacingExtra="1dp"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"

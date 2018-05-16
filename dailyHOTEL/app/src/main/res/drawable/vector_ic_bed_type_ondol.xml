@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="30dp"
+        android:height="30dp"
+        android:tint="@color/selector_svg_color_dababab_seb2135"
+        android:tintMode="multiply"
+        android:viewportHeight="60"
+        android:viewportWidth="60">
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="M14,47L14,32h32v15M14,13h32v11h-4v-5a1,1 0,0 0,-1 -1h-9a1,1 0,0 0,-1 1v5h-2v-5a1,1 0,0 0,-1 -1h-9a1,1 0,0 0,-1 1v5h-4L14,13zM33,24v-4h7v4m-20,0v-4h7v4m-13,6v-4h32v4m0,-19L14,11a2,2 0,0 0,-2 2v34a2,2 0,0 0,2 2h32a2,2 0,0 0,2 -2L48,13a2,2 0,0 0,-2 -2z"/>
+</vector>

@@ -64,17 +64,15 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     }
 
     fun setCalendar(text: CharSequence) {
-        viewDataBinding.calendarTextView.text = text
+        viewDataBinding.roomFilterView.setCalendar(text)
     }
 
     fun setBedTypeFilterCount(count: Int) {
-        viewDataBinding.bedTypeFilterTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.frag_hotel_tab_bed_type), count)
-        else context.getString(R.string.frag_hotel_tab_bed_type)
+        viewDataBinding.roomFilterView.setBedTypeFilterCount(count)
     }
 
     fun setFacilitiesTypeFilterCount(count: Int) {
-        viewDataBinding.facilitiesTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_room_amenities), count)
-        else context.getString(R.string.label_room_amenities)
+        viewDataBinding.roomFilterView.setFacilitiesTypeFilterCount(count)
     }
 
     fun setPriceAverageTypeVisible(visible: Boolean) {
@@ -217,5 +215,16 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
     fun isShowMoreRoom(): Boolean {
         return viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE
+    }
+
+    fun setSoldOutVisible(visible: Boolean) {
+        viewDataBinding.soldOutRoomGroup.visibility = if (visible) View.VISIBLE else View.GONE
+        viewDataBinding.roomFilterView.setSoldOutVisible(visible)
+
+        val flag = if(visible) View.GONE else View.VISIBLE
+        viewDataBinding.priceTypeGroup.visibility = flag
+        viewDataBinding.roomsLayout.visibility = flag
+        viewDataBinding.moreRoomsLayout.visibility = flag
+        viewDataBinding.actionButtonGroup.visibility = flag
     }
 }

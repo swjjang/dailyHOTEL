@@ -44,10 +44,6 @@ class DailyDetailBenefitView : ConstraintLayout {
         viewDataBinding.benefitTitleTextView.text = title
     }
 
-    fun setContentsVisible(visible: Boolean) {
-        viewDataBinding.benefitContentsLayout.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
     fun setContents(contents: List<String>?) {
         if (viewDataBinding.benefitContentsLayout.childCount > 0) {
             viewDataBinding.benefitContentsLayout.removeAllViews()
@@ -58,6 +54,10 @@ class DailyDetailBenefitView : ConstraintLayout {
                 viewDataBinding.benefitContentsLayout.addView(createContentView(it))
             }
         }
+    }
+
+    fun setContentsVisible(visible: Boolean) {
+        viewDataBinding.benefitContentsLayout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun createContentView(text: String): DailyTextView {
@@ -74,6 +74,10 @@ class DailyDetailBenefitView : ConstraintLayout {
                 topMargin = ScreenUtils.dpToPx(context, 12.0)
             }
         }
+    }
+
+    fun setBeneiftVisible(visible: Boolean) {
+        viewDataBinding.benefitLayout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setCouponButtonEnabled(enabled: Boolean) {

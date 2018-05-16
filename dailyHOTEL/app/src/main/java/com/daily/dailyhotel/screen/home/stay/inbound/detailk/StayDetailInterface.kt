@@ -57,6 +57,8 @@ interface StayDetailInterface {
 
         fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation)
 
+        fun setSoldOutRoomVisible(visible: Boolean)
+
         fun setRoomFilterInformation(calendarText: CharSequence, bedTypeFilterCount: Int, facilitiesFilterCount: Int)
 
         fun setPriceAverageTypeVisible(visible: Boolean)

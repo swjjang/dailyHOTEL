@@ -17,7 +17,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-
         <android.support.constraint.Guideline
             android:id="@+id/leftGuideLine"
             android:layout_width="wrap_content"
@@ -107,12 +106,12 @@
             android:id="@+id/discountPriceWonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="3dp"
             android:layout_marginLeft="1px"
             android:freezesText="true"
             android:text="@string/label_currency_more"
             android:textColor="@color/default_text_c323232"
-            android:textSize="15dp"
+            android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="@id/discountPriceTextView"
             app:layout_constraintLeft_toRightOf="@id/discountPriceTextView"
             dailyFont:style="Medium"/>
@@ -147,7 +146,7 @@
             android:gravity="center_vertical"
             android:text="@string/label_daily_true_awards"
             android:textColor="@color/default_text_c929292"
-            android:textSize="14dp"
+            android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             dailyFont:style="Medium"/>

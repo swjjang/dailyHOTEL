@@ -887,9 +887,15 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setBenefitInformationVisible(false)
                 }
 
-                setRoomFilter(bookDateTime, bedTypeFilter, facilitiesFilter, it.roomInformation?.roomList)
-                setPriceAverageTypeVisible(bookDateTime.nights > 1)
-                setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
+                if (it.roomInformation?.roomList.isNotNullAndNotEmpty()) {
+                    setSoldOutRoomVisible(false)
+
+                    setRoomFilter(bookDateTime, bedTypeFilter, facilitiesFilter, it.roomInformation?.roomList)
+                    setPriceAverageTypeVisible(bookDateTime.nights > 1)
+                    setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
+                } else {
+                    setSoldOutRoomVisible(true)
+                }
 
                 setDailyCommentVisible(it.dailyCommentList.letNotNullTrueElseNullFalse { setDailyComment(it) })
                 setFacilities(it.totalRoomCount, it.facilityList)
@@ -1033,11 +1039,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     viewInterface.setRoomActionButtonText(getString(R.string.label_collapse), 0, R.drawable.vector_roomlist_ic_sub_v)
                 }
             } else {
-                if (checkedRoomFilter()) {
+                val showViewRoomMaxCount = 5
+
+                if (filteredRoomList.size > showViewRoomMaxCount) {
                     viewInterface.setRoomActionButtonVisible(true)
-                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter), R.drawable.ic_refresh, 0)
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_show_more_rooms, filteredRoomList.size - showViewRoomMaxCount), 0, 0)
                 } else {
-                    viewInterface.setRoomActionButtonVisible(false)
+                    if (checkedRoomFilter()) {
+                        viewInterface.setRoomActionButtonVisible(true)
+                        viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter), R.drawable.ic_refresh, 0)
+                    } else {
+                        viewInterface.setRoomActionButtonVisible(false)
+                    }
                 }
             }
         }
