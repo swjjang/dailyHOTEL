@@ -467,6 +467,40 @@
             app:constraint_referenced_ids="showRoomGradientView, showRoomBackgroundView, showRoomBackgroundView, showRoomTopLineView"/>
 
         <View
+            android:id="@+id/filterDimmedBackgroundView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/black_cb3323232"
+            android:elevation="2dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.daily.dailyhotel.view.DailyDetailBedTypeFilterView
+            android:id="@+id/bedTypeFilterView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <com.daily.dailyhotel.view.DailyDetailFacilitiesFilterView
+            android:id="@+id/facilitiesFilterView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <View
             android:id="@+id/wishTooltipView"
             android:layout_width="0dp"
             android:layout_height="0dp"
