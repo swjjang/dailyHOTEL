@@ -91,7 +91,60 @@ public class RoomParcel implements Parcelable
     private void readFromParcel(Parcel in)
     {
         room = new Room();
+        room.index = in.readInt();
+        room.name = in.readString();
+        room.imageCount = in.readInt();
 
+        DetailImageInformationParcel detailImageInformationParcel = in.readParcelable(DetailImageInformationParcel.class.getClassLoader());
+        room.imageInformation = detailImageInformationParcel == null ? null : detailImageInformationParcel.getDetailImageInformation();
+
+        AmountInformationParcel amountInformationParcel = in.readParcelable(AmountInformationParcel.class.getClassLoader());
+        room.amountInformation = amountInformationParcel == null ? null : amountInformationParcel.getAmountInformation();
+
+        PersonsInformationParcel personsInformationParcel = in.readParcelable(PersonsInformationParcel.class.getClassLoader());
+        room.personsInformation = personsInformationParcel == null ? null : personsInformationParcel.getPersonsInformation();
+
+        room.benefit = in.readString();
+
+        BedInformationParcel bedInformationParcel = in.readParcelable(BedInformationParcel.class.getClassLoader());
+        room.bedInformation = bedInformationParcel == null ? null : bedInformationParcel.getBedInformation();
+
+        room.hasUsableCoupon = in.readInt() == 1;
+        room.provideRewardSticker = in.readInt() == 1;
+
+        room.amenityList = new ArrayList<String>();
+        in.readStringList(room.amenityList);
+
+        CheckTimeInformationParcel checkTimeInformationParcel = in.readParcelable(CheckTimeInformationParcel.class.getClassLoader());
+        room.checkTimeInformation = checkTimeInformationParcel == null ? null : checkTimeInformationParcel.getCheckTimeInformation();
+
+        room.descriptionList = new ArrayList<String>();
+        in.readStringList(room.descriptionList);
+
+        room.squareMeter = in.readFloat();
+
+        room.needToKnowList = new ArrayList<String>();
+        in.readStringList(room.needToKnowList);
+
+        ChargeInformationParcel chargeInformationParcel = in.readParcelable(ChargeInformationParcel.class.getClassLoader());
+        room.roomChargeInformation = chargeInformationParcel == null ? null : chargeInformationParcel.getChargeInformation();
+
+        AttributeInformationParcel attributeInformationParcel = in.readParcelable(AttributeInformationParcel.class.getClassLoader());
+        room.attributeInformation = attributeInformationParcel == null? null : attributeInformationParcel.getAttributeInformation();
+
+        List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
+        List<VrInformationParcel> vrParcelList = in.readArrayList(BedTypeInformationParcel.class.getClassLoader());
+        if (vrParcelList != null)
+        {
+            for (VrInformationParcel parcel : vrParcelList)
+            {
+                vrInformationList.add(parcel.getVrInformation());
+            }
+        }
+        room.vrInformationList = vrInformationList;
+
+        RefundInformationParcel refundInformationParcel = in.readParcelable(RefundInformationParcel.class.getClassLoader());
+        room.refundInformation = refundInformationParcel == null ? null : refundInformationParcel.getRefundInformation();
     }
 
     @Override

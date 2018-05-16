@@ -66,6 +66,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     }
 
+    override fun setNights(nights: Int) {
+        listAdapter.setNights(nights)
+    }
+
     override fun setRoomList(roomList: MutableList<Room>, position: Int) {
         if (roomList.size == 0) {
             return
