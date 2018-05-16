@@ -6,7 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/popup_bg_white_full"
+        android:background="@color/white"
         android:orientation="vertical"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
@@ -29,10 +29,10 @@
             android:id="@+id/prodTextView"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/selector_dialog_button01"
             android:gravity="center"
             android:text="Prod Server"
-            android:layout_marginTop="20dp"
             android:textColor="@drawable/selector_dialog_text_color01"
             android:textSize="14dp"
             dailyFont:style="Medium"/>
@@ -41,9 +41,9 @@
             android:id="@+id/stageTextView"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/selector_dialog_button01"
             android:gravity="center"
-            android:layout_marginTop="20dp"
             android:text="Stage Server"
             android:textColor="@drawable/selector_dialog_text_color01"
             android:textSize="14dp"
@@ -53,11 +53,35 @@
             android:id="@+id/devTextView"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/selector_dialog_button01"
             android:gravity="center"
-            android:layout_marginTop="20dp"
             android:text="Dev Server"
             android:textColor="@drawable/selector_dialog_text_color01"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/alphaServerTextView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_dialog_button01"
+            android:gravity="center"
+            android:text="국내알파서버, 해외데브서버"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/canaryServerTextView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_dialog_button01"
+            android:gravity="center"
+            android:text="Canary Server"
+            android:textColor="@color/white"
             android:textSize="14dp"
             dailyFont:style="Medium"/>
     </LinearLayout>

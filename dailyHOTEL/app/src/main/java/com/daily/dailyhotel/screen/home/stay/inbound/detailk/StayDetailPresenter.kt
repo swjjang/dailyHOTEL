@@ -17,10 +17,7 @@ import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.CommonDateTime
-import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.StayDetailk
-import com.daily.dailyhotel.entity.StayRoom
+import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
@@ -56,6 +53,7 @@ import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 private const val DAYS_OF_MAX_COUNT = 60
 
@@ -182,7 +180,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 StayDetailActivity.TransGradientType.NONE
             }
 
-            stayIndex = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
+            stayIndex = 1158;//intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
             stayName = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_NAME)
             defaultImageUrl = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL)
             viewPrice = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayDetailActivity.NONE_PRICE)
@@ -629,6 +627,23 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return stayDetail.filterIf({ it.roomInformation?.roomList.isNotNullAndNotEmpty() }, true)
     }
 
+    override fun onBedTypeFilterClick() {
+        if (lock()) return
+
+        stayDetail?.let {
+            addCompositeDisposable(viewInterface.showBedTypeFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+        } ?: Util.restartApp(activity)
+
+    }
+
+    override fun onFacilitiesFilterClick() {
+        if (lock()) return
+
+        stayDetail?.let {
+            addCompositeDisposable(viewInterface.showFacilitiesFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+        } ?: Util.restartApp(activity)
+    }
+
     override fun onMapClick() {
         if (lock()) return
 
@@ -866,11 +881,22 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         viewInterface.scrollStayInformation()
     }
 
+    override fun onSelectedBedTypeFilter(bedType: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onSelectedFacilitiesFilter(facilities: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun notifyDetailDataSetChanged() {
         stayDetail?.let {
             if (defaultImageUrl.isTextEmpty() && it.imageList.isNotNullAndNotEmpty()) {
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
             }
+
+            bedTypeFilter.clear()
+            facilitiesFilter.clear()
 
             viewInterface.apply {
                 setScrollViewVisible(true)
@@ -889,23 +915,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setBenefitInformationVisible(false)
                 }
 
-                val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
-                        bookDateTime.getCheckInDateTime("M.d(EEE)"),
-                        bookDateTime.getCheckOutDateTime("M.d(EEE)"),
-                        bookDateTime.nights)
+                if (it.roomInformation?.roomList.isNotNullAndNotEmpty()) {
+                    setSoldOutRoomVisible(false)
 
-                val startIndex = calendarText.indexOf('돋')
-                val spannableString = SpannableString(calendarText)
-                spannableString.setSpan(DailyImageSpan(activity, R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
-                setRoomList(it.roomInformation?.roomList)
-
-                setPriceAverageTypeVisible(bookDateTime.nights > 1)
-                setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
+                    setRoomFilter(bookDateTime, bedTypeFilter, facilitiesFilter, it.roomInformation?.roomList)
+                    setPriceAverageTypeVisible(bookDateTime.nights > 1)
+                    setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
+                } else {
+                    setSoldOutRoomVisible(true)
+                }
 
                 setDailyCommentVisible(it.dailyCommentList.letNotNullTrueElseNullFalse { setDailyComment(it) })
-                setFacilities(it.totalRoomCount, it.facilityList)
+                setFacilities(it.totalRoomCount, it.facilitiesList)
                 setAddressInformationVisible(it.addressInformation.letNotNullTrueElseNullFalse { setAddressInformation(it) })
                 setCheckTimeInformationVisible(it.checkTimeInformation.letNotNullTrueElseNullFalse { setCheckTimeInformation(it) })
 
@@ -921,6 +942,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 })
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
+
+                it.roomInformation?.bedTypeSet?.let { viewInterface.setBedTypeFilter(it, bedTypeFilter) }
+                it.roomInformation?.facilitiesSet?.let { viewInterface.setFacilitiesFilter(it, facilitiesFilter) }
             }
 
             status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
@@ -995,5 +1019,71 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             viewInterface.setWishCount(wishCount)
             viewInterface.setWishSelected(myWish)
         } ?: Util.restartApp(activity)
+    }
+
+    private fun checkedRoomFilter(): Boolean {
+        return !bedTypeFilter.isEmpty() || !facilitiesFilter.isEmpty()
+    }
+
+    private fun setRoomFilter(bookDateTime: StayBookDateTime, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>, roomList: List<Room>?) {
+        roomList.takeNotEmpty {
+            val filteredRoomList = ArrayList<Room>()
+
+            if (bedTypeFilter.isEmpty() && facilitiesFilter.isEmpty()) {
+                filteredRoomList.addAll(roomList!!)
+            } else {
+                it.forEach loop@{ room ->
+                    bedTypeFilter.forEach {
+                        if (room.bedInformation.filterList.contains(it)) {
+                            filteredRoomList.add(room)
+                            return@loop
+                        }
+                    }
+
+                    facilitiesFilter.forEach {
+                        if (room.amenityList.contains(it)) {
+                            filteredRoomList.add(room)
+                            return@loop
+                        }
+                    }
+                }
+            }
+
+            val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
+                    bookDateTime.getCheckInDateTime("M.d(EEE)"),
+                    bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                    bookDateTime.nights)
+
+            val startIndex = calendarText.indexOf('돋')
+            val spannableString = SpannableString(calendarText)
+            spannableString.setSpan(DailyImageSpan(activity, R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            viewInterface.setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
+            viewInterface.setRoomList(filteredRoomList)
+
+            if (viewInterface.isShowMoreRooms()) {
+                viewInterface.setRoomActionButtonVisible(true)
+
+                if (checkedRoomFilter()) {
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter), R.drawable.ic_refresh, 0)
+                } else {
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_collapse), 0, R.drawable.vector_roomlist_ic_sub_v)
+                }
+            } else {
+                val showViewRoomMaxCount = 5
+
+                if (filteredRoomList.size > showViewRoomMaxCount) {
+                    viewInterface.setRoomActionButtonVisible(true)
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_show_more_rooms, filteredRoomList.size - showViewRoomMaxCount), 0, 0)
+                } else {
+                    if (checkedRoomFilter()) {
+                        viewInterface.setRoomActionButtonVisible(true)
+                        viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter), R.drawable.ic_refresh, 0)
+                    } else {
+                        viewInterface.setRoomActionButtonVisible(false)
+                    }
+                }
+            }
+        }
     }
 }

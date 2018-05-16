@@ -765,29 +765,6 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setUserBirthday(String birthday)
-    {
-        if (DailyTextUtils.isTextEmpty(birthday) == true)
-        {
-            mAppboy.getCurrentUser().setCustomUserAttribute(AnalyticsManager.KeyType.FILL_DATE_OF_BIRTH, false);
-            return;
-        }
-
-        try
-        {
-            Date birthdayDate = DailyCalendar.convertDate(birthday, DailyCalendar.ISO_8601_FORMAT);
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(birthdayDate);
-
-            mAppboy.getCurrentUser().setDateOfBirth(calendar.get(Calendar.YEAR), Month.getMonth(calendar.get(Calendar.MONTH)), calendar.get(Calendar.DAY_OF_MONTH));
-            mAppboy.getCurrentUser().setCustomUserAttribute(AnalyticsManager.KeyType.FILL_DATE_OF_BIRTH, true);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
-    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
         mAppboy.getCurrentUser().setCustomUserAttribute("credit_limit_over", isExceedBonus);
@@ -914,15 +891,13 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String userType, String recommender, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, userIndex);
         appboyProperties.addProperty(AnalyticsManager.KeyType.TYPE_OF_REGISTRATION, AnalyticsManager.UserType.EMAIL);
         appboyProperties.addProperty(AnalyticsManager.KeyType.REGISTRATION_DATE, new Date());
-
-        setUserBirthday(birthday);
 
         if (DailyTextUtils.isTextEmpty(recommender) == true)
         {

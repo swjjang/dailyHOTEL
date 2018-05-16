@@ -86,6 +86,7 @@
 
     <color name="black_c0c000000">#0c000000</color>
     <color name="black_c4c000000">#4c000000</color>
+    <color name="black_cb3323232">#b3323232</color>
 
     <color name="statusbar_background">#323232</color>
     <color name="tab_text">#929292</color>

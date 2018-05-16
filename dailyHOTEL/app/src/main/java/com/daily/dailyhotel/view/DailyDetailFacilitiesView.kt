@@ -8,7 +8,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.FacilitiesPictogram
 import com.daily.dailyhotel.util.takeNotEmpty
@@ -63,11 +63,14 @@ class DailyDetailFacilitiesView : ConstraintLayout {
             gravity = Gravity.CENTER_HORIZONTAL
             setTextColor(context.resources.getColor(R.color.default_text_c323232))
             setCompoundDrawablesWithIntrinsicBounds(0, facilities.getImageResourceId(), 0, 0)
+            compoundDrawablePadding = ScreenUtils.dpToPx(context, 3.0)
 
             val layoutParams = android.support.v7.widget.GridLayout.LayoutParams()
             layoutParams.width = 0
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            layoutParams.height = android.support.v7.widget.GridLayout.LayoutParams.WRAP_CONTENT
             layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f)
+            layoutParams.topMargin = ScreenUtils.dpToPx(context, 11.0)
+            layoutParams.bottomMargin = ScreenUtils.dpToPx(context, 12.0)
 
             setLayoutParams(layoutParams)
         }

@@ -56,89 +56,14 @@
             app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
             app:layout_constraintLeft_toRightOf="@+id/titleTextView"/>
 
-
-        <HorizontalScrollView
-            android:id="@+id/filterScrollView"
+        <com.daily.dailyhotel.view.DailyDetailRoomFilterView
+            android:id="@+id/roomFilterView"
             android:layout_width="0dp"
-            android:layout_height="58dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/default_background"
-            android:fadingEdge="none"
-            android:scrollbars="none"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="69dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleTextView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <FrameLayout
-                    android:id="@+id/calendarLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/shape_fillrect_beb2135_r3"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="10dp">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/calendarTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:drawablePadding="3dp"
-                        android:gravity="center"
-                        android:text="3.1(월)-3.3(수),2박"
-                        android:textColor="@color/white"
-                        android:textSize="13dp"
-                        app:drawableCompatLeft="@drawable/vector_detail_ic_date_white"/>
-                </FrameLayout>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/bedTypeFilterTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r3"
-                    android:drawablePadding="4dp"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="베드타입  2"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="13dp"
-                    app:drawableCompatRight="@drawable/navibar_ic_v"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/facilitiesTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r3"
-                    android:drawablePadding="4dp"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="객실 내 시설 2"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="13dp"
-                    app:drawableCompatRight="@drawable/navibar_ic_v"/>
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <View
-            android:layout_width="18dp"
-            android:layout_height="0dp"
-            android:background="@drawable/detail_roomfilter_gradient"
-            app:layout_constraintBottom_toBottomOf="@+id/filterScrollView"
-            app:layout_constraintRight_toRightOf="@+id/filterScrollView"
-            app:layout_constraintTop_toTopOf="@+id/filterScrollView"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/totalPriceTextView"
@@ -151,7 +76,7 @@
             android:textColor="@color/selector_text_color_c929292_c4d4d4d"
             android:textSize="12dp"
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/filterScrollView"/>
+            app:layout_constraintTop_toBottomOf="@+id/roomFilterView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/averagePriceTextView"
@@ -165,7 +90,7 @@
             android:textColor="@color/selector_text_color_c929292_c4d4d4d"
             android:textSize="12dp"
             app:layout_constraintRight_toLeftOf="@+id/totalPriceTextView"
-            app:layout_constraintTop_toBottomOf="@id/filterScrollView"/>
+            app:layout_constraintTop_toBottomOf="@+id/roomFilterView"/>
 
         <View
             android:id="@+id/priceBottomLineView"
@@ -224,7 +149,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/actionButtonView"
             app:layout_constraintLeft_toLeftOf="@+id/actionButtonView"
             app:layout_constraintRight_toRightOf="@+id/actionButtonView"
-            app:layout_constraintTop_toBottomOf="@+id/actionButtonView"
+            app:layout_constraintTop_toTopOf="@+id/actionButtonView"
             dailyFont:style="Medium"/>
 
         <android.support.constraint.Group
@@ -232,6 +157,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="actionButtonView, actionButtonTextView"/>
+
+        <View
+            android:id="@+id/soldOutRoomView"
+            android:layout_width="0dp"
+            android:layout_height="204dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/roomFilterView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/soldOutRoomTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:lineSpacingExtra="1dp"
+            android:text="@string/message_stay_soldout_room"
+            android:textColor="@color/default_text_c929292"
+            app:drawableCompatTop="@drawable/no_hotel_search_ic"
+            app:layout_constraintBottom_toBottomOf="@+id/soldOutRoomView"
+            app:layout_constraintLeft_toLeftOf="@+id/soldOutRoomView"
+            app:layout_constraintRight_toRightOf="@+id/soldOutRoomView"
+            app:layout_constraintTop_toTopOf="@+id/soldOutRoomView"/>
+
+        <android.support.constraint.Group
+            android:id="@+id/soldOutRoomGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="soldOutRoomView, soldOutRoomTextView"/>
     </android.support.constraint.ConstraintLayout>
     <!--</merge>-->
 </layout>

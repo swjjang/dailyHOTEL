@@ -105,12 +105,6 @@ public class KakaoManager extends BaseAnalyticsManager
     }
 
     @Override
-    void setUserBirthday(String birthday)
-    {
-
-    }
-
-    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
 
@@ -191,7 +185,7 @@ public class KakaoManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String birthday, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String userType, String recommender, String callByScreen)
     {
         CompleteRegistration event = new CompleteRegistration();
         event.tag = userType;

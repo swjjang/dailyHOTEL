@@ -253,7 +253,7 @@ public class StayDetailData
                 {
                     for (String bedTypeFilter : bedTypeFilterList)
                     {
-                        bedTypeSet.add(bedTypeFilter);
+                        bedTypeSet.add(bedTypeFilter.toUpperCase());
                     }
                 }
 
@@ -261,7 +261,7 @@ public class StayDetailData
                 {
                     for (String amenitiesFilter : roomData.amenities)
                     {
-                        amenitiesSet.add(amenitiesFilter);
+                        amenitiesSet.add(amenitiesFilter.toUpperCase());
                     }
                 }
 
@@ -273,8 +273,8 @@ public class StayDetailData
                 }
             }
 
-            roomInformation.setBedTypeList(bedTypeSet);
-            roomInformation.setFacilityList(amenitiesSet);
+            roomInformation.setBedTypeSet(bedTypeSet);
+            roomInformation.setFacilitiesSet(amenitiesSet);
             roomInformation.setRoomList(roomList);
 
             stayDetail.setRoomInformation(roomInformation);
@@ -311,7 +311,7 @@ public class StayDetailData
                 }
             });
 
-            stayDetail.setFacilityList(facilitiesList);
+            stayDetail.setFacilitiesList(facilitiesList);
         }
 
         StayDetailk.AddressInformation addressInformation = new StayDetailk.AddressInformation();

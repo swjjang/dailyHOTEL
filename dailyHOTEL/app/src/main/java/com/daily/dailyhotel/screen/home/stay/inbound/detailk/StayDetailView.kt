@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detailk
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.TargetApi
 import android.content.DialogInterface
@@ -45,6 +46,7 @@ import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 import com.twoheart.dailyhotel.widget.AlphaTransition
+import io.reactivex.Completable
 import io.reactivex.Observable
 import java.text.DecimalFormat
 import java.util.*
@@ -61,7 +63,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         setScrollViewVisible(false)
 
         val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
-        val tabLayoutHeight = ScreenUtils.dpToPx(context, 40.0)
+        val tabLayoutHeight = ScreenUtils.dpToPx(context, 41.0)
+        val stickyTopHeight = ScreenUtils.dpToPx(context, 69.0)
+        val stickyHeight = ScreenUtils.dpToPx(context, 58.0)
 
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
             if (getViewDataBinding().scrollLayout.childCount < 2) {
@@ -71,7 +75,6 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
             val titleLayout = getViewDataBinding().scrollLayout.getChildAt(1)
 
-
             if (titleLayout.y - toolbarHeight > scrollY) {
                 getViewDataBinding().toolbarView.hideAnimation()
             } else {
@@ -80,10 +83,25 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
             getViewDataBinding().fakeVRImageView.isEnabled = scrollY <= toolbarHeight
 
-            if (getViewDataBinding().roomInformationTopLineView.y >= scrollY + toolbarHeight + tabLayoutHeight) {
+            val targetY = scrollY + toolbarHeight + tabLayoutHeight
+
+            if (getViewDataBinding().roomInformationTopLineView.y >= targetY) {
                 hideTabLayout()
             } else {
                 showTabLayout()
+            }
+
+            if (getViewDataBinding().roomInformationView.y + stickyTopHeight >= targetY) {
+                hideRoomFilterLayout()
+            } else {
+                val transitionY = targetY + stickyHeight
+
+                if (getViewDataBinding().roomInformationView.bottom >= transitionY) {
+                    showRoomFilterLayout()
+                    translationRoomFilterLayout(0.0f)
+                } else {
+                    translationRoomFilterLayout((getViewDataBinding().roomInformationView.bottom - transitionY).toFloat())
+                }
             }
         })
 
@@ -346,6 +364,25 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         tabLayoutHideAnimator?.start()
     }
 
+    fun showRoomFilterLayout() {
+        if (viewDataBinding.stickyRoomFilterView.visibility == View.VISIBLE)
+            return
+
+        viewDataBinding.stickyRoomFilterView.visibility = View.VISIBLE
+    }
+
+    fun hideRoomFilterLayout() {
+        if (viewDataBinding.stickyRoomFilterView.visibility == View.INVISIBLE)
+            return
+
+        viewDataBinding.stickyRoomFilterView.visibility = View.INVISIBLE
+        translationRoomFilterLayout(0.0f)
+    }
+
+    fun translationRoomFilterLayout(transitionY: Float) {
+        viewDataBinding.stickyRoomFilterView.translationY = transitionY
+    }
+
     override fun setWishCount(count: Int) {
         val wishCountText: String?
 
@@ -459,16 +496,25 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation) {
         viewDataBinding.businessBenefitView.apply {
-            if (benefitInformation.title.isTextEmpty()) {
-                setTitleVisible(false)
+            if (benefitInformation.title.isTextEmpty() && !benefitInformation.contentList.isNotNullAndNotEmpty()) {
+                setBeneiftVisible(false)
             } else {
-                setTitleVisible(true)
-                setTitleText(benefitInformation.title)
-            }
+                setBeneiftVisible(true)
 
-            setContentsVisible(benefitInformation.contentList.letNotNullTrueElseNullFalse {
-                setContents(it)
-            })
+                if (benefitInformation.title.isTextEmpty()) {
+                    setTitleVisible(false)
+                } else {
+                    setTitleVisible(true)
+                    setTitleText(benefitInformation.title)
+                }
+
+                if (benefitInformation.contentList.isNotNullAndNotEmpty()) {
+                    setContentsVisible(true)
+                    setContents(benefitInformation.contentList)
+                } else {
+                    setContentsVisible(false)
+                }
+            }
 
             if (benefitInformation.coupon != null && benefitInformation.coupon!!.couponDiscount > 0) {
                 setCouponButtonVisible(true)
@@ -494,6 +540,14 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setBedTypeFilterCount(bedTypeFilterCount)
             setFacilitiesTypeFilterCount(facilitiesFilterCount)
         }
+
+        viewDataBinding.stickyRoomFilterView.setCalendar(calendarText)
+        viewDataBinding.stickyRoomFilterView.setBedTypeFilterCount(bedTypeFilterCount)
+        viewDataBinding.stickyRoomFilterView.setFacilitiesTypeFilterCount(facilitiesFilterCount)
+    }
+
+    override fun setSoldOutRoomVisible(visible: Boolean) {
+        viewDataBinding.roomInformationView.setSoldOutVisible(visible)
     }
 
     override fun setRoomList(roomList: List<Room>?) {
@@ -504,6 +558,14 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 if (expanded) hideMoreRooms() else showMoreRooms()
             }
         })
+    }
+
+    override fun setRoomActionButtonVisible(visible: Boolean) {
+        viewDataBinding.roomInformationView.setActionButtonVisible(visible)
+    }
+
+    override fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int) {
+        viewDataBinding.roomInformationView.setActionButton(text, leftResourceId, rightResourceId)
     }
 
     override fun setDailyCommentVisible(visible: Boolean) {
@@ -785,6 +847,144 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun hideMoreRooms() {
         scrollRoomInformation()
         viewDataBinding.roomInformationView.hideMoreRoom()
+    }
+
+    override fun isShowMoreRooms(): Boolean {
+        return viewDataBinding.roomInformationView.isShowMoreRoom()
+    }
+
+    override fun setBedTypeFilter(bedTypeList: HashSet<String>, selectedBedType: LinkedHashSet<String>) {
+        viewDataBinding.bedTypeFilterView.setBedType(bedTypeList)
+    }
+
+    override fun showBedTypeFilter(): Completable {
+        return Completable.create {
+            val dimmedAnimation = ObjectAnimator.ofFloat(viewDataBinding.filterDimmedBackgroundView, View.ALPHA, 0.0f, 1.0f)
+            val transitionAnimation = ObjectAnimator.ofFloat(viewDataBinding.bedTypeFilterView, View.TRANSLATION_Y, viewDataBinding.bedTypeFilterView.height.toFloat(), 0.0f)
+
+            AnimatorSet().apply {
+                duration = 200
+                interpolator = AccelerateDecelerateInterpolator()
+
+                addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        it.onComplete()
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                        viewDataBinding.filterDimmedBackgroundView.visibility = View.VISIBLE
+                        viewDataBinding.bedTypeFilterView.visibility = View.VISIBLE
+                    }
+                })
+
+                playTogether(dimmedAnimation, transitionAnimation)
+            }
+        }
+    }
+
+    override fun hideBedTypeFilter(): Completable {
+        return Completable.create {
+            val dimmedAnimation = ObjectAnimator.ofFloat(viewDataBinding.filterDimmedBackgroundView, View.ALPHA, 1.0f, 0.0f)
+            val transitionAnimation = ObjectAnimator.ofFloat(viewDataBinding.bedTypeFilterView, View.TRANSLATION_Y, 0.0f, viewDataBinding.bedTypeFilterView.height.toFloat())
+
+            AnimatorSet().apply {
+                duration = 200
+                interpolator = AccelerateDecelerateInterpolator()
+
+                addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        viewDataBinding.filterDimmedBackgroundView.visibility = View.INVISIBLE
+                        viewDataBinding.bedTypeFilterView.visibility = View.INVISIBLE
+
+                        it.onComplete()
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                    }
+                })
+
+                playTogether(dimmedAnimation, transitionAnimation)
+            }
+        }
+    }
+
+    override fun setFacilitiesFilter(facilitiesList: HashSet<String>, selectedFacilities: LinkedHashSet<String>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showFacilitiesFilter(): Completable {
+        return Completable.create {
+            val dimmedAnimation = ObjectAnimator.ofFloat(viewDataBinding.filterDimmedBackgroundView, View.ALPHA, 0.0f, 1.0f)
+            val transitionAnimation = ObjectAnimator.ofFloat(viewDataBinding.facilitiesFilterView, View.TRANSLATION_Y, viewDataBinding.facilitiesFilterView.height.toFloat(), 0.0f)
+
+            AnimatorSet().apply {
+                duration = 200
+                interpolator = AccelerateDecelerateInterpolator()
+
+                addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        it.onComplete()
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                        viewDataBinding.filterDimmedBackgroundView.visibility = View.VISIBLE
+                        viewDataBinding.facilitiesFilterView.visibility = View.VISIBLE
+                    }
+                })
+
+                playTogether(dimmedAnimation, transitionAnimation)
+            }
+        }
+    }
+
+    override fun hideFacilitiesFilter(): Completable {
+        return Completable.create {
+            val dimmedAnimation = ObjectAnimator.ofFloat(viewDataBinding.filterDimmedBackgroundView, View.ALPHA, 1.0f, 0.0f)
+            val transitionAnimation = ObjectAnimator.ofFloat(viewDataBinding.facilitiesFilterView, View.TRANSLATION_Y, 0.0f, viewDataBinding.facilitiesFilterView.height.toFloat())
+
+            AnimatorSet().apply {
+                duration = 200
+                interpolator = AccelerateDecelerateInterpolator()
+
+                addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        viewDataBinding.filterDimmedBackgroundView.visibility = View.INVISIBLE
+                        viewDataBinding.facilitiesFilterView.visibility = View.INVISIBLE
+
+                        it.onComplete()
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                    }
+                })
+
+                playTogether(dimmedAnimation, transitionAnimation)
+            }
+        }
     }
 
     /**

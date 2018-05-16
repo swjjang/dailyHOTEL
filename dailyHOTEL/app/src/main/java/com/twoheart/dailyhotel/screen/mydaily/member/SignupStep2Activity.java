@@ -350,7 +350,7 @@ public class SignupStep2Activity extends BaseActivity
 
             // 이미 가입된것이기 때문에 미리 Analytics 넣음
             AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //
-                userIndex, birthday, Constants.DAILY_USER, mRecommender, mCallByScreen);
+                userIndex, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
             showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
 
@@ -359,13 +359,6 @@ public class SignupStep2Activity extends BaseActivity
             {
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
                     , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.SUCCESS, null);
-            }
-
-            if (DailyTextUtils.isTextEmpty(birthday) == false)
-            {
-                // 생일을 입력한 경우 체크
-                AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
-                    , AnalyticsManager.Action.PROFILE_CLICKED, birthday, null);
             }
         }
 
