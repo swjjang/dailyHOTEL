@@ -44,6 +44,19 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 listAdapter = StayRoomAdapter(context, mutableListOf())
             }
 
+            listAdapter.setEventListener(object : StayRoomAdapter.OnEventListener {
+                override fun finish() {
+                }
+
+                override fun onMoreImageClick(position: Int) {
+                    eventListener.onMoreImageClick(position)
+                }
+
+                override fun onVrImageClick(position: Int) {
+                    eventListener.onVrImageClick(position)
+                }
+            })
+
             recyclerView.adapter = listAdapter
 
             guideLayout.setOnClickListener(this@StayRoomsView)

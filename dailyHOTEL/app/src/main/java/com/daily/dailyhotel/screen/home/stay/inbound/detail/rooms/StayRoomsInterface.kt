@@ -21,6 +21,10 @@ interface StayRoomsInterface {
     interface OnEventListener : OnBaseEventListener {
 
         fun onScrolled(position: Int, real: Boolean)
+
+        fun onMoreImageClick(position: Int)
+
+        fun onVrImageClick(position: Int)
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

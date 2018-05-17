@@ -68,8 +68,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     private var onEventListener: OnEventListener? = null
 
     interface OnEventListener : OnBaseEventListener {
-        fun onMoreImageClick(index: Int)
-        fun onVrImageClick(index: Int)
+        fun onMoreImageClick(position: Int)
+        fun onVrImageClick(position: Int)
     }
 
     fun setEventListener(listener: OnEventListener?) {
