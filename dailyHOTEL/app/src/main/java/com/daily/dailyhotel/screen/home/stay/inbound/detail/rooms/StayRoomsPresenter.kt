@@ -19,8 +19,8 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     private var stayIndex = 0
     private var category = ""
 
-    private var position = 0;
-    private var centerPosition = -1;
+    private var position = 0
+    private var centerPosition = -1
 
     private val analytics: StayRoomsInterface.AnalyticsInterface by lazy {
         StayRoomsAnalyticsImpl()
