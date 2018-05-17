@@ -69,6 +69,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
     interface OnEventListener : OnBaseEventListener {
         fun onMoreImageClick(index: Int)
+        fun onVrImageClick(index: Int)
     }
 
     fun setEventListener(listener: OnEventListener?) {
@@ -133,11 +134,22 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.defaultImageLayout.setOnClickListener(null)
         } else {
             dataBinding.defaultImageLayout.visibility = View.VISIBLE
+            dataBinding.defaultImageLayout.setOnClickListener {
+                onEventListener?.let {
+                    it.onMoreImageClick(position)
+                }
+            }
+
             dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_placeholder)
             Util.requestImageResize(context, dataBinding.simpleDraweeView, room.imageInformation.imageMap.bigUrl)
 
             dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
             dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
+            dataBinding.vrIconView.setOnClickListener {
+                onEventListener?.let {
+                    it.onVrImageClick(position)
+                }
+            }
         }
 
         dataBinding.roomNameTextView.text = room.name
