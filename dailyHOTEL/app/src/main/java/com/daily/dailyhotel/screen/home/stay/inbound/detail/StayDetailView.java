@@ -1817,8 +1817,9 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 
-        viewDataBinding.conciergeTimeTextView.setText(getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime));
-        viewDataBinding.conciergeLayout.setOnClickListener(new View.OnClickListener()
+        viewDataBinding.conciergeTime01TextView.setText(getString(R.string.message_consult02, startHour, endHour));
+        viewDataBinding.conciergeTime02TextView.setText(getString(R.string.message_consult03, startLunchTime, endLunchTime));
+        viewDataBinding.conciergeView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

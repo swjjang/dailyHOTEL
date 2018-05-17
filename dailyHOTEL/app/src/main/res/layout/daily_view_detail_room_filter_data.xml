@@ -49,26 +49,10 @@
                 </FrameLayout>
 
                 <com.daily.base.widget.DailyTextView
-                    android:id="@+id/bedTypeFilterTextView"
+                    android:id="@+id/roomFilterTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginLeft="8dp"
-                    android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r3"
-                    android:drawablePadding="4dp"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="13dp"
-                    app:drawableCompatRight="@drawable/navibar_ic_v"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/facilitiesTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="10dp"
                     android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r3"
                     android:drawablePadding="4dp"
                     android:freezesText="true"
@@ -80,14 +64,5 @@
                     app:drawableCompatRight="@drawable/navibar_ic_v"/>
             </LinearLayout>
         </HorizontalScrollView>
-
-        <View
-            android:id="@+id/rightGradientView"
-            android:layout_width="18dp"
-            android:layout_height="0dp"
-            android:background="@drawable/detail_roomfilter_gradient"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
     </merge>
 </layout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shape_fillrect_leb2135_bffffff_r3" android:state_selected="true"/>
+    <item android:drawable="@drawable/shape_fillrect_leb2135_bffffff_r3" android:state_pressed="true"/>
+    <item android:drawable="@drawable/shape_fillrect_le8e8e9_bffffff_r3"/>
+</selector>

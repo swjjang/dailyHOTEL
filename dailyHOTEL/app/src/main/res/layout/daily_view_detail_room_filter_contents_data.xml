@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    >
+
+    <!--<merge-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/closeImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:paddingLeft="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/navibar_ic_x"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_stay_detail_apply_room_filter"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="18dp"
+            app:layout_constraintLeft_toRightOf="@+id/closeImageView"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/titleUnderLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce7e7e7"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/leftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/rightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/bedTypeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_stay_detail_bedtype"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="16dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/titleUnderLineView"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/bedType01TextView"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="10dp"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="12dp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toLeftOf="@+id/bedType02TextView"
+            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/bedType02TextView"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="10dp"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="12dp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/bedType01TextView"
+            app:layout_constraintRight_toLeftOf="@+id/bedType03TextView"
+            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/bedType03TextView"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="10dp"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="12dp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/bedType02TextView"
+            app:layout_constraintRight_toLeftOf="@+id/bedType04TextView"
+            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/bedType04TextView"
+            android:layout_width="0dp"
+            android:layout_height="67dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="10dp"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="12dp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/bedType03TextView"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+        <View
+            android:id="@+id/roomFacilitiesTopLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/default_line_ce7e7e7"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/bedType01TextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/roomFacilitiesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_stay_detail_room_facilities"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="16dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesTopLineView"
+            dailyFont:style="Medium"/>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/roomFacilitiesFlexboxLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesTextView"/>
+
+        <View
+            android:id="@+id/underLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/default_line_ce7e7e7"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesFlexboxLayout"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/resetTextView"
+            android:layout_width="48dp"
+            android:layout_height="44dp"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r3"
+            android:drawablePadding="4dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="9dp"
+            android:text="@string/label_reset"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="9dp"
+            app:drawableCompatTop="@drawable/ic_refresh"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underLineView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/confirmTextView"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_fillrect_beb2135_r3"
+            android:gravity="center"
+            android:text="@string/label_stay_detail_show_filtered_room"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/resetTextView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underLineView"
+            dailyFont:style="Medium"/>
+
+    </android.support.constraint.ConstraintLayout>
+    <!--</merge>-->
+</layout>

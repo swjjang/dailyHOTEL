@@ -18,9 +18,7 @@ class DailyDetailRoomFilterView : ConstraintLayout {
     interface OnDailyDetailRoomFilterListener {
         fun onCalendarClick()
 
-        fun onBedTypeFilterClick()
-
-        fun onFacilitiesFilterClick()
+        fun onRoomFilterClick()
     }
 
     constructor(context: Context) : super(context) {
@@ -39,8 +37,7 @@ class DailyDetailRoomFilterView : ConstraintLayout {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_filter_data, this, true)
 
         viewDataBinding.calendarTextView.setOnClickListener { listener?.onCalendarClick() }
-        viewDataBinding.bedTypeFilterTextView.setOnClickListener { listener?.onBedTypeFilterClick() }
-        viewDataBinding.facilitiesTextView.setOnClickListener { listener?.onFacilitiesFilterClick() }
+        viewDataBinding.roomFilterTextView.setOnClickListener { listener?.onRoomFilterClick() }
     }
 
     fun setRoomFilterListener(listener: OnDailyDetailRoomFilterListener) {
@@ -51,21 +48,12 @@ class DailyDetailRoomFilterView : ConstraintLayout {
         viewDataBinding.calendarTextView.text = text
     }
 
-    fun setBedTypeFilterCount(count: Int) {
-        viewDataBinding.bedTypeFilterTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.frag_hotel_tab_bed_type), count)
-        else context.getString(R.string.frag_hotel_tab_bed_type)
+    fun setRoomFilterCount(count: Int) {
+        viewDataBinding.roomFilterTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_stay_detail_room_filter), count)
+        else context.getString(R.string.label_stay_detail_room_filter)
     }
 
-    fun setFacilitiesFilterCount(count: Int) {
-        viewDataBinding.facilitiesTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_room_amenities), count)
-        else context.getString(R.string.label_room_amenities)
-    }
-
-    fun setSoldOutVisible(visible: Boolean) {
-        val flag = if (visible) View.GONE else View.VISIBLE
-
-        viewDataBinding.bedTypeFilterTextView.visibility = flag
-        viewDataBinding.facilitiesTextView.visibility = flag
-        viewDataBinding.rightGradientView.visibility = flag
+    fun setRoomFilterVisible(visible: Boolean) {
+        viewDataBinding.roomFilterTextView.visibility = if (visible) View.GONE else View.VISIBLE
     }
 }

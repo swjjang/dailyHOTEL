@@ -9,19 +9,31 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
+        <android.support.constraint.Guideline
+            android:id="@+id/leftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/rightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"/>
+
         <com.daily.base.widget.DailyTextView
             android:id="@+id/helpTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="30dp"
             android:gravity="center"
             android:text="@string/message_consult_kakao"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="18dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toTopOf="parent"
             dailyFont:style="Medium"/>
 
@@ -29,67 +41,68 @@
             android:id="@+id/helpMessageTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="3dp"
             android:gravity="center"
             android:text="@string/message_consult01"
-            android:textColor="@color/default_text_c666666"
-            android:textSize="13dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/helpTextView"
-            dailyFont:style="DemiLight"/>
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/helpTextView"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/conciergeTimeTextView"
+            android:id="@+id/conciergeTime01TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="14dp"
             android:gravity="center"
             android:text="@string/message_consult02"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/helpMessageTextView"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/conciergeTime02TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/message_consult03"
             android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/helpMessageTextView"/>
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/conciergeTime01TextView"/>
 
         <View
-            android:id="@+id/conciergeUnderLine"
-            android:layout_width="0dp"
-            android:layout_height="1px"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="13dp"
-            android:background="@color/default_line_cdcdcdd"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/conciergeTimeTextView"/>
-
-        <FrameLayout
-            android:id="@+id/conciergeLayout"
+            android:id="@+id/conciergeView"
             android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_marginBottom="60dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+            app:layout_constraintTop_toBottomOf="@+id/conciergeTime02TextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/conciergeUnderLine">
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:text="@string/label_daily_concierge_to_call"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/ic_detail_ic_ops_help"/>
-        </FrameLayout>
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:text="@string/label_daily_concierge_to_call"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            app:drawableCompatLeft="@drawable/ic_detail_ic_ops_help"
+            app:layout_constraintBottom_toBottomOf="@+id/conciergeView"
+            app:layout_constraintLeft_toLeftOf="@+id/conciergeView"
+            app:layout_constraintRight_toRightOf="@+id/conciergeView"
+            app:layout_constraintTop_toTopOf="@+id/conciergeView"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

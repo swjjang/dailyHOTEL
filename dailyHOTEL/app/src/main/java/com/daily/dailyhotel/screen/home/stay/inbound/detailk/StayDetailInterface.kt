@@ -60,7 +60,7 @@ interface StayDetailInterface {
 
         fun setSoldOutRoomVisible(visible: Boolean)
 
-        fun setRoomFilterInformation(calendarText: CharSequence, bedTypeFilterCount: Int, facilitiesFilterCount: Int)
+        fun setRoomFilterInformation(calendarText: CharSequence, roomFilterCount: Int)
 
         fun setPriceAverageTypeVisible(visible: Boolean)
 
@@ -138,21 +138,15 @@ interface StayDetailInterface {
 
         fun isShowMoreRooms(): Boolean
 
-        fun setBedTypeFilter(bedTypeList: HashSet<String>)
+        fun setRoomFilter(bedTypeList: HashSet<String>?, facilitiesList: HashSet<String>?)
 
-        fun setSelectedBedTypeFilter(selectedBedType: LinkedHashSet<String>, selectedRoomCount: Int)
+        fun setSelectedRoomFilter(selectedBedType: LinkedHashSet<String>, selectedFacilities: LinkedHashSet<String>)
 
-        fun showBedTypeFilter(): Completable
+        fun setSelectedRoomFilterCount(selectedRoomFilterCount: Int)
 
-        fun hideBedTypeFilter(): Completable
+        fun showRoomFilter(): Completable
 
-        fun setFacilitiesFilter(facilitiesList: HashSet<String>)
-
-        fun setSelectedFacilitiesFilter(selectedFacilities: LinkedHashSet<String>, selectedRoomCount: Int)
-
-        fun showFacilitiesFilter(): Completable
-
-        fun hideFacilitiesFilter(): Completable
+        fun hideRoomFilter(): Completable
     }
 
     interface OnEventListener : OnBaseEventListener {
@@ -170,9 +164,7 @@ interface StayDetailInterface {
 
         fun onCalendarClick()
 
-        fun onBedTypeFilterClick()
-
-        fun onFacilitiesFilterClick()
+        fun onRoomFilterClick()
 
         fun onMapClick()
 
@@ -216,21 +208,15 @@ interface StayDetailInterface {
 
         fun onStayInformationClick()
 
-        fun onSelectedBedTypeFilter(bedType: String)
+        fun onSelectedBedTypeFilter(selected: Boolean, bedType: String)
 
-        fun onSelectedFacilitiesFilter(facilities: String)
+        fun onSelectedFacilitiesFilter(selected: Boolean, facilities: String)
 
-        fun onResetBedTypeFilterClick()
+        fun onResetRoomFilterClick()
 
-        fun onResetFacilitiesFilterClick()
+        fun onConfirmRoomFilterClick()
 
-        fun onConfirmBedTypeFilterClick()
-
-        fun onConfirmFacilitiesFilterClick()
-
-        fun onCloseBedTypeFilterClick()
-
-        fun onCloseFacilitiesFilterClick()
+        fun onCloseRoomFilterClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

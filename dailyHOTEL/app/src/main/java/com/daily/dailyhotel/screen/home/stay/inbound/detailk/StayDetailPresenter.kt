@@ -53,7 +53,6 @@ import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 private const val DAYS_OF_MAX_COUNT = 60
 
@@ -61,7 +60,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     : BaseExceptionPresenter<StayDetailActivity, StayDetailInterface.ViewInterface>(activity), StayDetailInterface.OnEventListener {
 
     internal enum class Status {
-        NONE, BOOKING, SOLD_OUT, FINISH
+        NONE, BOOKING, SOLD_OUT, FINISH, ROOM_FILTER
     }
 
     enum class PriceType {
@@ -268,6 +267,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             Status.BOOKING -> return true
 
             Status.FINISH -> return super.onBackPressed()
+
+            Status.ROOM_FILTER -> onCloseRoomFilterClick()
 
             else -> {
                 status = Status.FINISH
@@ -627,21 +628,15 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return stayDetail.filterIf({ it.roomInformation?.roomList.isNotNullAndNotEmpty() }, true)
     }
 
-    override fun onBedTypeFilterClick() {
+    override fun onRoomFilterClick() {
         if (lock()) return
 
-        stayDetail?.let {
-            addCompositeDisposable(viewInterface.showBedTypeFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
-        } ?: Util.restartApp(activity)
-
-    }
-
-    override fun onFacilitiesFilterClick() {
-        if (lock()) return
+        status = Status.ROOM_FILTER
 
         stayDetail?.let {
-            addCompositeDisposable(viewInterface.showFacilitiesFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+            addCompositeDisposable(viewInterface.showRoomFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
         } ?: Util.restartApp(activity)
+
     }
 
     override fun onMapClick() {
@@ -881,45 +876,63 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         viewInterface.scrollStayInformation()
     }
 
-    override fun onSelectedBedTypeFilter(bedType: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onSelectedFacilitiesFilter(facilities: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onCloseBedTypeFilterClick() {
-        if (lock()) return
-
-        addCompositeDisposable(viewInterface.hideBedTypeFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
-    }
-
-    override fun onCloseFacilitiesFilterClick() {
-        if (lock()) return
-
-        addCompositeDisposable(viewInterface.hideFacilitiesFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
-    }
-
-    override fun onResetBedTypeFilterClick() {
-        if (lock()) return
-
-        bedTypeFilter.clear()
+    override fun onSelectedBedTypeFilter(selected: Boolean, bedType: String) {
+        if (selected) {
+            bedTypeFilter.add(bedType)
+        } else {
+            bedTypeFilter.remove(bedType)
+        }
 
         stayDetail?.let {
-            viewInterface.setSelectedBedTypeFilter(bedTypeFilter, getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
+            viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
+        } ?: Util.restartApp(activity)
+    }
+
+    override fun onSelectedFacilitiesFilter(selected: Boolean, facilities: String) {
+        if (selected) {
+            facilitiesFilter.add(facilities)
+        } else {
+            facilitiesFilter.remove(facilities)
+        }
+
+        stayDetail?.let {
+            viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
+        } ?: Util.restartApp(activity)
+    }
+
+    override fun onCloseRoomFilterClick() {
+        if (lock()) return
+
+        status = Status.BOOKING
+
+        addCompositeDisposable(viewInterface.hideRoomFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+    }
+
+    override fun onResetRoomFilterClick() {
+        if (lock()) return
+
+        resetRoomFilter()
+
+        stayDetail?.let {
+            viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
+            viewInterface.setSelectedRoomFilterCount(it.roomInformation?.roomList?.size ?: 0)
         }
 
         unLockAll()
     }
 
-    override fun onResetFacilitiesFilterClick() {
+    private fun resetRoomFilter() {
+        bedTypeFilter.clear()
+        facilitiesFilter.clear()
     }
 
-    override fun onConfirmBedTypeFilterClick() {
-    }
+    override fun onConfirmRoomFilterClick() {
+        if (lock()) return
 
-    override fun onConfirmFacilitiesFilterClick() {
+        stayDetail?.let {
+            setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+        } ?: Util.restartApp(activity)
+
     }
 
     private fun notifyDetailDataSetChanged() {
@@ -928,8 +941,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
             }
 
-            bedTypeFilter.clear()
-            facilitiesFilter.clear()
+            resetRoomFilter()
 
             viewInterface.apply {
                 setScrollViewVisible(true)
@@ -976,15 +988,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
 
-                it.roomInformation?.bedTypeSet?.let {
-                    viewInterface.setBedTypeFilter(it)
-                    viewInterface.setSelectedBedTypeFilter(bedTypeFilter, 0)
-                }
+                viewInterface.setRoomFilter(it.roomInformation?.bedTypeSet, it.roomInformation?.facilitiesSet)
+                viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
+                viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
 
-                it.roomInformation?.facilitiesSet?.let {
-                    viewInterface.setFacilitiesFilter(it)
-                    viewInterface.setSelectedFacilitiesFilter(facilitiesFilter, 0)
-                }
             }
 
             status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
@@ -1067,27 +1074,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private fun setRoomFilter(bookDateTime: StayBookDateTime, roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>) {
         roomList.takeNotEmpty {
-            val filteredRoomList = ArrayList<Room>()
-
-            if (bedTypeFilter.isEmpty() && facilitiesFilter.isEmpty()) {
-                filteredRoomList.addAll(roomList!!)
-            } else {
-                it.forEach loop@{ room ->
-                    bedTypeFilter.forEach {
-                        if (room.bedInformation.filterList.contains(it)) {
-                            filteredRoomList.add(room)
-                            return@loop
-                        }
-                    }
-
-                    facilitiesFilter.forEach {
-                        if (room.amenityList.contains(it)) {
-                            filteredRoomList.add(room)
-                            return@loop
-                        }
-                    }
-                }
-            }
+            val filteredRoomList = getFilteredRoomList(roomList, bedTypeFilter, facilitiesFilter)
 
             val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
                     bookDateTime.getCheckInDateTime("M.d(EEE)"),
@@ -1098,7 +1085,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             val spannableString = SpannableString(calendarText)
             spannableString.setSpan(DailyImageSpan(activity, R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-            viewInterface.setRoomFilterInformation(spannableString, bedTypeFilter.size, facilitiesFilter.size)
+            viewInterface.setRoomFilterInformation(spannableString, bedTypeFilter.size + facilitiesFilter.size)
             viewInterface.setRoomList(filteredRoomList)
 
             if (viewInterface.isShowMoreRooms()) {
@@ -1127,31 +1114,45 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }
     }
 
-    private fun getRoomFilterCount(roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): Int {
-        var filteredRoomCount = 0
+    private fun getFilteredRoomList(roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): List<Room> {
+        val filteredRoomSet = LinkedHashSet<Room>()
 
         roomList.takeNotEmpty {
             if (bedTypeFilter.isEmpty() && facilitiesFilter.isEmpty()) {
-                filteredRoomCount = it.size
+                filteredRoomSet.addAll(it)
             } else {
-                it.forEach loop@{ room ->
-                    bedTypeFilter.forEach {
-                        if (room.bedInformation.filterList.contains(it)) {
-                            filteredRoomCount++
-                            return@loop
+                if (bedTypeFilter.size == 0) {
+                    it.forEach loop@{ room ->
+                        facilitiesFilter.forEach {
+                            if (!room.amenityList.map { it.toUpperCase() }.contains(it)) {
+                                return@loop
+                            }
                         }
-                    }
 
-                    facilitiesFilter.forEach {
-                        if (room.amenityList.contains(it)) {
-                            filteredRoomCount++
-                            return@loop
+                        filteredRoomSet.add(room)
+                    }
+                } else {
+                    it.forEach loop@{ room ->
+                        bedTypeFilter.forEach {
+                            if (room.bedInformation.filterList.map { it.toUpperCase() }.contains(it)) {
+                                facilitiesFilter.forEach {
+                                    if (!room.amenityList.map { it.toUpperCase() }.contains(it)) {
+                                        return@loop
+                                    }
+                                }
+
+                                filteredRoomSet.add(room)
+                            }
                         }
                     }
                 }
             }
         }
 
-        return filteredRoomCount
+        return filteredRoomSet.toList()
+    }
+
+    private fun getRoomFilterCount(roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): Int {
+        return getFilteredRoomList(roomList, bedTypeFilter, facilitiesFilter).size
     }
 }

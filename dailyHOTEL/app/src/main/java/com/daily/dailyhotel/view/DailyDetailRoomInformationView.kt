@@ -18,7 +18,6 @@ import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailRoomInformationDataBinding
-import java.util.*
 
 private const val PRICE_AVERAGE_TAG = 1
 private const val PRICE_TOTAL_TAG = 2
@@ -32,9 +31,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     interface OnDailyDetailRoomInformationListener {
         fun onCalendarClick()
 
-        fun onBedTypeFilterClick()
-
-        fun onFacilitiesFilterClick()
+        fun onRoomFilterClick()
 
         fun onMoreRoomsClick(expanded: Boolean)
     }
@@ -64,17 +61,13 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
         setPriceAverageType(true)
 
-        viewDataBinding.roomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener{
+        viewDataBinding.roomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener {
             override fun onCalendarClick() {
                 listener?.onCalendarClick()
             }
 
-            override fun onBedTypeFilterClick() {
-                listener?.onBedTypeFilterClick()
-            }
-
-            override fun onFacilitiesFilterClick() {
-                listener?.onFacilitiesFilterClick()
+            override fun onRoomFilterClick() {
+                listener?.onRoomFilterClick()
             }
         })
     }
@@ -87,12 +80,8 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.roomFilterView.setCalendar(text)
     }
 
-    fun setBedTypeFilterCount(count: Int) {
-        viewDataBinding.roomFilterView.setBedTypeFilterCount(count)
-    }
-
-    fun setFacilitiesFilterCount(count: Int) {
-        viewDataBinding.roomFilterView.setFacilitiesFilterCount(count)
+    fun setRoomFilterCount(count: Int) {
+        viewDataBinding.roomFilterView.setRoomFilterCount(count)
     }
 
     fun setPriceAverageTypeVisible(visible: Boolean) {
@@ -239,9 +228,9 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
     fun setSoldOutVisible(visible: Boolean) {
         viewDataBinding.soldOutRoomGroup.visibility = if (visible) View.VISIBLE else View.GONE
-        viewDataBinding.roomFilterView.setSoldOutVisible(visible)
+        viewDataBinding.roomFilterView.setRoomFilterVisible(visible)
 
-        val flag = if(visible) View.GONE else View.VISIBLE
+        val flag = if (visible) View.GONE else View.VISIBLE
         viewDataBinding.priceTypeGroup.visibility = flag
         viewDataBinding.roomsLayout.visibility = flag
         viewDataBinding.moreRoomsLayout.visibility = flag
