@@ -133,7 +133,10 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         // TODO : Felix 확인 해야 함 List 로 줄 것인지 단일 텍스트인지.
         var benefitList = mutableListOf<String>()
-        benefitList.add(room.benefit)
+
+        if (!room.benefit.isTextEmpty()) {
+            benefitList.add(room.benefit)
+        }
         setRoomBenefitInformationView(dataBinding, benefitList)
 
         setRewardAndCouponInformationView(dataBinding, room.provideRewardSticker, room.hasUsableCoupon)
