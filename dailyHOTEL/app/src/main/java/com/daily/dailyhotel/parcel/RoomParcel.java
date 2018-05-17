@@ -534,11 +534,19 @@ public class RoomParcel implements Parcelable
         {
             ConsecutiveInformationParcel consecutiveInformationParcel = chargeInformation.consecutiveInformation == null ? null : new ConsecutiveInformationParcel(chargeInformation.consecutiveInformation);
             ExtraInformationParcel extraInformationParcel = chargeInformation.extraInformation == null ? null : new ExtraInformationParcel(chargeInformation.extraInformation);
-            ExtraPersonInformationParcel extraPersonInformationParcel = chargeInformation.extraPersonInformation == null ? null : new ExtraPersonInformationParcel(chargeInformation.extraPersonInformation);
+
+            List<ExtraPersonInformationParcel> extraPersonInformationParcelList = new ArrayList<>();
+            if (chargeInformation.extraPersonInformationList != null)
+            {
+                for (Room.ChargeInformation.ExtraPersonInformation info : chargeInformation.extraPersonInformationList)
+                {
+                    extraPersonInformationParcelList.add(new ExtraPersonInformationParcel(info));
+                }
+            }
 
             dest.writeParcelable(consecutiveInformationParcel, flags);
             dest.writeParcelable(extraInformationParcel, flags);
-            dest.writeParcelable(extraPersonInformationParcel, flags);
+            dest.writeList(extraPersonInformationParcelList);
         }
 
         private void readFromParcel(Parcel in)
@@ -547,11 +555,20 @@ public class RoomParcel implements Parcelable
 
             ConsecutiveInformationParcel consecutiveInformationParcel = in.readParcelable(ConsecutiveInformationParcel.class.getClassLoader());
             ExtraInformationParcel extraInformationParcel = in.readParcelable(ExtraInformationParcel.class.getClassLoader());
-            ExtraPersonInformationParcel extraPersonInformationParcel = in.readParcelable(ExtraPersonInformationParcel.class.getClassLoader());
+
+            List<Room.ChargeInformation.ExtraPersonInformation> list = new ArrayList<>();
+            List<ExtraPersonInformationParcel> parcelList = in.readArrayList(ExtraPersonInformationParcel.class.getClassLoader());
+            if (parcelList != null)
+            {
+                for (ExtraPersonInformationParcel parcel : parcelList)
+                {
+                    list.add(parcel.getExtraPersonInformation());
+                }
+            }
 
             chargeInformation.consecutiveInformation = consecutiveInformationParcel != null ? consecutiveInformationParcel.getConsecutiveInformation() : null;
             chargeInformation.extraInformation = extraInformationParcel != null ? extraInformationParcel.getExtraInformation() : null;
-            chargeInformation.extraPersonInformation = extraPersonInformationParcel != null ? extraPersonInformationParcel.getExtraPersonInformation() : null;
+            chargeInformation.extraPersonInformationList = list;
         }
 
         @Override
@@ -729,7 +746,7 @@ public class RoomParcel implements Parcelable
         @Override
         public void writeToParcel(Parcel dest, int flags)
         {
-            dest.writeString(extraInformation.descriptions);
+            dest.writeStringList(extraInformation.descriptionList);
             dest.writeInt(extraInformation.extraBed);
             dest.writeInt(extraInformation.extraBedEnable ? 1 : 0);
             dest.writeInt(extraInformation.extraBedding);
@@ -739,7 +756,9 @@ public class RoomParcel implements Parcelable
         private void readFromParcel(Parcel in)
         {
             extraInformation = new Room.ChargeInformation.ExtraInformation();
-            extraInformation.descriptions = in.readString();
+
+            extraInformation.descriptionList = new ArrayList<String>();
+            in.readStringList(extraInformation.descriptionList);
             extraInformation.extraBed = in.readInt();
             extraInformation.extraBedEnable = in.readInt() == 1;
             extraInformation.extraBedding = in.readInt();

@@ -868,7 +868,7 @@ public class StayDetailData
             public ExtraData extra;
 
             @JsonField(name = "extraPerson")
-            public ExtraPersonData extraPerson;
+            public List<ExtraPersonData> extraPersonList;
 
             @JsonObject
             static class ConsecutiveData
@@ -924,7 +924,7 @@ public class StayDetailData
             static class ExtraData
             {
                 @JsonField(name = "descriptions")
-                public String descriptions;
+                public List<String> descriptions;
 
                 @JsonField(name = "extraBed")
                 public int extraBed;
@@ -941,7 +941,7 @@ public class StayDetailData
                 Room.ChargeInformation.ExtraInformation getExtra()
                 {
                     Room.ChargeInformation.ExtraInformation extra = new Room.ChargeInformation.ExtraInformation();
-                    extra.descriptions = descriptions;
+                    extra.descriptionList = descriptions;
                     extra.extraBed = extraBed;
                     extra.extraBedEnable = extraBedEnable;
                     extra.extraBedding = extraBedding;
@@ -965,9 +965,16 @@ public class StayDetailData
                     roomCharge.extraInformation = extra.getExtra();
                 }
 
-                if (extraPerson != null)
+                if (extraPersonList != null)
                 {
-                    roomCharge.extraPersonInformation = extraPerson.getExtraPerson();
+                    List<Room.ChargeInformation.ExtraPersonInformation> list = new ArrayList<>();
+
+                    for (ExtraPersonData data : extraPersonList)
+                    {
+                        list.add(data.getExtraPerson());
+                    }
+
+                    roomCharge.extraPersonInformationList = list;
                 }
 
                 return roomCharge;
