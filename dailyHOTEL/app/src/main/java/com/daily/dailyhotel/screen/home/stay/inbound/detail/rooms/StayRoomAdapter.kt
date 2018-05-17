@@ -22,6 +22,7 @@ import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
+import com.twoheart.dailyhotel.util.DailyCalendar
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 
@@ -140,6 +141,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         setRoomBenefitInformationView(dataBinding, benefitList)
 
         setRewardAndCouponInformationView(dataBinding, room.provideRewardSticker, room.hasUsableCoupon)
+
+        setCheckTimeInformationView(dataBinding, room.checkTimeInformation)
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
@@ -174,12 +177,24 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetailk.RefundInformation?) {
-        if (refundInformation == null || refundInformation.warningMessage.isTextEmpty()) {
+        if (refundInformation == null) {
             dataBinding.refundPolicyTextView.visibility = View.GONE
-        } else {
-            dataBinding.refundPolicyTextView.visibility = View.VISIBLE
-            dataBinding.refundPolicyTextView.text = refundInformation.warningMessage
+            return
         }
+
+        val isNrd = !refundInformation.type.isTextEmpty() && refundInformation.type?.toLowerCase().equals("nrd", true)
+        if (!isNrd) {
+            dataBinding.refundPolicyTextView.visibility = View.GONE
+            return
+        }
+
+        var text = refundInformation.warningMessage
+        if (text.isTextEmpty()) {
+            text = context.resources.getString(R.string.label_stay_room_default_nrd_text)
+        }
+
+        dataBinding.refundPolicyTextView.visibility = View.VISIBLE
+        dataBinding.refundPolicyTextView.text = text
     }
 
     private fun setBaseInformationGridView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
@@ -344,6 +359,14 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setRewardAndCouponInformationView(dataBinding: ListRowStayRoomDataBinding, rewardable: Boolean, useCoupon: Boolean) {
+       if (rewardable || useCoupon) {
+           dataBinding.discountInfoGroup.visibility = View.VISIBLE
+       } else {
+           dataBinding.discountInfoGroup.visibility = View.GONE
+           return
+       }
+
+
         var text = ""
         val rewardString = context.resources.getString(R.string.label_stay_room_rewardable)
         val couponString = context.resources.getString(R.string.label_stay_room_coupon_useable)
@@ -379,6 +402,23 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
 
         dataBinding.discountInfoTextView.text = spannableString
+    }
+
+    private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomDataBinding, checkTimeInformation: StayDetailk.CheckTimeInformation?) {
+        if (checkTimeInformation == null) return
+
+        val checkInTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkIn, "HH:mm:ss", "HH:mm")
+        val checkOutTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkOut, "HH:mm:ss", "HH:mm")
+
+        if (isTextEmpty(checkInTime, checkOutTime)) {
+            dataBinding.checkTimeInfoLayout.visibility = View.GONE
+            return
+        }
+
+        dataBinding.checkTimeInfoLayout.visibility = View.VISIBLE
+
+        dataBinding.checkInTimeTextView.text = checkInTime
+        dataBinding.checkOutTimeTextView.text = checkOutTime
     }
 
     fun getLayoutWidth(): Float {

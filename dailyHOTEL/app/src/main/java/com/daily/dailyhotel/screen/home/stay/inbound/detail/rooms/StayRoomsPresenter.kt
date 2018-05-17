@@ -19,6 +19,9 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     private var stayIndex = 0
     private var category = ""
 
+    private var position = 0;
+    private var centerPosition = -1;
+
     private val analytics: StayRoomsInterface.AnalyticsInterface by lazy {
         StayRoomsAnalyticsImpl()
     }
@@ -125,6 +128,10 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
 
     override fun onScrolled(position: Int, real: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       (centerPosition == position).runTrue { return }
+
+        centerPosition = position
+
+        viewInterface.setIndicatorText(position + 1)
     }
 }

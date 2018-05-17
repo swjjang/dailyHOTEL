@@ -13,6 +13,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
     companion object {
         @JvmStatic
         fun newInstance(context: Context, roomList: List<Room>? = ArrayList<Room>()
+                        , position: Int
                         , checkInDate: String?, checkOutDate: String?
                         , stayIndex: Int?, category: String?
                         , activeReward: Boolean = false): Intent {
@@ -22,6 +23,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
                 roomList?.forEach { list.add(RoomParcel(it)) }
 
                 putParcelableArrayListExtra(INTENT_EXTRA_ROOM_LIST, list)
+                putExtra(INTENT_EXTRA_POSITION, position)
                 putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate?.let { it } ?: "")
                 putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate?.let { it } ?: "")
                 putExtra(INTENT_EXTRA_STAY_INDEX, stayIndex?.let { it } ?: 0)
@@ -36,6 +38,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
         const val INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate"
         const val INTENT_EXTRA_STAY_INDEX = "stayIndex"
         const val INTENT_EXTRA_STAY_CATEGORY = "category"
+        const val INTENT_EXTRA_POSITION = "position"
 
         const val REQUEST_CODE_TRUE_VR = 10000
     }

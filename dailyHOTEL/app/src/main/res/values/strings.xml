@@ -1871,4 +1871,5 @@
     <string name="label_stay_room_coupon_useable">할인쿠폰 사용</string>
     <string name="label_stay_room_reward_coupon_or"> 또는 </string>
     <string name="label_stay_room_end_description">이 가능한 객실입니다.</string>
+    <string name="label_stay_room_default_nrd_text">특가상품으로 변경, 취소, 환불 불가</string>
 </resources>
