@@ -8,11 +8,13 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.daily.base.util.*
+import com.daily.base.util.DailyImageSpan
+import com.daily.base.util.DailyTextUtils
+import com.daily.base.util.FontManager
+import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
@@ -204,34 +206,23 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
-        if (amountInformation == null) {
-            dataBinding.discountPercentTextView.visibility = View.GONE
-            dataBinding.priceTextView.visibility = View.GONE
-            dataBinding.discountPriceTextView.setText(R.string.label_soldout)
+        dataBinding.discountPercentTextView.visibility = View.VISIBLE
+        dataBinding.priceTextView.visibility = View.VISIBLE
 
-            ExLog.e("amountInformation is null")
-        } else {
-            dataBinding.discountPercentTextView.visibility = View.VISIBLE
-            dataBinding.priceTextView.visibility = View.VISIBLE
+        val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
+        discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        dataBinding.discountPercentTextView.text = discountRateSpan
 
-            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
-            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            dataBinding.discountPercentTextView.text = discountRateSpan
+        val nightsString = if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
+        val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
 
-            val nightsString = if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
-            val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
+        val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
+        discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        dataBinding.discountPriceTextView.text = discountPriceSpan
 
-            val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
-            discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            dataBinding.discountPriceTextView.text = discountPriceSpan
-
-            val priceSpan = SpannableString(DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false))
-            priceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), 0, priceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            priceSpan.setSpan(StrikethroughSpan(), 0, priceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            dataBinding.priceTextView.text = priceSpan
-        }
+        dataBinding.priceTextView.text = SpannableString(DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false))
     }
 
     private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetailk.RefundInformation?) {
@@ -290,7 +281,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
 
             val subDescription = if (it.extra == 0) "" else " " + context.resources.getString(if (it.extraCharge) R.string.label_bracket_pay else R.string.label_bracket_free)
-            personDescription = context.resources.getString(R.string.label_stay_outbound_room_max_person_free) + subDescription
+            personDescription = context.resources.getString(R.string.label_stay_outbound_room_max_person_free, it.fixed + it.extra) + subDescription
         }
 
         dataBinding.personIconImageView.setVectorImageResource(personVectorIconResId)
@@ -496,7 +487,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setRoomAmenityInformationView(dataBinding: ListRowStayRoomDataBinding, amenityList: MutableList<String>) {
-        if (amenityList == null || amenityList.size == 0) {
+        if (amenityList.size == 0) {
             dataBinding.roomAmenityGroup.visibility = View.GONE
             return
         }
@@ -543,7 +534,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.extraChargePersonTableLayout.setTitleVisible(true)
             dataBinding.extraChargePersonTableLayout.clearTableLayout()
 
-            val personList = info.extraPersonInformationList
             info.extraPersonInformationList.forEach {
                 var title = it.title
 
