@@ -72,7 +72,7 @@ class DailyDetailCheckInformationView : LinearLayout {
             compoundDrawablePadding = ScreenUtils.dpToPx(context, 10.0)
             setDrawableCompatLeftAndRightFixedFirstLine(true)
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0)
-            setPadding(0, ScreenUtils.dpToPx(context, 14.0), 0, 0)
+            setPadding(0, ScreenUtils.dpToPx(context, 16.0), 0, 0)
         }
     }
 

@@ -1313,6 +1313,9 @@
     <string name="label_stay_detail_room_facilities">객실 내 시설</string>
     <string name="label_stay_detail_show_filtered_room">%1$d개의 객실 보기</string>
     <string name="label_stay_detail_room_filter">객실 필터</string>
+    <string name="label_stay_detail_under_age">(0 ~ %1$d세 이하)</string>
+    <string name="label_stay_detail_over_age">(%1$d세 이상)</string>
+    <string name="label_stay_detail_range_age">(%1$d ~ %2$d세 이하)</string>
 
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>

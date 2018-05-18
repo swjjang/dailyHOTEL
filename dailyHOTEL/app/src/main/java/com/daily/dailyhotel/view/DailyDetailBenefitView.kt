@@ -71,7 +71,7 @@ class DailyDetailBenefitView : ConstraintLayout {
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_check_xs, 0, 0, 0)
 
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                topMargin = ScreenUtils.dpToPx(context, 12.0)
+                topMargin = ScreenUtils.dpToPx(context, 11.0)
             }
         }
     }

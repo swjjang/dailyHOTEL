@@ -28,7 +28,6 @@ import com.twoheart.dailyhotel.databinding.DailyViewDetailBreakfastInformationDa
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBreakfastInformationTableRowDataBinding
 import com.twoheart.dailyhotel.databinding.DailyViewDetailDetailInformationDataBinding
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
-import java.util.*
 
 class DailyDetailDetailInformationView : LinearLayout {
 
@@ -127,7 +126,7 @@ class DailyDetailDetailInformationView : LinearLayout {
             compoundDrawablePadding = ScreenUtils.dpToPx(context, 10.0)
             setDrawableCompatLeftAndRightFixedFirstLine(true)
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0)
-            setPadding(0, ScreenUtils.dpToPx(context, 14.0), 0, 0)
+            setPadding(0, ScreenUtils.dpToPx(context, 16.0), 0, 0)
         }
     }
 
@@ -155,21 +154,21 @@ class DailyDetailDetailInformationView : LinearLayout {
 
     private fun createBreakfastView(viewGroup: ViewGroup, item: StayDetailk.BreakfastInformation.Item) {
         val viewDataBinding: DailyViewDetailBreakfastInformationTableRowDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_breakfast_information_table_row_data, viewGroup, true)
-        val leftText = when {
+
+        viewDataBinding.leftTextView.text = when {
             item.minAge < 0 && item.maxAge < 0 ->
                 item.title
 
             item.minAge < 0 ->
-                item.title + String.format(Locale.KOREA, "(0 ~ %d세 이하)", item.maxAge)
+                item.title + context.getString(R.string.label_stay_detail_under_age, item.maxAge)
 
             item.maxAge < 0 ->
-                item.title + String.format(Locale.KOREA, "(%d세 이상)", item.minAge)
+                item.title + context.getString(R.string.label_stay_detail_over_age, item.minAge)
 
             else ->
-                item.title + String.format(Locale.KOREA, "(%d ~ %d세 이하)", item.minAge, item.maxAge)
+                item.title + context.getString(R.string.label_stay_detail_range_age, item.minAge, item.maxAge)
         }
 
-        viewDataBinding.leftTextView.text = leftText
         viewDataBinding.rightTextView.text = DailyTextUtils.getPriceFormat(context, item.amount, false)
     }
 
