@@ -382,7 +382,9 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        stringList.add(0, roomString)
+        if (!roomString.isTextEmpty()) {
+            stringList.add(0, roomString)
+        }
 
         dataBinding.subInfoGridView.setData(DailyRoomInfoGridView.ItemType.NONE, stringList)
     }
