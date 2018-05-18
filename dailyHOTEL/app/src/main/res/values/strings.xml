@@ -1882,4 +1882,5 @@
     <string name="label_stay_room_extra_charge_consecutive_item_title">2박 이상 투숙 시</string>
     <string name="label_stay_room_need_to_know_title">객실 확인 사항</string>
     <string name="label_stay_room_breakfast_person">%d인 조식 포함</string>
+    <string name="label_stay_room_booking_button_text">총 %s 예약하기</string>
 </resources>
