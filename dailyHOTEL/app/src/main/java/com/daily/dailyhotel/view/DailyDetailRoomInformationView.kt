@@ -129,6 +129,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         }
 
         viewDataBinding.moreRoomsLayout.visibility = View.INVISIBLE
+        viewDataBinding.moreRoomsLayout.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
         if (roomList.isNotNullAndNotEmpty()) {
             roomList!!.forEachIndexed { index, room ->

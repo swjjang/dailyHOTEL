@@ -731,11 +731,17 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
             } else {
                 if (checkedRoomFilter()) {
-                    resetRoomFilter()
-                    setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
-                    viewInterface.scrollRoomInformation()
+                    val showViewRoomMaxCount = 5
 
-                    viewInterface.showMoreRooms(false)
+                    if(getRoomFilterCount(stayDetail?.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) > showViewRoomMaxCount) {
+                        viewInterface.showMoreRooms(true)
+                    } else {
+                        resetRoomFilter()
+                        setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+                        viewInterface.scrollRoomInformation()
+
+                        viewInterface.showMoreRooms(false)
+                    }
                 } else {
                     viewInterface.showMoreRooms(true)
                 }
