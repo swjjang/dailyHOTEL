@@ -33,36 +33,48 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         const val MENU_WIDTH_RATIO = 0.865f
     }
 
-    enum class RoomType(val roomName: String) {
-        ONE_ROOM("원룸형"),
-        LIVING_ROOM("거실+방")
+
+    enum class RoomType(val stringResId: Int) {
+        ONE_ROOM(R.string.label_room_type_one_room),
+        LIVING_ROOM(R.string.label_room_type_living_room);
+
+        fun getName(context: Context): String {
+            return context.resources.getString(stringResId)
+        }
     }
 
-    enum class BedType(val type: String, val typeName: String = "체크인시 배정", val vectorIconResId: Int = R.drawable.vector_ic_detail_item_bed_double) {
-        SINGLE("SINGLE", "싱글", R.drawable.vector_ic_detail_item_bed_single),
-        DOUBLE("DOUBLE", "더블", R.drawable.vector_ic_detail_item_bed_double),
-        SEMI_DOUBLE("SEMI_DOUBLE", "세미더블", R.drawable.vector_ic_detail_item_bed_double),
-        KING("KING", "킹", R.drawable.vector_ic_detail_item_bed_double),
-        QUEEN("QUEEN", "퀸", R.drawable.vector_ic_detail_item_bed_double),
-        IN_FLOOR_HEATING("IN_FLOOR_HEATING", "온돌", R.drawable.vector_ic_detail_item_bed_heatingroom),
-        UNKNOWN("UNKNOWN", "채크인 시 배정", R.drawable.vector_ic_detail_item_bed_double)
+    enum class BedType(val stringResId: Int = R.string.label_bed_type_unknown, val vectorIconResId: Int = R.drawable.vector_ic_detail_item_bed_double) {
+        SINGLE(R.string.label_single, R.drawable.vector_ic_detail_item_bed_single),
+        DOUBLE(R.string.label_double, R.drawable.vector_ic_detail_item_bed_double),
+        SEMI_DOUBLE(R.string.label_semi_double, R.drawable.vector_ic_detail_item_bed_double),
+        KING(R.string.label_king, R.drawable.vector_ic_detail_item_bed_double),
+        QUEEN(R.string.label_queen, R.drawable.vector_ic_detail_item_bed_double),
+        IN_FLOOR_HEATING(R.string.label_in_floor_heating, R.drawable.vector_ic_detail_item_bed_heatingroom),
+        UNKNOWN(R.string.label_bed_type_unknown, R.drawable.vector_ic_detail_item_bed_double);
+
+        fun getName(context: Context): String {
+            return context.resources.getString(stringResId)
+        }
     }
 
-    enum class RoomAmenityType(val amenityName: String) {
-        WiFi("무선인터넷"),
-        Cooking("취사가능"),
-        Pc("PC"),
-        Bath("욕조구비"),
-        Tv("TV"),
-        SpaWallpool("스파월풀"),
-        PrivateBbq("개별바베큐"),
-        Smokeable("흡연가능"),
-        Karaoke("노래방"),
-        PartyRoom("파티룸"),
-        Amenity("Bath어메니티"),
-        ShowerGown("목욕가운"),
-        ToothbrushSet("칫솔/치약"),
-        DisabledFacilities("장애인편의시설")
+    enum class RoomAmenityType(val stringResId: Int) {
+        Cooking(R.string.label_cooking),
+        Pc(R.string.label_computer),
+        Bath(R.string.label_bathtub),
+        Tv(R.string.label_television),
+        SpaWallpool(R.string.label_whirlpool),
+        PrivateBbq(R.string.label_private_bbq),
+        Smokeable(R.string.label_smoke_able),
+        Karaoke(R.string.label_karaoke),
+        PartyRoom(R.string.label_party_room),
+        Amenity(R.string.label_bath_amenity),
+        ShowerGown(R.string.label_shower_gown),
+        ToothbrushSet(R.string.label_tooth_brush_set),
+        DisabledFacilities(R.string.label_disabled_facilities);
+
+        fun getName(context: Context): String {
+            return context.resources.getString(stringResId)
+        }
     }
 
     private var onEventListener: OnEventListener? = null
@@ -203,7 +215,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             dataBinding.discountPercentTextView.text = discountRateSpan
 
-            val nightsString = if (nights > 1) "/1박" else ""
+            val nightsString = if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
             val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
 
             val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
@@ -263,7 +275,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         var personDescription: String = ""
 
         personsInformation?.let {
-            personTitle = "${it.fixed}인 기준"
+            personTitle = context.resources.getString(R.string.label_standard_persons, it.fixed)
 
             personVectorIconResId = when (it.fixed) {
                 0, 1 -> R.drawable.vector_ic_detail_item_people_1
@@ -273,8 +285,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 else -> R.drawable.vector_ic_detail_item_people_3
             }
 
-            val subDescription = if (it.extra == 0) "" else (if (it.extraCharge) " (유료)" else " (무료)")
-            personDescription = "최대 ${it.fixed + it.extra}인$subDescription"
+            val subDescription = if (it.extra == 0) "" else " " + context.resources.getString(if (it.extraCharge) R.string.label_bracket_pay else R.string.label_bracket_free)
+            personDescription = context.resources.getString(R.string.label_stay_outbound_room_max_person_free) + subDescription
         }
 
         dataBinding.personIconImageView.setVectorImageResource(personVectorIconResId)
@@ -302,7 +314,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 R.drawable.vector_ic_detail_item_bed_double
             }
 
-            typeStringList += "${bedType.typeName} ${bedTypeInformation.count}"
+            typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
+            typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
@@ -317,7 +330,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
 
         val pyoung = Math.round(room.squareMeter / 400 * 121)
-        dataBinding.squareDescriptionTextView.text = "${pyoung}평"
+        dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
     }
 
     private fun setAttributeInformationView(dataBinding: ListRowStayRoomDataBinding, attribute: Room.AttributeInformation?) {
@@ -334,10 +347,10 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             RoomType.ONE_ROOM
         }
 
-        var titleText = roomType.roomName
+        var titleText = roomType.getName(context)
 
-        attribute.isEntireHouse.runTrue { titleText += "/독채" }
-        attribute.isDuplex.run { titleText += "/복층" }
+        attribute.isEntireHouse.runTrue { titleText += "/" + context.resources.getString(R.string.label_room_type_entire_house) }
+        attribute.isDuplex.run { titleText += "/" + context.resources.getString(R.string.label_room_type_duplex_room) }
 
         dataBinding.subInfoGridView.setTitleText(titleText)
         dataBinding.subInfoGridView.setTitleVisible(true)
@@ -353,7 +366,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                         roomString += ", "
                     }
 
-                    roomString += "침대룸 ${it.count}개"
+                    roomString += context.resources.getString(R.string.label_bed_room_format, it.count)
                 }
 
                 "IN_FLOOR_HEATING_ROOM" -> {
@@ -361,19 +374,19 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                         roomString += ", "
                     }
 
-                    roomString += "온돌룸 ${it.count}개"
+                    roomString += context.resources.getString(R.string.label_in_floor_heating_room_format, it.count)
                 }
 
                 "LIVING_ROOM" -> {
-                    stringList += "거실 ${it.count}개"
+                    stringList += context.resources.getString(R.string.label_living_room_format, it.count)
                 }
 
                 "KITCHEN" -> {
-                    stringList += "주방 ${it.count}개"
+                    stringList += context.resources.getString(R.string.label_kitchen_format, it.count)
                 }
 
                 "REST_ROOM" -> {
-                    stringList += "화장실 ${it.count}개"
+                    stringList += context.resources.getString(R.string.label_rest_room_format, it.count)
                 }
 
                 else -> {
@@ -492,7 +505,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 null
             }
 
-            amenityType?.run { list += amenityType.amenityName }
+            amenityType?.run { list += amenityType.getName(context) }
         }
 
         if (list.isEmpty()) {
@@ -532,7 +545,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
                 getPersonRangeText(it.minAge, it.maxAge).letNotEmpty { title += " ($it)" }
 
-                val subDescription = if (it.maxPersons > 0) "(최대 ${it.maxPersons} 까지)" else ""
+                val subDescription = if (it.maxPersons > 0) context.resources.getString(R.string.label_room_max_person_range_format, it.maxPersons) else ""
 
                 dataBinding.extraChargePersonTableLayout.addTableRow(title, getExtraChargePrice(it.amount), subDescription)
             }
@@ -580,11 +593,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         return if (minAge == -1 && maxAge == -1) {
             ""
         } else if (minAge != -1 && maxAge != -1) {
-            "${minAge}세 - ${maxAge}세"
+            context.resources.getString(R.string.label_person_age_range_format, minAge, maxAge)
         } else if (minAge != -1) {
-            "${minAge}세 이상"
+            context.resources.getString(R.string.label_person_age_and_over_format, minAge)
         } else {
-            "${maxAge}세 미만"
+            context.resources.getString(R.string.label_person_age_under_format, maxAge)
         }
     }
 
