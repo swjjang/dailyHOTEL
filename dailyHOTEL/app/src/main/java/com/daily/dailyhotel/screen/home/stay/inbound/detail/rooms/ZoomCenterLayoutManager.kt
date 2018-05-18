@@ -26,6 +26,8 @@ class ZoomCenterLayoutManager : LinearLayoutManager {
 
     private fun initialize(context: Context) {}
 
+    private var scrollEnabled = true
+
     override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler?, state: RecyclerView.State?): Int {
         val scrolled = super.scrollHorizontallyBy(dx, recycler, state)
         val midpoint = width / 2f
@@ -59,6 +61,18 @@ class ZoomCenterLayoutManager : LinearLayoutManager {
         super.onLayoutChildren(recycler, state)
 
         scrollHorizontallyBy(0, recycler, state)
+    }
+
+    fun setScrollEnabled(flag: Boolean) {
+        this.scrollEnabled = flag
+    }
+
+    override fun canScrollHorizontally(): Boolean {
+        return scrollEnabled && super.canScrollHorizontally()
+    }
+
+    override fun canScrollVertically(): Boolean {
+        return scrollEnabled && super.canScrollVertically()
     }
 
     companion object {

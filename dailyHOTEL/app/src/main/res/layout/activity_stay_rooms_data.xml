@@ -53,6 +53,17 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/indicatorTextView"/>
 
+        <include
+            android:id="@+id/invisibleLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            layout="@layout/list_row_stay_room_invisible_layout_data"/>
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/bottomLayout"
             android:layout_width="0dp"

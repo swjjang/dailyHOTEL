@@ -101,6 +101,10 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         this.nights = nights
     }
 
+    fun getNights(): Int {
+        return nights
+    }
+
     override fun getItemCount(): Int {
         return list.size
     }
@@ -589,7 +593,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    private fun getPersonRangeText(minAge: Int, maxAge: Int): String {
+    fun getPersonRangeText(minAge: Int, maxAge: Int): String {
         return if (minAge == -1 && maxAge == -1) {
             ""
         } else if (minAge != -1 && maxAge != -1) {
@@ -601,7 +605,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    private fun getExtraChargePrice(price: Int): String {
+    fun getExtraChargePrice(price: Int): String {
         if (price <= 0) {
             return context.resources.getString(R.string.label_free)
         }
