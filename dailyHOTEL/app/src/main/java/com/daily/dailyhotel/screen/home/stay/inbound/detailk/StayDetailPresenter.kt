@@ -389,7 +389,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onRefresh(showProgress: Boolean) {
         if (isFinish || !isRefresh) return
 
-        if (bookDateTime == null || !bookDateTime.validate()) {
+        if (!bookDateTime.validate()) {
             Util.restartApp(activity)
             return
         }
@@ -1040,7 +1040,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
 
-                viewInterface.setRoomFilter(it.roomInformation?.bedTypeSet, it.roomInformation?.facilitiesSet)
                 viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
 

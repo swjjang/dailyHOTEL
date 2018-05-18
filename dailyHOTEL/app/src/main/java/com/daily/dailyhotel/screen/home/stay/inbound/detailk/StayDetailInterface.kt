@@ -143,8 +143,6 @@ interface StayDetailInterface {
 
         fun isShowMoreRooms(): Boolean
 
-        fun setRoomFilter(bedTypeList: HashSet<String>?, facilitiesList: HashSet<String>?)
-
         fun setSelectedRoomFilter(selectedBedType: LinkedHashSet<String>, selectedFacilities: LinkedHashSet<String>)
 
         fun setSelectedRoomFilterCount(selectedRoomFilterCount: Int)

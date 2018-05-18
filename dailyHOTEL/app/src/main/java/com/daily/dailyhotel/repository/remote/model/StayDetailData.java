@@ -14,7 +14,6 @@ import com.daily.dailyhotel.entity.TrueAwards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 @JsonObject
@@ -242,28 +241,10 @@ public class StayDetailData
         if (rooms != null && rooms.size() > 0)
         {
             List<Room> roomList = new ArrayList<>();
-            HashSet<String> bedTypeSet = new HashSet<>();
-            HashSet<String> amenitiesSet = new HashSet<>();
 
             for (RoomData roomData : rooms)
             {
                 List<String> bedTypeFilterList = roomData.getBedTypeFilter();
-
-                if (bedTypeFilterList != null && bedTypeFilterList.size() > 0)
-                {
-                    for (String bedTypeFilter : bedTypeFilterList)
-                    {
-                        bedTypeSet.add(bedTypeFilter.toUpperCase());
-                    }
-                }
-
-                if (roomData.amenities != null && roomData.amenities.size() > 0)
-                {
-                    for (String amenitiesFilter : roomData.amenities)
-                    {
-                        amenitiesSet.add(amenitiesFilter.toUpperCase());
-                    }
-                }
 
                 roomList.add(roomData.getRoom(stayDetail.activeReward));
 
@@ -273,8 +254,6 @@ public class StayDetailData
                 }
             }
 
-            roomInformation.setBedTypeSet(bedTypeSet);
-            roomInformation.setFacilitiesSet(amenitiesSet);
             roomInformation.setRoomList(roomList);
 
             stayDetail.setRoomInformation(roomInformation);

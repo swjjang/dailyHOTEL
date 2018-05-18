@@ -13,7 +13,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/white">
 
         <ImageView
@@ -46,150 +46,387 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
-        <android.support.constraint.Guideline
-            android:id="@+id/leftGuideLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="20dp"/>
-
-        <android.support.constraint.Guideline
-            android:id="@+id/rightGuideLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="20dp"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/bedTypeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
-            android:text="@string/label_stay_detail_bedtype"
-            android:textColor="@color/default_text_c4d4d4d"
-            android:textSize="16dp"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/titleUnderLineView"
-            dailyFont:style="Medium"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/bedType01TextView"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="0dp"
-            android:layout_height="67dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
-            android:drawablePadding="2dp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="12dp"
-            android:paddingTop="10dp"
-            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
-            android:textSize="12dp"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintRight_toLeftOf="@+id/bedType02TextView"
-            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/bedType02TextView"
-            android:layout_width="0dp"
-            android:layout_height="67dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
-            android:drawablePadding="2dp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="12dp"
-            android:paddingTop="10dp"
-            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
-            android:textSize="12dp"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@+id/bedType01TextView"
-            app:layout_constraintRight_toLeftOf="@+id/bedType03TextView"
-            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/bedType03TextView"
-            android:layout_width="0dp"
-            android:layout_height="67dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
-            android:drawablePadding="2dp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="12dp"
-            android:paddingTop="10dp"
-            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
-            android:textSize="12dp"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@+id/bedType02TextView"
-            app:layout_constraintRight_toLeftOf="@+id/bedType04TextView"
-            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/bedType04TextView"
-            android:layout_width="0dp"
-            android:layout_height="67dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
-            android:drawablePadding="2dp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="12dp"
-            android:paddingTop="10dp"
-            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
-            android:textSize="12dp"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@+id/bedType03TextView"
-            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
-
-        <View
-            android:id="@+id/roomFacilitiesTopLineView"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/default_line_ce7e7e7"
-            android:gravity="center_horizontal"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/bedType01TextView"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/roomFacilitiesTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
-            android:text="@string/label_stay_detail_room_facilities"
-            android:textColor="@color/default_text_c4d4d4d"
-            android:textSize="16dp"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesTopLineView"
-            dailyFont:style="Medium"/>
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/roomFacilitiesFlexboxLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/underLineView"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesTextView"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/titleUnderLineView">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/leftGuideLine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="20dp"/>
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/rightGuideLine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="20dp"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/bedTypeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_stay_detail_bedtype"
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+                    app:layout_constraintTop_toTopOf="parent"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/doubleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="67dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+                    android:drawablePadding="2dp"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/label_double"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                    android:textSize="12dp"
+                    app:drawableCompatTop="@drawable/vector_ic_bed_type_double"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+                    app:layout_constraintRight_toLeftOf="@+id/twinTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/twinTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="67dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+                    android:drawablePadding="2dp"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/label_twin"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                    android:textSize="12dp"
+                    app:drawableCompatTop="@drawable/vector_ic_bed_type_twin"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toRightOf="@+id/doubleTextView"
+                    app:layout_constraintRight_toLeftOf="@+id/inFloorHeatingTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/inFloorHeatingTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="67dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+                    android:drawablePadding="2dp"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/label_in_floor_heating"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                    android:textSize="12dp"
+                    app:drawableCompatTop="@drawable/vector_ic_bed_type_ondol"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toRightOf="@+id/twinTextView"
+                    app:layout_constraintRight_toLeftOf="@+id/singleTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/singleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="67dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/selector_fillrect_ce6e6e7_ceb2135_r3"
+                    android:drawablePadding="2dp"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/label_single"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                    android:textSize="12dp"
+                    app:drawableCompatTop="@drawable/vector_ic_bed_type_single"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toRightOf="@+id/inFloorHeatingTextView"
+                    app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+                    app:layout_constraintTop_toBottomOf="@+id/bedTypeTextView"/>
+
+                <View
+                    android:id="@+id/roomFacilitiesTopLineView"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/default_line_ce7e7e7"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+                    app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+                    app:layout_constraintTop_toBottomOf="@+id/doubleTextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/roomFacilitiesTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_stay_detail_room_facilities"
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+                    app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesTopLineView"
+                    dailyFont:style="Medium"/>
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/roomFacilitiesFlexboxLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingBottom="30dp"
+                    app:flexDirection="row"
+                    app:flexWrap="wrap"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+                    app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesTextView">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/whirlPoolTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_whirlpool"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/bathTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_bathtub"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/bathAmenityTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_bath_amenity"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/showerGownTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_shower_gown"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/toothbrushSetTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_toothbrush_set"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/privateBbqTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_private_bbq"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/privatePoolTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_private_pool"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/partyRoomTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_party_room"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/karaokeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_karaoke"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/breakfastTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_breakfast"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/pcTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_computer"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/tvTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_television"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/cookingTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_cooking"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/smokeableTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_smokeable"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/disabledFacilitiesTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/selector_fillrect_ce8e8e9_ceb2135_r3"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="@string/label_disabled_facilities"
+                        android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+                        android:textSize="14dp"/>
+                </com.google.android.flexbox.FlexboxLayout>
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v4.widget.NestedScrollView>
 
         <View
             android:id="@+id/underLineView"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginBottom="64dp"
             android:layout_marginTop="30dp"
             android:background="@color/default_line_ce7e7e7"
             android:gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/roomFacilitiesFlexboxLayout"/>
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/resetTextView"
@@ -206,8 +443,7 @@
             android:textSize="9dp"
             app:drawableCompatTop="@drawable/ic_refresh"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/underLineView"/>
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/confirmTextView"
@@ -222,7 +458,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/resetTextView"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/underLineView"
             dailyFont:style="Medium"/>
 
     </android.support.constraint.ConstraintLayout>

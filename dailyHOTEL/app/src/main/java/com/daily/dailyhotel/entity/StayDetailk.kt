@@ -87,8 +87,6 @@ class StayDetailk : Configurations() {
     }
 
     class RoomInformation {
-        var bedTypeSet: HashSet<String>? = null
-        var facilitiesSet: HashSet<String>? = null
         var roomList: List<Room>? = null
     }
 

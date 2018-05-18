@@ -572,7 +572,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             }
 
             setPreviewTrueReviewVisible(trueReviewInformation.review.letNotNullTrueElseNullFalse {
-                setPreviewTrueReview(it.comment, it.score?.toString(), it.userId)
+                setPreviewTrueReview(it.comment, it.score.toString(), it.userId)
             })
 
             if (trueReviewInformation.reviewTotalCount > 0) {
@@ -946,11 +946,6 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun isShowMoreRooms(): Boolean {
         return viewDataBinding.roomInformationView.isShowMoreRoom()
-    }
-
-    override fun setRoomFilter(bedTypeSet: HashSet<String>?, facilitiesSet: HashSet<String>?) {
-        viewDataBinding.roomFilterView.setBedType(bedTypeSet)
-        viewDataBinding.roomFilterView.setFacilities(facilitiesSet)
     }
 
     override fun setSelectedRoomFilter(selectedBedTypeSet: LinkedHashSet<String>, selectedFacilitiesSet: LinkedHashSet<String>) {
