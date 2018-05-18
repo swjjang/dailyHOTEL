@@ -3,6 +3,9 @@ package com.daily.dailyhotel.view
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -49,8 +52,22 @@ class DailyDetailRoomFilterView : ConstraintLayout {
     }
 
     fun setRoomFilterCount(count: Int) {
-        viewDataBinding.roomFilterTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_stay_detail_room_filter), count)
-        else context.getString(R.string.label_stay_detail_room_filter)
+        viewDataBinding.roomFilterTextView.text = getRoomFilterCountText(count)
+    }
+
+    private fun getRoomFilterCountText(count: Int): CharSequence {
+        return if (count == 0) {
+            context.getString(R.string.label_stay_detail_room_filter)
+        } else {
+            val text = String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_stay_detail_room_filter), count);
+            val startIndex = text.lastIndexOf(' ')
+            val endIndex = text.length
+
+            SpannableStringBuilder(text).apply {
+                setSpan(ForegroundColorSpan(resources.getColor(R.color.default_text_ceb2135)), //
+                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        }
     }
 
     fun setRoomFilterVisible(visible: Boolean) {

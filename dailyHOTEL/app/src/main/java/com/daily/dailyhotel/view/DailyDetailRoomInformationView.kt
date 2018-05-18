@@ -19,6 +19,7 @@ import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailRoomInformationDataBinding
 import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 private const val PRICE_AVERAGE_TAG = 1
 private const val PRICE_TOTAL_TAG = 2
@@ -183,46 +184,59 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     }
 
     fun showMoreRoom(animated: Boolean): Completable {
-        return if (animated) {
-            Completable.create {
-                val height = viewDataBinding.moreRoomsLayout.tag as Int
-
-                if (height == 0 || viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE) {
-                    it.onComplete()
-                } else {
-                    ValueAnimator.ofInt(0, height).apply {
-                        addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
-                            valueAnimator?.let {
-                                viewDataBinding.moreRoomsLayout.apply {
-                                    layoutParams.height = valueAnimator.animatedValue as Int
-                                    requestLayout()
-                                }
-                            }
-                        })
-
-                        duration = 200
-                        interpolator = AccelerateDecelerateInterpolator()
-                        addListener(object : Animator.AnimatorListener {
-                            override fun onAnimationStart(animation: Animator) {
-                                viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
-                            }
-
-                            override fun onAnimationEnd(animation: Animator) {
-                                removeAllUpdateListeners()
-                                removeAllListeners()
-                            }
-
-                            override fun onAnimationCancel(animation: Animator) {
-                            }
-
-                            override fun onAnimationRepeat(animation: Animator) {
-                            }
-                        })
-                    }.start()
-                }
-            }
-        } else {
+        return if (viewDataBinding.moreRoomsLayout.childCount == 0) {
             Completable.complete()
+        } else {
+            if (animated) {
+                Completable.create {
+                    val height = viewDataBinding.moreRoomsLayout.tag as Int
+
+                    if (height == 0 || viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE) {
+                        it.onComplete()
+                    } else {
+                        ValueAnimator.ofInt(0, height).apply {
+                            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+                                valueAnimator?.let {
+                                    viewDataBinding.moreRoomsLayout.apply {
+                                        layoutParams.height = valueAnimator.animatedValue as Int
+                                    }.requestLayout()
+                                }
+                            })
+
+                            duration = 200
+                            interpolator = AccelerateDecelerateInterpolator()
+                            addListener(object : Animator.AnimatorListener {
+                                override fun onAnimationStart(animation: Animator) {
+                                    viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
+                                }
+
+                                override fun onAnimationEnd(animation: Animator) {
+                                    removeAllUpdateListeners()
+                                    removeAllListeners()
+
+                                    it.onComplete()
+                                }
+
+                                override fun onAnimationCancel(animation: Animator) {
+                                }
+
+                                override fun onAnimationRepeat(animation: Animator) {
+                                }
+                            })
+                        }.start()
+                    }
+                }.subscribeOn(AndroidSchedulers.mainThread())
+            } else {
+                Completable.create {
+                    viewDataBinding.moreRoomsLayout.apply {
+                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    }.requestLayout()
+
+                    viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
+
+                    it.onComplete()
+                }.subscribeOn(AndroidSchedulers.mainThread())
+            }
         }
     }
 

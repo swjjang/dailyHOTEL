@@ -119,6 +119,16 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 eventListener.onMoreRoomClick(expanded)
             }
         })
+
+        viewDataBinding.stickyRoomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener {
+            override fun onCalendarClick() {
+                eventListener.onCalendarClick()
+            }
+
+            override fun onRoomFilterClick() {
+                eventListener.onRoomFilterClick()
+            }
+        })
     }
 
     override fun setScrollViewVisible(visible: Boolean) {
@@ -424,14 +434,14 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         tabLayoutHideAnimator?.start()
     }
 
-    fun showRoomFilterLayout() {
+    private fun showRoomFilterLayout() {
         if (viewDataBinding.stickyRoomFilterView.visibility == View.VISIBLE)
             return
 
         viewDataBinding.stickyRoomFilterView.visibility = View.VISIBLE
     }
 
-    fun hideRoomFilterLayout() {
+    private fun hideRoomFilterLayout() {
         if (viewDataBinding.stickyRoomFilterView.visibility == View.INVISIBLE)
             return
 
@@ -439,7 +449,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         translationRoomFilterLayout(0.0f)
     }
 
-    fun translationRoomFilterLayout(transitionY: Float) {
+    private fun translationRoomFilterLayout(transitionY: Float) {
         viewDataBinding.stickyRoomFilterView.translationY = transitionY
     }
 
