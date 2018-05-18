@@ -116,7 +116,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             }
 
             override fun onMoreRoomsClick(expanded: Boolean) {
-                if (expanded) hideMoreRooms() else showMoreRooms()
+                eventListener.onMoreRoomClick(expanded)
             }
         })
     }
@@ -626,16 +626,14 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setRoomList(roomList: List<Room>?) {
         viewDataBinding.roomInformationView.setRoomList(roomList)
-
-
     }
 
     override fun setRoomActionButtonVisible(visible: Boolean) {
         viewDataBinding.roomInformationView.setActionButtonVisible(visible)
     }
 
-    override fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int) {
-        viewDataBinding.roomInformationView.setActionButton(text, leftResourceId, rightResourceId)
+    override fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int, colorResourceId: Int) {
+        viewDataBinding.roomInformationView.setActionButton(text, leftResourceId, rightResourceId, drawablePadding, colorResourceId)
     }
 
     override fun setDailyCommentVisible(visible: Boolean) {
@@ -919,8 +917,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.dailyCommentView.y.toInt() - toolbarHeight - tabLayoutHeight)
     }
 
-    override fun showMoreRooms() {
-        viewDataBinding.roomInformationView.showMoreRoom()
+    override fun showMoreRooms(animated: Boolean): Completable {
+        return viewDataBinding.roomInformationView.showMoreRoom(animated)
     }
 
     override fun hideMoreRooms() {

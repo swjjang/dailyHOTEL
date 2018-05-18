@@ -10,6 +10,7 @@ import com.daily.base.OnBaseEventListener
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
+import com.twoheart.dailyhotel.R
 import io.reactivex.Completable
 import io.reactivex.Observable
 
@@ -68,7 +69,11 @@ interface StayDetailInterface {
 
         fun setRoomActionButtonVisible(visible: Boolean)
 
-        fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int)
+        fun setRoomActionButtonText(text: String,
+                                    leftResourceId: Int = 0,
+                                    rightResourceId: Int = 0,
+                                    drawablePadding: Int = 0,
+                                    colorResourceId: Int = R.color.default_text_ceb2135)
 
         fun setRoomList(roomList: List<Room>?)
 
@@ -132,7 +137,7 @@ interface StayDetailInterface {
 
         fun scrollStayInformation()
 
-        fun showMoreRooms()
+        fun showMoreRooms(animated: Boolean): Completable
 
         fun hideMoreRooms()
 
@@ -174,7 +179,7 @@ interface StayDetailInterface {
 
         fun onConciergeClick()
 
-        fun onMoreRoomListClick()
+        fun onMoreRoomClick(expanded: Boolean)
 
         fun onPriceTypeClick(priceType: StayDetailPresenter.PriceType)
 

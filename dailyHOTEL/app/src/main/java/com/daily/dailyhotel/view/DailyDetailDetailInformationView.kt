@@ -215,8 +215,6 @@ class DailyDetailDetailInformationView : LinearLayout {
                 override fun onAnimationRepeat(animation: Animator) {
                 }
             })
-
-            start()
-        }
+        }.start()
     }
 }

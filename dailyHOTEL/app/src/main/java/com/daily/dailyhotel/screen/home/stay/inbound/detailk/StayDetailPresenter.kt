@@ -15,6 +15,7 @@ import com.daily.base.BaseActivity
 import com.daily.base.util.DailyImageSpan
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
+import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.*
@@ -711,12 +712,41 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         analytics.onEventConciergeClick(activity)
     }
 
-    override fun onMoreRoomListClick() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onMoreRoomClick(expanded: Boolean) {
+        if (lock()) return
+
+        stayDetail?.let {
+            if (expanded) {
+                if (checkedRoomFilter()) {
+                    resetRoomFilter()
+                    setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+                    viewInterface.scrollRoomInformation()
+
+                    addCompositeDisposable(viewInterface.showMoreRooms(false).observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+                } else {
+                    viewInterface.hideMoreRooms()
+                    unLockAll()
+                }
+            } else {
+                if (checkedRoomFilter()) {
+                    val showViewRoomMaxCount = 5
+
+                    if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) > showViewRoomMaxCount) {
+                        resetRoomFilter()
+                        setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+                        viewInterface.scrollRoomInformation()
+                        addCompositeDisposable(viewInterface.showMoreRooms(false).observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+                    } else {
+                        addCompositeDisposable(viewInterface.showMoreRooms(true).observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+                    }
+                } else {
+                    unLockAll()
+                }
+            }
+        } ?: Util.restartApp(activity)
     }
 
     override fun onPriceTypeClick(priceType: PriceType) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onConciergeFaqClick() {
@@ -931,8 +961,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
         stayDetail?.let {
             setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
-        } ?: Util.restartApp(activity)
 
+            unLockAll()
+            onCloseRoomFilterClick()
+        } ?: Util.restartApp(activity)
     }
 
     private fun notifyDetailDataSetChanged() {
@@ -1092,20 +1124,28 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 viewInterface.setRoomActionButtonVisible(true)
 
                 if (checkedRoomFilter()) {
-                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter), R.drawable.ic_refresh, 0)
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter),
+                            R.drawable.ic_refresh,
+                            0,
+                            ScreenUtils.dpToPx(activity, 8.0),
+                            R.color.default_text_c4d4d4d)
                 } else {
-                    viewInterface.setRoomActionButtonText(getString(R.string.label_collapse), 0, R.drawable.vector_roomlist_ic_sub_v)
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_collapse), 0, R.drawable.vector_roomlist_ic_sub_v, ScreenUtils.dpToPx(activity, 4.0))
                 }
             } else {
                 val showViewRoomMaxCount = 5
 
                 if (filteredRoomList.size > showViewRoomMaxCount) {
                     viewInterface.setRoomActionButtonVisible(true)
-                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_show_more_rooms, filteredRoomList.size - showViewRoomMaxCount), 0, 0)
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_show_more_rooms, filteredRoomList.size - showViewRoomMaxCount))
                 } else {
                     if (checkedRoomFilter()) {
                         viewInterface.setRoomActionButtonVisible(true)
-                        viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter), R.drawable.ic_refresh, 0)
+                        viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter),
+                                R.drawable.ic_refresh,
+                                0,
+                                ScreenUtils.dpToPx(activity, 8.0),
+                                R.color.default_text_c4d4d4d)
                     } else {
                         viewInterface.setRoomActionButtonVisible(false)
                     }

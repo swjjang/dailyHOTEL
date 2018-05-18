@@ -18,6 +18,7 @@ import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailRoomInformationDataBinding
+import io.reactivex.Completable
 
 private const val PRICE_AVERAGE_TAG = 1
 private const val PRICE_TOTAL_TAG = 2
@@ -172,46 +173,57 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.actionButtonGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int) {
-        viewDataBinding.actionButtonTextView.text = text
-        viewDataBinding.actionButtonTextView.setCompoundDrawablesWithIntrinsicBounds(leftResourceId, 0, rightResourceId, 0)
+    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int, colorResourceId: Int) {
+        viewDataBinding.actionButtonTextView.apply {
+            this.text = text
+            setCompoundDrawablesWithIntrinsicBounds(leftResourceId, 0, rightResourceId, 0)
+            compoundDrawablePadding = drawablePadding
+            setTextColor(context.resources.getColor(colorResourceId))
+        }
     }
 
-    fun showMoreRoom() {
-        val height = viewDataBinding.moreRoomsLayout.tag as Int
-        if (height == 0 || viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE) {
-            return
+    fun showMoreRoom(animated: Boolean): Completable {
+        return if (animated) {
+            Completable.create {
+                val height = viewDataBinding.moreRoomsLayout.tag as Int
+
+                if (height == 0 || viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE) {
+                    it.onComplete()
+                } else {
+                    ValueAnimator.ofInt(0, height).apply {
+                        addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+                            valueAnimator?.let {
+                                viewDataBinding.moreRoomsLayout.apply {
+                                    layoutParams.height = valueAnimator.animatedValue as Int
+                                    requestLayout()
+                                }
+                            }
+                        })
+
+                        duration = 200
+                        interpolator = AccelerateDecelerateInterpolator()
+                        addListener(object : Animator.AnimatorListener {
+                            override fun onAnimationStart(animation: Animator) {
+                                viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
+                            }
+
+                            override fun onAnimationEnd(animation: Animator) {
+                                removeAllUpdateListeners()
+                                removeAllListeners()
+                            }
+
+                            override fun onAnimationCancel(animation: Animator) {
+                            }
+
+                            override fun onAnimationRepeat(animation: Animator) {
+                            }
+                        })
+                    }.start()
+                }
+            }
+        } else {
+            Completable.complete()
         }
-
-        ValueAnimator.ofInt(0, height).apply {
-            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
-                valueAnimator?.let {
-                    viewDataBinding.moreRoomsLayout.apply {
-                        layoutParams.height = valueAnimator.animatedValue as Int
-                        requestLayout()
-                    }
-                }
-            })
-
-            duration = 200
-            interpolator = AccelerateDecelerateInterpolator()
-            addListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {
-                    viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
-                }
-
-                override fun onAnimationEnd(animation: Animator) {
-                    removeAllUpdateListeners()
-                    removeAllListeners()
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                }
-
-                override fun onAnimationRepeat(animation: Animator) {
-                }
-            })
-        }.start()
     }
 
     fun hideMoreRoom() {
