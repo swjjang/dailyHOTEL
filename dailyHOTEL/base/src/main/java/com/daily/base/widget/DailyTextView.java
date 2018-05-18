@@ -22,30 +22,35 @@ import com.daily.base.util.VersionUtils;
 public class DailyTextView extends AppCompatTextView
 {
     private int mCurMaxLine = 0;
-    private boolean mDrawableCompatLeftAndRightFixedFirstLine = false;
+    private boolean mDrawableLeftAndRightFixedFirstLine = false;
 
     public DailyTextView(Context context)
     {
         super(context);
 
-        setDrawableCompat(context, null);
-        setFontStyle(context, null);
+        initLayout(context, null);
     }
 
     public DailyTextView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
-        setDrawableCompat(context, attrs);
-        setFontStyle(context, attrs);
+        initLayout(context, attrs);
     }
 
     public DailyTextView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
 
+        initLayout(context, attrs);
+    }
+
+    private void initLayout(Context context, AttributeSet attrs)
+    {
         setDrawableCompat(context, attrs);
         setFontStyle(context, attrs);
+
+        setDrawableCompatLeftAndRightFixedFirstLine(context.obtainStyledAttributes(attrs, R.styleable.app).getBoolean(R.styleable.app_drawableCompatLeftAndRightFixedFirstLine, false));
     }
 
     private void setDrawableCompat(Context context, AttributeSet attrs)
@@ -64,8 +69,6 @@ public class DailyTextView extends AppCompatTextView
         {
             return;
         }
-
-        mDrawableCompatLeftAndRightFixedFirstLine = context.obtainStyledAttributes(attrs, R.styleable.app).getBoolean(R.styleable.app_drawableCompatLeftAndRightFixedFirstLine, false);
 
         setCompoundDrawablesWithIntrinsicBounds(drawableCompatLeftResId, drawableCompatTopResId, drawableCompatRightResId, drawableCompatBottomResId);
     }
@@ -130,12 +133,12 @@ public class DailyTextView extends AppCompatTextView
 
     public void setDrawableCompatLeftAndRightFixedFirstLine(boolean fixed)
     {
-        if (mDrawableCompatLeftAndRightFixedFirstLine == fixed)
+        if (mDrawableLeftAndRightFixedFirstLine == fixed)
         {
             return;
         }
 
-        mDrawableCompatLeftAndRightFixedFirstLine = fixed;
+        mDrawableLeftAndRightFixedFirstLine = fixed;
 
         Drawable[] drawables = getCompoundDrawables();
 
@@ -200,30 +203,32 @@ public class DailyTextView extends AppCompatTextView
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
     {
+        Context context = getContext();
+
         if (VersionUtils.isOverAPI21() == true)
         {
-            super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+            setCompoundDrawablesWithIntrinsicBounds(left != 0 ? context.getDrawable(left) : null,//
+                top != 0 ? context.getDrawable(top) : null,//
+                right != 0 ? context.getDrawable(right) : null,//
+                bottom != 0 ? context.getDrawable(bottom) : null);
         } else
         {
-            Context context = getContext();
-            Drawable leftDrawable = left == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, left);
-            Drawable topDrawable = top == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, top);
-            Drawable rightDrawable = right == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, right);
-            Drawable bottomDrawable = bottom == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, bottom);
-
-            setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
+            setCompoundDrawablesWithIntrinsicBounds(left == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, left),//
+                top == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, top),//
+                right == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, right),//
+                bottom == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, bottom));
         }
     }
 
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(@Nullable Drawable left, @Nullable Drawable top, @Nullable Drawable right, @Nullable Drawable bottom)
     {
-        if (left != null && mDrawableCompatLeftAndRightFixedFirstLine)
+        if (left != null && mDrawableLeftAndRightFixedFirstLine)
         {
             left = new GravityCompoundDrawable(left);
         }
 
-        if (right != null && mDrawableCompatLeftAndRightFixedFirstLine)
+        if (right != null && mDrawableLeftAndRightFixedFirstLine)
         {
             right = new GravityCompoundDrawable(right);
         }
@@ -330,7 +335,7 @@ public class DailyTextView extends AppCompatTextView
 
             canvas.save();
             canvas.translate(0, -halfCanvas + halfDrawable + (fontHeight - mDrawable.getIntrinsicHeight()) / 2);
-            mDrawable.draw(canvas);
+            mDrawable.getCurrent().draw(canvas);
             canvas.restore();
         }
 

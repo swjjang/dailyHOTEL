@@ -178,7 +178,7 @@ public class StayDetailData
             baseInformation.setGrade(Stay.Grade.etc);
         }
 
-        baseInformation.setProvideRewardSticker(provideRewardSticker);
+        baseInformation.setProvideRewardSticker(provideRewardSticker && stayDetail.activeReward);
         baseInformation.setName(name);
         baseInformation.setDiscount(discount);
 
@@ -265,7 +265,7 @@ public class StayDetailData
                     }
                 }
 
-                roomList.add(roomData.getRoom());
+                roomList.add(roomData.getRoom(stayDetail.activeReward));
 
                 if (stayDetail.getHasNRDRoom() == false && roomData.refundPolicy != null && "nrd".equalsIgnoreCase(roomData.refundPolicy.type))
                 {
@@ -735,7 +735,7 @@ public class StayDetailData
             return bedInfo != null ? bedInfo.filters : null;
         }
 
-        Room getRoom()
+        Room getRoom(boolean activeReward)
         {
             Room room = new Room();
 
@@ -743,7 +743,7 @@ public class StayDetailData
             room.name = roomName;
             room.bedCount = bedCount;
             room.benefit = benefit;
-            room.provideRewardSticker = provideRewardSticker;
+            room.provideRewardSticker = provideRewardSticker && activeReward;
             room.amenityList = amenities;
             room.descriptionList = descriptions;
             room.squareMeter = squareMeter;

@@ -68,27 +68,29 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/totalPriceTextView"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:drawableLeft="@drawable/selector_detail_checked_price_circle"
             android:drawablePadding="6dp"
-            android:gravity="center"
+            android:paddingTop="22dp"
             android:text="@string/label_total_price"
             android:textColor="@color/selector_text_color_c929292_c4d4d4d"
-            android:textSize="12dp"
+            android:textSize="13dp"
+            app:drawableCompatLeftAndRightFixedFirstLine="true"
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/roomFilterView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/averagePriceTextView"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_marginRight="20dp"
             android:drawableLeft="@drawable/selector_detail_checked_price_circle"
             android:drawablePadding="6dp"
-            android:gravity="center"
+            android:paddingTop="22dp"
             android:text="@string/label_detail_view_average_price"
             android:textColor="@color/selector_text_color_c929292_c4d4d4d"
-            android:textSize="12dp"
+            android:textSize="13dp"
+            app:drawableCompatLeftAndRightFixedFirstLine="true"
             app:layout_constraintRight_toLeftOf="@+id/totalPriceTextView"
             app:layout_constraintTop_toBottomOf="@+id/roomFilterView"/>
 

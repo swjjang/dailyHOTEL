@@ -335,7 +335,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         bookDateTime.setBookDateTime(checkInDateTime, checkOutDateTime)
                         isRefresh = true
 
-                        viewInterface.scrollTop()
+                        viewInterface.scrollRoomInformation()
                     } catch (e: Exception) {
                         ExLog.e(e.toString())
                     }
@@ -755,6 +755,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onPriceTypeClick(priceType: PriceType) {
+        if (lock()) return
+
+        showRoomPriceType = priceType
+        viewInterface.setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
+
+        unLockAll()
     }
 
     override fun onConciergeFaqClick() {
@@ -1129,7 +1135,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             val startIndex = calendarText.indexOf('돋')
             val spannableString = SpannableString(calendarText)
-            spannableString.setSpan(DailyImageSpan(activity, R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(DailyImageSpan(activity, R.drawable.layerlist_over_bffffff_s2_p2, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             viewInterface.setRoomFilterInformation(spannableString, bedTypeFilter.size + facilitiesFilter.size)
             viewInterface.setRoomList(filteredRoomList)

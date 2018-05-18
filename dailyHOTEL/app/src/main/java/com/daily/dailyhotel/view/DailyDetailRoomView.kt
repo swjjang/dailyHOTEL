@@ -3,9 +3,12 @@ package com.daily.dailyhotel.view
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import com.daily.base.util.DailyImageSpan
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
@@ -45,7 +48,7 @@ class DailyDetailRoomView : ConstraintLayout {
         if (isPriceAverageType == isAverageType) return
 
         isPriceAverageType = isAverageType;
-        viewDataBinding.discountPriceTextView.text = getPrice(isAverageType)
+        viewDataBinding.discountPriceTextView.text = getPrice(isAverageType) + if (isAverageType) context.getString(R.string.label_stay_detail_slash_one_nights) else ""
     }
 
     private fun getPrice(isAverageType: Boolean): String? {
@@ -59,6 +62,10 @@ class DailyDetailRoomView : ConstraintLayout {
 
     fun setImageUlr(url: String?) {
         Util.requestImageResize(context, viewDataBinding.simpleDraweeView, url)
+    }
+
+    fun setRewardVisible(visible: Boolean) {
+        viewDataBinding.rewardImageView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setBedTypeText(bedTypeList: List<Room.BedInformation.BedTypeInformation>?) {
@@ -134,10 +141,15 @@ class DailyDetailRoomView : ConstraintLayout {
         return bedStringBuilder.toString()
     }
 
-    private fun getPersons(fixed: Int, extra: Int, extraCharge: Boolean): String? {
+    private fun getPersons(fixed: Int, extra: Int, extraCharge: Boolean): CharSequence? {
         return if (fixed > 0) {
-            context.getString(R.string.label_stay_detail_person_information,
+            val text = context.getString(R.string.label_stay_detail_person_information,
                     fixed, fixed + extra, if (extraCharge) context.getString(R.string.label_pay) else context.getString(R.string.label_free))
+            val startIndex = text.indexOf('돋')
+
+            SpannableStringBuilder(text).apply {
+                setSpan(DailyImageSpan(context, R.drawable.layerlist_over_b4d666666_s2_p4, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
         } else null
     }
 }

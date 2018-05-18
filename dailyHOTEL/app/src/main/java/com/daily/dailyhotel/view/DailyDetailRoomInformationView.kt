@@ -35,6 +35,10 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
         fun onRoomFilterClick()
 
+        fun onAveragePriceClick()
+
+        fun onTotalPriceClick()
+
         fun onMoreRoomsClick(expanded: Boolean)
     }
 
@@ -60,6 +64,9 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                 }
             }
         })
+
+        viewDataBinding.averagePriceTextView.setOnClickListener { listener?.onAveragePriceClick() }
+        viewDataBinding.totalPriceTextView.setOnClickListener { listener?.onTotalPriceClick() }
 
         setPriceAverageType(true)
 
@@ -140,6 +147,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                         setPriceAverageType(isPriceAverageType)
                         setName(room.name)
                         setImageUlr(room.imageInformation?.imageMap?.smallUrl)
+                        setRewardVisible(room.provideRewardSticker)
                         setBedTypeText(room.bedInformation.bedTypeList)
                         setPersons(room.personsInformation)
                         setBenefit(room.benefit)

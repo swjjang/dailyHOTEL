@@ -19,6 +19,17 @@
             app:layout_constraintTop_toTopOf="parent"
             fresco:actualImageScaleType="centerCrop"/>
 
+        <ImageView
+            android:id="@+id/rewardImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="9dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@+id/simpleDraweeView"
+            app:layout_constraintTop_toTopOf="@+id/simpleDraweeView"
+            app:srcCompat="@drawable/r_ic_s_17_shadow"/>
+
         <com.daily.base.widget.DailyImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,6 +61,7 @@
             android:layout_marginTop="9dp"
             android:ellipsize="end"
             android:maxHeight="40dp"
+            android:lineSpacingExtra="-3dp"
             android:maxLines="2"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="16dp"
@@ -63,7 +75,7 @@
             android:id="@+id/bedTypeTextView"
             android:layout_width="0dp"
             android:layout_height="16dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="7dp"
             android:drawablePadding="6dp"
             android:ellipsize="end"
             android:maxLines="1"
@@ -95,7 +107,7 @@
             android:id="@+id/breakfastTextView"
             android:layout_width="0dp"
             android:layout_height="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/default_text_ccf9e5e"
@@ -144,7 +156,7 @@
             android:id="@+id/couponTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="5dp"
             android:background="@drawable/shape_fillrect_bfdf1f1_r2"
             android:paddingBottom="2dp"
@@ -155,7 +167,7 @@
             android:textColor="@color/default_text_cfb234a"
             android:textSize="10dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/wonTextView"/>
     </android.support.constraint.ConstraintLayout>
 </layout>
