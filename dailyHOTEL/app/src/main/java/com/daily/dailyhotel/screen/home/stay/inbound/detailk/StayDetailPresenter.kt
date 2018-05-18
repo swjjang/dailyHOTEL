@@ -100,7 +100,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showRoomPriceType: PriceType = PriceType.AVERAGE
     private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
     private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
-    private var resetRoomFilter = true
+    private var resetRoomFilterAfterRefresh = true
 
     private val bookDateTime = StayBookDateTime()
     private val commonDateTime = CommonDateTime()
@@ -334,6 +334,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                         bookDateTime.setBookDateTime(checkInDateTime, checkOutDateTime)
                         isRefresh = true
+
+                        viewInterface.scrollTop()
                     } catch (e: Exception) {
                         ExLog.e(e.toString())
                     }
@@ -952,8 +954,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun resetRoomFilter() {
-        if (!resetRoomFilter) return
-
         bedTypeFilter.clear()
         facilitiesFilter.clear()
     }
@@ -976,7 +976,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
             }
 
-            resetRoomFilter()
+            resetRoomFilterAfterRefresh.runTrue { resetRoomFilter() }
 
             viewInterface.apply {
                 setScrollViewVisible(true)
