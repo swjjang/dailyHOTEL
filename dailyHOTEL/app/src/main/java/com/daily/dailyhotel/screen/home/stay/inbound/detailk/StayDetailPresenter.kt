@@ -976,7 +976,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
             }
 
-            resetRoomFilterAfterRefresh.runTrue { resetRoomFilter() }
+            if (resetRoomFilterAfterRefresh) {
+                resetRoomFilter()
+            } else {
+                resetRoomFilterAfterRefresh = true
+            }
 
             viewInterface.apply {
                 setScrollViewVisible(true)
