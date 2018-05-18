@@ -84,9 +84,8 @@ class DailyRoomInfoGridView : LinearLayout {
                 return
             }
 
-            if (moreGridLayout.childCount > 0) {
-                moreGridLayout.removeAllViews()
-            }
+            gridLayout.removeAllViews()
+            moreGridLayout.removeAllViews()
 
             val columnCount = gridLayout.columnCount
             val maxIndex = DEFAULT_SHOW_LINE_COUNT * columnCount

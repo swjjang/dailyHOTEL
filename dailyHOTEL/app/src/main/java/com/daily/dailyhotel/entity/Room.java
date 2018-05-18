@@ -92,7 +92,7 @@ public class Room
 
         public ExtraInformation extraInformation;
 
-        public ExtraPersonInformation extraPersonInformation;
+        public List<ExtraPersonInformation> extraPersonInformationList;
 
         public static class ConsecutiveInformation
         {
@@ -111,7 +111,7 @@ public class Room
 
         public static class ExtraInformation
         {
-            public String descriptions;
+            public List<String> descriptionList;
             public int extraBed;
             public boolean extraBedEnable;
             public int extraBedding;

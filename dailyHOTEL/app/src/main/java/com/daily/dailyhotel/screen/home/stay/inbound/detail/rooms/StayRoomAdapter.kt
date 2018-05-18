@@ -17,11 +17,13 @@ import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetailk
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
+import com.twoheart.dailyhotel.util.DailyCalendar
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 
@@ -31,25 +33,55 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         const val MENU_WIDTH_RATIO = 0.865f
     }
 
-    enum class RoomType(val roomName: String) {
-        ONE_ROOM("원룸형"),
-        LIVING_ROOM("거실+방")
+
+    enum class RoomType(val stringResId: Int) {
+        ONE_ROOM(R.string.label_room_type_one_room),
+        LIVING_ROOM(R.string.label_room_type_living_room);
+
+        fun getName(context: Context): String {
+            return context.resources.getString(stringResId)
+        }
     }
 
-    enum class BedType(val type: String, val typeName: String = "체크인시 배정", val vectorIconResId: Int = R.drawable.vector_ic_detail_item_bed_double) {
-        SINGLE("SINGLE", "싱글", R.drawable.vector_ic_detail_item_bed_single),
-        DOUBLE("DOUBLE", "더블", R.drawable.vector_ic_detail_item_bed_double),
-        SEMI_DOUBLE("SEMI_DOUBLE", "세미더블", R.drawable.vector_ic_detail_item_bed_double),
-        KING("KING", "킹", R.drawable.vector_ic_detail_item_bed_double),
-        QUEEN("QUEEN", "퀸", R.drawable.vector_ic_detail_item_bed_double),
-        IN_FLOOR_HEATING("IN_FLOOR_HEATING", "온돌", R.drawable.vector_ic_detail_item_bed_heatingroom),
-        UNKNOWN("UNKNOWN", "채크인 시 배정", R.drawable.vector_ic_detail_item_bed_double)
+    enum class BedType(val stringResId: Int = R.string.label_bed_type_unknown, val vectorIconResId: Int = R.drawable.vector_ic_detail_item_bed_double) {
+        SINGLE(R.string.label_single, R.drawable.vector_ic_detail_item_bed_single),
+        DOUBLE(R.string.label_double, R.drawable.vector_ic_detail_item_bed_double),
+        SEMI_DOUBLE(R.string.label_semi_double, R.drawable.vector_ic_detail_item_bed_double),
+        KING(R.string.label_king, R.drawable.vector_ic_detail_item_bed_double),
+        QUEEN(R.string.label_queen, R.drawable.vector_ic_detail_item_bed_double),
+        IN_FLOOR_HEATING(R.string.label_in_floor_heating, R.drawable.vector_ic_detail_item_bed_heatingroom),
+        UNKNOWN(R.string.label_bed_type_unknown, R.drawable.vector_ic_detail_item_bed_double);
+
+        fun getName(context: Context): String {
+            return context.resources.getString(stringResId)
+        }
+    }
+
+    enum class RoomAmenityType(val stringResId: Int) {
+        Cooking(R.string.label_cooking),
+        Pc(R.string.label_computer),
+        Bath(R.string.label_bathtub),
+        Tv(R.string.label_television),
+        SpaWallpool(R.string.label_whirlpool),
+        PrivateBbq(R.string.label_private_bbq),
+        Smokeable(R.string.label_smokeable),
+        Karaoke(R.string.label_karaoke),
+        PartyRoom(R.string.label_party_room),
+        Amenity(R.string.label_bath_amenity),
+        ShowerGown(R.string.label_shower_gown),
+        ToothbrushSet(R.string.label_toothbrush_set),
+        DisabledFacilities(R.string.label_disabled_facilities);
+
+        fun getName(context: Context): String {
+            return context.resources.getString(stringResId)
+        }
     }
 
     private var onEventListener: OnEventListener? = null
 
     interface OnEventListener : OnBaseEventListener {
-        fun onMoreImageClick(index: Int)
+        fun onMoreImageClick(position: Int)
+        fun onVrImageClick(position: Int)
     }
 
     fun setEventListener(listener: OnEventListener?) {
@@ -114,11 +146,22 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.defaultImageLayout.setOnClickListener(null)
         } else {
             dataBinding.defaultImageLayout.visibility = View.VISIBLE
+            dataBinding.defaultImageLayout.setOnClickListener {
+                onEventListener?.let {
+                    it.onMoreImageClick(position)
+                }
+            }
+
             dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_placeholder)
             Util.requestImageResize(context, dataBinding.simpleDraweeView, room.imageInformation.imageMap.bigUrl)
 
             dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
             dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
+            dataBinding.vrIconView.setOnClickListener {
+                onEventListener?.let {
+                    it.onVrImageClick(position)
+                }
+            }
         }
 
         dataBinding.roomNameTextView.text = room.name
@@ -131,12 +174,29 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         setAttributeInformationView(dataBinding, room.attributeInformation)
 
-        // TODO : Felix 확인 해야 함 List 로 줄 것인지 단일 텍스트인지.
         var benefitList = mutableListOf<String>()
-        benefitList.add(room.benefit)
+
+        val breakfast = room.personsInformation?.breakfast ?: 0
+        if (breakfast > 0) {
+            benefitList.add(context.resources.getString(R.string.label_stay_room_breakfast_person, breakfast))
+        }
+
+        if (!room.benefit.isTextEmpty()) {
+            benefitList.add(room.benefit)
+        }
         setRoomBenefitInformationView(dataBinding, benefitList)
 
         setRewardAndCouponInformationView(dataBinding, room.provideRewardSticker, room.hasUsableCoupon)
+
+        setCheckTimeInformationView(dataBinding, room.checkTimeInformation)
+
+        setRoomDescriptionInformationView(dataBinding, room.descriptionList)
+
+        setRoomAmenityInformationView(dataBinding, room.amenityList)
+
+        setRoomChargeInformatinoView(dataBinding, room.roomChargeInformation)
+
+        setNeedToKnowInformationView(dataBinding, room.needToKnowList)
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
@@ -155,7 +215,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             dataBinding.discountPercentTextView.text = discountRateSpan
 
-            val nightsString = if (nights > 1) "/1박" else ""
+            val nightsString = if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
             val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
 
             val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
@@ -171,12 +231,24 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetailk.RefundInformation?) {
-        if (refundInformation == null || refundInformation.warningMessage.isTextEmpty()) {
+        if (refundInformation == null) {
             dataBinding.refundPolicyTextView.visibility = View.GONE
-        } else {
-            dataBinding.refundPolicyTextView.visibility = View.VISIBLE
-            dataBinding.refundPolicyTextView.text = refundInformation.warningMessage
+            return
         }
+
+        val isNrd = !refundInformation.type.isTextEmpty() && refundInformation.type?.toLowerCase().equals("nrd", true)
+        if (!isNrd) {
+            dataBinding.refundPolicyTextView.visibility = View.GONE
+            return
+        }
+
+        var text = refundInformation.warningMessage
+        if (text.isTextEmpty()) {
+            text = context.resources.getString(R.string.label_stay_room_default_nrd_text)
+        }
+
+        dataBinding.refundPolicyTextView.visibility = View.VISIBLE
+        dataBinding.refundPolicyTextView.text = text
     }
 
     private fun setBaseInformationGridView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
@@ -203,7 +275,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         var personDescription: String = ""
 
         personsInformation?.let {
-            personTitle = "${it.fixed}인 기준"
+            personTitle = context.resources.getString(R.string.label_standard_persons, it.fixed)
 
             personVectorIconResId = when (it.fixed) {
                 0, 1 -> R.drawable.vector_ic_detail_item_people_1
@@ -213,8 +285,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 else -> R.drawable.vector_ic_detail_item_people_3
             }
 
-            val subDescription = if (it.extra == 0) "" else (if (it.extraCharge) " (유료)" else " (무료)")
-            personDescription = "최대 ${it.fixed + it.extra}인$subDescription"
+            val subDescription = if (it.extra == 0) "" else " " + context.resources.getString(if (it.extraCharge) R.string.label_bracket_pay else R.string.label_bracket_free)
+            personDescription = context.resources.getString(R.string.label_stay_outbound_room_max_person_free) + subDescription
         }
 
         dataBinding.personIconImageView.setVectorImageResource(personVectorIconResId)
@@ -242,7 +314,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 R.drawable.vector_ic_detail_item_bed_double
             }
 
-            typeStringList += "${bedType.typeName} ${bedTypeInformation.count}"
+            typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
+            typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
@@ -257,7 +330,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
 
         val pyoung = Math.round(room.squareMeter / 400 * 121)
-        dataBinding.squareDescriptionTextView.text = "${pyoung}평"
+        dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
     }
 
     private fun setAttributeInformationView(dataBinding: ListRowStayRoomDataBinding, attribute: Room.AttributeInformation?) {
@@ -274,10 +347,10 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             RoomType.ONE_ROOM
         }
 
-        var titleText = roomType.roomName
+        var titleText = roomType.getName(context)
 
-        attribute.isEntireHouse.runTrue { titleText += "/독채" }
-        attribute.isDuplex.run { titleText += "/복층" }
+        attribute.isEntireHouse.runTrue { titleText += "/" + context.resources.getString(R.string.label_room_type_entire_house) }
+        attribute.isDuplex.run { titleText += "/" + context.resources.getString(R.string.label_room_type_duplex_room) }
 
         dataBinding.subInfoGridView.setTitleText(titleText)
         dataBinding.subInfoGridView.setTitleVisible(true)
@@ -293,7 +366,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                         roomString += ", "
                     }
 
-                    roomString += "침대룸 ${it.count}개"
+                    roomString += context.resources.getString(R.string.label_bed_room_format, it.count)
                 }
 
                 "IN_FLOOR_HEATING_ROOM" -> {
@@ -301,19 +374,19 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                         roomString += ", "
                     }
 
-                    roomString += "온돌룸 ${it.count}개"
+                    roomString += context.resources.getString(R.string.label_in_floor_heating_room_format, it.count)
                 }
 
                 "LIVING_ROOM" -> {
-                    stringList += "거실 ${it.count}개"
+                    stringList += context.resources.getString(R.string.label_living_room_format, it.count)
                 }
 
                 "KITCHEN" -> {
-                    stringList += "주방 ${it.count}개"
+                    stringList += context.resources.getString(R.string.label_kitchen_format, it.count)
                 }
 
                 "REST_ROOM" -> {
-                    stringList += "화장실 ${it.count}개"
+                    stringList += context.resources.getString(R.string.label_rest_room_format, it.count)
                 }
 
                 else -> {
@@ -322,7 +395,9 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        stringList.add(0, roomString)
+        if (!roomString.isTextEmpty()) {
+            stringList.add(0, roomString)
+        }
 
         dataBinding.subInfoGridView.setData(DailyRoomInfoGridView.ItemType.NONE, stringList)
     }
@@ -341,6 +416,14 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setRewardAndCouponInformationView(dataBinding: ListRowStayRoomDataBinding, rewardable: Boolean, useCoupon: Boolean) {
+        if (rewardable || useCoupon) {
+            dataBinding.discountInfoGroup.visibility = View.VISIBLE
+        } else {
+            dataBinding.discountInfoGroup.visibility = View.GONE
+            return
+        }
+
+
         var text = ""
         val rewardString = context.resources.getString(R.string.label_stay_room_rewardable)
         val couponString = context.resources.getString(R.string.label_stay_room_coupon_useable)
@@ -376,6 +459,167 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
 
         dataBinding.discountInfoTextView.text = spannableString
+    }
+
+    private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomDataBinding, checkTimeInformation: StayDetailk.CheckTimeInformation?) {
+        if (checkTimeInformation == null) return
+
+        val checkInTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkIn, "HH:mm:ss", "HH:mm")
+        val checkOutTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkOut, "HH:mm:ss", "HH:mm")
+
+        if (isTextEmpty(checkInTime, checkOutTime)) {
+            dataBinding.checkTimeInfoLayout.visibility = View.GONE
+            return
+        }
+
+        dataBinding.checkTimeInfoLayout.visibility = View.VISIBLE
+
+        dataBinding.checkInTimeTextView.text = checkInTime
+        dataBinding.checkOutTimeTextView.text = checkOutTime
+    }
+
+    private fun setRoomDescriptionInformationView(dataBinding: ListRowStayRoomDataBinding, descriptionList: MutableList<String>?) {
+        if (descriptionList == null || descriptionList.size == 0) {
+            dataBinding.roomDescriptionGroup.visibility = View.GONE
+            return
+        }
+
+        dataBinding.roomDescriptionGroup.visibility = View.VISIBLE
+
+        dataBinding.roomDescriptionGridView.setTitleText(R.string.label_stay_room_description_title)
+        dataBinding.roomDescriptionGridView.setColumnCount(1)
+        dataBinding.roomDescriptionGridView.setData(DailyRoomInfoGridView.ItemType.DOT, descriptionList)
+    }
+
+    private fun setRoomAmenityInformationView(dataBinding: ListRowStayRoomDataBinding, amenityList: MutableList<String>) {
+        if (amenityList == null || amenityList.size == 0) {
+            dataBinding.roomAmenityGroup.visibility = View.GONE
+            return
+        }
+
+        val list = mutableListOf<String>()
+        amenityList.forEach {
+            val amenityType: RoomAmenityType? = try {
+                RoomAmenityType.valueOf(it)
+            } catch (e: Exception) {
+                null
+            }
+
+            amenityType?.run { list += amenityType.getName(context) }
+        }
+
+        if (list.isEmpty()) {
+            dataBinding.roomAmenityGroup.visibility = View.GONE
+            return
+        }
+
+        dataBinding.roomAmenityGroup.visibility = View.VISIBLE
+        dataBinding.roomAmenityGridView.setTitleText(R.string.label_stay_room_amenity_title)
+        dataBinding.roomAmenityGridView.setColumnCount(1)
+        dataBinding.roomAmenityGridView.setData(DailyRoomInfoGridView.ItemType.DOT, list)
+    }
+
+    private fun setRoomChargeInformatinoView(dataBinding: ListRowStayRoomDataBinding, info: Room.ChargeInformation?) {
+        if (info == null) {
+            dataBinding.extraChargeLayout.visibility = View.GONE
+            return
+        }
+
+        if (!info.extraPersonInformationList.isNotNullAndNotEmpty() && info.extraInformation == null && info.consecutiveInformation == null) {
+            dataBinding.extraChargeLayout.visibility = View.GONE
+            return
+        }
+
+        if (info.extraPersonInformationList.isNotNullAndNotEmpty()) {
+            dataBinding.extraChargePersonTableLayout.visibility = View.GONE
+        } else {
+            dataBinding.extraChargePersonTableLayout.visibility = View.VISIBLE
+
+            dataBinding.extraChargePersonTableLayout.setTitleText(R.string.label_stay_room_extra_charge_person_title)
+            dataBinding.extraChargePersonTableLayout.setTitleVisible(true)
+            dataBinding.extraChargePersonTableLayout.clearTableLayout()
+
+            val personList = info.extraPersonInformationList
+            info.extraPersonInformationList.forEach {
+                var title = it.title
+
+                getPersonRangeText(it.minAge, it.maxAge).letNotEmpty { title += " ($it)" }
+
+                val subDescription = if (it.maxPersons > 0) context.resources.getString(R.string.label_room_max_person_range_format, it.maxPersons) else ""
+
+                dataBinding.extraChargePersonTableLayout.addTableRow(title, getExtraChargePrice(it.amount), subDescription)
+            }
+        }
+
+        if (info.extraInformation == null) {
+            dataBinding.extraChargeBedTableLayout.visibility = View.GONE
+            dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
+        } else {
+            dataBinding.extraChargeBedTableLayout.visibility = View.VISIBLE
+
+            dataBinding.extraChargeBedTableLayout.setTitleVisible(true)
+            dataBinding.extraChargeBedTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
+            dataBinding.extraChargeBedTableLayout.clearTableLayout()
+
+            (info.extraInformation.extraBeddingEnable).runTrue {
+                dataBinding.extraChargeBedTableLayout.addTableRow(context.resources.getString(R.string.label_bedding), getExtraChargePrice(info.extraInformation.extraBedding))
+            }
+
+            (info.extraInformation.extraBedEnable).runTrue {
+                dataBinding.extraChargeBedTableLayout.addTableRow(context.resources.getString(R.string.label_extra_bed), getExtraChargePrice(info.extraInformation.extraBed))
+            }
+
+            dataBinding.extraChargeBedTableLayout.visibility = if (itemCount == 0) View.GONE else View.VISIBLE
+
+            dataBinding.extraChargeDescriptionGridView.setColumnCount(1)
+            dataBinding.extraChargeDescriptionGridView.setTitleVisible(false)
+            dataBinding.extraChargeDescriptionGridView.setData(DailyRoomInfoGridView.ItemType.DOT, info.extraInformation.descriptionList)
+        }
+
+        if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
+            dataBinding.extraChargeNightsTableLayout.visibility = View.GONE
+        } else {
+            dataBinding.extraChargeNightsTableLayout.visibility = View.VISIBLE
+
+            dataBinding.extraChargeNightsTableLayout.setTitleVisible(true)
+            dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
+            dataBinding.extraChargeNightsTableLayout.clearTableLayout()
+
+            dataBinding.extraChargeNightsTableLayout.addTableRow(context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title), getExtraChargePrice(info.consecutiveInformation.charge))
+        }
+    }
+
+    private fun getPersonRangeText(minAge: Int, maxAge: Int): String {
+        return if (minAge == -1 && maxAge == -1) {
+            ""
+        } else if (minAge != -1 && maxAge != -1) {
+            context.resources.getString(R.string.label_person_age_range_format, minAge, maxAge)
+        } else if (minAge != -1) {
+            context.resources.getString(R.string.label_person_age_and_over_format, minAge)
+        } else {
+            context.resources.getString(R.string.label_person_age_under_format, maxAge)
+        }
+    }
+
+    private fun getExtraChargePrice(price: Int): String {
+        if (price <= 0) {
+            return context.resources.getString(R.string.label_free)
+        }
+
+        return DailyTextUtils.getPriceFormat(context, price, false)
+    }
+
+    private fun setNeedToKnowInformationView(dataBinding: ListRowStayRoomDataBinding, needToKnowList: MutableList<String>?) {
+        if (needToKnowList == null || needToKnowList.size == 0) {
+            dataBinding.roomCheckInfoGroup.visibility = View.GONE
+            return
+        }
+
+        dataBinding.roomCheckInfoGroup.visibility = View.VISIBLE
+
+        dataBinding.roomCheckInfoGridView.setTitleText(R.string.label_stay_room_need_to_know_title)
+        dataBinding.roomCheckInfoGridView.setColumnCount(1)
+        dataBinding.roomCheckInfoGridView.setData(DailyRoomInfoGridView.ItemType.DOT, needToKnowList)
     }
 
     fun getLayoutWidth(): Float {

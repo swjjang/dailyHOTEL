@@ -42,12 +42,20 @@ class DailyRoomInfoTableView : ConstraintLayout {
         dataBinding.tableLayout.setBackgroundColor(context.resources.getColor(tableLineColorResId))
     }
 
+    fun setTitleText(stringResId : Int) {
+        dataBinding.titleTextView.setText(stringResId)
+    }
+
     fun setTitleText(text: String) {
         dataBinding.titleTextView.text = text
     }
 
     fun setTitleVisible(visible: Boolean) {
         dataBinding.titleTextView.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    fun getItemCount() : Int {
+        return itemCount
     }
 
     fun clearTableLayout() {

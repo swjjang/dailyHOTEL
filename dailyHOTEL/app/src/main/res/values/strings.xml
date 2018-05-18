@@ -141,6 +141,8 @@
     <string name="label_number_of_visitors">방문 인원수</string>
     <string name="label_free">무료</string>
     <string name="label_pay">유료</string>
+    <string name="label_bracket_free">(무료)</string>
+    <string name="label_bracket_pay">(유료)</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -990,9 +992,13 @@
 
     <!-- Curation Activity -->
     <string name="label_double">더블</string>
+    <string name="label_semi_double">세미더블</string>
     <string name="label_twin">트윈</string>
     <string name="label_single">싱글</string>
-    <string name="label_heatedfloors">온돌</string>
+    <string name="label_king">킹</string>
+    <string name="label_queen">퀸</string>
+    <string name="label_in_floor_heating">온돌</string>
+    <string name="label_bed_type_unknown">채크인 시 배정</string>
     <string name="label_more_person">%1$d명 이상</string>
     <string name="label_hotel_filter_result_count">%1$d개의 스테이 보기</string>
     <string name="label_hotel_filter_result_over_count">%1$d개 이상의 스테이 보기</string>
@@ -1880,4 +1886,30 @@
     <string name="label_stay_room_coupon_useable">할인쿠폰 사용</string>
     <string name="label_stay_room_reward_coupon_or"> 또는 </string>
     <string name="label_stay_room_end_description">이 가능한 객실입니다.</string>
+    <string name="label_stay_room_default_nrd_text">특가상품으로 변경, 취소, 환불 불가</string>
+    <string name="label_stay_room_description_title">객실 설명</string>
+    <string name="label_stay_room_amenity_title">객실 내 시설</string>
+    <string name="label_stay_room_extra_charge_person_title">인원 추가요금 (1인 기준)</string>
+    <string name="label_stay_room_extra_charge_bed_title">침구 및 엑스트라베드 추가요금</string>
+    <string name="label_stay_room_extra_charge_consecutive_title">연박 시 추가요금</string>
+    <string name="label_bedding">침구</string>
+    <string name="label_extra_bed">엑스트라베드</string>
+    <string name="label_stay_room_extra_charge_consecutive_item_title">2박 이상 투숙 시</string>
+    <string name="label_stay_room_need_to_know_title">객실 확인 사항</string>
+    <string name="label_stay_room_breakfast_person">%d인 조식 포함</string>
+    <string name="label_stay_room_booking_button_text">총 %s 예약하기</string>
+    <string name="label_room_type_one_room">원룸형</string>
+    <string name="label_room_type_living_room">거실+방</string>
+    <string name="label_room_type_duplex_room">복층</string>
+    <string name="label_room_type_entire_house">독채</string>
+    <string name="label_bed_room_format">침대룸 %d개</string>
+    <string name="label_in_floor_heating_room_format">온돌룸 %d개</string>
+    <string name="label_living_room_format">거실 %d개</string>
+    <string name="label_kitchen_format">주방 %d개</string>
+    <string name="label_rest_room_format">"화장실 %d개</string>
+    <string name="label_pyoung_format">%d평</string>
+    <string name="label_room_max_person_range_format">(최대 %d인 까지)</string>
+    <string name="label_person_age_range_format">%1$d세 - %2$d세</string>
+    <string name="label_person_age_and_over_format">%1$d세 이상</string>
+    <string name="label_person_age_under_format">%1$d세 미만</string>
 </resources>

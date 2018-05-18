@@ -667,6 +667,7 @@
                 android:layout_marginLeft="7.5dp"
                 android:layout_marginRight="14dp"
                 android:text="@string/label_stay_room_extra_charge_info_description"
+                android:gravity="right|center_vertical"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="@+id/extraChargeTitleView"
@@ -731,13 +732,13 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/extraChargeLayout"/>
 
-        <android.support.v7.widget.GridLayout
-            android:id="@+id/roomCheckInfoGridLayout"
+        <com.daily.dailyhotel.view.DailyRoomInfoGridView
+            android:id="@+id/roomCheckInfoGridView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="6.5dp"
-            android:paddingRight="6.5dp"
-            app:columnCount="3"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/roomCheckInfoGridLine"/>
@@ -746,7 +747,7 @@
             android:id="@+id/roomCheckInfoGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="roomCheckInfoGridLine, roomCheckInfoGridLayout"/>
+            app:constraint_referenced_ids="roomCheckInfoGridLine, roomCheckInfoGridView"/>
 
         <ImageView
             android:layout_width="0dp"
@@ -756,7 +757,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/roomCheckInfoGridLayout"
+            app:layout_constraintTop_toBottomOf="@+id/roomCheckInfoGridView"
             app:srcCompat="@drawable/vector_end_list_logo"/>
 
         <View

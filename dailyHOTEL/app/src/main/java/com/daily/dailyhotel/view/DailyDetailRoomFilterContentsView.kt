@@ -170,7 +170,7 @@ class DailyDetailRoomFilterContentsView : ConstraintLayout {
     private enum class BedTypePictogram constructor(private val nameResId: Int, private val imageResId: Int) {
         DOUBLE(R.string.label_double, R.drawable.vector_ic_bed_type_double),
         TWIN(R.string.label_twin, R.drawable.vector_ic_bed_type_twin),
-        IN_FLOOR_HEATING(R.string.label_heatedfloors, R.drawable.vector_ic_bed_type_ondol),
+        IN_FLOOR_HEATING(R.string.label_in_floor_heating, R.drawable.vector_ic_bed_type_ondol),
         SINGLE(R.string.label_single, R.drawable.vector_ic_bed_type_single);
 
         fun getName(context: Context): String? {

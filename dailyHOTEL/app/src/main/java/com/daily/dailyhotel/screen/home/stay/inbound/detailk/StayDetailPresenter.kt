@@ -901,7 +901,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let { stayDetail ->
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, it
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, it, 0
                             , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
                             , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
                             , stayDetail.index
