@@ -105,8 +105,7 @@ class DailyDetailRoomFilterContentsView : ConstraintLayout {
     }
 
     fun setFilterCount(count: Int) {
+        viewDataBinding.confirmTextView.isEnabled = count > 0
         viewDataBinding.confirmTextView.text = context.getString(R.string.label_stay_detail_show_filtered_room, count)
     }
-
-
 }
