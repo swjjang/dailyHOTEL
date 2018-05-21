@@ -383,21 +383,19 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         if (menuOrderCount < minimumOrderQuantity)
         {
             gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(false);
-            gourmetMenuViewHolder.dataBinding.orderCountMinusView.setVectorImageResource(R.drawable.vector_ic_amount_circle_minus_off);
+            gourmetMenuViewHolder.dataBinding.orderCountMinusView.setVectorImageResource(R.drawable.vector_ic_amount_circle_minus);
         } else
         {
             gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(true);
-            gourmetMenuViewHolder.dataBinding.orderCountMinusView.setVectorImageResource(R.drawable.vector_ic_amount_circle_minus_on);
         }
 
         if (menuOrderCount >= maximumOrderQuantity || menuOrderCount >= saleOrderQuantity)
         {
             gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(false);
-            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setVectorImageResource(R.drawable.vector_ic_amount_circle_plus_off);
         } else
         {
             gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(true);
-            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setVectorImageResource(R.drawable.vector_ic_amount_circle_plus_on);
+            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setVectorImageResource(R.drawable.vector_ic_amount_circle_plus);
         }
 
         gourmetMenuViewHolder.dataBinding.orderCountTextView.setText(Integer.toString(menuOrderCount));

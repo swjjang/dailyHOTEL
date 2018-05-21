@@ -458,46 +458,93 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
             return AnalyticsManager.Label.SORTFILTER_NONE;
         } else
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            final char DELIMITER = ',';
 
-            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PARKING) == StayFilter.FLAG_AMENITIES_PARKING)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(',');
-            }
+            StringBuilder stringBuilder = new StringBuilder();
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_POOL) == StayFilter.FLAG_AMENITIES_POOL)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_POOL).append(',');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_FITNESS) == StayFilter.FLAG_AMENITIES_FITNESS)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_POOL).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SAUNA) == StayFilter.FLAG_AMENITIES_SAUNA)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SPA_MASSAGE) == StayFilter.FLAG_AMENITIES_SPA_MASSAGE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_MASSAGE).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BREAKFAST_RESTAURANT) == StayFilter.FLAG_AMENITIES_BREAKFAST_RESTAURANT)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BREAKFAST).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_CAFETERIA) == StayFilter.FLAG_AMENITIES_CAFETERIA)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_CAFETERIA).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SEMINAR_ROOM) == StayFilter.FLAG_AMENITIES_SEMINAR_ROOM)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SEMINAR_ROOM).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_AMENITIES_BUSINESS_CENTER)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(DELIMITER);
             }
 
-            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_WIFI) == StayFilter.FLAG_AMENITIES_WIFI)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_FITNESS) == StayFilter.FLAG_AMENITIES_FITNESS)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_CLUB_LOUNGE) == StayFilter.FLAG_AMENITIES_CLUB_LOUNGE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_CLUB_LOUNGE).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_AMENITIES_SHARED_BBQ)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SHARED_BBQ).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PICK_UP) == StayFilter.FLAG_AMENITIES_PICK_UP)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PICK_UP).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_CONVENIENCE_STORE) == StayFilter.FLAG_AMENITIES_CONVENIENCE_STORE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_CONVENIENCE_STORE).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PARKING) == StayFilter.FLAG_AMENITIES_PARKING)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARKING).append(DELIMITER);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PET) == StayFilter.FLAG_AMENITIES_PET)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PET).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(DELIMITER);
+            }
+
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_RENT_BABY_BED) == StayFilter.FLAG_AMENITIES_RENT_BABY_BED)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_RENT_BABY_BED).append(DELIMITER);
             }
 
             if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
@@ -519,24 +566,9 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WALL_POOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WALL_POOL)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(',');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_ROOM_AMENITIES_WIFI)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(',');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(',');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_WALL_POOL).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_ROOM_AMENITIES_BATHTUB)
@@ -544,14 +576,19 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATH_AMENITY) == StayFilter.FLAG_ROOM_AMENITIES_BATH_AMENITY)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BATH_AMENITIES).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SHOWER_GOWN) == StayFilter.FLAG_ROOM_AMENITIES_SHOWER_GOWN)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SHOWER_GOWN).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TOOTHBRUSH_SET) == StayFilter.FLAG_ROOM_AMENITIES_TOOTHBRUSH_SET)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TOOTHBRUSH_SET).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ)
@@ -559,14 +596,49 @@ public class SearchStayResultListFragmentAnalyticsImpl implements SearchStayResu
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_POOL) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_POOL)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_POOL).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM)
             {
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BREAKFAST).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SMOKEABLE) == StayFilter.FLAG_ROOM_AMENITIES_SMOKEABLE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_DISABLED_FACILITIES) == StayFilter.FLAG_ROOM_AMENITIES_DISABLED_FACILITIES)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DISABLED_FACILITIES).append(',');
             }
 
             if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')

@@ -126,7 +126,7 @@
                                 android:id="@+id/orderCountMinusView"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                app:srcCompat="@drawable/vector_ic_amount_circle_minus_off"/>
+                                app:srcCompat="@drawable/vector_ic_amount_circle_minus"/>
 
                             <com.daily.base.widget.DailyTextView
                                 android:id="@+id/orderCountTextView"
@@ -141,7 +141,7 @@
                                 android:id="@+id/orderCountPlusView"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                app:srcCompat="@drawable/vector_ic_amount_circle_plus_off"/>
+                                app:srcCompat="@drawable/vector_ic_amount_circle_plus"/>
                         </LinearLayout>
                     </android.support.constraint.ConstraintLayout>
 

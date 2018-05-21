@@ -23,6 +23,7 @@
             android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/white"
             android:fadingEdge="none"
             app:layout_constraintBottom_toTopOf="@+id/bottomTopLine"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -33,68 +34,90 @@
                 android:id="@+id/nestedScrollLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:orientation="vertical">
 
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:background="@drawable/layerlist_filter_title_background"
-                    android:gravity="center"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
                     android:text="@string/label_sort_by"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    dailyFont:style="Medium"/>
 
                 <include
                     android:id="@+id/sortInclude"
                     layout="@layout/layout_stay_filter_sort_data"/>
 
-                <com.daily.base.widget.DailyTextView
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:background="@drawable/layerlist_filter_title_background"
-                    android:gravity="center"
-                    android:text="@string/label_personnel"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/default_line_cf0f0f0"/>
 
                 <include
                     android:id="@+id/personInclude"
                     layout="@layout/layout_stay_filter_person_data"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:background="@drawable/layerlist_filter_title_background"
-                    android:gravity="center"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
                     android:text="@string/label_bedtype"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    dailyFont:style="Medium"/>
 
                 <include
                     android:id="@+id/bedTypeInclude"
                     layout="@layout/layout_stay_filter_bed_type_data"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:background="@drawable/layerlist_filter_title_background"
-                    android:gravity="center"
-                    android:text="@string/label_amenities"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_in_amenities"
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    dailyFont:style="Medium"/>
 
                 <include
                     android:id="@+id/amenityInclude"
                     layout="@layout/layout_stay_filter_amenity_data"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:background="@drawable/layerlist_filter_title_background"
-                    android:gravity="center"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
                     android:text="@string/label_room_amenities"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    dailyFont:style="Medium"/>
 
                 <include
                     android:id="@+id/roomAmenityInclude"

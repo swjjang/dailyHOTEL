@@ -197,16 +197,6 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    public void requestStayList(String tag, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, String abTestType, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
-            : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList, abTestType);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
     public void requestStayRegionList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//

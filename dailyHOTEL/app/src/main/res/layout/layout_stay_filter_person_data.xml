@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:background="@color/white"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_height="40dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_weight="1"/>
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_personnel"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyFont:style="Medium"/>
 
         <ImageView
             android:id="@+id/minusPersonImageView"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginRight="20dp"
             android:scaleType="center"
-            app:srcCompat="@drawable/f_ic_hotel_02_pax_01"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/personCountTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/vector_ic_amount_circle_minus"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/personCountTextView"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginRight="20dp"
             android:gravity="center"
-            android:textColor="@color/dh_theme_color"
-            android:textSize="13dp"/>
+            android:text="1명 이상"
+            android:textColor="@color/default_text_ceb2135"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/plusPersonImageView"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/plusPersonImageView"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_weight="1"
-            android:scaleType="center"
-            app:srcCompat="@drawable/f_ic_hotel_02_pax_02"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_weight="1"/>
-    </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/vector_ic_amount_circle_plus"/>
+    </android.support.constraint.ConstraintLayout>
 </layout>

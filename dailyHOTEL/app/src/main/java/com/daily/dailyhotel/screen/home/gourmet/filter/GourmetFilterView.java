@@ -70,7 +70,6 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
         }
 
         getViewDataBinding().sortInclude.regionRadioButton.setVisibility(View.GONE);
-        getViewDataBinding().sortInclude.emptyRadioButton.setVisibility(View.INVISIBLE);
     }
 
     @Override

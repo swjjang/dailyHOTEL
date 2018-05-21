@@ -3,109 +3,250 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.GridLayout
-        android:id="@+id/amenityGridLayout"
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/amenityFlexboxLayout"
         android:layout_width="match_parent"
-        android:layout_height="148dp"
-        android:background="@color/white"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:columnCount="5">
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/parkingTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_parking"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_05"
-            app:layout_columnWeight="1"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-10dp"
+        app:flexDirection="row"
+        app:flexWrap="wrap">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/poolTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_pool"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_06"
-            app:layout_columnWeight="1"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/fitnessTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_fitness"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_07"
-            app:layout_columnWeight="1"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/saunaTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_sauna"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_16"
-            app:layout_columnWeight="1"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/spaMassageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_spa_massage"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/breakfastRestaurantTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_breakfast_restaurant"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/cafeteriaTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_cafeteria"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/seminarRoomTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_seminar_room"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/businessCenterTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_business_center"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_15"
-            app:layout_columnWeight="1"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/kidsPlayTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_kids_play_room"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_17"
-            app:layout_columnWeight="1"/>
+            android:id="@+id/wifiTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_wifi"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/bbqTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:id="@+id/fitnessTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_fitness"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/clubLoungeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_club_lounge"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/sharedBbqTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_allowed_barbecue"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_09"
-            app:layout_columnWeight="1"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/pickupTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_pickup_available"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/convenienceStoreTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_rent_convenience_store"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/parkingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_parking"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/petTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_allowed_pet"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_08"
-            app:layout_columnWeight="1"/>
-    </android.support.v7.widget.GridLayout>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/kidsPlayRoomTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_kids_play_room"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/rentBabyBedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_rent_baby_bed"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+    </com.google.android.flexbox.FlexboxLayout>
 </layout>

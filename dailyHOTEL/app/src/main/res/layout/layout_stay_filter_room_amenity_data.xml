@@ -3,134 +3,223 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.GridLayout
-        android:id="@+id/amenityRoomGridLayout"
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/roomAmenityFlexboxLayout"
         android:layout_width="match_parent"
-        android:layout_height="153dp"
-        android:background="@color/white"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:columnCount="5">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-10dp"
+        android:paddingBottom="20dp"
+        app:flexDirection="row"
+        app:flexWrap="wrap">
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/breakfastTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_breakfast"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_02"
-            app:layout_columnWeight="1"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/wifiTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_wifi"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_01"
-            app:layout_columnWeight="1"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/cookingTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_cooking"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_03"
-            app:layout_columnWeight="1"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/pcTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_computer"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_18"
-            app:layout_columnWeight="1"/>
+            android:id="@+id/whirlPoolTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_whirlpool"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/bathTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_bathtub"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_04"
-            app:layout_columnWeight="1"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/tvTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_television"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_19"
-            app:layout_columnWeight="1"/>
+            android:id="@+id/bathAmenityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_bath_amenity"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/spaTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_whirlpool"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_20"
-            app:layout_columnWeight="1"/>
+            android:id="@+id/showerGownTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_shower_gown"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/toothbrushSetTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_toothbrush_set"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/privateBbqTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_private_bbq"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_09"
-            app:layout_columnWeight="1"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/karaokeTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:text="@string/label_karaoke"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_21"
-            app:layout_columnWeight="1"/>
+            android:id="@+id/privatePoolTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_private_pool"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/partyRoomTextView"
-            android:layout_width="0dp"
-            android:layout_height="74dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_party_room"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_facilities_22"
-            app:layout_columnWeight="1"/>
-    </android.support.v7.widget.GridLayout>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/karaokeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_karaoke"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/breakfastTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_breakfast"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/pcTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_computer"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/tvTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_television"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/cookingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_cooking"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/smokeableTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_smokeable"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/disabledFacilitiesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/label_disabled_facilities"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+    </com.google.android.flexbox.FlexboxLayout>
 </layout>
