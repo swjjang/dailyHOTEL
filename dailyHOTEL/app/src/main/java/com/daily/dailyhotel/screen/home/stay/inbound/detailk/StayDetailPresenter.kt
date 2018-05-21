@@ -915,11 +915,19 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onRoomInformationClick() {
+        if(lock()) return
+
         viewInterface.scrollRoomInformation()
+
+        unLockAll()
     }
 
     override fun onStayInformationClick() {
+        if(lock()) return
+
         viewInterface.scrollStayInformation()
+
+        unLockAll()
     }
 
     override fun onSelectedBedTypeFilter(selected: Boolean, bedType: String) {

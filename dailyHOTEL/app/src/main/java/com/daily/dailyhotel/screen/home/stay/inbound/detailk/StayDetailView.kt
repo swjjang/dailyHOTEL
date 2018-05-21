@@ -365,8 +365,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     private fun initTabLayout(viewDataBinding: ActivityStayDetailkDataBinding) {
-        viewDataBinding.roomInformationTextView.setOnClickListener { eventListener.onRoomInformationClick() }
-        viewDataBinding.stayInformationTextView.setOnClickListener { eventListener.onStayInformationClick() }
+        viewDataBinding.roomInformationTextView.setOnClickListener { if (!it.isSelected) eventListener.onRoomInformationClick() }
+        viewDataBinding.stayInformationTextView.setOnClickListener { if (!it.isSelected) eventListener.onStayInformationClick() }
     }
 
     @Synchronized
