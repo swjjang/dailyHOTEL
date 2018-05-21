@@ -266,9 +266,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     override fun onBackPressed(): Boolean {
         when (status) {
-            Status.FINISH -> return super.onBackPressed()
+            Status.FINISH -> return false
 
             Status.ROOM_FILTER -> onCloseRoomFilterClick()
+
+            Status.NONE -> return false
 
             else -> {
                 status = Status.FINISH
@@ -284,7 +286,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     viewInterface.setTransitionVisible(true)
                     viewInterface.scrollTop()
 
-                    Completable.timer(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe { onBackPressed() }
+                    Completable.timer(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe { activity.onBackPressed() }
 
                     return true
                 }
