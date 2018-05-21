@@ -638,8 +638,12 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.stickyRoomFilterView.setRoomFilterCount(roomFilterCount)
     }
 
-    override fun setSoldOutRoomVisible(visible: Boolean) {
-        viewDataBinding.roomInformationView.setSoldOutVisible(visible)
+    override fun setEmptyRoomText(text: String?) {
+        viewDataBinding.roomInformationView.setEmptyRoomText(text)
+    }
+
+    override fun setEmptyRoomVisible(visible: Boolean) {
+        viewDataBinding.roomInformationView.setEmptyRoomVisible(visible)
     }
 
     override fun setRoomList(roomList: List<Room>?) {

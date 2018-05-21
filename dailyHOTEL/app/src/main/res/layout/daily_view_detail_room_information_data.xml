@@ -160,35 +160,21 @@
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="actionButtonView, actionButtonTextView"/>
 
-        <View
-            android:id="@+id/soldOutRoomView"
-            android:layout_width="0dp"
-            android:layout_height="204dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/roomFilterView"/>
-
         <com.daily.base.widget.DailyTextView
             android:id="@+id/soldOutRoomTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="38dp"
             android:gravity="center"
             android:lineSpacingExtra="1dp"
             android:text="@string/message_stay_soldout_room"
             android:textColor="@color/default_text_c929292"
             app:drawableCompatTop="@drawable/no_hotel_search_ic"
-            app:layout_constraintBottom_toBottomOf="@+id/soldOutRoomView"
-            app:layout_constraintLeft_toLeftOf="@+id/soldOutRoomView"
-            app:layout_constraintRight_toRightOf="@+id/soldOutRoomView"
-            app:layout_constraintTop_toTopOf="@+id/soldOutRoomView"/>
-
-        <android.support.constraint.Group
-            android:id="@+id/soldOutRoomGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="soldOutRoomView, soldOutRoomTextView"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/roomFilterView"/>
     </android.support.constraint.ConstraintLayout>
     <!--</merge>-->
 </layout>

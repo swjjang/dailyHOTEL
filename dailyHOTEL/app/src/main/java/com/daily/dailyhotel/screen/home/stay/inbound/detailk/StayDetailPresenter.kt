@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.View
+import android.widget.CompoundButton
 import com.crashlytics.android.Crashlytics
 import com.daily.base.BaseActivity
 import com.daily.base.util.DailyImageSpan
@@ -22,6 +23,7 @@ import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl
 import com.daily.dailyhotel.repository.remote.*
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity
@@ -32,6 +34,7 @@ import com.daily.dailyhotel.screen.common.event.EventWebActivity
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms.StayRoomsActivity
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -41,6 +44,7 @@ import com.daily.dailyhotel.util.*
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog
+import com.twoheart.dailyhotel.screen.common.TrueVRActivity
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity
 import com.twoheart.dailyhotel.screen.information.FAQActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
@@ -735,7 +739,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 if (checkedRoomFilter()) {
                     val showViewRoomMaxCount = 5
 
-                    if(getRoomFilterCount(stayDetail?.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) > showViewRoomMaxCount) {
+                    if (getRoomFilterCount(stayDetail?.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) > showViewRoomMaxCount) {
                         viewInterface.showMoreRooms(true)
                     } else {
                         resetRoomFilter()
@@ -796,42 +800,81 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onRoomClick(stayRoom: StayRoom) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            stayDetail.roomInformation?.let {
+                it.roomList.takeNotEmpty {
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, it, 0
+                            , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
+                            , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
+                            , stayDetail.index
+                            , stayDetail.baseInformation?.category
+                            , stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
+                }
+            }
+        } ?: Util.restartApp(activity)
     }
 
     override fun onTrueReviewClick() {
-//        if(lock()) return
-//
-//        stayDetail?.let {
-//            val analyticsParam = TrueReviewAnalyticsParam().apply {
-//                category = it.category
-//            }
-//
-//            startActivityForResult(StayTrueReviewActivity.newInstance(activity, it.index,
-//                    mReviewScores, analyticsParam), StayDetailActivity.REQUEST_CODE_TRUE_VIEW)
-//
-//            analytics.onEventTrueReviewClick(activity)
-//        } ?: Util.restartApp(activity)
+        if (lock()) return
+
+        stayDetail?.let {
+            val analyticsParam = TrueReviewAnalyticsParam().apply {
+                category = it.baseInformation?.category
+            }
+
+            val reviewScores = ReviewScores().apply {
+                reviewScoreTotalCount = it.trueReviewInformation?.reviewTotalCount ?: 0
+                reviewScoreList = it.trueReviewInformation?.reviewScores?.map {
+                    ReviewScore().apply {
+                        type = it.type
+                        scoreAverage = it.average
+                    }
+                }
+            }
+
+            startActivityForResult(StayTrueReviewActivity.newInstance(activity, it.index,
+                    reviewScores, analyticsParam), StayDetailActivity.REQUEST_CODE_TRUE_VIEW)
+
+            analytics.onEventTrueReviewClick(activity)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onTrueVRClick() {
-//        if (lock()) return
-//
-//        stayDetail?.let { stayDetail ->
-//            if (DailyPreference.getInstance(activity).isTrueVRCheckDataGuide) {
-//                startActivityForResult(TrueVRActivity.newInstance(activity, stayDetail.index, mTrueVRList,
-//                        Constants.PlaceType.HOTEL, stayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR)
-//            } else {
-//                viewInterface.showTrueVRDialog(CompoundButton.OnCheckedChangeListener { buttonView, checked ->
-//                    DailyPreference.getInstance(activity).isTrueVRCheckDataGuide = checked
-//                }, View.OnClickListener {
-//                    startActivityForResult(TrueVRActivity.newInstance(activity, stayDetail.index, mTrueVRList,
-//                            Constants.PlaceType.HOTEL, stayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR)
-//                }, DialogInterface.OnDismissListener { unLockAll() })
-//            }
-//
-//            analytics.onEventTrueVRClick(activity, stayDetail.index)
-//        } ?: Util.restartApp(activity)
+        if (lock()) return
+
+        stayDetail?.let { stayDetail ->
+            if (DailyPreference.getInstance(activity).isTrueVRCheckDataGuide) {
+
+                startActivityForResult(TrueVRActivity.newInstance(activity, stayDetail.index,
+                        stayDetail.vrInformation?.map {
+                            TrueVR().apply {
+                                name = it.name
+                                type = it.type
+                                typeIndex = it.typeIndex
+                                url = it.url
+                            }
+                        }, Constants.PlaceType.HOTEL, stayDetail.baseInformation?.category), StayDetailActivity.REQUEST_CODE_TRUE_VR)
+            } else {
+                viewInterface.showVRDialog(CompoundButton.OnCheckedChangeListener { _, isChecked ->
+                    DailyPreference.getInstance(activity).isTrueVRCheckDataGuide = isChecked
+                }, View.OnClickListener {
+                    startActivityForResult(TrueVRActivity.newInstance(activity, stayDetail.index,
+                            stayDetail.vrInformation?.map {
+                                TrueVR().apply {
+                                    name = it.name
+                                    type = it.type
+                                    typeIndex = it.typeIndex
+                                    url = it.url
+                                }
+                            },
+                            Constants.PlaceType.HOTEL, stayDetail.baseInformation?.category), StayDetailActivity.REQUEST_CODE_TRUE_VR)
+                }, DialogInterface.OnDismissListener { unLockAll() })
+            }
+
+            analytics.onEventTrueVRClick(activity, stayDetail.index)
+        } ?: Util.restartApp(activity)
     }
 
     override fun onDownloadCouponClick() {
@@ -915,7 +958,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onRoomInformationClick() {
-        if(lock()) return
+        if (lock()) return
 
         viewInterface.scrollRoomInformation()
 
@@ -923,7 +966,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onStayInformationClick() {
-        if(lock()) return
+        if (lock()) return
 
         viewInterface.scrollStayInformation()
 
@@ -1022,14 +1065,21 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
 
                 if (it.roomInformation?.roomList.isNotNullAndNotEmpty()) {
-                    setSoldOutRoomVisible(false)
-
                     setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+
+                    if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
+                        setEmptyRoomVisible(true)
+                        setEmptyRoomText(activity.getString(R.string.message_stay_empty_room))
+                    } else {
+                        setEmptyRoomVisible(false)
+                    }
+
                     applyMoreRoomAction()
                     setPriceAverageTypeVisible(bookDateTime.nights > 1)
                     setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
                 } else {
-                    setSoldOutRoomVisible(true)
+                    setEmptyRoomVisible(true)
+                    setEmptyRoomText(activity.getString(R.string.message_stay_soldout_room))
                 }
 
                 setDailyCommentVisible(it.dailyCommentList.letNotNullTrueElseNullFalse { setDailyComment(it) })
