@@ -322,8 +322,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     private fun setInvisibleData(position: Int) {
         val room = listAdapter.getItem(position) ?: return
 
-        // TODO : StayRoomAdapter 의 onBindViewHolder 기능 다 추가 필요
-
         val dataBinding: ListRowStayRoomInvisibleLayoutDataBinding = viewDataBinding.invisibleLayout!!
 
         if (room.imageInformation == null) {
@@ -332,9 +330,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         } else {
             dataBinding.defaultImageLayout.visibility = View.VISIBLE
             dataBinding.defaultImageLayout.setOnClickListener {
-                //                onEventListener?.let {
-//                    it.onMoreImageClick(position)
-//                }
+                eventListener.onMoreImageClick(position)
             }
 
             dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_placeholder)
@@ -343,9 +339,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
             dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
             dataBinding.vrIconView.setOnClickListener {
-                //                onEventListener?.let {
-//                    it.onVrImageClick(position)
-//                }
+                eventListener.onVrImageClick(position)
             }
         }
 
@@ -379,7 +373,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         setRoomAmenityInformationView(dataBinding, room.amenityList)
 
-        setRoomChargeInformatinoView(dataBinding, room.roomChargeInformation)
+        setRoomChargeInformationView(dataBinding, room.roomChargeInformation)
 
         setNeedToKnowInformationView(dataBinding, room.needToKnowList)
     }
@@ -584,7 +578,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.roomBenefitGroup.visibility = View.VISIBLE
 
-        dataBinding.roomAmenityGridView.setTitleText(R.string.label_stay_room_benefit_title)
+        dataBinding.roomBenefitGridView.setTitleText(R.string.label_stay_room_benefit_title)
         dataBinding.roomBenefitGridView.setColumnCount(1)
         dataBinding.roomBenefitGridView.setData(DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList)
     }
@@ -596,7 +590,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             dataBinding.discountInfoGroup.visibility = View.GONE
             return
         }
-
 
         var text = ""
         val rewardString = context.resources.getString(R.string.label_stay_room_rewardable)
@@ -689,11 +682,11 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.roomAmenityGroup.visibility = View.VISIBLE
         dataBinding.roomAmenityGridView.setTitleText(R.string.label_stay_room_amenity_title)
-        dataBinding.roomAmenityGridView.setColumnCount(1)
+        dataBinding.roomAmenityGridView.setColumnCount(2)
         dataBinding.roomAmenityGridView.setData(DailyRoomInfoGridView.ItemType.DOT, list)
     }
 
-    private fun setRoomChargeInformatinoView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, info: Room.ChargeInformation?) {
+    private fun setRoomChargeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, info: Room.ChargeInformation?) {
         if (info == null) {
             dataBinding.extraChargeLayout.visibility = View.GONE
             return

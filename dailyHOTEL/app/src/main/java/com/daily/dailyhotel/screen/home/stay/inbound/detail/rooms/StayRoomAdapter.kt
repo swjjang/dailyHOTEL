@@ -200,7 +200,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         setRoomAmenityInformationView(dataBinding, room.amenityList)
 
-        setRoomChargeInformatinoView(dataBinding, room.roomChargeInformation)
+        setRoomChargeInformationView(dataBinding, room.roomChargeInformation)
 
         setNeedToKnowInformationView(dataBinding, room.needToKnowList)
     }
@@ -405,7 +405,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         dataBinding.roomBenefitGroup.visibility = View.VISIBLE
 
-        dataBinding.roomAmenityGridView.setTitleText(R.string.label_stay_room_benefit_title)
+        dataBinding.roomBenefitGridView.setTitleText(R.string.label_stay_room_benefit_title)
         dataBinding.roomBenefitGridView.setColumnCount(1)
         dataBinding.roomBenefitGridView.setData(DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList)
     }
@@ -417,7 +417,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.discountInfoGroup.visibility = View.GONE
             return
         }
-
 
         var text = ""
         val rewardString = context.resources.getString(R.string.label_stay_room_rewardable)
@@ -510,11 +509,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         dataBinding.roomAmenityGroup.visibility = View.VISIBLE
         dataBinding.roomAmenityGridView.setTitleText(R.string.label_stay_room_amenity_title)
-        dataBinding.roomAmenityGridView.setColumnCount(1)
+        dataBinding.roomAmenityGridView.setColumnCount(2)
         dataBinding.roomAmenityGridView.setData(DailyRoomInfoGridView.ItemType.DOT, list)
     }
 
-    private fun setRoomChargeInformatinoView(dataBinding: ListRowStayRoomDataBinding, info: Room.ChargeInformation?) {
+    private fun setRoomChargeInformationView(dataBinding: ListRowStayRoomDataBinding, info: Room.ChargeInformation?) {
         if (info == null) {
             dataBinding.extraChargeLayout.visibility = View.GONE
             return

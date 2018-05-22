@@ -80,6 +80,7 @@ class DailyRoomInfoTableView : ConstraintLayout {
                 freezesText = true
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
                 gravity = Gravity.CENTER_VERTICAL
+                setPadding(ScreenUtils.dpToPx(context, 8.0), 0 , 0, 0)
                 text = title
             }
 
@@ -93,7 +94,7 @@ class DailyRoomInfoTableView : ConstraintLayout {
                     gravity = Gravity.CENTER_VERTICAL
                     orientation = TableRow.HORIZONTAL
 
-                    val horizontalMargin =ScreenUtils.dpToPx(context, 8.0)
+                    val horizontalMargin = ScreenUtils.dpToPx(context, 8.0)
                     setPadding(horizontalMargin, 0, horizontalMargin, 0)
                 }
             }

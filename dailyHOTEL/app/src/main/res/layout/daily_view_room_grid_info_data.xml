@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/label_more"
+            android:layout_marginLeft="13dp"
             android:textColor="@color/default_text_ceb2135"
             android:textSize="14dp"
             android:visibility="gone"
