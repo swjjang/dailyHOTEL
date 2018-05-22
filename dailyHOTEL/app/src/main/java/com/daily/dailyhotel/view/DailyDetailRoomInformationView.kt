@@ -18,7 +18,8 @@ import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailRoomInformationDataBinding
-import java.util.*
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 private const val PRICE_AVERAGE_TAG = 1
 private const val PRICE_TOTAL_TAG = 2
@@ -32,9 +33,11 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     interface OnDailyDetailRoomInformationListener {
         fun onCalendarClick()
 
-        fun onBedTypeFilterClick()
+        fun onRoomFilterClick()
 
-        fun onFacilitiesFilterClick()
+        fun onAveragePriceClick()
+
+        fun onTotalPriceClick()
 
         fun onMoreRoomsClick(expanded: Boolean)
     }
@@ -62,19 +65,18 @@ class DailyDetailRoomInformationView : ConstraintLayout {
             }
         })
 
+        viewDataBinding.averagePriceTextView.setOnClickListener { listener?.onAveragePriceClick() }
+        viewDataBinding.totalPriceTextView.setOnClickListener { listener?.onTotalPriceClick() }
+
         setPriceAverageType(true)
 
-        viewDataBinding.roomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener{
+        viewDataBinding.roomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener {
             override fun onCalendarClick() {
                 listener?.onCalendarClick()
             }
 
-            override fun onBedTypeFilterClick() {
-                listener?.onBedTypeFilterClick()
-            }
-
-            override fun onFacilitiesFilterClick() {
-                listener?.onFacilitiesFilterClick()
+            override fun onRoomFilterClick() {
+                listener?.onRoomFilterClick()
             }
         })
     }
@@ -87,12 +89,8 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.roomFilterView.setCalendar(text)
     }
 
-    fun setBedTypeFilterCount(count: Int) {
-        viewDataBinding.roomFilterView.setBedTypeFilterCount(count)
-    }
-
-    fun setFacilitiesFilterCount(count: Int) {
-        viewDataBinding.roomFilterView.setFacilitiesFilterCount(count)
+    fun setRoomFilterCount(count: Int) {
+        viewDataBinding.roomFilterView.setRoomFilterCount(count)
     }
 
     fun setPriceAverageTypeVisible(visible: Boolean) {
@@ -138,6 +136,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         }
 
         viewDataBinding.moreRoomsLayout.visibility = View.INVISIBLE
+        viewDataBinding.moreRoomsLayout.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
         if (roomList.isNotNullAndNotEmpty()) {
             roomList!!.forEachIndexed { index, room ->
@@ -148,6 +147,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                         setPriceAverageType(isPriceAverageType)
                         setName(room.name)
                         setImageUlr(room.imageInformation?.imageMap?.smallUrl)
+                        setRewardVisible(room.provideRewardSticker)
                         setBedTypeText(room.bedInformation.bedTypeList)
                         setPersons(room.personsInformation)
                         setBenefit(room.benefit)
@@ -183,46 +183,70 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.actionButtonGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int) {
-        viewDataBinding.actionButtonTextView.text = text
-        viewDataBinding.actionButtonTextView.setCompoundDrawablesWithIntrinsicBounds(leftResourceId, 0, rightResourceId, 0)
+    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int, colorResourceId: Int) {
+        viewDataBinding.actionButtonTextView.apply {
+            this.text = text
+            setCompoundDrawablesWithIntrinsicBounds(leftResourceId, 0, rightResourceId, 0)
+            compoundDrawablePadding = drawablePadding
+            setTextColor(context.resources.getColor(colorResourceId))
+        }
     }
 
-    fun showMoreRoom() {
-        val height = viewDataBinding.moreRoomsLayout.tag as Int
-        if (height == 0 || viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE) {
-            return
-        }
+    fun showMoreRoom(animated: Boolean): Completable {
+        return if (viewDataBinding.moreRoomsLayout.childCount == 0) {
+            Completable.complete()
+        } else {
+            if (animated) {
+                Completable.create {
+                    val height = viewDataBinding.moreRoomsLayout.tag as Int
 
-        ValueAnimator.ofInt(0, height).apply {
-            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
-                valueAnimator?.let {
-                    viewDataBinding.moreRoomsLayout.apply {
-                        layoutParams.height = valueAnimator.animatedValue as Int
-                        requestLayout()
+                    if (height == 0 || viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE) {
+                        it.onComplete()
+                    } else {
+                        ValueAnimator.ofInt(0, height).apply {
+                            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+                                valueAnimator?.let {
+                                    viewDataBinding.moreRoomsLayout.apply {
+                                        layoutParams.height = valueAnimator.animatedValue as Int
+                                    }.requestLayout()
+                                }
+                            })
+
+                            duration = 200
+                            interpolator = AccelerateDecelerateInterpolator()
+                            addListener(object : Animator.AnimatorListener {
+                                override fun onAnimationStart(animation: Animator) {
+                                    viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
+                                }
+
+                                override fun onAnimationEnd(animation: Animator) {
+                                    removeAllUpdateListeners()
+                                    removeAllListeners()
+
+                                    it.onComplete()
+                                }
+
+                                override fun onAnimationCancel(animation: Animator) {
+                                }
+
+                                override fun onAnimationRepeat(animation: Animator) {
+                                }
+                            })
+                        }.start()
                     }
-                }
-            })
+                }.subscribeOn(AndroidSchedulers.mainThread())
+            } else {
+                Completable.create {
+                    viewDataBinding.moreRoomsLayout.apply {
+                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    }.requestLayout()
 
-            duration = 200
-            interpolator = AccelerateDecelerateInterpolator()
-            addListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {
                     viewDataBinding.moreRoomsLayout.visibility = View.VISIBLE
-                }
 
-                override fun onAnimationEnd(animation: Animator) {
-                    removeAllUpdateListeners()
-                    removeAllListeners()
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                }
-
-                override fun onAnimationRepeat(animation: Animator) {
-                }
-            })
-        }.start()
+                    it.onComplete()
+                }.subscribeOn(AndroidSchedulers.mainThread())
+            }
+        }
     }
 
     fun hideMoreRoom() {
@@ -237,11 +261,15 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         return viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE
     }
 
-    fun setSoldOutVisible(visible: Boolean) {
-        viewDataBinding.soldOutRoomGroup.visibility = if (visible) View.VISIBLE else View.GONE
-        viewDataBinding.roomFilterView.setSoldOutVisible(visible)
+    fun setEmptyRoomText(text: String?) {
+        viewDataBinding.soldOutRoomTextView.text = text
+    }
 
-        val flag = if(visible) View.GONE else View.VISIBLE
+    fun setEmptyRoomVisible(visible: Boolean) {
+        viewDataBinding.soldOutRoomTextView.visibility = if (visible) View.VISIBLE else View.GONE
+        viewDataBinding.roomFilterView.setRoomFilterVisible(visible)
+
+        val flag = if (visible) View.GONE else View.VISIBLE
         viewDataBinding.priceTypeGroup.visibility = flag
         viewDataBinding.roomsLayout.visibility = flag
         viewDataBinding.moreRoomsLayout.visibility = flag

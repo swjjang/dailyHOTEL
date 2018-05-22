@@ -37,7 +37,7 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="32dp"
             android:freezesText="true"
             android:text="업장 프로모션 정보"
             android:textColor="@color/default_text_c4d4d4d"

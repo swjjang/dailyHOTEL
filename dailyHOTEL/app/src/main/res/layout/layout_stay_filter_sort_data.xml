@@ -6,92 +6,72 @@
     <RadioGroup
         android:id="@+id/sortRadioGroup"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/regionRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:gravity="center_vertical"
             android:text="@string/label_sort_by_area"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_sort_01"/>
+            android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+            android:textSize="14dp"
+            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/distanceRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:gravity="center_vertical"
             android:text="@string/label_sort_by_distance"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_sort_02"/>
+            android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+            android:textSize="14dp"
+            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/lowPriceRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:gravity="center_vertical"
             android:text="@string/label_sort_by_low_price"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_sort_03"/>
+            android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+            android:textSize="14dp"
+            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/highPriceRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:gravity="center_vertical"
             android:text="@string/label_sort_by_high_price"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_sort_04"/>
+            android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+            android:textSize="14dp"
+            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/satisfactionRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:gravity="center_vertical"
             android:text="@string/label_sort_by_satisfaction"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_sort_05"/>
-
-        <com.daily.base.widget.DailyRadioButton
-            android:id="@+id/emptyRadioButton"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:button="@null"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
-            android:textSize="11dp"
-            android:visibility="gone"/>
+            android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+            android:textSize="14dp"
+            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
     </RadioGroup>
 </layout>

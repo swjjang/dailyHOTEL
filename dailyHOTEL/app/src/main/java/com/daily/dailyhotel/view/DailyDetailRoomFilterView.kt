@@ -3,6 +3,9 @@ package com.daily.dailyhotel.view
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -18,9 +21,7 @@ class DailyDetailRoomFilterView : ConstraintLayout {
     interface OnDailyDetailRoomFilterListener {
         fun onCalendarClick()
 
-        fun onBedTypeFilterClick()
-
-        fun onFacilitiesFilterClick()
+        fun onRoomFilterClick()
     }
 
     constructor(context: Context) : super(context) {
@@ -39,8 +40,7 @@ class DailyDetailRoomFilterView : ConstraintLayout {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_filter_data, this, true)
 
         viewDataBinding.calendarTextView.setOnClickListener { listener?.onCalendarClick() }
-        viewDataBinding.bedTypeFilterTextView.setOnClickListener { listener?.onBedTypeFilterClick() }
-        viewDataBinding.facilitiesTextView.setOnClickListener { listener?.onFacilitiesFilterClick() }
+        viewDataBinding.roomFilterTextView.setOnClickListener { listener?.onRoomFilterClick() }
     }
 
     fun setRoomFilterListener(listener: OnDailyDetailRoomFilterListener) {
@@ -51,21 +51,26 @@ class DailyDetailRoomFilterView : ConstraintLayout {
         viewDataBinding.calendarTextView.text = text
     }
 
-    fun setBedTypeFilterCount(count: Int) {
-        viewDataBinding.bedTypeFilterTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.frag_hotel_tab_bed_type), count)
-        else context.getString(R.string.frag_hotel_tab_bed_type)
+    fun setRoomFilterCount(count: Int) {
+        viewDataBinding.roomFilterTextView.text = getRoomFilterCountText(count)
     }
 
-    fun setFacilitiesFilterCount(count: Int) {
-        viewDataBinding.facilitiesTextView.text = if (count > 0) String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_room_amenities), count)
-        else context.getString(R.string.label_room_amenities)
+    private fun getRoomFilterCountText(count: Int): CharSequence {
+        return if (count == 0) {
+            context.getString(R.string.label_stay_detail_room_filter)
+        } else {
+            val text = String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_stay_detail_room_filter), count);
+            val startIndex = text.lastIndexOf(' ')
+            val endIndex = text.length
+
+            SpannableStringBuilder(text).apply {
+                setSpan(ForegroundColorSpan(resources.getColor(R.color.default_text_ceb2135)), //
+                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        }
     }
 
-    fun setSoldOutVisible(visible: Boolean) {
-        val flag = if (visible) View.GONE else View.VISIBLE
-
-        viewDataBinding.bedTypeFilterTextView.visibility = flag
-        viewDataBinding.facilitiesTextView.visibility = flag
-        viewDataBinding.rightGradientView.visibility = flag
+    fun setRoomFilterVisible(visible: Boolean) {
+        viewDataBinding.roomFilterTextView.visibility = if (visible) View.GONE else View.VISIBLE
     }
 }

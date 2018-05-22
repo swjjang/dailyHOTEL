@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:drawablePadding="8dp"
+            android:drawablePadding="9dp"
             android:drawableTop="@drawable/vector_detail_ic_daily_comment"
             android:text="@string/label_detail_daily_comment"
             android:textColor="@color/default_text_c4d4d4d"

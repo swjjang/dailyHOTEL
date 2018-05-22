@@ -1352,10 +1352,6 @@ public class DailyMobileAPITest
         //}
         //  }
 
-        paramMap.put("details", Const.TEST_IS_SHOW_LIST_DETAIL);
-
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, paramMap, null, null, null, networkCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     //    @Test

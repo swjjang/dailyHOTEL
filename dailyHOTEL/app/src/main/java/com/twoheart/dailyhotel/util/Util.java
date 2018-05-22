@@ -901,13 +901,12 @@ public class Util implements Constants
 
             if (DailyHotel.isSuccessTMapAuth() == false)
             {
-                tmapTapi.setSKPMapAuthentication(Crypto.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
+                tmapTapi.setSKTMapAuthentication(Crypto.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
                 tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
                 {
                     @Override
-                    public void SKPMapApikeySucceed()
+                    public void SKTMapApikeySucceed()
                     {
-                        //                    ExLog.d("TMap : SKPMapApikeySucceed");
                         if (activity != null)
                         {
                             activity.runOnUiThread(new Runnable()
@@ -923,7 +922,7 @@ public class Util implements Constants
                     }
 
                     @Override
-                    public void SKPMapApikeyFailed(String s)
+                    public void SKTMapApikeyFailed(String s)
                     {
                         if (activity != null)
                         {

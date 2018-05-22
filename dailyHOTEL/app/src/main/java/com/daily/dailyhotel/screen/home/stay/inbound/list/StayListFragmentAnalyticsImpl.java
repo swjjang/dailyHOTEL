@@ -364,24 +364,9 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WALL_POOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WALL_POOL)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(',');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_ROOM_AMENITIES_WIFI)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(',');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(',');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC)
-            {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_WALL_POOL).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_ROOM_AMENITIES_BATHTUB)
@@ -389,14 +374,19 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATH_AMENITY) == StayFilter.FLAG_ROOM_AMENITIES_BATH_AMENITY)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BATH_AMENITIES).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SHOWER_GOWN) == StayFilter.FLAG_ROOM_AMENITIES_SHOWER_GOWN)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_SHOWER_GOWN).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TOOTHBRUSH_SET) == StayFilter.FLAG_ROOM_AMENITIES_TOOTHBRUSH_SET)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TOOTHBRUSH_SET).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ)
@@ -404,14 +394,49 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_POOL) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_POOL)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_POOL).append(',');
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM)
             {
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BREAKFAST).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SMOKEABLE) == StayFilter.FLAG_ROOM_AMENITIES_SMOKEABLE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
+            }
+
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_DISABLED_FACILITIES) == StayFilter.FLAG_ROOM_AMENITIES_DISABLED_FACILITIES)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DISABLED_FACILITIES).append(',');
             }
 
             if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')

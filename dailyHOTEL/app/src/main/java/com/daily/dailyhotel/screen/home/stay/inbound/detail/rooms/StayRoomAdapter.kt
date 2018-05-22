@@ -66,12 +66,12 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         Tv(R.string.label_television),
         SpaWallpool(R.string.label_whirlpool),
         PrivateBbq(R.string.label_private_bbq),
-        Smokeable(R.string.label_smoke_able),
+        Smokeable(R.string.label_smokeable),
         Karaoke(R.string.label_karaoke),
         PartyRoom(R.string.label_party_room),
         Amenity(R.string.label_bath_amenity),
         ShowerGown(R.string.label_shower_gown),
-        ToothbrushSet(R.string.label_tooth_brush_set),
+        ToothbrushSet(R.string.label_toothbrush_set),
         DisabledFacilities(R.string.label_disabled_facilities);
 
         fun getName(context: Context): String {

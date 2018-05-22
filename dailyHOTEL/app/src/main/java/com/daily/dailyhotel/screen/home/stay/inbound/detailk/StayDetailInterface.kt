@@ -10,6 +10,7 @@ import com.daily.base.OnBaseEventListener
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
+import com.twoheart.dailyhotel.R
 import io.reactivex.Completable
 import io.reactivex.Observable
 
@@ -58,9 +59,11 @@ interface StayDetailInterface {
 
         fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation)
 
-        fun setSoldOutRoomVisible(visible: Boolean)
+        fun setEmptyRoomText(text: String?)
 
-        fun setRoomFilterInformation(calendarText: CharSequence, bedTypeFilterCount: Int, facilitiesFilterCount: Int)
+        fun setEmptyRoomVisible(visible: Boolean)
+
+        fun setRoomFilterInformation(calendarText: CharSequence, roomFilterCount: Int)
 
         fun setPriceAverageTypeVisible(visible: Boolean)
 
@@ -68,7 +71,11 @@ interface StayDetailInterface {
 
         fun setRoomActionButtonVisible(visible: Boolean)
 
-        fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int)
+        fun setRoomActionButtonText(text: String,
+                                    leftResourceId: Int = 0,
+                                    rightResourceId: Int = 0,
+                                    drawablePadding: Int = 0,
+                                    colorResourceId: Int = R.color.default_text_ceb2135)
 
         fun setRoomList(roomList: List<Room>?)
 
@@ -132,27 +139,19 @@ interface StayDetailInterface {
 
         fun scrollStayInformation()
 
-        fun showMoreRooms()
+        fun showMoreRooms(animated: Boolean): Completable
 
         fun hideMoreRooms()
 
         fun isShowMoreRooms(): Boolean
 
-        fun setBedTypeFilter(bedTypeList: HashSet<String>)
+        fun setSelectedRoomFilter(selectedBedType: LinkedHashSet<String>, selectedFacilities: LinkedHashSet<String>)
 
-        fun setSelectedBedTypeFilter(selectedBedType: LinkedHashSet<String>, selectedRoomCount: Int)
+        fun setSelectedRoomFilterCount(selectedRoomFilterCount: Int)
 
-        fun showBedTypeFilter(): Completable
+        fun showRoomFilter(): Completable
 
-        fun hideBedTypeFilter(): Completable
-
-        fun setFacilitiesFilter(facilitiesList: HashSet<String>)
-
-        fun setSelectedFacilitiesFilter(selectedFacilities: LinkedHashSet<String>, selectedRoomCount: Int)
-
-        fun showFacilitiesFilter(): Completable
-
-        fun hideFacilitiesFilter(): Completable
+        fun hideRoomFilter(): Completable
     }
 
     interface OnEventListener : OnBaseEventListener {
@@ -170,9 +169,7 @@ interface StayDetailInterface {
 
         fun onCalendarClick()
 
-        fun onBedTypeFilterClick()
-
-        fun onFacilitiesFilterClick()
+        fun onRoomFilterClick()
 
         fun onMapClick()
 
@@ -182,7 +179,7 @@ interface StayDetailInterface {
 
         fun onConciergeClick()
 
-        fun onMoreRoomListClick()
+        fun onMoreRoomClick(expanded: Boolean)
 
         fun onPriceTypeClick(priceType: StayDetailPresenter.PriceType)
 
@@ -216,21 +213,15 @@ interface StayDetailInterface {
 
         fun onStayInformationClick()
 
-        fun onSelectedBedTypeFilter(bedType: String)
+        fun onSelectedBedTypeFilter(selected: Boolean, bedType: String)
 
-        fun onSelectedFacilitiesFilter(facilities: String)
+        fun onSelectedFacilitiesFilter(selected: Boolean, facilities: String)
 
-        fun onResetBedTypeFilterClick()
+        fun onResetRoomFilterClick()
 
-        fun onResetFacilitiesFilterClick()
+        fun onConfirmRoomFilterClick()
 
-        fun onConfirmBedTypeFilterClick()
-
-        fun onConfirmFacilitiesFilterClick()
-
-        fun onCloseBedTypeFilterClick()
-
-        fun onCloseFacilitiesFilterClick()
+        fun onCloseRoomFilterClick()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

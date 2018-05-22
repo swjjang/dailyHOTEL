@@ -14,7 +14,6 @@ import com.daily.dailyhotel.entity.TrueAwards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 @JsonObject
@@ -178,7 +177,7 @@ public class StayDetailData
             baseInformation.setGrade(Stay.Grade.etc);
         }
 
-        baseInformation.setProvideRewardSticker(provideRewardSticker);
+        baseInformation.setProvideRewardSticker(provideRewardSticker && stayDetail.activeReward);
         baseInformation.setName(name);
         baseInformation.setDiscount(discount);
 
@@ -242,30 +241,12 @@ public class StayDetailData
         if (rooms != null && rooms.size() > 0)
         {
             List<Room> roomList = new ArrayList<>();
-            HashSet<String> bedTypeSet = new HashSet<>();
-            HashSet<String> amenitiesSet = new HashSet<>();
 
             for (RoomData roomData : rooms)
             {
                 List<String> bedTypeFilterList = roomData.getBedTypeFilter();
 
-                if (bedTypeFilterList != null && bedTypeFilterList.size() > 0)
-                {
-                    for (String bedTypeFilter : bedTypeFilterList)
-                    {
-                        bedTypeSet.add(bedTypeFilter.toUpperCase());
-                    }
-                }
-
-                if (roomData.amenities != null && roomData.amenities.size() > 0)
-                {
-                    for (String amenitiesFilter : roomData.amenities)
-                    {
-                        amenitiesSet.add(amenitiesFilter.toUpperCase());
-                    }
-                }
-
-                roomList.add(roomData.getRoom());
+                roomList.add(roomData.getRoom(stayDetail.activeReward));
 
                 if (stayDetail.getHasNRDRoom() == false && roomData.refundPolicy != null && "nrd".equalsIgnoreCase(roomData.refundPolicy.type))
                 {
@@ -273,8 +254,6 @@ public class StayDetailData
                 }
             }
 
-            roomInformation.setBedTypeSet(bedTypeSet);
-            roomInformation.setFacilitiesSet(amenitiesSet);
             roomInformation.setRoomList(roomList);
 
             stayDetail.setRoomInformation(roomInformation);
@@ -537,9 +516,6 @@ public class StayDetailData
         {
             StayDetailk.DetailInformation.Item item = new StayDetailk.DetailInformation.Item();
 
-            contents.addAll(contents);
-            contents.addAll(contents);
-
             item.setTitle(title);
             item.setContentList(contents);
 
@@ -738,7 +714,7 @@ public class StayDetailData
             return bedInfo != null ? bedInfo.filters : null;
         }
 
-        Room getRoom()
+        Room getRoom(boolean activeReward)
         {
             Room room = new Room();
 
@@ -746,7 +722,7 @@ public class StayDetailData
             room.name = roomName;
             room.bedCount = bedCount;
             room.benefit = benefit;
-            room.provideRewardSticker = provideRewardSticker;
+            room.provideRewardSticker = provideRewardSticker && activeReward;
             room.amenityList = amenities;
             room.descriptionList = descriptions;
             room.squareMeter = squareMeter;

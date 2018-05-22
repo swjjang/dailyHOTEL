@@ -798,7 +798,8 @@
 
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_consult01">데일리 컨시어지팀이 친절하고 신속하게 답변해드려요.</string>
-    <string name="message_consult02">상담시간 : 오전 %1$s시 ~ 익일 새벽 %2$s시\n(점심시간 : %3$s ~ %4$s)</string>
+    <string name="message_consult02">상담시간 : 오전 %1$s시 ~ 익일 새벽 %2$s시</string>
+    <string name="message_consult03">(점심시간 : %1$s ~ %2$s)</string>
     <string name="message_booking_refund_product">변경, 취소, 환불이 불가한 특가 할인 상품입니다.</string>
     <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 필수사항 동의 후 [결제하기] 버튼을 눌러주세요.</string>
     <string name="message_booking_detail_do_login">로그인 후 예약 내역을 확인할 수 있습니다.\n로그인 할까요?</string>
@@ -1018,6 +1019,7 @@
     <string name="label_bedtype">베드타입</string>
     <string name="label_foodtype">음식종류</string>
     <string name="label_amenities">부대시설</string>
+    <string name="label_in_amenities">업장 내 시설</string>
     <string name="label_room_amenities">객실 내 시설</string>
     <string name="label_wifi">무료WiFi</string>
     <string name="label_breakfast">조식포함</string>
@@ -1052,7 +1054,7 @@
     <string name="label_kids_play_room">키즈플레이룸</string>
     <string name="label_computer">PC</string>
     <string name="label_television">TV</string>
-    <string name="label_whirlpool">스파/월풀</string>
+    <string name="label_whirlpool">스파월풀</string>
     <string name="label_private_bbq">개별바베큐</string>
     <string name="label_karaoke">노래방</string>
     <string name="label_party_room">파티룸</string>
@@ -1060,10 +1062,11 @@
     <string name="label_pickup_available">픽업가능</string>
     <string name="label_rent_baby_bed">아기침대대여</string>
     <string name="label_rent_convenience_store">편의점(매점)</string>
-    <string name="label_smoke_able">흡연가능</string>
     <string name="label_bath_amenity">Bath어메니티</string>
     <string name="label_shower_gown">목욕가운</string>
-    <string name="label_tooth_brush_set">칫솔/치약</string>
+    <string name="label_toothbrush_set">칫솔/치약</string>
+    <string name="label_private_pool">Private pool</string>
+    <string name="label_smokeable">흡연가능</string>
     <string name="label_disabled_facilities">장애인편의시설</string>
     <string name="label_more">더보기</string>
     <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
@@ -1286,7 +1289,7 @@
     <string name="label_detail_view_review_go">%1$s개 트루리뷰 보기</string>
     <string name="label_detail_view_show_true_review">%1$d개 리뷰 더보기</string>
     <string name="label_gourmet_detail_full_time_menu">전체시간 메뉴</string>
-    <string name="label_stay_detail_view_room_detail">객실 상세보기</string>
+    <string name="label_stay_detail_view_room_detail">객실 선택하기</string>
     <string name="label_business_benefit">업장 혜택</string>
     <string name="label_select_room">객실 선택</string>
     <string name="label_total_price">총 가격</string>
@@ -1306,9 +1309,14 @@
     <string name="label_detail_daily_comment">데일리’s comment</string>
     <string name="label_stay_detail_reset_room_filter">필터 초기화하여 모든 객실 보기</string>
     <string name="label_detail_stay_detail_information">업장 정보</string>
-    <string name="label_stay_detail_bedtype_filter">베드타입 필터</string>
-    <string name="label_stay_detail_room_filter">객실 내 시설 필터</string>
+    <string name="label_stay_detail_apply_room_filter">객실 필터 적용하기</string>
+    <string name="label_stay_detail_bedtype">베드타입</string>
+    <string name="label_stay_detail_room_facilities">객실 내 시설</string>
     <string name="label_stay_detail_show_filtered_room">%1$d개의 객실 보기</string>
+    <string name="label_stay_detail_room_filter">객실 필터</string>
+    <string name="label_stay_detail_under_age">(0 ~ %1$d세 이하)</string>
+    <string name="label_stay_detail_over_age">(%1$d세 이상)</string>
+    <string name="label_stay_detail_range_age">(%1$d ~ %2$d세 이하)</string>
 
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
@@ -1321,6 +1329,7 @@
     <string name="message_stay_used_data_guide">3G/LTE 환경에서는\n데이터 사용료가 발생할 수 있습니다.</string>
     <string name="message_stay_waiting_reservation_guide"><![CDATA[해당 예약은 확정 예약이 아닌 <font color="#6185cd">대기 예약</font>으로, 결제 완료 시 예약대기 상태이며, <font color="#6185cd">예약확정 여부가 문자로 발송됩니다.</font>]]></string>
     <string name="message_stay_soldout_room">객실이 모두 판매완료되었습니다.\n날짜를 변경하거나 다른 숙소를 확인해주세요.</string>
+    <string name="message_stay_empty_room">조건에 일치하는 객실이 없습니다.\n필터를 변경하거나 다른 날짜로 검색해보세요.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
     <string name="message_detail_nrd">특가상품으로 변경, 취소, 환불이 불가합니다.</string>

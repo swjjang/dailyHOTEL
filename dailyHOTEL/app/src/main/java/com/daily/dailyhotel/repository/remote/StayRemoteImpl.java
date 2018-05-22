@@ -147,8 +147,8 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     {
         if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
         {
-            final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
-                : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
+            final String API = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales"//
+                : "NjAkMzUkMjAkMzQkOSQ2NiQzMiQxMiQ3MSQzNCQ5MyQzOSQ1MyQ5MiQ2NiQzMiQ=$MUEzNjQ3NMUQE2RkFCM0IxHMDFERDA0MYDNLU3OEWTEF2Mjg4MDAxMYDk3QzdENTQ4MWTdDANKzYE5NDhBQUQyQTI5N0FFLOTcN4OA==$";
 
             return Crypto.getUrlDecoderEx(API);
         } else

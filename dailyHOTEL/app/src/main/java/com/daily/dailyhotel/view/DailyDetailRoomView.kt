@@ -3,17 +3,18 @@ package com.daily.dailyhotel.view
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import com.daily.base.util.DailyImageSpan
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailRoomDataBinding
 import com.twoheart.dailyhotel.util.Util
 import java.text.DecimalFormat
-import java.util.*
 
 private const val PRICE_AVERAGE_TAG = 1
 private const val PRICE_TOTAL_TAG = 2
@@ -45,7 +46,7 @@ class DailyDetailRoomView : ConstraintLayout {
         if (isPriceAverageType == isAverageType) return
 
         isPriceAverageType = isAverageType;
-        viewDataBinding.discountPriceTextView.text = getPrice(isAverageType)
+        viewDataBinding.discountPriceTextView.text = getPrice(isAverageType) + if (isAverageType) context.getString(R.string.label_stay_detail_slash_one_nights) else ""
     }
 
     private fun getPrice(isAverageType: Boolean): String? {
@@ -59,6 +60,10 @@ class DailyDetailRoomView : ConstraintLayout {
 
     fun setImageUlr(url: String?) {
         Util.requestImageResize(context, viewDataBinding.simpleDraweeView, url)
+    }
+
+    fun setRewardVisible(visible: Boolean) {
+        viewDataBinding.rewardImageView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setBedTypeText(bedTypeList: List<Room.BedInformation.BedTypeInformation>?) {
@@ -119,25 +124,70 @@ class DailyDetailRoomView : ConstraintLayout {
 
     private fun getBedType(bedTypeList: List<Room.BedInformation.BedTypeInformation>?): String? {
         val bedStringBuilder = StringBuilder()
+        val bedTypeMap = LinkedHashMap<String, Int>().apply {
+            put("DOUBLE", 0)
+            put("SINGLE", 0)
+            put("IN_FLOOR_HEATING", 0)
+            put("UNKNOWN", 0)
+        }
 
-        bedTypeList.takeNotEmpty {
-            it.forEach {
-                if (bedStringBuilder.isNotEmpty()) {
-                    bedStringBuilder.append(',')
-                }
+        bedTypeList?.forEach {
+            when (it.bedType) {
+                "DOUBLE", "KING", "QUEEN", "SEMI_DOUBLE" -> bedTypeMap.put("DOUBLE", bedTypeMap.get("DOUBLE")!! + it.count)
 
-                bedStringBuilder.append(it.bedType)
-                bedStringBuilder.append(String.format(Locale.KOREA, " %d개", it.count))
+                "SINGLE" -> bedTypeMap.put("SINGLE", bedTypeMap.get("SINGLE")!! + 1)
+
+                "IN_FLOOR_HEATING" -> bedTypeMap.put("IN_FLOOR_HEATING", bedTypeMap.get("IN_FLOOR_HEATING")!! + it.count)
+
+                "UNKNOWN" -> bedTypeMap.put("UNKNOWN", bedTypeMap.get("UNKNOWN")!! + 1)
             }
+        }
+
+        val doubleCount = bedTypeMap.get("DOUBLE")!!
+        if (doubleCount > 0) {
+            bedStringBuilder.append(context.getString(R.string.label_double))
+            bedStringBuilder.append(context.getString(R.string.label_booking_count, doubleCount))
+        }
+
+        val singleCount = bedTypeMap.get("SINGLE")!!
+        if (singleCount > 0) {
+            if(bedStringBuilder.isNotEmpty()) {
+                bedStringBuilder.append(", ")
+            }
+            bedStringBuilder.append(context.getString(R.string.label_single))
+            bedStringBuilder.append(context.getString(R.string.label_booking_count, singleCount))
+        }
+
+        val inFloorHeatingCount = bedTypeMap.get("IN_FLOOR_HEATING")!!
+        if (inFloorHeatingCount > 0) {
+            if(bedStringBuilder.isNotEmpty()) {
+                bedStringBuilder.append(", ")
+            }
+            bedStringBuilder.append(context.getString(R.string.label_in_floor_heating))
+            bedStringBuilder.append(context.getString(R.string.label_booking_count, inFloorHeatingCount))
+        }
+
+        val unKnownCount = bedTypeMap.get("UNKNOWN")!!
+        if (unKnownCount > 0) {
+            if(bedStringBuilder.isNotEmpty()) {
+                bedStringBuilder.append(", ")
+            }
+            bedStringBuilder.append(context.getString(R.string.label_bed_type_unknown))
+            bedStringBuilder.append(context.getString(R.string.label_booking_count, unKnownCount))
         }
 
         return bedStringBuilder.toString()
     }
 
-    private fun getPersons(fixed: Int, extra: Int, extraCharge: Boolean): String? {
+    private fun getPersons(fixed: Int, extra: Int, extraCharge: Boolean): CharSequence? {
         return if (fixed > 0) {
-            context.getString(R.string.label_stay_detail_person_information,
+            val text = context.getString(R.string.label_stay_detail_person_information,
                     fixed, fixed + extra, if (extraCharge) context.getString(R.string.label_pay) else context.getString(R.string.label_free))
+            val startIndex = text.indexOf('돋')
+
+            SpannableStringBuilder(text).apply {
+                setSpan(DailyImageSpan(context, R.drawable.layerlist_over_b4d666666_s2_p4, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
         } else null
     }
 }
