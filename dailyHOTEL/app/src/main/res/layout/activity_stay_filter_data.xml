@@ -141,40 +141,39 @@
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/resetTextView"
-                android:layout_width="48dp"
-                android:layout_height="44dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r2"
-                android:drawablePadding="4dp"
-                android:gravity="center_horizontal"
-                android:paddingTop="9dp"
-                android:text="@string/label_reset"
-                android:textColor="@color/default_text_c454545"
-                android:textSize="9dp"
-                app:drawableCompatTop="@drawable/ic_refresh"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/resetTextView"
+            android:layout_width="48dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r2"
+            android:drawablePadding="4dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="9dp"
+            android:text="@string/label_reset"
+            android:textColor="@color/default_text_c454545"
+            android:textSize="9dp"
+            app:drawableCompatTop="@drawable/ic_refresh"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toLeftOf="@+id/bottomLayout"
+            app:layout_constraintTop_toTopOf="@+id/bottomLayout"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/confirmTextView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/selector_button_default_background"
-                android:gravity="center"
-                android:text="@string/label_searching"
-                android:textColor="@drawable/selector_button_default_text_color"
-                android:textSize="17dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/resetTextView"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                dailyFont:style="Medium"/>
-        </android.support.constraint.ConstraintLayout>
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/confirmTextView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/selector_button_default_background"
+            android:gravity="center"
+            android:text="@string/label_searching"
+            android:textColor="@drawable/selector_button_default_text_color"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toRightOf="@+id/resetTextView"
+            app:layout_constraintRight_toRightOf="@+id/bottomLayout"
+            app:layout_constraintTop_toTopOf="@+id/bottomLayout"
+            dailyFont:style="Medium"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

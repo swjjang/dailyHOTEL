@@ -278,16 +278,16 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
         {
             getEventListener().onRatingClick(rating);
 
-            int count = getViewDataBinding().ratingLayout.getChildCount();
+            int count = getViewDataBinding().ratingRadioGroup.getChildCount();
 
             for (int i = 0; i < count; i++)
             {
-                if (getViewDataBinding().ratingLayout.getChildAt(i) == view)
+                if (getViewDataBinding().ratingRadioGroup.getChildAt(i) == view)
                 {
-                    getViewDataBinding().ratingLayout.getChildAt(i).setSelected(true);
+                    getViewDataBinding().ratingRadioGroup.getChildAt(i).setSelected(true);
                 } else
                 {
-                    getViewDataBinding().ratingLayout.getChildAt(i).setSelected(false);
+                    getViewDataBinding().ratingRadioGroup.getChildAt(i).setSelected(false);
                 }
             }
         } else
@@ -304,11 +304,11 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
             return;
         }
 
-        int count = getViewDataBinding().ratingLayout.getChildCount();
+        int count = getViewDataBinding().ratingRadioGroup.getChildCount();
 
         for (int i = 0; i < count; i++)
         {
-            getViewDataBinding().ratingLayout.getChildAt(i).setSelected(false);
+            getViewDataBinding().ratingRadioGroup.getChildAt(i).setSelected(false);
         }
     }
 }

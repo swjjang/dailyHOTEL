@@ -19,233 +19,206 @@
             app:layout_constraintTop_toTopOf="parent"
             dailyToolbar:underLineHeight="1px"/>
 
-        <ScrollView
-            android:id="@+id/contentScrollView"
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/white"
             android:fadingEdge="none"
-            app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+            app:layout_constraintBottom_toTopOf="@+id/bottomTopLine"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <LinearLayout
-                android:id="@+id/contentLayout"
+                android:id="@+id/nestedScrollLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="match_parent"
-                    android:layout_height="25dp">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:background="@color/default_background_section_cf2f2f3"
-                        android:gravity="center"
-                        android:text="@string/label_sort_by"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="13dp"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_alignParentTop="true"
-                        android:background="@color/default_line_ce7e7e7"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/default_line_ce7e7e7"/>
-                </RelativeLayout>
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_sort_by"
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    dailyFont:style="Medium"/>
 
                 <RadioGroup
                     android:id="@+id/sortRadioGroup"
                     android:layout_width="match_parent"
-                    android:layout_height="74dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rankRadioButton"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_sort_by_rank"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_06"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/distanceRadioButton"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_sort_by_distance"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_02"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/lowPriceRadioButton"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_sort_by_low_price"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_03"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/highPriceRadioButton"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_sort_by_high_price"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_04"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/satisfactionRadioButton"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_sort_by_satisfaction"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_05"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
                 </RadioGroup>
 
-                <RelativeLayout
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="25dp">
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/default_line_cf0f0f0"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:background="@color/default_background_section_cf2f2f3"
-                        android:gravity="center"
-                        android:text="@string/label_rating"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="13dp"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_alignParentTop="true"
-                        android:background="@color/default_line_ce7e7e7"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/default_line_ce7e7e7"/>
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/ratingLayout"
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="match_parent"
-                    android:layout_height="74dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_rating"
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="16dp"
+                    dailyFont:style="Medium"/>
 
-                    <com.daily.base.widget.DailyTextView
+                <RadioGroup
+                    android:id="@+id/ratingRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp">
+
+                    <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating1TextView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
+                        android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_1_star_rate"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_01"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
-                    <com.daily.base.widget.DailyTextView
+                    <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating2TextView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_2_star_rate"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_02"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
-                    <com.daily.base.widget.DailyTextView
+                    <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating3TextView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_3_star_rate"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_03"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
-                    <com.daily.base.widget.DailyTextView
+                    <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating4TextView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_4_star_rate"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_04"/>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
 
-                    <com.daily.base.widget.DailyTextView
+                    <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating5TextView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="12dp"
+                        android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_5_star_rate"
-                        android:textColor="@color/selector_curation_textcolor"
-                        android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_05"/>
-                </LinearLayout>
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"
+                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+                </RadioGroup>
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
+
+        <View
+            android:id="@+id/bottomTopLine"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce7e7e7"
+            app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/bottomLayout"
@@ -254,48 +227,39 @@
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"/>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1px"
-                android:background="@color/default_line_ce7e7e7"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/resetFilterView"
+            android:layout_width="48dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r2"
+            android:drawablePadding="4dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="9dp"
+            android:text="@string/label_reset"
+            android:textColor="@color/default_text_c454545"
+            android:textSize="9dp"
+            app:drawableCompatTop="@drawable/ic_refresh"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toLeftOf="@+id/bottomLayout"
+            app:layout_constraintTop_toTopOf="@+id/bottomLayout"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/resetFilterView"
-                android:layout_width="48dp"
-                android:layout_height="44dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r2"
-                android:drawablePadding="4dp"
-                android:gravity="center_horizontal"
-                android:paddingTop="9dp"
-                android:text="@string/label_reset"
-                android:textColor="@color/default_text_c454545"
-                android:textSize="9dp"
-                app:drawableCompatTop="@drawable/ic_refresh"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/confirmView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/selector_button_default_background"
-                android:gravity="center"
-                android:text="@string/label_view_result"
-                android:textColor="@drawable/selector_button_default_text_color"
-                android:textSize="17dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/resetFilterView"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                dailyFont:style="Medium"/>
-        </android.support.constraint.ConstraintLayout>
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/confirmView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/selector_button_default_background"
+            android:gravity="center"
+            android:text="@string/label_view_result"
+            android:textColor="@drawable/selector_button_default_text_color"
+            android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toRightOf="@+id/resetFilterView"
+            app:layout_constraintRight_toRightOf="@+id/bottomLayout"
+            app:layout_constraintTop_toTopOf="@+id/bottomLayout"
+            dailyFont:style="Medium"/>
     </android.support.constraint.ConstraintLayout>
 </layout>
