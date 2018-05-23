@@ -7,7 +7,6 @@ import android.widget.RadioGroup;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayFilterDataBinding;
@@ -73,14 +72,25 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
     }
 
     @Override
-    public void defaultSortLayoutGone()
+    public void setFirstSortText(String text)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().sortInclude.regionRadioButton.setVisibility(View.GONE);
+        getViewDataBinding().sortInclude.regionRadioButton.setText(text);
+    }
+
+    @Override
+    public void setSortLayoutEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().disabledSortFilterGroup.setVisibility(enabled ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -112,24 +122,6 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             case SATISFACTION:
                 getViewDataBinding().sortInclude.sortRadioGroup.check(R.id.satisfactionRadioButton);
                 break;
-        }
-    }
-
-    @Override
-    public void setSortLayoutEnabled(boolean enabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().sortInclude.sortRadioGroup.setEnabled(enabled);
-
-        int childCount = getViewDataBinding().sortInclude.sortRadioGroup.getChildCount();
-
-        for (int i = 0; i < childCount; i++)
-        {
-            getViewDataBinding().sortInclude.sortRadioGroup.getChildAt(i).setEnabled(enabled);
         }
     }
 
@@ -396,6 +388,8 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
         {
             return;
         }
+
+        getViewDataBinding().sortDimmedView.setOnClickListener((View.OnClickListener) v -> {});
 
         viewDataBinding.sortInclude.sortRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {

@@ -881,7 +881,7 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             startActivityForResult(StayFilterActivity.newInstance(getActivity(), mViewModel.listType, checkInDateTime, checkOutDateTime//
                 , mViewModel.categoryType, mViewModel.getViewType().name()//
                 , mViewModel.getFilter(), mViewModel.getSuggest()//
-                , categoryList, location, radius, null), SearchStayResultTabActivity.REQUEST_CODE_FILTER);
+                , categoryList, location, radius), SearchStayResultTabActivity.REQUEST_CODE_FILTER);
 
             mAnalytics.onEventFilterClick(getActivity());
         } catch (Exception e)

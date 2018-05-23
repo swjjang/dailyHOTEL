@@ -36,13 +36,12 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
     static final String INTENT_EXTRA_DATA_CATEGORIES = "categories";
     public static final String INTENT_EXTRA_DATA_LOCATION = "location";
     static final String INTENT_EXTRA_DATA_RADIUS = "radius";
-    static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
     static final String INTENT_EXTRA_DATA_CATEGORY_TYPE = "categoryType";
 
     public static Intent newInstance(Context context, SearchStayResultTabPresenter.ListType listType//
         , String checkInDateTime, String checkOutDateTime//
         , DailyCategoryType categoryType, String viewType, StayFilter filter, StaySuggest suggest//
-        , ArrayList<String> categories, Location location, float radius, String searchWord)
+        , ArrayList<String> categories, Location location, float radius)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
@@ -55,7 +54,6 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORIES, categories);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCH_WORD, searchWord);
 
         return intent;
     }

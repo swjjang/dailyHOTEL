@@ -38,24 +38,66 @@
                 android:layout_marginRight="20dp"
                 android:orientation="vertical">
 
-                <com.daily.base.widget.DailyTextView
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/label_sort_by"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="16dp"
-                    dailyFont:style="Medium"/>
+                    android:layout_height="wrap_content">
 
-                <include
-                    android:id="@+id/sortInclude"
-                    layout="@layout/layout_stay_filter_sort_data"/>
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/sortTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_sort_by"
+                        android:textColor="@color/default_text_c4d4d4d"
+                        android:textSize="16dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        dailyFont:style="Medium"/>
+
+                    <include
+                        android:id="@+id/sortInclude"
+                        layout="@layout/layout_stay_filter_sort_data"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sortTextView"/>
+
+                    <View
+                        android:id="@+id/sortDimmedView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@color/white_a70"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/disabledSortFilterTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/message_filter_disabled_sort_filter"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="12dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/sortTextView"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/sortTextView"/>
+
+                    <android.support.constraint.Group
+                        android:id="@+id/disabledSortFilterGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:constraint_referenced_ids="sortDimmedView, disabledSortFilterTextView"/>
+                </android.support.constraint.ConstraintLayout>
 
                 <View
+                    android:id="@+id/personTopLineView"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
                     android:background="@color/default_line_cf0f0f0"/>
 
