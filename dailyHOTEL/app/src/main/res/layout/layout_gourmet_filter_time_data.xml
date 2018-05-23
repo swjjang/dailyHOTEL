@@ -3,73 +3,82 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/timeRangeLayout"
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/timeRangeFlexboxLayout"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-10dp"
+        app:flexDirection="row"
+        app:flexWrap="wrap">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/time0611View"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_time_0611"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_01"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/time1115View"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_time_1115"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_02"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/time1517View"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_time_1517"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_03"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/time1721View"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_time_1721"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_04"/>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/time2106View"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:paddingTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_rect_ce8e8e9_ceb2135_r3"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/label_time_2106"
-            android:textColor="@color/selector_curation_textcolor"
-            android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_05"/>
-    </LinearLayout>
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
+            android:textSize="14dp"/>
+    </com.google.android.flexbox.FlexboxLayout>
 </layout>

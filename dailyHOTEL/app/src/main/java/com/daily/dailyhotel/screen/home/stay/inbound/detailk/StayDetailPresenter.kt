@@ -822,7 +822,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             if (room.index == stayRoom?.index) {
                 return index
             }
-        } 
+        }
 
         return 0
     }

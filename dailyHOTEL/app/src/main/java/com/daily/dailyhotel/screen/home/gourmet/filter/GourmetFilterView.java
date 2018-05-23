@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.gourmet.filter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -138,24 +137,27 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
         }
 
         DailyTextView dailyTextView = new DailyTextView(context);
-        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
-        dailyTextView.setTextColor(getColorStateList(R.color.selector_curation_textcolor));
+        dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c929292_ceb2135));
 
         if (category != null)
         {
             dailyTextView.setTag(category);
             dailyTextView.setText(category.name);
             dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, getCategoryResourceId(category.code), 0, 0);
+            dailyTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(context, 2));
+            dailyTextView.setBackgroundResource(R.drawable.selector_fillrect_ce6e6e7_ceb2135_r3);
+            dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 12));
         }
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = category == null ? 1 : ScreenUtils.dpToPx(context, 74d);
+        layoutParams.height = category == null ? 1 : ScreenUtils.dpToPx(context, 67);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+        layoutParams.leftMargin = ScreenUtils.dpToPx(context, 10);
+        layoutParams.topMargin = ScreenUtils.dpToPx(context, 10);
 
-        dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 12), 0, 0);
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;
@@ -460,21 +462,14 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
-        int count = viewDataBinding.timeInclude.timeRangeLayout.getChildCount();
+        int count = viewDataBinding.timeInclude.timeRangeFlexboxLayout.getChildCount();
 
         View view;
 
         for (int i = 0; i < count; i++)
         {
-            view = viewDataBinding.timeInclude.timeRangeLayout.getChildAt(i);
-
-            if (view instanceof DailyTextView)
-            {
-                view.setOnClickListener(this);
-            } else
-            {
-                view.setEnabled(false);
-            }
+            view = viewDataBinding.timeInclude.timeRangeFlexboxLayout.getChildAt(i);
+            view.setOnClickListener(this);
         }
     }
 
@@ -485,21 +480,14 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
-        int count = viewDataBinding.amenityInclude.amenityGridLayout.getChildCount();
+        int count = viewDataBinding.amenityInclude.amenityFlexboxLayout.getChildCount();
 
         View view;
 
         for (int i = 0; i < count; i++)
         {
-            view = viewDataBinding.amenityInclude.amenityGridLayout.getChildAt(i);
-
-            if (view instanceof DailyTextView)
-            {
-                view.setOnClickListener(this);
-            } else
-            {
-                view.setEnabled(false);
-            }
+            view = viewDataBinding.amenityInclude.amenityFlexboxLayout.getChildAt(i);
+            view.setOnClickListener(this);
         }
     }
 }
