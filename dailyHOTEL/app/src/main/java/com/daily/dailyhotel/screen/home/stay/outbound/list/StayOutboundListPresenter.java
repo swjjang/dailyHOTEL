@@ -131,7 +131,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     boolean mIsFirstLoad;
 
-    enum ViewState
+    public enum ViewState
     {
         MAP,
         LIST
@@ -954,7 +954,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             case LIST:
             {
-                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, true, true);
+                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, ViewState.LIST.name());
                 startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
 
                 mAnalytics.onEventFilterClick(getActivity());
@@ -963,7 +963,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             case MAP:
             {
-                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, false, true);
+                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, ViewState.MAP.name());
                 startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
                 break;
             }

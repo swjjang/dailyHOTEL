@@ -12,6 +12,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
+import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListPresenter;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -26,6 +27,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundFilters mStayOutboundFilters;
     private StayOutboundFilters.SortType mPrevSortType;
     private boolean[] mEnabledLines;
+    private StayOutboundListPresenter.ViewState mViewState;
 
     private DailyLocationExFactory mDailyLocationExFactory;
 
@@ -81,6 +83,15 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         mStayOutboundFilters.rating = intent.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
+
+        try
+        {
+            mViewState = StayOutboundListPresenter.ViewState.valueOf(intent.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_VIEWTYPE));
+        } catch (Exception e)
+        {
+            mViewState = StayOutboundListPresenter.ViewState.LIST;
+        }
+
         mEnabledLines = intent.getBooleanArrayExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_ENABLEDLINES);
 
         return true;
@@ -96,9 +107,30 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
+
+        setSortFilter(mViewState);
+
         getViewInterface().setSort(mStayOutboundFilters.sortType);
         getViewInterface().setRating(mStayOutboundFilters.rating);
-        getViewInterface().setEnabledLines(mEnabledLines);
+    }
+
+    private void setSortFilter(StayOutboundListPresenter.ViewState viewState)
+    {
+        if (viewState == null)
+        {
+            return;
+        }
+
+        switch (viewState)
+        {
+            case LIST:
+                getViewInterface().setSortLayoutEnabled(true);
+                break;
+
+            case MAP:
+                getViewInterface().setSortLayoutEnabled(false);
+                break;
+        }
     }
 
     @Override
