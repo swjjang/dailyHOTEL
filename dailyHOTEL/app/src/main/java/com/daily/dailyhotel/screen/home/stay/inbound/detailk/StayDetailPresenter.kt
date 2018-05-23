@@ -805,15 +805,26 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let { stayDetail ->
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, it, 0
-                            , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
-                            , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
-                            , stayDetail.index
-                            , stayDetail.baseInformation?.category
-                            , stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, getFilteredRoomList(it, bedTypeFilter, facilitiesFilter),
+                            getRoomPosition(it, stayRoom),
+                            bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
+                            bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
+                            stayDetail.index,
+                            stayDetail.baseInformation?.category,
+                            stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
                 }
             }
         } ?: Util.restartApp(activity)
+    }
+
+    private fun getRoomPosition(roomList: List<Room>?, stayRoom: StayRoom?): Int {
+        roomList?.forEachIndexed { index, room ->
+            if (room.index == stayRoom?.index) {
+                return index
+            }
+        } 
+
+        return 0
     }
 
     override fun onTrueReviewClick() {
@@ -946,12 +957,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let { stayDetail ->
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, it, 0
-                            , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
-                            , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
-                            , stayDetail.index
-                            , stayDetail.baseInformation?.category
-                            , stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, getFilteredRoomList(it, bedTypeFilter, facilitiesFilter),
+                            0,
+                            bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
+                            bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
+                            stayDetail.index,
+                            stayDetail.baseInformation?.category,
+                            stayDetail.activeReward), StayDetailActivity.REQUEST_CODE_ROOM)
                 }
             }
         } ?: Util.restartApp(activity)
