@@ -756,7 +756,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             Intent intent = GourmetFilterActivity.newInstance(GourmetMainActivity.this, SearchGourmetResultTabPresenter.ListType.DEFAULT//
                 , visitDateTime, mViewType.name(), gourmetFilter//
-                , suggest, location, 0, null);
+                , suggest, location, 0);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 

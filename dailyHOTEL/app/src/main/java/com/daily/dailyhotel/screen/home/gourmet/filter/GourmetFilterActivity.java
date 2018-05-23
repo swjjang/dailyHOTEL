@@ -31,11 +31,10 @@ public class GourmetFilterActivity extends BaseActivity<GourmetFilterPresenter>
     static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_LOCATION = "location";
     static final String INTENT_EXTRA_DATA_RADIUS = "radius";
-    static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
 
     public static Intent newInstance(Context context, SearchGourmetResultTabPresenter.ListType listType, String visitDateTime//
         , String viewType, GourmetFilter filter//
-        , GourmetSuggest suggest, Location location, float radius, String searchWord)
+        , GourmetSuggest suggest, Location location, float radius)
     {
         Intent intent = new Intent(context, GourmetFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_LIST_TYPE, listType.name());
@@ -45,7 +44,6 @@ public class GourmetFilterActivity extends BaseActivity<GourmetFilterPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(suggest));
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCH_WORD, searchWord);
 
         return intent;
     }
