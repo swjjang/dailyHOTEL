@@ -110,13 +110,13 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                 MOVE_STATE_NONE -> {
                                     if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY)) {
                                         if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.GONE) {
-                                            viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.GONE
+                                            viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.INVISIBLE
                                         }
                                     } else if (Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY)) {
                                         // x 축으로 이동한 경우.
                                         mMoveState = MOVE_STATE_VIEWPAGER
                                         if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.GONE) {
-                                            viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.GONE
+                                            viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.INVISIBLE
                                         }
                                     } else {
                                         // y축으로 이동한 경우.
@@ -850,7 +850,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 if (scaleUp) {
                     viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
                 } else {
-                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.GONE
+                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.INVISIBLE
                 }
 
                 setRecyclerScrollEnabled()

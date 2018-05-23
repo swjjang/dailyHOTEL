@@ -45,7 +45,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginRight="9dp"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/detail_ic_more_img"
                 app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
                 app:layout_constraintRight_toRightOf="@id/simpleDraweeView"/>
@@ -55,7 +55,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="9dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/detail_ic_vr_img"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
