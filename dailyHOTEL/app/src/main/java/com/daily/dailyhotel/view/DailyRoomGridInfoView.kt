@@ -97,6 +97,7 @@ class DailyRoomInfoGridView : LinearLayout {
             } else {
                 titleTextLayout.visibility = View.VISIBLE
                 titleTextView.text = title
+                titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, if (largeView) LARGE_TITLE_TEXT_SIZE.toFloat() else SMALL_TITLE_TEXT_SIZE.toFloat())
             }
 
             gridLayout.removeAllViews()
