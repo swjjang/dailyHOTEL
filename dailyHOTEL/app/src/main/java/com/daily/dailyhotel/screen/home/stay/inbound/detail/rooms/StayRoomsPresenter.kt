@@ -77,7 +77,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             }
 
             category = it.getStringExtra(StayRoomsActivity.INTENT_EXTRA_STAY_CATEGORY)
-
+            position = it.getIntExtra(StayRoomsActivity.INTENT_EXTRA_POSITION, 0)
             activeReward = it.getBooleanExtra(StayRoomsActivity.INTENT_EXTRA_ACTIVE_REWARD, false)
 
             true
