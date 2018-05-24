@@ -5,11 +5,11 @@ import com.daily.dailyhotel.entity.StayFilter;
 
 public interface StayFilterInterface extends BaseDialogViewInterface
 {
-    void defaultSortLayoutGone();
-
-    void setSortLayout(StayFilter.SortType sortType);
+    void setFirstSortText(String text);
 
     void setSortLayoutEnabled(boolean enabled);
+
+    void setSortLayout(StayFilter.SortType sortType);
 
     void setPerson(int person, int personCountOfMax, int personCountOfMin);
 

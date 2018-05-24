@@ -65,7 +65,6 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     List<String> mCategoryList;
     Location mLocation;
     float mRadius;
-    String mSearchWord;
     Constants.ViewType mViewType;
     StayFilterCount milterCount;
     DailyCategoryType mCategoryType = DailyCategoryType.STAY_ALL;
@@ -178,7 +177,6 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mLocation = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
         mRadius = intent.getFloatExtra(StayFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
-        mSearchWord = intent.getStringExtra(StayFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
 
         return true;
     }
@@ -194,12 +192,39 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
 
-        if (mSuggest.isLocationSuggestType())
-        {
-            getViewInterface().defaultSortLayoutGone();
-        }
+        setSortFilter(mListType, mViewType);
 
         notifyFilterChanged();
+    }
+
+    private void setSortFilter(SearchStayResultTabPresenter.ListType listType, Constants.ViewType viewType)
+    {
+        if (listType == null || viewType == null)
+        {
+            return;
+        }
+
+        switch (mListType)
+        {
+            case SEARCH:
+                getViewInterface().setFirstSortText(getString(R.string.label_sort_by_rank));
+                break;
+
+            case DEFAULT:
+                getViewInterface().setFirstSortText(getString(mSuggest.isLocationSuggestType() ? R.string.label_sort_by_rank : R.string.label_sort_by_area));
+                break;
+        }
+
+        switch (mViewType)
+        {
+            case LIST:
+                getViewInterface().setSortLayoutEnabled(true);
+                break;
+
+            case MAP:
+                getViewInterface().setSortLayoutEnabled(false);
+                break;
+        }
     }
 
     @Override
@@ -479,7 +504,6 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         }
 
         getViewInterface().setSortLayout(mFilter.sortType);
-        getViewInterface().setSortLayoutEnabled(mViewType == Constants.ViewType.LIST);
         getViewInterface().setPerson(mFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
         getViewInterface().setBedTypeCheck(mFilter.flagBedTypeFilters);
         getViewInterface().setAmenitiesCheck(mFilter.flagAmenitiesFilters);

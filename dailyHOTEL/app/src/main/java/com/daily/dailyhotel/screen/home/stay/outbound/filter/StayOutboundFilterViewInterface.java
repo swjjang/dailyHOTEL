@@ -9,5 +9,5 @@ public interface StayOutboundFilterViewInterface extends BaseDialogViewInterface
 
     void setRating(int rating);
 
-    void setEnabledLines(boolean[] enabledLines);
+    void setSortLayoutEnabled(boolean enabled);
 }

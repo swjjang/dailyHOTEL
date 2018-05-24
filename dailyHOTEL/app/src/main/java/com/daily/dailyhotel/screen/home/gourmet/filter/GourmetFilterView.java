@@ -61,14 +61,14 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
     }
 
     @Override
-    public void defaultSortLayoutGone()
+    public void setFirstSortText(String text)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().sortInclude.regionRadioButton.setVisibility(View.GONE);
+        getViewDataBinding().sortInclude.regionRadioButton.setText(text);
     }
 
     @Override
@@ -223,14 +223,7 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
-        getViewDataBinding().sortInclude.sortRadioGroup.setEnabled(enabled);
-
-        int childCount = getViewDataBinding().sortInclude.sortRadioGroup.getChildCount();
-
-        for (int i = 0; i < childCount; i++)
-        {
-            getViewDataBinding().sortInclude.sortRadioGroup.getChildAt(i).setEnabled(enabled);
-        }
+        getViewDataBinding().disabledSortFilterGroup.setVisibility(enabled ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -397,6 +390,9 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
         {
             return;
         }
+
+        getViewDataBinding().sortDimmedView.setOnClickListener((View.OnClickListener) v -> {
+        });
 
         viewDataBinding.sortInclude.sortRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {

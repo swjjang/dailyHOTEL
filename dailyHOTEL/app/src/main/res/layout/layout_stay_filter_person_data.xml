@@ -6,6 +6,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
         android:layout_height="40dp">
 
         <com.daily.base.widget.DailyTextView
@@ -24,7 +25,6 @@
             android:id="@+id/minusPersonImageView"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginRight="20dp"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/personCountTextView"
@@ -33,9 +33,8 @@
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/personCountTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="0dp"
-            android:layout_marginRight="20dp"
             android:gravity="center"
             android:text="1명 이상"
             android:textColor="@color/default_text_ceb2135"

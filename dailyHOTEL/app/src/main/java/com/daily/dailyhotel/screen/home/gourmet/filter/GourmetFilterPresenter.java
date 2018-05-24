@@ -59,7 +59,6 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     GourmetBookDateTime mBookDateTime;
     Location mLocation;
     float mRadius;
-    String mSearchWord;
     Constants.ViewType mViewType;
     GourmetFilterCount mFilterCount;
 
@@ -93,16 +92,16 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     public boolean onIntent(Intent intent)
     {
         if (intent == null)
-
-
         {
-            try
-            {
-                mListType = SearchGourmetResultTabPresenter.ListType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
-            } catch (Exception e)
-            {
-                mListType = SearchGourmetResultTabPresenter.ListType.DEFAULT;
-            }
+            return false;
+        }
+
+        try
+        {
+            mListType = SearchGourmetResultTabPresenter.ListType.valueOf(intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LIST_TYPE));
+        } catch (Exception e)
+        {
+            mListType = SearchGourmetResultTabPresenter.ListType.DEFAULT;
         }
 
         String visitDateTime = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
@@ -145,7 +144,6 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
 
         mLocation = intent.getParcelableExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_LOCATION);
         mRadius = intent.getFloatExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_RADIUS, 0);
-        mSearchWord = intent.getStringExtra(GourmetFilterActivity.INTENT_EXTRA_DATA_SEARCH_WORD);
 
         return true;
     }
@@ -161,14 +159,41 @@ public class GourmetFilterPresenter extends BaseExceptionPresenter<GourmetFilter
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
 
-        if (mSuggest.isLocationSuggestType())
-        {
-            getViewInterface().defaultSortLayoutGone();
-        }
+        setSortFilter(mListType, mViewType);
 
         getViewInterface().setCategory(mFilter.getCategoryMap());
 
         notifyFilterChanged();
+    }
+
+    private void setSortFilter(SearchGourmetResultTabPresenter.ListType listType, Constants.ViewType viewType)
+    {
+        if (listType == null || viewType == null)
+        {
+            return;
+        }
+
+        switch (mListType)
+        {
+            case SEARCH:
+                getViewInterface().setFirstSortText(getString(R.string.label_sort_by_rank));
+                break;
+
+            case DEFAULT:
+                getViewInterface().setFirstSortText(getString(mSuggest.isLocationSuggestType() ? R.string.label_sort_by_rank : R.string.label_sort_by_area));
+                break;
+        }
+
+        switch (mViewType)
+        {
+            case LIST:
+                getViewInterface().setSortLayoutEnabled(true);
+                break;
+
+            case MAP:
+                getViewInterface().setSortLayoutEnabled(false);
+                break;
+        }
     }
 
     @Override

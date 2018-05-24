@@ -1069,7 +1069,8 @@
     <string name="label_smokeable">흡연가능</string>
     <string name="label_disabled_facilities">장애인편의시설</string>
     <string name="label_more">더보기</string>
-    <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
+    <string name="activity_curation_title">정렬/필터 적용하기</string>
+    <string name="message_filter_disabled_sort_filter">*지도 화면에서는 정렬 필터 사용 불가</string>
 
     <!-- PaymentResult Activity -->
     <string name="label_booking_information">예약 정보</string>

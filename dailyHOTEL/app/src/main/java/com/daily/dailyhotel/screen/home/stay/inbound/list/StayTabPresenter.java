@@ -782,7 +782,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             , checkInDateTime, checkOutDateTime//
             , mStayViewModel.categoryType, mStayViewModel.viewType.getValue().name()//
             , mStayViewModel.stayFilter.getValue(), suggest//
-            , categoryList, location, 0, null), StayTabActivity.REQUEST_CODE_FILTER);
+            , categoryList, location, 0), StayTabActivity.REQUEST_CODE_FILTER);
 
         mAnalytics.onFilterClick(getActivity(), mStayViewModel.categoryType, mStayViewModel.viewType.getValue());
     }

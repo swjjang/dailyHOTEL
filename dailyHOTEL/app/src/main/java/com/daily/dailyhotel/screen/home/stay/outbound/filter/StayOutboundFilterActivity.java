@@ -19,12 +19,13 @@ public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterP
     public static final String INTENT_EXTRA_DATA_SORT = "sort";
     public static final String INTENT_EXTRA_DATA_DEFAULT_SORT = "defaultSort";
     public static final String INTENT_EXTRA_DATA_RATING = "rating";
+    public static final String INTENT_EXTRA_DATA_VIEWTYPE = "viewType";
     public static final String INTENT_EXTRA_DATA_ENABLEDLINES = "enabledLines";
 
     static final int REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER = 10000;
     static final int REQUEST_CODE_STAYOUTBOUND_SETTING_LOCATION = 10001;
 
-    public static Intent newInstance(Context context, StayOutboundFilters stayOutboundFilters, boolean... enabledLines)
+    public static Intent newInstance(Context context, StayOutboundFilters stayOutboundFilters, String viewType)
     {
         Intent intent = new Intent(context, StayOutboundFilterActivity.class);
 
@@ -33,7 +34,7 @@ public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterP
             intent.putExtra(INTENT_EXTRA_DATA_SORT, stayOutboundFilters.sortType.name());
             intent.putExtra(INTENT_EXTRA_DATA_DEFAULT_SORT, stayOutboundFilters.defaultSortType.name());
             intent.putExtra(INTENT_EXTRA_DATA_RATING, stayOutboundFilters.rating);
-            intent.putExtra(INTENT_EXTRA_DATA_ENABLEDLINES, enabledLines);
+            intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType);
         }
 
         return intent;
