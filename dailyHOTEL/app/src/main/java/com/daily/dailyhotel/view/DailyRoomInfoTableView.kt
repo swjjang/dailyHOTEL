@@ -32,7 +32,6 @@ class DailyRoomInfoTableView : ConstraintLayout {
             dataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_room_table_information_data, this, true)
         }
 
-//        setPadding(ScreenUtils.dpToPx(context, 12.0), ScreenUtils.dpToPx(context, 30.0), ScreenUtils.dpToPx(context, 12.0), 0)
         setBackgroundColor(context.resources.getColor(R.color.white))
 
         itemWidth = ScreenUtils.dpToPx(context, 95.0) // left padding 1dp 뺌
@@ -42,7 +41,7 @@ class DailyRoomInfoTableView : ConstraintLayout {
         dataBinding.tableLayout.setBackgroundColor(context.resources.getColor(tableLineColorResId))
     }
 
-    fun setTitleText(stringResId : Int) {
+    fun setTitleText(stringResId: Int) {
         dataBinding.titleTextView.setText(stringResId)
     }
 
@@ -51,15 +50,19 @@ class DailyRoomInfoTableView : ConstraintLayout {
     }
 
     fun setTitleVisible(visible: Boolean) {
-        dataBinding.titleTextView.visibility = if (visible) View.VISIBLE else View.GONE
+        dataBinding.titleTextLayout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun getItemCount() : Int {
+    fun setTitleTextSize(size: Float) {
+        dataBinding.titleTextView.textSize = size
+    }
+
+    fun getItemCount(): Int {
         return itemCount
     }
 
     fun clearTableLayout() {
-        if(dataBinding.tableLayout.childCount > 0) {
+        if (dataBinding.tableLayout.childCount > 0) {
             dataBinding.tableLayout.removeAllViews()
         }
 
@@ -80,7 +83,7 @@ class DailyRoomInfoTableView : ConstraintLayout {
                 freezesText = true
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
                 gravity = Gravity.CENTER_VERTICAL
-                setPadding(ScreenUtils.dpToPx(context, 8.0), 0 , 0, 0)
+                setPadding(ScreenUtils.dpToPx(context, 8.0), 0, 0, 0)
                 text = title
             }
 
@@ -88,38 +91,37 @@ class DailyRoomInfoTableView : ConstraintLayout {
 //            this.addView(getVerticalLine())
 
             val descriptionLayout = LinearLayout(context).apply {
-//                width = TableRow.LayoutParams.MATCH_PARENT
                 layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, itemHeight).apply {
-                    setBackgroundColor(context.resources.getColor(R.color.white))
                     gravity = Gravity.CENTER_VERTICAL
-                    orientation = TableRow.HORIZONTAL
-
-                    val horizontalMargin = ScreenUtils.dpToPx(context, 8.0)
-                    setPadding(horizontalMargin, 0, horizontalMargin, 0)
+                    orientation = LinearLayout.HORIZONTAL
                 }
+
+                val horizontalMargin = ScreenUtils.dpToPx(context, 8.0)
+                setPadding(horizontalMargin, 0, horizontalMargin, 0)
+                setBackgroundColor(context.resources.getColor(R.color.white))
             }
 
             val descriptionView = DailyTextView(context).apply {
-                width = LinearLayout.LayoutParams.WRAP_CONTENT
-                height = itemHeight
-//                setBackgroundColor(context.resources.getColor(R.color.white))
+               layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                   gravity = Gravity.CENTER_VERTICAL
+               }
+
                 setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
                 freezesText = true
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
-                gravity = Gravity.CENTER_VERTICAL
                 text = description
             }
 
             descriptionLayout.addView(descriptionView)
 
             val subDescriptionView = DailyTextView(context).apply {
-                width = LinearLayout.LayoutParams.WRAP_CONTENT
-                height = itemHeight
-//                setBackgroundColor(context.resources.getColor(R.color.white))
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                }
+
                 setTextColor(context.resources.getColor(R.color.default_text_c929292))
                 freezesText = true
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
-                gravity = Gravity.CENTER_VERTICAL
                 text = subDescription
                 setPadding(ScreenUtils.dpToPx(context, 2.0), 0, 0, 0)
             }

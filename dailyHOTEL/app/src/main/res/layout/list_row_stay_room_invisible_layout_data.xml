@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-        xmlns:fresco="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
@@ -41,7 +41,7 @@
                     fresco:roundBottomRight="false"
                     fresco:roundTopLeft="true"
                     fresco:roundTopRight="true"
-                    fresco:roundedCornerRadius="6dp"/>
+                    fresco:roundedCornerRadius="6dp" />
 
                 <View
                     android:id="@+id/moreIconView"
@@ -51,7 +51,7 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/detail_ic_more_img"
                     app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-                    app:layout_constraintRight_toRightOf="@id/simpleDraweeView"/>
+                    app:layout_constraintRight_toRightOf="@id/simpleDraweeView" />
 
                 <View
                     android:id="@+id/vrIconView"
@@ -62,7 +62,7 @@
                     android:background="@drawable/detail_ic_vr_img"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-                    app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView"/>
+                    app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/roomCountTagTextView"
@@ -75,7 +75,7 @@
                     android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    dailyFont:style="Medium"/>
+                    dailyFont:style="Medium" />
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/closeImageView"
@@ -86,7 +86,7 @@
                     android:paddingRight="10dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/navibar_ic_x"/>
+                    app:srcCompat="@drawable/navibar_ic_x" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -110,7 +110,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    dailyFont:style="Medium"/>
+                    dailyFont:style="Medium" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/discountPercentTextView"
@@ -124,7 +124,7 @@
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/discountPriceTextView"
-                    dailyFont:style="Medium"/>
+                    dailyFont:style="Medium" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/discountPriceTextView"
@@ -138,20 +138,20 @@
                     app:layout_constraintLeft_toRightOf="@+id/discountPercentTextView"
                     app:layout_constraintRight_toLeftOf="@+id/priceTextView"
                     app:layout_constraintTop_toBottomOf="@+id/roomNameTextView"
-                    dailyFont:style="Bold"/>
+                    dailyFont:style="Bold" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/priceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
                     android:layout_marginLeft="5dp"
                     android:text="400,000원"
                     android:textColor="@color/default_text_cc5c5c5"
                     android:textSize="14dp"
-                    android:layout_marginBottom="1dp"
                     app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
                     app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"
-                    app:layout_constraintRight_toRightOf="parent"/>
+                    app:layout_constraintRight_toRightOf="parent" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/refundPolicyTextView"
@@ -168,7 +168,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/discountPriceTextView"/>
+                    app:layout_constraintTop_toBottomOf="@id/discountPriceTextView" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -183,18 +183,16 @@
                     android:layout_height="1dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <android.support.v7.widget.GridLayout
                     android:id="@+id/baseInfoGridLayout"
-                    android:layout_width="0dp"
+                    android:layout_width="285dp"
                     android:layout_height="wrap_content"
                     android:paddingBottom="15dp"
-                    android:paddingLeft="37.5dp"
-                    android:paddingRight="37.5dp"
                     android:paddingTop="5dp"
                     app:columnCount="3"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -216,7 +214,7 @@
                             android:layout_marginTop="10dp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/personTitleTextView"
@@ -229,7 +227,7 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/personIconImageView"
-                            dailyFont:style="Medium"/>
+                            dailyFont:style="Medium" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/personDescriptionTextView"
@@ -248,7 +246,7 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/personTitleTextView"
-                            dailyFont:style="Medium"/>
+                            dailyFont:style="Medium" />
 
                     </android.support.constraint.ConstraintLayout>
 
@@ -266,7 +264,7 @@
                             android:layout_marginTop="10dp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/bedTitleTextView"
@@ -280,7 +278,7 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/bedIconImageView"
-                            dailyFont:style="Medium"/>
+                            dailyFont:style="Medium" />
 
 
                         <com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
@@ -296,7 +294,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView"/>
+                            app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView" />
 
                     </android.support.constraint.ConstraintLayout>
 
@@ -315,7 +313,7 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/vector_ic_detail_item_floorspace"/>
+                            app:srcCompat="@drawable/vector_ic_detail_item_floorspace" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/squareTitleTextView"
@@ -330,7 +328,7 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toLeftOf="@+id/squareIconTextView"
                             app:layout_constraintTop_toBottomOf="@+id/squareIconImageView"
-                            dailyFont:style="Medium"/>
+                            dailyFont:style="Medium" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/squareIconTextView"
@@ -346,7 +344,7 @@
                             app:layout_constraintLeft_toRightOf="@+id/squareTitleTextView"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/squareTitleTextView"
-                            dailyFont:style="Medium"/>
+                            dailyFont:style="Medium" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/squareDescriptionTextView"
@@ -365,7 +363,7 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/squareTitleTextView"
-                            dailyFont:style="Medium"/>
+                            dailyFont:style="Medium" />
 
                     </android.support.constraint.ConstraintLayout>
                 </android.support.v7.widget.GridLayout>
@@ -382,10 +380,10 @@
                     android:layout_height="1dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoGridView
                     android:id="@+id/subInfoGridView"
@@ -397,7 +395,7 @@
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/subInfoGridLine"/>
+                    app:layout_constraintTop_toBottomOf="@+id/subInfoGridLine" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -408,25 +406,25 @@
                 <View
                     android:id="@+id/roomBenefitGridLine"
                     android:layout_width="0dp"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoGridView
                     android:id="@+id/roomBenefitGridView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingBottom="30dp"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/roomBenefitGridLine"/>
+                    app:layout_constraintTop_toBottomOf="@+id/roomBenefitGridLine" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -437,42 +435,42 @@
                 <View
                     android:id="@+id/discountInfoLine"
                     android:layout_width="0dp"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/discountInfoTitleView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="30dp"
                     android:text="@string/label_stay_room_discount_info_title"
                     android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="16dp"
+                    android:textSize="18dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/discountInfoLine"
-                    dailyFont:style="Medium"/>
+                    dailyFont:style="Medium" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/discountInfoTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="14dp"
                     android:paddingBottom="30dp"
                     android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="14dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/discountInfoTitleView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/discountInfoTitleView" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -483,24 +481,24 @@
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/checkTimeInfoTitleView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="30dp"
                     android:text="@string/label_stay_room_check_time_title"
                     android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="16dp"
+                    android:textSize="18dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -514,30 +512,31 @@
                     android:layout_height="33dp"
                     android:layout_marginBottom="2dp"
                     android:layout_marginTop="2dp"
-                    android:background="@color/default_line_ce7e7e7"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintBottom_toBottomOf="@+id/checkInTimeTextView"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/checkInTimeTitleView"/>
+                    app:layout_constraintTop_toTopOf="@+id/checkInTimeTitleView" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/checkInTimeTitleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="21dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/label_check_in"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="14dp"
                     app:layout_constraintBottom_toTopOf="@+id/checkInTimeTextView"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/verticalLine"
-                    app:layout_constraintTop_toBottomOf="@+id/checkTimeInfoTitleView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/checkTimeInfoTitleView" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/checkInTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
+                    android:layout_marginTop="2dp"
                     android:text="15:00"
                     android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="16dp"
@@ -545,26 +544,27 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/verticalLine"
                     app:layout_constraintTop_toBottomOf="@+id/checkInTimeTitleView"
-                    dailyFont:style="Medium"/>
+                    dailyFont:style="Medium" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/checkOutTimeTitleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="21dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/label_check_out"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="14dp"
                     app:layout_constraintBottom_toTopOf="@+id/checkInTimeTextView"
                     app:layout_constraintLeft_toRightOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/verticalLine"
-                    app:layout_constraintTop_toBottomOf="@+id/checkTimeInfoTitleView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/checkTimeInfoTitleView" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/checkOutTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
+                    android:layout_marginTop="2dp"
                     android:text="15:00"
                     android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="16dp"
@@ -572,7 +572,7 @@
                     app:layout_constraintLeft_toRightOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/verticalLine"
                     app:layout_constraintTop_toBottomOf="@+id/checkInTimeTitleView"
-                    dailyFont:style="Medium"/>
+                    dailyFont:style="Medium" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -584,25 +584,25 @@
                 <View
                     android:id="@+id/roomDescriptionGridLine"
                     android:layout_width="0dp"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoGridView
                     android:id="@+id/roomDescriptionGridView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingBottom="30dp"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/roomDescriptionGridLine"/>
+                    app:layout_constraintTop_toBottomOf="@+id/roomDescriptionGridLine" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -613,25 +613,25 @@
                 <View
                     android:id="@+id/roomAmenityGridLine"
                     android:layout_width="0dp"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoGridView
                     android:id="@+id/roomAmenityGridView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingBottom="30dp"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/roomAmenityGridLine"/>
+                    app:layout_constraintTop_toBottomOf="@+id/roomAmenityGridLine" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -642,37 +642,37 @@
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/extraChargeTitleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="35.5dp"
                     android:text="@string/label_stay_room_extra_charge_info_title"
                     android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="16dp"
+                    android:textSize="18dp"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/extraChargeDescriptionView"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_goneMarginRight="14dp"
-                    dailyFont:style="Medium"/>
+                    dailyFont:style="Medium" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/extraChargeDescriptionView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="7.5dp"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginRight="20dp"
                     android:gravity="right|center_vertical"
                     android:text="@string/label_stay_room_extra_charge_info_description"
                     android:textColor="@color/default_text_c929292"
@@ -680,51 +680,51 @@
                     app:layout_constraintBottom_toBottomOf="@+id/extraChargeTitleView"
                     app:layout_constraintLeft_toRightOf="@+id/extraChargeTitleView"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/extraChargeTitleView"/>
+                    app:layout_constraintTop_toTopOf="@+id/extraChargeTitleView" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoTableView
                     android:id="@+id/extraChargePersonTableLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="30dp"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:paddingTop="20dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/extraChargeTitleView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/extraChargeTitleView" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoTableView
                     android:id="@+id/extraChargeBedTableLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/extraChargePersonTableLayout"/>
+                    app:layout_constraintTop_toBottomOf="@+id/extraChargePersonTableLayout" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoTableView
                     android:id="@+id/extraChargeNightsTableLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/extraChargeBedTableLayout"/>
+                    app:layout_constraintTop_toBottomOf="@+id/extraChargeBedTableLayout" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoGridView
                     android:id="@+id/extraChargeDescriptionGridView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/extraChargeNightsTableLayout"/>
+                    app:layout_constraintTop_toBottomOf="@+id/extraChargeNightsTableLayout" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -736,32 +736,32 @@
                 <View
                     android:id="@+id/roomCheckInfoGridLine"
                     android:layout_width="0dp"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:background="@color/default_line_cdcdcdd"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_cf0f0f0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.daily.dailyhotel.view.DailyRoomInfoGridView
                     android:id="@+id/roomCheckInfoGridView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="30dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/roomCheckInfoGridLine"/>
+                    app:layout_constraintTop_toBottomOf="@+id/roomCheckInfoGridLine" />
             </android.support.constraint.ConstraintLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="40dp"
                 android:paddingBottom="80dp"
-                app:srcCompat="@drawable/vector_end_list_logo"/>
+                app:srcCompat="@drawable/vector_end_list_logo" />
 
             <!--</android.support.constraint.ConstraintLayout>-->
 

@@ -239,7 +239,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)
                     .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
 
-            val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(position) as StayRoomAdapter.RoomViewHolder
+            val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(position) as? StayRoomAdapter.RoomViewHolder
+                    ?: return@post
 
             val top = viewDataBinding.recyclerView.top
             val paddingTop = roomViewHolder.dataBinding.root.paddingTop

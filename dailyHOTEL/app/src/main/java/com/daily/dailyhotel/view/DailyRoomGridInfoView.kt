@@ -60,8 +60,12 @@ class DailyRoomInfoGridView : LinearLayout {
         viewDataBinding.titleTextView.text = text
     }
 
+    fun setTitleTextSize(size: Float) {
+        viewDataBinding.titleTextView.textSize = size
+    }
+
     fun setTitleVisible(visible: Boolean) {
-        viewDataBinding.titleTextView.visibility = if (visible) View.VISIBLE else View.GONE
+        viewDataBinding.titleTextLayout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setColumnCount(count: Int) {
@@ -97,9 +101,9 @@ class DailyRoomInfoGridView : LinearLayout {
 
             list.forEachIndexed { index, text ->
                 if (index < maxIndex) {
-                    gridLayout.addView(getItemView(type, text))
+                    gridLayout.addView(getItemView(type, text, index >= columnCount))
                 } else {
-                    moreGridLayout.addView(getItemView(type, text))
+                    moreGridLayout.addView(getItemView(type, text, index >= columnCount))
                 }
             }
 
@@ -107,9 +111,9 @@ class DailyRoomInfoGridView : LinearLayout {
             if (remainder != 0) {
                 for (index in 1..columnCount - remainder) {
                     if (hasMore) {
-                        moreGridLayout.addView(getItemView(NONE, ""))
+                        moreGridLayout.addView(getItemView(NONE, "", index >= columnCount))
                     } else {
-                        gridLayout.addView(getItemView(NONE, ""))
+                        gridLayout.addView(getItemView(NONE, "", index >= columnCount))
                     }
                 }
             }
@@ -186,7 +190,7 @@ class DailyRoomInfoGridView : LinearLayout {
         valueAnimator.start()
     }
 
-    private fun getItemView(type: ItemType, text: String): View {
+    private fun getItemView(type: ItemType, text: String, showTopMargin: Boolean): View {
         val iconResId: Int
         val textColorResId: Int
 
@@ -222,6 +226,10 @@ class DailyRoomInfoGridView : LinearLayout {
                 width = 0
                 height = ViewGroup.LayoutParams.WRAP_CONTENT
                 columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f)
+
+                if (showTopMargin) {
+                    topMargin = ScreenUtils.dpToPx(context, 12.0)
+                }
             }
 
             this.layoutParams = params
