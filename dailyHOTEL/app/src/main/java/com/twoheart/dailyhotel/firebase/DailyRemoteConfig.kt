@@ -100,7 +100,7 @@ class DailyRemoteConfig(private val context: Context) {
                         SplashImageDownloadAsyncTask(context).execute(splashDelegate.getUrl(context), it)
                     }
                 } else {
-                    if (Constants.DAILY_INTRO_CURRENT_VERSION < currentUpdateTime && currentUpdateTime < it) {
+                    if (Constants.DAILY_INTRO_CURRENT_VERSION <= currentUpdateTime && currentUpdateTime < it) {
                         SplashImageDownloadAsyncTask(context).execute(splashDelegate.getUrl(context), it)
                     }
                 }
