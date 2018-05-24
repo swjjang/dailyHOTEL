@@ -170,6 +170,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
         viewInterface.setIndicatorText(position + 1)
         viewInterface.setBookingButtonText(position)
+        viewInterface.setInvisibleData(position)
     }
 
     override fun onMoreImageClick(position: Int) {

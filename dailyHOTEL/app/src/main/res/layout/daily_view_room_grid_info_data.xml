@@ -35,6 +35,7 @@
             android:id="@+id/moreGridLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:columnCount="1" />
 
         <com.daily.base.widget.DailyTextView

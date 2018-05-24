@@ -259,8 +259,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             viewDataBinding.invisibleLayout!!.nestedScrollView.setPadding(mTouchHorizontalMargin, mTouchVerticalMargin, mTouchHorizontalMargin, 0)
 
-            setInvisibleData(position)
-
             viewDataBinding.invisibleLayout!!.nestedScrollView.setOnTouchListener(object : View.OnTouchListener {
                 private var mPrevY: Float = 0.toFloat()
 
@@ -320,7 +318,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
     }
 
-    private fun setInvisibleData(position: Int) {
+    override fun setInvisibleData(position: Int) {
         val room = listAdapter.getItem(position) ?: return
 
         val dataBinding: ListRowStayRoomInvisibleLayoutDataBinding = viewDataBinding.invisibleLayout!!

@@ -21,6 +21,8 @@ interface StayRoomsInterface {
 
         fun notifyDataSetChanged()
 
+        fun setInvisibleData(position: Int)
+
         fun setGuideVisible(visible: Boolean)
 
         fun hideGuideAnimation(): Observable<Boolean>
