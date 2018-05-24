@@ -544,6 +544,9 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_CURATION = "DailyHotel_SortFilterSelectView";
         //
         public static final String DAILYHOTEL_DETAIL = "DailyHotel_HotelDetailView";
+        public static final String DAILYHOTEL_HOTELDETAILVIEW_EMPTY = "DailyHotel_HotelDetailView_empty";
+        public static final String INFORMATION_ROOM = "Information_room";
+        public static final String INFORMATION_STAY = "Information_stay";
         public static final String DAILYHOTEL_DETAIL_ROOMTYPE = " DailyHotel_HotelRoomTypeList";
         public static final String DAILYHOTEL_DETAIL_MAP = "DailyHotel_HotelDetailMapView";
         //
@@ -1147,6 +1150,7 @@ public class AnalyticsManager
         public static final String AUTO_SEARCH = "AutoSearch";
         public static final String AUTO_SEARCH_NOT_FOUND = "AutoSearchNotFound";
         public static final String CALL_BUTTON_CLICKED = "CallButtonClicked";
+        public static final String DETAILVIEW_STAY = "detailview_stay";
 
         // Review
         public static final String HOTEL_SATISFACTIONEVALUATION = "HotelSatisfactionEvaluation";

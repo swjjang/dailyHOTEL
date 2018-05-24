@@ -388,7 +388,7 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
         setResult(Activity.RESULT_OK, intent);
 
-        mAnalytics.onEventConfirmClick(getActivity(), mCallByScreen, mCheckInDateTime, mCheckOutDateTime);
+        mAnalytics.onEventConfirmClick(getActivity(), mCallByScreen, mCheckInDateTime, mCheckOutDateTime, mStayIndex);
 
         onBackClick();
     }

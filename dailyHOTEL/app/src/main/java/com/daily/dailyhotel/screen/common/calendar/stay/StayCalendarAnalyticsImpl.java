@@ -46,7 +46,7 @@ public class StayCalendarAnalyticsImpl implements StayCalendarInterface.Analytic
     }
 
     @Override
-    public void onEventConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime)
+    public void onEventConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime, int stayIndex)
     {
         if (activity == null || DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
@@ -59,7 +59,7 @@ public class StayCalendarAnalyticsImpl implements StayCalendarInterface.Analytic
 
             String checkInDate = DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
             String checkOutDate = DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
-            int nights = DailyCalendar.compareDateDay(checkInDateTime, checkOutDateTime);
+            int nights = DailyCalendar.compareDateDay(checkOutDateTime, checkInDateTime);
 
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
@@ -72,6 +72,11 @@ public class StayCalendarAnalyticsImpl implements StayCalendarInterface.Analytic
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED//
                 , (changedDate ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE_) + "-" + checkInDate + "-" + checkOutDate + "-" + phoneDate, params);
 
+            if (stayIndex > 0)
+            {
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.DETAILVIEW_STAY, "filter_date_confirmed"//
+                    , params.get(AnalyticsManager.KeyType.CHECK_IN_DATE) + "_" + params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE) + "_" + nights, null);
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());

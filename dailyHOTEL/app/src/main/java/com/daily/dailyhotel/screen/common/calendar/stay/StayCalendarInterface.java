@@ -59,7 +59,7 @@ public interface StayCalendarInterface
 
         void onEventCloseClick(Activity activity, String callByScreen);
 
-        void onEventConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime);
+        void onEventConfirmClick(Activity activity, String callByScreen, String checkInDateTime, String checkOutDateTime, int stayIndex);
     }
 
 

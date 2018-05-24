@@ -68,7 +68,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.averagePriceTextView.setOnClickListener { listener?.onAveragePriceClick() }
         viewDataBinding.totalPriceTextView.setOnClickListener { listener?.onTotalPriceClick() }
 
-        setPriceAverageType(true)
+        setPriceAverageType(false)
 
         viewDataBinding.roomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener {
             override fun onCalendarClick() {
@@ -158,6 +158,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
             }
 
             if (viewDataBinding.moreRoomsLayout.childCount > 0) {
+                viewDataBinding.moreRoomsLayout.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                 viewDataBinding.moreRoomsLayout.doOnPreDraw {
                     it.tag = it.height
                     it.layoutParams.height = 0
@@ -183,13 +184,16 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.actionButtonGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int, colorResourceId: Int) {
+    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int,
+                        textColorResourceId: Int, backgroundResourceId: Int) {
         viewDataBinding.actionButtonTextView.apply {
             this.text = text
             setCompoundDrawablesWithIntrinsicBounds(leftResourceId, 0, rightResourceId, 0)
             compoundDrawablePadding = drawablePadding
-            setTextColor(context.resources.getColor(colorResourceId))
+            setTextColor(context.resources.getColor(textColorResourceId))
         }
+
+        viewDataBinding.actionButtonView.setBackgroundResource(backgroundResourceId)
     }
 
     fun showMoreRoom(animated: Boolean): Completable {

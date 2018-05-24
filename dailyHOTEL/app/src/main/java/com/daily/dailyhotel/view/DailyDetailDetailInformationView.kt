@@ -83,6 +83,7 @@ class DailyDetailDetailInformationView : LinearLayout {
             })
 
             viewDataBinding.moreInformationLayout.visibility = View.INVISIBLE
+            viewDataBinding.moreInformationLayout.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             viewDataBinding.moreInformationLayout.doOnPreDraw {
                 it.tag = it.height
                 it.layoutParams.height = 0
@@ -144,7 +145,7 @@ class DailyDetailDetailInformationView : LinearLayout {
                 }
             }
 
-            it.description.takeNotEmpty {
+            it.descriptionList.takeNotEmpty {
                 it.filter { !it.isTextEmpty() }.forEach {
                     viewDataBinding.informationLayout.addView(getContentBulletView(it))
                 }
