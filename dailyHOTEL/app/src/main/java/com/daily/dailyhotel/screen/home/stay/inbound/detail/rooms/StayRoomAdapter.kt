@@ -482,7 +482,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         dataBinding.roomDescriptionGridView.columnCount = 1
         dataBinding.roomDescriptionGridView.setData(
                 context.resources.getString(R.string.label_stay_room_description_title)
-                ,DailyRoomInfoGridView.ItemType.DOT, descriptionList, false)
+                , DailyRoomInfoGridView.ItemType.DOT, descriptionList, false)
     }
 
     private fun setRoomAmenityInformationView(dataBinding: ListRowStayRoomDataBinding, amenityList: MutableList<String>) {
@@ -541,7 +541,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
                 val subDescription = if (it.maxPersons > 0) context.resources.getString(R.string.label_room_max_person_range_format, it.maxPersons) else ""
 
-                dataBinding.extraChargePersonTableLayout.addTableRow(title, getExtraChargePrice(it.amount), subDescription)
+                dataBinding.extraChargePersonTableLayout.addTableRow(title, getExtraChargePrice(it.amount), subDescription, false)
             }
         }
 
@@ -556,11 +556,15 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.extraChargeBedTableLayout.clearTableLayout()
 
             (info.extraInformation.extraBeddingEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(context.resources.getString(R.string.label_bedding), getExtraChargePrice(info.extraInformation.extraBedding))
+                dataBinding.extraChargeBedTableLayout.addTableRow(
+                        context.resources.getString(R.string.label_bedding)
+                        , getExtraChargePrice(info.extraInformation.extraBedding), "", false)
             }
 
             (info.extraInformation.extraBedEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(context.resources.getString(R.string.label_extra_bed), getExtraChargePrice(info.extraInformation.extraBed))
+                dataBinding.extraChargeBedTableLayout.addTableRow(
+                        context.resources.getString(R.string.label_extra_bed)
+                        , getExtraChargePrice(info.extraInformation.extraBed), "", false)
             }
 
             dataBinding.extraChargeBedTableLayout.visibility = if (itemCount == 0) View.GONE else View.VISIBLE
@@ -580,7 +584,9 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
             dataBinding.extraChargeNightsTableLayout.clearTableLayout()
 
-            dataBinding.extraChargeNightsTableLayout.addTableRow(context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title), getExtraChargePrice(info.consecutiveInformation.charge))
+            dataBinding.extraChargeNightsTableLayout.addTableRow(
+                    context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title)
+                    , getExtraChargePrice(info.consecutiveInformation.charge), "", false)
         }
     }
 

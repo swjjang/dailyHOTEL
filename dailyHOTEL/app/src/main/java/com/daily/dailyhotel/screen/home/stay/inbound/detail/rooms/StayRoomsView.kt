@@ -703,6 +703,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             dataBinding.extraChargePersonTableLayout.visibility = View.VISIBLE
 
             dataBinding.extraChargePersonTableLayout.setTitleText(R.string.label_stay_room_extra_charge_person_title)
+            dataBinding.extraChargePersonTableLayout.setTitleTextSize(ScreenUtils.dpToPx(context, 16.0).toFloat())
             dataBinding.extraChargePersonTableLayout.setTitleVisible(true)
             dataBinding.extraChargePersonTableLayout.clearTableLayout()
 
@@ -713,7 +714,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                 val subDescription = if (it.maxPersons > 0) context.resources.getString(R.string.label_room_max_person_range_format, it.maxPersons) else ""
 
-                dataBinding.extraChargePersonTableLayout.addTableRow(title, listAdapter.getExtraChargePrice(it.amount), subDescription)
+                dataBinding.extraChargePersonTableLayout.addTableRow(title, listAdapter.getExtraChargePrice(it.amount), subDescription, true)
             }
         }
 
@@ -725,14 +726,19 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             dataBinding.extraChargeBedTableLayout.setTitleVisible(true)
             dataBinding.extraChargeBedTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
+            dataBinding.extraChargePersonTableLayout.setTitleTextSize(ScreenUtils.dpToPx(context, 16.0).toFloat())
             dataBinding.extraChargeBedTableLayout.clearTableLayout()
 
             (info.extraInformation.extraBeddingEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(context.resources.getString(R.string.label_bedding), listAdapter.getExtraChargePrice(info.extraInformation.extraBedding))
+                dataBinding.extraChargeBedTableLayout.addTableRow(
+                        context.resources.getString(R.string.label_bedding)
+                        , listAdapter.getExtraChargePrice(info.extraInformation.extraBedding), "", true)
             }
 
             (info.extraInformation.extraBedEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(context.resources.getString(R.string.label_extra_bed), listAdapter.getExtraChargePrice(info.extraInformation.extraBed))
+                dataBinding.extraChargeBedTableLayout.addTableRow(
+                        context.resources.getString(R.string.label_extra_bed)
+                        , listAdapter.getExtraChargePrice(info.extraInformation.extraBed), "", false)
             }
 
             dataBinding.extraChargeBedTableLayout.visibility = if (listAdapter.itemCount == 0) View.GONE else View.VISIBLE
@@ -750,9 +756,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             dataBinding.extraChargeNightsTableLayout.setTitleVisible(true)
             dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
+            dataBinding.extraChargePersonTableLayout.setTitleTextSize(ScreenUtils.dpToPx(context, 16.0).toFloat())
             dataBinding.extraChargeNightsTableLayout.clearTableLayout()
 
-            dataBinding.extraChargeNightsTableLayout.addTableRow(context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title), listAdapter.getExtraChargePrice(info.consecutiveInformation.charge))
+            dataBinding.extraChargeNightsTableLayout.addTableRow(
+                    context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title)
+                    , listAdapter.getExtraChargePrice(info.consecutiveInformation.charge), "", false)
         }
     }
 
