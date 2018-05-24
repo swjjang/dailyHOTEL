@@ -158,6 +158,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
             }
 
             if (viewDataBinding.moreRoomsLayout.childCount > 0) {
+                viewDataBinding.moreRoomsLayout.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                 viewDataBinding.moreRoomsLayout.doOnPreDraw {
                     it.tag = it.height
                     it.layoutParams.height = 0

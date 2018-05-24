@@ -114,7 +114,7 @@ class StayDetailk : Configurations() {
 
     class BreakfastInformation {
         var items: List<Item>? = null
-        var description: List<String>? = null
+        var descriptionList: List<String>? = null
 
         class Item {
             var amount: Int = 0

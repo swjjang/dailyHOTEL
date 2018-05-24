@@ -53,6 +53,10 @@ class DailyDetailFacilitiesView : ConstraintLayout {
                 viewDataBinding.facilitiesGridLayout.addView(getFacilitiesView(it))
 
             }
+
+            for (i in 0..it.size % 5) {
+                viewDataBinding.facilitiesGridLayout.addView(getFacilitiesEmptyView())
+            }
         }
     }
 
@@ -76,4 +80,19 @@ class DailyDetailFacilitiesView : ConstraintLayout {
         }
     }
 
+    private fun getFacilitiesEmptyView(): View {
+        return DailyTextView(context).apply {
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11.0f)
+            gravity = Gravity.CENTER_HORIZONTAL
+
+            val layoutParams = android.support.v7.widget.GridLayout.LayoutParams()
+            layoutParams.width = 0
+            layoutParams.height = android.support.v7.widget.GridLayout.LayoutParams.WRAP_CONTENT
+            layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f)
+            layoutParams.topMargin = ScreenUtils.dpToPx(context, 11.0)
+            layoutParams.bottomMargin = ScreenUtils.dpToPx(context, 12.0)
+
+            setLayoutParams(layoutParams)
+        }
+    }
 }

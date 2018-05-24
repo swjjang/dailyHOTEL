@@ -526,8 +526,8 @@ public class StayDetailData
     @JsonObject
     static class BreakfastData
     {
-        @JsonField(name = "description")
-        public List<String> description;
+        @JsonField(name = "descriptions")
+        public List<String> descriptions;
 
         @JsonField(name = "items")
         public List<ItemData> items;
@@ -568,7 +568,7 @@ public class StayDetailData
         {
             StayDetailk.BreakfastInformation breakfastInformation = new StayDetailk.BreakfastInformation();
 
-            breakfastInformation.setDescription(description);
+            breakfastInformation.setDescriptionList(descriptions);
 
             if (items != null && items.size() > 0)
             {
