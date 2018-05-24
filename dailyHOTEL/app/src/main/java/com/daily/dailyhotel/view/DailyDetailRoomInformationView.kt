@@ -183,13 +183,16 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.actionButtonGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int, colorResourceId: Int) {
+    fun setActionButton(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int,
+                        textColorResourceId: Int, backgroundResourceId: Int) {
         viewDataBinding.actionButtonTextView.apply {
             this.text = text
             setCompoundDrawablesWithIntrinsicBounds(leftResourceId, 0, rightResourceId, 0)
             compoundDrawablePadding = drawablePadding
-            setTextColor(context.resources.getColor(colorResourceId))
+            setTextColor(context.resources.getColor(textColorResourceId))
         }
+
+        viewDataBinding.actionButtonView.setBackgroundResource(backgroundResourceId)
     }
 
     fun showMoreRoom(animated: Boolean): Completable {

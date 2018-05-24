@@ -105,6 +105,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
     private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
     private var resetRoomFilterAfterRefresh = true
+    private var checkChangedPrice = false
 
     private val bookDateTime = StayBookDateTime()
     private val commonDateTime = CommonDateTime()
@@ -297,8 +298,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             }
         }
 
-        analytics.onScreen(activity, bookDateTime, stayDetail, viewPrice)
-
         return super.onBackPressed()
     }
 
@@ -431,7 +430,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             unLockAll()
             disposable?.dispose()
-
         }, {
             ExLog.e(it.toString())
 
@@ -643,6 +641,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
         stayDetail?.let {
             addCompositeDisposable(viewInterface.showRoomFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
+
+            analytics.onEventRoomFilterClick(activity)
         } ?: Util.restartApp(activity)
 
     }
@@ -725,13 +725,17 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let {
             val completable: Completable = if (expanded) {
                 if (checkedRoomFilter()) {
-                    resetRoomFilter()
+                    onResetRoomFilterClick()
                     setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
                     viewInterface.scrollRoomInformation()
+
+                    analytics.onEventResetFilterAndShowAllRoom(activity)
 
                     viewInterface.showMoreRooms(false)
                 } else {
                     viewInterface.hideMoreRooms()
+
+                    analytics.onEventUnfoldRoom(activity, false)
 
                     Completable.complete()
                 }
@@ -740,15 +744,19 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     val showViewRoomMaxCount = 5
 
                     if (getRoomFilterCount(stayDetail?.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) > showViewRoomMaxCount) {
+                        analytics.onEventFoldRoom(activity, true)
                         viewInterface.showMoreRooms(true)
                     } else {
-                        resetRoomFilter()
+                        onResetRoomFilterClick()
                         setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
                         viewInterface.scrollRoomInformation()
+
+                        analytics.onEventResetFilterAndShowAllRoom(activity)
 
                         viewInterface.showMoreRooms(false)
                     }
                 } else {
+                    analytics.onEventFoldRoom(activity, false)
                     viewInterface.showMoreRooms(true)
                 }
             }
@@ -1030,6 +1038,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         unLockAll()
     }
 
+    override fun onScrolledBaseInformation() {
+        analytics.onScreen(activity)
+    }
+
+    override fun onScrolledRoomInformation() {
+        analytics.onScreenRoomInformation(activity)
+    }
+
+    override fun onScrolledStayInformation() {
+        analytics.onScreenStayInformation(activity)
+    }
+
     private fun resetRoomFilter() {
         bedTypeFilter.clear()
         facilitiesFilter.clear()
@@ -1044,6 +1064,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             viewInterface.scrollRoomInformation()
             unLockAll()
             onCloseRoomFilterClick()
+
+            analytics.onEventConfirmRoomFilterClick(activity, bedTypeFilter, facilitiesFilter)
         } ?: Util.restartApp(activity)
     }
 
@@ -1114,10 +1136,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                 viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
-
             }
 
-            status = if (isSoldOut()) Status.SOLD_OUT else Status.BOOKING
+            checkChangedPrice(hasDeepLink, it, viewPrice, checkChangedPrice == false)
+            checkChangedPrice = true
+
+            status = if (isSoldOut()) {
+                analytics.onScreenSoldOut(activity)
+                Status.SOLD_OUT
+            } else {
+                analytics.onScreen(activity, bookDateTime, stayDetail, viewPrice)
+                Status.BOOKING
+            }
 
             when {
                 showCalendar -> {
@@ -1143,6 +1173,35 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private fun hasBenefitContents(benefitInformation: StayDetailk.BenefitInformation?): Boolean {
         return benefitInformation != null && (!benefitInformation.title.isTextEmpty() || benefitInformation.contentList.isNotNullAndNotEmpty())
+    }
+
+    private fun checkChangedPrice(isDeepLink: Boolean, stayDetail: StayDetailk, listViewPrice: Int, compareListPrice: Boolean) {
+        if (isSoldOut()) {
+            setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
+
+            viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                    , getString(R.string.label_changing_date), { v -> onCalendarClick() }, null, true)
+        } else {
+            if (!isDeepLink && compareListPrice) {
+                val hasPrice = if (listViewPrice == StayDetailActivity.NONE_PRICE) {
+                    true
+                } else {
+                    stayDetail.roomInformation?.roomList?.takeWhile {
+                        listViewPrice == it.amountInformation.discountAverage
+                    }?.isNotEmpty()
+                }
+
+                if (hasPrice != true) {
+                    setResult(BaseActivity.RESULT_CODE_REFRESH,
+                            Intent().putExtra(com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE, true))
+
+                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
+                            , getString(R.string.dialog_btn_text_confirm), null)
+
+                    analytics.onEventChangedPrice(activity, isDeepLink, stayDetail.baseInformation?.name, false)
+                }
+            }
+        }
     }
 
     private fun notifyRewardDataSetChanged() {
@@ -1222,7 +1281,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         R.drawable.ic_refresh,
                         0,
                         ScreenUtils.dpToPx(activity, 8.0),
-                        R.color.default_text_c4d4d4d)
+                        R.color.default_text_c4d4d4d,
+                        R.drawable.shape_fillrect_le8e8e9_bfafafb_r3)
             } else {
                 viewInterface.setRoomActionButtonText(getString(R.string.label_collapse), 0, R.drawable.vector_roomlist_ic_sub_v, ScreenUtils.dpToPx(activity, 4.0))
             }
@@ -1240,7 +1300,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                             R.drawable.ic_refresh,
                             0,
                             ScreenUtils.dpToPx(activity, 8.0),
-                            R.color.default_text_c4d4d4d)
+                            R.color.default_text_c4d4d4d,
+                            R.drawable.shape_fillrect_le8e8e9_bfafafb_r3)
                 } else {
                     viewInterface.setRoomActionButtonVisible(false)
                 }

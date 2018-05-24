@@ -173,6 +173,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         val stickyTopHeight = ScreenUtils.dpToPx(context, 69.0)
         val stickyHeight = ScreenUtils.dpToPx(context, 58.0)
 
+        var previousInformationPosition = -1
+
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
             if (getViewDataBinding().scrollLayout.childCount < 2) {
                 getViewDataBinding().toolbarView.visibility = View.GONE
@@ -190,15 +192,21 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             getViewDataBinding().fakeVRImageView.isEnabled = scrollY <= toolbarHeight
 
             val targetY = scrollY + toolbarHeight + tabLayoutHeight
+            var scrollInformationPosition = 0
 
             if (getViewDataBinding().roomInformationTopLineView.y >= targetY) {
                 hideTabLayout()
                 hideRoomDetailButton()
+
+                scrollInformationPosition = 0
+
             } else {
                 showTabLayout()
 
                 viewDataBinding.roomInformationTextView.isSelected = true
                 viewDataBinding.stayInformationTextView.isSelected = false
+
+                scrollInformationPosition = 1
             }
 
             if (getViewDataBinding().roomInformationView.y + stickyTopHeight >= targetY) {
@@ -214,6 +222,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                     viewDataBinding.roomInformationTextView.isSelected = true
                     viewDataBinding.stayInformationTextView.isSelected = false
 
+                    scrollInformationPosition = 1
+
                     hideRoomDetailButton()
                 } else {
                     translationRoomFilterLayout((getViewDataBinding().roomInformationView.bottom - transitionY).toFloat())
@@ -222,13 +232,27 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                         viewDataBinding.roomInformationTextView.isSelected = true
                         viewDataBinding.stayInformationTextView.isSelected = false
 
+                        scrollInformationPosition = 1
+
                         hideRoomDetailButton()
                     } else {
                         viewDataBinding.roomInformationTextView.isSelected = false
                         viewDataBinding.stayInformationTextView.isSelected = true
 
+                        scrollInformationPosition = 2
+
                         showRoomDetailButton()
                     }
+                }
+            }
+
+            (previousInformationPosition != scrollInformationPosition).runTrue {
+                previousInformationPosition = scrollInformationPosition
+
+                when (scrollInformationPosition) {
+                    0 -> eventListener.onScrolledBaseInformation()
+                    1 -> eventListener.onScrolledRoomInformation()
+                    2 -> eventListener.onScrolledStayInformation()
                 }
             }
         })
@@ -578,6 +602,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             if (trueReviewInformation.reviewTotalCount > 0) {
                 setShowTrueReviewButtonVisible(true)
                 setShowTrueReviewButtonText(trueReviewInformation.reviewTotalCount)
+                setTrueReviewClickListener(View.OnClickListener { eventListener.onTrueReviewClick() })
             } else {
                 setShowTrueReviewButtonVisible(false)
             }
@@ -654,8 +679,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.roomInformationView.setActionButtonVisible(visible)
     }
 
-    override fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int, colorResourceId: Int) {
-        viewDataBinding.roomInformationView.setActionButton(text, leftResourceId, rightResourceId, drawablePadding, colorResourceId)
+    override fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int,
+                                         textColorResourceId: Int, backgroundResourceId: Int) {
+        viewDataBinding.roomInformationView.setActionButton(text, leftResourceId, rightResourceId, drawablePadding, textColorResourceId, backgroundResourceId)
     }
 
     override fun setDailyCommentVisible(visible: Boolean) {

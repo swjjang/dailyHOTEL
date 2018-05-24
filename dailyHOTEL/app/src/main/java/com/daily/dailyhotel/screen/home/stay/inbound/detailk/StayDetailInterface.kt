@@ -17,7 +17,6 @@ import io.reactivex.Observable
 interface StayDetailInterface {
     interface ViewInterface : BaseDialogViewInterface {
 
-
         fun setInitializedLayout(name: String?, url: String?)
 
         fun setTransitionVisible(visible: Boolean)
@@ -75,7 +74,8 @@ interface StayDetailInterface {
                                     leftResourceId: Int = 0,
                                     rightResourceId: Int = 0,
                                     drawablePadding: Int = 0,
-                                    colorResourceId: Int = R.color.default_text_ceb2135)
+                                    textColorResourceId: Int = R.color.default_text_ceb2135,
+                                    backgroundResourceId: Int = R.drawable.shape_fillrect_leb2135_bffffff_r3)
 
         fun setRoomList(roomList: List<Room>?)
 
@@ -222,6 +222,12 @@ interface StayDetailInterface {
         fun onConfirmRoomFilterClick()
 
         fun onCloseRoomFilterClick()
+
+        fun onScrolledBaseInformation()
+
+        fun onScrolledRoomInformation()
+
+        fun onScrolledStayInformation()
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {
@@ -231,13 +237,13 @@ interface StayDetailInterface {
 
         fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int)
 
-        fun onScreenRoomList(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk, priceFromList: Int)
+        fun onScreen(activity: Activity)
 
-        fun onEventRoomListOpenClick(activity: Activity, stayName: String)
+        fun onScreenSoldOut(activity: Activity)
 
-        fun onEventRoomListCloseClick(activity: Activity, stayName: String)
+        fun onScreenRoomInformation(activity: Activity)
 
-        fun onEventRoomClick(activity: Activity, roomName: String)
+        fun onScreenStayInformation(activity: Activity)
 
         fun onEventShareKakaoClick(activity: Activity, login: Boolean, userType: String, benefitAlarm: Boolean//
                                    , stayIndex: Int, stayName: String?)
@@ -252,13 +258,9 @@ interface StayDetailInterface {
 
         fun onEventShare(activity: Activity)
 
-        fun onEventChangedPrice(activity: Activity, deepLink: Boolean, stayName: String, soldOut: Boolean)
+        fun onEventChangedPrice(activity: Activity, deepLink: Boolean, stayName: String?, soldOut: Boolean)
 
         fun onEventCalendarClick(activity: Activity)
-
-        fun onEventBookingClick(activity: Activity, stayBookDateTime: StayBookDateTime//
-                                , stayIndex: Int, stayName: String, roomName: String, discountPrice: Int, category: String//
-                                , provideRewardSticker: Boolean, isOverseas: Boolean)
 
         fun onEventTrueReviewClick(activity: Activity)
 
@@ -272,7 +274,7 @@ interface StayDetailInterface {
 
         fun onEventClipAddressClick(activity: Activity, stayName: String?)
 
-        fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk, priceFromList: Int, myWish: Boolean)
+        fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int, myWish: Boolean)
 
         fun onEventCallClick(activity: Activity)
 
@@ -287,5 +289,15 @@ interface StayDetailInterface {
         fun onEventTrueAwards(activity: Activity, stayIndex: Int)
 
         fun onEventTrueAwardsClick(activity: Activity, stayIndex: Int)
+
+        fun onEventRoomFilterClick(activity: Activity)
+
+        fun onEventConfirmRoomFilterClick(activity: Activity, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>)
+
+        fun onEventResetFilterAndShowAllRoom(activity: Activity)
+
+        fun onEventFoldRoom(activity: Activity, filtered: Boolean)
+
+        fun onEventUnfoldRoom(activity: Activity, filtered: Boolean)
     }
 }

@@ -55,4 +55,8 @@ class DailyDetailTrueReviewExView : ConstraintLayout {
     fun setShowTrueReviewButtonText(reviewCount: Int) {
         viewDataBinding.showTrueReviewTextView.text = context.getString(R.string.label_detail_view_show_true_review, reviewCount)
     }
+
+    fun setTrueReviewClickListener(listener: View.OnClickListener) {
+        viewDataBinding.showTrueReviewTextView.setOnClickListener(listener)
+    }
 }
