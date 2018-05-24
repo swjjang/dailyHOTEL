@@ -41,6 +41,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
         const val INTENT_EXTRA_POSITION = "position"
 
         const val REQUEST_CODE_TRUE_VR = 10000
+        const val REQUEST_CODE_IMAGE_LIST = 10001
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

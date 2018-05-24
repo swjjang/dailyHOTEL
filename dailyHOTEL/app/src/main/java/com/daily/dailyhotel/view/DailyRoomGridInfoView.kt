@@ -101,6 +101,7 @@ class DailyRoomInfoGridView : LinearLayout {
 
             gridLayout.removeAllViews()
             moreGridLayout.removeAllViews()
+            moreGridLayout.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
 
             list.takeNotEmpty {
                 gridLayout.visibility = View.VISIBLE

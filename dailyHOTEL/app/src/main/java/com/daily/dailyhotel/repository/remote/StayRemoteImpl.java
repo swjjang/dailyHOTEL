@@ -235,20 +235,17 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         urlParams.put("{roomIndex}", Integer.toString(roomIndex));
 
         return mDailyMobileService.getRoomImages(Crypto.getUrlDecoderEx(API, urlParams)) //
-            .subscribeOn(Schedulers.io()).map(baseListDto -> {
+            .subscribeOn(Schedulers.io()).map(baseDto -> {
                 List<RoomImageInformation> roomImageInformationList = new ArrayList<>();
 
-                if (baseListDto != null)
+                if (baseDto != null)
                 {
-                    if (baseListDto.msgCode == 100 && baseListDto.data != null)
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        for (RoomImageInformationData roomImageInformationData : baseListDto.data)
-                        {
-                            roomImageInformationList.add(roomImageInformationData.getRoomImageInformation());
-                        }
+                        roomImageInformationList = baseDto.data.getRoomImageList();
                     } else
                     {
-                        throw new BaseException(baseListDto.msgCode, baseListDto.msg);
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
                     }
                 } else
                 {

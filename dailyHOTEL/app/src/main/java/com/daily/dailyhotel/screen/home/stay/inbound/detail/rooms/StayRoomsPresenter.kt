@@ -6,14 +6,15 @@ import android.content.Intent
 import android.view.View
 import android.widget.CompoundButton
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.Room
-import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.TrueVR
+import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.RoomParcel
+import com.daily.dailyhotel.repository.remote.StayRemoteImpl
+import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.runFalse
 import com.daily.dailyhotel.util.runTrue
+import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity
 import com.twoheart.dailyhotel.util.Constants
@@ -32,6 +33,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
     private var position = 0
     private var centerPosition = -1
+    private val stayRemoteImpl = StayRemoteImpl()
 
     private val analytics: StayRoomsInterface.AnalyticsInterface by lazy {
         StayRoomsAnalyticsImpl()
@@ -176,11 +178,33 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onMoreImageClick(position: Int) {
         lock().runTrue { return }
 
-        // TODO : 객실 이미지 전체를 서버에서 가져와서 이미지 목록 띄우는 소스 필요
         val room = roomList[position]
 
-//        startActivityForResult(ImageListActivity.newInstance(activity, mStayDetail.name//
-//                , mStayDetail.getImageInformationList(), position, analyticsParam), StayDetailActivity.REQUEST_CODE_IMAGE_LIST)
+        addCompositeDisposable(stayRemoteImpl.getRoomImages(stayIndex, room.index)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()
+                ).subscribe({
+                    var imageList = mutableListOf<DetailImageInformation>()
+                    it.forEach {
+                        val info = DetailImageInformation()
+                        info.caption = it.description
+                        info.imageMap = ImageMap().apply({
+                            smallUrl = it.url
+                            mediumUrl = it.url
+                            bigUrl = it.url
+                        })
+
+                        imageList.add(info)
+                    }
+
+                    imageList.takeNotEmpty {
+                        startActivityForResult(ImageListActivity.newInstance(activity, room.name
+                                , it, 0, null), StayRoomsActivity.REQUEST_CODE_IMAGE_LIST)
+                    }
+
+                    unLockAll()
+                }, {
+                    onHandleError(it)
+                }))
     }
 
     override fun onVrImageClick(position: Int) {

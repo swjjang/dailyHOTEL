@@ -765,26 +765,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
     }
 
-//    private fun getPersonRangeText(minAge: Int, maxAge: Int): String {
-//        return if (minAge == -1 && maxAge == -1) {
-//            ""
-//        } else if (minAge != -1 && maxAge != -1) {
-//            context.resources.getString(R.string.label_person_age_range_format, minAge, maxAge)
-//        } else if (minAge != -1) {
-//            context.resources.getString(R.string.label_person_age_and_over_format, minAge)
-//        } else {
-//            context.resources.getString(R.string.label_person_age_under_format, maxAge)
-//        }
-//    }
-//
-//    private fun getExtraChargePrice(price: Int): String {
-//        if (price <= 0) {
-//            return context.resources.getString(R.string.label_free)
-//        }
-//
-//        return DailyTextUtils.getPriceFormat(context, price, false)
-//    }
-
     private fun setNeedToKnowInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, needToKnowList: MutableList<String>?) {
         if (needToKnowList == null || needToKnowList.size == 0) {
             dataBinding.roomCheckInfoGroup.visibility = View.GONE
@@ -808,11 +788,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val horizontalRatio = mTouchHorizontalMargin.toFloat() / mTouchVerticalMargin.toFloat()
         val horizontalGap = (if (increasing) mTouchHorizontalMargin else 0) + gap * horizontalRatio
-        val horizontal: Int
-        if (horizontalGap > 0) {
-            horizontal = if (horizontalGap > mTouchHorizontalMargin) mTouchHorizontalMargin else Math.round(horizontalGap)
+        val horizontal: Int = if (horizontalGap > 0) {
+            if (horizontalGap > mTouchHorizontalMargin) mTouchHorizontalMargin else Math.round(horizontalGap)
         } else {
-            horizontal = 0
+            0
         }
 
         val vertical: Float
