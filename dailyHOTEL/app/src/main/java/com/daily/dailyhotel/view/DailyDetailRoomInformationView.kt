@@ -68,7 +68,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.averagePriceTextView.setOnClickListener { listener?.onAveragePriceClick() }
         viewDataBinding.totalPriceTextView.setOnClickListener { listener?.onTotalPriceClick() }
 
-        setPriceAverageType(true)
+        setPriceAverageType(false)
 
         viewDataBinding.roomFilterView.setRoomFilterListener(object : DailyDetailRoomFilterView.OnDailyDetailRoomFilterListener {
             override fun onCalendarClick() {

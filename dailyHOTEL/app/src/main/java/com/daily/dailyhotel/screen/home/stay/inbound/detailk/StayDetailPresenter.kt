@@ -101,7 +101,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showCalendar = false
     private var showTrueVR = false
     private var deepLink: DailyDeepLink? = null
-    private var showRoomPriceType: PriceType = PriceType.AVERAGE
+    private var showRoomPriceType: PriceType = PriceType.TOTAL
     private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
     private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
     private var resetRoomFilterAfterRefresh = true
@@ -273,7 +273,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         when (status) {
             Status.FINISH -> return false
 
-            Status.ROOM_FILTER -> onCloseRoomFilterClick()
+            Status.ROOM_FILTER -> {
+                onCloseRoomFilterClick()
+                return true
+            }
 
             Status.NONE -> return false
 
@@ -339,6 +342,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                         bookDateTime.setBookDateTime(checkInDateTime, checkOutDateTime)
                         isRefresh = true
+
+                        onPriceTypeClick(if (bookDateTime.nights > 1) PriceType.AVERAGE else PriceType.TOTAL)
 
                         viewInterface.scrollRoomInformation()
                     } catch (e: Exception) {
@@ -725,7 +730,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let {
             val completable: Completable = if (expanded) {
                 if (checkedRoomFilter()) {
-                    onResetRoomFilterClick()
+                    setResetRoomFilter()
                     setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
                     viewInterface.scrollRoomInformation()
 
@@ -747,7 +752,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         analytics.onEventFoldRoom(activity, true)
                         viewInterface.showMoreRooms(true)
                     } else {
-                        onResetRoomFilterClick()
+                        setResetRoomFilter()
                         setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
                         viewInterface.scrollRoomInformation()
 
@@ -1028,14 +1033,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onResetRoomFilterClick() {
         if (lock()) return
 
+        setResetRoomFilter()
+
+        unLockAll()
+    }
+
+    private fun setResetRoomFilter() {
         resetRoomFilter()
 
         stayDetail?.let {
             viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
             viewInterface.setSelectedRoomFilterCount(it.roomInformation?.roomList?.size ?: 0)
         }
-
-        unLockAll()
     }
 
     override fun onScrolledBaseInformation() {
