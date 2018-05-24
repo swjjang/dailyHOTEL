@@ -179,6 +179,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             recyclerView.adapter = listAdapter
 
+            bookingTextView.setOnClickListener(this@StayRoomsView)
+
             guideLayout.setOnClickListener(this@StayRoomsView)
             guideLayout.visibility = View.GONE
         }

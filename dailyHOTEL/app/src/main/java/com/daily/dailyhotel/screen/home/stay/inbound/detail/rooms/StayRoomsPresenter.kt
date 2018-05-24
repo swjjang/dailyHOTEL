@@ -160,9 +160,16 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onBookingClick() {
         lock().runTrue { return }
 
+        // TODO : 결제 넘기는 부분 상세에서 진행 할지 Sheldon 과 이야기 필요!
         val intent = Intent()
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+        if (centerPosition in 0..roomList.size) {
+            val room = roomList[centerPosition]
+            intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM, RoomParcel(room))
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        } else {
+            // TODO : error 처리 필요한지 확인 필요
+        }
     }
 
     override fun onScrolled(position: Int, real: Boolean) {
