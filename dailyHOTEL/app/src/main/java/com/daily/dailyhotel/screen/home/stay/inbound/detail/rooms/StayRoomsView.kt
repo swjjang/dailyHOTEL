@@ -519,9 +519,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         attribute.isEntireHouse.runTrue { titleText += "/" + context.resources.getString(R.string.label_room_type_entire_house) }
         attribute.isDuplex.run { titleText += "/" + context.resources.getString(R.string.label_room_type_duplex_room) }
 
-        dataBinding.subInfoGridView.setTitleText(titleText)
-        dataBinding.subInfoGridView.setTitleVisible(true)
-        dataBinding.subInfoGridView.setColumnCount(2)
+        dataBinding.subInfoGridView.columnCount = 2
 
         val stringList = mutableListOf<String>()
         var roomString = ""
@@ -566,7 +564,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             stringList.add(0, roomString)
         }
 
-        dataBinding.subInfoGridView.setData(DailyRoomInfoGridView.ItemType.NONE, stringList)
+        dataBinding.subInfoGridView.setData(titleText, DailyRoomInfoGridView.ItemType.NONE, stringList, true)
     }
 
     private fun setRoomBenefitInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, benefitList: MutableList<String>) {
@@ -577,9 +575,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.roomBenefitGroup.visibility = View.VISIBLE
 
-        dataBinding.roomBenefitGridView.setTitleText(R.string.label_stay_room_benefit_title)
-        dataBinding.roomBenefitGridView.setColumnCount(1)
-        dataBinding.roomBenefitGridView.setData(DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList)
+        dataBinding.roomBenefitGridView.columnCount = 1
+        dataBinding.roomBenefitGridView.setData(
+                context.resources.getString(R.string.label_stay_room_benefit_title)
+                , DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList, true)
     }
 
     private fun setRewardAndCouponInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, rewardable: Boolean, useCoupon: Boolean) {
@@ -652,9 +651,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.roomDescriptionGroup.visibility = View.VISIBLE
 
-        dataBinding.roomDescriptionGridView.setTitleText(R.string.label_stay_room_description_title)
-        dataBinding.roomDescriptionGridView.setColumnCount(1)
-        dataBinding.roomDescriptionGridView.setData(DailyRoomInfoGridView.ItemType.DOT, descriptionList)
+        dataBinding.roomDescriptionGridView.columnCount = 1
+        dataBinding.roomDescriptionGridView.setData(
+                context.resources.getString(R.string.label_stay_room_description_title)
+                , DailyRoomInfoGridView.ItemType.DOT, descriptionList, true)
     }
 
     private fun setRoomAmenityInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, amenityList: MutableList<String>) {
@@ -680,9 +680,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
 
         dataBinding.roomAmenityGroup.visibility = View.VISIBLE
-        dataBinding.roomAmenityGridView.setTitleText(R.string.label_stay_room_amenity_title)
-        dataBinding.roomAmenityGridView.setColumnCount(2)
-        dataBinding.roomAmenityGridView.setData(DailyRoomInfoGridView.ItemType.DOT, list)
+        dataBinding.roomAmenityGridView.columnCount = 2
+        dataBinding.roomAmenityGridView.setData(
+                context.resources.getString(R.string.label_stay_room_amenity_title)
+                , DailyRoomInfoGridView.ItemType.DOT, list, true)
     }
 
     private fun setRoomChargeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, info: Room.ChargeInformation?) {
@@ -736,9 +737,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             dataBinding.extraChargeBedTableLayout.visibility = if (listAdapter.itemCount == 0) View.GONE else View.VISIBLE
 
-            dataBinding.extraChargeDescriptionGridView.setColumnCount(1)
-            dataBinding.extraChargeDescriptionGridView.setTitleVisible(false)
-            dataBinding.extraChargeDescriptionGridView.setData(DailyRoomInfoGridView.ItemType.DOT, info.extraInformation.descriptionList)
+            dataBinding.extraChargeDescriptionGridView.columnCount = 1
+            dataBinding.extraChargeDescriptionGridView.setData(
+                    ""
+                    , DailyRoomInfoGridView.ItemType.DOT, info.extraInformation.descriptionList, true)
         }
 
         if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
@@ -782,9 +784,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.roomCheckInfoGroup.visibility = View.VISIBLE
 
-        dataBinding.roomCheckInfoGridView.setTitleText(R.string.label_stay_room_need_to_know_title)
-        dataBinding.roomCheckInfoGridView.setColumnCount(1)
-        dataBinding.roomCheckInfoGridView.setData(DailyRoomInfoGridView.ItemType.DOT, needToKnowList)
+        dataBinding.roomCheckInfoGridView.columnCount = 1
+        dataBinding.roomCheckInfoGridView.setData(
+                context.resources.getString(R.string.label_stay_room_need_to_know_title)
+                , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, true)
     }
 
     private fun setInvisibleLayout(increasing: Boolean, preY: Float, y: Float) {

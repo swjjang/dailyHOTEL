@@ -4,18 +4,21 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.databinding.DataBindingUtil
+import android.graphics.Rect
 import android.support.v7.widget.GridLayout
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
+import androidx.core.view.doOnPreDraw
 import com.daily.base.util.ExLog
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
+import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.takeNotEmpty
 import com.daily.dailyhotel.view.DailyRoomInfoGridView.ItemType.*
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewRoomGridInfoDataBinding
@@ -28,6 +31,20 @@ class DailyRoomInfoGridView : LinearLayout {
 
     companion object {
         const val DEFAULT_SHOW_LINE_COUNT = 3
+
+        private const val ANIMATION_DURATION = 200L
+
+        private const val SMALL_TITLE_TEXT_SIZE = 16.0
+        private const val SMALL_ICON_DRAW_PADDING = 6.0
+        private const val SMALL_ITEM_TEXT_SIZE = 14.0
+        private const val SMALL_ITEM_HEIGHT = 22.0
+        private const val SMALL_LINE_MARGIN_TOP = 12.0
+
+        private const val LARGE_TITLE_TEXT_SIZE = 18.0
+        private const val LARGE_ICON_DRAW_PADDING = 10.0
+        private const val LARGE_ITEM_TEXT_SIZE = 14.0
+        private const val LARGE_ITEM_HEIGHT = 22.0
+        private const val LARGE_LINE_MARGIN_TOP = 14.0
     }
 
     enum class ItemType {
@@ -35,6 +52,15 @@ class DailyRoomInfoGridView : LinearLayout {
     }
 
     private lateinit var viewDataBinding: DailyViewRoomGridInfoDataBinding
+    var columnCount = 1
+        set(value) {
+            field = when {
+                value < 1 -> 1
+                else -> value
+            }
+            viewDataBinding.gridLayout.columnCount = field
+            viewDataBinding.moreGridLayout.columnCount = field
+        }
 
     init {
         if (!::viewDataBinding.isInitialized) {
@@ -48,108 +74,92 @@ class DailyRoomInfoGridView : LinearLayout {
         })
     }
 
-    fun setTitleText(textResId: Int) {
-        if (textResId == 0) {
-            return
-        }
+//    fun setTitleText(textResId: Int) {
+//        if (textResId == 0) {
+//            return
+//        }
+//
+//        viewDataBinding.titleTextView.setText(textResId)
+//    }
+//
+//    fun setTitleText(text: String) {
+//        viewDataBinding.titleTextView.text = text
+//    }
+//
+//    fun setTitleVisible(visible: Boolean) {
+//        viewDataBinding.titleTextLayout.visibility = if (visible) View.VISIBLE else View.GONE
+//    }
 
-        viewDataBinding.titleTextView.setText(textResId)
-    }
-
-    fun setTitleText(text: String) {
-        viewDataBinding.titleTextView.text = text
-    }
-
-    fun setTitleTextSize(size: Float) {
-        viewDataBinding.titleTextView.textSize = size
-    }
-
-    fun setTitleVisible(visible: Boolean) {
-        viewDataBinding.titleTextLayout.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
-    fun setColumnCount(count: Int) {
-        var newCount = 1
-
-        if (count > 0) {
-            newCount = count
-        }
-
-        viewDataBinding.gridLayout.columnCount = newCount
-        viewDataBinding.moreGridLayout.columnCount = newCount
-    }
-
-    fun setData(type: ItemType, list: MutableList<String> = mutableListOf()) {
+    fun setData(title: String, type: ItemType, list: MutableList<String> = mutableListOf(), largeView: Boolean) {
         viewDataBinding.run {
-            if (list.isEmpty()) {
-                gridLayout.visibility = View.GONE
-                moreGridLayout.visibility = View.GONE
-                moreTextView.visibility = View.GONE
-                return
+            if (title.isTextEmpty()) {
+                titleTextLayout.visibility = View.GONE
+            } else {
+                titleTextLayout.visibility = View.VISIBLE
+                titleTextView.text = title
             }
 
             gridLayout.removeAllViews()
             moreGridLayout.removeAllViews()
 
-            val columnCount = gridLayout.columnCount
-            val maxIndex = DEFAULT_SHOW_LINE_COUNT * columnCount
-            val hasMore = list.size > maxIndex
+            list.takeNotEmpty {
+                gridLayout.visibility = View.VISIBLE
+                moreGridLayout.visibility = View.INVISIBLE
 
-            gridLayout.visibility = View.VISIBLE
-            moreGridLayout.visibility = View.VISIBLE
-            moreTextView.visibility = if (hasMore) View.VISIBLE else View.GONE
+                columnCount = gridLayout.columnCount
+                val maxIndex = DEFAULT_SHOW_LINE_COUNT * columnCount
+                val hasMore = list.size > maxIndex
+                moreTextView.visibility = if (hasMore) View.VISIBLE else View.GONE
 
-            list.forEachIndexed { index, text ->
-                if (index < maxIndex) {
-                    gridLayout.addView(getItemView(type, text, index >= columnCount))
-                } else {
-                    moreGridLayout.addView(getItemView(type, text, index >= columnCount))
-                }
-            }
+                it.forEachIndexed { index, text ->
+                    val itemView: DailyTextView = getItemView(type, text, index >= columnCount, largeView)
 
-            val remainder = list.size % columnCount
-            if (remainder != 0) {
-                for (index in 1..columnCount - remainder) {
-                    if (hasMore) {
-                        moreGridLayout.addView(getItemView(NONE, "", index >= columnCount))
+                    if (index < maxIndex) {
+                        gridLayout.addView(itemView)
                     } else {
-                        gridLayout.addView(getItemView(NONE, "", index >= columnCount))
+                        moreGridLayout.addView(itemView)
+                    }
+                }
+
+                val remainder = it.size % columnCount
+                if (remainder != 0) {
+                    for (index in 1..columnCount - remainder) {
+                        val itemView = getItemView(NONE, "", index >= columnCount, largeView)
+
+                        if (hasMore) {
+                            moreGridLayout.addView(itemView)
+                        } else {
+                            gridLayout.addView(itemView)
+                        }
                     }
                 }
             }
 
-            moreGridLayout.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    try {
-                        moreGridLayout.viewTreeObserver.removeOnPreDrawListener(this)
-                        moreGridLayout.tag = moreGridLayout.height
-
-                        (moreGridLayout.layoutParams as? LinearLayout.LayoutParams)?.let {
-                            it.height = 0
-                            moreGridLayout.layoutParams = it
-                        }
-                    } catch (e: Exception) {
-                        ExLog.e(e.toString())
-                    }
-
-                    return false
+            moreGridLayout.doOnPreDraw {
+                val itemHeight = if (largeView) {
+                    LARGE_ITEM_HEIGHT + LARGE_LINE_MARGIN_TOP
+                } else {
+                    SMALL_ITEM_HEIGHT + SMALL_LINE_MARGIN_TOP
                 }
-            })
-        }
-    }
 
-    private fun isShowMoreList(): Boolean {
-        return viewDataBinding.moreGridLayout.height > 0
+                var rect = Rect()
+                it.getLocalVisibleRect(rect)
+
+                ExLog.d("sam : rect = " + rect)
+
+//                    it.tag = ScreenUtils.dpToPx(context, itemHeight) * moreGridLayout.rowCount
+                it.tag = it.height
+                it.layoutParams.height = 0
+                it.requestLayout()
+            }
+
+            moreGridLayout.requestLayout()
+        }
     }
 
     private fun showMoreList() {
-
         val height = viewDataBinding.moreGridLayout.tag as Int
-        if (height == 0) {
-            return
-        }
-
-        if (isShowMoreList()) {
+        if (height == 0 || viewDataBinding.moreGridLayout.visibility == View.VISIBLE) {
             return
         }
 
@@ -165,14 +175,16 @@ class DailyRoomInfoGridView : LinearLayout {
                 viewDataBinding.moreGridLayout.requestLayout()
             })
 
-            duration = 200
+            duration = ANIMATION_DURATION
             interpolator = AccelerateDecelerateInterpolator()
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
+                    viewDataBinding.moreGridLayout.visibility = View.VISIBLE
                     viewDataBinding.moreTextView.visibility = View.GONE
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
+                    viewDataBinding.moreGridLayout.layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT
                     removeAllUpdateListeners()
                     removeAllListeners()
                 }
@@ -190,7 +202,7 @@ class DailyRoomInfoGridView : LinearLayout {
         valueAnimator.start()
     }
 
-    private fun getItemView(type: ItemType, text: String, showTopMargin: Boolean): View {
+    private fun getItemView(type: ItemType, text: String, showTopMargin: Boolean, largeView: Boolean): DailyTextView {
         val iconResId: Int
         val textColorResId: Int
 
@@ -215,20 +227,20 @@ class DailyRoomInfoGridView : LinearLayout {
             if (iconResId != 0) {
                 setDrawableCompatLeftAndRightFixedFirstLine(true)
                 setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
-                compoundDrawablePadding = ScreenUtils.dpToPx(context, 6.0)
+                compoundDrawablePadding = ScreenUtils.dpToPx(context, if (largeView) LARGE_ICON_DRAW_PADDING else SMALL_ICON_DRAW_PADDING)
             }
 
             setTextColor(context.resources.getColor(textColorResId))
             this.text = text
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14F)
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, if (largeView) LARGE_ITEM_TEXT_SIZE.toFloat() else SMALL_ITEM_TEXT_SIZE.toFloat())
 
             val params = GridLayout.LayoutParams().apply {
                 width = 0
-                height = ViewGroup.LayoutParams.WRAP_CONTENT
+                height = GridLayout.LayoutParams.WRAP_CONTENT
                 columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f)
 
                 if (showTopMargin) {
-                    topMargin = ScreenUtils.dpToPx(context, 12.0)
+                    topMargin = ScreenUtils.dpToPx(context, if (largeView) LARGE_LINE_MARGIN_TOP else SMALL_LINE_MARGIN_TOP)
                 }
             }
 
