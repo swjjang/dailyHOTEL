@@ -104,7 +104,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showRoomPriceType: PriceType = PriceType.TOTAL
     private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
     private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
-    private var resetRoomFilterAfterRefresh = true
     private var checkChangedPrice = false
 
     private val bookDateTime = StayBookDateTime()
@@ -186,7 +185,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 StayDetailActivity.TransGradientType.NONE
             }
 
-            stayIndex = 1158;//intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
+            stayIndex = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, 0)
             stayName = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_STAY_NAME)
             defaultImageUrl = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL)
             viewPrice = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayDetailActivity.NONE_PRICE)
@@ -194,6 +193,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             bookDateTime.setCheckInDateTime(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME))
                     .setCheckOutDateTime(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME))
                     .validate().runFalse { throw IllegalArgumentException() }
+
+            intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_BEDTYPE_FILTER)?.let { bedTypeFilter.addAll(it) }
+            intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_FACILITIES_FILTER)?.let { facilitiesFilter.addAll(it) }
 
             analytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS))
         } catch (e: Exception) {
@@ -1082,12 +1084,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let {
             if (defaultImageUrl.isTextEmpty() && it.imageList.isNotNullAndNotEmpty()) {
                 defaultImageUrl = it.imageList?.get(0)?.imageMap?.bigUrl
-            }
-
-            if (resetRoomFilterAfterRefresh) {
-                resetRoomFilter()
-            } else {
-                resetRoomFilterAfterRefresh = true
             }
 
             viewInterface.apply {

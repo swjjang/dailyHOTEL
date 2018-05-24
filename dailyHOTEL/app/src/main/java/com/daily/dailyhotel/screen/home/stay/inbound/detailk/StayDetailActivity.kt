@@ -42,6 +42,8 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
         internal const val INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition"
         internal const val INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE = "gradientType"
         internal const val INTENT_EXTRA_DATA_LIST_PRICE = "listPrice"
+        internal const val REQUEST_CODE_BEDTYPE_FILTER = "bedTypeFilter"
+        internal const val REQUEST_CODE_FACILITIES_FILTER = "facilitiesFilter"
 
         const val INTENT_EXTRA_DATA_WISH = "wish"
         const val INTENT_EXTRA_DATA_CHANGED_PRICE = "changedPrice"
@@ -50,6 +52,7 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
         @JvmStatic
         fun newInstance(context: Context, stayIndex: Int, stayName: String, imageUrl: String,
                         viewPrice: Int, checkInDateTime: String, checkOutDateTime: String,
+                        bedTypeFilter: List<String>?, facilitiesFilter: List<String>?,
                         isUsedMultiTransition: Boolean, gradientType: TransGradientType = TransGradientType.NONE,
                         analyticsParam: StayDetailAnalyticsParam): Intent {
             return Intent(context, StayDetailActivity::class.java)
@@ -59,6 +62,8 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
                     .putExtra(INTENT_EXTRA_DATA_LIST_PRICE, viewPrice)
                     .putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime)
                     .putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime)
+                    .putStringArrayListExtra(REQUEST_CODE_BEDTYPE_FILTER, bedTypeFilter?.let { ArrayList(it) })
+                    .putStringArrayListExtra(REQUEST_CODE_FACILITIES_FILTER, facilitiesFilter?.let { ArrayList(it) })
                     .putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, isUsedMultiTransition)
                     .putExtra(INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE, gradientType.name)
                     .putExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS, analyticsParam)
