@@ -19,6 +19,7 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
+import androidx.core.graphics.scaleMatrix
 import com.daily.base.BaseDialogView
 import com.daily.base.util.*
 import com.daily.dailyhotel.entity.Room
@@ -42,8 +43,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     : BaseDialogView<StayRoomsInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
         , StayRoomsInterface.ViewInterface, View.OnClickListener {
     private lateinit var listAdapter: StayRoomAdapter
-    private var mTouchVerticalMargin: Int = 0
-    private var mTouchHorizontalMargin: Int = 0
 
     @SuppressLint("ClickableViewAccessibility")
     override fun setContentView(viewDataBinding: ActivityStayRoomsDataBinding) {
@@ -58,96 +57,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val pagerSnapHelper = PagerSnapHelper()
             pagerSnapHelper.attachToRecyclerView(recyclerView)
 
-            viewDataBinding.recyclerView.setOnTouchListener(object : View.OnTouchListener {
-                private val MOVE_STATE_NONE = 0
-                private val MOVE_STATE_SCROLL = 10
-                private val MOVE_STATE_VIEWPAGER = 100
-                private val MOVE_CALIBRATE_VALUE = 1.25f
-
-                private var mMoveState: Int = 0
-                private var mPrevX: Float = 0.toFloat()
-                private var mPrevY: Float = 0.toFloat()
-
-                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                    if (listAdapter == null) return false
-                    if (listAdapter.itemCount == 0) return false
-                    if (event == null) return false
-
-                    setRecyclerScrollEnabled()
-
-                    when (event.action and MotionEventCompat.ACTION_MASK) {
-                        MotionEvent.ACTION_DOWN -> {
-                            mPrevX = event.x
-                            mPrevY = event.y
-
-                            mMoveState = MOVE_STATE_NONE
-                        }
-
-                        MotionEvent.ACTION_UP -> run {
-                            setInvisibleLayoutAnimation()
-
-                            val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-
-                            val x = (mPrevX - event.x).toInt()
-                            val y = (mPrevY - event.y).toInt()
-
-                            val distance = Math.sqrt((x * x + y * y).toDouble()).toInt()
-                            if (distance < touchSlop) {
-                                mMoveState = MOVE_STATE_NONE
-                                return@run
-                            }
-                        }
-
-                        MotionEvent.ACTION_CANCEL -> {
-                            mMoveState = MOVE_STATE_NONE
-                        }
-
-                        MotionEvent.ACTION_MOVE -> {
-                            val x = event.x
-                            val y = event.y
-
-                            when (mMoveState) {
-                                MOVE_STATE_NONE -> {
-                                    if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY)) {
-                                        if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.GONE) {
-                                            viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.INVISIBLE
-                                        }
-                                    } else if (Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY)) {
-                                        // x 축으로 이동한 경우.
-                                        mMoveState = MOVE_STATE_VIEWPAGER
-                                        if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.GONE) {
-                                            viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.INVISIBLE
-                                        }
-                                    } else {
-                                        // y축으로 이동한 경우.
-                                        mMoveState = MOVE_STATE_SCROLL
-
-                                        if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.VISIBLE) {
-                                            viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.VISIBLE
-                                        }
-
-                                        setInvisibleLayout(true, mPrevY, y)
-                                    }
-                                }
-
-                                MOVE_STATE_SCROLL -> {
-                                    if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.VISIBLE) {
-                                        viewDataBinding.invisibleLayout.nestedScrollView.visibility = View.VISIBLE
-                                    }
-
-                                    setInvisibleLayout(true, mPrevY, y)
-                                }
-
-                                MOVE_STATE_VIEWPAGER -> {
-
-                                }
-                            }
-                        }
-                    }
-
-                    return false
-                }
-            })
+            viewDataBinding.recyclerView.setOnTouchListener(recyclerTouchListener)
 
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -241,69 +151,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)
                     .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
 
-            val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(position) as? StayRoomAdapter.RoomViewHolder
-                    ?: return@post
-
-            val top = viewDataBinding.recyclerView.top
-            val paddingTop = roomViewHolder.dataBinding.root.paddingTop
-            val width = roomViewHolder.dataBinding.root.measuredWidth
-            val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
-            val paddingRight = roomViewHolder.dataBinding.root.paddingRight
-
-            mTouchVerticalMargin = top + paddingTop
-            mTouchHorizontalMargin = (ScreenUtils.getScreenWidth(context) - (width - paddingLeft - paddingRight)) / 2
-
-            ExLog.d("sam - top : " + top + " , mTouchVerticalMargin : " + mTouchVerticalMargin
-                    + " , width : " + width
-                    + " , paddingLeft : " + paddingLeft
-                    + " , paddingRight : " + paddingRight
-                    + " , mTouchHorizontalMargin : " + mTouchHorizontalMargin)
-
-            viewDataBinding.invisibleLayout!!.nestedScrollView.setPadding(mTouchHorizontalMargin, mTouchVerticalMargin, mTouchHorizontalMargin, 0)
-
-            viewDataBinding.invisibleLayout!!.nestedScrollView.setOnTouchListener(object : View.OnTouchListener {
-                private var mPrevY: Float = 0.toFloat()
-
-                override fun onTouch(v: View, event: MotionEvent): Boolean {
-                    if (viewDataBinding == null) return false
-                    if (listAdapter.itemCount == 0) return false
-
-                    setRecyclerScrollEnabled()
-
-                    when (event.action and MotionEventCompat.ACTION_MASK) {
-                        MotionEvent.ACTION_DOWN -> {
-                            mPrevY = event.y
-                        }
-
-                        MotionEvent.ACTION_UP -> {
-                            setInvisibleLayoutAnimation()
-                        }
-
-                        MotionEvent.ACTION_CANCEL -> {
-                        }
-
-                        MotionEvent.ACTION_MOVE -> {
-                            val y = event.y
-
-                            val verticalPadding = viewDataBinding.invisibleLayout!!.nestedScrollView.paddingTop
-                            val scrollY = viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY
-
-                            ExLog.d("sam - verticalPadding : $verticalPadding , scrollY : $scrollY")
-
-                            if (scrollY != 0) {
-                                mPrevY = event.y
-                                return false
-                            }
-
-                            setInvisibleLayout(false, mPrevY, y)
-
-                            if (verticalPadding != 0) return true
-                        }
-                    }
-
-                    return false
-                }
-            })
+            initInvisibleLayout()
         }
     }
 
@@ -699,13 +547,13 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             return
         }
 
-        if (info.extraPersonInformationList.isNotNullAndNotEmpty()) {
+        if (!info.extraPersonInformationList.isNotNullAndNotEmpty()) {
             dataBinding.extraChargePersonTableLayout.visibility = View.GONE
         } else {
             dataBinding.extraChargePersonTableLayout.visibility = View.VISIBLE
 
             dataBinding.extraChargePersonTableLayout.setTitleText(R.string.label_stay_room_extra_charge_person_title)
-            dataBinding.extraChargePersonTableLayout.setTitleTextSize(ScreenUtils.dpToPx(context, 16.0).toFloat())
+            dataBinding.extraChargePersonTableLayout.setTitleTextSize(16f)
             dataBinding.extraChargePersonTableLayout.setTitleVisible(true)
             dataBinding.extraChargePersonTableLayout.clearTableLayout()
 
@@ -728,7 +576,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             dataBinding.extraChargeBedTableLayout.setTitleVisible(true)
             dataBinding.extraChargeBedTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
-            dataBinding.extraChargePersonTableLayout.setTitleTextSize(ScreenUtils.dpToPx(context, 16.0).toFloat())
+            dataBinding.extraChargePersonTableLayout.setTitleTextSize(16f)
             dataBinding.extraChargeBedTableLayout.clearTableLayout()
 
             (info.extraInformation.extraBeddingEnable).runTrue {
@@ -758,7 +606,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             dataBinding.extraChargeNightsTableLayout.setTitleVisible(true)
             dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
-            dataBinding.extraChargePersonTableLayout.setTitleTextSize(ScreenUtils.dpToPx(context, 16.0).toFloat())
+            dataBinding.extraChargePersonTableLayout.setTitleTextSize(16f)
             dataBinding.extraChargeNightsTableLayout.clearTableLayout()
 
             dataBinding.extraChargeNightsTableLayout.addTableRow(
@@ -781,84 +629,54 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, true)
     }
 
-    private fun setInvisibleLayout(increasing: Boolean, preY: Float, y: Float) {
-        if (preY == y) {
-            return
-        }
-
-        val gap = y - preY // plus 값이면 상단으로 올림, minus 값이면 하단으로 내림
-
-        val horizontalRatio = mTouchHorizontalMargin.toFloat() / mTouchVerticalMargin.toFloat()
-        val horizontalGap = (if (increasing) mTouchHorizontalMargin else 0) + gap * horizontalRatio
-        val horizontal: Int = if (horizontalGap > 0) {
-            if (horizontalGap > mTouchHorizontalMargin) mTouchHorizontalMargin else Math.round(horizontalGap)
-        } else {
-            0
-        }
-
-        val vertical: Float
-        val verticalGap = (if (increasing) mTouchVerticalMargin else 0) + gap
-        vertical = if (verticalGap > 0) {
-            if (verticalGap > mTouchVerticalMargin) mTouchVerticalMargin.toFloat() else verticalGap
-        } else {
-            0f
-        }
-
-        viewDataBinding.invisibleLayout!!.nestedScrollView.setPadding(horizontal, vertical.toInt(), horizontal, 0)
-
-        if (increasing && verticalGap <= 0) {
-            viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = (-verticalGap).toInt()
-        }
-    }
-
-    private fun setInvisibleLayoutAnimation() {
-
-        val view = viewDataBinding.invisibleLayout!!.nestedScrollView
-
-        val scaleUp = view.paddingTop < mTouchVerticalMargin / 2
-        val end = if (scaleUp) 0 else mTouchVerticalMargin
-        val horizontalRatio = mTouchHorizontalMargin.toFloat() / mTouchVerticalMargin.toFloat()
-
-        val duration = 200
-
-        ExLog.d("sam - params.topMargin : " + view.paddingTop + " , end : " + end)
-        val animator = ValueAnimator.ofInt(view.paddingTop, end)
-        animator.duration = duration.toLong()
-        animator.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            val horizontal = Math.round(value * horizontalRatio)
-
-            ExLog.d("sam - value : $value , horizontal : $horizontal")
-
-            viewDataBinding.invisibleLayout!!.nestedScrollView.setPadding(horizontal, value, horizontal, 0)
-        }
-
-        animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animator) {
-                if (scaleUp) {
-                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
-                } else {
-                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.INVISIBLE
-                }
-
-                setRecyclerScrollEnabled()
-            }
-
-            override fun onAnimationCancel(animation: Animator) {
-
-            }
-
-            override fun onAnimationRepeat(animation: Animator) {
-
-            }
-        })
-
-        animator.start()
-    }
+//    private fun setInvisibleLayoutAnimation() {
+//
+//        val view = viewDataBinding.invisibleLayout!!.nestedScrollView
+//
+//        val scaleUp = view.paddingTop < mTouchVerticalMargin / 2
+//        val end = if (scaleUp) 0 else mTouchVerticalMargin
+//        val horizontalRatio = mTouchHorizontalMargin.toFloat() / mTouchVerticalMargin.toFloat()
+//
+//        val duration = 200
+//
+//        ExLog.d("sam - params.topMargin : " + view.paddingTop + " , end : " + end)
+//        val animator = ValueAnimator.ofInt(view.paddingTop, end)
+//        animator.duration = duration.toLong()
+//        animator.addUpdateListener { animation ->
+//            val value = animation.animatedValue as Int
+//            val horizontal = Math.round(value * horizontalRatio)
+//
+//            ExLog.d("sam - value : $value , horizontal : $horizontal")
+//
+//            viewDataBinding.invisibleLayout!!.nestedScrollView.setPadding(horizontal, value, horizontal, 0)
+//        }
+//
+//        animator.addListener(object : Animator.AnimatorListener {
+//            override fun onAnimationStart(animation: Animator) {
+//
+//            }
+//
+//            override fun onAnimationEnd(animation: Animator) {
+//                if (scaleUp) {
+//                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
+//                } else {
+//                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.INVISIBLE
+//                }
+//
+//                setRecyclerScrollEnabled()
+//            }
+//
+//            override fun onAnimationCancel(animation: Animator) {
+//
+//            }
+//
+//            override fun onAnimationRepeat(animation: Animator) {
+//
+//            }
+//        })
+//
+//        animator.start()
+//    }
 
     override fun setGuideVisible(visible: Boolean) {
         viewDataBinding.guideLayout.visibility = if (visible) View.VISIBLE else View.GONE
@@ -904,5 +722,222 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 , getString(R.string.dialog_btn_text_close)
                 , checkedChangeListener, positiveListener
                 , null, null, onDismissListener, true)
+    }
+
+    private fun initInvisibleLayout() {
+        if (listAdapter.itemCount == 0) return
+
+        val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(0) as? StayRoomAdapter.RoomViewHolder
+                ?: return
+
+        val invisibleLayoutDataBinding = viewDataBinding.invisibleLayout ?: return
+
+        val top = viewDataBinding.recyclerView.top
+        val paddingTop = roomViewHolder.dataBinding.root.paddingTop
+        val paddingBottom = roomViewHolder.dataBinding.root.paddingBottom
+        val width = roomViewHolder.dataBinding.root.measuredWidth
+        val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
+        val paddingRight = roomViewHolder.dataBinding.root.paddingRight
+
+        val invisibleWidth = width - paddingLeft - paddingRight
+
+        val newScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
+
+        val ratio: Float = ScreenUtils.getScreenWidth(context).toFloat() / ScreenUtils.getScreenHeight(context).toFloat()
+
+        ExLog.d("sam - top : $top , paddingTop : $paddingTop + paddingBottom : $paddingBottom , paddingLeft : $paddingLeft")
+
+        invisibleLayoutDataBinding.scrollLayout.apply {
+            translationY = 0f - ((top + paddingTop) * ratio)
+            scaleX = newScaleX
+            scaleY = newScaleX
+
+            ExLog.d("sam - translationY : $translationY , top : ${this.top}")
+        }
+
+        invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
+    }
+
+    private fun setInvisibleLayout(preY: Float, y: Float) {
+        if (preY == y) return
+
+        val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(0) as? StayRoomAdapter.RoomViewHolder
+                ?: return
+
+        val invisibleLayoutDataBinding = viewDataBinding.invisibleLayout ?: return
+
+        val gap = y - preY // minus 면 상단으로 이동, plus 하단으로 이동
+
+        val top = viewDataBinding.recyclerView.top
+        val paddingTop = roomViewHolder.dataBinding.root.paddingTop
+        val width = roomViewHolder.dataBinding.root.measuredWidth
+        val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
+        val paddingRight = roomViewHolder.dataBinding.root.paddingRight
+
+        var minWidth = width - paddingLeft - paddingRight
+        var invisibleWidth = when {
+            minWidth + -gap > ScreenUtils.getScreenWidth(context) -> ScreenUtils.getScreenWidth(context)
+            minWidth + -gap < minWidth -> minWidth
+            else -> minWidth + -gap.toInt()
+        }
+
+
+        var newScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
+        if (newScaleX > 1) {
+            newScaleX = 1f
+        }
+
+        ExLog.d("sam - invisibleWidth : $invisibleWidth , screen : ${ScreenUtils.getScreenWidth(context).toFloat()} , newScaleX : $newScaleX")
+        ExLog.d("sam - gap : $gap , ")
+
+        val ratio: Float = ScreenUtils.getScreenWidth(context).toFloat() / ScreenUtils.getScreenHeight(context).toFloat()
+
+        val minTransY = 0f - ((top + paddingTop) * ratio)
+        var transY = when {
+            minTransY + -gap > 0f -> 0f
+            minTransY + -gap < minTransY -> minTransY
+            else -> minTransY + -gap
+        }
+
+        invisibleLayoutDataBinding.scrollLayout.apply {
+            translationY = transY
+            scaleX = newScaleX
+            scaleY = newScaleX
+            setOnTouchListener(invisibleLayoutTouchListener)
+
+            ExLog.d("sam - translationY : $translationY , top : ${this.top}")
+        }
+    }
+
+    private val recyclerTouchListener = object : View.OnTouchListener {
+        private val MOVE_STATE_NONE = 0
+        private val MOVE_STATE_SCROLL = 10
+        private val MOVE_STATE_VIEWPAGER = 100
+        private val MOVE_CALIBRATE_VALUE = 1.25f
+
+        private var mMoveState: Int = 0
+        private var mPrevX: Float = 0.toFloat()
+        private var mPrevY: Float = 0.toFloat()
+
+        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+            if (listAdapter.itemCount == 0) return false
+            if (event == null) return false
+
+            setRecyclerScrollEnabled()
+
+            when (event.action and MotionEventCompat.ACTION_MASK) {
+                MotionEvent.ACTION_DOWN -> {
+                    mPrevX = event.x
+                    mPrevY = event.y
+
+                    mMoveState = MOVE_STATE_NONE
+                }
+
+                MotionEvent.ACTION_UP -> run {
+
+                    val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+
+                    val x = (mPrevX - event.x).toInt()
+                    val y = (mPrevY - event.y).toInt()
+
+                    val distance = Math.sqrt((x * x + y * y).toDouble()).toInt()
+                    if (distance < touchSlop) {
+                        mMoveState = MOVE_STATE_NONE
+                    }
+
+                    // TODO : invisibleLayout 애니메이션 하기
+                }
+
+                MotionEvent.ACTION_CANCEL -> {
+                    mMoveState = MOVE_STATE_NONE
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    val x = event.x
+                    val y = event.y
+
+                    when (mMoveState) {
+                        MOVE_STATE_NONE -> {
+                            when {
+                                Math.abs(x - mPrevX) == Math.abs(y - mPrevY) -> {
+                                    // 안 움직이거나 x, y 정확히 대각선 일때
+                                }
+
+                                Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY) -> {
+                                    // x 축으로 이동한 경우.
+                                    mMoveState = MOVE_STATE_VIEWPAGER
+
+                                    if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility == View.VISIBLE) {
+                                        viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.INVISIBLE
+                                    }
+                                }
+
+                                else -> {
+                                    // y축으로 이동한 경우.
+                                    mMoveState = MOVE_STATE_SCROLL
+
+                                    if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.VISIBLE) {
+                                        viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
+                                    }
+
+                                    setInvisibleLayout(mPrevY, y)
+                                }
+                            }
+                        }
+
+                        MOVE_STATE_SCROLL -> {
+                            if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.VISIBLE) {
+                                viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
+                            }
+
+                            setInvisibleLayout(mPrevY, y)
+                        }
+
+                        MOVE_STATE_VIEWPAGER -> {
+                            if (viewDataBinding.invisibleLayout!!.nestedScrollView.visibility == View.VISIBLE) {
+                                viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.INVISIBLE
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false
+        }
+    }
+
+    private val invisibleLayoutTouchListener = object : View.OnTouchListener {
+        private var mPrevY: Float = 0.toFloat()
+
+        override fun onTouch(v: View, event: MotionEvent): Boolean {
+            if (viewDataBinding == null) return false
+            if (listAdapter.itemCount == 0) return false
+
+            setRecyclerScrollEnabled()
+
+            when (event.action and MotionEventCompat.ACTION_MASK) {
+                MotionEvent.ACTION_DOWN -> {
+                    mPrevY = event.y
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    // TODO : invisibleLayout 애니메이션 하기
+                }
+
+                MotionEvent.ACTION_CANCEL -> {
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    val y = event.y
+
+                    val verticalPadding = viewDataBinding.invisibleLayout!!.scrollLayout.translationY
+                    val scrollY = viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY
+
+//                    setInvisibleLayout(mPrevY, y)
+                }
+            }
+
+            return false
+        }
     }
 }

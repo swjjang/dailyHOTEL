@@ -525,7 +525,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             return
         }
 
-        if (info.extraPersonInformationList.isNotNullAndNotEmpty()) {
+        if (!info.extraPersonInformationList.isNotNullAndNotEmpty()) {
             dataBinding.extraChargePersonTableLayout.visibility = View.GONE
         } else {
             dataBinding.extraChargePersonTableLayout.visibility = View.VISIBLE

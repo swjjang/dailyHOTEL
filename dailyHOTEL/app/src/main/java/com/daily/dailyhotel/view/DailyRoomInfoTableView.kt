@@ -63,8 +63,8 @@ class DailyRoomInfoTableView : ConstraintLayout {
         dataBinding.titleTextLayout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setTitleTextSize(size: Float) {
-        dataBinding.titleTextView.textSize = size
+    fun setTitleTextSize(dpSize: Float) {
+        dataBinding.titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, dpSize)
     }
 
     fun getItemCount(): Int {
