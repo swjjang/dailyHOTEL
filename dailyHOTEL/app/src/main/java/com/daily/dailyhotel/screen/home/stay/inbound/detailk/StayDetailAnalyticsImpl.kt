@@ -26,7 +26,8 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         return StayPaymentAnalyticsParam()
     }
 
-    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int) {
+    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int,
+                          bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>) {
         if (stayDetail == null) return
 
         try {
@@ -77,6 +78,23 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
             params[AnalyticsManager.KeyType.RATING] = stayDetail.trueReviewInformation?.ratingPercent.toString()
             params[AnalyticsManager.KeyType.LENGTH_OF_STAY] = nights.toString()
             params[AnalyticsManager.KeyType.COUNTRY] = AnalyticsManager.ValueType.DOMESTIC
+
+            // 베드타입
+            params[AnalyticsManager.KeyType.BEDTYPE_DOUBLE] = bedTypeFilter.contains("DOUBLE").toString()
+            params[AnalyticsManager.KeyType.BEDTYPE_TWIN] = bedTypeFilter.contains("TWIN").toString()
+            params[AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING] = bedTypeFilter.contains("IN_FLOOR_HEATING").toString()
+            params[AnalyticsManager.KeyType.BEDTYPE_SINGLE] = bedTypeFilter.contains("SINGLE").toString()
+
+            // 시설
+            analyticsParam?.let {
+                params[AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM] = it.amenitiesFilter.contains("KidsPlayroom").toString()
+                params[AnalyticsManager.KeyType.FACILITY_POOL] = it.amenitiesFilter.contains("Pool").toString()
+                params[AnalyticsManager.KeyType.FACILITY_PET] = it.amenitiesFilter.contains("Pet").toString()
+            }
+
+            params[AnalyticsManager.KeyType.FACILITY_BREAKFAST] = facilitiesFilter.contains("Breakfast").toString()
+            params[AnalyticsManager.KeyType.FACILITY_PART_ROOM] = facilitiesFilter.contains("PartyRoom").toString()
+            params[AnalyticsManager.KeyType.FACILITY_WHIRLPOOL] = facilitiesFilter.contains("SpaWallpool").toString()
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null, params)
         } catch (e: Exception) {

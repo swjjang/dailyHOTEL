@@ -84,8 +84,28 @@ public class AppboyManager extends BaseAnalyticsManager
         //                ExLog.d(e.toString());
         //            }
         //        } else
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true //
-            || AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
+        {
+            AppboyProperties appboyProperties = new AppboyProperties();
+
+            appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
+            appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
+            appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+            appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
+            appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
+            appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
+            appboyProperties.addProperty("facility_객실내_조식", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_BREAKFAST)));
+            appboyProperties.addProperty("facility_객실내_파티룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PART_ROOM)));
+            appboyProperties.addProperty("facility_객실내_스파월풀", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_WHIRLPOOL)));
+
+            mAppboy.logCustomEvent(EventName.STAY_DETAIL_CLICKED, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.STAY_DETAIL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+            }
+        }
+        else if (AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -189,7 +209,24 @@ public class AppboyManager extends BaseAnalyticsManager
                 satisfactionCustomEvent(label);
             } else if (AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
             {
-                curationCustomEvent(EventName.STAY_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
+                appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
+                appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+                appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
+                appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
+                appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
+                appboyProperties.addProperty("facility_객실내_조식", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_BREAKFAST)));
+                appboyProperties.addProperty("facility_객실내_파티룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PART_ROOM)));
+                appboyProperties.addProperty("facility_객실내_스파월풀", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_WHIRLPOOL)));
+
+                mAppboy.logCustomEvent(EventName.STAY_SORTFILTER_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_SORTFILTER_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
             } else if (AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
             {
                 curationCustomEvent(EventName.GOURMET_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);

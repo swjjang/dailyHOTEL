@@ -701,6 +701,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         DailyToast.showToast(activity, R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT)
 
         stayDetail?.let { analytics.onEventClipAddressClick(activity, it.baseInformation?.name) }
+
+        unLockAll()
     }
 
     override fun onNavigatorClick() {
@@ -715,7 +717,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             startActivityForResult(NavigatorDialogActivity.newInstance(activity, it.baseInformation?.name,
                     it.addressInformation?.latitude ?: 0.0, it.addressInformation?.longitude
                     ?: 0.0, false, analyticsParam), StayDetailActivity.REQUEST_CODE_NAVIGATOR)
-        }
+        } ?: Util.restartApp(activity)
     }
 
     override fun onConciergeClick() {
@@ -1150,7 +1152,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 analytics.onScreenSoldOut(activity)
                 Status.SOLD_OUT
             } else {
-                analytics.onScreen(activity, bookDateTime, stayDetail, viewPrice)
+                analytics.onScreen(activity, bookDateTime, stayDetail, viewPrice, bedTypeFilter, facilitiesFilter)
                 Status.BOOKING
             }
 

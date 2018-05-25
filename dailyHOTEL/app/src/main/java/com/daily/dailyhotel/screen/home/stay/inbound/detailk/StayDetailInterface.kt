@@ -235,7 +235,8 @@ interface StayDetailInterface {
 
         fun getStayPaymentAnalyticsParam(stayDetail: StayDetailk, stayRoom: StayRoom): StayPaymentAnalyticsParam
 
-        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int)
+        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int,
+                     bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>)
 
         fun onScreen(activity: Activity)
 
