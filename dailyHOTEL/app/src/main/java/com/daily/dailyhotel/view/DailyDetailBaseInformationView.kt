@@ -55,4 +55,8 @@ class DailyDetailBaseInformationView : ConstraintLayout {
     fun setAwardsTitle(text: String?) {
         viewDataBinding.awardsTitleTextView.text = text
     }
+
+    fun setAwardsClickListener(listener: OnClickListener) {
+        viewDataBinding.awardsQuestionView.setOnClickListener(listener)
+    }
 }

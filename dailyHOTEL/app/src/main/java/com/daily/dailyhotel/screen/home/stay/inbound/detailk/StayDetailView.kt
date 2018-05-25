@@ -578,6 +578,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
             setNightsEnabled(nightsEnabled)
             setAwardsVisible(baseInformation.awards.letNotNullTrueElseNullFalse { setAwardsTitle(it.title) })
+            setAwardsClickListener(View.OnClickListener { eventListener.onTrueAwardsClick() })
         }
     }
 
