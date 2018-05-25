@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -19,7 +20,6 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
-import androidx.core.graphics.scaleMatrix
 import com.daily.base.BaseDialogView
 import com.daily.base.util.*
 import com.daily.dailyhotel.entity.Room
@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
+import kotlin.math.min
 
 class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.OnEventListener)//
     : BaseDialogView<StayRoomsInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
@@ -57,7 +58,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val pagerSnapHelper = PagerSnapHelper()
             pagerSnapHelper.attachToRecyclerView(recyclerView)
 
-            viewDataBinding.recyclerView.setOnTouchListener(recyclerTouchListener)
+//            viewDataBinding.recyclerView.setOnTouchListener(recyclerTouchListener)
 
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -84,6 +85,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                 override fun onVrImageClick(position: Int) {
                     eventListener.onVrImageClick(position)
+                }
+
+                override fun onItemClick(position: Int) {
+                    setInvisibleLayoutAnimation(viewDataBinding.invisibleLayout!!.scrollLayout.scaleX == minScaleX)
                 }
             })
 
@@ -605,7 +610,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             dataBinding.extraChargeNightsTableLayout.visibility = View.VISIBLE
 
             dataBinding.extraChargeNightsTableLayout.setTitleVisible(true)
-            dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
+            dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_consecutive_title)
             dataBinding.extraChargePersonTableLayout.setTitleTextSize(16f)
             dataBinding.extraChargeNightsTableLayout.clearTableLayout()
 
@@ -628,55 +633,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 context.resources.getString(R.string.label_stay_room_need_to_know_title)
                 , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, true)
     }
-
-//    private fun setInvisibleLayoutAnimation() {
-//
-//        val view = viewDataBinding.invisibleLayout!!.nestedScrollView
-//
-//        val scaleUp = view.paddingTop < mTouchVerticalMargin / 2
-//        val end = if (scaleUp) 0 else mTouchVerticalMargin
-//        val horizontalRatio = mTouchHorizontalMargin.toFloat() / mTouchVerticalMargin.toFloat()
-//
-//        val duration = 200
-//
-//        ExLog.d("sam - params.topMargin : " + view.paddingTop + " , end : " + end)
-//        val animator = ValueAnimator.ofInt(view.paddingTop, end)
-//        animator.duration = duration.toLong()
-//        animator.addUpdateListener { animation ->
-//            val value = animation.animatedValue as Int
-//            val horizontal = Math.round(value * horizontalRatio)
-//
-//            ExLog.d("sam - value : $value , horizontal : $horizontal")
-//
-//            viewDataBinding.invisibleLayout!!.nestedScrollView.setPadding(horizontal, value, horizontal, 0)
-//        }
-//
-//        animator.addListener(object : Animator.AnimatorListener {
-//            override fun onAnimationStart(animation: Animator) {
-//
-//            }
-//
-//            override fun onAnimationEnd(animation: Animator) {
-//                if (scaleUp) {
-//                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
-//                } else {
-//                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.INVISIBLE
-//                }
-//
-//                setRecyclerScrollEnabled()
-//            }
-//
-//            override fun onAnimationCancel(animation: Animator) {
-//
-//            }
-//
-//            override fun onAnimationRepeat(animation: Animator) {
-//
-//            }
-//        })
-//
-//        animator.start()
-//    }
 
     override fun setGuideVisible(visible: Boolean) {
         viewDataBinding.guideLayout.visibility = if (visible) View.VISIBLE else View.GONE
@@ -724,6 +680,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 , null, null, onDismissListener, true)
     }
 
+    private var minScaleX = 1f
+    private var minTransY = 0f
+
     private fun initInvisibleLayout() {
         if (listAdapter.itemCount == 0) return
 
@@ -741,21 +700,90 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val invisibleWidth = width - paddingLeft - paddingRight
 
-        val newScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
-
+        minScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
         val ratio: Float = ScreenUtils.getScreenWidth(context).toFloat() / ScreenUtils.getScreenHeight(context).toFloat()
+        minTransY = 0f - ((top + paddingTop) * ratio)
 
         ExLog.d("sam - top : $top , paddingTop : $paddingTop + paddingBottom : $paddingBottom , paddingLeft : $paddingLeft")
 
         invisibleLayoutDataBinding.scrollLayout.apply {
             translationY = 0f - ((top + paddingTop) * ratio)
-            scaleX = newScaleX
-            scaleY = newScaleX
+            scaleX = minScaleX
+            scaleY = minScaleX
 
             ExLog.d("sam - translationY : $translationY , top : ${this.top}")
         }
 
-        invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
+//        invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
+        invisibleLayoutDataBinding.scrollLayout.setOnClickListener {
+            setInvisibleLayoutAnimation(viewDataBinding.invisibleLayout!!.scrollLayout.scaleX == minScaleX)
+        }
+    }
+
+    private fun setInvisibleLayoutAnimation(scaleUp: Boolean) {
+        val scrollLayout = viewDataBinding.invisibleLayout!!.scrollLayout
+
+        val startScale = scrollLayout.scaleX
+        val end = if (scaleUp) 1.0f else minScaleX
+        val startTransY = scrollLayout.translationY
+        val endTransY = if (scaleUp) 0.0f else minTransY
+
+//        ExLog.d("sam - start : $startScale , end : $end , startTransY : $startTransY , endTransY : $endTransY")
+
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 200
+        val transAnimator = ValueAnimator.ofFloat(startTransY, endTransY)
+        transAnimator.addUpdateListener { animation ->
+            val transValue = animation.animatedValue as Float
+//            ExLog.d("sam - transValue : $transValue")
+
+            scrollLayout.translationY = transValue
+        }
+
+        val scaleAnimator = ValueAnimator.ofFloat(startScale * 100, end * 100)
+        scaleAnimator.addUpdateListener { animation ->
+            val value = animation.animatedValue as Float / 100
+
+//            ExLog.d("sam - value : $value")
+
+            scrollLayout.scaleX = value
+            scrollLayout.scaleY = value
+        }
+
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                if (scaleUp && viewDataBinding.invisibleLayout!!.nestedScrollView.visibility != View.VISIBLE) {
+                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                if (scaleUp) {
+                    scrollLayout.scaleX = 1.0f
+                    scrollLayout.scaleY = 1.0f
+                    scrollLayout.translationY = 0.0f
+                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.VISIBLE
+                } else {
+                    scrollLayout.scaleX = minScaleX
+                    scrollLayout.scaleY = minScaleX
+                    scrollLayout.translationY = minTransY
+                    viewDataBinding.invisibleLayout!!.nestedScrollView.visibility = View.INVISIBLE
+                }
+
+                setRecyclerScrollEnabled()
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {
+
+            }
+        })
+
+        animatorSet.playTogether(scaleAnimator, transAnimator)
+        animatorSet.start()
     }
 
     private fun setInvisibleLayout(preY: Float, y: Float) {

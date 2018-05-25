@@ -84,6 +84,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     interface OnEventListener : OnBaseEventListener {
         fun onMoreImageClick(position: Int)
         fun onVrImageClick(position: Int)
+        fun onItemClick(position: Int)
     }
 
     fun setEventListener(listener: OnEventListener?) {
@@ -126,6 +127,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val room = getItem(position) ?: return
 
         holder.dataBinding.root.setTag(R.id.blurView, holder.dataBinding.blurView)
+
+        holder.dataBinding.roomLayout.setOnClickListener { onEventListener?.onItemClick(position) }
 
         val margin = getLayoutMargin()
         (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).apply {
@@ -581,7 +584,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.extraChargeNightsTableLayout.visibility = View.VISIBLE
 
             dataBinding.extraChargeNightsTableLayout.setTitleVisible(true)
-            dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
+            dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_consecutive_title)
             dataBinding.extraChargeNightsTableLayout.clearTableLayout()
 
             dataBinding.extraChargeNightsTableLayout.addTableRow(
