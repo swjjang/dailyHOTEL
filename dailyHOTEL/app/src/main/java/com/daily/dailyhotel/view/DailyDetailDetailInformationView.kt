@@ -170,7 +170,7 @@ class DailyDetailDetailInformationView : LinearLayout {
                 item.title + context.getString(R.string.label_stay_detail_range_age, item.minAge, item.maxAge)
         }
 
-        viewDataBinding.rightTextView.text = DailyTextUtils.getPriceFormat(context, item.amount, false)
+        viewDataBinding.rightTextView.text = if (item.amount == 0) context.getString(R.string.label_free) else DailyTextUtils.getPriceFormat(context, item.amount, false)
     }
 
     private fun createLineView(): View {
