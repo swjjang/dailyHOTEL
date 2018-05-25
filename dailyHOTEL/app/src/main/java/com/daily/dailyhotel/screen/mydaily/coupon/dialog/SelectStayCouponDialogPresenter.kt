@@ -35,6 +35,8 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
     private var maxCouponAmount: Int = 0
     private var categoryCode: String = ""
     private var stayName: String = ""
+    private var hasDownloadable = false
+
     private lateinit var callByScreen: String
     private val stayBookingDay: StayBookingDay by lazy {
         StayBookingDay()
@@ -112,8 +114,10 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
                 analytics.onCancelByPayment(activity, viewInterface.getCouponCount(), categoryCode, stayName, roomPrice)
             }
 
-            val intent = Intent().apply {
-                putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+            val intent = Intent().putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+
+            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equals(callByScreen, true)) {
+                intent.putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, hasDownloadable)
             }
 
             activity.setResult(Activity.RESULT_CANCELED, intent)
@@ -193,9 +197,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
                 AnalyticsManager.Screen.DAILYHOTEL_DETAIL -> {
                     viewInterface.setVisibility(true)
 
-                    var hasDownloadable = list.any {
-                        !it.isDownloaded
-                    }
+                    hasDownloadable = list.any { !it.isDownloaded }
 
                     viewInterface.setTitle(if (hasDownloadable) R.string.coupon_download_coupon else R.string.coupon_dont_download_coupon)
                     viewInterface.setOneButtonLayout(true, R.string.dialog_btn_text_close)
@@ -225,12 +227,16 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
 
         isSetOk = true
 
-        val intent = Intent().apply {
-            putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, CouponParcel(coupon))
-            putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+        val intent = Intent()
+                .putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, CouponParcel(coupon))
+                .putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equals(callByScreen, true)) {
+            intent.putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, hasDownloadable)
         }
 
         setResult(Activity.RESULT_OK, intent)
+
         finish()
 
         analytics.onSelectedCouponResult(activity, coupon.title)

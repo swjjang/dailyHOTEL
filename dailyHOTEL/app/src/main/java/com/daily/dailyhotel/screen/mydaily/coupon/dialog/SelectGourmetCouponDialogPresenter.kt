@@ -96,11 +96,8 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
                 analytics.onCancelByPayment(activity, viewInterface.getCouponCount())
             }
 
-            val intent: Intent = Intent().apply {
-                putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
-            }
-
-            activity.setResult(Activity.RESULT_OK, intent)
+            activity.setResult(Activity.RESULT_OK, Intent()
+                    .putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount))
         }
     }
 
@@ -213,10 +210,9 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
 
         isSetOk = true
 
-        val intent = Intent().apply {
-            putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, CouponParcel(coupon))
-            putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
-        }
+        val intent = Intent()
+                .putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, CouponParcel(coupon))
+                .putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
 
         setResult(Activity.RESULT_OK, intent)
         finish()

@@ -326,6 +326,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             StayDetailActivity.REQUEST_CODE_LOGIN -> onLoginActivityResult(resultCode, intent)
 
+            StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON -> onCouponActivityResult(resultCode, intent)
+
             StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON -> onLoginByCouponActivityResult(resultCode, intent)
 
             StayDetailActivity.REQUEST_CODE_WISH_DIALOG -> onWishDialogActivityResult(resultCode, intent)
@@ -361,6 +363,23 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             Activity.RESULT_OK -> {
                 setResult(BaseActivity.RESULT_CODE_REFRESH)
                 isRefresh = true
+            }
+        }
+    }
+
+    private fun onCouponActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                intent?.let {
+                    it.getBooleanExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, true).let {
+                        viewInterface.setCouponButtonEnabled(it)
+
+                        stayDetail?.benefitInformation?.coupon?.couponDiscount?.let {
+                            viewInterface.setCouponButtonText(getString(R.string.label_detail_complete_coupon_download,
+                                    DailyTextUtils.getPriceFormat(activity, it, false)), false)
+                        }
+                    }
+                }
             }
         }
     }
@@ -603,7 +622,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onImageClick(position: Int) {
-        if (stayDetail.filterIf({ it.imageList.isNotNullAndNotEmpty() }) && lock()) return
+        if (stayDetail.filterIf({ it.imageList.isNotNullAndNotEmpty() }) || lock()) return
 
         stayDetail?.let {
             startActivityForResult(ImageListActivity.newInstance(activity, it.baseInformation?.name,
@@ -1136,7 +1155,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
 
 
-                if(hasRefundInformation(it.refundInformation)) {
+                if (hasRefundInformation(it.refundInformation)) {
                     setCancellationAndRefundPolicyVisible(true)
                     setCancellationAndRefundPolicy(it.refundInformation!!, it.hasNRDRoom)
                 } else {
@@ -1198,7 +1217,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun hasRefundInformation(refundInformation: StayDetailk.RefundInformation?): Boolean {
-        if(refundInformation?.contentList.isNotNullAndNotEmpty()) return true
+        if (refundInformation?.contentList.isNotNullAndNotEmpty()) return true
 
         return false
     }
@@ -1214,9 +1233,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 val hasPrice = if (listViewPrice == StayDetailActivity.NONE_PRICE) {
                     true
                 } else {
-                    stayDetail.roomInformation?.roomList?.takeWhile {
-                        listViewPrice == it.amountInformation.discountAverage
-                    }?.isNotEmpty()
+                    stayDetail.roomInformation?.roomList?.any { listViewPrice == it.amountInformation.discountAverage }
                 }
 
                 if (hasPrice != true) {

@@ -58,6 +58,10 @@ interface StayDetailInterface {
 
         fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation)
 
+        fun setCouponButtonEnabled(enabled: Boolean)
+
+        fun setCouponButtonText(text: String, iconVisible: Boolean = true)
+
         fun setEmptyRoomText(text: String?)
 
         fun setEmptyRoomVisible(visible: Boolean)
