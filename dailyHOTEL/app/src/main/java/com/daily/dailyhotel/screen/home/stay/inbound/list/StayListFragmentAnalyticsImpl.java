@@ -424,7 +424,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE) == StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE)
             {
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
             }

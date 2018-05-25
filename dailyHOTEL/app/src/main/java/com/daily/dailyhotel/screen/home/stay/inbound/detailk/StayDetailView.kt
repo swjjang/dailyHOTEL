@@ -571,12 +571,20 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.imageLoopView.setImageList(imageList)
     }
 
-    override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean) {
+    override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean) {
         viewDataBinding.baseInformationView.apply {
             setGradeName(baseInformation.grade.getName(context))
             setRewardsVisible(baseInformation.provideRewardSticker)
             setNameText(baseInformation.name)
-            setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
+
+            if (soldOut) {
+                setPrice(getString(R.string.label_soldout))
+                setPriceWonVisible(false)
+            } else {
+                setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
+                setPriceWonVisible(true)
+            }
+
             setNightsEnabled(nightsEnabled)
             setAwardsVisible(baseInformation.awards.letNotNullTrueElseNullFalse { setAwardsTitle(it.title) })
             setAwardsClickListener(View.OnClickListener { eventListener.onTrueAwardsClick() })
@@ -689,6 +697,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setEmptyRoomVisible(visible: Boolean) {
         viewDataBinding.roomInformationView.setEmptyRoomVisible(visible)
+        viewDataBinding.stickyRoomFilterView.setRoomFilterVisible(visible)
     }
 
     override fun setRoomList(roomList: List<Room>?) {

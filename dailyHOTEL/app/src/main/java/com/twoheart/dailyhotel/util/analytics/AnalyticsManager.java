@@ -1324,10 +1324,10 @@ public class AnalyticsManager
         public static final String SORTFILTER_PRIVATE_POOL = "PrivatePool";
         public static final String SORTFILTER_KARAOKE = "Karaoke";
         public static final String SORTFILTER_PARTYROOM = "PartyRoom";
-        public static final String SORTFILTER_COOKING = "Cooking";
+        public static final String SORTFILTER_COOKING = "kitchenette";
         public static final String SORTFILTER_SMOKEABLE = "Smokeable";
         public static final String SORTFILTER_DISABLED_FACILITIES = "DisabledFacilities";
-        public static final String SORTFILTER_RENT_BABY_BED = "RentBabyBed";
+        public static final String SORTFILTER_BASSINET = "Bassinet";
         //
         public static final String SORTFILTER_0611 = "0611";
         public static final String SORTFILTER_1115 = "1115";

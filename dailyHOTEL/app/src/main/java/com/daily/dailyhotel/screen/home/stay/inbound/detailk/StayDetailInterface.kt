@@ -48,7 +48,7 @@ interface StayDetailInterface {
 
         fun setScrollViewVisible(visible: Boolean)
 
-        fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean)
+        fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean)
 
         fun setTrueReviewInformationVisible(visible: Boolean)
 

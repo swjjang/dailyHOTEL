@@ -60,7 +60,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     enum class RoomAmenityType(val stringResId: Int) {
-        Cooking(R.string.label_cooking),
+        Kitchenette(R.string.label_cooking),
         Pc(R.string.label_computer),
         Bath(R.string.label_bathtub),
         Tv(R.string.label_television),

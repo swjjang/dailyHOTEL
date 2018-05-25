@@ -1113,7 +1113,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setMoreImageVisible(it.imageList.isNotNullAndNotEmpty() && it.imageList!!.size > 1)
 
                 it.imageList.takeNotEmpty { setImageList(it) }
-                it.baseInformation?.let { setBaseInformation(it, bookDateTime.nights > 1) }
+                it.baseInformation?.let { setBaseInformation(it, bookDateTime.nights > 1, isSoldOut()) }
 
                 setTrueReviewInformationVisible(it.trueReviewInformation.letNotNullTrueElseNullFalse { setTrueReviewInformation(it) })
 
@@ -1138,6 +1138,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setPriceAverageTypeVisible(bookDateTime.nights > 1)
                     setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
                 } else {
+                    setRoomFilter(bookDateTime, null, bedTypeFilter, facilitiesFilter)
+
                     setEmptyRoomVisible(true)
                     setEmptyRoomText(activity.getString(R.string.message_stay_soldout_room))
                 }
@@ -1300,17 +1302,19 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun setRoomFilter(bookDateTime: StayBookDateTime, roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>) {
-        roomList.takeNotEmpty {
+        val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
+                bookDateTime.getCheckInDateTime("M.d(EEE)"),
+                bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                bookDateTime.nights)
+
+        val startIndex = calendarText.indexOf('돋')
+        val spannableString = SpannableString(calendarText)
+        spannableString.setSpan(DailyImageSpan(activity, R.drawable.layerlist_over_bffffff_s2_p2, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        if(roomList == null ||roomList.isEmpty()) {
+            viewInterface.setRoomFilterInformation(spannableString, 0)
+        } else {
             val filteredRoomList = getFilteredRoomList(roomList, bedTypeFilter, facilitiesFilter)
-
-            val calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
-                    bookDateTime.getCheckInDateTime("M.d(EEE)"),
-                    bookDateTime.getCheckOutDateTime("M.d(EEE)"),
-                    bookDateTime.nights)
-
-            val startIndex = calendarText.indexOf('돋')
-            val spannableString = SpannableString(calendarText)
-            spannableString.setSpan(DailyImageSpan(activity, R.drawable.layerlist_over_bffffff_s2_p2, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             viewInterface.setRoomFilterInformation(spannableString, bedTypeFilter.size + facilitiesFilter.size)
             viewInterface.setRoomList(filteredRoomList)

@@ -344,9 +344,9 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(DELIMITER);
             }
 
-            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_RENT_BABY_BED) == StayFilter.FLAG_AMENITIES_RENT_BABY_BED)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BASSINET) == StayFilter.FLAG_AMENITIES_BASSINET)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_RENT_BABY_BED).append(DELIMITER);
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BASSINET).append(DELIMITER);
             }
 
             if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
@@ -430,7 +430,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE) == StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE)
             {
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
             }
