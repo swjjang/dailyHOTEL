@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dh_theme_color">#B70038</color>
+    <color name="dh_theme_color">#EB2135</color>
     <color name="dh_theme_second_color">#BE945B</color>
-    <color name="dh_theme_color_a10">#1AB70038</color>
-    <color name="dh_theme_color_a8">#14B70038</color>
+    <color name="dh_theme_color_a10">#1AEB2135</color>
+    <color name="dh_theme_color_a8">#14EB2135</color>
 
     <color name="actionbar_border">#7f7f7f</color>
 
     <color name="actionbar_underline">#b4b4b4</color>
     <color name="actionbar_background">#ffffff</color>
-    <color name="actionbar_hamburger">#B70038</color>
+    <color name="actionbar_hamburger">#EB2135</color>
 
     <color name="drawermenu_border">#d6d6d6</color>
     <color name="common_border">#dcdcdc</color>
@@ -32,7 +32,7 @@
     <color name="kakaotalk_background">#f9ed00</color>
 
     <color name="tab_background">#f4f4f4</color>
-    <color name="button_background">#B70038</color>
+    <color name="button_background">#EB2135</color>
     <color name="activity_background">#fdfdfd</color>
     <color name="leftdrawer_divider">#f0f0f0</color>
 
@@ -90,7 +90,7 @@
 
     <color name="statusbar_background">#323232</color>
     <color name="tab_text">#929292</color>
-    <color name="tab_selected">#B70038</color>
+    <color name="tab_selected">#EB2135</color>
     <color name="tab_underline">#e7e7e7</color>
 
     <color name="daytab_text">#1c1c1c</color>
@@ -113,10 +113,10 @@
     <color name="hotel_list_item_underline">#3a3a3a</color>
     <color name="hotel_list_background">#ececec</color>
 
-    <color name="floating_action_button_default">#B70038</color>
+    <color name="floating_action_button_default">#EB2135</color>
     <color name="floating_action_button_pressed">#ff5a5a</color>
 
-    <color name="region_circle">#99b70038</color>
+    <color name="region_circle">#99eb2135</color>
     <color name="region_circle_text">#fffafa</color>
 
     <!-- Credit Card -->
@@ -172,9 +172,9 @@
     <color name="setting_business_license">#8f8f8f</color>
 
     <!-- Custom Popup -->
-    <color name="dialog_title_text">#B70038</color>
+    <color name="dialog_title_text">#EB2135</color>
     <color name="dialog_message_text">#3a3a3a</color>
-    <color name="dialog_agree_text">#B70038</color>
+    <color name="dialog_agree_text">#EB2135</color>
 
     <!-- GOURMET ListFragment -->
     <color name="headersectionbar">#222222</color>
@@ -205,7 +205,7 @@
     <color name="calendar_day_text_select">#ffffff</color>
     <color name="calendar_day_text_disable">#ebebeb</color>
     <color name="calendar_week_text_default">#999999</color>
-    <color name="calendar_sunday_text_default">#B70038</color>
+    <color name="calendar_sunday_text_default">#EB2135</color>
     <color name="calendar_month_text">#969696</color>
     <color name="calendar_month_line">#ebebeb</color>
     <color name="calendar_month_background">#f7f7f7</color>
@@ -219,7 +219,7 @@
 
     <!-- Botton Menu -->
     <color name="menu_text_default">#929292</color>
-    <color name="menu_text_select">#B70038</color>
+    <color name="menu_text_select">#EB2135</color>
 
     <!-- Action Bar -->
     <color name="actionbar_title">#323232</color>
@@ -228,7 +228,7 @@
     <color name="information_background">#f8f8f9</color>
     <color name="information_title">#323232</color>
     <color name="information_push_subtext">#929292</color>
-    <color name="information_count_text">#B70038</color>
+    <color name="information_count_text">#EB2135</color>
 
     <!-- Etc -->
     <color name="c181818">#181818</color>
@@ -252,7 +252,6 @@
     <color name="stay_outbound_detail_grade">#cfad80</color>
 
     <!-- DEFAULT -->
-    <color name="default_text_cb70038">#B70038</color>
     <color name="default_text_c323232">#323232</color>
     <color name="default_text_c4d4d4d">#4d4d4d</color>
     <color name="default_text_c929292">#929292</color>
@@ -322,7 +321,7 @@
     <color name="default_background_cfdf1f1">#fdf1f1</color>
     <color name="default_background_c666666">#666666</color>
 
-    <color name="default_popup_button_background_cb70038">#B70038</color>
+    <color name="default_popup_button_background_ceb2135">#EB2135</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
     <color name="default_popup_button_background_c5c93f8">#5c93f8</color>
 
@@ -362,7 +361,7 @@
 
     <!-- Coupon -->
     <color name="coupon_expire_text">#929292</color>
-    <color name="coupon_red_wine_text">#B70038</color>
+    <color name="coupon_red_wine_text">#EB2135</color>
     <color name="coupon_vertical_line">#d1d1d1</color>
     <color name="coupon_description_text">#b3b3b3</color>
     <color name="coupon_use_notice_text">#8f8f8f</color>

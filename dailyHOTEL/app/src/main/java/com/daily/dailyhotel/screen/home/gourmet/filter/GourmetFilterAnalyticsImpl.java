@@ -198,7 +198,7 @@ public class GourmetFilterAnalyticsImpl implements GourmetFilterInterface.Analyt
                 stringBuilder.append(categoryFilter).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -243,7 +243,7 @@ public class GourmetFilterAnalyticsImpl implements GourmetFilterInterface.Analyt
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_2106).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -293,7 +293,7 @@ public class GourmetFilterAnalyticsImpl implements GourmetFilterInterface.Analyt
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_CORKAGE).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }

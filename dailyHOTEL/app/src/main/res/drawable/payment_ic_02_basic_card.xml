@@ -4,7 +4,7 @@
         android:viewportHeight="60.0"
         android:viewportWidth="60.0"
         android:tintMode="multiply"
-        android:tint="@color/selector_svg_color_d454545_sb70038">
+        android:tint="@color/selector_svg_color_d454545_seb2135">
     <path
         android:fillColor="#ffffff"
         android:pathData="M48,23L12,23L12,19C12,18.45 12.45,18 13,18L47,18C47.55,18 48,18.45 48,19L48,23ZM48,41C48,41.55 47.55,42 47,42L13,42C12.45,42 12,41.55 12,41L12,25L48,25L48,41ZM47,16L13,16C11.35,16 10,17.35 10,19L10,41C10,42.65 11.35,44 13,44L47,44C48.65,44 50,42.65 50,41L50,19C50,17.35 48.65,16 47,16L47,16Z"

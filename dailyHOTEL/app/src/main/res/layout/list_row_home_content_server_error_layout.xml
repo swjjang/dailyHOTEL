@@ -59,7 +59,7 @@
             android:gravity="center_vertical"
             android:minHeight="19dp"
             android:text="@string/label_home_retry_button_text"
-            android:textColor="@color/default_text_cb70038"
+            android:textColor="@color/default_text_ceb2135"
             android:textSize="13dp"
             dailyFont:style="Medium"/>
     </RelativeLayout>

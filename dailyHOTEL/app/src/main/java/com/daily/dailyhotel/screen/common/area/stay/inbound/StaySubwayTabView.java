@@ -122,7 +122,7 @@ public class StaySubwayTabView extends LinearLayout implements View.OnClickListe
     {
         DailyTextView dailyTextView = new DailyTextView(context);
         dailyTextView.setText(text);
-        dailyTextView.setTextColor(getResources().getColorStateList(R.drawable.selector_text_color_c929292_cb70038));
+        dailyTextView.setTextColor(getResources().getColorStateList(R.drawable.selector_text_color_c929292_ceb2135));
         dailyTextView.setGravity(Gravity.CENTER);
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
 

@@ -38,7 +38,7 @@
             app:tabGravity="fill"
             app:tabIndicatorHeight="2dp"
             app:tabMaxWidth="0dp"
-            app:tabSelectedTextColor="@color/default_text_cb70038"
+            app:tabSelectedTextColor="@color/default_text_ceb2135"
             app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
             app:tabTextColor="@color/default_text_c929292"/>
 

@@ -243,7 +243,12 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if ((flagBedTypeFilters & StayFilter.FLAG_BED_SINGLE) == StayFilter.FLAG_BED_SINGLE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(DELIMITER);
+            }
+
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -349,7 +354,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BASSINET).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -445,7 +450,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DISABLED_FACILITIES).append(',');
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }

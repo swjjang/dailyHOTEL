@@ -149,12 +149,12 @@ class SelectCouponAdapter(val context: Context, val list: MutableList<Coupon>, v
                     root.setBackgroundColor(context.resources.getColor(R.color.default_background_cfafafb))
 
                     couponPriceTextView.run {
-                        setTextColor(context.resources.getColor(R.color.default_text_cb70038))
+                        setTextColor(context.resources.getColor(R.color.default_text_ceb2135))
                         setCompoundDrawablesWithIntrinsicBounds(if (rewardCoupon) R.drawable.vector_r_ic_s_17 else 0, 0, R.drawable.ic_check_s, 0)
                         isSelected = true
                     }
 
-                    couponNameTextView.setTextColor(context.resources.getColor(R.color.default_text_cb70038))
+                    couponNameTextView.setTextColor(context.resources.getColor(R.color.default_text_ceb2135))
                 }
 
                 else -> {

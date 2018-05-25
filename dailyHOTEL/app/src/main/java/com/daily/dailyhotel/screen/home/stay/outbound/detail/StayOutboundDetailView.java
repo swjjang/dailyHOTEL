@@ -1389,14 +1389,14 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", stayBookDateTime.getCheckInDateTime("M.d(EEE)"), stayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, stayBookDateTime.getNights()));
 
             getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.label_stay_outbound_detail_check_in_out), dateFormat);
-            getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_cb70038));
+            getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_ceb2135));
             getViewDataBinding().dateInformationView.setDate1DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
             getViewDataBinding().dateInformationView.setData1TextSize(13.0f, 13.0f);
 
             getViewDataBinding().dateInformationView.setCenterNightsVisible(false);
 
             getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_stay_outbound_detail_number_of_people), people.toShortString(getContext()));
-            getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_cb70038));
+            getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_ceb2135));
             getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
             getViewDataBinding().dateInformationView.setData2TextSize(13.0f, 13.0f);
 

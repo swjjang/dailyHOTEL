@@ -166,7 +166,7 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
                 textView.isSelected = selectedPosition == position
 
                 if (selectedPosition == position) {
-                    textView.setTextColor(context.resources.getColor(R.color.default_text_cb70038))
+                    textView.setTextColor(context.resources.getColor(R.color.default_text_ceb2135))
                 } else {
                     textView.setTextColor(context.resources.getColor(R.color.default_text_c323232))
                 }

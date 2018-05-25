@@ -124,11 +124,11 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
+                        android:drawableRight="@drawable/selector_filter_radio_button"
                         android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_1_star_rate"
                         android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-                        android:textSize="14dp"
-                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+                        android:textSize="14dp"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating2RadioButton"
@@ -137,11 +137,11 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
+                        android:drawableRight="@drawable/selector_filter_radio_button"
                         android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_2_star_rate"
                         android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-                        android:textSize="14dp"
-                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+                        android:textSize="14dp"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating3RadioButton"
@@ -150,11 +150,11 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
+                        android:drawableRight="@drawable/selector_filter_radio_button"
                         android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_3_star_rate"
                         android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-                        android:textSize="14dp"
-                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+                        android:textSize="14dp"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating4RadioButton"
@@ -163,11 +163,11 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
+                        android:drawableRight="@drawable/selector_filter_radio_button"
                         android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_4_star_rate"
                         android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-                        android:textSize="14dp"
-                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+                        android:textSize="14dp"/>
 
                     <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating5RadioButton"
@@ -176,11 +176,11 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:button="@null"
+                        android:drawableRight="@drawable/selector_filter_radio_button"
                         android:gravity="center_vertical"
                         android:text="@string/label_stay_outbound_filter_5_star_rate"
                         android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-                        android:textSize="14dp"
-                        app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+                        android:textSize="14dp"/>
                 </RadioGroup>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

@@ -13,11 +13,11 @@
             android:layout_height="22dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="3dp"
-            android:background="@drawable/shape_fillrect_lb70038_bffffff_r50"
+            android:background="@drawable/shape_fillrect_leb2135_bffffff_r50"
             android:gravity="center"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
-            android:textColor="@color/default_text_cb70038"
+            android:textColor="@color/default_text_ceb2135"
             android:textSize="12dp"/>
 
         <com.daily.base.widget.DailyTextView

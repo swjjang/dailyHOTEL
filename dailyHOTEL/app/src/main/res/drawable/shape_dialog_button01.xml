@@ -23,5 +23,5 @@
 
     <corners android:radius="2dp"/>
 
-    <solid android:color="@color/default_popup_button_background_cb70038"/>
+    <solid android:color="@color/default_popup_button_background_ceb2135"/>
 </shape>

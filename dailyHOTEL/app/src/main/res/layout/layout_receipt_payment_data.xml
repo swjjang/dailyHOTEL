@@ -168,7 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
                 android:layout_alignParentRight="true"
-                android:textColor="@color/default_text_cb70038"
+                android:textColor="@color/default_text_ceb2135"
                 android:textSize="11dp"
                 dailyFont:style="Bold"/>
         </RelativeLayout>

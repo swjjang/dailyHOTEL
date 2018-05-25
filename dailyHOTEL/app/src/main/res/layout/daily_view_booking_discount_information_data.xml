@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_used_bonus"
-                        android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c323232_ceb2135_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -151,7 +151,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_used_coupon"
-                        android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c323232_ceb2135_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -224,7 +224,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_used_deposit_sticker"
-                        android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c323232_ceb2135_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -386,7 +386,7 @@
                     android:id="@+id/totalPaymentPriceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_cb70038"
+                    android:textColor="@color/default_text_ceb2135"
                     android:textSize="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"

@@ -8,7 +8,7 @@
     <bool name="com_appboy_handle_push_deep_links_automatically">true</bool>
     <drawable name="com_appboy_push_small_notification_icon">@drawable/icon_noti_small</drawable>
     <drawable name="com_appboy_push_large_notification_icon">@drawable/icon_noti_big</drawable>
-    <integer name="com_appboy_default_notification_accent_color">0xffb70038</integer>
+    <integer name="com_appboy_default_notification_accent_color">0xffeb2135</integer>
     <bool name="com_appboy_disable_location_collection">true</bool>
     <bool name="com_appboy_enable_fresco_library_use">true</bool>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
 
     <RadioGroup
         android:id="@+id/sortRadioGroup"
@@ -16,11 +16,11 @@
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
+            android:drawableRight="@drawable/selector_filter_radio_button"
             android:gravity="center_vertical"
             android:text="@string/label_sort_by_area"
             android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-            android:textSize="14dp"
-            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/distanceRadioButton"
@@ -29,11 +29,11 @@
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
+            android:drawableRight="@drawable/selector_filter_radio_button"
             android:gravity="center_vertical"
             android:text="@string/label_sort_by_distance"
             android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-            android:textSize="14dp"
-            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/lowPriceRadioButton"
@@ -42,11 +42,11 @@
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
+            android:drawableRight="@drawable/selector_filter_radio_button"
             android:gravity="center_vertical"
             android:text="@string/label_sort_by_low_price"
             android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-            android:textSize="14dp"
-            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/highPriceRadioButton"
@@ -55,11 +55,11 @@
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
+            android:drawableRight="@drawable/selector_filter_radio_button"
             android:gravity="center_vertical"
             android:text="@string/label_sort_by_high_price"
             android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-            android:textSize="14dp"
-            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+            android:textSize="14dp"/>
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/satisfactionRadioButton"
@@ -68,10 +68,10 @@
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
+            android:drawableRight="@drawable/selector_filter_radio_button"
             android:gravity="center_vertical"
             android:text="@string/label_sort_by_satisfaction"
             android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
-            android:textSize="14dp"
-            app:drawableCompatRight="@drawable/selector_filter_radio_button"/>
+            android:textSize="14dp"/>
     </RadioGroup>
 </layout>

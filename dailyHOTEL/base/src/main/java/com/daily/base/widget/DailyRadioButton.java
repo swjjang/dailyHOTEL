@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
@@ -155,6 +156,19 @@ public class DailyRadioButton extends AppCompatRadioButton
             Drawable bottomDrawable = bottom == 0 ? null : AppCompatDrawableManager.get().getDrawable(context, bottom);
 
             super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
+        }
+    }
+
+    @Override
+    public void invalidateDrawable(@NonNull Drawable drawable)
+    {
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            super.invalidateDrawable(drawable);
+        } else
+        {
+
+            super.invalidateDrawable(drawable);
         }
     }
 }

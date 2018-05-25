@@ -1156,7 +1156,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setDetailInformationVisible(false)
                 }
 
-
                 if (hasRefundInformation(it.refundInformation)) {
                     setCancellationAndRefundPolicyVisible(true)
                     setCancellationAndRefundPolicy(it.refundInformation!!, it.hasNRDRoom)
@@ -1171,8 +1170,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
             }
 
-            checkChangedPrice(hasDeepLink, it, viewPrice, checkChangedPrice == false)
-            checkChangedPrice = true
+            if (checkChangedPrice == false) {
+                checkChangedPrice = true
+                checkChangedPrice(hasDeepLink, it, viewPrice, true)
+
+                if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
+                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_filtered_empty_room)//
+                            , getString(R.string.dialog_btn_text_confirm), { _ ->
+                        setResetRoomFilter()
+                        setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+                    }, null, true)
+                }
+            }
 
             status = if (isSoldOut()) {
                 analytics.onScreenSoldOut(activity)
@@ -1229,7 +1238,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
 
             viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
-                    , getString(R.string.label_changing_date), { v -> onCalendarClick() }, null, true)
+                    , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
         } else {
             if (!isDeepLink && compareListPrice) {
                 val hasPrice = if (listViewPrice == StayDetailActivity.NONE_PRICE) {
@@ -1311,7 +1320,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         val spannableString = SpannableString(calendarText)
         spannableString.setSpan(DailyImageSpan(activity, R.drawable.layerlist_over_bffffff_s2_p2, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        if(roomList == null ||roomList.isEmpty()) {
+        if (roomList == null || roomList.isEmpty()) {
             viewInterface.setRoomFilterInformation(spannableString, 0)
         } else {
             val filteredRoomList = getFilteredRoomList(roomList, bedTypeFilter, facilitiesFilter)

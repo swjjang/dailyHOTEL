@@ -58,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/label_denied"
-                android:textColor="@color/default_text_cb70038"
+                android:textColor="@color/default_text_ceb2135"
                 android:textSize="15dp"
                 android:layout_toRightOf="@+id/textView01"
                 android:layout_marginLeft="5dp"/>

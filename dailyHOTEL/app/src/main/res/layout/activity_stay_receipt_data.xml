@@ -105,7 +105,7 @@
                     android:layout_marginTop="22dp"
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="3dp"
-                    android:textColor="@color/default_text_cb70038"
+                    android:textColor="@color/default_text_ceb2135"
                     android:textSize="10dp"/>
             </RelativeLayout>
         </ScrollView>
@@ -129,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
-                android:background="@drawable/shape_fillrect_bb70038_r2"
+                android:background="@drawable/shape_fillrect_beb2135_r2"
                 android:gravity="center"
                 android:text="@string/label_send_email"
                 android:textColor="@color/white"

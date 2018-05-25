@@ -110,7 +110,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:padding="6dp"
-                    android:textColor="@color/default_text_cb70038"
+                    android:textColor="@color/default_text_ceb2135"
                     android:textSize="11dp"/>
 
                 <View

@@ -152,7 +152,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         spannableStringBuilder.setSpan(new UnderlineSpan(), 52, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_cb70038)), //
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_ceb2135)), //
             59, 69, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         linkAlarmTextView.setText(spannableStringBuilder);

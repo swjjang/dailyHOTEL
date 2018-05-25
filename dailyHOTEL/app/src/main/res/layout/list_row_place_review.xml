@@ -31,7 +31,7 @@
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
             android:text="@string/label_detail_review_more_read"
-            android:textColor="@color/default_text_cb70038"
+            android:textColor="@color/default_text_ceb2135"
             android:textSize="13dp"
             android:visibility="gone"/>
     </RelativeLayout>
@@ -97,7 +97,7 @@
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
             android:text="@string/label_detail_review_more_read"
-            android:textColor="@color/default_text_cb70038"
+            android:textColor="@color/default_text_ceb2135"
             android:textSize="13dp"
             android:visibility="gone"/>
     </RelativeLayout>

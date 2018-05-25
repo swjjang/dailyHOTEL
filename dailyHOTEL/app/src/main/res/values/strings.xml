@@ -952,7 +952,7 @@
     <string name="label_send_email">이메일로 발송하기</string>
     <string name="label_receipt_email">영수증 이메일 발송</string>
     <string name="message_send_email">아래 이메일 주소로\n영수증을 전송할까요?</string>
-    <string name="label_receipt_booking_state_reservation_wait"><![CDATA[해당 예약은 확정 예약이 아닌 <font color=0xb70038>대기 예약</font> 상태입니다.</font>]]></string>
+    <string name="label_receipt_booking_state_reservation_wait"><![CDATA[해당 예약은 확정 예약이 아닌 <font color=0xeb2135>대기 예약</font> 상태입니다.</font>]]></string>
 
     <!-- Area -->
     <string name="label_selectarea_stay_area">스테이 지역 선택</string>
@@ -1332,6 +1332,7 @@
     <string name="message_stay_waiting_reservation_guide"><![CDATA[해당 예약은 확정 예약이 아닌 <font color="#6185cd">대기 예약</font>으로, 결제 완료 시 예약대기 상태이며, <font color="#6185cd">예약확정 여부가 문자로 발송됩니다.</font>]]></string>
     <string name="message_stay_soldout_room">객실이 모두 판매완료되었습니다.\n날짜를 변경하거나 다른 숙소를 확인해주세요.</string>
     <string name="message_stay_empty_room">조건에 일치하는 객실이 없습니다.\n필터를 변경하거나 다른 날짜로 검색해보세요.</string>
+    <string name="message_stay_filtered_empty_room">해당 조건의 객실이 판매완료되어\n필터를 초기화합니다.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
     <string name="message_detail_nrd">특가상품으로 변경, 취소, 환불이 불가합니다.</string>
@@ -1376,7 +1377,7 @@
     <string name="message_please_select_a_reason_for_cancellation">취소 사유를 선택해주세요.</string>
     <string name="message_please_refund_notice">고객님께서 현금결제 주문을 취소하실 경우 수령하실 계좌이며,\n인증된 환불계좌 정보는 수집하지 않고 환불처리 후 바로 삭제 합니다.</string>
 
-    <string name="message_please_wait_refund01"><![CDATA[<font color=0xb70038>무료취소 요청 완료</font> 되었으며, 1~2일 이내 처리완료 됩니다.]]></string>
+    <string name="message_please_wait_refund01"><![CDATA[<font color=0xeb2135>무료취소 요청 완료</font> 되었으며, 1~2일 이내 처리완료 됩니다.]]></string>
     <string name="message_please_wait_refund02">결제금액 환불은 결제수단에 따라 최대 7일 이상 소요될 수 있습니다.</string>
 
     <!-- wishList -->

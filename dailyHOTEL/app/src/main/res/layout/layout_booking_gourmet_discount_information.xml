@@ -59,7 +59,7 @@
             android:layout_marginLeft="7dp"
             android:layout_toRightOf="@+id/couponRadioButton"
             android:text="@string/label_booking_used_coupon"
-            android:textColor="@drawable/selector_text_color_c929292_cb70038"
+            android:textColor="@drawable/selector_text_color_c929292_ceb2135"
             android:textSize="13dp"/>
 
         <LinearLayout
@@ -207,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/default_text_cb70038"
+                android:textColor="@color/default_text_ceb2135"
                 android:textSize="15dp"
                 dailyFont:style="Bold"/>
         </RelativeLayout>

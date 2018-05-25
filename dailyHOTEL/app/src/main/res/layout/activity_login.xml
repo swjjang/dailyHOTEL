@@ -165,7 +165,7 @@
                 android:background="@drawable/shape_button_emaillogin_background"
                 android:gravity="center"
                 android:text="@string/act_login_btn_login"
-                android:textColor="@color/default_text_cb70038"
+                android:textColor="@color/default_text_ceb2135"
                 android:textSize="15dp"
                 dailyFont:style="Medium"/>
 
