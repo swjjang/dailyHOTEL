@@ -48,11 +48,11 @@
             android:textSize="14dp"
             app:layout_constraintBottom_toTopOf="@+id/horizontalLineView"
             app:layout_constraintLeft_toLeftOf="@+id/backgroundView"
-            app:layout_constraintRight_toLeftOf="@+id/iconImageView"
+            app:layout_constraintRight_toLeftOf="@+id/mapIconImageView"
             app:layout_constraintTop_toTopOf="@+id/backgroundView"/>
 
         <ImageView
-            android:id="@+id/iconImageView"
+            android:id="@+id/mapIconImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
