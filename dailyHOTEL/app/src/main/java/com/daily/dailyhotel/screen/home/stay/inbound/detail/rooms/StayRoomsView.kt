@@ -178,23 +178,21 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val dataBinding: ListRowStayRoomInvisibleLayoutDataBinding = viewDataBinding.invisibleLayout!!
 
+        dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
+        dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
+        dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
+        dataBinding.vrIconView.setOnClickListener {
+            eventListener.onVrImageClick(position)
+        }
+
         if (room.imageInformation == null) {
-            dataBinding.defaultImageLayout.visibility = View.GONE
             dataBinding.defaultImageLayout.setOnClickListener(null)
         } else {
-            dataBinding.defaultImageLayout.visibility = View.VISIBLE
             dataBinding.defaultImageLayout.setOnClickListener {
                 eventListener.onMoreImageClick(position)
             }
 
-            dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_placeholder)
             Util.requestImageResize(context, dataBinding.simpleDraweeView, room.imageInformation.imageMap.bigUrl)
-
-            dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-            dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-            dataBinding.vrIconView.setOnClickListener {
-                eventListener.onVrImageClick(position)
-            }
         }
 
         dataBinding.roomNameTextView.text = room.name

@@ -150,27 +150,25 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
+        dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
+        dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
+        dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
+        dataBinding.vrIconView.setOnClickListener {
+            onEventListener?.let {
+                it.onVrImageClick(position)
+            }
+        }
+
         if (room.imageInformation == null) {
-            dataBinding.defaultImageLayout.visibility = View.GONE
             dataBinding.defaultImageLayout.setOnClickListener(null)
         } else {
-            dataBinding.defaultImageLayout.visibility = View.VISIBLE
             dataBinding.defaultImageLayout.setOnClickListener {
                 onEventListener?.let {
                     it.onMoreImageClick(position)
                 }
             }
 
-            dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_placeholder)
             Util.requestImageResize(context, dataBinding.simpleDraweeView, room.imageInformation.imageMap.bigUrl)
-
-            dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-            dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-            dataBinding.vrIconView.setOnClickListener {
-                onEventListener?.let {
-                    it.onVrImageClick(position)
-                }
-            }
         }
 
         dataBinding.roomNameTextView.text = room.name
