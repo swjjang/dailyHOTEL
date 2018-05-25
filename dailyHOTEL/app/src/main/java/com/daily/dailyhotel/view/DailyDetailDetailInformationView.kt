@@ -20,6 +20,7 @@ import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
@@ -132,10 +133,10 @@ class DailyDetailDetailInformationView : LinearLayout {
     }
 
     fun setBreakfastInformation(information: StayDetailk.BreakfastInformation?) {
-        information?.let {
+        if (hasBreakfastInformation(information)) {
             val viewDataBinding: DailyViewDetailBreakfastInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_breakfast_information_data, this, true)
 
-            it.items.takeNotEmpty {
+            information!!.items.takeNotEmpty {
                 it.forEachIndexed { index, item ->
                     if (index > 0) {
                         viewDataBinding.breakfastTableLayout.addView(createLineView(), TableLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, 1.0))
@@ -145,12 +146,20 @@ class DailyDetailDetailInformationView : LinearLayout {
                 }
             }
 
-            it.descriptionList.takeNotEmpty {
+            information.descriptionList.takeNotEmpty {
                 it.filter { !it.isTextEmpty() }.forEach {
                     viewDataBinding.informationLayout.addView(getContentBulletView(it))
                 }
             }
         }
+    }
+
+    private fun hasBreakfastInformation(information: StayDetailk.BreakfastInformation?): Boolean {
+        if (information?.items.isNotNullAndNotEmpty()) return true
+
+        if (information?.descriptionList.isNotNullAndNotEmpty()) return true
+
+        return false
     }
 
     private fun createBreakfastView(viewGroup: ViewGroup, item: StayDetailk.BreakfastInformation.Item) {

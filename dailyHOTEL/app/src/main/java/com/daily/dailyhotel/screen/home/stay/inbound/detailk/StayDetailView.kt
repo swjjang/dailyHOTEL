@@ -640,6 +640,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 setCouponButtonVisible(true)
                 setCouponButtonEnabled(!benefitInformation.coupon!!.isDownloaded)
                 setCouponButtonText(benefitInformation.coupon!!.couponDiscount)
+                setCouponButtonClickListener(View.OnClickListener { eventListener.onDownloadCouponClick() })
             } else {
                 setCouponButtonVisible(false)
             }
@@ -765,7 +766,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.refundInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation, hasNRDRoom: Boolean) {
+    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation?, hasNRDRoom: Boolean) {
         viewDataBinding.refundInformationView.setInformation(refundInformation)
     }
 

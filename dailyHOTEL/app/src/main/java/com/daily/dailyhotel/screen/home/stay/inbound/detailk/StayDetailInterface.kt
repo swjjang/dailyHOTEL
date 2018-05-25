@@ -99,7 +99,7 @@ interface StayDetailInterface {
 
         fun setCancellationAndRefundPolicyVisible(visible: Boolean)
 
-        fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation, hasNRDRoom: Boolean = false)
+        fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation?, hasNRDRoom: Boolean = false)
 
         fun setCheckInformationVisible(visible: Boolean)
 

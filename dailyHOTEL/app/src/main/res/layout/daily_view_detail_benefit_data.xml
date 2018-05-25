@@ -90,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
-            app:layout_constraintTop_toBottomOf="@+id/benefitBackgroundView"
+            app:layout_constraintTop_toBottomOf="@+id/benefitLayout"
             app:layout_goneMarginTop="20dp"/>
 
         <com.daily.base.widget.DailyTextView

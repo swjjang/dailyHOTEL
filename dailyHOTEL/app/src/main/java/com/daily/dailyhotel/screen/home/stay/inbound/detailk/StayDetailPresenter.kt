@@ -1128,16 +1128,21 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setAddressInformationVisible(it.addressInformation.letNotNullTrueElseNullFalse { setAddressInformation(it) })
                 setCheckTimeInformationVisible(it.checkTimeInformation.letNotNullTrueElseNullFalse { setCheckTimeInformation(it) })
 
-                if (it.detailInformation == null && it.breakfastInformation == null) {
-                    setDetailInformationVisible(false)
-                } else {
+                if (hasDetailInformation(it.detailInformation, it.breakfastInformation)) {
                     setDetailInformationVisible(true)
                     setDetailInformation(it.detailInformation, it.breakfastInformation)
+                } else {
+                    setDetailInformationVisible(false)
                 }
 
-                setCancellationAndRefundPolicyVisible(it.refundInformation.letNotNullTrueElseNullFalse { refundInformation ->
-                    setCancellationAndRefundPolicy(refundInformation, it.hasNRDRoom)
-                })
+
+                if(hasRefundInformation(it.refundInformation)) {
+                    setCancellationAndRefundPolicyVisible(true)
+                    setCancellationAndRefundPolicy(it.refundInformation!!, it.hasNRDRoom)
+                } else {
+                    setCancellationAndRefundPolicyVisible(false)
+                }
+
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
 
@@ -1180,6 +1185,22 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private fun hasBenefitContents(benefitInformation: StayDetailk.BenefitInformation?): Boolean {
         return benefitInformation != null && (!benefitInformation.title.isTextEmpty() || benefitInformation.contentList.isNotNullAndNotEmpty())
+    }
+
+    private fun hasDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?): Boolean {
+        if (detailInformation?.itemList.isNotNullAndNotEmpty()) return true
+
+        if (breakfastInformation?.items.isNotNullAndNotEmpty()) return true
+
+        if (breakfastInformation?.descriptionList.isNotNullAndNotEmpty()) return true
+
+        return false
+    }
+
+    private fun hasRefundInformation(refundInformation: StayDetailk.RefundInformation?): Boolean {
+        if(refundInformation?.contentList.isNotNullAndNotEmpty()) return true
+
+        return false
     }
 
     private fun checkChangedPrice(isDeepLink: Boolean, stayDetail: StayDetailk, listViewPrice: Int, compareListPrice: Boolean) {

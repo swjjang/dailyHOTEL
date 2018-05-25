@@ -91,4 +91,8 @@ class DailyDetailBenefitView : ConstraintLayout {
     fun setCouponButtonText(price: Int) {
         viewDataBinding.downloadCouponTextView.text = context.getString(R.string.label_detail_download_coupon, DecimalFormat("###,##0").format(price))
     }
+
+    fun setCouponButtonClickListener(listener: OnClickListener) {
+        viewDataBinding.downloadCouponTextView.setOnClickListener(listener)
+    }
 }
