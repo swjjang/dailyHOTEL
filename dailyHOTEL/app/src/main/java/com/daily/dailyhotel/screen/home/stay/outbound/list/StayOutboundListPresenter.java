@@ -31,6 +31,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
@@ -182,6 +183,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         void onEventChangedRadius(Activity activity, String areaName);
 
         void onEventResearchClick(Activity activity, StayOutboundSuggest suggest);
+
+        void onEventApplyFilter(Activity activity, StayOutboundSuggest suggest, StayOutboundFilters stayOutboundFilters);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
@@ -742,6 +745,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     {
                         onRefreshAll(true);
                     }
+
+                    mAnalytics.onEventApplyFilter(getActivity(), mStayOutboundSuggest, mStayOutboundFilters);
                 }
                 break;
         }

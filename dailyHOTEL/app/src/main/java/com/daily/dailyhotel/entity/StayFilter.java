@@ -155,7 +155,7 @@ public class StayFilter
 
         if ((flagAmenitiesFilters & FLAG_AMENITIES_BREAKFAST_RESTAURANT) == FLAG_AMENITIES_BREAKFAST_RESTAURANT)
         {
-            amenitiesFilterList.add("Breakfast");
+            amenitiesFilterList.add("BreakfastRestaurant");
         }
 
         if ((flagAmenitiesFilters & FLAG_AMENITIES_CAFETERIA) == FLAG_AMENITIES_CAFETERIA)

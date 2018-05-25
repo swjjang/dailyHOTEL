@@ -32,6 +32,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
 
         try {
             val params = HashMap<String, String?>()
+            params[AnalyticsManager.KeyType.PLACE_INDEX] = stayDetail.index.toString()
             params[AnalyticsManager.KeyType.NAME] = stayDetail.baseInformation?.name
             params[AnalyticsManager.KeyType.GRADE] = stayDetail.baseInformation?.grade?.getName(activity)
             params[AnalyticsManager.KeyType.DBENEFIT] = if (DailyTextUtils.isTextEmpty(stayDetail?.benefitInformation?.title)) "no" else "yes" // 3
