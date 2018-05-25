@@ -179,7 +179,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="right|center_vertical"
                     android:lineSpacingExtra="-2dp"
-                    android:textColor="@color/default_text_cb70038"
+                    android:textColor="@color/default_text_ceb2135"
                     android:textSize="14dp"
                     dailyFont:style="Bold"/>
             </RelativeLayout>

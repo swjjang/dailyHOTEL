@@ -400,7 +400,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_margin="10dp"
-                        android:background="@drawable/shape_fillrect_bb70038_r2"
+                        android:background="@drawable/shape_fillrect_beb2135_r2"
                         android:gravity="center"
                         android:text="@string/act_booking_btn_pay"
                         android:textColor="@color/white"

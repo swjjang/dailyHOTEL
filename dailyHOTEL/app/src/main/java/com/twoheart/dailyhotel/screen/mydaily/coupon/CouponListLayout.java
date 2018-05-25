@@ -304,7 +304,7 @@ public class CouponListLayout extends BaseLayout
 
                 if (mSelectedPosition == position)
                 {
-                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
+                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_ceb2135));
                 } else
                 {
                     textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));

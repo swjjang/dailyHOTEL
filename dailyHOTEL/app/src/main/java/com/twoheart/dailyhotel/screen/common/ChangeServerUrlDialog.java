@@ -85,8 +85,7 @@ public class ChangeServerUrlDialog extends BaseActivity
             {
                 Intent intent = new Intent(ChangeServerUrlDialog.this, LauncherActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fbeta-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fbeta-silo.dailyhotel.me%2F"));
-                intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=http%3A%2F%2F10.0.1.159:8090%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fdev-silo.dailyhotel.me%2F"));
+                intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fbeta-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fbeta-silo.dailyhotel.me%2F"));
                 startActivity(intent);
             }
         });

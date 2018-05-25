@@ -39,7 +39,7 @@
                 android:layout_marginRight="10dp"
                 android:drawablePadding="-30dp"
                 android:gravity="center"
-                android:textColor="@color/default_text_cb70038"
+                android:textColor="@color/default_text_ceb2135"
                 android:textSize="12dp"
                 app:drawableCompatLeft="@drawable/ic_alert"/>
 

@@ -6,6 +6,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
@@ -363,6 +364,49 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
                     , "ob_research", null, null);
                 break;
         }
+    }
+
+    @Override
+    public void onEventApplyFilter(Activity activity, StayOutboundSuggest suggest, StayOutboundFilters stayOutboundFilters)
+    {
+        if (activity == null || suggest == null || stayOutboundFilters == null)
+        {
+            return;
+        }
+
+        HashMap<String, String> params = new HashMap<>();
+
+        String sort = null;
+
+        switch (stayOutboundFilters.sortType)
+        {
+            case RECOMMENDATION:
+                sort = "liked";
+                break;
+
+            case DISTANCE:
+                sort = "distance";
+                break;
+
+            case LOW_PRICE:
+                sort = "low_to_high_price";
+                break;
+
+            case HIGH_PRICE:
+                sort = "high_to_low_price";
+                break;
+
+            case SATISFACTION:
+                sort = "rating";
+                break;
+        }
+
+        params.put("sorting", sort);
+        params.put(AnalyticsManager.KeyType.COUNTRY, suggest.country);
+        params.put(AnalyticsManager.KeyType.PROVINCE, suggest.city);
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RESULT//
+            , AnalyticsManager.Action.FILTER, sort, params);
     }
 
     @Override

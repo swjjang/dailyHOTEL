@@ -107,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@drawable/shape_fillrect_bb70038_r2"
+                    android:background="@drawable/shape_fillrect_beb2135_r2"
                     android:gravity="center"
                     android:text="@string/label_map_searchmap"
                     android:textColor="@color/white"

@@ -38,7 +38,7 @@
         android:paddingBottom="21dp"
         android:paddingTop="7dp"
         android:text="@string/message_payment_free_payment"
-        android:textColor="@color/default_text_cb70038"
+        android:textColor="@color/default_text_ceb2135"
         android:textSize="13dp"
         android:visibility="gone"
         app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_easypayment"
-                        android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                        android:textColor="@drawable/selector_text_color_c323232_ceb2135"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -263,7 +263,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_card"
-                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                    android:textColor="@drawable/selector_text_color_c323232_ceb2135"
                     android:textSize="13dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -316,7 +316,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_mobile"
-                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                    android:textColor="@drawable/selector_text_color_c323232_ceb2135"
                     android:textSize="13dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -370,7 +370,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_account"
-                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                    android:textColor="@drawable/selector_text_color_c323232_ceb2135"
                     android:textSize="13dp"/>
 
                 <com.daily.base.widget.DailyTextView

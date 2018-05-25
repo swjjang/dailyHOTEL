@@ -27,7 +27,7 @@
 
     <stroke
         android:width="1dp"
-        android:color="@color/default_text_cb70038"/>
+        android:color="@color/default_text_ceb2135"/>
 
     <padding
         android:bottom="@dimen/abc_button_padding_vertical_material"

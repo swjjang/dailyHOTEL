@@ -7,18 +7,15 @@ import android.os.Bundle;
 
 import com.appboy.Appboy;
 import com.appboy.AppboyLifecycleCallbackListener;
-import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -84,13 +81,32 @@ public class AppboyManager extends BaseAnalyticsManager
         //                ExLog.d(e.toString());
         //            }
         //        } else
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true //
-            || AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
+        {
+            AppboyProperties appboyProperties = new AppboyProperties();
+
+            appboyProperties.addProperty("idx", Integer.valueOf(params.get(AnalyticsManager.KeyType.PLACE_INDEX)));
+            appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
+            appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
+            appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+            appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
+            appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
+            appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
+            appboyProperties.addProperty("facility_객실내_조식", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_BREAKFAST)));
+            appboyProperties.addProperty("facility_객실내_파티룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PART_ROOM)));
+            appboyProperties.addProperty("facility_객실내_스파월풀", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_WHIRLPOOL)));
+
+            mAppboy.logCustomEvent(EventName.STAY_DETAIL_CLICKED, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.STAY_DETAIL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
             appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
             appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
             appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
@@ -104,11 +120,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.UNIT_PRICE, Integer.parseInt(params.get(AnalyticsManager.KeyType.UNIT_PRICE)));
                 appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
 
-                mAppboy.logCustomEvent(EventName.STAY_DETAIL_CLICKED, appboyProperties);
+                mAppboy.logCustomEvent(EventName.OB_DETAIL_CLICKED, appboyProperties);
 
                 if (DEBUG == true)
                 {
-                    ExLog.d(TAG + " : " + EventName.STAY_DETAIL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                    ExLog.d(TAG + " : " + EventName.OB_DETAIL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
                 }
             } catch (Exception e)
             {
@@ -148,23 +164,6 @@ public class AppboyManager extends BaseAnalyticsManager
         {
             firstPurchaseEventGourmet(params);
         }
-        //        else
-        //        {
-        //            AppboyProperties appboyProperties = getAppboyProperties(params);
-        //
-        //            if (appboyProperties != null)
-        //            {
-        //                appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
-        //                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-        //
-        //                mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
-        //
-        //                if (DEBUG == true)
-        //                {
-        //                    ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
-        //                }
-        //            }
-        //        }
     }
 
     @Override
@@ -189,7 +188,24 @@ public class AppboyManager extends BaseAnalyticsManager
                 satisfactionCustomEvent(label);
             } else if (AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
             {
-                curationCustomEvent(EventName.STAY_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
+                appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
+                appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+                appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
+                appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
+                appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
+                appboyProperties.addProperty("facility_객실내_조식", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_BREAKFAST)));
+                appboyProperties.addProperty("facility_객실내_파티룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PART_ROOM)));
+                appboyProperties.addProperty("facility_객실내_스파월풀", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_WHIRLPOOL)));
+
+                mAppboy.logCustomEvent(EventName.STAY_SORTFILTER_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_SORTFILTER_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
             } else if (AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
             {
                 curationCustomEvent(EventName.GOURMET_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
@@ -553,6 +569,24 @@ public class AppboyManager extends BaseAnalyticsManager
                 if (DEBUG == true)
                 {
                     ExLog.d(TAG + " : " + EventName.SEARCH_TERM + ", " + appboyProperties.forJsonPut().toString());
+                }
+            }
+        } else if (AnalyticsManager.Category.OB_SEARCH_RESULT.equalsIgnoreCase(category))
+        {
+            if (AnalyticsManager.Action.FILTER.equalsIgnoreCase(action))
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                appboyProperties.addProperty("sorting", params.get("sorting"));
+                appboyProperties.addProperty("country", params.get(AnalyticsManager.KeyType.COUNTRY));
+                appboyProperties.addProperty("province", params.get(AnalyticsManager.KeyType.PROVINCE));
+
+                mAppboy.logCustomEvent(EventName.OB_SORTFILTER_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.OB_SORTFILTER_CLICKED + ", " + appboyProperties.forJsonPut().toString());
                 }
             }
         }
@@ -1158,6 +1192,8 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String REGISTERED_CARD_INFO = "registered_card_info";
         public static final String STAY_SELECTED_DATE = "stay_selected_date";
         public static final String STAY_DETAIL_CLICKED = "stay_detail_clicked";
+        public static final String OB_DETAIL_CLICKED = "ob_detail_clicked";
+        public static final String OB_SORTFILTER_CLICKED = "ob_sortfilter_clicked";
         public static final String STAY_BOOKING_INITIALISED = "stay_booking_initialised";
         public static final String STAY_PURCHASE_COMPLETED = "stay_purchase_completed";
 

@@ -51,7 +51,7 @@
             android:paddingRight="18dp"
             android:paddingTop="10dp"
             android:text="@string/label_filter"
-            android:textColor="@color/selector_text_color_c323232_cb70038_none_pressed"
+            android:textColor="@color/selector_text_color_c323232_ceb2135_none_pressed"
             android:textSize="12dp"
             app:drawableCompatLeft="@drawable/vector_ic_fab_03_filter"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -65,7 +65,7 @@
             android:layout_height="4dp"
             android:layout_marginRight="13dp"
             android:layout_marginTop="11dp"
-            android:background="@drawable/shape_circle_bb70038"
+            android:background="@drawable/shape_circle_beb2135"
             android:visibility="invisible"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

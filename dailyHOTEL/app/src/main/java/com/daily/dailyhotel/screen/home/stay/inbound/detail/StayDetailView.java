@@ -1463,7 +1463,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
 
         getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.label_check_in), stayBookDateTime.getCheckInDateTime(DATE_FORMAT));
-        getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_cb70038));
+        getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_ceb2135));
         getViewDataBinding().dateInformationView.setDate1DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
         getViewDataBinding().dateInformationView.setData1TextSize(13.0f, 15.0f);
 
@@ -1471,7 +1471,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         getViewDataBinding().dateInformationView.setCenterNightsText(getString(R.string.label_nights, stayBookDateTime.getNights()));
 
         getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_check_out), stayBookDateTime.getCheckOutDateTime(DATE_FORMAT));
-        getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_cb70038));
+        getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_ceb2135));
         getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
         getViewDataBinding().dateInformationView.setData2TextSize(13.0f, 15.0f);
 

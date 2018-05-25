@@ -34,7 +34,7 @@ public class StayFilter
     public static final int FLAG_AMENITIES_PARKING = FLAG_AMENITIES_CONVENIENCE_STORE << 1;
     public static final int FLAG_AMENITIES_PET = FLAG_AMENITIES_PARKING << 1;
     public static final int FLAG_AMENITIES_KIDS_PLAY_ROOM = FLAG_AMENITIES_PET << 1;
-    public static final int FLAG_AMENITIES_RENT_BABY_BED = FLAG_AMENITIES_KIDS_PLAY_ROOM << 1;
+    public static final int FLAG_AMENITIES_BASSINET = FLAG_AMENITIES_KIDS_PLAY_ROOM << 1;
 
 
     //
@@ -51,8 +51,8 @@ public class StayFilter
     public static final int FLAG_ROOM_AMENITIES_BREAKFAST = FLAG_ROOM_AMENITIES_KARAOKE << 1;
     public static final int FLAG_ROOM_AMENITIES_PC = FLAG_ROOM_AMENITIES_BREAKFAST << 1;
     public static final int FLAG_ROOM_AMENITIES_TV = FLAG_ROOM_AMENITIES_PC << 1;
-    public static final int FLAG_ROOM_AMENITIES_COOKING = FLAG_ROOM_AMENITIES_TV << 1;
-    public static final int FLAG_ROOM_AMENITIES_SMOKEABLE = FLAG_ROOM_AMENITIES_COOKING << 1;
+    public static final int FLAG_ROOM_AMENITIES_KITCHENETTE = FLAG_ROOM_AMENITIES_TV << 1;
+    public static final int FLAG_ROOM_AMENITIES_SMOKEABLE = FLAG_ROOM_AMENITIES_KITCHENETTE << 1;
     public static final int FLAG_ROOM_AMENITIES_DISABLED_FACILITIES = FLAG_ROOM_AMENITIES_SMOKEABLE << 1;
 
     public int person = PERSON_COUNT_OF_DEFAULT;
@@ -155,7 +155,7 @@ public class StayFilter
 
         if ((flagAmenitiesFilters & FLAG_AMENITIES_BREAKFAST_RESTAURANT) == FLAG_AMENITIES_BREAKFAST_RESTAURANT)
         {
-            amenitiesFilterList.add("Breakfast");
+            amenitiesFilterList.add("BreakfastRestaurant");
         }
 
         if ((flagAmenitiesFilters & FLAG_AMENITIES_CAFETERIA) == FLAG_AMENITIES_CAFETERIA)
@@ -217,9 +217,9 @@ public class StayFilter
             amenitiesFilterList.add("KidsPlayroom");
         }
 
-        if ((flagAmenitiesFilters & FLAG_AMENITIES_RENT_BABY_BED) == FLAG_AMENITIES_RENT_BABY_BED)
+        if ((flagAmenitiesFilters & FLAG_AMENITIES_BASSINET) == FLAG_AMENITIES_BASSINET)
         {
-            amenitiesFilterList.add("RentBabyBed");
+            amenitiesFilterList.add("Bassinet");
         }
 
         return amenitiesFilterList;
@@ -294,9 +294,9 @@ public class StayFilter
             roomAmenitiesFilterList.add("Tv");
         }
 
-        if ((flagRoomAmenitiesFilters & FLAG_ROOM_AMENITIES_COOKING) == FLAG_ROOM_AMENITIES_COOKING)
+        if ((flagRoomAmenitiesFilters & FLAG_ROOM_AMENITIES_KITCHENETTE) == FLAG_ROOM_AMENITIES_KITCHENETTE)
         {
-            roomAmenitiesFilterList.add("Cooking");
+            roomAmenitiesFilterList.add("Kitchenette");
         }
 
         if ((flagRoomAmenitiesFilters & FLAG_ROOM_AMENITIES_SMOKEABLE) == FLAG_ROOM_AMENITIES_SMOKEABLE)

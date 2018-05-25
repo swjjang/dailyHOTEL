@@ -112,6 +112,9 @@ public class StayDetailData
     @JsonField(name = "statistic")
     public ReviewStatisticData statistic;
 
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
+
     public StayDetailData()
     {
 
@@ -346,6 +349,11 @@ public class StayDetailData
         checkInformation.setWaitingForBooking(waitingForBooking);
 
         stayDetail.setCheckInformation(checkInformation);
+
+        if (rewardCard != null)
+        {
+            stayDetail.setRewardStickerCount(rewardCard.rewardStickerCount);
+        }
 
         return stayDetail;
     }
@@ -1113,6 +1121,21 @@ public class StayDetailData
 
                 return reviewScore;
             }
+        }
+    }
+
+    @JsonObject
+    static class RewardCardData
+    {
+        @JsonField(name = "expiredAt")
+        public String expiredAt;
+
+        @JsonField(name = "rewardStickerCount")
+        public int rewardStickerCount;
+
+        public RewardCardData()
+        {
+
         }
     }
 }

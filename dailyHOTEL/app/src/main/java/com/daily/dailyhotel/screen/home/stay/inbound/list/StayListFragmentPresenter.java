@@ -650,6 +650,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         analyticsParam.totalListCount = listCount;
         analyticsParam.isDailyChoice = stay.dailyChoice;
         analyticsParam.gradeName = stay.grade.getName(getActivity());
+        analyticsParam.setAmenitiesFilter(mStayViewModel.stayFilter.getValue().getAmenitiesFilter());
 
         StayBookDateTime stayBookDateTime = mStayViewModel.bookDateTime.getValue();
 

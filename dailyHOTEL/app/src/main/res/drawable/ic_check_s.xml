@@ -2,7 +2,7 @@
         android:width="12dp"
         android:height="10dp"
         android:tintMode="multiply"
-        android:tint="@color/selector_svg_color_dababab_sb70038_eeaeaea"
+        android:tint="@color/selector_svg_color_dababab_seb2135_eeaeaea"
         android:viewportHeight="20.0"
         android:viewportWidth="24.0">
     <path

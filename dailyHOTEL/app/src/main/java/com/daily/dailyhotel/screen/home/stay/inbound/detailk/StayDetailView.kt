@@ -21,6 +21,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
+import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -570,14 +571,23 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.imageLoopView.setImageList(imageList)
     }
 
-    override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean) {
+    override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean) {
         viewDataBinding.baseInformationView.apply {
             setGradeName(baseInformation.grade.getName(context))
             setRewardsVisible(baseInformation.provideRewardSticker)
             setNameText(baseInformation.name)
-            setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
+
+            if (soldOut) {
+                setPrice(getString(R.string.label_soldout))
+                setPriceWonVisible(false)
+            } else {
+                setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
+                setPriceWonVisible(true)
+            }
+
             setNightsEnabled(nightsEnabled)
             setAwardsVisible(baseInformation.awards.letNotNullTrueElseNullFalse { setAwardsTitle(it.title) })
+            setAwardsClickListener(View.OnClickListener { eventListener.onTrueAwardsClick() })
         }
     }
 
@@ -616,9 +626,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation) {
         viewDataBinding.businessBenefitView.apply {
             if (benefitInformation.title.isTextEmpty() && !benefitInformation.contentList.isNotNullAndNotEmpty()) {
-                setBeneiftVisible(false)
+                setBenefitVisible(false)
             } else {
-                setBeneiftVisible(true)
+                setBenefitVisible(true)
 
                 if (benefitInformation.title.isTextEmpty()) {
                     setTitleVisible(false)
@@ -637,12 +647,30 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
             if (benefitInformation.coupon != null && benefitInformation.coupon!!.couponDiscount > 0) {
                 setCouponButtonVisible(true)
-                setCouponButtonEnabled(!benefitInformation.coupon!!.isDownloaded)
-                setCouponButtonText(benefitInformation.coupon!!.couponDiscount)
+
+                val couponPrice = DailyTextUtils.getPriceFormat(context, benefitInformation.coupon!!.couponDiscount, false)
+
+                if (!benefitInformation.coupon!!.isDownloaded) {
+                    setCouponButtonEnabled(true)
+                    setCouponButtonText(context.getString(R.string.label_detail_download_coupon, couponPrice), true)
+                } else {
+                    setCouponButtonEnabled(false)
+                    setCouponButtonText(context.getString(R.string.label_detail_complete_coupon_download, couponPrice), false)
+                }
+
+                setCouponButtonClickListener(View.OnClickListener { eventListener.onDownloadCouponClick() })
             } else {
                 setCouponButtonVisible(false)
             }
         }
+    }
+
+    override fun setCouponButtonText(text: String, iconVisible: Boolean) {
+        viewDataBinding.businessBenefitView.setCouponButtonText(text, iconVisible)
+    }
+
+    override fun setCouponButtonEnabled(enabled: Boolean) {
+        viewDataBinding.businessBenefitView.setCouponButtonEnabled(enabled)
     }
 
     override fun setPriceAverageTypeVisible(visible: Boolean) {
@@ -669,6 +697,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
     override fun setEmptyRoomVisible(visible: Boolean) {
         viewDataBinding.roomInformationView.setEmptyRoomVisible(visible)
+        viewDataBinding.stickyRoomFilterView.setRoomFilterVisible(visible)
     }
 
     override fun setRoomList(roomList: List<Room>?) {
@@ -764,7 +793,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.refundInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation, hasNRDRoom: Boolean) {
+    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation?, hasNRDRoom: Boolean) {
         viewDataBinding.refundInformationView.setInformation(refundInformation)
     }
 

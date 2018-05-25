@@ -49,6 +49,7 @@ class SelectStayCouponDialogActivity : BaseActivity<SelectStayCouponDialogPresen
         const val INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate"
         const val INTENT_EXTRA_SELECT_COUPON = "selectCoupon"
         const val INTENT_EXTRA_MAX_COUPON_AMOUNT = "maxCouponAmount"
+        const val INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON = "hasDownloadableCoupon"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

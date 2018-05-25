@@ -506,7 +506,7 @@ public class SearchGourmetResultTabView extends BaseDialogView<SearchGourmetResu
 
             if (mSelectedPosition == position)
             {
-                textView.setTextColor(getColor(R.color.default_text_cb70038));
+                textView.setTextColor(getColor(R.color.default_text_ceb2135));
             } else
             {
                 textView.setTextColor(getColor(R.color.default_text_c323232));

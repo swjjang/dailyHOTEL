@@ -217,11 +217,11 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
         {
             holder.dataBinding.getRoot().setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
 
-            holder.dataBinding.couponPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
+            holder.dataBinding.couponPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_ceb2135));
             holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, R.drawable.ic_check_s, 0);
             holder.dataBinding.couponPriceTextView.setSelected(true);
 
-            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
+            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_ceb2135));
         } else
         {
             holder.dataBinding.getRoot().setBackgroundResource(R.color.white);

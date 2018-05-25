@@ -22,7 +22,7 @@
         android:layout_marginRight="15dp"
         android:gravity="center"
         android:text="@string/coupon_toolbar_button_text"
-        android:textColor="@color/default_text_cb70038"
+        android:textColor="@color/default_text_ceb2135"
         android:textSize="18dp"/>
 
     <RelativeLayout

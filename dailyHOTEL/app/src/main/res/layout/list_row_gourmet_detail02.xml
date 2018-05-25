@@ -91,7 +91,7 @@
             android:drawablePadding="4dp"
             android:freezesText="true"
             android:gravity="center_vertical"
-            android:textColor="@color/default_text_cb70038"
+            android:textColor="@color/default_text_ceb2135"
             android:textSize="13dp"
             android:visibility="visible"
             app:drawableCompatLeft="@drawable/detail_ic_review"
@@ -175,7 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
             android:drawablePadding="4dp"
-            android:textColor="@color/default_text_cb70038"
+            android:textColor="@color/default_text_ceb2135"
             android:textSize="15dp"
             app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
     </LinearLayout>

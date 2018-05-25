@@ -302,7 +302,7 @@
                     android:drawablePadding="4dp"
                     android:paddingRight="10dp"
                     android:text="@string/label_detail_view_average_price"
-                    android:textColor="@drawable/selector_text_color_c929292_cb70038"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/ic_check_s"/>
 
@@ -316,7 +316,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="12dp"
                     android:text="@string/label_detail_view_total_price"
-                    android:textColor="@drawable/selector_text_color_c929292_cb70038"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/ic_check_s"/>
             </RadioGroup>
@@ -368,7 +368,7 @@
             android:layout_marginLeft="@dimen/detail_button_min_left_margin"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/shape_fillrect_bb70038_r2"
+            android:background="@drawable/shape_fillrect_beb2135_r2"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="17dp"

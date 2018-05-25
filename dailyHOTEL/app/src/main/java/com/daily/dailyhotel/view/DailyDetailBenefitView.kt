@@ -76,19 +76,25 @@ class DailyDetailBenefitView : ConstraintLayout {
         }
     }
 
-    fun setBeneiftVisible(visible: Boolean) {
+    fun setBenefitVisible(visible: Boolean) {
         viewDataBinding.benefitLayout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     fun setCouponButtonEnabled(enabled: Boolean) {
-        viewDataBinding.downloadCouponGroup.isEnabled = enabled
+        viewDataBinding.downloadCouponView.isEnabled = enabled
+        viewDataBinding.downloadCouponTextView.isEnabled = enabled
     }
 
     fun setCouponButtonVisible(visible: Boolean) {
         viewDataBinding.downloadCouponGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setCouponButtonText(price: Int) {
-        viewDataBinding.downloadCouponTextView.text = context.getString(R.string.label_detail_download_coupon, DecimalFormat("###,##0").format(price))
+    fun setCouponButtonText(text: String, iconVisible: Boolean = true) {
+        viewDataBinding.downloadCouponTextView.text = text
+        viewDataBinding.downloadCouponTextView.setCompoundDrawablesWithIntrinsicBounds(if (iconVisible) R.drawable.vector_detail_ic_coupon_small_white else 0, 0, 0, 0)
+    }
+
+    fun setCouponButtonClickListener(listener: OnClickListener) {
+        viewDataBinding.downloadCouponTextView.setOnClickListener(listener)
     }
 }

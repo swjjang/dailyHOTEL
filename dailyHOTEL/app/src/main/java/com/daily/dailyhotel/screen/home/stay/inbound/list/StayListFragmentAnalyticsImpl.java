@@ -286,7 +286,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(',');
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == ',')
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -345,7 +345,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == ',')
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -424,7 +424,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE) == StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE)
             {
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
             }
@@ -439,7 +439,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DISABLED_FACILITIES).append(',');
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == ',')
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == ',')
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }

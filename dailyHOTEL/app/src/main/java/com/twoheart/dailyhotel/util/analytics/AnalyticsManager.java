@@ -1324,10 +1324,10 @@ public class AnalyticsManager
         public static final String SORTFILTER_PRIVATE_POOL = "PrivatePool";
         public static final String SORTFILTER_KARAOKE = "Karaoke";
         public static final String SORTFILTER_PARTYROOM = "PartyRoom";
-        public static final String SORTFILTER_COOKING = "Cooking";
+        public static final String SORTFILTER_COOKING = "kitchenette";
         public static final String SORTFILTER_SMOKEABLE = "Smokeable";
         public static final String SORTFILTER_DISABLED_FACILITIES = "DisabledFacilities";
-        public static final String SORTFILTER_RENT_BABY_BED = "RentBabyBed";
+        public static final String SORTFILTER_BASSINET = "Bassinet";
         //
         public static final String SORTFILTER_0611 = "0611";
         public static final String SORTFILTER_1115 = "1115";
@@ -1613,6 +1613,16 @@ public class AnalyticsManager
         public static final String AGGREGATION_ID = "aggregation_id";
         public static final String LABEL = "label";
         public static final String CANCEL_TYPE = "cancel_type";
+        public static final String BEDTYPE_DOUBLE = "bedtype_double";
+        public static final String BEDTYPE_TWIN = "bedtype_twin";
+        public static final String BEDTYPE_IN_FLOOR_HEATING = "bedtype_in_floor_heating";
+        public static final String BEDTYPE_SINGLE = "bedtype_single";
+        public static final String FACILITY_KIDS_PLAY_ROOM = "facility_kids_play_room";
+        public static final String FACILITY_POOL = "facility_pool";
+        public static final String FACILITY_PET = "facility_pet";
+        public static final String FACILITY_BREAKFAST = "facility_breakfast";
+        public static final String FACILITY_PART_ROOM = "facility_part_room";
+        public static final String FACILITY_WHIRLPOOL = "facility_whirlpool";
     }
 
     public static class ValueType

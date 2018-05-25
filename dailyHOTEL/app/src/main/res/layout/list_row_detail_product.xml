@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/default_text_cb70038"
+            android:textColor="@color/default_text_ceb2135"
             android:textSize="15dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -108,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/shape_fillrect_bb70038_r2"
+            android:background="@drawable/shape_fillrect_beb2135_r2"
             android:gravity="center"
             android:paddingLeft="17dp"
             android:paddingRight="17dp"

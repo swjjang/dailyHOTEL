@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAnalyticsInterface
@@ -55,6 +56,27 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                     eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
             }
+
+            // 베드타입
+            List<String> bedTypeList = stayFilter.getBedTypeList();
+            if (bedTypeList != null && bedTypeList.size() > 0)
+            {
+                eventParams.put(AnalyticsManager.KeyType.BEDTYPE_DOUBLE, Boolean.toString(bedTypeList.contains("DOUBLE")));
+                eventParams.put(AnalyticsManager.KeyType.BEDTYPE_TWIN, Boolean.toString(bedTypeList.contains("TWIN")));
+                eventParams.put(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING, Boolean.toString(bedTypeList.contains("IN_FLOOR_HEATING")));
+                eventParams.put(AnalyticsManager.KeyType.BEDTYPE_SINGLE, Boolean.toString(bedTypeList.contains("SINGLE")));
+            }
+
+            // 시설
+            List<String> amenitiesList = stayFilter.getAmenitiesFilter();
+            eventParams.put(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM, Boolean.toString(amenitiesList.contains("KidsPlayroom")));
+            eventParams.put(AnalyticsManager.KeyType.FACILITY_POOL, Boolean.toString(amenitiesList.contains("Pool")));
+            eventParams.put(AnalyticsManager.KeyType.FACILITY_PET, Boolean.toString(amenitiesList.contains("Pet")));
+
+            List<String> roomAmenitiesList = stayFilter.getRoomAmenitiesFilterList();
+            eventParams.put(AnalyticsManager.KeyType.FACILITY_BREAKFAST, Boolean.toString(roomAmenitiesList.contains("Breakfast")));
+            eventParams.put(AnalyticsManager.KeyType.FACILITY_PART_ROOM, Boolean.toString(roomAmenitiesList.contains("PartyRoom")));
+            eventParams.put(AnalyticsManager.KeyType.FACILITY_WHIRLPOOL, Boolean.toString(roomAmenitiesList.contains("SpaWallpool")));
 
             final char DELIMITER = '-';
 
@@ -221,7 +243,12 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if ((flagBedTypeFilters & StayFilter.FLAG_BED_SINGLE) == StayFilter.FLAG_BED_SINGLE)
+            {
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(DELIMITER);
+            }
+
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -322,12 +349,12 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(DELIMITER);
             }
 
-            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_RENT_BABY_BED) == StayFilter.FLAG_AMENITIES_RENT_BABY_BED)
+            if ((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BASSINET) == StayFilter.FLAG_AMENITIES_BASSINET)
             {
-                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_RENT_BABY_BED).append(DELIMITER);
+                stringBuilder.append(AnalyticsManager.Label.SORTFILTER_BASSINET).append(DELIMITER);
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }
@@ -408,7 +435,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
             }
 
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING)
+            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE) == StayFilter.FLAG_ROOM_AMENITIES_KITCHENETTE)
             {
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_COOKING).append(',');
             }
@@ -423,7 +450,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 stringBuilder.append(AnalyticsManager.Label.SORTFILTER_DISABLED_FACILITIES).append(',');
             }
 
-            if (stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
+            if (stringBuilder.length() > 0 && stringBuilder.charAt(stringBuilder.length() - 1) == DELIMITER)
             {
                 stringBuilder.setLength(stringBuilder.length() - 1);
             }

@@ -1,7 +1,7 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
         android:width="20dp"
         android:height="20dp"
-        android:tint="@color/selector_svg_color_d454545_sb70038_none_pressed"
+        android:tint="@color/selector_svg_color_d454545_seb2135_none_pressed"
         android:tintMode="multiply"
         android:viewportHeight="40.0"
         android:viewportWidth="40.0">

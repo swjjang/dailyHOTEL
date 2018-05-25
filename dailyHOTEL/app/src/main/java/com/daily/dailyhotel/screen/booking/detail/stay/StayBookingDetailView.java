@@ -807,7 +807,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
         String comment = refundPolicy == null ? "" : refundPolicy.comment;
         if (DailyTextUtils.isTextEmpty(comment) == false)
         {
-            comment = comment.replaceAll("900034", "B70038");
+            comment = comment.replaceAll("900034", "EB2135");
             mBookingDetail03DataBinding.refundPolicyTextView.setText(Html.fromHtml(comment));
         }
 

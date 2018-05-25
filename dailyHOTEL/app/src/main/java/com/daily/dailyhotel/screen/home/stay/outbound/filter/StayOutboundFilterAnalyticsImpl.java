@@ -5,10 +5,12 @@ import android.app.Activity;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
+
 public class StayOutboundFilterAnalyticsImpl implements StayOutboundFilterPresenter.StayOutboundFilterAnalyticsInterface
 {
     @Override
-    public void onSortClick(Activity activity, StayOutboundFilters.SortType sortType)
+    public void onEventSortClick(Activity activity, StayOutboundFilters.SortType sortType)
     {
         if (activity == null || sortType == null)
         {
@@ -45,7 +47,7 @@ public class StayOutboundFilterAnalyticsImpl implements StayOutboundFilterPresen
     }
 
     @Override
-    public void onRatingClick(Activity activity, int rating)
+    public void onEventRatingClick(Activity activity, int rating)
     {
         if (activity == null)
         {

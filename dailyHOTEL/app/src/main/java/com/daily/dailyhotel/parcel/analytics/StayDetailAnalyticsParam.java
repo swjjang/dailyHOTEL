@@ -10,6 +10,10 @@ import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * Created by android_sam on 2017. 6. 23..
  */
@@ -26,6 +30,7 @@ public class StayDetailAnalyticsParam implements Parcelable
     private String mAddressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
     private StayRegion mRegion;
     private String mShowOriginalPriceYn = "N"; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
+    private HashSet mAmenitiesFilter = new HashSet();
 
     public StayDetailAnalyticsParam()
     {
@@ -95,6 +100,22 @@ public class StayDetailAnalyticsParam implements Parcelable
         mShowOriginalPriceYn = originPrice <= 0 || originPrice <= discountPrice ? "N" : "Y";
     }
 
+    public void setAmenitiesFilter(List<String> amenitiesFilter)
+    {
+        if (amenitiesFilter == null || amenitiesFilter.isEmpty())
+        {
+            return;
+        }
+
+        mAmenitiesFilter.clear();
+        mAmenitiesFilter.addAll(amenitiesFilter);
+    }
+
+    public HashSet getAmenitiesFilter()
+    {
+        return mAmenitiesFilter;
+    }
+
     @Override
     public int describeContents()
     {
@@ -111,6 +132,7 @@ public class StayDetailAnalyticsParam implements Parcelable
         dest.writeInt(entryPosition);
         dest.writeInt(totalListCount);
         dest.writeInt(isDailyChoice == true ? 1 : 0);
+        dest.writeSerializable(mAmenitiesFilter);
 
         if (mRegion == null)
         {
@@ -130,6 +152,7 @@ public class StayDetailAnalyticsParam implements Parcelable
         entryPosition = in.readInt();
         totalListCount = in.readInt();
         isDailyChoice = in.readInt() == 1;
+        mAmenitiesFilter = (HashSet) in.readSerializable();
 
         StayRegionParcel stayRegionParcel = in.readParcelable(StayRegionParcel.class.getClassLoader());
 

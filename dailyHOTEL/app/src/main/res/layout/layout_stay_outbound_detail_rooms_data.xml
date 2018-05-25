@@ -96,7 +96,7 @@
                     android:drawablePadding="4dp"
                     android:paddingRight="10dp"
                     android:text="@string/label_detail_view_average_price"
-                    android:textColor="@drawable/selector_text_color_c929292_cb70038"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/ic_check_s"/>
 
@@ -110,7 +110,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="15dp"
                     android:text="@string/label_detail_view_total_price"
-                    android:textColor="@drawable/selector_text_color_c929292_cb70038"
+                    android:textColor="@drawable/selector_text_color_c929292_ceb2135"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/ic_check_s"/>
             </RadioGroup>

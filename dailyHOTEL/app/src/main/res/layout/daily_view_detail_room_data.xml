@@ -17,7 +17,10 @@
             android:layout_height="168dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            fresco:actualImageScaleType="centerCrop"/>
+            fresco:actualImageScaleType="centerCrop"
+            fresco:backgroundImage="@color/default_background"
+            fresco:placeholderImage="@drawable/img_no_img_stay"
+            fresco:placeholderImageScaleType="center"/>
 
         <ImageView
             android:id="@+id/rewardImageView"
@@ -60,8 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
             android:ellipsize="end"
-            android:maxHeight="40dp"
             android:lineSpacingExtra="-3dp"
+            android:maxHeight="40dp"
             android:maxLines="2"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="16dp"

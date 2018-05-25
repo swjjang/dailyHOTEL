@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:drawablePadding="4dp"
-                        android:textColor="@color/default_text_cb70038"
+                        android:textColor="@color/default_text_ceb2135"
                         android:textSize="13dp"
                         app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
                 </LinearLayout>
@@ -162,7 +162,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:drawablePadding="4dp"
-                        android:textColor="@color/default_text_cb70038"
+                        android:textColor="@color/default_text_ceb2135"
                         android:textSize="13dp"
                         app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
                 </LinearLayout>

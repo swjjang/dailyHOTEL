@@ -37,9 +37,9 @@ class DailyDetailAddressView : ConstraintLayout {
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_address_data, this, true)
 
-        viewDataBinding.mapImageView.setOnClickListener { clickListener?.onMapClick() }
+        viewDataBinding.mapIconImageView.setOnClickListener { clickListener?.onMapClick() }
         viewDataBinding.copyAddressTextView.setOnClickListener { clickListener?.onCopyAddressClick() }
-        viewDataBinding.searchAddressTextView.setOnClickListener { clickListener?.onCopyAddressClick() }
+        viewDataBinding.searchAddressTextView.setOnClickListener { clickListener?.onSearchAddressClick() }
     }
 
     fun setOnAddressClickListener(clickListener: OnAddressClickListener?) {

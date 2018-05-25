@@ -35,19 +35,21 @@ class DailyDetailRefundInformationView : ConstraintLayout {
 
     }
 
-    fun setInformation(information: StayDetailk.RefundInformation, hasNRDRoom: Boolean = false) {
+    fun setInformation(information: StayDetailk.RefundInformation?, hasNRDRoom: Boolean = false) {
         if (viewDataBinding.informationLayout.childCount > 0) {
             viewDataBinding.informationLayout.removeAllViews()
         }
 
-        information.contentList.takeNotEmpty {
-            it.forEach {
-                viewDataBinding.informationLayout.addView(getContentBulletView(it), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        information?.let {
+            it.contentList.takeNotEmpty {
+                it.forEach {
+                    viewDataBinding.informationLayout.addView(getContentBulletView(it), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                }
             }
-        }
 
-        information.warningMessage.takeNotEmpty {
-            viewDataBinding.informationLayout.addView(getContentBulletView(it, R.color.default_text_ceb2135), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            it.warningMessage.takeNotEmpty {
+                viewDataBinding.informationLayout.addView(getContentBulletView(it, R.color.default_text_ceb2135), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            }
         }
     }
 

@@ -48,7 +48,7 @@ interface StayDetailInterface {
 
         fun setScrollViewVisible(visible: Boolean)
 
-        fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean)
+        fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean)
 
         fun setTrueReviewInformationVisible(visible: Boolean)
 
@@ -57,6 +57,10 @@ interface StayDetailInterface {
         fun setBenefitInformationVisible(visible: Boolean)
 
         fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation)
+
+        fun setCouponButtonEnabled(enabled: Boolean)
+
+        fun setCouponButtonText(text: String, iconVisible: Boolean = true)
 
         fun setEmptyRoomText(text: String?)
 
@@ -99,7 +103,7 @@ interface StayDetailInterface {
 
         fun setCancellationAndRefundPolicyVisible(visible: Boolean)
 
-        fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation, hasNRDRoom: Boolean = false)
+        fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation?, hasNRDRoom: Boolean = false)
 
         fun setCheckInformationVisible(visible: Boolean)
 
@@ -235,7 +239,8 @@ interface StayDetailInterface {
 
         fun getStayPaymentAnalyticsParam(stayDetail: StayDetailk, stayRoom: StayRoom): StayPaymentAnalyticsParam
 
-        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int)
+        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int,
+                     bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>)
 
         fun onScreen(activity: Activity)
 

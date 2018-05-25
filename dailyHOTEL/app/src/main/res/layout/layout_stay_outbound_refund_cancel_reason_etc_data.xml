@@ -11,7 +11,7 @@
             android:layout_height="45dp"
             android:gravity="center_vertical"
             android:text="@string/label_select_cancel_refund07"
-            android:textColor="@drawable/selector_text_color_c323232_cb70038"
+            android:textColor="@drawable/selector_text_color_c323232_ceb2135"
             android:textSize="14dp"/>
 
         <FrameLayout
