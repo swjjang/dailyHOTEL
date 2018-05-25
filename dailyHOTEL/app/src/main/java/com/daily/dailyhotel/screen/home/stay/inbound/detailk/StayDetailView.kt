@@ -21,6 +21,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
+import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -617,9 +618,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     override fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation) {
         viewDataBinding.businessBenefitView.apply {
             if (benefitInformation.title.isTextEmpty() && !benefitInformation.contentList.isNotNullAndNotEmpty()) {
-                setBeneiftVisible(false)
+                setBenefitVisible(false)
             } else {
-                setBeneiftVisible(true)
+                setBenefitVisible(true)
 
                 if (benefitInformation.title.isTextEmpty()) {
                     setTitleVisible(false)
@@ -638,13 +639,30 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
             if (benefitInformation.coupon != null && benefitInformation.coupon!!.couponDiscount > 0) {
                 setCouponButtonVisible(true)
-                setCouponButtonEnabled(!benefitInformation.coupon!!.isDownloaded)
-                setCouponButtonText(benefitInformation.coupon!!.couponDiscount)
+
+                val couponPrice = DailyTextUtils.getPriceFormat(context, benefitInformation.coupon!!.couponDiscount, false)
+
+                if (!benefitInformation.coupon!!.isDownloaded) {
+                    setCouponButtonEnabled(true)
+                    setCouponButtonText(context.getString(R.string.label_detail_download_coupon, couponPrice), true)
+                } else {
+                    setCouponButtonEnabled(false)
+                    setCouponButtonText(context.getString(R.string.label_detail_complete_coupon_download, couponPrice), false)
+                }
+
                 setCouponButtonClickListener(View.OnClickListener { eventListener.onDownloadCouponClick() })
             } else {
                 setCouponButtonVisible(false)
             }
         }
+    }
+
+    override fun setCouponButtonText(text: String, iconVisible: Boolean) {
+        viewDataBinding.businessBenefitView.setCouponButtonText(text, iconVisible)
+    }
+
+    override fun setCouponButtonEnabled(enabled: Boolean) {
+        viewDataBinding.businessBenefitView.setCouponButtonEnabled(enabled)
     }
 
     override fun setPriceAverageTypeVisible(visible: Boolean) {
