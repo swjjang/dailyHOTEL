@@ -39,8 +39,8 @@
                 android:text="@string/label_detail_review_terms_go"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
@@ -70,11 +70,101 @@
         <View
             android:id="@+id/progressBarUnderLineView"
             android:layout_width="0dp"
-            android:layout_height="12dp"
-            android:background="@drawable/layerlist_divider"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progressBarLayout"/>
+
+        <LinearLayout
+            android:id="@+id/primaryReviewLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBarUnderLineView">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/productNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="11dp"
+                dailyFont:style="DemiLight"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/reviewTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/default_text_c666666"
+                    android:textSize="13dp"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/moreReadTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/reviewTextView"
+                    android:layout_alignParentRight="true"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="20dp"
+                    android:text="@string/label_detail_review_more_read"
+                    android:textColor="@color/default_text_ceb2135"
+                    android:textSize="13dp"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/ratingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/default_text_c6185cd"
+                    android:textSize="12dp"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/customerTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:textColor="@color/default_text_cc5c5c5"
+                    android:textSize="11dp"
+                    dailyFont:style="DemiLight"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/primaryReviewUnderLineView"
+            android:layout_width="0dp"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/primaryReviewLayout"/>
+
+        <android.support.constraint.Group
+            android:id="@+id/primaryReviewGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="primaryReviewLayout, primaryReviewUnderLineView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/reviewCountTextView"
@@ -88,7 +178,7 @@
             android:textSize="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBarUnderLineView"
+            app:layout_constraintTop_toBottomOf="@id/primaryReviewUnderLineView"
             dailyFont:style="Medium"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

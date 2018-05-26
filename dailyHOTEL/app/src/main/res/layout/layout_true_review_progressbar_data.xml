@@ -39,7 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="3dp"
             android:text="0.0"
-            android:textColor="@color/default_text_ccf9e5e"
+            android:textColor="@color/default_text_c6185cd"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/slashTextView"
