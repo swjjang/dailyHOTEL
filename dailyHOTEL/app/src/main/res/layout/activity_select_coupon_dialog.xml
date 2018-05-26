@@ -27,7 +27,7 @@
             android:paddingRight="15dp"
             android:paddingTop="5dp"
             android:text="@string/label_select_coupon"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="17dp"
             dailyFont:style="Medium"/>
 

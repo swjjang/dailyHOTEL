@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_searchresult_empty"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="18dp"
                     dailyFont:style="Medium"/>
 
@@ -105,7 +105,7 @@
                     android:gravity="center_horizontal"
                     android:paddingBottom="15dp"
                     android:text="@string/label_searchresult_call_customercenter"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
@@ -146,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/message_not_exist_filters"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="18dp"
                     dailyFont:style="Medium"/>
 

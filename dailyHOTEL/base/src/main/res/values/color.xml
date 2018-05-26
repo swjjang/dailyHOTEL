@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="default_probressbar">#d3d3d3</color>
-    <color name="default_statusbar_background">#323232</color>
+    <color name="default_statusbar_background">#4d4d4d</color>
 
     <color name="ceb2135">#eb2135</color>
     <color name="ce8e8e9">#e8e8e9</color>
     <color name="caa000000">#aa000000</color>
 
-    <color name="default_text_c323232">#323232</color>
+    <color name="default_text_c4d4d4d">#4d4d4d</color>
     <color name="default_text_cc5c5c5">#c5c5c5</color>
     <color name="default_text_cffffff">#ffffff</color>
 </resources>

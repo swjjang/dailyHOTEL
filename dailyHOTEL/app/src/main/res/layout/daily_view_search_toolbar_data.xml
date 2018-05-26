@@ -50,7 +50,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="12dp"
             app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
             app:layout_constraintRight_toRightOf="@+id/titleBackgroundView"

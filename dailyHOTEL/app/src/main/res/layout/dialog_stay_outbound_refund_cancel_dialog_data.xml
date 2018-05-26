@@ -35,7 +35,7 @@
                     android:layout_marginTop="24dp"
                     android:gravity="center_horizontal"
                     android:text="@string/label_select_cancel_refund"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="17dp"
                     dailyFont:style="Medium"/>
 
@@ -219,7 +219,7 @@
                                 <!--android:paddingLeft="10dp"-->
                                 <!--android:paddingRight="10dp"-->
                                 <!--android:paddingTop="10dp"-->
-                                <!--android:textColor="@color/default_text_c323232"-->
+                                <!--android:textColor="@color/default_text_c4d4d4d"-->
                                 <!--android:textColorHint="@color/default_line_cd0d0d0"-->
                                 <!--android:textSize="13dp"/>-->
 

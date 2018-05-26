@@ -17,8 +17,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
-        android:text="상담 유형 선택"
-        android:textColor="@color/default_text_c323232"
+        android:text="@string/label_happytalk_select_consulting_type"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 
@@ -30,8 +30,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="신속하고 정확한 상담을 위해 상담 유형을 선택해주세요"
-        android:textColor="@color/default_text_c323232"
+        android:text="@string/message_happytalk_select_consult_type"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="13dp"/>
 
     <com.twoheart.dailyhotel.widget.DailyHintSpinner

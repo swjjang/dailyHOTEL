@@ -375,7 +375,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:text="@string/act_booking_price_real"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="14dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"

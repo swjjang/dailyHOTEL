@@ -18,7 +18,7 @@
             android:layout_height="15dp"
             android:layout_marginTop="10dp"
             android:text="@string/label_receipt_bookinginfo"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"
             dailyFont:style="Bold"/>
 
@@ -42,7 +42,7 @@
             android:layout_marginLeft="69dp"
             android:layout_marginTop="@dimen/issuingreceipt_linespacing"
             android:gravity="right"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -66,7 +66,7 @@
             android:layout_marginTop="@dimen/issuingreceipt_linespacing"
             android:layout_toRightOf="@id/stayNameTitleView"
             android:gravity="right"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -91,7 +91,7 @@
             android:layout_toRightOf="@id/addressTitleView"
             android:gravity="right"
             android:maxLines="2"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -115,7 +115,7 @@
             android:layout_marginTop="@dimen/issuingreceipt_linespacing"
             android:layout_toRightOf="@id/guestTitleView"
             android:gravity="right"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -139,7 +139,7 @@
             android:layout_marginTop="@dimen/issuingreceipt_linespacing"
             android:layout_toRightOf="@id/checkInOutTitleView"
             android:gravity="right"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -161,7 +161,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/checkInOutTextView"
             android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"/>
     </RelativeLayout>
 

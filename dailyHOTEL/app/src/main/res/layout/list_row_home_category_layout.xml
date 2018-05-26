@@ -30,7 +30,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:text="@string/label_home_category_nearby_stay_text"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="11dp"
         app:drawableCompatLeft="@drawable/vector_home_shortcut_nearby"/>
 

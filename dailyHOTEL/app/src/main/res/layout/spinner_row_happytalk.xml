@@ -10,6 +10,6 @@
     android:gravity="center_vertical"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
-    android:textColor="@color/default_text_c323232"
+    android:textColor="@color/default_text_c4d4d4d"
     android:textSize="13dp"
     app:drawableCompatRight="@drawable/spinner"/>

@@ -22,7 +22,7 @@
         android:paddingRight="15dp"
         android:paddingTop="25dp"
         android:text="@string/label_booking_step4"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="14dp"
         dailyFont:style="Medium"/>
 

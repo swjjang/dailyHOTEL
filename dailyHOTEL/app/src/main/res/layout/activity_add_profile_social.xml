@@ -43,7 +43,7 @@
                 android:gravity="left|center_vertical"
                 android:lineSpacingExtra="-2dp"
                 android:text="@string/message_add_profile_guide"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="11dp"/>
 
             <LinearLayout
@@ -73,7 +73,7 @@
                     android:inputType="textEmailAddress"
                     android:maxLength="50"
                     android:singleLine="true"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textColorHint="@color/search_hint_text"
                     android:textSize="16dp"
                     android:theme="@style/EditTextTheme"/>
@@ -107,7 +107,7 @@
                     android:inputType="text"
                     android:maxLength="20"
                     android:singleLine="true"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textColorHint="@color/search_hint_text"
                     android:textSize="16dp"
                     android:theme="@style/EditTextTheme"/>
@@ -145,7 +145,7 @@
                         android:maxLength="20"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
                         android:theme="@style/EditTextTheme"
@@ -181,7 +181,7 @@
                         android:maxLength="20"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
                         android:theme="@style/EditTextTheme"/>
@@ -212,7 +212,7 @@
                 android:inputType="text"
                 android:maxLength="20"
                 android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textColorHint="@color/search_hint_text"
                 android:textSize="16dp"
                 android:theme="@style/EditTextTheme"/>
@@ -254,7 +254,7 @@
                         android:layout_height="31dp"
                         android:gravity="center"
                         android:text="@string/act_signup_14_over"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
                         android:theme="@style/CheckBoxTheme"/>
                 </RelativeLayout>
@@ -271,7 +271,7 @@
                         android:layout_height="31dp"
                         android:gravity="center"
                         android:text="@string/act_signup_terms"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
                         android:theme="@style/CheckBoxTheme"/>
 

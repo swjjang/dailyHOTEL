@@ -16,7 +16,7 @@
         android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
         android:text="@string/label_map_searchmap"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 
@@ -37,7 +37,7 @@
             android:drawableTop="@drawable/ic_kakao_map"
             android:gravity="center"
             android:text="@string/label_share_daum_map"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"
             android:visibility="visible"
             app:layout_columnWeight="1"/>
@@ -51,7 +51,7 @@
             android:drawableTop="@drawable/ic_naver"
             android:gravity="center"
             android:text="@string/label_share_naver_map"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"
             android:visibility="visible"
             app:layout_columnWeight="1"/>
@@ -65,7 +65,7 @@
             android:drawableTop="@drawable/ic_google"
             android:gravity="center"
             android:text="@string/label_share_google_map"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"
             app:layout_columnWeight="1"/>
 
@@ -78,7 +78,7 @@
             android:drawableTop="@drawable/ic_tmap_red"
             android:gravity="center"
             android:text="@string/label_share_tmap_navi"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"
             app:layout_columnWeight="1"/>
 
@@ -91,7 +91,7 @@
             android:drawableTop="@drawable/ic_kakao_navi"
             android:gravity="center"
             android:text="@string/label_share_kakao_navi"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"
             app:layout_columnWeight="1"/>
     </android.support.v7.widget.GridLayout>

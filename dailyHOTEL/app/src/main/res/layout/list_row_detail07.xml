@@ -33,7 +33,7 @@
             android:layout_marginTop="14dp"
             android:gravity="center"
             android:text="@string/message_consult_kakao"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
 
@@ -85,7 +85,7 @@
                 android:drawablePadding="4dp"
                 android:gravity="center"
                 android:text="@string/label_daily_concierge_to_call"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"
                 app:drawableCompatLeft="@drawable/ic_detail_ic_ops_help"/>
         </FrameLayout>

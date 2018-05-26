@@ -49,7 +49,7 @@
             android:layout_marginTop="22dp"
             android:freezesText="true"
             android:gravity="center_horizontal"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -68,7 +68,7 @@
             android:gravity="center_horizontal"
             android:maxLines="2"
             android:paddingBottom="2dp"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -341,7 +341,7 @@
                 android:layout_marginTop="32dp"
                 android:background="@drawable/tooltip_top_vr"
                 android:text="@string/label_preview_wish_guide"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"
                 dailyFont:style="Medium"/>
         </FrameLayout>

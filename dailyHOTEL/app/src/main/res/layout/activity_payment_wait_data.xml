@@ -47,7 +47,7 @@
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/actionbar_title_payment_wait_reservation_title"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="14dp"
                     dailyFont:style="Medium"/>
 
@@ -79,7 +79,7 @@
                         android:layout_weight="0.7"
                         android:gravity="right|center_vertical"
                         android:lineSpacingExtra="-2dp"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textIsSelectable="true"
                         android:textSize="13dp"/>
                 </LinearLayout>
@@ -106,7 +106,7 @@
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/label_wait_payment_price_information"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="14dp"
                     dailyFont:style="Medium"/>
 
@@ -177,7 +177,7 @@
                             android:layout_weight="0.7"
                             android:gravity="right|center_vertical"
                             android:lineSpacingExtra="-2dp"
-                            android:textColor="@color/default_text_c323232"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="13dp"/>
                     </LinearLayout>
 
@@ -203,7 +203,7 @@
                             android:layout_weight="0.7"
                             android:gravity="right|center_vertical"
                             android:lineSpacingExtra="-2dp"
-                            android:textColor="@color/default_text_c323232"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="13dp"/>
                     </LinearLayout>
 
@@ -355,7 +355,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:text="@string/label_wait_payment_total_price"
-                                android:textColor="@color/default_text_c323232"
+                                android:textColor="@color/default_text_c4d4d4d"
                                 android:textSize="14dp"
                                 dailyFont:style="Bold"/>
 
@@ -396,7 +396,7 @@
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/dialog_title_payment_confirm"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="14dp"
                     dailyFont:style="Medium"/>
 

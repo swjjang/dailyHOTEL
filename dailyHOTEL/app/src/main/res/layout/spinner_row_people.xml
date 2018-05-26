@@ -7,5 +7,5 @@
     android:background="@drawable/payment_ic_amount_time_bg"
     android:gravity="center"
     android:paddingRight="25dp"
-    android:textColor="@color/default_text_c323232"
+    android:textColor="@color/default_text_c4d4d4d"
     android:textSize="13dp"/>

@@ -96,7 +96,7 @@
             android:drawablePadding="7dp"
             android:gravity="center"
             android:text="@string/label_daily_concierge_to_call"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/ic_detail_ic_ops_help"
             app:layout_constraintBottom_toBottomOf="@+id/conciergeView"

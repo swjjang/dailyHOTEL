@@ -45,7 +45,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="@string/label_write_review_comment_title"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"/>
     </RelativeLayout>
 
@@ -108,7 +108,7 @@
                     android:layout_marginTop="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/label_write_review_comment_description"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="17dp"/>
 
                 <View
@@ -133,7 +133,7 @@
                 android:minHeight="160dp"
                 android:paddingBottom="15dp"
                 android:paddingTop="14dp"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textColorHint="@color/default_text_cd0d0d0"
                 android:textSize="13dp"
                 android:theme="@style/EditTextTheme"/>

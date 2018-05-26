@@ -17,7 +17,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 
@@ -29,7 +29,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="18dp"
         android:gravity="center"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="13dp"/>
 
     <com.daily.base.widget.DailyCheckBox
@@ -41,7 +41,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="7dp"
         android:text="@string/label_dont_again"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="13dp"
         android:theme="@style/CheckBoxTheme"
         dailyFont:style="Bold"/>

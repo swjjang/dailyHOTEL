@@ -56,7 +56,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="left|center_vertical"
                 android:text="@string/act_credit_current_credit"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="12dp"/>
         </LinearLayout>
 

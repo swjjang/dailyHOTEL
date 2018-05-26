@@ -40,7 +40,7 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/daily_titleImageView"

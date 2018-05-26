@@ -65,7 +65,7 @@ class DailyDetailFacilitiesView : ConstraintLayout {
             this.text = facilities.getName(context)
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11.0f)
             gravity = Gravity.CENTER_HORIZONTAL
-            setTextColor(context.resources.getColor(R.color.default_text_c323232))
+            setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
             setCompoundDrawablesWithIntrinsicBounds(0, facilities.getImageResourceId(), 0, 0)
             compoundDrawablePadding = ScreenUtils.dpToPx(context, 3.0)
 

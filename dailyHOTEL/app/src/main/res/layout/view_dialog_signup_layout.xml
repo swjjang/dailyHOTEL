@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/popup_bg_white_full"
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="24dp"
-        android:src="@drawable/ic_popup_signup"/>
+        app:srcCompat="@drawable/vector_ic_popup_signup"/>
 
     <com.daily.base.widget.DailyTextView
         android:id="@+id/titleTextView"
@@ -24,7 +25,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 

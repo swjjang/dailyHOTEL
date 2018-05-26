@@ -40,7 +40,7 @@
                 android:gravity="left|center_vertical"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="12dp"
                 app:drawableCompatLeft="@drawable/navibar_ic_s_region"
                 app:drawableCompatRight="@drawable/navibar_ic_v"/>
@@ -68,7 +68,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="12dp"
                 app:drawableCompatLeft="@drawable/navibar_ic_s_calendar"
                 app:drawableCompatRight="@drawable/navibar_ic_v"/>

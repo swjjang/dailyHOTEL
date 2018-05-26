@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"
             app:layout_constraintBottom_toTopOf="@+id/subTitleTextView"
             app:layout_constraintLeft_toRightOf="@+id/iconImageView"

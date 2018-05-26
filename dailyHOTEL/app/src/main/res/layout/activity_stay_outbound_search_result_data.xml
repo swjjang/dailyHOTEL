@@ -175,7 +175,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="16dp"
                     android:text="@string/message_searchresult_empty_title"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="18dp"
                     dailyFont:style="Medium"/>
 
@@ -269,7 +269,7 @@
                             android:drawablePadding="4dp"
                             android:gravity="center"
                             android:text="@string/label_searchresult_search_stay"
-                            android:textColor="@color/default_text_c323232"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="13dp"
                             app:drawableCompatLeft="@drawable/vector_search_shortcut_01_stay"
                             dailyFont:style="Medium"/>
@@ -291,7 +291,7 @@
                             android:drawablePadding="4dp"
                             android:gravity="center"
                             android:text="@string/label_searchresult_search_gourmet"
-                            android:textColor="@color/default_text_c323232"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="13dp"
                             app:drawableCompatLeft="@drawable/vector_search_shortcut_03_gourmet"
                             dailyFont:style="Medium"/>
@@ -333,7 +333,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/frag_error_network_unavail"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="18dp"
                     dailyFont:style="Medium"/>
 

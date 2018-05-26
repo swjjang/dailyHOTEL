@@ -37,7 +37,7 @@
             android:gravity="left|center_vertical"
             android:lineSpacingExtra="-2dp"
             android:text="@string/act_forgot_pwd_text"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -59,7 +59,7 @@
             android:inputType="textEmailAddress"
             android:maxLength="50"
             android:singleLine="true"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textColorHint="@color/search_hint_text"
             android:textSize="16dp"
             android:theme="@style/EditTextTheme"/>

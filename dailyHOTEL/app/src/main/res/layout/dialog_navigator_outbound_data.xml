@@ -21,7 +21,7 @@
             android:layout_marginRight="5dp"
             android:gravity="center_horizontal"
             android:text="@string/label_map_searchmap"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="17dp"
             dailyFont:style="Medium"/>
 
@@ -35,7 +35,7 @@
             android:drawableTop="@drawable/ic_google"
             android:gravity="center"
             android:text="@string/label_googlemap"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="12dp"/>
     </LinearLayout>
 </layout>

@@ -246,7 +246,7 @@
                 android:layout_toLeftOf="@+id/closeView"
                 android:gravity="center"
                 android:paddingLeft="45dp"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="16dp"/>
 
             <ImageView
@@ -455,7 +455,7 @@
             android:layout_gravity="right"
             android:layout_marginTop="32dp"
             android:text="@string/label_preview_wish_guide"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"
             dailyFont:style="Medium"/>
     </FrameLayout>

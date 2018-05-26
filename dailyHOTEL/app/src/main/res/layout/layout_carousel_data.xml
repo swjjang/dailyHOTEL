@@ -26,7 +26,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:gravity="left|center_vertical"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintLeft_toLeftOf="parent"

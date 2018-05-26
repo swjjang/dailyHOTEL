@@ -152,7 +152,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="@string/recent_stay_list_empty_button_message"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="13dp"
                         dailyFont:style="Medium" />
                 </LinearLayout>
@@ -192,7 +192,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="@string/label_booking_go_to_gourmet"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="13dp"
                         dailyFont:style="Medium" />
                 </LinearLayout>

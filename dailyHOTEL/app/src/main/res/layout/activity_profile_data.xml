@@ -93,7 +93,7 @@
                         android:maxLength="20"
                         android:singleLine="true"
                         android:text="\u2022\u2022\u2022\u2022\u2022\u2022"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="16dp"/>
                 </LinearLayout>
 
@@ -125,7 +125,7 @@
                         android:layout_marginTop="7dp"
                         android:hint="@string/act_profile_input_name"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/default_text_cc5c5c5"
                         android:textSize="16dp"/>
                 </LinearLayout>
@@ -176,7 +176,7 @@
                         android:gravity="left|center_vertical"
                         android:hint="@string/act_profile_input_contact"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/default_text_cc5c5c5"
                         android:textSize="16dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -212,7 +212,7 @@
                         android:layout_marginTop="7dp"
                         android:hint="@string/act_profile_input_birthday"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/default_text_cc5c5c5"
                         android:textSize="16dp"/>
                 </LinearLayout>
@@ -254,7 +254,7 @@
                             android:gravity="left|center_vertical"
                             android:paddingRight="24dp"
                             android:text="@string/label_privacy_valid_date_1year"
-                            android:textColor="@color/default_text_c323232"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="16dp"
                             app:drawableCompatLeft="@drawable/selector_radio_button"/>
 
@@ -269,7 +269,7 @@
                             android:paddingLeft="6dp"
                             android:paddingRight="24dp"
                             android:text="@string/label_privacy_valid_date_3year"
-                            android:textColor="@color/default_text_c323232"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="16dp"
                             app:drawableCompatLeft="@drawable/selector_radio_button"/>
 
@@ -284,7 +284,7 @@
                             android:paddingLeft="6dp"
                             android:paddingRight="24dp"
                             android:text="@string/label_privacy_valid_date_5year"
-                            android:textColor="@color/default_text_c323232"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="16dp"
                             app:drawableCompatLeft="@drawable/selector_radio_button"/>
                     </RadioGroup>

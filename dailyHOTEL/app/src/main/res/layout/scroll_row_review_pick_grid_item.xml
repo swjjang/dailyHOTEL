@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textColor="@color/selector_text_color_d666666_s323232"
+            android:textColor="@color/selector_text_color_d666666_s4d4d4d"
             android:textSize="13dp"/>
 
         <com.daily.base.widget.DailyTextView
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textColor="@color/selector_text_color_d929292_s323232"
+            android:textColor="@color/selector_text_color_d929292_s4d4d4d"
             android:textSize="10dp"
             android:visibility="gone"/>
     </LinearLayout>

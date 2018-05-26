@@ -21,7 +21,7 @@
             android:layout_marginRight="5dp"
             android:gravity="center_horizontal"
             android:text="@string/label_receipt_email"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="17dp"
             dailyFont:style="Medium"/>
 
@@ -34,7 +34,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/message_send_email"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"/>
 
         <com.daily.base.widget.DailyEditText
@@ -48,7 +48,7 @@
             android:inputType="textEmailAddress"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textColorHint="@color/default_text_cc5c5c5"
             android:textSize="15dp"
             android:theme="@style/EditTextTheme"/>

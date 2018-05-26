@@ -20,7 +20,7 @@
             android:layout_marginBottom="16dp"
             android:gravity="center_horizontal"
             android:text="@string/label_call_service"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="17dp"
             dailyFont:style="Medium"/>
 
@@ -36,7 +36,7 @@
                 android:layout_height="62dp"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
@@ -58,7 +58,7 @@
                 android:layout_height="62dp"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
@@ -81,7 +81,7 @@
                 android:layout_height="62dp"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
@@ -98,7 +98,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="@string/label_daily_kakaotalk"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/popup_ic_ops_04_daily_kakao"
             dailyFont:style="Medium"/>
@@ -115,7 +115,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="@string/frag_call_res_contact"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/popup_ic_ops_06_daily_call"
             dailyFont:style="Medium"/>

@@ -60,7 +60,7 @@
                 android:paddingRight="15dp"
                 android:paddingTop="20dp"
                 android:text="@string/label_booking_reservation_information"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
@@ -85,7 +85,7 @@
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:paddingTop="10dp"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="18dp"
                     dailyFont:style="Medium"/>
 
@@ -108,7 +108,7 @@
                         android:gravity="center_horizontal"
                         android:paddingTop="10dp"
                         android:text="@string/label_booking_view_detail"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
                         app:drawableCompatTop="@drawable/reservation_ic_detail_info"/>
 
@@ -126,7 +126,7 @@
                         android:gravity="center_horizontal"
                         android:paddingTop="10dp"
                         android:text="@string/label_booking_view_map"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
                         app:drawableCompatTop="@drawable/reservation_ic_directions"/>
 
@@ -145,7 +145,7 @@
                         android:gravity="center_horizontal"
                         android:paddingTop="10dp"
                         android:text="@string/label_booking_input_review"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
                         app:drawableCompatTop="@drawable/reservation_ic_review"/>
                 </LinearLayout>

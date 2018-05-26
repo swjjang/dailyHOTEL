@@ -1536,7 +1536,9 @@
     <!-- Happy Talk -->
     <string name="label_select_category">선택</string>
     <string name="label_consulting">상담 시작</string>
+    <string name="label_happytalk_select_consulting_type">상담 유형 선택</string>
     <string name="message_happytalk_login">원활한 상담 진행을 위해\n앱 로그인을 해주세요.</string>
+    <string name="message_happytalk_select_consult_type">신속하고 정확한 상담을 위해 상담 유형을 선택해주세요.</string>
 
     <!-- Stamp -->
     <!--<string name="label_mydaily_stamp">1박 무료 프리패스 스탬프 모으기!</string>-->

@@ -81,7 +81,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/label_monday"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="11dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -91,7 +91,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/label_tuesday"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="11dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -101,7 +101,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/label_wednesday"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="11dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -111,7 +111,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/label_thursday"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="11dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -121,7 +121,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/label_friday"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="11dp"/>
 
                 <com.daily.base.widget.DailyTextView

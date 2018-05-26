@@ -40,7 +40,7 @@
                 android:maxLines="1"
                 android:paddingTop="14dp"
                 android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textColorHint="@color/default_text_cc5c5c5"
                 android:textSize="18dp"
                 android:theme="@style/EditTextTheme"

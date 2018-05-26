@@ -32,7 +32,7 @@
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
             android:text="@string/label_stay_detail_apply_room_filter"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"
             app:layout_constraintLeft_toRightOf="@+id/closeImageView"
             app:layout_constraintTop_toTopOf="parent"/>

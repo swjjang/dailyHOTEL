@@ -27,7 +27,7 @@
             android:layout_marginRight="11dp"
             android:layout_marginTop="10dp"
             android:text="@string/label_receipt_paymentinfo"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"
             dailyFont:style="Bold"/>
 
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
                 android:layout_alignParentRight="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="11dp"/>
         </RelativeLayout>
 
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
                 android:layout_alignParentRight="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="11dp"/>
         </RelativeLayout>
 
@@ -159,7 +159,7 @@
                 android:layout_height="13dp"
                 android:gravity="center_vertical"
                 android:text="@string/label_receipt_total_payment"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="12dp"
                 dailyFont:style="Medium"/>
 

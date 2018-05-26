@@ -15,7 +15,7 @@
         android:background="@drawable/coupon_footer_button_background"
         android:gravity="center"
         android:text="@string/coupon_use_notice_text"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="13dp"
         dailyFont:style="Medium"/>
 
@@ -28,7 +28,7 @@
         android:background="@drawable/coupon_footer_button_background"
         android:gravity="center"
         android:text="@string/coupon_history_text"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="13dp"
         dailyFont:style="Medium"/>
 </LinearLayout>

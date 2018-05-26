@@ -7,6 +7,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:textColor="@color/default_text_c323232"
+    android:textColor="@color/default_text_c4d4d4d"
     android:textSize="11dp"
     app:drawableCompatTop="@drawable/vector_search_ic_nearby"/>

@@ -47,7 +47,7 @@
                 android:gravity="left|center_vertical"
                 android:lineSpacingExtra="-2dp"
                 android:text="@string/message_edit_phone_guide"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="11dp"/>
 
             <LinearLayout
@@ -80,7 +80,7 @@
                         android:maxLength="20"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
                         android:theme="@style/EditTextTheme"
@@ -117,7 +117,7 @@
                         android:maxLength="20"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
                         android:theme="@style/EditTextTheme"/>
@@ -169,7 +169,7 @@
                         android:inputType="number"
                         android:maxLength="20"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/search_hint_text"
                         android:textSize="16dp"
                         android:theme="@style/EditTextTheme"/>

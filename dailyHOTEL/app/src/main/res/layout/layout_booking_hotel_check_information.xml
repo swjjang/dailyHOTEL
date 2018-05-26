@@ -18,7 +18,7 @@
         android:paddingRight="15dp"
         android:paddingTop="25dp"
         android:text="@string/label_booking_step1"
-        android:textColor="@color/default_text_c323232"
+        android:textColor="@color/default_text_c4d4d4d"
         android:textSize="14dp"
         dailyFont:style="Medium"/>
 
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="13dp"/>
             </LinearLayout>
 
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="13dp"/>
             </LinearLayout>
         </LinearLayout>
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:gravity="right"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"/>
     </LinearLayout>
 
@@ -170,7 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:gravity="right"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"/>
     </LinearLayout>
 
@@ -226,7 +226,7 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
         </LinearLayout>
 
@@ -255,7 +255,7 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
         </LinearLayout>
 
@@ -284,7 +284,7 @@
                 android:maxLength="50"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
         </LinearLayout>
 
@@ -401,7 +401,7 @@
                         android:maxLength="20"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/default_text_cc5c5c5"
                         android:textSize="13dp"
                         android:theme="@style/EditTextTheme"/>
@@ -452,7 +452,7 @@
                         android:maxLength="20"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textColorHint="@color/default_text_cc5c5c5"
                         android:textSize="13dp"
                         android:theme="@style/EditTextTheme"/>
@@ -490,7 +490,7 @@
                     android:maxLength="50"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textColorHint="@color/default_text_cc5c5c5"
                     android:textSize="13dp"
                     android:theme="@style/EditTextTheme"/>
@@ -574,7 +574,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="@string/label_no_parking"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
         </RelativeLayout>
 

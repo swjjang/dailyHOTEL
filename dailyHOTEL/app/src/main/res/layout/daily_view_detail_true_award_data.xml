@@ -22,7 +22,7 @@
             android:id="@+id/awardsNameView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             android:text="@string/label_daily_true_awards"
             app:layout_constraintBottom_toBottomOf="parent"

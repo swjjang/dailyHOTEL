@@ -33,7 +33,7 @@
             android:paddingRight="15dp"
             android:paddingTop="25dp"
             android:text="@string/label_select_reason_for_cancellation"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             dailyFont:style="Medium"/>
 
@@ -53,7 +53,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/message_please_select_a_reason_for_cancellation"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"
             app:drawableCompatRight="@drawable/payment_ic_right"/>
 
@@ -84,7 +84,7 @@
                 android:paddingRight="15dp"
                 android:paddingTop="25dp"
                 android:text="@string/label_input_refund_account"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
@@ -112,7 +112,7 @@
                     android:background="@drawable/shape_fillrect_le8e8e9_bffffff_r2"
                     android:gravity="center"
                     android:text="@string/label_select_bank"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="13dp"
                     app:drawableCompatRight="@drawable/payment_ic_right_on"/>
             </RelativeLayout>
@@ -144,7 +144,7 @@
                     android:maxLength="50"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textColorHint="@color/default_text_cc5c5c5"
                     android:textSize="13dp"
                     android:theme="@style/EditTextTheme"/>
@@ -176,7 +176,7 @@
                     android:maxLength="50"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="@color/default_text_c323232"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textColorHint="@color/default_text_cc5c5c5"
                     android:textSize="13dp"
                     android:theme="@style/EditTextTheme"/>

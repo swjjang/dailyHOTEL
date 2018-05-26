@@ -25,7 +25,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/message_collection_stay_empty_text"
-            android:textColor="@color/default_text_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"
             dailyFont:style="Medium"/>
 
