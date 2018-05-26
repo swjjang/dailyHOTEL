@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_fillrect_ld0d0d0_bffffff"
+    android:background="@drawable/shape_fillrect_ld0d0d0_bffffff_r2"
     android:drawablePadding="2dp"
     android:gravity="center_vertical"
     android:paddingLeft="12dp"

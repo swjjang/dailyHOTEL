@@ -24,7 +24,7 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="67dp"
-                android:background="@drawable/shape_fillrect_lr_top_round_bffffff"
+                android:background="@drawable/shape_fillrect_lr_top_round_bffffff_r2"
                 android:gravity="center"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"

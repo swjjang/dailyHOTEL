@@ -122,7 +122,7 @@
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent"-->
             <!--android:layout_margin="10dp"-->
-            <!--android:background="@drawable/shape_button_disable"-->
+            <!--android:background="@drawable/shape_fillrect_be8e8e9_r3"-->
             <!--android:gravity="center"-->
             <!--android:text="@string/act_hotel_soldout"-->
             <!--android:textColor="@color/default_text_cc5c5c5"-->

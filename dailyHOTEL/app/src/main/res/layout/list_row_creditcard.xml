@@ -13,7 +13,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/shape_fillrect_ld1d1d1_bffffff">
+        android:background="@drawable/shape_fillrect_ld1d1d1_bffffff_r10">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/logoTextView"

@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_easypayment"
-                        android:textColor="@drawable/selector_text_color_c323232_ceb2135"
+                        android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -157,7 +157,7 @@
                     android:id="@+id/emptySimpleCardLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/shape_fillrect_le6e6e7_bffffff"
+                    android:background="@drawable/shape_fillrect_le6e6e7_bffffff_r10"
                     android:visibility="visible">
 
                     <com.daily.base.widget.DailyTextView
@@ -176,7 +176,7 @@
                     android:id="@+id/selectedSimpleCardLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/shape_fillrect_ld1d1d1_bffffff"
+                    android:background="@drawable/shape_fillrect_ld1d1d1_bffffff_r10"
                     android:visibility="gone">
 
                     <com.daily.base.widget.DailyTextView
@@ -263,7 +263,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_card"
-                    android:textColor="@drawable/selector_text_color_c323232_ceb2135"
+                    android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135"
                     android:textSize="13dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -316,7 +316,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_mobile"
-                    android:textColor="@drawable/selector_text_color_c323232_ceb2135"
+                    android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135"
                     android:textSize="13dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -370,7 +370,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_account"
-                    android:textColor="@drawable/selector_text_color_c323232_ceb2135"
+                    android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135"
                     android:textSize="13dp"/>
 
                 <com.daily.base.widget.DailyTextView

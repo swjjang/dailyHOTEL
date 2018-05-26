@@ -77,7 +77,7 @@
                 android:background="@drawable/payment_ic_amount_time_bg"
                 android:gravity="center"
                 android:text="@string/label_booking_select_coupon"
-                android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
+                android:textColor="@drawable/selector_text_color_c4d4d4d_cc5c5c5"
                 android:textSize="13dp"/>
 
             <ImageView

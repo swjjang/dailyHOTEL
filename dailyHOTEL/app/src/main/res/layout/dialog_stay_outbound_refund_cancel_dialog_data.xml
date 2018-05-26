@@ -211,7 +211,7 @@
                                 <!--android:id="@+id/messageEditText"-->
                                 <!--android:layout_width="match_parent"-->
                                 <!--android:layout_height="match_parent"-->
-                                <!--android:background="@drawable/shape_fillrect_ld0d0d0_bffffff"-->
+                                <!--android:background="@drawable/shape_fillrect_ld0d0d0_bffffff_r2"-->
                                 <!--android:gravity="top"-->
                                 <!--android:hint="@string/message_enter_contents"-->
                                 <!--android:maxLength="300"-->

@@ -1507,7 +1507,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         DailyRadioButton fullTimeTextView = new DailyRadioButton(getContext());
         fullTimeTextView.setText(R.string.label_gourmet_detail_full_time_menu);
         fullTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-        fullTimeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+        fullTimeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c4d4d4d_cffffff));
         fullTimeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
         fullTimeTextView.setTag(GourmetDetailPresenter.FULL_TIME);
         fullTimeTextView.setButtonDrawable(new StateListDrawable());
@@ -1529,7 +1529,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 DailyRadioButton timeTextView = new DailyRadioButton(getContext());
                 timeTextView.setText(DailyCalendar.convertDateFormatString(operationTimeList.get(i), DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
                 timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+                timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c4d4d4d_cffffff));
                 timeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
                 timeTextView.setTag(operationTimeList.get(i));
                 timeTextView.setButtonDrawable(new StateListDrawable());

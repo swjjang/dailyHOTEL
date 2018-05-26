@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_margin="15dp"
-            android:background="@drawable/shape_fillrect_le8e8e9_bffffff"
+            android:background="@drawable/shape_fillrect_le8e8e9_bffffff_r2"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"

@@ -71,7 +71,7 @@
             android:layout_below="@+id/textLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:background="@drawable/shape_button_common_background"
+            android:background="@drawable/shape_fillrect_beb2135_r3"
             android:gravity="center"
             android:text="@string/frag_error_btn"
             android:textColor="@android:color/white"

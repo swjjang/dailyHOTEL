@@ -10,7 +10,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/shape_list_row_detail_pension_only_background"
+        android:background="@drawable/shape_rect_cf0f0f0_r2"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 

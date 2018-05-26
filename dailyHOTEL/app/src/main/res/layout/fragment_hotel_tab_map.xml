@@ -118,7 +118,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="@string/label_copy_address"
-                android:textColor="@color/menu_text_default"
+                android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"/>
 
         </RelativeLayout>
@@ -139,7 +139,7 @@
                 android:layout_height="44dp"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="10dp"
-                android:background="@drawable/shape_fillrect_beb2135_r2"
+                android:background="@drawable/shape_fillrect_beb2135_r3"
                 android:gravity="center"
                 android:text="@string/label_map_searchmap"
                 android:textColor="@color/white"

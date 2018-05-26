@@ -343,7 +343,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             } else
             {
                 dailyTextView = new DailyTextView(getContext());
-                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_ceb2135));
+                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c4d4d4d_ceb2135));
                 dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
                 dailyTextView.setText(reason.second);
                 dailyTextView.setTag(reason.first);

@@ -67,7 +67,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="14dp"
-            android:background="@drawable/shape_list_row_detail_pension_only_background"
+            android:background="@drawable/shape_rect_cf0f0f0_r2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

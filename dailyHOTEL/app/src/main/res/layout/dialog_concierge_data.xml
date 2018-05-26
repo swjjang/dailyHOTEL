@@ -125,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="38dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/shape_dialog_button01"
+            android:background="@drawable/shape_fillrect_beb2135_r3"
             android:gravity="center"
             android:text="@string/dialog_btn_text_close"
             android:textColor="@color/default_text_cffffff"

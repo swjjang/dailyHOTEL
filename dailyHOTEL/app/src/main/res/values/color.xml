@@ -213,10 +213,6 @@
     <!-- Splash -->
     <color name="splash_background">#efefef</color>
 
-    <!-- Botton Menu -->
-    <color name="menu_text_default">#929292</color>
-    <color name="menu_text_select">#EB2135</color>
-
     <!-- Information -->
     <color name="information_background">#f8f8f9</color>
     <color name="information_push_subtext">#929292</color>

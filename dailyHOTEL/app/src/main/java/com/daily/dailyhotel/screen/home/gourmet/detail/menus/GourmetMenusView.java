@@ -298,7 +298,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         DailyTextView fullTimeTextView = new DailyTextView(getContext());
         fullTimeTextView.setText(R.string.label_all);
         fullTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-        fullTimeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+        fullTimeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c4d4d4d_cffffff));
         fullTimeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
         fullTimeTextView.setTag(GourmetDetailPresenter.FULL_TIME);
         fullTimeTextView.setGravity(Gravity.CENTER);
@@ -322,7 +322,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 DailyTextView dailyTextView = new DailyTextView(getContext());
                 dailyTextView.setText(DailyCalendar.convertDateFormatString(time, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
                 dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c4d4d4d_cffffff));
                 dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
                 dailyTextView.setTag(time);
                 dailyTextView.setGravity(Gravity.CENTER);
@@ -616,7 +616,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 DailyTextView dailyTextView = new DailyTextView(getContext());
                 dailyTextView.setText(DailyCalendar.convertDateFormatString(time, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
                 dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c4d4d4d_cffffff));
                 dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
                 dailyTextView.setTag(time);
                 dailyTextView.setGravity(Gravity.CENTER);
@@ -646,7 +646,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             DailyTextView dailyTextView = new DailyTextView(getContext());
             dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-            dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+            dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c4d4d4d_cffffff));
             dailyTextView.setGravity(Gravity.CENTER);
 
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();

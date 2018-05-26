@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_used_bonus"
-                        android:textColor="@drawable/selector_text_color_c323232_ceb2135_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -107,7 +107,7 @@
                         android:duplicateParentState="true"
                         android:gravity="center"
                         android:text="@string/label_booking_used_bonus"
-                        android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c4d4d4d_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <ImageView
@@ -151,7 +151,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_used_coupon"
-                        android:textColor="@drawable/selector_text_color_c323232_ceb2135_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -182,7 +182,7 @@
                         android:duplicateParentState="true"
                         android:gravity="center"
                         android:text="@string/label_booking_select_coupon"
-                        android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c4d4d4d_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <ImageView
@@ -224,7 +224,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_used_deposit_sticker"
-                        android:textColor="@drawable/selector_text_color_c323232_ceb2135_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView

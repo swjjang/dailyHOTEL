@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:gravity="center_vertical"
-            android:textColor="@drawable/selector_text_color_c323232_ceb2135"
+            android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135"
             android:textSize="14dp"/>
 
         <View

@@ -11,7 +11,7 @@
             android:layout_height="45dp"
             android:gravity="center_vertical"
             android:text="@string/label_select_cancel_refund07"
-            android:textColor="@drawable/selector_text_color_c323232_ceb2135"
+            android:textColor="@drawable/selector_text_color_c4d4d4d_ceb2135"
             android:textSize="14dp"/>
 
         <FrameLayout
@@ -23,7 +23,7 @@
                 android:id="@+id/messageEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/shape_fillrect_ld0d0d0_bffffff"
+                android:background="@drawable/shape_fillrect_ld0d0d0_bffffff_r2"
                 android:gravity="top"
                 android:hint="@string/message_enter_contents"
                 android:maxLength="300"

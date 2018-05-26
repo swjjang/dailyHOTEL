@@ -44,7 +44,7 @@
                 android:layout_width="141dp"
                 android:layout_height="38dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/shape_button_common_background"
+                android:background="@drawable/shape_fillrect_beb2135_r3"
                 android:gravity="center"
                 android:text="@string/label_do_setting_permission"
                 android:textColor="@color/white"

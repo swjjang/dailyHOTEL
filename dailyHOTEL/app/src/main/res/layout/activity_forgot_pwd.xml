@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/shape_button_common_background"
+            android:background="@drawable/shape_fillrect_beb2135_r3"
             android:gravity="center"
             android:paddingLeft="10dp"
             android:text="@string/act_forgot_pwd_forgot"

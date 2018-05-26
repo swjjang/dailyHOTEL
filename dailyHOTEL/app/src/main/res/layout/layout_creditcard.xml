@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
-                android:background="@drawable/shape_fillrect_beb2135_r2"
+                android:background="@drawable/shape_fillrect_beb2135_r3"
                 android:gravity="center"
                 android:text="@string/label_add_creditcard"
                 android:textColor="@color/white"
@@ -54,7 +54,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="24dp"
-            android:background="@drawable/shape_fillrect_ld1d1d1_bffffff"
+            android:background="@drawable/shape_fillrect_ld1d1d1_bffffff_r10"
             android:visibility="gone">
 
             <com.daily.base.widget.DailyTextView

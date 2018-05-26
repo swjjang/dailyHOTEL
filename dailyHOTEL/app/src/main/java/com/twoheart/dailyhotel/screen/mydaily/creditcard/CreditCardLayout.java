@@ -322,11 +322,11 @@ public class CreditCardLayout extends FrameLayout
                 if (mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(card.billingkey) == true)
                 {
                     logoTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.card_btn_v_select, 0);
-                    cardLayout.setBackgroundResource(R.drawable.shape_fillrect_leb2135_bffffff);
+                    cardLayout.setBackgroundResource(R.drawable.shape_fillrect_leb2135_bffffff_r10);
                 } else
                 {
                     logoTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    cardLayout.setBackgroundResource(R.drawable.shape_fillrect_ld1d1d1_bffffff);
+                    cardLayout.setBackgroundResource(R.drawable.shape_fillrect_ld1d1d1_bffffff_r10);
                 }
             }
 
