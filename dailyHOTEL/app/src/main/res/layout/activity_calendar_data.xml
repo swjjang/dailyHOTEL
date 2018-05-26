@@ -39,11 +39,12 @@
 
             <ImageView
                 android:id="@+id/closeView"
-                android:layout_width="wrap_content"
-                android:layout_height="52dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="15dp"
+                app:layout_constraintBottom_toTopOf="@+id/toolbarUnderLineView"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/navibar_ic_x"/>
 
             <View
@@ -130,7 +131,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/label_saturday"
-                    android:textColor="@color/default_text_c2284dc"
+                    android:textColor="@color/default_text_c2c8de6"
                     android:textSize="11dp"/>
             </LinearLayout>
 

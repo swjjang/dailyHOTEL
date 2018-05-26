@@ -56,7 +56,7 @@
                 android:freezesText="true"
                 android:lineSpacingExtra="-2dp"
                 android:text="@string/message_booking_click_process_payment"
-                android:textColor="@color/default_background_section_c323232"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
         </LinearLayout>
     </merge>

@@ -622,7 +622,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun onImageClick(position: Int) {
-        if (stayDetail.filterIf({ it.imageList.isNotNullAndNotEmpty() }) || lock()) return
+        if (stayDetail.filterIf({ !it.imageList.isNotNullAndNotEmpty() }) || lock()) return
 
         stayDetail?.let {
             startActivityForResult(ImageListActivity.newInstance(activity, it.baseInformation?.name,

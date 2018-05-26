@@ -381,6 +381,7 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
+        viewDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x);
         viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 

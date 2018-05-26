@@ -245,15 +245,7 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
             return;
         }
 
-        viewDataBinding.toolbarView.setBackVisible(false);
-        viewDataBinding.toolbarView.clearMenuItem();
-        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE, null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onBackClick();
-            }
-        });
+        viewDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x);
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 }

@@ -11,7 +11,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="20dp"
-            android:textColor="@color/hoteldetail_title_text"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
 
