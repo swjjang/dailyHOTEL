@@ -50,7 +50,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/default_text_ce9a230"
+                        android:textColor="@color/default_text_cf4a426"
                         android:lineSpacingExtra="-3dp"
                         android:textSize="14dp"
                         app:layout_constraintBottom_toBottomOf="parent"

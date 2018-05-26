@@ -89,7 +89,7 @@
             android:drawablePadding="3dp"
             android:freezesText="true"
             android:text="@string/label_used_reward"
-            android:textColor="@color/default_text_ce9a230"
+            android:textColor="@color/default_text_cf4a426"
             android:textSize="12dp"
             android:visibility="gone"
             app:drawableCompatLeft="@drawable/vector_r_ic_xs_14"

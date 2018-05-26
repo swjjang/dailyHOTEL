@@ -23,7 +23,7 @@
             android:id="@+id/suggestBackgroundView"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:background="@drawable/shape_fillrect_bf8f8f9_r2"
+            android:background="@drawable/shape_fillrect_bf8f8f9_r3"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -54,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/shape_fillrect_bf8f8f9_r2"
+            android:background="@drawable/shape_fillrect_bf8f8f9_r3"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/suggestBackgroundView"/>
@@ -83,7 +83,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/shape_fillrect_bf8f8f9_r2"
+            android:background="@drawable/shape_fillrect_bf8f8f9_r3"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarBackgroundView"/>

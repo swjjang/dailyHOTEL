@@ -369,7 +369,7 @@ public class DailyRewardCardView extends ConstraintLayout
             spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
                 startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            spannableString.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.default_text_ce9a230)), //
+            spannableString.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.default_text_cf4a426)), //
                 startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             mViewDataBinding.descriptionTextView.setText(spannableString);
