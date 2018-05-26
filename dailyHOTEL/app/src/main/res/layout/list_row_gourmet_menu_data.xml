@@ -177,7 +177,7 @@
                             android:layout_marginTop="2dp"
                             android:layout_toRightOf="@id/benefitImageView"
                             android:freezesText="true"
-                            android:textColor="@color/default_text_cbe945b"
+                            android:textColor="@color/default_text_ccf9e5e"
                             android:textSize="13dp"/>
 
                         <View

@@ -60,7 +60,7 @@
                 android:id="@+id/ratingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/default_text_cbe945b"
+                android:textColor="@color/default_text_ccf9e5e"
                 android:textSize="12dp"
                 dailyFont:style="Bold"/>
 

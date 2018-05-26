@@ -5,14 +5,12 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityAmenityListDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowAmenityDataBinding;
@@ -85,16 +83,8 @@ public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListe
             return;
         }
 
-        viewDataBinding.toolbarView.setBackVisible(false);
-        viewDataBinding.toolbarView.clearMenuItem();
-        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE, null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onBackClick();
-            }
-        });
+        viewDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x);
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 
     class AmenityListAdapter extends RecyclerView.Adapter<AmenityListAdapter.AmenityViewHolder>

@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="-2dp"
-            android:textColor="@color/default_text_cbe945b"
+            android:textColor="@color/default_text_ccf9e5e"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
 

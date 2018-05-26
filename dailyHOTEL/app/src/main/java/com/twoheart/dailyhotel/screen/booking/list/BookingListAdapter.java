@@ -206,7 +206,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
             case Booking.BOOKING_STATE_BEFORE_USE:
                 holder.dataBinding.bookingStatusTextView.setText(R.string.label_booking_before_use);
-                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cbe945b));
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_ccf9e5e));
 
                 String description;
                 String dayText;
