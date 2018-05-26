@@ -43,7 +43,7 @@
             android:layout_marginRight="100dp"
             android:freezesText="true"
             android:maxLines="3"
-            android:textColor="@color/hoteldetail_title_text"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"/>
     </FrameLayout>
 
@@ -82,7 +82,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="@string/label_copy_address"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
         </LinearLayout>
 
@@ -114,7 +114,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="@string/label_navigator"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
         </LinearLayout>
     </LinearLayout>

@@ -119,7 +119,7 @@
                         android:gravity="left|center_vertical"
                         android:lines="1"
                         android:text="@string/frag_need_login"
-                        android:textColor="@color/information_title"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="16dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -192,7 +192,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center_vertical"
                                 android:text="@string/frag_coupon_box"
-                                android:textColor="@color/information_title"
+                                android:textColor="@color/default_text_c4d4d4d"
                                 android:textSize="11dp"/>
 
                             <com.daily.base.widget.DailyTextView
@@ -249,7 +249,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center_vertical"
                                 android:text="@string/frag_view_bonus"
-                                android:textColor="@color/information_title"
+                                android:textColor="@color/default_text_c4d4d4d"
                                 android:textSize="11dp"/>
 
                             <com.daily.base.widget.DailyTextView
@@ -291,7 +291,7 @@
                             android:layout_marginTop="3dp"
                             android:gravity="center_vertical"
                             android:text="@string/frag_view_creditcard"
-                            android:textColor="@color/information_title"
+                            android:textColor="@color/default_text_c4d4d4d"
                             android:textSize="11dp"/>
 
                     </RelativeLayout>
@@ -341,7 +341,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/actionbar_title_wishList"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -366,7 +366,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_recent_places"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -400,7 +400,7 @@
                     android:layout_marginTop="6dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_push_alert"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <com.daily.base.widget.DailyTextView

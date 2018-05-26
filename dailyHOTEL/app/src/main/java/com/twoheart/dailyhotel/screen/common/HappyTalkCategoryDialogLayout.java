@@ -262,7 +262,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
                 textView.setTextColor(mContext.getResources().getColor(R.color.default_text_ceb2135));
             } else
             {
-                textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c4d4d4d));
             }
 
             return view;

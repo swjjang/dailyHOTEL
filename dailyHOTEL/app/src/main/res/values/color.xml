@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dh_theme_color">#EB2135</color>
-    <color name="dh_theme_second_color">#BE945B</color>
+    <color name="dh_theme_second_color">#CF9E5E</color>
     <color name="dh_theme_color_a10">#1AEB2135</color>
     <color name="dh_theme_color_a8">#14EB2135</color>
 
@@ -86,9 +86,8 @@
 
     <color name="black_c0c000000">#0c000000</color>
     <color name="black_c4c000000">#4c000000</color>
-    <color name="black_cb3323232">#b3323232</color>
 
-    <color name="statusbar_background">#323232</color>
+    <color name="statusbar_background">#4d4d4d</color>
     <color name="tab_text">#929292</color>
     <color name="tab_selected">#EB2135</color>
     <color name="tab_underline">#e7e7e7</color>
@@ -141,7 +140,6 @@
     <color name="selectarea_background_child">#f0f0f0</color>
     <color name="selectarea_underline">#dcdcdd</color>
     <color name="selectarea_selcted">#a6a6a8</color>
-    <color name="selectarea_title">#323232</color>
     <color name="selectarea_subtitle">#999999</color>
     <color name="province_underline">#4ddcdcdd</color>
 
@@ -153,7 +151,6 @@
     <color name="hoteldetail_viewpager_background">#c3c3c3</color>
     <color name="hoteldetail_dbenefit_background">#ebFFFFFF</color>
     <color name="hoteldetail_image_tag_text">#FFFFFF</color>
-    <color name="hoteldetail_title_text">#323232</color>
 
     <!-- Wait Popup -->
     <color name="popup_underline">#e1e1e1</color>
@@ -201,7 +198,6 @@
     <color name="countrycode_section_text">#4d272727</color>
 
     <!-- Calendar Code -->
-    <color name="calendar_day_text_default">#323232</color>
     <color name="calendar_day_text_select">#ffffff</color>
     <color name="calendar_day_text_disable">#ebebeb</color>
     <color name="calendar_week_text_default">#999999</color>
@@ -221,12 +217,8 @@
     <color name="menu_text_default">#929292</color>
     <color name="menu_text_select">#EB2135</color>
 
-    <!-- Action Bar -->
-    <color name="actionbar_title">#323232</color>
-
     <!-- Information -->
     <color name="information_background">#f8f8f9</color>
-    <color name="information_title">#323232</color>
     <color name="information_push_subtext">#929292</color>
     <color name="information_count_text">#EB2135</color>
 
@@ -242,7 +234,6 @@
 
     <!-- Search -->
     <color name="search_hint_text">#c5c5c5</color>
-    <color name="search_text">#323232</color>
     <color name="search_autocomplete_pricetext">#929292</color>
 
     <color name="payment_memo_hint">#d0d0d0</color>
@@ -282,7 +273,6 @@
     <color name="default_text_kakao">#3c1e1e</color>
 
     <color name="default_background">#f8f8f9</color>
-    <color name="default_background_section_c323232">#323232</color>
     <color name="default_background_section_cf2f2f3">#f2f2f3</color>
     <color name="default_background_kakao">#f9ed00</color>
     <color name="default_background_facebook">#3b5998</color>
@@ -326,7 +316,6 @@
     <color name="default_popup_button_background_c5c93f8">#5c93f8</color>
 
     <color name="default_popup_button_text_cffffff">#ffffff</color>
-    <color name="default_popup_button_text_c323232">#323232</color>
     <color name="default_popup_button_text_cc5c5c5">#c5c5c5</color>
 
     <color name="default_line_ce7e7e7">#e7e7e7</color>
@@ -335,7 +324,7 @@
     <color name="default_line_ce6e6e6">#e6e6e6</color>
     <color name="default_line_ce6e6e7">#e6e6e7</color>
     <color name="default_line_cd0d0d0">#d0d0d0</color>
-    <color name="default_line_c323232">#323232</color>
+    <color name="default_line_c4d4d4d">#4d4d4d</color>
     <color name="default_line_cf0f0f0">#f0f0f0</color>
     <color name="default_line_cdedee0">#dedee0</color>
     <color name="default_line_ceeeef0">#eeeef0</color>

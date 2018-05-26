@@ -24,7 +24,7 @@
             android:id="@+id/contentTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/information_title"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"/>
 
         <com.daily.base.widget.DailyTextView

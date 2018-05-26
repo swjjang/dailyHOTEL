@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:text="@string/coupon_history_header_text"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="12dp"
                     app:drawableCompatTop="@drawable/more_ic_coupon_01" />
 
@@ -106,7 +106,7 @@
                 android:gravity="center"
                 android:paddingBottom="80dp"
                 android:text="@string/coupon_history_empty_message"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="18dp"
                 app:drawableCompatTop="@drawable/no_coupon_ic"
                 dailyFont:style="Medium" />

@@ -230,7 +230,7 @@ public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<
             holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
             holder.dataBinding.couponPriceTextView.setSelected(false);
 
-            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c4d4d4d));
         }
     }
 

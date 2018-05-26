@@ -88,7 +88,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:textColor="@color/hoteldetail_title_text"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="18dp"/>
             </RelativeLayout>
 

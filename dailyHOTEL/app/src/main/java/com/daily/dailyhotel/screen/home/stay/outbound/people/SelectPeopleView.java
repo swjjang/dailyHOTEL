@@ -351,7 +351,7 @@ public class SelectPeopleView extends BaseDialogView<SelectPeopleView.OnEventLis
                 textView.setTextColor(getColor(R.color.default_text_ceb2135));
             } else
             {
-                textView.setTextColor(getColor(R.color.default_text_c323232));
+                textView.setTextColor(getColor(R.color.default_text_c4d4d4d));
             }
 
             return view;

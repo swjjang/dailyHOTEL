@@ -1578,7 +1578,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
-        dailyTextView.setTextColor(getColorStateList(R.color.default_text_c323232));
+        dailyTextView.setTextColor(getColorStateList(R.color.default_text_c4d4d4d));
         dailyTextView.setText(pictogram.getName(context));
         dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, pictogram.getImageResId(), 0, 0);
         dailyTextView.setDrawableVectorTint(R.color.default_background_c454545);

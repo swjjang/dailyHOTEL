@@ -166,7 +166,7 @@ class SelectCouponAdapter(val context: Context, val list: MutableList<Coupon>, v
                         isSelected = false
                     }
 
-                    couponNameTextView.setTextColor(context.resources.getColor(R.color.default_text_c323232))
+                    couponNameTextView.setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
                 }
             }
         }

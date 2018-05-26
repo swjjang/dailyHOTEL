@@ -45,7 +45,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="@string/label_write_review_comment_title"
-            android:textColor="@color/actionbar_title"
+            android:textColor="@color/default_text_c323232"
             android:textSize="18dp"/>
     </RelativeLayout>
 

@@ -226,7 +226,7 @@
                 android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:text="@string/label_signup_allagreement"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"
                 android:theme="@style/CheckBoxTheme"
                 dailyFont:style="Medium"/>
@@ -300,7 +300,7 @@
                         android:layout_height="31dp"
                         android:gravity="center"
                         android:text="@string/act_signup_privacy"
-                        android:textColor="@color/information_title"
+                        android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
                         android:theme="@style/CheckBoxTheme"/>
 
@@ -325,7 +325,7 @@
                     android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:text="@string/label_notification_on_option"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="12dp"
                     android:theme="@style/CheckBoxTheme"/>
 
@@ -348,7 +348,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="30dp"
                 android:text="@string/label_privacy_valid_date_option"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>
 
             <android.support.constraint.ConstraintLayout
@@ -369,7 +369,7 @@
                     android:layout_marginLeft="8dp"
                     android:gravity="center"
                     android:text="@string/label_privacy_valid_date_1year"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="12dp"
                     android:theme="@style/CheckBoxTheme"
                     android:visibility="gone"
@@ -383,7 +383,7 @@
                     android:layout_marginLeft="23dp"
                     android:gravity="center"
                     android:text="@string/label_privacy_valid_date_3year"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="12dp"
                     android:theme="@style/CheckBoxTheme"
                     app:layout_constraintLeft_toRightOf="@+id/yearCheckBox1"
@@ -397,7 +397,7 @@
                     android:layout_marginLeft="23dp"
                     android:gravity="center"
                     android:text="@string/label_privacy_valid_date_5year"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="12dp"
                     android:theme="@style/CheckBoxTheme"
                     app:layout_constraintLeft_toRightOf="@+id/yearCheckBox3"

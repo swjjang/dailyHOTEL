@@ -205,7 +205,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 이메일
         if (DailyTextUtils.isTextEmpty(user.email) == true)
         {
-            getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
         }
 
         getViewDataBinding().emailLayout.setOnClickListener(null);
@@ -216,7 +216,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 이름
         if (DailyTextUtils.isTextEmpty(user.name) == true)
         {
-            getViewDataBinding().nameView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().nameView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
         }
 
         getViewDataBinding().nameTextView.setText(user.name);
@@ -224,7 +224,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 생일
         if (DailyTextUtils.isTextEmpty(user.birthday) == true)
         {
-            getViewDataBinding().birthdayView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().birthdayView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
             getViewDataBinding().birthdayTextView.setText(null);
         } else
         {
@@ -243,7 +243,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 휴대폰
         if (DailyTextUtils.isTextEmpty(user.phone) == true)
         {
-            getViewDataBinding().phoneView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().phoneView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
         }
 
         getViewDataBinding().phoneVerifyView.setVisibility(View.VISIBLE);
@@ -297,7 +297,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 이메일
         if (DailyTextUtils.validEmail(user.email) == false)
         {
-            getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
             getViewDataBinding().emailTextView.setText(null);
             getViewDataBinding().emailLayout.setOnClickListener(v -> getEventListener().startEditEmail());
         } else
@@ -320,7 +320,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 이름
         if (DailyTextUtils.isTextEmpty(user.name) == true)
         {
-            getViewDataBinding().nameView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().nameView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
             getViewDataBinding().nameTextView.setText(null);
         } else
         {
@@ -330,7 +330,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 생일
         if (DailyTextUtils.isTextEmpty(user.birthday) == true)
         {
-            getViewDataBinding().birthdayView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().birthdayView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
             getViewDataBinding().birthdayTextView.setText(null);
         } else
         {
@@ -350,7 +350,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 휴대폰
         if (DailyTextUtils.isTextEmpty(user.phone) == true)
         {
-            getViewDataBinding().phoneView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().phoneView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
         }
 
         getViewDataBinding().phoneTextView.setText(user.phone);

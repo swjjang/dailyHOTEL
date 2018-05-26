@@ -214,7 +214,7 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
                 getViewDataBinding().messageClickView.setOnClickListener(null);
 
                 getViewDataBinding().messageEditText.setCursorVisible(true);
-                getViewDataBinding().messageEditText.setTextColor(getColor(R.color.default_text_c323232));
+                getViewDataBinding().messageEditText.setTextColor(getColor(R.color.default_text_c4d4d4d));
 
                 setSelected(view);
 

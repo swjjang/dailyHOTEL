@@ -71,7 +71,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:text="@string/label_copy_address"
-                    android:textColor="@color/hoteldetail_title_text"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="11dp" />
 
                 <com.daily.base.widget.DailyTextView
@@ -84,7 +84,7 @@
                     android:layout_toLeftOf="@id/copyAddressView"
                     android:freezesText="true"
                     android:gravity="left|center_vertical"
-                    android:textColor="@color/hoteldetail_title_text"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="13dp" />
 
             </RelativeLayout>

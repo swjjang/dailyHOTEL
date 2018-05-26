@@ -52,7 +52,7 @@
                 android:layout_alignStart="@+id/view"
                 android:gravity="center_vertical"
                 android:text="@string/actionbar_title_term_activity"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"/>
 
             <View
@@ -78,7 +78,7 @@
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
                 android:text="@string/actionbar_title_privacy_activity"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"
                 dailyFont:style="Medium"/>
 
@@ -104,7 +104,7 @@
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
                 android:text="@string/actionbar_title_locationterms_activity"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"/>
 
             <View
@@ -129,7 +129,7 @@
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
                 android:text="@string/actionbar_title_protectyouthterms_activity"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"/>
 
             <View
@@ -154,7 +154,7 @@
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
                 android:text="@string/frag_opensource_license"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"/>
 
             <View

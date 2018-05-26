@@ -145,7 +145,7 @@ public class HomeCategoryLayout extends RelativeLayout
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
-        dailyTextView.setTextColor(mContext.getResources().getColorStateList(R.color.default_text_c323232));
+        dailyTextView.setTextColor(mContext.getResources().getColorStateList(R.color.default_text_c4d4d4d));
         dailyTextView.setText(categoryType.getNameResId());
         dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, categoryType.getImageResId(), 0, 0);
         dailyTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(mContext, 2d));

@@ -166,7 +166,7 @@
             android:layout_marginTop="7dp"
             android:freezesText="true"
             android:gravity="center_vertical"
-            android:textColor="@color/hoteldetail_title_text"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"
             dailyFont:style="Medium"/>
     </LinearLayout>

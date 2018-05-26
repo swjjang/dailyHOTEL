@@ -569,7 +569,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             getViewDataBinding().inputReviewVerticalLine.setVisibility(View.VISIBLE);
             getViewDataBinding().inputReviewView.setVisibility(View.VISIBLE);
             getViewDataBinding().inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
-            getViewDataBinding().inputReviewView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().inputReviewView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
         } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatusType) == true)
         {
             getViewDataBinding().inputReviewVerticalLine.setVisibility(View.VISIBLE);
@@ -584,7 +584,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             getViewDataBinding().inputReviewVerticalLine.setVisibility(View.GONE);
             getViewDataBinding().inputReviewView.setVisibility(View.GONE);
             getViewDataBinding().inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
-            getViewDataBinding().inputReviewView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().inputReviewView.setTextColor(getContext().getResources().getColor(R.color.default_text_c4d4d4d));
         }
     }
 

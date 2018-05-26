@@ -47,7 +47,7 @@
             android:layout_marginRight="100dp"
             android:freezesText="true"
             android:maxLines="3"
-            android:textColor="@color/hoteldetail_title_text"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="13dp"
             app:layout_constraintBottom_toBottomOf="@+id/mapImageView"
             app:layout_constraintLeft_toLeftOf="@+id/mapImageView"
@@ -84,7 +84,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="@string/label_copy_address"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"
                 app:drawableCompatLeft="@drawable/detail_ic_copy"/>
         </FrameLayout>
@@ -108,7 +108,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="@string/label_navigator"
-                android:textColor="@color/hoteldetail_title_text"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"
                 app:drawableCompatLeft="@drawable/detail_ic_directions"/>
         </FrameLayout>

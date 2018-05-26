@@ -143,7 +143,7 @@
             android:drawablePadding="-1dp"
             android:gravity="center"
             android:text="@string/coupon_useable_text"
-            android:textColor="@color/default_line_c323232"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="11dp"
             android:visibility="visible"
             app:drawableCompatTop="@drawable/more_ic_coupon_01"

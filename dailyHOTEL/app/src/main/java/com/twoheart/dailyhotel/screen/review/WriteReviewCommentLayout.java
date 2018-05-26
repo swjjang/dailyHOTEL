@@ -185,7 +185,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
             int length = Integer.toString(remainder).length();
 
-            stringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c323232)), //
+            stringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c4d4d4d)), //
                 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             mBottomTextCountView.setText(stringBuilder);

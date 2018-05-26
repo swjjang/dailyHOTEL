@@ -55,7 +55,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_dailyhotel_guide"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -80,7 +80,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_dailyh_lifestyle"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -106,7 +106,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_daily_reward"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -131,7 +131,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_daily_true_awards"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -156,7 +156,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_dailyh_sns"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
             </RelativeLayout>
 
@@ -175,7 +175,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/actionbar_title_event_list_frag"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <ImageView
@@ -211,7 +211,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/actionbar_title_notice_activity"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <ImageView
@@ -240,7 +240,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_faqs"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -265,7 +265,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_call_service"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <View
@@ -290,7 +290,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/frag_terms_and_policy"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
             </RelativeLayout>
 
@@ -308,7 +308,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="@string/label_version"
-                    android:textColor="@color/information_title"
+                    android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
 
                 <com.daily.base.widget.DailyTextView

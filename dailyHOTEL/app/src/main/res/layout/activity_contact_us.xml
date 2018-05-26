@@ -42,7 +42,7 @@
                 android:layout_alignStart="@+id/view"
                 android:gravity="center_vertical"
                 android:text="@string/frag_daily_kakao"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"/>
 
             <View
@@ -68,7 +68,7 @@
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
                 android:text="@string/frag_call_res_contact"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"/>
 
             <View
@@ -93,7 +93,7 @@
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
                 android:text="@string/frag_send_mail"
-                android:textColor="@color/information_title"
+                android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="15dp"/>
         </RelativeLayout>
 

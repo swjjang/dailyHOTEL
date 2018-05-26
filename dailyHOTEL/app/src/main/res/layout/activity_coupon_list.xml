@@ -97,7 +97,7 @@
             android:gravity="center"
             android:paddingBottom="70dp"
             android:text="@string/coupon_list_empty_message"
-            android:textColor="@color/information_title"
+            android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"
             app:drawableCompatTop="@drawable/no_coupon_ic"
             dailyFont:style="Medium"/>
