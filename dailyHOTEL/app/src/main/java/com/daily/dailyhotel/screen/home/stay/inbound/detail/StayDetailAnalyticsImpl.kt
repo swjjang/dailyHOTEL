@@ -351,7 +351,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
             "BREAKFAST" -> R.string.label_breakfast
             "PC" -> R.string.label_computer
             "TV" -> R.string.label_television
-            "COOKING" -> R.string.label_cooking
+            "KITCHENETTE" -> R.string.label_cooking
             "SMOKEABLE" -> R.string.label_smokeable
             "DISABLEDFACILITIES" -> R.string.label_disabled_facilities
             else -> 0

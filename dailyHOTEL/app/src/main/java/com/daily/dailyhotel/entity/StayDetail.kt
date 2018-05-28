@@ -145,21 +145,21 @@ enum class FacilitiesPictogram constructor(private val nameResId: Int, private v
     POOL(R.string.label_pool, R.drawable.vector_f_ic_facilities_swimming), // 수영장
     SAUNA(R.string.label_sauna, R.drawable.vector_f_ic_facilities_sauna), // 사우나
     SPAMASSAGE(R.string.label_spa_massage, R.drawable.vector_f_ic_facilities_spa_massage), // 스파마사지
-    BREAKFAST(R.string.label_breakfast_restaurant, R.drawable.vector_f_ic_facilities_breakfast_restaurant), // 조식당
-    CAFETERIA(R.string.label_allowed_pet, R.drawable.vector_f_ic_facilities_cafe), // 카페테리아
+    BREAKFASTRESTAURANT(R.string.label_breakfast_restaurant, R.drawable.vector_f_ic_facilities_breakfast_restaurant), // 조식당
+    CAFETERIA(R.string.label_cafeteria, R.drawable.vector_f_ic_facilities_cafe), // 카페테리아
     SEMINARROOM(R.string.label_seminar_room, R.drawable.vector_f_ic_facilities_seminar_room), // 세미나실
     BUSINESSCENTER(R.string.label_business_center, R.drawable.vector_f_ic_facilities_business), // 비즈니스센터
     WIFI(R.string.label_wifi, R.drawable.vector_f_ic_facilities_wifi), // 무료WiFi
     FITNESS(R.string.label_fitness, R.drawable.vector_f_ic_facilities_fitness), // 피트니스
     CLUBLOUNGE(R.string.label_club_lounge, R.drawable.vector_f_ic_facilities_lounge), // 클럽라운지
     SHAREDBBQ(R.string.label_allowed_barbecue, R.drawable.vector_f_ic_facilities_bbq), // 공동바베큐
-    PICKUPAVAILABLE(R.string.label_allowed_pet, R.drawable.vector_f_ic_facilities_pickup), // 픽업가능
+    PICKUPAVAILABLE(R.string.label_pickup_available, R.drawable.vector_f_ic_facilities_pickup), // 픽업가능
     CONVENIENCESTORE(R.string.label_rent_convenience_store, R.drawable.vector_f_ic_facilities_mart), //편의점(매점)
     PARKING(R.string.label_parking, R.drawable.vector_f_ic_facilities_parking), // 주차가능
     NOPARKING(R.string.label_unabled_parking, R.drawable.vector_f_ic_facilities_no_parking), // 주차불가
     PET(R.string.label_allowed_pet, R.drawable.vector_f_ic_facilities_pets), // 반려동물
     KIDSPLAYROOM(R.string.label_kids_play_room, R.drawable.vector_f_ic_facilities_kidsplay), // 키즈플레이룸
-    RENTBABYBED(R.string.label_rent_baby_bed, R.drawable.vector_f_ic_facilities_babycrib); // 아기침대대여
+    BASSINET(R.string.label_rent_baby_bed, R.drawable.vector_f_ic_facilities_babycrib); // 아기침대대여
 
     fun getName(context: Context): String? {
         return if (nameResId == 0) null else context.getString(nameResId)

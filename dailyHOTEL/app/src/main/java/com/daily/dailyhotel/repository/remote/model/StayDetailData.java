@@ -457,15 +457,15 @@ public class StayDetailData
         @JsonField(name = "checkOut")
         public String checkOut;
 
-        @JsonField(name = "description")
-        public List<String> description;
+        @JsonField(name = "descriptions")
+        public List<String> descriptions;
 
         StayDetail.CheckTimeInformation getCheckTimeInformation()
         {
             StayDetail.CheckTimeInformation checkTimeInformation = new StayDetail.CheckTimeInformation();
             checkTimeInformation.setCheckIn(checkIn);
             checkTimeInformation.setCheckOut(checkOut);
-            checkTimeInformation.setDescription(description);
+            checkTimeInformation.setDescription(descriptions);
 
             return checkTimeInformation;
         }
