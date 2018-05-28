@@ -153,8 +153,8 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             return Crypto.getUrlDecoderEx(API);
         } else
         {
-            final String API = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{categoryAsPath}/sales"//
-                : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
+            final String API = Constants.UNENCRYPTED_URL ? "api/v5/hotels/category/{categoryAsPath}/sales"//
+                : "NyQ4NyQyMCQyOCQ1JDgkMTA3JDk5JDczJDg1JDUxJDQkMzEkODMkNCQyNCQ=$MjJEHNQETVAXFMDk0NDlDNzgXX4OUZFMUVZU0RjI2NTI2NDIyNkRDODSRCQzM3OTRFMTVDQzczMzJDKQjg5QzYNCOTlKFREI4MDMk2REMwMU0Q3OUU1OSUIzODc4MkYyOERCMENDRDMwQUNF$";
 
             Map<String, String> urlParams = new HashMap<>();
             urlParams.put("{categoryAsPath}", categoryType.getCodeString(context));
