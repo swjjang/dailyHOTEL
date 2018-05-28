@@ -736,11 +736,86 @@ public class SearchStayResultTabPresenter extends BaseExceptionPresenter<SearchS
             mViewModel.getFilter().defaultSortType = StayFilter.SortType.DEFAULT;
         }
 
+        String[] filters = externalDeepLink.getFilters();
+
+        mViewModel.getFilter().flagAmenitiesFilters = getDeepLinkAmenitiesFlags(filters);
+        mViewModel.getFilter().flagRoomAmenitiesFilters = getDeepLinkRoomAmenitiesFlags(filters);
+
         mViewModel.getFilter().sortType = StayFilter.SortType.valueOf(sortType.name());
         mViewModel.setFilter(mViewModel.getFilter());
 
         mViewModel.setBookDateTime(bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
         mViewModel.setSuggest(suggest);
+    }
+
+    private int getDeepLinkAmenitiesFlags(String[] filters)
+    {
+        if (filters == null || filters.length == 0)
+        {
+            return 0;
+        }
+
+        int flag = StayFilter.FLAG_AMENITIES_NONE;
+
+        for (String filter : filters)
+        {
+            if (DailyTextUtils.isTextEmpty(filter))
+            {
+                continue;
+            }
+
+            switch (filter.toLowerCase())
+            {
+                case "pet":
+                    flag |= StayFilter.FLAG_AMENITIES_PET;
+                    break;
+
+                case "kidsplayroom":
+                    flag |= StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM;
+                    break;
+
+                case "pool":
+                    flag |= StayFilter.FLAG_AMENITIES_POOL;
+                    break;
+            }
+        }
+
+        return flag;
+    }
+
+    private int getDeepLinkRoomAmenitiesFlags(String[] filters)
+    {
+        if (filters == null || filters.length == 0)
+        {
+            return 0;
+        }
+
+        int flag = StayFilter.FLAG_ROOM_AMENITIES_NONE;
+
+        for (String filter : filters)
+        {
+            if (DailyTextUtils.isTextEmpty(filter))
+            {
+                continue;
+            }
+
+            switch (filter.toLowerCase())
+            {
+                case "breakfast":
+                    mViewModel.getFilter().flagRoomAmenitiesFilters |= StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST;
+                    break;
+
+                case "partyroom":
+                    mViewModel.getFilter().flagRoomAmenitiesFilters |= StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM;
+                    break;
+
+                case "spawallpool":
+                    mViewModel.getFilter().flagRoomAmenitiesFilters |= StayFilter.FLAG_ROOM_AMENITIES_SPA_WALL_POOL;
+                    break;
+            }
+        }
+
+        return flag;
     }
 
     @Override
