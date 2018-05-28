@@ -742,6 +742,7 @@ public class StayDetailData
             room.squareMeter = squareMeter;
             room.needToKnowList = needToKnows;
             room.amountInformation = amount.getAmount();
+            room.hasUsableCoupon = hasUsableCoupon;
 
             if (bedInfo != null)
             {
