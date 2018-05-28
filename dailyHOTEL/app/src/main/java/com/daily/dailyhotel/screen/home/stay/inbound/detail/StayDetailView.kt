@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk
+package com.daily.dailyhotel.screen.home.stay.inbound.detail
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
@@ -37,7 +37,7 @@ import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.DraweeTransition
 import com.facebook.imagepipeline.image.ImageInfo
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.databinding.ActivityStayDetailkDataBinding
+import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding
 import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding
@@ -49,12 +49,12 @@ import java.text.DecimalFormat
 import java.util.*
 
 class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface.OnEventListener)//
-    : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailkDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
+    : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
 
     var tabLayoutShowAnimator: ObjectAnimator? = null
     var tabLayoutHideAnimator: ObjectAnimator? = null
 
-    override fun setContentView(viewDataBinding: ActivityStayDetailkDataBinding) {
+    override fun setContentView(viewDataBinding: ActivityStayDetailDataBinding) {
         initToolbar(viewDataBinding)
         initScrollView(viewDataBinding)
         initEmptyView(viewDataBinding)
@@ -71,7 +71,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.toolbarView.setTitleText(title)
     }
 
-    private fun initToolbar(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initToolbar(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.toolbarView.setOnBackClickListener { eventListener.onBackClick() }
         viewDataBinding.toolbarView.clearMenuItem()
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null) { eventListener.onWishClick() }
@@ -84,7 +84,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null) { eventListener.onShareClick() }
     }
 
-    private fun initRoomFilter(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initRoomFilter(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.roomFilterView.setOnDailyDetailRoomFilterListener(object : DailyDetailRoomFilterContentsView.OnDailyDetailRoomFilterListener {
             override fun onSelectedBedTypeFilter(selected: Boolean, bedType: String) {
                 eventListener.onSelectedBedTypeFilter(selected, bedType)
@@ -166,7 +166,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
-    private fun initScrollView(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initScrollView(viewDataBinding: ActivityStayDetailDataBinding) {
         setScrollViewVisible(false)
 
         val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
@@ -261,7 +261,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
     }
 
-    private fun initEmptyView(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initEmptyView(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.detailEmptyView.setOnEventListener(object : DailyDetailEmptyView.OnEventListener {
             override fun onStopMove(event: MotionEvent) {
                 viewDataBinding.nestedScrollView.isScrollingEnabled = false
@@ -389,7 +389,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.wishTooltipGroup.visibility = View.GONE
     }
 
-    private fun initTabLayout(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initTabLayout(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.roomInformationTextView.setOnClickListener { if (!it.isSelected) eventListener.onRoomInformationClick() }
         viewDataBinding.stayInformationTextView.setOnClickListener { if (!it.isSelected) eventListener.onStayInformationClick() }
     }
@@ -571,7 +571,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.imageLoopView.setImageList(imageList)
     }
 
-    override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean) {
+    override fun setBaseInformation(baseInformation: StayDetail.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean) {
         viewDataBinding.baseInformationView.apply {
             setGradeName(baseInformation.grade.getName(context))
             setRewardsVisible(baseInformation.provideRewardSticker)
@@ -595,7 +595,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.trueReviewGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setTrueReviewInformation(trueReviewInformation: StayDetailk.TrueReviewInformation) {
+    override fun setTrueReviewInformation(trueReviewInformation: StayDetail.TrueReviewInformation) {
         viewDataBinding.trueReviewView.apply {
 
             if (trueReviewInformation.ratingPercent > 0 || trueReviewInformation.ratingCount > 0) {
@@ -623,7 +623,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.businessBenefitGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation) {
+    override fun setBenefitInformation(benefitInformation: StayDetail.BenefitInformation) {
         viewDataBinding.businessBenefitView.apply {
             if (benefitInformation.title.isTextEmpty() && !benefitInformation.contentList.isNotNullAndNotEmpty()) {
                 setBenefitVisible(false)
@@ -744,7 +744,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.addressView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setAddressInformation(addressInformation: StayDetailk.AddressInformation) {
+    override fun setAddressInformation(addressInformation: StayDetail.AddressInformation) {
         viewDataBinding.addressView.apply {
             setAddressText(addressInformation.address)
             setOnAddressClickListener(object : DailyDetailAddressView.OnAddressClickListener {
@@ -767,7 +767,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.checkTimeInformationView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCheckTimeInformation(checkTimeInformation: StayDetailk.CheckTimeInformation) {
+    override fun setCheckTimeInformation(checkTimeInformation: StayDetail.CheckTimeInformation) {
         viewDataBinding.checkTimeInformationView.apply {
             setCheckTimeText(checkTimeInformation.checkIn, checkTimeInformation.checkOut)
 
@@ -784,7 +784,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.detailInformationView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?) {
+    override fun setDetailInformation(detailInformation: StayDetail.DetailInformation?, breakfastInformation: StayDetail.BreakfastInformation?) {
         viewDataBinding.detailInformationView.setInformation(detailInformation?.itemList)
         viewDataBinding.detailInformationView.setBreakfastInformation(breakfastInformation)
     }
@@ -793,7 +793,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.refundInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation?, hasNRDRoom: Boolean) {
+    override fun setCancellationAndRefundPolicy(refundInformation: StayDetail.RefundInformation?, hasNRDRoom: Boolean) {
         viewDataBinding.refundInformationView.setInformation(refundInformation)
     }
 
@@ -801,7 +801,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.checkInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCheckInformation(checkInformation: StayDetailk.CheckInformation) {
+    override fun setCheckInformation(checkInformation: StayDetail.CheckInformation) {
         viewDataBinding.checkInformationView.setInformation(checkInformation)
     }
 
@@ -882,9 +882,11 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.nestedScrollView.smoothScrollTo(0, 0)
     }
 
-    override fun showShareDialog(listener: DialogInterface.OnDismissListener) {
-
-        DataBindingUtil.inflate<DialogShareDataBinding>(LayoutInflater.from(context), R.layout.dialog_share_data, null, false).apply {
+    override fun showShareDialog() {
+        DataBindingUtil.inflate<DialogShareDataBinding>(LayoutInflater.from(context),
+                R.layout.dialog_share_data,
+                null,
+                false).apply {
             kakaoShareView.setOnClickListener {
                 hideSimpleDialog()
 
@@ -905,7 +907,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
             closeTextView.setOnClickListener { hideSimpleDialog() }
 
-            showSimpleDialog(root, null, listener, true)
+            showSimpleDialog(root, null, null, true)
         }
     }
 

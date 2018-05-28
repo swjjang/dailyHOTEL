@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail;
+package com.daily.dailyhotel.screen.home.stay.inbound.old_detail;
 
 
 import android.app.Activity;
@@ -25,8 +25,8 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.old_StayDetail;
 import com.daily.dailyhotel.entity.StayDetail;
-import com.daily.dailyhotel.entity.StayDetailk;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.User;
@@ -121,7 +121,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     String mImageUrl;
     StayBookDateTime mStayBookDateTime;
     private CommonDateTime mCommonDateTime;
-    StayDetail mStayDetail;
+    old_StayDetail mStayDetail;
     StayRoom mSelectedRoom;
     ReviewScores mReviewScores;
     List<TrueVR> mTrueVRList;
@@ -143,11 +143,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         void setAnalyticsParam(StayDetailAnalyticsParam analyticsParam);
 
-        StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(StayDetail stayDetail, StayRoom stayRoom);
+        StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(old_StayDetail stayDetail, StayRoom stayRoom);
 
-        Disposable onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
+        Disposable onScreen(Activity activity, StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int priceFromList);
 
-        void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
+        void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int priceFromList);
 
         void onEventRoomListOpenClick(Activity activity, String stayName);
 
@@ -188,7 +188,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         void onEventClipAddressClick(Activity activity, String stayName);
 
-        void onEventWishClick(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList, boolean myWish);
+        void onEventWishClick(Activity activity, StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int priceFromList, boolean myWish);
 
         void onEventCallClick(Activity activity);
 
@@ -220,7 +220,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void constructorInitialize(StayDetailActivity activity)
     {
-        setContentView(R.layout.activity_stay_detail_data);
+        setContentView(R.layout.activity_stay_detail_data_old);
 
         mAnalytics = new StayDetailAnalyticsImpl();
 
@@ -1517,7 +1517,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }
     }
 
-    void setStayDetail(StayDetail stayDetail)
+    void setStayDetail(old_StayDetail stayDetail)
     {
         mStayDetail = stayDetail;
 
@@ -1805,7 +1805,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }
     }
 
-    private void checkChangedPrice(boolean isDeepLink, StayDetail stayDetail, int listViewPrice, boolean compareListPrice)
+    private void checkChangedPrice(boolean isDeepLink, old_StayDetail stayDetail, int listViewPrice, boolean compareListPrice)
     {
         if (stayDetail == null)
         {
@@ -1879,79 +1879,79 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
-        addCompositeDisposable(Observable.zip(observable//
-            , mStayRemoteImpl.getDetail(mStayIndex, mStayBookDateTime)//
-            , mCalendarImpl.getStayUnavailableCheckInDates(mStayIndex, DAYS_OF_MAX_COUNT, false)//
-            , mStayRemoteImpl.getReviewScores(mStayIndex)//
-            , mStayRemoteImpl.getTrueVR(mStayIndex)//
-            , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function6<Boolean, StayDetailk, List<String>, ReviewScores, List<TrueVR>, CommonDateTime, StayDetail>()
-            {
-                @Override
-                public StayDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
-                    , @io.reactivex.annotations.NonNull StayDetailk stayDetail//
-                    , @io.reactivex.annotations.NonNull List<String> unavailableDates//
-                    , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
-                    , @io.reactivex.annotations.NonNull List<TrueVR> trueVRList//
-                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
-                {
-                    setCommonDateTime(commonDateTime);
-                    setReviewScores(reviewScores);
-                    setSoldOutDateList(unavailableDates);
-                    setTrueVRList(trueVRList);
-                    setStayDetail(stayDetail.toStayDetail());
-
-                    return stayDetail.toStayDetail();
-                }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayDetail>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull StayDetail stayDetail) throws Exception
-            {
-                notifyDetailChanged();
-                notifyWishChanged();
-                notifyRewardChanged();
-
-                if (disposable != null)
-                {
-                    disposable.dispose();
-                }
-
-                if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
-                {
-                    showWishTooltip();
-                }
-
-                unLockAll();
-
-                if (mReviewScores != null && mReviewScores.reviewScoreTotalCount > 0)
-                {
-                    mAnalytics.onEventShowTrueReview(getActivity(), stayDetail.index);
-                }
-
-                if (stayDetail.couponPrice > 0)
-                {
-                    mAnalytics.onEventShowCoupon(getActivity(), stayDetail.index);
-                }
-
-                if (stayDetail.awards != null && DailyTextUtils.isTextEmpty(stayDetail.awards.title) == false)
-                {
-                    mAnalytics.onEventTrueAwards(getActivity(), stayDetail.index);
-                }
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-            {
-                if (disposable != null)
-                {
-                    disposable.dispose();
-                }
-
-                onHandleError(throwable);
-            }
-        }));
+//        addCompositeDisposable(Observable.zip(observable//
+//            , mStayRemoteImpl.getDetail(mStayIndex, mStayBookDateTime)//
+//            , mCalendarImpl.getStayUnavailableCheckInDates(mStayIndex, DAYS_OF_MAX_COUNT, false)//
+//            , mStayRemoteImpl.getReviewScores(mStayIndex)//
+//            , mStayRemoteImpl.getTrueVR(mStayIndex)//
+//            , mCommonRemoteImpl.getCommonDateTime()//
+//            , new Function6<Boolean, StayDetail, List<String>, ReviewScores, List<TrueVR>, CommonDateTime, old_StayDetail>()
+//            {
+//                @Override
+//                public old_StayDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
+//                    , @io.reactivex.annotations.NonNull StayDetail stayDetail//
+//                    , @io.reactivex.annotations.NonNull List<String> unavailableDates//
+//                    , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
+//                    , @io.reactivex.annotations.NonNull List<TrueVR> trueVRList//
+//                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
+//                {
+//                    setCommonDateTime(commonDateTime);
+//                    setReviewScores(reviewScores);
+//                    setSoldOutDateList(unavailableDates);
+//                    setTrueVRList(trueVRList);
+//                    setStayDetail(stayDetail.toStayDetail());
+//
+//                    return stayDetail.toStayDetail();
+//                }
+//            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<old_StayDetail>()
+//        {
+//            @Override
+//            public void accept(@io.reactivex.annotations.NonNull old_StayDetail stayDetail) throws Exception
+//            {
+//                notifyDetailChanged();
+//                notifyWishChanged();
+//                notifyRewardChanged();
+//
+//                if (disposable != null)
+//                {
+//                    disposable.dispose();
+//                }
+//
+//                if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
+//                {
+//                    showWishTooltip();
+//                }
+//
+//                unLockAll();
+//
+//                if (mReviewScores != null && mReviewScores.reviewScoreTotalCount > 0)
+//                {
+//                    mAnalytics.onEventShowTrueReview(getActivity(), stayDetail.index);
+//                }
+//
+//                if (stayDetail.couponPrice > 0)
+//                {
+//                    mAnalytics.onEventShowCoupon(getActivity(), stayDetail.index);
+//                }
+//
+//                if (stayDetail.awards != null && DailyTextUtils.isTextEmpty(stayDetail.awards.title) == false)
+//                {
+//                    mAnalytics.onEventTrueAwards(getActivity(), stayDetail.index);
+//                }
+//            }
+//        }, new Consumer<Throwable>()
+//        {
+//            @Override
+//            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+//            {
+//                if (disposable != null)
+//                {
+//                    disposable.dispose();
+//                }
+//
+//                onHandleError(throwable);
+//            }
+//        }));
     }
 
     private void onBookingRoom()
@@ -2012,7 +2012,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             , mStayDetail.activeReward && mSelectedRoom.provideRewardSticker, mStayDetail.overseas);
     }
 
-    private boolean isSoldOut(StayDetail stayDetail)
+    private boolean isSoldOut(old_StayDetail stayDetail)
     {
         if (stayDetail == null)
         {
@@ -2022,7 +2022,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         return (mStayDetail.getRoomList() == null || mStayDetail.getRoomList().size() == 0);
     }
 
-    void startPayment(StayBookDateTime stayBookDateTime, StayDetail stayDetail, StayRoom stayRoom)
+    void startPayment(StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, StayRoom stayRoom)
     {
         if (stayBookDateTime == null || stayDetail == null || stayRoom == null)
         {

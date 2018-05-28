@@ -19,7 +19,7 @@ class DailyDetailRoomFilterContentsView : ConstraintLayout {
     private val bedTypeList: Array<String> = arrayOf("DOUBLE", "TWIN", "IN_FLOOR_HEATING", "SINGLE")
     private val facilitiesList: Array<String> = arrayOf("SPAWALLPOOL", "BATH", "AMENITY", "SHOWERGOWN",
             "TOOTHBRUSHSET", "PRIVATEBBQ", "PRIVATEPOOL", "PARTYROOM", "KARAOKE", "BREAKFAST",
-            "PC", "TV", "COOKING", "SMOKEABLE", "DISABLEDFACILITIES")
+            "PC", "TV", "Kitchenette", "SMOKEABLE", "DISABLEDFACILITIES")
 
     interface OnDailyDetailRoomFilterListener {
         fun onSelectedBedTypeFilter(selected: Boolean, bedType: String)

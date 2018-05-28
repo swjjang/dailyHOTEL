@@ -175,7 +175,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                             @Override
                             public void subscribe(ObservableEmitter<Object> e) throws Exception
                             {
-                                onStayClick(mWishPosition, mStayByLongPress, mListCountByLongPress, mPairsByLongPress, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                                onStayClick(mWishPosition, mStayByLongPress, mListCountByLongPress
+                                    , mPairsByLongPress, StayDetailActivity.TransGradientType.LIST);
                             }
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
@@ -631,7 +632,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     }
 
     @Override
-    public void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType)
+    public void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs//
+        , StayDetailActivity.TransGradientType transGradientType)
     {
         if (mStayViewModel == null || stay == null || lock() == true)
         {
@@ -679,23 +681,23 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
 
-            Intent intent = com.daily.dailyhotel.screen.home.stay.inbound.detailk.StayDetailActivity.newInstance(getActivity() //
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , bedTypeFilter, facilitiesFilter//
-                , true, com.daily.dailyhotel.screen.home.stay.inbound.detailk.StayDetailActivity.TransGradientType.LIST//
+                , true, transGradientType//
                 , analyticsParam);
 
             startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
         } else
         {
-            Intent intent = com.daily.dailyhotel.screen.home.stay.inbound.detailk.StayDetailActivity.newInstance(getActivity() //
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , bedTypeFilter, facilitiesFilter//
-                , false, com.daily.dailyhotel.screen.home.stay.inbound.detailk.StayDetailActivity.TransGradientType.NONE//
+                , false, StayDetailActivity.TransGradientType.NONE//
                 , analyticsParam);
 
             startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);

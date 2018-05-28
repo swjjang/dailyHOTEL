@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
-import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailRefundInformationDataBinding
@@ -35,7 +35,7 @@ class DailyDetailRefundInformationView : ConstraintLayout {
 
     }
 
-    fun setInformation(information: StayDetailk.RefundInformation?, hasNRDRoom: Boolean = false) {
+    fun setInformation(information: StayDetail.RefundInformation?, hasNRDRoom: Boolean = false) {
         if (viewDataBinding.informationLayout.childCount > 0) {
             viewDataBinding.informationLayout.removeAllViews()
         }

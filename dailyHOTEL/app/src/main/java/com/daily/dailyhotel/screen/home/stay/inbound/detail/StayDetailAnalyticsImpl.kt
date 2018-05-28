@@ -1,10 +1,10 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk
+package com.daily.dailyhotel.screen.home.stay.inbound.detail
 
 import android.app.Activity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.dailyhotel.entity.StayBookDateTime
-import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
@@ -21,12 +21,12 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         this.analyticsParam = analyticsParam
     }
 
-    override fun getStayPaymentAnalyticsParam(stayDetail: StayDetailk, stayRoom: StayRoom): StayPaymentAnalyticsParam {
+    override fun getStayPaymentAnalyticsParam(stayDetail: StayDetail, stayRoom: StayRoom): StayPaymentAnalyticsParam {
 
         return StayPaymentAnalyticsParam()
     }
 
-    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int,
+    override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int,
                           bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>) {
         if (stayDetail == null) return
 
@@ -223,7 +223,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
                 AnalyticsManager.Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, stayName, null)
     }
 
-    override fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int, myWish: Boolean) {
+    override fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int, myWish: Boolean) {
         if (stayDetail == null) {
             return
         }
@@ -351,7 +351,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
             "BREAKFAST" -> R.string.label_breakfast
             "PC" -> R.string.label_computer
             "TV" -> R.string.label_television
-            "COOKING" -> R.string.label_cooking
+            "KITCHENETTE" -> R.string.label_cooking
             "SMOKEABLE" -> R.string.label_smokeable
             "DISABLEDFACILITIES" -> R.string.label_disabled_facilities
             else -> 0

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk
+package com.daily.dailyhotel.screen.home.stay.inbound.detail
 
 import android.app.Activity
 import android.content.DialogInterface
@@ -48,15 +48,15 @@ interface StayDetailInterface {
 
         fun setScrollViewVisible(visible: Boolean)
 
-        fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean)
+        fun setBaseInformation(baseInformation: StayDetail.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean)
 
         fun setTrueReviewInformationVisible(visible: Boolean)
 
-        fun setTrueReviewInformation(trueReviewInformation: StayDetailk.TrueReviewInformation)
+        fun setTrueReviewInformation(trueReviewInformation: StayDetail.TrueReviewInformation)
 
         fun setBenefitInformationVisible(visible: Boolean)
 
-        fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation)
+        fun setBenefitInformation(benefitInformation: StayDetail.BenefitInformation)
 
         fun setCouponButtonEnabled(enabled: Boolean)
 
@@ -91,23 +91,23 @@ interface StayDetailInterface {
 
         fun setAddressInformationVisible(visible: Boolean)
 
-        fun setAddressInformation(addressInformation: StayDetailk.AddressInformation)
+        fun setAddressInformation(addressInformation: StayDetail.AddressInformation)
 
         fun setCheckTimeInformationVisible(visible: Boolean)
 
-        fun setCheckTimeInformation(checkTimeInformation: StayDetailk.CheckTimeInformation)
+        fun setCheckTimeInformation(checkTimeInformation: StayDetail.CheckTimeInformation)
 
         fun setDetailInformationVisible(visible: Boolean)
 
-        fun setDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?)
+        fun setDetailInformation(detailInformation: StayDetail.DetailInformation?, breakfastInformation: StayDetail.BreakfastInformation?)
 
         fun setCancellationAndRefundPolicyVisible(visible: Boolean)
 
-        fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation?, hasNRDRoom: Boolean = false)
+        fun setCancellationAndRefundPolicy(refundInformation: StayDetail.RefundInformation?, hasNRDRoom: Boolean = false)
 
         fun setCheckInformationVisible(visible: Boolean)
 
-        fun setCheckInformation(checkTimeInformation: StayDetailk.CheckInformation)
+        fun setCheckInformation(checkTimeInformation: StayDetail.CheckInformation)
 
         fun setRewardVisible(visible: Boolean)
 
@@ -124,7 +124,7 @@ interface StayDetailInterface {
 
         fun scrollTop()
 
-        fun showShareDialog(listener: DialogInterface.OnDismissListener)
+        fun showShareDialog()
 
         fun showConciergeDialog(listener: DialogInterface.OnDismissListener)
 
@@ -237,9 +237,9 @@ interface StayDetailInterface {
     interface AnalyticsInterface : BaseAnalyticsInterface {
         fun setAnalyticsParam(analyticsParam: StayDetailAnalyticsParam)
 
-        fun getStayPaymentAnalyticsParam(stayDetail: StayDetailk, stayRoom: StayRoom): StayPaymentAnalyticsParam
+        fun getStayPaymentAnalyticsParam(stayDetail: StayDetail, stayRoom: StayRoom): StayPaymentAnalyticsParam
 
-        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int,
+        fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int,
                      bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>)
 
         fun onScreen(activity: Activity)
@@ -279,7 +279,7 @@ interface StayDetailInterface {
 
         fun onEventClipAddressClick(activity: Activity, stayName: String?)
 
-        fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetailk?, priceFromList: Int, myWish: Boolean)
+        fun onEventWishClick(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int, myWish: Boolean)
 
         fun onEventCallClick(activity: Activity)
 

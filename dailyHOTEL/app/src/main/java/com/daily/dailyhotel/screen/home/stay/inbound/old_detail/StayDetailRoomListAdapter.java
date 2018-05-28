@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail;
+package com.daily.dailyhotel.screen.home.stay.inbound.old_detail;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;

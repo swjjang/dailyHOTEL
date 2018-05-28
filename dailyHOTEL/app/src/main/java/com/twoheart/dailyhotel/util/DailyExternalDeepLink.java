@@ -143,10 +143,12 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V25_IMAGE_URL = "iurl";
     private static final String PARAM_V25_AGGREGATION_ID = "agi";
 
+    private static final String PARAM_V26_FILTER = "filter";
+
 
     // Version
     private static final int MINIMUM_VERSION_CODE = 3;
-    private static final int MAXIMUM_VERSION_CODE = 25;
+    private static final int MAXIMUM_VERSION_CODE = 26;
 
     private int mVersionCode;
 
@@ -262,6 +264,22 @@ public class DailyExternalDeepLink extends DailyDeepLink
         }
 
         return mParamsMap.containsKey(paramName);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 26
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public String[] getFilters()
+    {
+        String value = getStringValue(26, PARAM_V26_FILTER);
+
+        if (DailyTextUtils.isTextEmpty(value) == true)
+        {
+            return null;
+        }
+
+        return value.split(",");
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

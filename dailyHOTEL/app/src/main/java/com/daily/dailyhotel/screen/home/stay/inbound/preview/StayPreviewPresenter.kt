@@ -12,11 +12,15 @@ import com.daily.base.BaseActivity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.dailyhotel.base.BaseExceptionPresenter
-import com.daily.dailyhotel.entity.*
+import com.daily.dailyhotel.entity.ReviewScores
+import com.daily.dailyhotel.entity.Room
+import com.daily.dailyhotel.entity.StayBookDateTime
+import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
 import com.daily.dailyhotel.storage.preference.DailyUserPreference
+import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.util.Constants
@@ -148,7 +152,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
                 hideAnimationAfterFinish()
             }
 
-            else -> viewInterface.setWish(detail.myWish)
+            else -> viewInterface.setWish(detail.wish)
         }
     }
 
@@ -166,10 +170,10 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
             screenLock(showProgress)
 
             addCompositeDisposable(Observable.zip(stayRemoteImpl.getDetail(stayIndex, bookDateTime), stayRemoteImpl.getReviewScores(stayIndex)
-                    , BiFunction<StayDetailk, ReviewScores, Int> { stayDetail, reviewScores ->
-                this@StayPreviewPresenter.detail = stayDetail.toStayDetail()
+                    , BiFunction<StayDetail, ReviewScores, Int> { stayDetail, reviewScores ->
+                this@StayPreviewPresenter.detail = stayDetail
 
-                analytics.onScreen(activity, stayDetail.toStayDetail().category)
+                analytics.onScreen(activity, stayDetail.baseInformation?.category)
 
                 reviewScores.reviewScoreTotalCount
             }).observeOn(AndroidSchedulers.mainThread()).subscribe({ trueReviewCount ->
@@ -198,7 +202,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     override fun onWishClick() {
         takeIf { it::detail.isInitialized && !lock() }.let {
-            val changeWish = !detail.myWish
+            val changeWish = !detail.wish
 
             viewInterface.setWish(changeWish)
 
@@ -246,14 +250,19 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
     private fun startKakaoLinkApplication(userName: String?, detail: StayDetail, bookDateTime: StayBookDateTime, url: String) {
         KakaoLinkManager.newInstance(activity).shareStay(userName
-                , detail.name, detail.address, detail.index
-                , detail.defaultImageUrl
+                , detail.baseInformation?.name, detail.addressInformation?.address, detail.index
+                , detail.imageList?.get(0)?.imageMap?.smallUrl
                 , url, bookDateTime)
     }
 
     override fun onMapClick() {
         takeIf { it::detail.isInitialized && !lock() }.let {
-            hideAnimationAfterFinish { Util.shareNaverMap(activity, detail.name, detail.latitude.toString(), detail.longitude.toString()) }
+            hideAnimationAfterFinish {
+                Util.shareNaverMap(activity,
+                        detail.baseInformation?.name,
+                        detail.addressInformation?.latitude.toString(),
+                        detail.addressInformation?.longitude.toString())
+            }
 
             analytics.onEventMapClick(activity)
         }
@@ -271,22 +280,26 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         viewInterface.setName(stayName)
 
         if (::detail.isInitialized) {
-            val soldOut = !detail.hasRooms()
+            val soldOut = isSoldOut(detail)
 
-            viewInterface.setCategory(detail.grade.getName(activity), detail.activeReward)
-            viewInterface.setImages(detail.imageInformationList.map { it.imageMap.smallUrl }.toTypedArray())
+            viewInterface.setCategory(detail.baseInformation?.grade?.getName(activity), detail.activeReward)
+            viewInterface.setImages(detail.imageList?.map { it.imageMap.smallUrl }?.toTypedArray())
 
-            notifyRoomInformationDataSetChanged(soldOut, detail.roomList)
+            notifyRoomInformationDataSetChanged(soldOut, detail.roomInformation?.roomList)
             notifyReviewInformationDataSetChanged(trueReviewCount, detail.wishCount)
 
-            viewInterface.setWish(detail.myWish)
+            viewInterface.setWish(detail.wish)
             viewInterface.setBookingButtonText(if (soldOut) getString(R.string.label_booking_view_detail) else getString(R.string.label_preview_booking))
         } else {
             viewInterface.setCategory(stayGrade, false)
         }
     }
 
-    private fun notifyRoomInformationDataSetChanged(soldOut: Boolean, roomList: List<StayRoom>?) {
+    private fun isSoldOut(detail: StayDetail): Boolean {
+        return !detail.roomInformation?.roomList.isNotNullAndNotEmpty()
+    }
+
+    private fun notifyRoomInformationDataSetChanged(soldOut: Boolean, roomList: List<Room>?) {
         val roomTypeCountText: String = if (soldOut) getString(R.string.message_preview_changed_price)
         else getRoomTypeCountText(roomList?.size ?: 0)
 
@@ -318,14 +331,14 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
         return if (count == 0) getString(R.string.message_preview_changed_price) else getString(R.string.label_detail_stay_product_count, count)
     }
 
-    private fun getRangePriceText(roomList: List<StayRoom>?): String? {
+    private fun getRangePriceText(roomList: List<Room>?): String? {
         return roomList?.let {
             var minPrice = Int.MAX_VALUE
             var maxPrice = Int.MIN_VALUE
 
             it.forEach {
-                minPrice = Math.min(minPrice, it.discountAverage)
-                maxPrice = Math.max(maxPrice, it.discountAverage)
+                minPrice = Math.min(minPrice, it.amountInformation.discountAverage)
+                maxPrice = Math.max(maxPrice, it.amountInformation.discountAverage)
             }
 
             if (minPrice == Int.MAX_VALUE || minPrice <= 0 || maxPrice == Int.MIN_VALUE || maxPrice == 0) {

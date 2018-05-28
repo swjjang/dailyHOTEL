@@ -435,7 +435,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, StayDetailActivity.NONE_PRICE//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
+                , null, null//
+                , true, StayDetailActivity.TransGradientType.LIST, analyticsParam);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
         } else
@@ -444,7 +445,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.NONE_PRICE//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+                , null, null//
+                , false, StayDetailActivity.TransGradientType.NONE, analyticsParam);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

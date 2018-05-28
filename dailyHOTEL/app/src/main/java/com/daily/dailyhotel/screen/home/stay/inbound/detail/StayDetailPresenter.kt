@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk
+package com.daily.dailyhotel.screen.home.stay.inbound.detail
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -92,7 +92,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var viewPrice: Int = 0
     private var stayName: String? = null
     private var defaultImageUrl: String? = null
-    private var stayDetail: StayDetailk? = null
+    private var stayDetail: StayDetail? = null
     private var status = Status.NONE
     private var isUsedMultiTransition = false
     private var hasDeepLink = false
@@ -104,7 +104,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showRoomPriceType: PriceType = PriceType.TOTAL
     private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
     private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
-    private var checkChangedPrice = false
+    private var checkOneTime = false
 
     private val bookDateTime = StayBookDateTime()
     private val commonDateTime = CommonDateTime()
@@ -114,7 +114,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun constructorInitialize(activity: StayDetailActivity) {
-        setContentView(R.layout.activity_stay_detailk_data)
+        setContentView(R.layout.activity_stay_detail_data)
 
         isRefresh = false
     }
@@ -435,7 +435,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         addCompositeDisposable(Observable.zip(observable,
                 stayRemoteImpl.getDetail(stayIndex, bookDateTime),
                 calendarImpl.getStayUnavailableCheckInDates(stayIndex, DAYS_OF_MAX_COUNT, false),
-                commonRemoteImpl.commonDateTime, Function4<Boolean, StayDetailk, List<String>, CommonDateTime, StayDetailk> { _, stayDetail, soldOutDayList, commonDateTime ->
+                commonRemoteImpl.commonDateTime, Function4<Boolean, StayDetail, List<String>, CommonDateTime, StayDetail> { _, stayDetail, soldOutDayList, commonDateTime ->
             this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
             this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replace("-".toRegex(), "").toInt() }.toIntArray()
             this@StayDetailPresenter.stayDetail = stayDetail
@@ -463,7 +463,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }))
     }
 
-    private fun writeRecentlyViewedPlace(stayDetail: StayDetailk) {
+    private fun writeRecentlyViewedPlace(stayDetail: StayDetail) {
         val regionName = stayDetail.province?.name
         val observable: Observable<String> =
                 if (regionName.isTextEmpty())
@@ -498,9 +498,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onShareClick() {
         if (lock()) return
 
-        viewInterface.showShareDialog(DialogInterface.OnDismissListener { unLockAll() })
+        viewInterface.showShareDialog()
 
         analytics.onEventShare(activity)
+
+        unLockAll()
     }
 
     override fun onWishClick() {
@@ -1170,16 +1172,22 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
             }
 
-            if (checkChangedPrice == false) {
-                checkChangedPrice = true
-                checkChangedPrice(hasDeepLink, it, viewPrice, true)
+            if (checkOneTime == false) {
+                checkOneTime = true
 
-                if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
+                if (isSoldOut()) {
+                    setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
+
+                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                            , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
+                } else if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
                     viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_filtered_empty_room)//
                             , getString(R.string.dialog_btn_text_confirm), { _ ->
                         setResetRoomFilter()
                         setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
                     }, null, true)
+                } else {
+                    checkChangedPrice(hasDeepLink, it, viewPrice, true)
                 }
             }
 
@@ -1213,11 +1221,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         } ?: Util.restartApp(activity)
     }
 
-    private fun hasBenefitContents(benefitInformation: StayDetailk.BenefitInformation?): Boolean {
+    private fun hasBenefitContents(benefitInformation: StayDetail.BenefitInformation?): Boolean {
         return benefitInformation != null && (!benefitInformation.title.isTextEmpty() || benefitInformation.contentList.isNotNullAndNotEmpty())
     }
 
-    private fun hasDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?): Boolean {
+    private fun hasDetailInformation(detailInformation: StayDetail.DetailInformation?, breakfastInformation: StayDetail.BreakfastInformation?): Boolean {
         if (detailInformation?.itemList.isNotNullAndNotEmpty()) return true
 
         if (breakfastInformation?.items.isNotNullAndNotEmpty()) return true
@@ -1227,35 +1235,28 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return false
     }
 
-    private fun hasRefundInformation(refundInformation: StayDetailk.RefundInformation?): Boolean {
+    private fun hasRefundInformation(refundInformation: StayDetail.RefundInformation?): Boolean {
         if (refundInformation?.contentList.isNotNullAndNotEmpty()) return true
 
         return false
     }
 
-    private fun checkChangedPrice(isDeepLink: Boolean, stayDetail: StayDetailk, listViewPrice: Int, compareListPrice: Boolean) {
-        if (isSoldOut()) {
-            setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
+    private fun checkChangedPrice(isDeepLink: Boolean, stayDetail: StayDetail, listViewPrice: Int, compareListPrice: Boolean) {
+        if (!isDeepLink && compareListPrice) {
+            val hasPrice = if (listViewPrice == StayDetailActivity.NONE_PRICE) {
+                true
+            } else {
+                stayDetail.roomInformation?.roomList?.any { listViewPrice == it.amountInformation.discountAverage }
+            }
 
-            viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
-                    , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
-        } else {
-            if (!isDeepLink && compareListPrice) {
-                val hasPrice = if (listViewPrice == StayDetailActivity.NONE_PRICE) {
-                    true
-                } else {
-                    stayDetail.roomInformation?.roomList?.any { listViewPrice == it.amountInformation.discountAverage }
-                }
+            if (hasPrice != true) {
+                setResult(BaseActivity.RESULT_CODE_REFRESH,
+                        Intent().putExtra(com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE, true))
 
-                if (hasPrice != true) {
-                    setResult(BaseActivity.RESULT_CODE_REFRESH,
-                            Intent().putExtra(com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE, true))
+                viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
+                        , getString(R.string.dialog_btn_text_confirm), null)
 
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
-                            , getString(R.string.dialog_btn_text_confirm), null)
-
-                    analytics.onEventChangedPrice(activity, isDeepLink, stayDetail.baseInformation?.name, false)
-                }
+                analytics.onEventChangedPrice(activity, isDeepLink, stayDetail.baseInformation?.name, false)
             }
         }
     }

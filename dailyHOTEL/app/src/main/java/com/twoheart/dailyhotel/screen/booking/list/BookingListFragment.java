@@ -899,7 +899,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             , booking.placeIndex, booking.placeName, null, StayDetailActivity.NONE_PRICE//
                             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                             , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, new StayDetailAnalyticsParam());
+                            , null, null//
+                            , false, StayDetailActivity.TransGradientType.NONE, new StayDetailAnalyticsParam());
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

@@ -14,6 +14,7 @@ import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 
 import java.util.List;
@@ -76,7 +77,8 @@ public interface StayListFragmentInterface
 
         void onMoreRefreshing();
 
-        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType);
+        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs
+            , StayDetailActivity.TransGradientType transGradientType);
 
         void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs);
 

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.daily.dailyhotel.entity.Room;
-import com.daily.dailyhotel.entity.StayDetailk;
+import com.daily.dailyhotel.entity.StayDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class RoomParcel implements Parcelable
 
         if (room.vrInformationList != null)
         {
-            for (StayDetailk.VRInformation info : room.vrInformationList)
+            for (StayDetail.VRInformation info : room.vrInformationList)
             {
                 list.add(new VrInformationParcel(info));
             }
@@ -132,7 +132,7 @@ public class RoomParcel implements Parcelable
         AttributeInformationParcel attributeInformationParcel = in.readParcelable(AttributeInformationParcel.class.getClassLoader());
         room.attributeInformation = attributeInformationParcel == null ? null : attributeInformationParcel.getAttributeInformation();
 
-        List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
+        List<StayDetail.VRInformation> vrInformationList = new ArrayList<>();
         List<VrInformationParcel> vrParcelList = in.readArrayList(BedTypeInformationParcel.class.getClassLoader());
         if (vrParcelList != null)
         {
@@ -381,9 +381,9 @@ public class RoomParcel implements Parcelable
 
     public static class CheckTimeInformationParcel implements Parcelable
     {
-        private StayDetailk.CheckTimeInformation checkTimeInformation;
+        private StayDetail.CheckTimeInformation checkTimeInformation;
 
-        public CheckTimeInformationParcel(StayDetailk.CheckTimeInformation checkTimeInformation)
+        public CheckTimeInformationParcel(StayDetail.CheckTimeInformation checkTimeInformation)
         {
             if (checkTimeInformation == null)
             {
@@ -398,7 +398,7 @@ public class RoomParcel implements Parcelable
             readFromParcel(in);
         }
 
-        public StayDetailk.CheckTimeInformation getCheckTimeInformation()
+        public StayDetail.CheckTimeInformation getCheckTimeInformation()
         {
             return checkTimeInformation;
         }
@@ -413,7 +413,7 @@ public class RoomParcel implements Parcelable
 
         private void readFromParcel(Parcel in)
         {
-            checkTimeInformation = new StayDetailk.CheckTimeInformation();
+            checkTimeInformation = new StayDetail.CheckTimeInformation();
             checkTimeInformation.setCheckIn(in.readString());
             checkTimeInformation.setCheckOut(in.readString());
 
@@ -935,9 +935,9 @@ public class RoomParcel implements Parcelable
 
     public static class VrInformationParcel implements Parcelable
     {
-        private StayDetailk.VRInformation vrInformation;
+        private StayDetail.VRInformation vrInformation;
 
-        public VrInformationParcel(StayDetailk.VRInformation vrInformation)
+        public VrInformationParcel(StayDetail.VRInformation vrInformation)
         {
             if (vrInformation == null)
             {
@@ -952,7 +952,7 @@ public class RoomParcel implements Parcelable
             readFromParcel(in);
         }
 
-        public StayDetailk.VRInformation getVrInformation()
+        public StayDetail.VRInformation getVrInformation()
         {
             return vrInformation;
         }
@@ -968,7 +968,7 @@ public class RoomParcel implements Parcelable
 
         private void readFromParcel(Parcel in)
         {
-            vrInformation = new StayDetailk.VRInformation();
+            vrInformation = new StayDetail.VRInformation();
             vrInformation.setName(in.readString());
             vrInformation.setType(in.readString());
             vrInformation.setTypeIndex(in.readInt());
@@ -999,9 +999,9 @@ public class RoomParcel implements Parcelable
 
     public static class RefundInformationParcel implements Parcelable
     {
-        private StayDetailk.RefundInformation refundInformation;
+        private StayDetail.RefundInformation refundInformation;
 
-        public RefundInformationParcel(StayDetailk.RefundInformation refundInformation)
+        public RefundInformationParcel(StayDetail.RefundInformation refundInformation)
         {
             if (refundInformation == null)
             {
@@ -1016,7 +1016,7 @@ public class RoomParcel implements Parcelable
             readFromParcel(in);
         }
 
-        public StayDetailk.RefundInformation getRefundInformation()
+        public StayDetail.RefundInformation getRefundInformation()
         {
             return refundInformation;
         }
@@ -1032,7 +1032,7 @@ public class RoomParcel implements Parcelable
 
         private void readFromParcel(Parcel in)
         {
-            refundInformation = new StayDetailk.RefundInformation();
+            refundInformation = new StayDetail.RefundInformation();
             refundInformation.setTitle(in.readString());
             refundInformation.setType(in.readString());
 

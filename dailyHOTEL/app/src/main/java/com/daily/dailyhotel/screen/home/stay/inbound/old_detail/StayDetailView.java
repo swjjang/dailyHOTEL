@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail;
+package com.daily.dailyhotel.screen.home.stay.inbound.old_detail;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -43,7 +43,7 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.old_StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.entity.TrueAwards;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -62,7 +62,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataOldBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
@@ -89,7 +89,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListener, ActivityStayDetailDataBinding>//
+public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListener, ActivityStayDetailDataOldBinding>//
     implements StayDetailViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
@@ -159,7 +159,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    protected void setContentView(final ActivityStayDetailDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayDetailDataOldBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -439,7 +439,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount)
+    public void setStayDetail(StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int trueReviewCount)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || stayDetail == null)
         {
@@ -1190,7 +1190,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         showSimpleDialog(dataBinding.getRoot(), null, onDismissListener, true);
     }
 
-    private void initToolbar(ActivityStayDetailDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayDetailDataOldBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -1529,7 +1529,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
      *
      * @return
      */
-    private void setAmenitiesView(List<StayDetail.Pictogram> pictogramList)
+    private void setAmenitiesView(List<old_StayDetail.Pictogram> pictogramList)
     {
         if (getViewDataBinding() == null)
         {
@@ -1555,7 +1555,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         boolean isSingleLine = pictogramList.size() <= GRID_COLUMN_COUNT;
 
-        for (StayDetail.Pictogram pictogram : pictogramList)
+        for (old_StayDetail.Pictogram pictogram : pictogramList)
         {
             viewDataBinding.amenitiesGridLayout.addView(getGridLayoutItemView(getContext(), pictogram, isSingleLine));
         }
@@ -1567,12 +1567,12 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             int addEmptyViewCount = GRID_COLUMN_COUNT - columnCount;
             for (int i = 0; i < addEmptyViewCount; i++)
             {
-                viewDataBinding.amenitiesGridLayout.addView(getGridLayoutItemView(getContext(), StayDetail.Pictogram.NONE, isSingleLine));
+                viewDataBinding.amenitiesGridLayout.addView(getGridLayoutItemView(getContext(), old_StayDetail.Pictogram.NONE, isSingleLine));
             }
         }
     }
 
-    private DailyTextView getGridLayoutItemView(Context context, StayDetail.Pictogram pictogram, boolean isSingleLine)
+    private DailyTextView getGridLayoutItemView(Context context, old_StayDetail.Pictogram pictogram, boolean isSingleLine)
     {
         DailyTextView dailyTextView = new DailyTextView(context);
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);

@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionGroup="true">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/transImageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageLoopView"
+            app:layout_constraintLeft_toLeftOf="@+id/imageLoopView"
+            app:layout_constraintRight_toRightOf="@+id/imageLoopView"
+            app:layout_constraintTop_toTopOf="@+id/imageLoopView"
+            fresco:actualImageScaleType="centerCrop"/>
+
+        <com.daily.dailyhotel.view.DailyImageLoopView
+            android:id="@+id/imageLoopView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,4:3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/transGradientBottomView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageLoopView"
+            app:layout_constraintLeft_toLeftOf="@+id/imageLoopView"
+            app:layout_constraintRight_toRightOf="@+id/imageLoopView"
+            app:layout_constraintTop_toTopOf="@+id/imageLoopView"/>
+
+        <ImageView
+            android:id="@+id/vrImageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="15dp"
+            android:scaleType="center"
+            android:src="@drawable/detail_ic_vr_img"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/imageLoopView"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/transNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="19dp"
+            android:ellipsize="end"
+            android:freezesText="true"
+            android:gravity="center_horizontal"
+            android:maxLines="2"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageLoopView"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyNestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+            android:fadingEdgeLength="0dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/scrollLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.daily.dailyhotel.view.DailyDetailEmptyView
+                        android:id="@+id/detailEmptyView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="H,4:3"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+
+                <com.daily.dailyhotel.view.DailyDetailTitleInformationView
+                    android:id="@+id/titleInformationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:id="@+id/trueReviewTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"
+                    android:visibility="gone"/>
+
+                <com.daily.dailyhotel.view.DailyDetailTrueReviewView
+                    android:id="@+id/trueReviewView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/trueAwardsTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"
+                    android:visibility="gone"/>
+
+                <com.daily.dailyhotel.view.DailyDetailTrueAwardsView
+                    android:id="@+id/trueAwardsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/dateInformationViewTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
+
+                <com.daily.dailyhotel.view.DailyDateInformationView
+                    android:id="@+id/dateInformationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:background="@color/white"/>
+
+                <include
+                    android:id="@+id/mapViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_map_data"/>
+
+                <include
+                    android:id="@+id/amenitiesViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_amenities_data"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
+
+                <include
+                    android:id="@+id/benefitViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_benefit_data"/>
+
+                <LinearLayout
+                    android:id="@+id/descriptionsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"/>
+
+                <LinearLayout
+                    android:id="@+id/rewardCardLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/default_background"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.daily.dailyhotel.view.DailyRewardCardView
+                        android:id="@+id/rewardCardView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"/>
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/conciergeTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
+
+                <include
+                    android:id="@+id/conciergeViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_concierge_data"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@drawable/layerlist_divider"/>
+            </LinearLayout>
+        </com.daily.base.widget.DailyNestedScrollView>
+
+        <View
+            android:id="@+id/fakeVRImageView"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/imageLoopView"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/fakeToolbarView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/toolbar_height"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:themeColor="white"
+            dailyToolbar:underLineVisible="false"/>
+
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
+
+        <View
+            android:id="@+id/productTypeBackgroundView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/black_a60"
+            android:elevation="2dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <include
+            android:id="@+id/roomsViewDataBinding"
+            layout="@layout/layout_stay_outbound_detail_rooms_data"
+            app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/gradient_2dp_line_height_over_21"
+            android:background="@drawable/shape_gradient_bottom_up"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <RelativeLayout
+            android:id="@+id/bottomLayout"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/gradient_1dp_line_height_under_21"
+                android:background="@color/default_line_ce7e7e7"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/bookingTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="@dimen/detail_button_min_left_margin"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_fillrect_beb2135_r3"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="17dp"
+                android:visibility="gone"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/soldoutTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_fillrect_be8e8e9_r3"
+                android:gravity="center"
+                android:text="@string/act_hotel_soldout"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="17dp"
+                android:visibility="gone"
+                dailyFont:style="Medium"/>
+        </RelativeLayout>
+
+        <com.daily.dailyhotel.view.DailyWishAnimationView
+            android:id="@+id/wishAnimationView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/transparent"
+            android:fillViewport="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <FrameLayout
+            android:id="@+id/wishTooltipLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/wishTooltipTextView"
+                android:layout_width="316dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/tooltip_top_vr"
+                android:text="@string/label_preview_wish_guide"
+                android:textColor="@color/default_text_c4d4d4d"
+                android:textSize="13dp"
+                dailyFont:style="Medium"/>
+        </FrameLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

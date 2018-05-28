@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail;
+package com.daily.dailyhotel.screen.home.stay.inbound.old_detail;
 
 import android.app.Activity;
 
@@ -6,7 +6,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.old_StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
@@ -34,7 +34,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public Disposable onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList)
+    public Disposable onScreen(Activity activity, StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int priceFromList)
     {
         if (activity == null || stayDetail == null)
         {
@@ -119,7 +119,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList)
+    public void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int priceFromList)
     {
         if (activity == null || stayDetail == null)
         {
@@ -497,7 +497,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onEventWishClick(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList, boolean myWish)
+    public void onEventWishClick(Activity activity, StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int priceFromList, boolean myWish)
     {
         if (activity == null || stayBookDateTime == null || stayDetail == null)
         {
@@ -605,7 +605,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(StayDetail stayDetail, StayRoom stayRoom)
+    public StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(old_StayDetail stayDetail, StayRoom stayRoom)
     {
         StayPaymentAnalyticsParam analyticsParam = new StayPaymentAnalyticsParam();
 

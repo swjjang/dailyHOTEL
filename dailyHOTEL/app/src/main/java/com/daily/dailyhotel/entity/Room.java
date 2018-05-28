@@ -30,7 +30,7 @@ public class Room
 
     public List<String> amenityList;
 
-    public StayDetailk.CheckTimeInformation checkTimeInformation;
+    public StayDetail.CheckTimeInformation checkTimeInformation;
 
     public List<String> descriptionList;
 
@@ -42,9 +42,9 @@ public class Room
 
     public AttributeInformation attributeInformation;
 
-    public List<StayDetailk.VRInformation> vrInformationList;
+    public List<StayDetail.VRInformation> vrInformationList;
 
-    public StayDetailk.RefundInformation refundInformation;
+    public StayDetail.RefundInformation refundInformation;
 
     public static class AmountInformation
     {
