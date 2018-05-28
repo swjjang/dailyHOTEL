@@ -42,8 +42,8 @@ import com.facebook.AccessToken;
 import com.facebook.FacebookException;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.MeResponseCallback;
-import com.kakao.usermgmt.response.model.UserProfile;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
@@ -1835,7 +1835,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 @Override
                 protected void subscribeActual(Observer<? super Boolean> observer)
                 {
-                    UserManagement.getInstance().requestMe(new MeResponseCallback()
+                    UserManagement.getInstance().me(null, new MeV2ResponseCallback()
                     {
                         @Override
                         public void onSessionClosed(ErrorResult errorResult)
@@ -1845,14 +1845,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         }
 
                         @Override
-                        public void onNotSignedUp()
-                        {
-                            observer.onNext(false);
-                            observer.onComplete();
-                        }
-
-                        @Override
-                        public void onSuccess(UserProfile result)
+                        public void onSuccess(MeV2Response result)
                         {
                             observer.onNext(true);
                             observer.onComplete();

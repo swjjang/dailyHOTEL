@@ -47,8 +47,8 @@ import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
-import com.kakao.usermgmt.callback.MeResponseCallback;
-import com.kakao.usermgmt.response.model.UserProfile;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.util.exception.KakaoException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -688,25 +688,20 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             lockUI();
 
-            UserManagement.getInstance().requestMe(new MeResponseCallback()
+            UserManagement.getInstance().me(null, new MeV2ResponseCallback()
             {
-                @Override
-                public void onSuccess(UserProfile result)
-                {
-                    // id값은 특별함. kakao login
-                    registerKakaoUser(result.getId());
-                }
-
                 @Override
                 public void onSessionClosed(ErrorResult errorResult)
                 {
+                    DailyToast.showToast(LoginActivity.this, errorResult.getErrorMessage(), DailyToast.LENGTH_LONG);
                     unLockUI();
                 }
 
                 @Override
-                public void onNotSignedUp()
+                public void onSuccess(MeV2Response result)
                 {
-                    unLockUI();
+                    // id값은 특별함. kakao login
+                    registerKakaoUser(result.getId());
                 }
             });
         }
