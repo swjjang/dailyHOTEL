@@ -498,9 +498,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onShareClick() {
         if (lock()) return
 
-        viewInterface.showShareDialog(DialogInterface.OnDismissListener { unLockAll() })
+        viewInterface.showShareDialog()
 
         analytics.onEventShare(activity)
+
+        unLockAll()
     }
 
     override fun onWishClick() {

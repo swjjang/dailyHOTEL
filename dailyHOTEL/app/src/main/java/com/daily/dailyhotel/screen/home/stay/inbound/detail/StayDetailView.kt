@@ -882,9 +882,11 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.nestedScrollView.smoothScrollTo(0, 0)
     }
 
-    override fun showShareDialog(listener: DialogInterface.OnDismissListener) {
-
-        DataBindingUtil.inflate<DialogShareDataBinding>(LayoutInflater.from(context), R.layout.dialog_share_data, null, false).apply {
+    override fun showShareDialog() {
+        DataBindingUtil.inflate<DialogShareDataBinding>(LayoutInflater.from(context),
+                R.layout.dialog_share_data,
+                null,
+                false).apply {
             kakaoShareView.setOnClickListener {
                 hideSimpleDialog()
 
@@ -905,7 +907,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
             closeTextView.setOnClickListener { hideSimpleDialog() }
 
-            showSimpleDialog(root, null, listener, true)
+            showSimpleDialog(root, null, null, true)
         }
     }
 

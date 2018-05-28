@@ -124,7 +124,7 @@ interface StayDetailInterface {
 
         fun scrollTop()
 
-        fun showShareDialog(listener: DialogInterface.OnDismissListener)
+        fun showShareDialog()
 
         fun showConciergeDialog(listener: DialogInterface.OnDismissListener)
 
