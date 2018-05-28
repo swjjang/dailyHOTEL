@@ -86,7 +86,7 @@
             android:textColor="@color/white"
             android:textSize="12dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/imageLoopViewPager"
+            app:layout_constraintBottom_toBottomOf="@+id/imageLoopViewPager"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
