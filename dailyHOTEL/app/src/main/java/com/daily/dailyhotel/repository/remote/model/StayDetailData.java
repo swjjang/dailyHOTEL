@@ -191,38 +191,44 @@ public class StayDetailData
 
         stayDetail.setBaseInformation(baseInformation);
 
-        StayDetail.TrueReviewInformation trueReviewInformation = new StayDetail.TrueReviewInformation();
-
-        if (rating != null)
+        if (rating == null && primaryReview == null && (statistic == null || statistic.reviewScoreTotalCount == 0))
         {
-            trueReviewInformation.setRatingCount(rating.persons);
-            trueReviewInformation.setRatingPercent(rating.values);
-            trueReviewInformation.setShowRating(rating.show);
-        }
 
-        if (primaryReview != null)
+        } else
         {
-            trueReviewInformation.setReview(primaryReview.getPrimaryReview());
-        }
+            StayDetail.TrueReviewInformation trueReviewInformation = new StayDetail.TrueReviewInformation();
 
-        if (statistic != null)
-        {
-            trueReviewInformation.setReviewTotalCount(statistic.reviewScoreTotalCount);
-
-            if (statistic.reviewScoreAvgs != null && statistic.reviewScoreAvgs.size() > 0)
+            if (rating != null)
             {
-                List<StayDetail.TrueReviewInformation.ReviewScore> reviewScoreList = new ArrayList<>();
-
-                for (ReviewStatisticData.ReviewScoreAvgData reviewScoreAvgData : statistic.reviewScoreAvgs)
-                {
-                    reviewScoreList.add(reviewScoreAvgData.getReviewScore());
-                }
-
-                trueReviewInformation.setReviewScores(reviewScoreList);
+                trueReviewInformation.setRatingCount(rating.persons);
+                trueReviewInformation.setRatingPercent(rating.values);
+                trueReviewInformation.setShowRating(rating.show);
             }
-        }
 
-        stayDetail.setTrueReviewInformation(trueReviewInformation);
+            if (primaryReview != null)
+            {
+                trueReviewInformation.setReview(primaryReview.getPrimaryReview());
+            }
+
+            if (statistic != null)
+            {
+                trueReviewInformation.setReviewTotalCount(statistic.reviewScoreTotalCount);
+
+                if (statistic.reviewScoreAvgs != null && statistic.reviewScoreAvgs.size() > 0)
+                {
+                    List<StayDetail.TrueReviewInformation.ReviewScore> reviewScoreList = new ArrayList<>();
+
+                    for (ReviewStatisticData.ReviewScoreAvgData reviewScoreAvgData : statistic.reviewScoreAvgs)
+                    {
+                        reviewScoreList.add(reviewScoreAvgData.getReviewScore());
+                    }
+
+                    trueReviewInformation.setReviewScores(reviewScoreList);
+                }
+            }
+
+            stayDetail.setTrueReviewInformation(trueReviewInformation);
+        }
 
         StayDetail.BenefitInformation benefitInformation = new StayDetail.BenefitInformation();
 
