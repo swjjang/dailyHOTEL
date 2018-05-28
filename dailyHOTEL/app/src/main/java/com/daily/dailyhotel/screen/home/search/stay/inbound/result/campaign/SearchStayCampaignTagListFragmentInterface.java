@@ -16,6 +16,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.result.SearchStayResultTabPresenter;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 
 import java.util.List;
 
@@ -77,7 +78,8 @@ public interface SearchStayCampaignTagListFragmentInterface
 
         void onMoreRefreshing();
 
-        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType);
+        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs//
+            , StayDetailActivity.TransGradientType transGradientType);
 
         void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs);
 

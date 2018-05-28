@@ -965,7 +965,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, StayDetailActivity.NONE_PRICE//
                             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                             , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                            , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+                            , null, null//
+                            , true, StayDetailActivity.TransGradientType.NONE, analyticsParam);
 
                         if (intent == null)
                         {
@@ -998,7 +999,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, StayDetailActivity.NONE_PRICE//
                             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                             , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+                            , null, null//
+                            , false, StayDetailActivity.TransGradientType.NONE, analyticsParam);
 
                         if (intent == null)
                         {

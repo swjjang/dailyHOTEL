@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk
+package com.daily.dailyhotel.screen.home.stay.inbound.detail
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -92,7 +92,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var viewPrice: Int = 0
     private var stayName: String? = null
     private var defaultImageUrl: String? = null
-    private var stayDetail: StayDetailk? = null
+    private var stayDetail: StayDetail? = null
     private var status = Status.NONE
     private var isUsedMultiTransition = false
     private var hasDeepLink = false
@@ -435,7 +435,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         addCompositeDisposable(Observable.zip(observable,
                 stayRemoteImpl.getDetail(stayIndex, bookDateTime),
                 calendarImpl.getStayUnavailableCheckInDates(stayIndex, DAYS_OF_MAX_COUNT, false),
-                commonRemoteImpl.commonDateTime, Function4<Boolean, StayDetailk, List<String>, CommonDateTime, StayDetailk> { _, stayDetail, soldOutDayList, commonDateTime ->
+                commonRemoteImpl.commonDateTime, Function4<Boolean, StayDetail, List<String>, CommonDateTime, StayDetail> { _, stayDetail, soldOutDayList, commonDateTime ->
             this@StayDetailPresenter.commonDateTime.setDateTime(commonDateTime)
             this@StayDetailPresenter.soldOutDays = soldOutDayList.map { it.replace("-".toRegex(), "").toInt() }.toIntArray()
             this@StayDetailPresenter.stayDetail = stayDetail
@@ -463,7 +463,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }))
     }
 
-    private fun writeRecentlyViewedPlace(stayDetail: StayDetailk) {
+    private fun writeRecentlyViewedPlace(stayDetail: StayDetail) {
         val regionName = stayDetail.province?.name
         val observable: Observable<String> =
                 if (regionName.isTextEmpty())
@@ -1213,11 +1213,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         } ?: Util.restartApp(activity)
     }
 
-    private fun hasBenefitContents(benefitInformation: StayDetailk.BenefitInformation?): Boolean {
+    private fun hasBenefitContents(benefitInformation: StayDetail.BenefitInformation?): Boolean {
         return benefitInformation != null && (!benefitInformation.title.isTextEmpty() || benefitInformation.contentList.isNotNullAndNotEmpty())
     }
 
-    private fun hasDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?): Boolean {
+    private fun hasDetailInformation(detailInformation: StayDetail.DetailInformation?, breakfastInformation: StayDetail.BreakfastInformation?): Boolean {
         if (detailInformation?.itemList.isNotNullAndNotEmpty()) return true
 
         if (breakfastInformation?.items.isNotNullAndNotEmpty()) return true
@@ -1227,13 +1227,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return false
     }
 
-    private fun hasRefundInformation(refundInformation: StayDetailk.RefundInformation?): Boolean {
+    private fun hasRefundInformation(refundInformation: StayDetail.RefundInformation?): Boolean {
         if (refundInformation?.contentList.isNotNullAndNotEmpty()) return true
 
         return false
     }
 
-    private fun checkChangedPrice(isDeepLink: Boolean, stayDetail: StayDetailk, listViewPrice: Int, compareListPrice: Boolean) {
+    private fun checkChangedPrice(isDeepLink: Boolean, stayDetail: StayDetail, listViewPrice: Int, compareListPrice: Boolean) {
         if (isSoldOut()) {
             setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
 

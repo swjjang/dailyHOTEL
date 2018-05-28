@@ -23,7 +23,7 @@ import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
 import com.daily.base.util.*
 import com.daily.dailyhotel.entity.Room
-import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
@@ -38,7 +38,6 @@ import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
-import kotlin.math.min
 
 class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.OnEventListener)//
     : BaseDialogView<StayRoomsInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
@@ -250,7 +249,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         dataBinding.priceTextView.text = SpannableString(DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false))
     }
 
-    private fun setRefundInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, refundInformation: StayDetailk.RefundInformation?) {
+    private fun setRefundInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, refundInformation: StayDetail.RefundInformation?) {
         if (refundInformation == null) {
             dataBinding.refundPolicyTextView.visibility = View.GONE
             return
@@ -479,7 +478,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         dataBinding.discountInfoTextView.text = spannableString
     }
 
-    private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, checkTimeInformation: StayDetailk.CheckTimeInformation?) {
+    private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, checkTimeInformation: StayDetail.CheckTimeInformation?) {
         if (checkTimeInformation == null) return
 
         val checkInTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkIn, "HH:mm:ss", "HH:mm")

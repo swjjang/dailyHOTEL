@@ -438,7 +438,8 @@ public class StayBookingCancelDetailPresenter //
                 , mStayBookingDetail.stayIndex, mStayBookingDetail.stayName, null, StayDetailActivity.NONE_PRICE//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+                , null, null//
+                , false, StayDetailActivity.TransGradientType.NONE, analyticsParam);
 
             startActivityForResult(intent, StayBookingCancelDetailActivity.REQUEST_CODE_DETAIL);
 

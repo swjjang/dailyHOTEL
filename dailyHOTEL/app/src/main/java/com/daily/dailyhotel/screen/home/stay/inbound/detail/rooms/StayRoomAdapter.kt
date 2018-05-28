@@ -16,7 +16,7 @@ import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
-import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
@@ -226,7 +226,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         dataBinding.priceTextView.text = SpannableString(DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false))
     }
 
-    private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetailk.RefundInformation?) {
+    private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetail.RefundInformation?) {
         if (refundInformation == null) {
             dataBinding.refundPolicyTextView.visibility = View.GONE
             return
@@ -455,7 +455,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         dataBinding.discountInfoTextView.text = spannableString
     }
 
-    private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomDataBinding, checkTimeInformation: StayDetailk.CheckTimeInformation?) {
+    private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomDataBinding, checkTimeInformation: StayDetail.CheckTimeInformation?) {
         if (checkTimeInformation == null) return
 
         val checkInTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkIn, "HH:mm:ss", "HH:mm")

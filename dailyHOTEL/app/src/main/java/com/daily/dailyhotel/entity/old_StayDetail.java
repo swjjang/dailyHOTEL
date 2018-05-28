@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class StayDetail extends Configurations
+public class old_StayDetail extends Configurations
 {
     public int index;
     public String name;
@@ -40,7 +40,7 @@ public class StayDetail extends Configurations
     private List<Pictogram> mPictogramList;
     private List<String> mBenefitContentList;
 
-    public StayDetail()
+    public old_StayDetail()
     {
 
     }

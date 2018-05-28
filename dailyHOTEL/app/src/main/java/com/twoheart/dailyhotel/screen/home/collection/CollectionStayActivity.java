@@ -635,7 +635,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     , recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl, recommendationStay.discount//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                     , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
+                    , null, null//
+                    , true, StayDetailActivity.TransGradientType.LIST, analyticsParam);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
             } else
@@ -644,7 +645,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     , recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl, recommendationStay.discount//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                     , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+                    , null, null//
+                    , false, StayDetailActivity.TransGradientType.NONE, analyticsParam);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

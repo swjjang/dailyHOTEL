@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detailk
+package com.daily.dailyhotel.screen.home.stay.inbound.detail
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
@@ -571,7 +571,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.imageLoopView.setImageList(imageList)
     }
 
-    override fun setBaseInformation(baseInformation: StayDetailk.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean) {
+    override fun setBaseInformation(baseInformation: StayDetail.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean) {
         viewDataBinding.baseInformationView.apply {
             setGradeName(baseInformation.grade.getName(context))
             setRewardsVisible(baseInformation.provideRewardSticker)
@@ -595,7 +595,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.trueReviewGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setTrueReviewInformation(trueReviewInformation: StayDetailk.TrueReviewInformation) {
+    override fun setTrueReviewInformation(trueReviewInformation: StayDetail.TrueReviewInformation) {
         viewDataBinding.trueReviewView.apply {
 
             if (trueReviewInformation.ratingPercent > 0 || trueReviewInformation.ratingCount > 0) {
@@ -623,7 +623,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.businessBenefitGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setBenefitInformation(benefitInformation: StayDetailk.BenefitInformation) {
+    override fun setBenefitInformation(benefitInformation: StayDetail.BenefitInformation) {
         viewDataBinding.businessBenefitView.apply {
             if (benefitInformation.title.isTextEmpty() && !benefitInformation.contentList.isNotNullAndNotEmpty()) {
                 setBenefitVisible(false)
@@ -744,7 +744,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.addressView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setAddressInformation(addressInformation: StayDetailk.AddressInformation) {
+    override fun setAddressInformation(addressInformation: StayDetail.AddressInformation) {
         viewDataBinding.addressView.apply {
             setAddressText(addressInformation.address)
             setOnAddressClickListener(object : DailyDetailAddressView.OnAddressClickListener {
@@ -767,7 +767,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.checkTimeInformationView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCheckTimeInformation(checkTimeInformation: StayDetailk.CheckTimeInformation) {
+    override fun setCheckTimeInformation(checkTimeInformation: StayDetail.CheckTimeInformation) {
         viewDataBinding.checkTimeInformationView.apply {
             setCheckTimeText(checkTimeInformation.checkIn, checkTimeInformation.checkOut)
 
@@ -784,7 +784,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.detailInformationView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setDetailInformation(detailInformation: StayDetailk.DetailInformation?, breakfastInformation: StayDetailk.BreakfastInformation?) {
+    override fun setDetailInformation(detailInformation: StayDetail.DetailInformation?, breakfastInformation: StayDetail.BreakfastInformation?) {
         viewDataBinding.detailInformationView.setInformation(detailInformation?.itemList)
         viewDataBinding.detailInformationView.setBreakfastInformation(breakfastInformation)
     }
@@ -793,7 +793,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.refundInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCancellationAndRefundPolicy(refundInformation: StayDetailk.RefundInformation?, hasNRDRoom: Boolean) {
+    override fun setCancellationAndRefundPolicy(refundInformation: StayDetail.RefundInformation?, hasNRDRoom: Boolean) {
         viewDataBinding.refundInformationView.setInformation(refundInformation)
     }
 
@@ -801,7 +801,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.checkInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun setCheckInformation(checkInformation: StayDetailk.CheckInformation) {
+    override fun setCheckInformation(checkInformation: StayDetail.CheckInformation) {
         viewDataBinding.checkInformationView.setInformation(checkInformation)
     }
 

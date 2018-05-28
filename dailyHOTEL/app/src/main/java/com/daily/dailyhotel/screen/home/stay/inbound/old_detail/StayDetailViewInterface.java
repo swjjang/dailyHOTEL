@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail;
+package com.daily.dailyhotel.screen.home.stay.inbound.old_detail;
 
 import android.app.Dialog;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.old_StayDetail;
 import com.daily.dailyhotel.entity.TrueAwards;
 
 import io.reactivex.Observable;
@@ -17,7 +17,7 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount);
+    void setStayDetail(StayBookDateTime stayBookDateTime, old_StayDetail stayDetail, int trueReviewCount);
 
     void setRewardVisible(boolean visible);
 

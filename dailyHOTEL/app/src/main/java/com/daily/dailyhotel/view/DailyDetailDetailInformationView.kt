@@ -19,7 +19,7 @@ import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
-import com.daily.dailyhotel.entity.StayDetailk
+import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
@@ -48,7 +48,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         orientation = LinearLayout.VERTICAL
     }
 
-    fun setInformation(information: List<StayDetailk.DetailInformation.Item>?) {
+    fun setInformation(information: List<StayDetail.DetailInformation.Item>?) {
         if (childCount > 0) {
             removeAllViews()
         }
@@ -56,7 +56,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         information.takeNotEmpty { it.forEach { addView(getInformationView(it)) } }
     }
 
-    private fun getInformationView(information: StayDetailk.DetailInformation.Item): View {
+    private fun getInformationView(information: StayDetail.DetailInformation.Item): View {
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
 
         viewDataBinding.titleTextView.text = information.title
@@ -132,7 +132,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         }
     }
 
-    fun setBreakfastInformation(information: StayDetailk.BreakfastInformation?) {
+    fun setBreakfastInformation(information: StayDetail.BreakfastInformation?) {
         if (hasBreakfastInformation(information)) {
             val viewDataBinding: DailyViewDetailBreakfastInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_breakfast_information_data, this, true)
 
@@ -154,7 +154,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         }
     }
 
-    private fun hasBreakfastInformation(information: StayDetailk.BreakfastInformation?): Boolean {
+    private fun hasBreakfastInformation(information: StayDetail.BreakfastInformation?): Boolean {
         if (information?.items.isNotNullAndNotEmpty()) return true
 
         if (information?.descriptionList.isNotNullAndNotEmpty()) return true
@@ -162,7 +162,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         return false
     }
 
-    private fun createBreakfastView(viewGroup: ViewGroup, item: StayDetailk.BreakfastInformation.Item) {
+    private fun createBreakfastView(viewGroup: ViewGroup, item: StayDetail.BreakfastInformation.Item) {
         val viewDataBinding: DailyViewDetailBreakfastInformationTableRowDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_breakfast_information_table_row_data, viewGroup, true)
 
         viewDataBinding.leftTextView.text = when {

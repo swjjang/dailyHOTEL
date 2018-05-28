@@ -8,7 +8,7 @@ import com.daily.dailyhotel.entity.FacilitiesPictogram;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.Room;
 import com.daily.dailyhotel.entity.Stay;
-import com.daily.dailyhotel.entity.StayDetailk;
+import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.TrueAwards;
 
 import java.util.ArrayList;
@@ -120,9 +120,9 @@ public class StayDetailData
 
     }
 
-    public StayDetailk getStayDetail()
+    public StayDetail getStayDetail()
     {
-        StayDetailk stayDetail = new StayDetailk();
+        StayDetail stayDetail = new StayDetail();
 
         stayDetail.setIndex(index);
         stayDetail.setWishCount(wishCount);
@@ -159,7 +159,7 @@ public class StayDetailData
 
         if (vrs != null && vrs.size() > 0)
         {
-            List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
+            List<StayDetail.VRInformation> vrInformationList = new ArrayList<>();
 
             for (VRData vrData : vrs)
             {
@@ -169,7 +169,7 @@ public class StayDetailData
             stayDetail.setVrInformation(vrInformationList);
         }
 
-        StayDetailk.BaseInformation baseInformation = new StayDetailk.BaseInformation();
+        StayDetail.BaseInformation baseInformation = new StayDetail.BaseInformation();
         baseInformation.setCategory(category);
 
         try
@@ -191,7 +191,7 @@ public class StayDetailData
 
         stayDetail.setBaseInformation(baseInformation);
 
-        StayDetailk.TrueReviewInformation trueReviewInformation = new StayDetailk.TrueReviewInformation();
+        StayDetail.TrueReviewInformation trueReviewInformation = new StayDetail.TrueReviewInformation();
 
         if (rating != null)
         {
@@ -211,7 +211,7 @@ public class StayDetailData
 
             if (statistic.reviewScoreAvgs != null && statistic.reviewScoreAvgs.size() > 0)
             {
-                List<StayDetailk.TrueReviewInformation.ReviewScore> reviewScoreList = new ArrayList<>();
+                List<StayDetail.TrueReviewInformation.ReviewScore> reviewScoreList = new ArrayList<>();
 
                 for (ReviewStatisticData.ReviewScoreAvgData reviewScoreAvgData : statistic.reviewScoreAvgs)
                 {
@@ -224,7 +224,7 @@ public class StayDetailData
 
         stayDetail.setTrueReviewInformation(trueReviewInformation);
 
-        StayDetailk.BenefitInformation benefitInformation = new StayDetailk.BenefitInformation();
+        StayDetail.BenefitInformation benefitInformation = new StayDetail.BenefitInformation();
 
         if (benefit != null)
         {
@@ -239,7 +239,7 @@ public class StayDetailData
 
         stayDetail.setBenefitInformation(benefitInformation);
 
-        StayDetailk.RoomInformation roomInformation = new StayDetailk.RoomInformation();
+        StayDetail.RoomInformation roomInformation = new StayDetail.RoomInformation();
 
         if (rooms != null && rooms.size() > 0)
         {
@@ -296,7 +296,7 @@ public class StayDetailData
             stayDetail.setFacilitiesList(facilitiesList);
         }
 
-        StayDetailk.AddressInformation addressInformation = new StayDetailk.AddressInformation();
+        StayDetail.AddressInformation addressInformation = new StayDetail.AddressInformation();
         addressInformation.setAddress(address);
 
         if (location != null)
@@ -312,11 +312,11 @@ public class StayDetailData
             stayDetail.setCheckTimeInformation(checkTime.getCheckTimeInformation());
         }
 
-        StayDetailk.DetailInformation detailInformation = new StayDetailk.DetailInformation();
+        StayDetail.DetailInformation detailInformation = new StayDetail.DetailInformation();
 
         if (details != null && details.size() > 0)
         {
-            List<StayDetailk.DetailInformation.Item> itemList = new ArrayList<>();
+            List<StayDetail.DetailInformation.Item> itemList = new ArrayList<>();
 
             for (DetailData detailData : details)
             {
@@ -338,7 +338,7 @@ public class StayDetailData
             stayDetail.setRefundInformation(refundPolicy.getRefundInformation());
         }
 
-        StayDetailk.CheckInformation checkInformation = new StayDetailk.CheckInformation();
+        StayDetail.CheckInformation checkInformation = new StayDetail.CheckInformation();
 
         if (checkList != null && checkList.contents != null && checkList.contents.size() > 0)
         {
@@ -373,9 +373,9 @@ public class StayDetailData
         @JsonField(name = "userId")
         public String userId;
 
-        StayDetailk.TrueReviewInformation.PrimaryReview getPrimaryReview()
+        StayDetail.TrueReviewInformation.PrimaryReview getPrimaryReview()
         {
-            StayDetailk.TrueReviewInformation.PrimaryReview primaryReview = new StayDetailk.TrueReviewInformation.PrimaryReview();
+            StayDetail.TrueReviewInformation.PrimaryReview primaryReview = new StayDetail.TrueReviewInformation.PrimaryReview();
             primaryReview.setScore(avgScore);
             primaryReview.setComment(comment);
             primaryReview.setUserId(userId);
@@ -394,9 +394,9 @@ public class StayDetailData
         @JsonField(name = "isDownloaded")
         public boolean isDownloaded;
 
-        StayDetailk.BenefitInformation.Coupon getCoupon()
+        StayDetail.BenefitInformation.Coupon getCoupon()
         {
-            StayDetailk.BenefitInformation.Coupon coupon = new StayDetailk.BenefitInformation.Coupon();
+            StayDetail.BenefitInformation.Coupon coupon = new StayDetail.BenefitInformation.Coupon();
             coupon.setCouponDiscount(couponDiscount);
             coupon.setDownloaded(isDownloaded);
 
@@ -460,9 +460,9 @@ public class StayDetailData
         @JsonField(name = "description")
         public List<String> description;
 
-        StayDetailk.CheckTimeInformation getCheckTimeInformation()
+        StayDetail.CheckTimeInformation getCheckTimeInformation()
         {
-            StayDetailk.CheckTimeInformation checkTimeInformation = new StayDetailk.CheckTimeInformation();
+            StayDetail.CheckTimeInformation checkTimeInformation = new StayDetail.CheckTimeInformation();
             checkTimeInformation.setCheckIn(checkIn);
             checkTimeInformation.setCheckOut(checkOut);
             checkTimeInformation.setDescription(description);
@@ -486,9 +486,9 @@ public class StayDetailData
         @JsonField(name = "warning")
         public String warning;
 
-        StayDetailk.RefundInformation getRefundInformation()
+        StayDetail.RefundInformation getRefundInformation()
         {
-            StayDetailk.RefundInformation refundInformation = new StayDetailk.RefundInformation();
+            StayDetail.RefundInformation refundInformation = new StayDetail.RefundInformation();
             refundInformation.setTitle(title);
             refundInformation.setType(type);
             refundInformation.setWarningMessage(warning);
@@ -520,9 +520,9 @@ public class StayDetailData
         @JsonField(name = "contents")
         public List<String> contents;
 
-        StayDetailk.DetailInformation.Item getItem()
+        StayDetail.DetailInformation.Item getItem()
         {
-            StayDetailk.DetailInformation.Item item = new StayDetailk.DetailInformation.Item();
+            StayDetail.DetailInformation.Item item = new StayDetail.DetailInformation.Item();
 
             item.setTitle(title);
             item.setContentList(contents);
@@ -558,9 +558,9 @@ public class StayDetailData
             @JsonField(name = "title")
             public String title;
 
-            StayDetailk.BreakfastInformation.Item getItem()
+            StayDetail.BreakfastInformation.Item getItem()
             {
-                StayDetailk.BreakfastInformation.Item item = new StayDetailk.BreakfastInformation.Item();
+                StayDetail.BreakfastInformation.Item item = new StayDetail.BreakfastInformation.Item();
 
                 item.setAmount(amount);
                 item.setMaxAge(maxAge);
@@ -572,15 +572,15 @@ public class StayDetailData
             }
         }
 
-        StayDetailk.BreakfastInformation getBreakfastInformation()
+        StayDetail.BreakfastInformation getBreakfastInformation()
         {
-            StayDetailk.BreakfastInformation breakfastInformation = new StayDetailk.BreakfastInformation();
+            StayDetail.BreakfastInformation breakfastInformation = new StayDetail.BreakfastInformation();
 
             breakfastInformation.setDescriptionList(descriptions);
 
             if (items != null && items.size() > 0)
             {
-                List<StayDetailk.BreakfastInformation.Item> itemList = new ArrayList<>();
+                List<StayDetail.BreakfastInformation.Item> itemList = new ArrayList<>();
 
                 for (ItemData itemData : items)
                 {
@@ -642,9 +642,9 @@ public class StayDetailData
         @JsonField(name = "name")
         public String name;
 
-        StayDetailk.Province getProvince()
+        StayDetail.Province getProvince()
         {
-            StayDetailk.Province province = new StayDetailk.Province();
+            StayDetail.Province province = new StayDetail.Province();
             province.setIndex(index);
             province.setName(name);
 
@@ -765,7 +765,7 @@ public class StayDetailData
 
             if (vrs != null && vrs.size() > 0)
             {
-                List<StayDetailk.VRInformation> vrInformationList = new ArrayList<>();
+                List<StayDetail.VRInformation> vrInformationList = new ArrayList<>();
 
                 for (VRData vrData : vrs)
                 {
@@ -1082,9 +1082,9 @@ public class StayDetailData
         @JsonField(name = "url")
         public String url;
 
-        StayDetailk.VRInformation getVRInformation()
+        StayDetail.VRInformation getVRInformation()
         {
-            StayDetailk.VRInformation vrInformation = new StayDetailk.VRInformation();
+            StayDetail.VRInformation vrInformation = new StayDetail.VRInformation();
 
             vrInformation.setName(name);
             vrInformation.setType(type);
@@ -1113,9 +1113,9 @@ public class StayDetailData
             @JsonField(name = "scoreAvg")
             public float scoreAvg;
 
-            StayDetailk.TrueReviewInformation.ReviewScore getReviewScore()
+            StayDetail.TrueReviewInformation.ReviewScore getReviewScore()
             {
-                StayDetailk.TrueReviewInformation.ReviewScore reviewScore = new StayDetailk.TrueReviewInformation.ReviewScore();
+                StayDetail.TrueReviewInformation.ReviewScore reviewScore = new StayDetail.TrueReviewInformation.ReviewScore();
                 reviewScore.setType(type);
                 reviewScore.setAverage(scoreAvg);
 

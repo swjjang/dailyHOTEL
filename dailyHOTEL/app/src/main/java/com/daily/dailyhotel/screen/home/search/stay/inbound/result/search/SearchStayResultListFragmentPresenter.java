@@ -313,7 +313,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                     @Override
                     public void subscribe(ObservableEmitter<Object> e) throws Exception
                     {
-                        onStayClick(mWishPosition, mStayByLongPress, mListCountByLongPress, mPairsByLongPress, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                        onStayClick(mWishPosition, mStayByLongPress, mListCountByLongPress, mPairsByLongPress//
+                            , StayDetailActivity.TransGradientType.LIST);
                     }
                 }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 break;
@@ -916,7 +917,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     }
 
     @Override
-    public void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType)
+    public void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs//
+        , StayDetailActivity.TransGradientType transGradientType)
     {
         if (mViewModel == null || stay == null || lock() == true)
         {
@@ -953,7 +955,8 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                , null, null//
+                , true, transGradientType//
                 , analyticsParam);
 
             startActivityForResult(intent, SearchStayResultTabActivity.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
@@ -961,8 +964,10 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         {
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , null, null//
+                , false, StayDetailActivity.TransGradientType.NONE//
                 , analyticsParam);
 
             startActivityForResult(intent, SearchStayResultTabActivity.REQUEST_CODE_DETAIL);

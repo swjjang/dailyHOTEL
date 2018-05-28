@@ -238,7 +238,10 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
-                            getEventListener().onStayClick(position, objectItem.getItem(), mListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                            getEventListener().onStayClick(position, objectItem.getItem()//
+                                , mListAdapter.getItemCount()//
+                                , ((DailyStayCardView) view).getOptionsCompat()//
+                                , StayDetailActivity.TransGradientType.LIST);
                         } else
                         {
 
@@ -346,7 +349,10 @@ public class SearchStayResultListFragmentView extends BaseBlurFragmentView<Searc
                 {
                     if (view instanceof DailyStayMapCardView)
                     {
-                        getEventListener().onStayClick(-1, stay, getViewDataBinding().mapViewPager.getChildCount(), ((DailyStayMapCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                        getEventListener().onStayClick(-1, stay//
+                            , getViewDataBinding().mapViewPager.getChildCount()//
+                            , ((DailyStayMapCardView) view).getOptionsCompat()//
+                            , StayDetailActivity.TransGradientType.MAP);
                     }
                 }
 

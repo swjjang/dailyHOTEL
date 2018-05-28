@@ -1290,7 +1290,7 @@
     <string name="label_detail_view_review_go">%1$s개 트루리뷰 보기</string>
     <string name="label_detail_view_show_true_review">%1$d개 리뷰 더보기</string>
     <string name="label_gourmet_detail_full_time_menu">전체시간 메뉴</string>
-    <string name="label_stay_detail_view_room_detail">객실 선택하기</string>
+    <string name="label_stay_detail_view_room_detail">객실 상세보기</string>
     <string name="label_business_benefit">업장 혜택</string>
     <string name="label_select_room">객실 선택</string>
     <string name="label_total_price">총 가격</string>

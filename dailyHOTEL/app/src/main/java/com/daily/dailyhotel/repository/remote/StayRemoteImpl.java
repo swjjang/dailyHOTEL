@@ -11,14 +11,13 @@ import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.RoomImageInformation;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayDetailk;
+import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StaySubwayAreaGroup;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
-import com.daily.dailyhotel.repository.remote.model.RoomImageInformationData;
 import com.daily.dailyhotel.repository.remote.model.SubwayAreasData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -164,7 +163,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<StayDetailk> getDetail(int stayIndex, StayBookDateTime stayBookDateTime)
+    public Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/hotel/{stayIndex}"//
             : "MzkkMTckNTgkNDMkOTAkNDgkMTckMzMkOSQ3MyQ3OCQyNSQyOCQyJDc1JDUwJA==$NkVMxNTg1NUzg0MzU4QIL0U1OUJY2DOEYyOTgS0MkVBMjkYwMCFzIyMJ0RBNTMzQzZFYMzlCNzA4BRNThCQDkEwN0I1M0JFQzI3MAW==$";
@@ -175,7 +174,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         return mDailyMobileService.getStayDetail(Crypto.getUrlDecoderEx(API, urlParams) //
             , stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights()) //
             .subscribeOn(Schedulers.io()).map(baseDto -> {
-                StayDetailk stayDetail;
+                StayDetail stayDetail;
 
                 if (baseDto != null)
                 {

@@ -3,7 +3,7 @@ package com.daily.dailyhotel.entity
 import android.content.Context
 import com.twoheart.dailyhotel.R
 
-class StayDetailk : Configurations() {
+class StayDetail : Configurations() {
     var index: Int = 0
     var wishCount: Int = 0
     var wish: Boolean = false
@@ -31,10 +31,6 @@ class StayDetailk : Configurations() {
 
     var province: Province? = null
     var hasNRDRoom = false
-
-    fun toStayDetail(): StayDetail {
-        return StayDetail()
-    }
 
     class VRInformation {
         var name: String? = null
