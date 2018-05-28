@@ -23,6 +23,10 @@ interface StayRoomsInterface {
 
         fun setInvisibleData(position: Int)
 
+        fun showInvisibleLayout() : Boolean
+
+        fun startInvisibleLayoutAnimation(scaleUp: Boolean)
+
         fun setGuideVisible(visible: Boolean)
 
         fun hideGuideAnimation(): Observable<Boolean>

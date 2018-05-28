@@ -138,7 +138,21 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     }
 
     override fun onBackClick() {
+        if (viewInterface.showInvisibleLayout()) {
+            viewInterface.startInvisibleLayoutAnimation(false)
+            return
+        }
+
         activity.onBackPressed()
+    }
+
+    override fun onBackPressed(): Boolean {
+        if (viewInterface.showInvisibleLayout()) {
+            viewInterface.startInvisibleLayoutAnimation(false)
+            return true
+        }
+
+        return super.onBackPressed()
     }
 
     override fun onCloseClick() {
