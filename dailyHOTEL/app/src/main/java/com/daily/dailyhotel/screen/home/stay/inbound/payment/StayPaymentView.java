@@ -118,12 +118,12 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
         if (enabledSticker == true)
         {
-            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9f0));
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9ef));
             getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_cf4a426));
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf3ebde));
         } else
         {
-            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cf0f0f2));
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9ef));
             getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_c929292));
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_ce7e7e7));
         }

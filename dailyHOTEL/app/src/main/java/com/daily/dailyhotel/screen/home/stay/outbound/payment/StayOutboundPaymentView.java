@@ -110,7 +110,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         if (enabledSticker == true)
         {
-            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9f0));
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9ef));
             getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_cf4a426));
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf3ebde));
         } else
