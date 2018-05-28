@@ -469,8 +469,8 @@ public class StayDetailData
         StayDetail.CheckTimeInformation getCheckTimeInformation()
         {
             StayDetail.CheckTimeInformation checkTimeInformation = new StayDetail.CheckTimeInformation();
-            checkTimeInformation.setCheckIn(checkIn);
-            checkTimeInformation.setCheckOut(checkOut);
+            checkTimeInformation.setCheckIn(checkIn.substring(0, checkIn.lastIndexOf(':')));
+            checkTimeInformation.setCheckOut(checkOut.substring(0, checkIn.lastIndexOf(':')));
             checkTimeInformation.setDescription(descriptions);
 
             return checkTimeInformation;
