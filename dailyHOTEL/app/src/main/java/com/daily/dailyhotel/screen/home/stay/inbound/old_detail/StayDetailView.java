@@ -62,7 +62,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataOldBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
@@ -89,7 +89,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListener, ActivityStayDetailDataBinding>//
+public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListener, ActivityStayDetailDataOldBinding>//
     implements StayDetailViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
@@ -159,7 +159,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    protected void setContentView(final ActivityStayDetailDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayDetailDataOldBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -1190,7 +1190,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         showSimpleDialog(dataBinding.getRoot(), null, onDismissListener, true);
     }
 
-    private void initToolbar(ActivityStayDetailDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayDetailDataOldBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

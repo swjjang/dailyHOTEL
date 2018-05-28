@@ -114,7 +114,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     override fun constructorInitialize(activity: StayDetailActivity) {
-        setContentView(R.layout.activity_stay_detailk_data)
+        setContentView(R.layout.activity_stay_detail_data)
 
         isRefresh = false
     }

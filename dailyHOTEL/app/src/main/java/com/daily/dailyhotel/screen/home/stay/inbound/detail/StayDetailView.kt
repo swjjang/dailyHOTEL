@@ -37,7 +37,7 @@ import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.DraweeTransition
 import com.facebook.imagepipeline.image.ImageInfo
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.databinding.ActivityStayDetailkDataBinding
+import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding
 import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding
@@ -49,12 +49,12 @@ import java.text.DecimalFormat
 import java.util.*
 
 class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface.OnEventListener)//
-    : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailkDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
+    : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
 
     var tabLayoutShowAnimator: ObjectAnimator? = null
     var tabLayoutHideAnimator: ObjectAnimator? = null
 
-    override fun setContentView(viewDataBinding: ActivityStayDetailkDataBinding) {
+    override fun setContentView(viewDataBinding: ActivityStayDetailDataBinding) {
         initToolbar(viewDataBinding)
         initScrollView(viewDataBinding)
         initEmptyView(viewDataBinding)
@@ -71,7 +71,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.toolbarView.setTitleText(title)
     }
 
-    private fun initToolbar(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initToolbar(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.toolbarView.setOnBackClickListener { eventListener.onBackClick() }
         viewDataBinding.toolbarView.clearMenuItem()
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null) { eventListener.onWishClick() }
@@ -84,7 +84,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null) { eventListener.onShareClick() }
     }
 
-    private fun initRoomFilter(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initRoomFilter(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.roomFilterView.setOnDailyDetailRoomFilterListener(object : DailyDetailRoomFilterContentsView.OnDailyDetailRoomFilterListener {
             override fun onSelectedBedTypeFilter(selected: Boolean, bedType: String) {
                 eventListener.onSelectedBedTypeFilter(selected, bedType)
@@ -166,7 +166,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
-    private fun initScrollView(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initScrollView(viewDataBinding: ActivityStayDetailDataBinding) {
         setScrollViewVisible(false)
 
         val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
@@ -261,7 +261,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
     }
 
-    private fun initEmptyView(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initEmptyView(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.detailEmptyView.setOnEventListener(object : DailyDetailEmptyView.OnEventListener {
             override fun onStopMove(event: MotionEvent) {
                 viewDataBinding.nestedScrollView.isScrollingEnabled = false
@@ -389,7 +389,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.wishTooltipGroup.visibility = View.GONE
     }
 
-    private fun initTabLayout(viewDataBinding: ActivityStayDetailkDataBinding) {
+    private fun initTabLayout(viewDataBinding: ActivityStayDetailDataBinding) {
         viewDataBinding.roomInformationTextView.setOnClickListener { if (!it.isSelected) eventListener.onRoomInformationClick() }
         viewDataBinding.stayInformationTextView.setOnClickListener { if (!it.isSelected) eventListener.onStayInformationClick() }
     }

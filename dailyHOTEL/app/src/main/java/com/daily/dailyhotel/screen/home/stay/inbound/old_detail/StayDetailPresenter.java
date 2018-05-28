@@ -220,7 +220,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void constructorInitialize(StayDetailActivity activity)
     {
-        setContentView(R.layout.activity_stay_detail_data);
+        setContentView(R.layout.activity_stay_detail_data_old);
 
         mAnalytics = new StayDetailAnalyticsImpl();
 
