@@ -9,10 +9,21 @@ public class TrueReviews
     public int numberOfElements;
     public int page;
 
+    private TrueReview mPrimaryReview;
     private List<TrueReview> mTrueReviewList;
 
     public TrueReviews()
     {
+    }
+
+    public TrueReview getPrimaryReview()
+    {
+        return mPrimaryReview;
+    }
+
+    public void setPrimaryReview(TrueReview primaryReview)
+    {
+        mPrimaryReview = primaryReview;
     }
 
     public List<TrueReview> getTrueReviewList()

@@ -84,46 +84,41 @@
             android:orientation="vertical"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:paddingTop="20dp"
+            android:paddingBottom="24dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progressBarUnderLineView">
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/label_detail_review_primary"
+                android:textColor="@color/default_text_c4d4d4d"
+                android:textSize="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/primaryReviewUnderLineView"
+                dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/productNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="11dp"
                 dailyFont:style="DemiLight"/>
 
-            <RelativeLayout
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/reviewTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/reviewTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_c666666"
-                    android:textSize="13dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/moreReadTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/reviewTextView"
-                    android:layout_alignParentRight="true"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="20dp"
-                    android:text="@string/label_detail_review_more_read"
-                    android:textColor="@color/default_text_ceb2135"
-                    android:textSize="13dp"
-                    android:visibility="gone"/>
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:textColor="@color/default_text_c666666"
+                android:textSize="13dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

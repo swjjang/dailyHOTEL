@@ -11,6 +11,9 @@ import java.util.List;
 @JsonObject
 public class TrueReviewsData
 {
+    @JsonField(name = "primaryReview")
+    public TrueReviewData primaryReview;
+
     @JsonField(name = "content")
     public List<TrueReviewData> content;
 
@@ -38,6 +41,11 @@ public class TrueReviewsData
         trueReviews.totalPages = totalPages;
         trueReviews.numberOfElements = numberOfElements;
         trueReviews.page = page + 1;
+
+        if (page == 0 && primaryReview != null)
+        {
+            trueReviews.setPrimaryReview(primaryReview.getTrueReview());
+        }
 
         List<TrueReview> trueReviewList = new ArrayList<>();
 

@@ -610,7 +610,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             }
 
             setPreviewTrueReviewVisible(trueReviewInformation.review.letNotNullTrueElseNullFalse {
-                setPreviewTrueReview(it.comment, it.score.toString(), it.userId)
+                setPreviewTrueReview(it.comment, it.score.toString(), it.userId, it.createdAt)
             })
 
             if (trueReviewInformation.reviewTotalCount > 0) {

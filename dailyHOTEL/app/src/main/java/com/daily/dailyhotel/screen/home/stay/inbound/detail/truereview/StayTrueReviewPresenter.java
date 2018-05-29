@@ -203,6 +203,8 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
 
                     addTrueReviews(trueReviews);
 
+                    getViewInterface().setPrimaryReview(trueReviews.getPrimaryReview());
+
                     return Observable.timer(300, TimeUnit.MILLISECONDS);
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()

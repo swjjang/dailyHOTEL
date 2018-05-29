@@ -80,8 +80,8 @@
             android:layout_marginTop="14dp"
             android:ellipsize="end"
             android:freezesText="true"
-            android:maxLines="3"
             android:lineSpacingExtra="1dp"
+            android:maxLines="3"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
@@ -102,12 +102,13 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/reviewerTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginLeft="6dp"
-            android:lineSpacingExtra="1dp"
+            android:gravity="center"
             android:textColor="@color/default_text_cc5c5c5"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/ratingValueTextView"
+            app:layout_constraintTop_toTopOf="@+id/ratingValueTextView"
             app:layout_constraintLeft_toRightOf="@+id/ratingValueTextView"/>
 
         <android.support.constraint.Group

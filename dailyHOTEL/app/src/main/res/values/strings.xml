@@ -111,7 +111,7 @@
     <string name="label_check_in">체크인</string>
     <string name="label_check_out">체크아웃</string>
     <string name="label_include_tax">(세금/봉사료 포함)</string>
-    <string name="label_download_coupon_price">%1$s 할인쿠폰 다운받기</string>
+    <string name="label_download_coupon_price">%1$s 쿠폰 다운받기</string>
     <string name="label_event">EVENT</string>
     <string name="label_delete">삭제</string>
     <string name="label_area_list">지역명</string>
@@ -1302,7 +1302,7 @@
     <string name="label_stay_detail_slash_one_nights">/1박</string>
     <string name="label_stay_detail_satisfaction">실제 투숙객 %1$d%% 만족</string>
     <string name="label_stay_detail_rating">(%1$s명 평가)</string>
-    <string name="label_detail_download_coupon">%1$s원 할인쿠폰 다운받기</string>
+    <string name="label_detail_download_coupon">%1$s 할인쿠폰 다운받기</string>
     <string name="label_stay_detail_show_more_rooms">%1$d개 객실 더보기</string>
     <string name="label_stay_detail_include_person_breakfast">조식 %1$d인 포함</string>
     <string name="label_stay_detail_person_information">%1$d인 기준돋최대 %2$d인 (%3$s)</string>
@@ -1583,6 +1583,7 @@
     <string name="label_detail_review_count">%1$s개의 리뷰</string>
     <string name="label_detail_review_terms_go">운영정책 보기</string>
     <string name="label_detail_review_more_read">더 읽어보기</string>
+    <string name="label_detail_review_primary">대표 트루리뷰</string>
     <string name="message_detail_review_stay_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 

@@ -306,6 +306,17 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
     }
 
     @Override
+    public void setPrimaryReview(TrueReview primaryReview)
+    {
+        if (getViewDataBinding() == null || mTrueReviewListAdapter == null)
+        {
+            return;
+        }
+
+        mTrueReviewListAdapter.setPrimaryReview(primaryReview);
+    }
+
+    @Override
     public void showReviewScoresAnimation()
     {
         if (getViewDataBinding() == null || mTrueReviewListAdapter == null || mShowProgressbarAnimation == true)
@@ -405,6 +416,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         private List<ObjectItem> mObjectItemList;
         private int mTotalCount;
         private String mHeaderTitle;
+        private TrueReview mPrimaryReview;
         private ViewGroup mProgressBarLayout;
         private boolean mProductVisible;
 
@@ -433,6 +445,11 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             addAll(objectItemList);
 
             mShowProgressbarAnimation = false;
+        }
+
+        public void setPrimaryReview(TrueReview primaryReview)
+        {
+            mPrimaryReview = primaryReview;
         }
 
         public void addAll(List<ObjectItem> objectItemList)
@@ -595,6 +612,48 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
 
                     progressbarDataBinding.progressBar.setTag(progress);
                 }
+            }
+
+            if (mPrimaryReview != null)
+            {
+                holder.dataBinding.primaryReviewGroup.setVisibility(View.VISIBLE);
+
+                if (mProductVisible && DailyTextUtils.isTextEmpty(mPrimaryReview.productName) == false)
+                {
+                    holder.dataBinding.productNameTextView.setVisibility(View.VISIBLE);
+                    holder.dataBinding.productNameTextView.setText(mPrimaryReview.productName);
+                } else
+                {
+                    holder.dataBinding.productNameTextView.setVisibility(View.GONE);
+                }
+
+                holder.dataBinding.reviewTextView.setText(mPrimaryReview.comment);
+
+                holder.dataBinding.ratingTextView.setText(Float.toString(mPrimaryReview.averageScore));
+
+                if (DailyTextUtils.isTextEmpty(mPrimaryReview.email) == true)
+                {
+                    mPrimaryReview.email = mContext.getString(R.string.label_customer);
+                }
+
+                try
+                {
+                    final String SEPARATOR = "ㅣ";
+
+                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(mPrimaryReview.email + SEPARATOR//
+                        + DailyCalendar.convertDateFormatString(mPrimaryReview.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+
+                    spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_line_ce7e7e7)), //
+                        mPrimaryReview.email.length(), mPrimaryReview.email.length() + SEPARATOR.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    holder.dataBinding.customerTextView.setText(spannableStringBuilder);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            } else
+            {
+                holder.dataBinding.primaryReviewGroup.setVisibility(View.GONE);
             }
 
             if (mTotalCount == 0)
