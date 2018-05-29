@@ -33,7 +33,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
 
-    enum class RoomType(val stringResId: Int) {
+    enum class RoomType(private val stringResId: Int) {
         ONE_ROOM(R.string.label_room_type_one_room),
         LIVING_ROOM(R.string.label_room_type_living_room);
 
@@ -42,7 +42,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    enum class BedType(val stringResId: Int = R.string.label_bed_type_unknown, val vectorIconResId: Int = R.drawable.vector_ic_detail_item_bed_double) {
+    enum class BedType(private val stringResId: Int = R.string.label_bed_type_unknown, val vectorIconResId: Int = R.drawable.vector_ic_detail_item_bed_double) {
         SINGLE(R.string.label_single, R.drawable.vector_ic_detail_item_bed_single),
         DOUBLE(R.string.label_double, R.drawable.vector_ic_detail_item_bed_double),
         SEMI_DOUBLE(R.string.label_semi_double, R.drawable.vector_ic_detail_item_bed_double),
@@ -56,7 +56,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    enum class RoomAmenityType(val stringResId: Int) {
+    enum class RoomAmenityType(private val stringResId: Int) {
         Kitchenette(R.string.label_cooking),
         Pc(R.string.label_computer),
         Bath(R.string.label_bathtub),
@@ -66,10 +66,12 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         Smokeable(R.string.label_smokeable),
         Karaoke(R.string.label_karaoke),
         PartyRoom(R.string.label_party_room),
-        Amenity(R.string.label_bath_amenity),
+        BathAmenity(R.string.label_bath_amenity),
         ShowerGown(R.string.label_shower_gown),
         ToothbrushSet(R.string.label_toothbrush_set),
-        DisabledFacilities(R.string.label_disabled_facilities);
+        DisabledFacilities(R.string.label_disabled_facilities),
+        Breakfast(R.string.label_breakfast),
+        PrivatePool(R.string.label_private_pool);
 
         fun getName(context: Context): String {
             return context.resources.getString(stringResId)

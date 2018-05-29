@@ -20,6 +20,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import com.daily.base.BaseDialogView
@@ -765,6 +766,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val animatorSet = AnimatorSet()
         animatorSet.duration = 200
+        animatorSet.interpolator = AccelerateDecelerateInterpolator()
         val transAnimator = ValueAnimator.ofFloat(startTransY, endTransY)
         transAnimator.addUpdateListener { animation ->
             val transValue = animation.animatedValue as Float
