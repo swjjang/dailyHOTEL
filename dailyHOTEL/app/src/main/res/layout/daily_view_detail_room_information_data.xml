@@ -46,15 +46,17 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/descriptionTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="2dp"
             android:freezesText="true"
+            android:gravity="center"
             android:text="@string/label_include_tax"
             android:textColor="@color/default_text_c929292"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
-            app:layout_constraintLeft_toRightOf="@+id/titleTextView"/>
+            app:layout_constraintLeft_toRightOf="@+id/titleTextView"
+            app:layout_constraintTop_toTopOf="@+id/titleTextView"/>
 
         <com.daily.dailyhotel.view.DailyDetailRoomFilterView
             android:id="@+id/roomFilterView"
@@ -165,10 +167,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
-            android:paddingTop="40dp"
-            android:paddingBottom="38dp"
             android:gravity="center"
             android:lineSpacingExtra="1dp"
+            android:paddingBottom="38dp"
+            android:paddingTop="40dp"
             android:text="@string/message_stay_soldout_room"
             android:textColor="@color/default_text_c929292"
             app:drawableCompatTop="@drawable/no_hotel_search_ic"
