@@ -1261,7 +1261,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun hasBenefitContents(benefitInformation: StayDetail.BenefitInformation?): Boolean {
-        return benefitInformation != null && (!benefitInformation.title.isTextEmpty() || benefitInformation.contentList.isNotNullAndNotEmpty() || benefitInformation.coupon != null)
+        return benefitInformation != null
+                && (!benefitInformation.title.isTextEmpty()
+                || benefitInformation.contentList.isNotNullAndNotEmpty()
+                || (benefitInformation.coupon != null && benefitInformation.coupon?.couponDiscount != 0))
     }
 
     private fun hasDetailInformation(detailInformation: StayDetail.DetailInformation?, breakfastInformation: StayDetail.BreakfastInformation?): Boolean {
