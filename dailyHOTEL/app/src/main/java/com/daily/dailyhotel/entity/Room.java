@@ -94,6 +94,17 @@ public class Room
 
         public List<ExtraPersonInformation> extraPersonInformationList;
 
+        public boolean isAllHidden() {
+            boolean isEmptyPersonInformationList = false;
+            if (extraPersonInformationList == null || extraPersonInformationList.size() == 0) {
+                isEmptyPersonInformationList = true;
+            }
+
+            return isEmptyPersonInformationList //
+                && (extraInformation == null || extraInformation.isAllHidden()) //
+                && (consecutiveInformation == null || !consecutiveInformation.enable);
+        }
+
         public static class ConsecutiveInformation
         {
             public int charge;
@@ -116,6 +127,15 @@ public class Room
             public boolean extraBedEnable;
             public int extraBedding;
             public boolean extraBeddingEnable;
+
+            public boolean isAllHidden() {
+                boolean isEmptyDescriptionList = false;
+                if (descriptionList == null || descriptionList.size() == 0) {
+                    isEmptyDescriptionList = true;
+                }
+
+                return isEmptyDescriptionList && !extraBedEnable && !extraBeddingEnable;
+            }
         }
     }
 

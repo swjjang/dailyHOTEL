@@ -513,12 +513,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setRoomChargeInformationView(dataBinding: ListRowStayRoomDataBinding, info: Room.ChargeInformation?) {
-        if (info == null) {
-            dataBinding.extraChargeLayout.visibility = View.GONE
-            return
-        }
-
-        if (!info.extraPersonInformationList.isNotNullAndNotEmpty() && info.extraInformation == null && info.consecutiveInformation == null) {
+        if (info == null || info.isAllHidden) {
             dataBinding.extraChargeLayout.visibility = View.GONE
             return
         }
@@ -543,7 +538,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        if (info.extraInformation == null) {
+        if (info.extraInformation == null || info.extraInformation.isAllHidden) {
             dataBinding.extraChargeBedTableLayout.visibility = View.GONE
             dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
         } else {
@@ -565,7 +560,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                         , getExtraChargePrice(info.extraInformation.extraBed), "", false)
             }
 
-            dataBinding.extraChargeBedTableLayout.visibility = if (itemCount == 0) View.GONE else View.VISIBLE
+            dataBinding.extraChargeBedTableLayout.visibility = if (dataBinding.extraChargeBedTableLayout.getItemCount() == 0) View.GONE else View.VISIBLE
 
             dataBinding.extraChargeDescriptionGridView.columnCount = 1
             dataBinding.extraChargeDescriptionGridView.setData(

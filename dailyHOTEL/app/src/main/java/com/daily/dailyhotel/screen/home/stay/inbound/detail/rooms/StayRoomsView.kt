@@ -547,12 +547,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     private fun setRoomChargeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, info: Room.ChargeInformation?) {
-        if (info == null) {
-            dataBinding.extraChargeLayout.visibility = View.GONE
-            return
-        }
-
-        if (!info.extraPersonInformationList.isNotNullAndNotEmpty() && info.extraInformation == null && info.consecutiveInformation == null) {
+        if (info == null || info.isAllHidden) {
             dataBinding.extraChargeLayout.visibility = View.GONE
             return
         }
@@ -578,7 +573,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             }
         }
 
-        if (info.extraInformation == null) {
+        if (info.extraInformation == null || info.extraInformation.isAllHidden) {
             dataBinding.extraChargeBedTableLayout.visibility = View.GONE
             dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
         } else {
@@ -601,7 +596,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         , listAdapter.getExtraChargePrice(info.extraInformation.extraBed), "", false)
             }
 
-            dataBinding.extraChargeBedTableLayout.visibility = if (listAdapter.itemCount == 0) View.GONE else View.VISIBLE
+            dataBinding.extraChargeBedTableLayout.visibility = if (dataBinding.extraChargeBedTableLayout.getItemCount() == 0) View.GONE else View.VISIBLE
 
             dataBinding.extraChargeDescriptionGridView.columnCount = 1
             dataBinding.extraChargeDescriptionGridView.setData(
