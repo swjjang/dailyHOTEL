@@ -4,10 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.daily.dailyhotel.entity.AreaElement;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StayPaymentAnalyticsParam implements Parcelable

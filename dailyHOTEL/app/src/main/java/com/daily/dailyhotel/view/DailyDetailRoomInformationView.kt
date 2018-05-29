@@ -39,6 +39,8 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
         fun onTotalPriceClick()
 
+        fun onRoomClick(room: Room)
+
         fun onMoreRoomsClick(expanded: Boolean)
     }
 
@@ -153,6 +155,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                         setBenefit(room.benefit)
                         setPrice(room.amountInformation.discountAverage, room.amountInformation.discountTotal)
                         setCouponVisible(room.hasUsableCoupon)
+                        setOnClickListener { listener?.onRoomClick(room) }
                     }, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 }
             }

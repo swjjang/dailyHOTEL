@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:freezesText="true"
             android:textColor="@color/default_text_c323232"
             android:textSize="20dp"
@@ -148,8 +148,7 @@
             android:textColor="@color/default_text_c929292"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
-            dailyFont:style="Medium"/>
+            app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/awardsTitleTextView"
@@ -163,8 +162,7 @@
             app:drawableCompatLeft="@drawable/vector_detail_ic_trueawards_l"
             app:drawableCompatRight="@drawable/vector_detail_ic_trueawards_r"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/awardsNameView"
-            dailyFont:style="Medium"/>
+            app:layout_constraintLeft_toRightOf="@+id/awardsNameView"/>
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/awardsQuestionView"
