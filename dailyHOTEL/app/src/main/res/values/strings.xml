@@ -1302,7 +1302,7 @@
     <string name="label_stay_detail_slash_one_nights">/1박</string>
     <string name="label_stay_detail_satisfaction">실제 투숙객 %1$d%% 만족</string>
     <string name="label_stay_detail_rating">(%1$s명 평가)</string>
-    <string name="label_detail_download_coupon">%1$s원 할인쿠폰 다운받기</string>
+    <string name="label_detail_download_coupon">%1$s 할인쿠폰 다운받기</string>
     <string name="label_stay_detail_show_more_rooms">%1$d개 객실 더보기</string>
     <string name="label_stay_detail_include_person_breakfast">조식 %1$d인 포함</string>
     <string name="label_stay_detail_person_information">%1$d인 기준돋최대 %2$d인 (%3$s)</string>
