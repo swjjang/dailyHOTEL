@@ -15,8 +15,10 @@ import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.runFalse
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.util.takeNotEmpty
+import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.Constants
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -103,6 +105,16 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         unLockAll()
+
+        when (requestCode) {
+            Constants.CODE_REQUEST_ACTIVITY_LOGIN -> {
+                (resultCode == Activity.RESULT_OK).runTrue {
+                    onBookingClick()
+                }
+            }
+
+            else -> {}
+        }
     }
 
     @Synchronized
@@ -174,15 +186,18 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onBookingClick() {
         lock().runTrue { return }
 
-        // TODO : 결제 넘기는 부분 상세에서 진행 할지 Sheldon 과 이야기 필요!
+        DailyHotel.isLogin().runFalse {
+            val intent = LoginActivity.newInstance(activity)
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_LOGIN)
+            return
+        }
+
         val intent = Intent()
-        if (centerPosition in 0..roomList.size) {
+        (centerPosition in 0..roomList.size).runTrue {
             val room = roomList[centerPosition]
-            intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM, RoomParcel(room))
+            intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, room.index)
             setResult(Activity.RESULT_OK, intent)
             finish()
-        } else {
-            // TODO : error 처리 필요한지 확인 필요
         }
     }
 

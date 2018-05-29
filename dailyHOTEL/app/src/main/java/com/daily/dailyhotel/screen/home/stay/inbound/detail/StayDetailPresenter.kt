@@ -446,7 +446,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                                 it.imageList?.get(0)?.imageMap?.bigUrl,
                                 room.index, room.amountInformation.discountTotal, room.name,
                                 bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
-                                bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
+                                bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
                                 false, it.baseInformation?.category,
                                 it.addressInformation?.latitude ?: 0.0,
                                 it.addressInformation?.longitude ?: 0.0,
