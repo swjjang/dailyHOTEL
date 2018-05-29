@@ -191,15 +191,18 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             eventListener.onCloseClick()
         }
 
-        if (room.imageInformation == null) {
+        val stringUrl: String?
+        stringUrl = if (room.imageInformation == null) {
             dataBinding.emptyLayout.setOnClickListener(null)
+            null
         } else {
             dataBinding.emptyLayout.setOnClickListener {
                 eventListener.onMoreImageClick(position)
             }
 
-            Util.requestImageResize(context, dataBinding.simpleDraweeView, room.imageInformation.imageMap.bigUrl)
+            room.imageInformation.imageMap.bigUrl
         }
+        Util.requestImageResize(context, dataBinding.simpleDraweeView, stringUrl)
 
         dataBinding.roomNameTextView.text = room.name
 

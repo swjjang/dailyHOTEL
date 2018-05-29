@@ -156,8 +156,10 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        if (room.imageInformation == null) {
+        val stringUrl: String?
+        stringUrl = if (room.imageInformation == null) {
             dataBinding.defaultImageLayout.setOnClickListener(null)
+            null
         } else {
             dataBinding.defaultImageLayout.setOnClickListener {
                 onEventListener?.let {
@@ -165,8 +167,9 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 }
             }
 
-            Util.requestImageResize(context, dataBinding.simpleDraweeView, room.imageInformation.imageMap.bigUrl)
+            room.imageInformation.imageMap.bigUrl
         }
+        Util.requestImageResize(context, dataBinding.simpleDraweeView, stringUrl)
 
         dataBinding.roomNameTextView.text = room.name
 
