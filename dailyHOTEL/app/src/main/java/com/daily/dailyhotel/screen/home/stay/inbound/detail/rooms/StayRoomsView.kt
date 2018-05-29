@@ -184,7 +184,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             eventListener.onVrImageClick(position)
         }
 
-        dataBinding.closeImageView.setOnClickListener{
+        dataBinding.closeImageView.setOnClickListener {
             eventListener.onCloseClick()
         }
 
@@ -706,7 +706,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         ExLog.d("sam - top : $top , paddingTop : $paddingTop + paddingBottom : $paddingBottom , paddingLeft : $paddingLeft , minScaleX : $minScaleX")
 
-        val scaleTransY = invisibleLayoutDataBinding.roomLayout.measuredHeight  * (1f - minScaleX) / 2
+        val scaleTransY = invisibleLayoutDataBinding.roomLayout.measuredHeight * (1f - minScaleX) / 2
         minTransY = (top + paddingTop) - scaleTransY
 
         invisibleLayoutDataBinding.roomLayout.apply {
@@ -718,15 +718,13 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             ExLog.d("sam - translationY : $translationY , top : ${this.top} , measuredHeight : $measuredHeight , minTransY : ${minTransY}")
         }
 
-//        invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
+        EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
+
+        invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
     }
 
     override fun startInvisibleLayoutAnimation(scaleUp: Boolean) {
         val roomLayout = viewDataBinding.invisibleLayout!!.roomLayout
-
-        if (viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY != 0) {
-            viewDataBinding.invisibleLayout!!.nestedScrollView.smoothScrollTo(0, 0)
-        }
 
         val startScale = roomLayout.scaleX
         val end = if (scaleUp) 1.0f else minScaleX
@@ -734,6 +732,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val endTransY = if (scaleUp) 0.0f else minTransY
 
 //        ExLog.d("sam - start : $startScale , end : $end , startTransY : $startTransY , endTransY : $endTransY")
+        viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = 0
 
         val animatorSet = AnimatorSet()
         animatorSet.duration = 200
