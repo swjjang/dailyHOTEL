@@ -33,9 +33,9 @@
         <View
             android:id="@+id/topLineView"
             android:layout_width="0dp"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:layout_marginTop="30dp"
-            android:background="@color/default_line_cdcdcdd"
+            android:background="@color/default_line_cf0f0f0"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toTopOf="parent"/>
