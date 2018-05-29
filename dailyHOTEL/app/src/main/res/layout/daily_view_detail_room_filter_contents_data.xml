@@ -172,7 +172,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="20dp"
-                    android:background="@color/default_line_ce7e7e7"
+                    android:background="@color/default_line_cf0f0f0"
                     android:gravity="center_horizontal"
                     app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
                     app:layout_constraintRight_toRightOf="@+id/rightGuideLine"

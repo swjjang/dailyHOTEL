@@ -49,7 +49,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:drawablePadding="10dp"
-            android:text="객실수 : 469개"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/shape_circle_b666666"

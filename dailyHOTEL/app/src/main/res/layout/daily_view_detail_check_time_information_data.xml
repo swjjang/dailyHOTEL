@@ -45,10 +45,10 @@
 
         <View
             android:id="@+id/verticalLineView"
-            android:layout_width="1px"
+            android:layout_width="1dp"
             android:layout_height="33dp"
             android:layout_marginTop="24dp"
-            android:background="@color/default_line_cdcdcdd"
+            android:background="@color/default_line_cf0f0f0"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
@@ -85,7 +85,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="15:00"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/checkBottomGuideLine"
@@ -110,7 +109,6 @@
             android:id="@+id/checkOutTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12:00"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/checkBottomGuideLine"

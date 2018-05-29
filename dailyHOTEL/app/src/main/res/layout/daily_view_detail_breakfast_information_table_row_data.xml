@@ -17,7 +17,6 @@
             android:freezesText="true"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
-            android:text="유아 (0~3세 이하)"
             android:textColor="@color/default_text_c929292"
             android:textSize="12dp"/>
 
@@ -28,7 +27,6 @@
             android:freezesText="true"
             android:gravity="center_vertical"
             android:paddingLeft="11dp"
-            android:text="무료"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="14dp"/>
     </TableRow>
