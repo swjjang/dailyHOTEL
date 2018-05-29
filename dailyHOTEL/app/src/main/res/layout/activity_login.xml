@@ -54,7 +54,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
                 android:drawablePadding="15dp"
-                android:drawableRight="@drawable/signup_ic"
+                app:drawableCompatRight="@drawable/vector_signup_ic"
                 android:text="@string/message_login_signup"
                 android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="13dp"/>

@@ -40,9 +40,9 @@
                 android:layout_marginRight="10dp"
                 android:drawablePadding="-30dp"
                 android:gravity="center"
-                android:textColor="@color/default_text_ceb2135"
+                android:textColor="@color/default_text_c2c8de6"
                 android:textSize="12dp"
-                app:drawableCompatLeft="@drawable/ic_alert"/>
+                app:drawableCompatLeft="@drawable/vector_ic_alert_blue"/>
 
             <View
                 android:layout_width="match_parent"

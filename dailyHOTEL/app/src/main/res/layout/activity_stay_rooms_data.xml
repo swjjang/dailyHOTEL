@@ -145,7 +145,7 @@
                 android:layout_width="165dp"
                 android:layout_height="165dp"
                 android:layout_gravity="center"
-                android:background="@drawable/shape_circle_bdb2353"
+                android:background="@drawable/shape_filloval_ce6eb2135"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 

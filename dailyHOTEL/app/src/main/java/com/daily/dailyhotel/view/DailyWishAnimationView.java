@@ -64,7 +64,7 @@ public class DailyWishAnimationView extends ScrollView
 
         mViewDataBinding.wishTextView.setText(R.string.wishlist_detail_add_message);
         mViewDataBinding.wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
-        mViewDataBinding.wishTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
+        mViewDataBinding.wishTextView.setBackgroundResource(R.drawable.shape_filloval_ce6eb2135);
 
         return getAnimation(mViewDataBinding.wishTextView);
     }
