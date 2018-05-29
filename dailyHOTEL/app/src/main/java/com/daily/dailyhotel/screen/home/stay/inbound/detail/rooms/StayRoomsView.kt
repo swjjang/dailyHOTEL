@@ -371,7 +371,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             }
 
             typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
-            typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
