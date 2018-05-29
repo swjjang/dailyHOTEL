@@ -13,7 +13,7 @@
         <FrameLayout
             android:id="@+id/titleTextLayout"
             android:layout_width="wrap_content"
-            android:layout_height="27.5dp">
+            android:layout_height="37.5dp">
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/titleTextView"
