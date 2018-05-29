@@ -5,7 +5,7 @@
         xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
-        android:id="@+id/itemLayout"
+        android:id="@+id/roomLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -92,11 +92,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.daily.dailyhotel.view.DailyDetailEmptyView
+                    <View
                         android:id="@+id/roomEmptyView"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:background="@color/transparent"
                         app:layout_constraintDimensionRatio="H,3:2"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"

@@ -234,7 +234,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     override fun showInvisibleLayout(): Boolean {
-        return viewDataBinding.invisibleLayout?.itemLayout?.visibility == View.VISIBLE
+        return viewDataBinding.invisibleLayout?.roomLayout?.visibility == View.VISIBLE
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, amountInformation: Room.AmountInformation) {
@@ -480,7 +480,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val couponStart = text.indexOf(couponString)
         if (couponStart != -1) {
-            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_cf27c7a)), couponStart, rewardStart + couponString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_cf27c7a)), couponStart, couponStart + couponString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         dataBinding.discountInfoTextView.text = spannableString
@@ -706,10 +706,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         ExLog.d("sam - top : $top , paddingTop : $paddingTop + paddingBottom : $paddingBottom , paddingLeft : $paddingLeft , minScaleX : $minScaleX")
 
-        val scaleTransY = invisibleLayoutDataBinding.itemLayout.measuredHeight  * (1f - minScaleX) / 2
+        val scaleTransY = invisibleLayoutDataBinding.roomLayout.measuredHeight  * (1f - minScaleX) / 2
         minTransY = (top + paddingTop) - scaleTransY
 
-        invisibleLayoutDataBinding.itemLayout.apply {
+        invisibleLayoutDataBinding.roomLayout.apply {
             translationY = minTransY
 
             scaleX = minScaleX
@@ -722,11 +722,15 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     override fun startInvisibleLayoutAnimation(scaleUp: Boolean) {
-        val itemLayout = viewDataBinding.invisibleLayout!!.itemLayout
+        val roomLayout = viewDataBinding.invisibleLayout!!.roomLayout
 
-        val startScale = itemLayout.scaleX
+        if (viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY != 0) {
+            viewDataBinding.invisibleLayout!!.nestedScrollView.smoothScrollTo(0, 0)
+        }
+
+        val startScale = roomLayout.scaleX
         val end = if (scaleUp) 1.0f else minScaleX
-        val startTransY = itemLayout.translationY
+        val startTransY = roomLayout.translationY
         val endTransY = if (scaleUp) 0.0f else minTransY
 
 //        ExLog.d("sam - start : $startScale , end : $end , startTransY : $startTransY , endTransY : $endTransY")
@@ -738,7 +742,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val transValue = animation.animatedValue as Float
 //            ExLog.d("sam - transValue : $transValue")
 
-            itemLayout.translationY = transValue
+            roomLayout.translationY = transValue
         }
 
         val scaleAnimator = ValueAnimator.ofFloat(startScale * 100, end * 100)
@@ -747,28 +751,28 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
 //            ExLog.d("sam - value : $value")
 
-            itemLayout.scaleX = value
-            itemLayout.scaleY = value
+            roomLayout.scaleX = value
+            roomLayout.scaleY = value
         }
 
         animatorSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
-                if (scaleUp && viewDataBinding.invisibleLayout!!.itemLayout.visibility != View.VISIBLE) {
-                    viewDataBinding.invisibleLayout!!.itemLayout.visibility = View.VISIBLE
+                if (scaleUp && viewDataBinding.invisibleLayout!!.roomLayout.visibility != View.VISIBLE) {
+                    viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                 }
             }
 
             override fun onAnimationEnd(animation: Animator) {
                 if (scaleUp) {
-                    itemLayout.scaleX = 1.0f
-                    itemLayout.scaleY = 1.0f
-                    itemLayout.translationY = 0.0f
-                    viewDataBinding.invisibleLayout!!.itemLayout.visibility = View.VISIBLE
+                    roomLayout.scaleX = 1.0f
+                    roomLayout.scaleY = 1.0f
+                    roomLayout.translationY = 0.0f
+                    viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                 } else {
-                    itemLayout.scaleX = minScaleX
-                    itemLayout.scaleY = minScaleX
-                    itemLayout.translationY = minTransY
-                    viewDataBinding.invisibleLayout!!.itemLayout.visibility = View.INVISIBLE
+                    roomLayout.scaleX = minScaleX
+                    roomLayout.scaleY = minScaleX
+                    roomLayout.translationY = minTransY
+                    viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.INVISIBLE
                 }
 
                 setRecyclerScrollEnabled()
@@ -895,8 +899,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                     // x 축으로 이동한 경우.
                                     mMoveState = MOVE_STATE_VIEWPAGER
 
-                                    if (viewDataBinding.invisibleLayout!!.itemLayout.visibility == View.VISIBLE) {
-                                        viewDataBinding.invisibleLayout!!.itemLayout.visibility = View.INVISIBLE
+                                    if (viewDataBinding.invisibleLayout!!.roomLayout.visibility == View.VISIBLE) {
+                                        viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.INVISIBLE
                                     }
                                 }
 
@@ -904,8 +908,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                     // y축으로 이동한 경우.
                                     mMoveState = MOVE_STATE_SCROLL
 
-                                    if (viewDataBinding.invisibleLayout!!.itemLayout.visibility != View.VISIBLE) {
-                                        viewDataBinding.invisibleLayout!!.itemLayout.visibility = View.VISIBLE
+                                    if (viewDataBinding.invisibleLayout!!.roomLayout.visibility != View.VISIBLE) {
+                                        viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                                     }
 
                                     setInvisibleLayout(mPrevY, y)
@@ -914,16 +918,16 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         }
 
                         MOVE_STATE_SCROLL -> {
-                            if (viewDataBinding.invisibleLayout!!.itemLayout.visibility != View.VISIBLE) {
-                                viewDataBinding.invisibleLayout!!.itemLayout.visibility = View.VISIBLE
+                            if (viewDataBinding.invisibleLayout!!.roomLayout.visibility != View.VISIBLE) {
+                                viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                             }
 
                             setInvisibleLayout(mPrevY, y)
                         }
 
                         MOVE_STATE_VIEWPAGER -> {
-                            if (viewDataBinding.invisibleLayout!!.itemLayout.visibility == View.VISIBLE) {
-                                viewDataBinding.invisibleLayout!!.itemLayout.visibility = View.INVISIBLE
+                            if (viewDataBinding.invisibleLayout!!.roomLayout.visibility == View.VISIBLE) {
+                                viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.INVISIBLE
                             }
                         }
                     }

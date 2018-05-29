@@ -449,7 +449,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         val couponStart = text.indexOf(couponString)
         if (couponStart != -1) {
-            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_cf27c7a)), couponStart, rewardStart + couponString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_cf27c7a)), couponStart, couponStart + couponString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         dataBinding.discountInfoTextView.text = spannableString
