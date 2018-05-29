@@ -7,6 +7,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.support.v4.view.MotionEventCompat
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -179,19 +180,21 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
         dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
+        dataBinding.emptyMoreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
         dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.setOnClickListener {
+        dataBinding.emptyVrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
+        dataBinding.emptyVrIconView.setOnClickListener {
             eventListener.onVrImageClick(position)
         }
 
-        dataBinding.closeImageView.setOnClickListener {
+        dataBinding.emptyCloseImageView.setOnClickListener {
             eventListener.onCloseClick()
         }
 
         if (room.imageInformation == null) {
-            dataBinding.defaultImageLayout.setOnClickListener(null)
+            dataBinding.emptyLayout.setOnClickListener(null)
         } else {
-            dataBinding.defaultImageLayout.setOnClickListener {
+            dataBinding.emptyLayout.setOnClickListener {
                 eventListener.onMoreImageClick(position)
             }
 
@@ -719,6 +722,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
 
         EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
+
+        invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            invisibleLayoutDataBinding.emptyCloseImageView.translationY = scrollY.toFloat()
+            invisibleLayoutDataBinding.emptyMoreIconView.translationY = scrollY.toFloat()
+            invisibleLayoutDataBinding.emptyVrIconView.translationY = scrollY.toFloat()
+        })
 
         invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
     }
