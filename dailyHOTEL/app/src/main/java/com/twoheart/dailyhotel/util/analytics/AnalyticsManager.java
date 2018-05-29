@@ -721,6 +721,9 @@ public class AnalyticsManager
         public static final String MEMBER_LEAVE_STEP_1 = "member_leave_step_1";
         public static final String MEMBER_LEAVE_STEP_2 = "member_leave_step_2";
         public static final String MEMBER_LEAVE_STEP_3 = "member_leave_step_3";
+
+        // Room List
+        public static final String DAILYHOTEL_ROOM_DETAIL_VIEW = "DailyHotel_RoomDetailView";
     }
 
     public static class Action
@@ -1228,6 +1231,9 @@ public class AnalyticsManager
         public static final String EVENTPAGE_SHARE = "eventpage_share";
 
         public static final String NOTIFICATION = "notification";
+
+        // Room List
+        public static final String DETAIL_VIEW_ROOM = "detailview_room";
     }
 
     public static class Label

@@ -23,7 +23,7 @@ interface StayRoomsInterface {
 
         fun setInvisibleData(position: Int)
 
-        fun showInvisibleLayout() : Boolean
+        fun showInvisibleLayout(): Boolean
 
         fun startInvisibleLayoutAnimation(scaleUp: Boolean)
 
@@ -51,5 +51,10 @@ interface StayRoomsInterface {
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {
+        fun onScreen(activity: StayRoomsActivity)
+
+        fun onScrolled(activity: StayRoomsActivity, stayIndex: Int, roomIndex: Int)
+
+        fun onBookingClick(activity: StayRoomsActivity, stayIndex: Int, roomIndex: Int)
     }
 }
