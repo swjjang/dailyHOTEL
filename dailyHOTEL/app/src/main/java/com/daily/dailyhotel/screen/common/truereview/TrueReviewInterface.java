@@ -12,6 +12,8 @@ public interface TrueReviewInterface extends BaseDialogViewInterface
 {
     void setReviewScores(String title, List<ReviewScore> reviewScoreList);
 
+    void setPrimaryReview(TrueReview primaryReview);
+
     void showReviewScoresAnimation();
 
     void addLastFooter();
