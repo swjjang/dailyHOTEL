@@ -267,17 +267,25 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
 
         val isNrd = !refundInformation.type.isTextEmpty() && refundInformation.type?.toLowerCase().equals("nrd", true)
-        if (!isNrd) {
-            dataBinding.refundPolicyTextView.visibility = View.GONE
-            return
-        }
-
         var text = refundInformation.warningMessage
-        if (text.isTextEmpty()) {
-            text = context.resources.getString(R.string.label_stay_room_default_nrd_text)
+        val backgroundResId: Int
+        val textColorResId: Int
+
+        if (isNrd) {
+            backgroundResId = R.drawable.shape_stay_room_refund_policy_nrd_background
+            textColorResId = R.color.default_text_cfb234a
+
+            if (text.isTextEmpty()) {
+                text = context.resources.getString(R.string.label_stay_room_default_nrd_text)
+            }
+        } else {
+            backgroundResId = R.drawable.shape_stay_room_refund_policy_refundable_background
+            textColorResId = R.color.default_text_c299aff
         }
 
-        dataBinding.refundPolicyTextView.visibility = View.VISIBLE
+        dataBinding.refundPolicyTextView.setTextColor(context.resources.getColor(textColorResId))
+        dataBinding.refundPolicyTextView.setBackgroundResource(backgroundResId)
+        dataBinding.refundPolicyTextView.visibility = if (text.isTextEmpty()) View.GONE else View.VISIBLE
         dataBinding.refundPolicyTextView.text = text
     }
 

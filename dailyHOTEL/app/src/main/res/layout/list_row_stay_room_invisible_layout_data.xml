@@ -191,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:background="@drawable/shape_stay_room_refund_policy_background"
+                        android:background="@drawable/shape_stay_room_refund_policy_nrd_background"
                         android:paddingBottom="5dp"
                         android:paddingLeft="6dp"
                         android:paddingRight="6dp"
