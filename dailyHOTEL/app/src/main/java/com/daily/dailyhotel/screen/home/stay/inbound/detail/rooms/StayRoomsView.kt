@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.graphics.Paint
 import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
@@ -33,7 +34,6 @@ import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomInvisibleLayoutDataBinding
-import com.twoheart.dailyhotel.util.DailyCalendar
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
@@ -241,23 +241,37 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, amountInformation: Room.AmountInformation) {
-        dataBinding.discountPercentTextView.visibility = View.VISIBLE
-        dataBinding.priceTextView.visibility = View.VISIBLE
+        dataBinding.discountPercentTextView.visibility = View.GONE
+        dataBinding.priceTextView.visibility = View.GONE
 
-        val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
-        discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        dataBinding.discountPercentTextView.text = discountRateSpan
+        val showOriginPrice = amountInformation.priceAverage > 0 && amountInformation.priceAverage > amountInformation.discountAverage
+        val showDiscountRate = amountInformation.discountRate in 5..100 && showOriginPrice
+
+        showDiscountRate.runTrue {
+            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
+            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 14.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            dataBinding.discountPercentTextView.apply {
+                text = discountRateSpan
+                visibility = View.VISIBLE
+            }
+        }
 
         val nightsString = if (listAdapter.getNights() > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
         val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
 
         val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
         discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 14.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         dataBinding.discountPriceTextView.text = discountPriceSpan
 
-        dataBinding.priceTextView.text = SpannableString(DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false))
+        showOriginPrice.runTrue {
+            dataBinding.priceTextView.apply {
+                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                this.text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
+                this.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun setRefundInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, refundInformation: StayDetail.RefundInformation?) {

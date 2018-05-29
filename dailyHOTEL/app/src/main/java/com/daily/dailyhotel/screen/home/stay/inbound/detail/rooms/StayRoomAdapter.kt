@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
 
 import android.content.Context
 import android.databinding.DataBindingUtil
+import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
@@ -17,15 +18,11 @@ import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.util.isNotNullAndNotEmpty
-import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.letNotEmpty
-import com.daily.dailyhotel.util.runTrue
+import com.daily.dailyhotel.util.*
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
-import com.twoheart.dailyhotel.util.DailyCalendar
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 
@@ -207,13 +204,21 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
-        dataBinding.discountPercentTextView.visibility = View.VISIBLE
-        dataBinding.priceTextView.visibility = View.VISIBLE
+        dataBinding.discountPercentTextView.visibility = View.GONE
+        dataBinding.priceTextView.visibility = View.GONE
 
-        val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
-        discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        dataBinding.discountPercentTextView.text = discountRateSpan
+        val showOriginPrice = amountInformation.priceAverage > 0 && amountInformation.priceAverage > amountInformation.discountAverage
+        val showDiscountRate = amountInformation.discountRate in 5..100 && showOriginPrice
+
+        showDiscountRate.runTrue {
+            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
+            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            dataBinding.discountPercentTextView.apply {
+                text = discountRateSpan
+                visibility = View.VISIBLE
+            }
+        }
 
         val nightsString = if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
         val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
@@ -223,7 +228,13 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         dataBinding.discountPriceTextView.text = discountPriceSpan
 
-        dataBinding.priceTextView.text = SpannableString(DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false))
+        showOriginPrice.runTrue {
+            dataBinding.priceTextView.apply {
+                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                this.text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
+                this.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetail.RefundInformation?) {
