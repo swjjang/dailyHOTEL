@@ -152,6 +152,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 try {
                     stayIndex = externalDeepLink.index.toInt()
                     bookDateTime.setBookDateTime(externalDeepLink.getStayBookDateTime(it))
+
+                    showRoomPriceType = if (bookDateTime.nights == 1) PriceType.TOTAL else PriceType.AVERAGE
+
                     showCalendar = externalDeepLink.isShowCalendar
                     showTrueVR = externalDeepLink.isShowVR
 
@@ -194,6 +197,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             bookDateTime.setCheckInDateTime(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME))
                     .setCheckOutDateTime(intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME))
                     .validate().runFalse { throw IllegalArgumentException() }
+
+            showRoomPriceType = if (bookDateTime.nights == 1) PriceType.TOTAL else PriceType.AVERAGE
 
             intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_BEDTYPE_FILTER)?.let { bedTypeFilter.addAll(it) }
             intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_FACILITIES_FILTER)?.let { facilitiesFilter.addAll(it) }
@@ -347,10 +352,18 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                         if (isTextEmpty(checkInDateTime, checkOutDateTime)) return
 
+                        val previousOneNights = bookDateTime.nights == 1
+
                         bookDateTime.setBookDateTime(checkInDateTime, checkOutDateTime)
                         isRefresh = true
 
-                        onPriceTypeClick(if (bookDateTime.nights > 1) PriceType.AVERAGE else PriceType.TOTAL)
+                        val currentOneNights = bookDateTime.nights == 1
+
+                        if (previousOneNights && !currentOneNights) {
+                            onPriceTypeClick(PriceType.AVERAGE);
+                        } else {
+                            onPriceTypeClick(if (currentOneNights) PriceType.TOTAL else showRoomPriceType)
+                        }
 
                         viewInterface.scrollRoomInformation()
                     } catch (e: Exception) {

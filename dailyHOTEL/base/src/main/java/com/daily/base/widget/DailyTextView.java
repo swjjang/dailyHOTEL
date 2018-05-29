@@ -335,7 +335,8 @@ public class DailyTextView extends AppCompatTextView
 
             canvas.save();
             canvas.translate(0, -halfCanvas + halfDrawable + (fontHeight - mDrawable.getIntrinsicHeight()) / 2);
-            mDrawable.getCurrent().draw(canvas);
+            mDrawable.setState(DailyTextView.this.getDrawableState());
+            mDrawable.draw(canvas);
             canvas.restore();
         }
 

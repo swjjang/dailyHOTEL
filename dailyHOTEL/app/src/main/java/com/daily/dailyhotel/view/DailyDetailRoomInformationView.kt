@@ -27,7 +27,7 @@ private const val PRICE_TOTAL_TAG = 2
 class DailyDetailRoomInformationView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailRoomInformationDataBinding
 
-    private var isPriceAverageType = false
+    private var isPriceAverageType = true
     private var listener: OnDailyDetailRoomInformationListener? = null
 
     interface OnDailyDetailRoomInformationListener {
@@ -100,8 +100,6 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     }
 
     fun setPriceAverageType(isAverageType: Boolean) {
-        if (isPriceAverageType == isAverageType) return
-
         isPriceAverageType = isAverageType;
 
         viewDataBinding.averagePriceTextView.isSelected = isAverageType
