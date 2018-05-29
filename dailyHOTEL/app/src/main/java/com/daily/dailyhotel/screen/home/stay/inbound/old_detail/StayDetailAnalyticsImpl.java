@@ -629,7 +629,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
         analyticsParam.averageDiscount = stayRoom.discountAverage;
         analyticsParam.address = stayDetail.address;
         analyticsParam.nrd = stayRoom.nrd;
-        analyticsParam.grade = stayDetail.grade;
+//        analyticsParam.grade = stayDetail.grade;
         analyticsParam.provideRewardSticker = stayDetail.provideRewardSticker;
 
         return analyticsParam;
