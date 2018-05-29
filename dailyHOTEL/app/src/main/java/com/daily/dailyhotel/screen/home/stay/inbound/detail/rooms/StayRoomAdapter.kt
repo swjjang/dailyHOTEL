@@ -458,18 +458,15 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomDataBinding, checkTimeInformation: StayDetail.CheckTimeInformation?) {
         if (checkTimeInformation == null) return
 
-        val checkInTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkIn, "HH:mm:ss", "HH:mm")
-        val checkOutTime = DailyCalendar.convertDateFormatString(checkTimeInformation.checkOut, "HH:mm:ss", "HH:mm")
-
-        if (isTextEmpty(checkInTime, checkOutTime)) {
+        if (isTextEmpty(checkTimeInformation.checkIn, checkTimeInformation.checkOut)) {
             dataBinding.checkTimeInfoLayout.visibility = View.GONE
             return
         }
 
         dataBinding.checkTimeInfoLayout.visibility = View.VISIBLE
 
-        dataBinding.checkInTimeTextView.text = checkInTime
-        dataBinding.checkOutTimeTextView.text = checkOutTime
+        dataBinding.checkInTimeTextView.text = checkTimeInformation.checkIn
+        dataBinding.checkOutTimeTextView.text = checkTimeInformation.checkOut
     }
 
     private fun setRoomDescriptionInformationView(dataBinding: ListRowStayRoomDataBinding, descriptionList: MutableList<String>?) {

@@ -90,10 +90,9 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/emptyLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible">
+                    android:layout_height="wrap_content">
 
-                    <View
+                    <com.daily.dailyhotel.view.DailyDetailEmptyView
                         android:id="@+id/roomEmptyView"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
