@@ -136,7 +136,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 layoutParams.topMargin = 0;
                 //                holder.dataBinding.verticalLineView01.requestLayout();
 
-                holder.dataBinding.verticalLineView01.setBackgroundResource(R.color.default_background_c99cfad80);
+                holder.dataBinding.verticalLineView01.setBackgroundResource(R.color.default_line_cebcea7);
                 break;
             }
 
@@ -171,13 +171,13 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
             case Booking.BOOKING_STATE_BEFORE_USE:
             {
-                holder.dataBinding.topVerticalLineView.setBackgroundResource(R.color.default_background_c99cfad80);
-                holder.dataBinding.circleView.setBackgroundResource(R.drawable.shape_circle_bcfad80);
+                holder.dataBinding.topVerticalLineView.setBackgroundResource(R.color.default_line_cebcea7);
+                holder.dataBinding.circleView.setBackgroundResource(R.drawable.shape_filloval_cdfae6d);
 
                 ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView02.getLayoutParams();
                 layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 4);
 
-                holder.dataBinding.verticalLineView02.setBackgroundResource(R.color.default_background_c99cfad80);
+                holder.dataBinding.verticalLineView02.setBackgroundResource(R.color.default_line_cebcea7);
                 break;
             }
 
@@ -308,7 +308,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
             case Booking.BOOKING_STATE_DEPOSIT_WAITING:
                 holder.dataBinding.bookingStatusTextView.setText(R.string.frag_booking_wait_account);
-                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cda2853));
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c6185cd));
                 holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
                 holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_please_deposit_completed);
                 holder.dataBinding.buttonLayout.setVisibility(View.GONE);

@@ -298,6 +298,7 @@
     <color name="default_background_cf9f9fb">#f9f9fb</color>
     <color name="default_background_c99cfad80">#99cfad80</color>
     <color name="default_background_cf0f0f2">#f0f0f2</color>
+    <color name="default_background_cdfae6d">#dfae6d</color>
     <color name="default_background_cf7f7f8">#f7f7f8</color>
     <color name="default_placeholder">#e6e6e7</color>
     <color name="default_background_ce6eb2135">#e6eb2135</color>
@@ -334,6 +335,7 @@
     <color name="default_line_cf3ebde">#f3ebde</color>
     <color name="default_line_cd2d2d2">#d2d2d2</color>
     <color name="default_line_ceb2135">#eb2135</color>
+    <color name="default_line_cebcea7">#ebcea7</color>
 
 
     <color name="cababab">#ababab</color>

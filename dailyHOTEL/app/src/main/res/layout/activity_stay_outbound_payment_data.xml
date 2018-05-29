@@ -378,8 +378,7 @@
                     android:id="@+id/agreementThirdPartyView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    dailyBookingAgreeThirdParty:serviceType="stay_outbound"
-                    />
+                    dailyBookingAgreeThirdParty:serviceType="stay_outbound"/>
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/doPaymentLayout"

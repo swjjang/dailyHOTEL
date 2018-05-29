@@ -219,17 +219,17 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
         if (waitingDeposit.getMessage1List() != null)
         {
             String[] messages1 = waitingDeposit.getMessage1List().toArray(new String[waitingDeposit.getMessage1List().size()]);
-            setGuideText(messages1, false);
+            setGuideText(messages1, R.color.default_text_c4d4d4d);
         }
 
         if (waitingDeposit.getMessage2List() != null)
         {
             String[] messages2 = waitingDeposit.getMessage2List().toArray(new String[waitingDeposit.getMessage2List().size()]);
-            setGuideText(messages2, true);
+            setGuideText(messages2, R.color.default_text_c2c8de6);
         }
     }
 
-    private void setGuideText(String[] guides, boolean isImportant)
+    private void setGuideText(String[] guides, int colorResourceId)
     {
         if (getViewDataBinding() == null || getContext() == null || guides == null)
         {
@@ -250,11 +250,7 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
             }
 
             dataBinding.textView.setText(guideText);
-
-            if (isImportant == true)
-            {
-                dataBinding.textView.setTextColor(getColor(R.color.dh_theme_color));
-            }
+            dataBinding.textView.setTextColor(getColor(colorResourceId));
 
             getViewDataBinding().guide1Layout.addView(dataBinding.getRoot());
         }
