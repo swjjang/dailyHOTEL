@@ -364,6 +364,7 @@
     <string name="dialog_btn_text_confirm">확인</string>
     <string name="dialog_btn_text_select">선택</string>
     <string name="dialog_btn_text_cancel">취소</string>
+    <string name="dialog_btn_text_cancel2">취소하기</string>
     <string name="dialog_btn_text_retry">재시도</string>
     <string name="dialog_btn_text_setting">설정</string>
     <string name="dialog_btn_text_waiting">잠시만요!</string>
@@ -1923,4 +1924,5 @@
     <string name="label_person_age_range_format">%1$d세 - %2$d세</string>
     <string name="label_person_age_and_over_format">%1$d세 이상</string>
     <string name="label_person_age_under_format">%1$d세 미만</string>
+    <string name="dialog_message_check_consecutive">"2박 이상 투숙 시 현장에서\n추가요금 결제가 필요한 객실입니다.\n계속해서 예약하시겠습니까?"</string>
 </resources>

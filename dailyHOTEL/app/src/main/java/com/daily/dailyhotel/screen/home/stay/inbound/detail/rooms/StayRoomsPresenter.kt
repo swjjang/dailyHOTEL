@@ -113,7 +113,8 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
                 }
             }
 
-            else -> {}
+            else -> {
+            }
         }
     }
 
@@ -192,9 +193,27 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             return
         }
 
-        val intent = Intent()
         (centerPosition in 0..roomList.size).runTrue {
             val room = roomList[centerPosition]
+
+            val consecutive: Boolean = room.roomChargeInformation?.consecutiveInformation?.enable
+                    ?: false
+
+            (bookDateTime.nights > 1 && consecutive).runTrue {
+                viewInterface.showSimpleDialog(getString(R.string.dialog_notice2)
+                        , getString(R.string.dialog_message_check_consecutive)
+                        , getString(R.string.label_do_booking)
+                        , getString(R.string.dialog_btn_text_cancel2)
+                        , View.OnClickListener {
+                    val intent = Intent()
+                    intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, room.index)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }, null)
+                return
+            }
+
+            val intent = Intent()
             intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, room.index)
             setResult(Activity.RESULT_OK, intent)
             finish()
