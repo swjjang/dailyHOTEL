@@ -35,6 +35,7 @@ import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms.StayRoomsActivity
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity
+import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -331,6 +332,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON -> onLoginByCouponActivityResult(resultCode, intent)
 
             StayDetailActivity.REQUEST_CODE_WISH_DIALOG -> onWishDialogActivityResult(resultCode, intent)
+
+            StayDetailActivity.REQUEST_CODE_ROOM -> onRoomActivityResult(resultCode, intent)
         }
     }
 
@@ -414,6 +417,42 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             else -> notifyWishDataSetChanged();
         }
+    }
+
+    private fun onRoomActivityResult(resultCode: Int, intent: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                intent?.let {
+                    val roomIndex = it.getIntExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, -1)
+
+                    stayDetail?.let {
+                        val room = getRoom(it.roomInformation?.roomList, roomIndex) ?: return
+
+                        startActivityForResult(StayPaymentActivity.newInstance(activity, it.index,
+                                it.baseInformation?.name,
+                                it.imageList?.get(0)?.imageMap?.bigUrl,
+                                room.index, room.amountInformation.discountTotal, room.name,
+                                bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
+                                bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
+                                false, it.baseInformation?.category,
+                                it.addressInformation?.latitude ?: 0.0,
+                                it.addressInformation?.longitude ?: 0.0,
+                                analytics.getStayPaymentAnalyticsParam(it, room)),
+                                StayDetailActivity.REQUEST_CODE_PAYMENT)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getRoom(roomList: List<Room>?, roomIndex: Int): Room? {
+        roomList?.forEach {
+            if (it.index == roomIndex) {
+                return it
+            }
+        }
+
+        return null
     }
 
     @Synchronized
@@ -837,14 +876,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         analytics.onEventCallClick(activity)
     }
 
-    override fun onRoomClick(stayRoom: StayRoom) {
+    override fun onRoomClick(room: Room) {
         if (lock()) return
 
         stayDetail?.let { stayDetail ->
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
                     startActivityForResult(StayRoomsActivity.newInstance(activity, getFilteredRoomList(it, bedTypeFilter, facilitiesFilter),
-                            getRoomPosition(it, stayRoom),
+                            getRoomPosition(it, room),
                             bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
                             bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
                             stayDetail.index,
@@ -855,7 +894,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         } ?: Util.restartApp(activity)
     }
 
-    private fun getRoomPosition(roomList: List<Room>?, stayRoom: StayRoom?): Int {
+    private fun getRoomPosition(roomList: List<Room>?, stayRoom: Room?): Int {
         roomList?.forEachIndexed { index, room ->
             if (room.index == stayRoom?.index) {
                 return index

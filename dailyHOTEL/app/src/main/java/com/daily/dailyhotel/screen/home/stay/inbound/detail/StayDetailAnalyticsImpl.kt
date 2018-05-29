@@ -3,9 +3,9 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail
 import android.app.Activity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
+import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayBookDateTime
 import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.entity.StayRoom
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
@@ -21,9 +21,31 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         this.analyticsParam = analyticsParam
     }
 
-    override fun getStayPaymentAnalyticsParam(stayDetail: StayDetail, stayRoom: StayRoom): StayPaymentAnalyticsParam {
+    override fun getStayPaymentAnalyticsParam(stayDetail: StayDetail?, room: Room?): StayPaymentAnalyticsParam {
+        val paymentAnalyticsParam = StayPaymentAnalyticsParam()
 
-        return StayPaymentAnalyticsParam()
+        if (stayDetail == null || room == null) {
+            return paymentAnalyticsParam
+        }
+
+        analyticsParam?.let {
+            paymentAnalyticsParam.showOriginalPrice = it.showOriginalPriceYn
+            paymentAnalyticsParam.rankingPosition = it.entryPosition
+            paymentAnalyticsParam.totalListCount = it.totalListCount
+            paymentAnalyticsParam.dailyChoice = it.isDailyChoice
+            paymentAnalyticsParam.region = it.region
+            paymentAnalyticsParam.addressAreaName = it.addressAreaName
+        }
+
+        paymentAnalyticsParam.ratingValue = stayDetail.trueReviewInformation?.ratingPercent ?: 0
+        paymentAnalyticsParam.benefit = DailyTextUtils.isTextEmpty(stayDetail.benefitInformation?.title) == false
+        paymentAnalyticsParam.averageDiscount = room.amountInformation.discountAverage
+        paymentAnalyticsParam.address = stayDetail.addressInformation?.address
+        paymentAnalyticsParam.nrd = DailyTextUtils.isTextEmpty(room.refundInformation.warningMessage) == false
+        paymentAnalyticsParam.grade = stayDetail.baseInformation?.grade
+        paymentAnalyticsParam.provideRewardSticker = stayDetail.baseInformation?.provideRewardSticker ?: false
+
+        return paymentAnalyticsParam
     }
 
     override fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int,

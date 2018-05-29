@@ -116,16 +116,20 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 eventListener.onRoomFilterClick()
             }
 
-            override fun onMoreRoomsClick(expanded: Boolean) {
-                eventListener.onMoreRoomClick(expanded)
-            }
-
             override fun onAveragePriceClick() {
                 eventListener.onPriceTypeClick(StayDetailPresenter.PriceType.AVERAGE)
             }
 
             override fun onTotalPriceClick() {
                 eventListener.onPriceTypeClick(StayDetailPresenter.PriceType.TOTAL)
+            }
+
+            override fun onRoomClick(room: Room) {
+                eventListener.onRoomClick(room)
+            }
+
+            override fun onMoreRoomsClick(expanded: Boolean) {
+                eventListener.onMoreRoomClick(expanded)
             }
         })
 

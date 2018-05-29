@@ -40,6 +40,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
         const val INTENT_EXTRA_STAY_CATEGORY = "category"
         const val INTENT_EXTRA_POSITION = "position"
         const val INTENT_EXTRA_ROOM = "room"
+        const val INTENT_EXTRA_ROOM_INDEX = "roomIndex"
 
         const val REQUEST_CODE_TRUE_VR = 10000
         const val REQUEST_CODE_IMAGE_LIST = 10001

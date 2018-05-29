@@ -193,7 +193,7 @@ interface StayDetailInterface {
 
         fun onConciergeCallClick()
 
-        fun onRoomClick(stayRoom: StayRoom)
+        fun onRoomClick(room: Room)
 
         fun onTrueReviewClick()
 
@@ -237,7 +237,7 @@ interface StayDetailInterface {
     interface AnalyticsInterface : BaseAnalyticsInterface {
         fun setAnalyticsParam(analyticsParam: StayDetailAnalyticsParam)
 
-        fun getStayPaymentAnalyticsParam(stayDetail: StayDetail, stayRoom: StayRoom): StayPaymentAnalyticsParam
+        fun getStayPaymentAnalyticsParam(stayDetail: StayDetail?, room: Room?): StayPaymentAnalyticsParam
 
         fun onScreen(activity: Activity, stayBookDateTime: StayBookDateTime, stayDetail: StayDetail?, priceFromList: Int,
                      bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>)
