@@ -335,7 +335,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
 
             typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
-            typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
