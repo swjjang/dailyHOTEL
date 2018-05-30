@@ -363,7 +363,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         return when (bedType) {
             "SPAWALLPOOL" -> R.string.label_whirlpool
             "BATH" -> R.string.label_bathtub
-            "AMENITY" -> R.string.label_bath_amenity
+            "BATHAMENITY" -> R.string.label_bath_amenity
             "SHOWERGOWN" -> R.string.label_shower_gown
             "TOOTHBRUSHSET" -> R.string.label_toothbrush_set
             "PRIVATEBBQ" -> R.string.label_private_bbq

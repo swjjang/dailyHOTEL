@@ -17,7 +17,7 @@ class DailyDetailRoomFilterContentsView : ConstraintLayout {
     private var listener: OnDailyDetailRoomFilterListener? = null
 
     private val bedTypeList: Array<String> = arrayOf("DOUBLE", "TWIN", "IN_FLOOR_HEATING", "SINGLE")
-    private val facilitiesList: Array<String> = arrayOf("SPAWALLPOOL", "BATH", "AMENITY", "SHOWERGOWN",
+    private val facilitiesList: Array<String> = arrayOf("SPAWALLPOOL", "BATH", "BATHAMENITY", "SHOWERGOWN",
             "TOOTHBRUSHSET", "PRIVATEBBQ", "PRIVATEPOOL", "PARTYROOM", "KARAOKE", "BREAKFAST",
             "PC", "TV", "KITCHENETTE", "SMOKEABLE", "DISABLEDFACILITIES")
 
