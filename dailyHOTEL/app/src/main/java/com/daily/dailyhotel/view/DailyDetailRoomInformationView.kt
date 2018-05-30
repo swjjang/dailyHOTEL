@@ -277,7 +277,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         val flag = if (visible) View.GONE else View.VISIBLE
         viewDataBinding.priceTypeGroup.visibility = flag
         viewDataBinding.roomsLayout.visibility = flag
-        viewDataBinding.moreRoomsLayout.visibility = flag
+        viewDataBinding.moreRoomsLayout.visibility = if (visible) View.GONE else viewDataBinding.moreRoomsLayout.visibility
         viewDataBinding.actionButtonGroup.visibility = flag
     }
 }
