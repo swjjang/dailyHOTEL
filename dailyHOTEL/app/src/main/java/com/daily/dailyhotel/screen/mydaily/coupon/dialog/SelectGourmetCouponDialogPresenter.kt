@@ -53,11 +53,13 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
     }
 
     override fun onIntent(intent: Intent?): Boolean {
-        return intent?.run {
+        var result = true
+
+        intent?.run {
             callByScreen = getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN)
             if (callByScreen.isTextEmpty()) {
                 Util.restartApp(activity)
-                false
+                result = false
             }
 
             visitDay = getStringExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_VISIT_DAY)
@@ -69,8 +71,10 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
                 ticketCounts = getIntArrayExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_TICKET_COUNTS)
             }
 
-            true
-        } ?: true
+            result = true
+        }
+
+        return result
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -137,7 +137,7 @@ class DailyRoomInfoGridView : LinearLayout {
             }
 
             moreGridLayout.doOnPreDraw {
-                val itemHeight = if (largeView) {
+                if (largeView) {
                     LARGE_ITEM_HEIGHT + LARGE_LINE_MARGIN_TOP
                 } else {
                     SMALL_ITEM_HEIGHT + SMALL_LINE_MARGIN_TOP
@@ -146,7 +146,7 @@ class DailyRoomInfoGridView : LinearLayout {
                 var rect = Rect()
                 it.getLocalVisibleRect(rect)
 
-                ExLog.d("sam : rect = " + rect)
+                ExLog.d("sam : rect = $rect")
 
 //                    it.tag = ScreenUtils.dpToPx(context, itemHeight) * moreGridLayout.rowCount
                 it.tag = it.height

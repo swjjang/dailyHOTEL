@@ -328,7 +328,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 BedType.UNKNOWN
             }
 
-            bedVectorIconResId = if (bedVectorIconResId == 0) {
+            bedVectorIconResId = if (bedVectorIconResId != 0) {
                 bedType.vectorIconResId
             } else {
                 R.drawable.vector_ic_detail_item_bed_double
@@ -451,7 +451,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         if (useCoupon) {
             if (!text.isTextEmpty()) {
-                text += context.resources.getString(R.string.label_stay_room_reward_coupon_or)
+                text += " ${context.resources.getString(R.string.label_stay_room_reward_coupon_or)} "
             }
 
             text += couponString
@@ -466,7 +466,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val rewardStart = text.indexOf(rewardString)
 
         if (rewardStart != -1) {
-            spannableString.setSpan(DailyImageSpan(context, R.drawable.vector_ic_r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(DailyImageSpan(context, R.drawable.r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_line_cfaae37)), rewardStart, rewardStart + rewardString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 

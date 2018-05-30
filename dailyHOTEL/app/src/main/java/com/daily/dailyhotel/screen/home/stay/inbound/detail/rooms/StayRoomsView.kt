@@ -364,7 +364,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 StayRoomAdapter.BedType.UNKNOWN
             }
 
-            bedVectorIconResId = if (bedVectorIconResId == 0) {
+            bedVectorIconResId = if (bedVectorIconResId != 0) {
                 bedType.vectorIconResId
             } else {
                 R.drawable.vector_ic_detail_item_bed_double
@@ -487,7 +487,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         if (useCoupon) {
             if (!text.isTextEmpty()) {
-                text += context.resources.getString(R.string.label_stay_room_reward_coupon_or)
+                text += " ${context.resources.getString(R.string.label_stay_room_reward_coupon_or)} "
             }
 
             text += couponString
@@ -502,7 +502,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val rewardStart = text.indexOf(rewardString)
 
         if (rewardStart != -1) {
-            spannableString.setSpan(DailyImageSpan(context, R.drawable.vector_ic_r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(DailyImageSpan(context, R.drawable.r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_line_cfaae37)), rewardStart, rewardStart + rewardString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
@@ -738,12 +738,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             scaleX = minScaleX
             scaleY = minScaleX
 
-            ExLog.d("sam - translationY : $translationY , top : ${this.top} , measuredHeight : $measuredHeight , minTransY : ${minTransY}")
+            ExLog.d("sam - translationY : $translationY , top : ${this.top} , measuredHeight : $measuredHeight , minTransY : $minTransY")
         }
 
         EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
 
-        invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
             invisibleLayoutDataBinding.emptyCloseImageView.translationY = scrollY.toFloat()
             invisibleLayoutDataBinding.emptyMoreIconView.translationY = scrollY.toFloat()
             invisibleLayoutDataBinding.emptyVrIconView.translationY = scrollY.toFloat()
@@ -990,9 +990,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                 MotionEvent.ACTION_MOVE -> {
                     val y = event.y
-
-                    val verticalPadding = viewDataBinding.invisibleLayout!!.scrollLayout.translationY
+                    val translationY = viewDataBinding.invisibleLayout!!.scrollLayout.translationY
                     val scrollY = viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY
+
+                    val preY = mPrevY - scrollY
+
+                    ExLog.d("sam - mPrevY : $mPrevY , scrollY : $scrollY , preY : $preY , y : $y , translationY : $translationY")
 
 //                    setInvisibleLayout(mPrevY, y)
                 }

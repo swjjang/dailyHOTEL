@@ -60,11 +60,13 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
     }
 
     override fun onIntent(intent: Intent?): Boolean {
-        return intent?.run {
+        var result = false
+
+        intent?.run {
             callByScreen = getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN)
             if (callByScreen.isTextEmpty()) {
                 Util.restartApp(activity)
-                false
+                result = false
             }
 
             try {
@@ -74,7 +76,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
                 ExLog.e(e.toString())
 
                 Util.restartApp(activity)
-                false
+                result = false
             }
 
             stayIndex = getIntExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_STAY_IDX, -1)
@@ -86,8 +88,10 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
                 roomPrice = getIntExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_ROOM_PRICE, 0)
             }
 
-            true
-        } ?: false
+            result = true
+        }
+
+        return result
     }
 
     override fun onNewIntent(intent: Intent?) {
