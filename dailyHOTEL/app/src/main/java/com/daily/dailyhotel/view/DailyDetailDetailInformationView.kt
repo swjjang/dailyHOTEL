@@ -113,6 +113,8 @@ class DailyDetailDetailInformationView : LinearLayout {
                                 0, s.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
+
+                text = spannableStringBuilder;
             }
         }
     }
