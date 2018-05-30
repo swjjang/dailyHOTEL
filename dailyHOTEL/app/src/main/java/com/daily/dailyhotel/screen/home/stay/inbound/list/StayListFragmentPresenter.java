@@ -175,8 +175,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                             @Override
                             public void subscribe(ObservableEmitter<Object> e) throws Exception
                             {
-                                onStayClick(mWishPosition, mStayByLongPress, mListCountByLongPress
-                                    , mPairsByLongPress, StayDetailActivity.TransGradientType.LIST);
+                                onStayClick(mWishPosition, mStayByLongPress, mListCountByLongPress, mPairsByLongPress, StayDetailActivity.TransGradientType.LIST);
                             }
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;

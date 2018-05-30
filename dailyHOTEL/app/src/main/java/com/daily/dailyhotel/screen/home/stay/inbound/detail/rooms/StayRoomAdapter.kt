@@ -18,7 +18,10 @@ import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.util.*
+import com.daily.dailyhotel.util.isNotNullAndNotEmpty
+import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.letNotEmpty
+import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding

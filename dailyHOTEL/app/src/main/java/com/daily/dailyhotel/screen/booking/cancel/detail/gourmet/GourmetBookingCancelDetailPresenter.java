@@ -4,7 +4,6 @@ package com.daily.dailyhotel.screen.booking.cancel.detail.gourmet;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -575,27 +574,9 @@ public class GourmetBookingCancelDetailPresenter //
 
         RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
 
-        try
-        {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity() //
-                , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING_CANCEL//
-                , restaurantInfo.index, mReservationIndex, restaurantInfo.name), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-        } catch (Exception e)
-        {
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
-        }
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity() //
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING_CANCEL//
+            , restaurantInfo.index, mReservationIndex, restaurantInfo.name), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
     }
 
     @Override
@@ -619,34 +600,7 @@ public class GourmetBookingCancelDetailPresenter //
 
         try
         {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
-
-            //            String firstTicketName = "";
-            //            int totalTicketCount = 0;
-            //            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
-            //
-            //            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
-            //            {
-            //                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
-            //                {
-            //                    firstTicketName = ticketInfo.name;
-            //                }
-            //
-            //                totalTicketCount += ticketInfo.count;
-            //            }
-            //
-            //            String ticketName;
-            //            if (ticketSize > 1)
-            //            {
-            //                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-            //            } else
-            //            {
-            //                ticketName = firstTicketName;
-            //            }
-
             String reserveDate = DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
             String canceledAt = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
 
@@ -661,18 +615,7 @@ public class GourmetBookingCancelDetailPresenter //
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
-
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
+            ExLog.e(e.toString());
         }
     }
 

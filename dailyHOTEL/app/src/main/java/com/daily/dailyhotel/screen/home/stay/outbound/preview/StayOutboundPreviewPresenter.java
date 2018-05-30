@@ -3,10 +3,8 @@ package com.daily.dailyhotel.screen.home.stay.outbound.preview;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -323,9 +321,6 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         try
         {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
             String name = DailyUserPreference.getInstance(getActivity()).getName();
 
             String imageUrl;
@@ -364,18 +359,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         {
             unLockAll();
 
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-
-                        onBackClick();
-                    }
-                }, null);
+            ExLog.e(e.toString());
         }
     }
 

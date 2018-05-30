@@ -4,7 +4,6 @@ package com.daily.dailyhotel.screen.booking.detail.stay.outbound;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -611,32 +610,14 @@ public class StayOutboundBookingDetailPresenter //
             return;
         }
 
-        try
+        if (refund == true)
         {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
-            if (refund == true)
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_REFUND//
-                    , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
-            } else
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
-                    , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
-            }
-        } catch (Exception e)
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_REFUND//
+                , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
+        } else
         {
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
+                , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
         }
     }
 
@@ -656,9 +637,6 @@ public class StayOutboundBookingDetailPresenter //
 
         try
         {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
             int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
@@ -674,18 +652,7 @@ public class StayOutboundBookingDetailPresenter //
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
-
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
+            ExLog.e(e.toString());
         }
     }
 

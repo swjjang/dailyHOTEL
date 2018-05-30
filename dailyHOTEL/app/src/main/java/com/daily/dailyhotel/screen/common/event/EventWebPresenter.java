@@ -515,9 +515,6 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
             String longUrl = mEventUrl;
 
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl) //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
                 {
@@ -562,16 +559,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
                 }));
         } catch (Exception e)
         {
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
+            ExLog.e(e.toString());
 
             unLockAll();
         }

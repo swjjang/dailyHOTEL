@@ -9,7 +9,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
-import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundFilterDataBinding;
 

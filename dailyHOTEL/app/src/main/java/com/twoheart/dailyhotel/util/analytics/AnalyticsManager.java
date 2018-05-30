@@ -1299,7 +1299,7 @@ public class AnalyticsManager
         public static final String SORTFILTER_KITCHEN = "Kitchen";
         public static final String SORTFILTER_BATHTUB = "Bath";
         public static final String SORTFILTER_SPA_MASSAGE = "SpaMassage";
-        public static final String SORTFILTER_BATH_AMENITIES= "Amenity";
+        public static final String SORTFILTER_BATH_AMENITIES = "Amenity";
         public static final String SORTFILTER_PARKING = "Parking";
         public static final String SORTFILTER_PARKINGAVAILABLE = "ParkingAvailable";
         public static final String SORTFILTER_PARKINGDISABLE = "NoParking";

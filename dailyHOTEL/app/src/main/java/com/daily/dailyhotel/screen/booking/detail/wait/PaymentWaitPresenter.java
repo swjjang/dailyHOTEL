@@ -4,10 +4,8 @@ package com.daily.dailyhotel.screen.booking.detail.wait;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 import android.widget.Toast;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -399,40 +397,22 @@ public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActi
             return;
         }
 
-        try
+        mAnalytics.onEventConciergeHappyTalkClick2(getActivity());
+
+        switch (mBooking.placeType)
         {
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+            case STAY:
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
+                    , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAYMENT_WAIT, 0//
+                    , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                break;
 
-            mAnalytics.onEventConciergeHappyTalkClick2(getActivity());
-
-            switch (mBooking.placeType)
-            {
-                case STAY:
-                    startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
-                        , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAYMENT_WAIT, 0//
-                        , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-                    break;
-
-                case GOURMET:
-                    startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
-                        , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAYMENT_WAIT, 0//
-                        , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-                    break;
-            }
-        } catch (Exception e)
-        {
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
+            case GOURMET:
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
+                    , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAYMENT_WAIT, 0//
+                    , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                break;
         }
-
 
         mAnalytics.onEventConciergeHappyTalkClick(getActivity(), placeType);
     }

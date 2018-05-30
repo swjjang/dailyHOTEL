@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Spannable
@@ -569,8 +568,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
         stayDetail?.let { stayDetail ->
             try {
-                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
-
                 val name: String? = DailyUserPreference.getInstance(activity).name
                 val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
                 val longUrl = String.format(Locale.KOREA, urlFormat, stayDetail.index, bookDateTime.getCheckInDateTime("yyyy-MM-dd"), bookDateTime.nights)
@@ -593,9 +590,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             } catch (e: Exception) {
                 unLockAll()
 
-                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk),
-                        getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
-                        View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }, null)
+                ExLog.e(e.toString());
             }
         } ?: Util.restartApp(activity)
     }
@@ -858,17 +853,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     override fun onConciergeHappyTalkClick() {
         stayDetail?.let {
-            try {
-                // 카카오톡 패키지 설치 여부
-                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
-
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(activity, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL
-                        , it.index, 0, it.baseInformation?.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK)
-            } catch (e: Exception) {
-                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk),
-                        getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
-                        View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }, null)
-            }
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(activity, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL
+                    , it.index, 0, it.baseInformation?.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK)
 
             analytics.onEventHappyTalkClick(activity)
         } ?: Util.restartApp(activity)

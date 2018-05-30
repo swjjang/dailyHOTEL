@@ -94,9 +94,11 @@ public class Room
 
         public List<ExtraPersonInformation> extraPersonInformationList;
 
-        public boolean isAllHidden() {
+        public boolean isAllHidden()
+        {
             boolean isEmptyPersonInformationList = false;
-            if (extraPersonInformationList == null || extraPersonInformationList.size() == 0) {
+            if (extraPersonInformationList == null || extraPersonInformationList.size() == 0)
+            {
                 isEmptyPersonInformationList = true;
             }
 
@@ -128,9 +130,11 @@ public class Room
             public int extraBedding;
             public boolean extraBeddingEnable;
 
-            public boolean isAllHidden() {
+            public boolean isAllHidden()
+            {
                 boolean isEmptyDescriptionList = false;
-                if (descriptionList == null || descriptionList.size() == 0) {
+                if (descriptionList == null || descriptionList.size() == 0)
+                {
                     isEmptyDescriptionList = true;
                 }
 

@@ -4,7 +4,6 @@ package com.daily.dailyhotel.screen.booking.cancel.detail.stay;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -547,26 +546,8 @@ public class StayBookingCancelDetailPresenter //
             return;
         }
 
-        try
-        {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING_CANCEL//
-                , mStayBookingDetail.stayIndex, mReservationIndex, mStayBookingDetail.stayName), StayBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-        } catch (Exception e)
-        {
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
-        }
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING_CANCEL//
+            , mStayBookingDetail.stayIndex, mReservationIndex, mStayBookingDetail.stayName), StayBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
     }
 
     @Override
@@ -585,9 +566,6 @@ public class StayBookingCancelDetailPresenter //
 
         try
         {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
             String[] checkInDates = mStayBookingDetail.checkInDateTime.split("T");
@@ -613,18 +591,7 @@ public class StayBookingCancelDetailPresenter //
 
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
-
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
+            ExLog.e(e.toString());
         }
     }
 

@@ -10,7 +10,6 @@ import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
