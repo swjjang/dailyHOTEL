@@ -163,7 +163,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
 
     // App Research
-    private static final String KEY_REMOTE_CONFIG_APP_RESEARCH = "1002";
+//    private static final String KEY_REMOTE_CONFIG_APP_RESEARCH = "1002";
 
     private static DailyRemoteConfigPreference mInstance;
     private SharedPreferences mRemoteConfigPreferences;
@@ -1154,16 +1154,6 @@ public class DailyRemoteConfigPreference
     //    {
     //        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, null);
     //    }
-
-    public void setKeyRemoteConfigAppResearch(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_APP_RESEARCH, value);
-    }
-
-    public String getKeyRemoteConfigAppResearch()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_APP_RESEARCH, null);
-    }
 
     public void setKeyRemoteConfigGourmetSearchKeyword(String value)
     {

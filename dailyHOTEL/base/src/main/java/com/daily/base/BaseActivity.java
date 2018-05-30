@@ -189,12 +189,12 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     @Override
     public void finish()
     {
-        super.finish();
-
         if (mPresenter != null)
         {
             mPresenter.onFinish();
         }
+
+        super.finish();
     }
 
     @Override

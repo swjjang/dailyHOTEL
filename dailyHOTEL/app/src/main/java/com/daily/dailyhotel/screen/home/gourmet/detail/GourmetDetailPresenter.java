@@ -64,7 +64,6 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -152,7 +151,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private List<String> mOperationTimeList;
 
     DailyDeepLink mDailyDeepLink;
-    private AppResearch mAppResearch;
 
     public interface GourmetDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -239,8 +237,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         setContentView(R.layout.activity_gourmet_detail_data);
 
         mAnalytics = new GourmetDetailAnalyticsImpl();
-
-        mAppResearch = new AppResearch();
 
         mGourmetRemoteImpl = new GourmetRemoteImpl();
         mCommonRemoteImpl = new CommonRemoteImpl();
@@ -440,16 +436,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
             }));
         }
-
-        mAppResearch.onResume(getActivity(), "고메", mGourmetIndex);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-
-        mAppResearch.onPause(getActivity(), "고메", mGourmetIndex);
     }
 
     @Override

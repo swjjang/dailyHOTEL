@@ -628,7 +628,21 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
                     , R.layout.layout_stay_outbound_detail_information_data, mBookingDetail03DataBinding.defaultRefundPolicyLayout, true);
 
-                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicyList.get(i)));
+                String comment = refundPolicyList.get(i);
+
+                switch (stayOutboundBookingDetail.refundStatus)
+                {
+                    case NRD:
+                        comment = comment.replaceAll("900034", "EB2135");
+                        break;
+
+                    case FULL:
+                    case PARTIAL:
+                        comment = comment.replaceAll("900034", "2C8DE6");
+                        break;
+                }
+
+                detailInformationDataBinding.textView.setText(Html.fromHtml(comment));
 
                 if (i == size - 1)
                 {

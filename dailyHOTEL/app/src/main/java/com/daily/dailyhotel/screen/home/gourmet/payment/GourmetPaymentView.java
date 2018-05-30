@@ -673,7 +673,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
             return;
         }
 
-        getViewDataBinding().refundPolicyView.setRefundPolicyList(null);
+        getViewDataBinding().refundPolicyView.setRefundPolicyList(null, false);
 
         getViewDataBinding().agreementThirdPartyView.setOnAgreementClickListener(new DailyBookingAgreementThirdPartyView.OnAgreementClickListener()
         {

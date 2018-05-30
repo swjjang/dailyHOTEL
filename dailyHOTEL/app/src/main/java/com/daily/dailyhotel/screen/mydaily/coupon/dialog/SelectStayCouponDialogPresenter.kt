@@ -113,19 +113,22 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
         super.onFinish()
 
         if (!isSetOk) {
-
             if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equals(callByScreen, true)) {
                 analytics.onCancelByPayment(activity, viewInterface.getCouponCount(), categoryCode, stayName, roomPrice)
             }
 
-            val intent = Intent().putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
-
-            if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equals(callByScreen, true)) {
-                intent.putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, hasDownloadable)
-            }
-
-            activity.setResult(Activity.RESULT_CANCELED, intent)
+            setFinishResult()
         }
+    }
+
+    private fun setFinishResult() {
+        val intent = Intent().putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equals(callByScreen, true)) {
+            intent.putExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, hasDownloadable)
+        }
+
+        activity.setResult(Activity.RESULT_CANCELED, intent)
     }
 
     override fun onDestroy() {

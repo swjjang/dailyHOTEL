@@ -45,7 +45,7 @@ public class DailyBookingRefundPolicyView extends ConstraintLayout
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_payment_refund_data, this, true);
     }
 
-    public void setRefundPolicyList(List<String> refundPolicyList)
+    public void setRefundPolicyList(List<String> refundPolicyList, boolean nrd)
     {
         if (mViewDataBinding == null)
         {
@@ -70,7 +70,9 @@ public class DailyBookingRefundPolicyView extends ConstraintLayout
 
             for (int i = 0; i < size; i++)
             {
-                if (DailyTextUtils.isTextEmpty(refundPolicyList.get(i)) == true)
+                String comment = refundPolicyList.get(i);
+
+                if (DailyTextUtils.isTextEmpty(comment) == true)
                 {
                     continue;
                 }
@@ -78,7 +80,15 @@ public class DailyBookingRefundPolicyView extends ConstraintLayout
                 LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
                     , R.layout.layout_stay_outbound_detail_information_data, mViewDataBinding.refundPolicyListLayout, true);
 
-                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicyList.get(i)));
+                if (nrd)
+                {
+                    comment = comment.replaceAll("b70038", "EB2135");
+                } else
+                {
+                    comment = comment.replaceAll("b70038", "2C8DE6");
+                }
+
+                detailInformationDataBinding.textView.setText(Html.fromHtml(comment));
 
                 if (i == size - 1)
                 {

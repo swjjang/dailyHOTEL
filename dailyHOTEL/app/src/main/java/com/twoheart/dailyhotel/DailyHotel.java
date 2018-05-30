@@ -10,17 +10,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
-import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
-import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
-import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -33,8 +22,6 @@ import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.RetrofitHttpClient;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
-import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -235,11 +222,10 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     private class DailyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks
     {
         private int mRunningActivity = 0;
-        private AppResearch mAppResearch;
 
         DailyActivityLifecycleCallbacks()
         {
-            mAppResearch = new AppResearch();
+
         }
 
         @Override
@@ -275,62 +261,12 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         public void onActivityResumed(Activity activity)
         {
             AnalyticsManager.getInstance(activity).onActivityResumed(activity);
-
-            if (activity instanceof StayDetailActivity || activity instanceof GourmetDetailActivity || activity instanceof StayOutboundDetailActivity)
-            {
-                return;
-            }
-
-            if (activity instanceof StayTabActivity//
-                || activity instanceof StayPaymentActivity//
-                || activity instanceof StayThankYouActivity)
-            {
-                mAppResearch.onResume(activity, "스테이", -1);
-            } else if (activity instanceof GourmetMainActivity//
-                || activity instanceof GourmetPaymentActivity//
-                || activity instanceof GourmetThankYouActivity)
-            {
-                mAppResearch.onResume(activity, "고메", -1);
-            } else if (activity instanceof StayOutboundListActivity//
-                || activity instanceof StayOutboundPaymentActivity//
-                || activity instanceof StayOutboundThankYouActivity)
-            {
-                mAppResearch.onResume(activity, "outbound_스테이", -1);
-            } else
-            {
-                mAppResearch.onResume(activity, "etc", -1);
-            }
         }
 
         @Override
         public void onActivityPaused(Activity activity)
         {
             AnalyticsManager.getInstance(activity).onActivityPaused(activity);
-
-            if (activity instanceof StayDetailActivity || activity instanceof GourmetDetailActivity || activity instanceof StayOutboundDetailActivity)
-            {
-                return;
-            }
-
-            if (activity instanceof StayTabActivity//
-                || activity instanceof StayPaymentActivity//
-                || activity instanceof StayThankYouActivity)
-            {
-                mAppResearch.onPause(activity, "스테이", -1);
-            } else if (activity instanceof GourmetMainActivity//
-                || activity instanceof GourmetPaymentActivity//
-                || activity instanceof GourmetThankYouActivity)
-            {
-                mAppResearch.onPause(activity, "고메", -1);
-            } else if (activity instanceof StayOutboundListActivity//
-                || activity instanceof StayOutboundPaymentActivity//
-                || activity instanceof StayOutboundThankYouActivity)
-            {
-                mAppResearch.onPause(activity, "outbound_스테이", -1);
-            } else
-            {
-                mAppResearch.onPause(activity, "etc", -1);
-            }
         }
 
         @Override

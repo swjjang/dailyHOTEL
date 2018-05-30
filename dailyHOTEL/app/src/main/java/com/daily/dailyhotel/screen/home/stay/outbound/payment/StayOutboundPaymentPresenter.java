@@ -1751,7 +1751,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        getViewInterface().setRefundPolicyList(mStayOutboundPayment.getRefundPolicyList(), hasDepositSticker());
+        getViewInterface().setRefundPolicyList(mStayOutboundPayment.getRefundPolicyList(), hasDepositSticker(), mStayOutboundPayment.nonRefundable);
     }
 
     void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)

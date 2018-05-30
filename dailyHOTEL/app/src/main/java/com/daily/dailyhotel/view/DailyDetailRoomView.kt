@@ -134,47 +134,46 @@ class DailyDetailRoomView : ConstraintLayout {
 
         bedTypeList?.forEach {
             when (it.bedType) {
-                "DOUBLE", "KING", "QUEEN", "SEMI_DOUBLE" -> bedTypeMap.put("DOUBLE", bedTypeMap.get("DOUBLE")!! + it.count)
+                "DOUBLE", "KING", "QUEEN", "SEMI_DOUBLE" -> bedTypeMap["DOUBLE"] = bedTypeMap["DOUBLE"]!! + it.count
 
-                "SINGLE" -> bedTypeMap.put("SINGLE", bedTypeMap.get("SINGLE")!! + 1)
+                "SINGLE" -> bedTypeMap["SINGLE"] = bedTypeMap["SINGLE"]!! + it.count
 
-                "IN_FLOOR_HEATING" -> bedTypeMap.put("IN_FLOOR_HEATING", bedTypeMap.get("IN_FLOOR_HEATING")!! + it.count)
+                "IN_FLOOR_HEATING" -> bedTypeMap["IN_FLOOR_HEATING"] = bedTypeMap["IN_FLOOR_HEATING"]!! + it.count
 
-                "UNKNOWN" -> bedTypeMap.put("UNKNOWN", bedTypeMap.get("UNKNOWN")!! + 1)
+                "UNKNOWN" -> bedTypeMap["UNKNOWN"] = 1
             }
         }
 
-        val doubleCount = bedTypeMap.get("DOUBLE")!!
+        val doubleCount = bedTypeMap["DOUBLE"]!!
         if (doubleCount > 0) {
             bedStringBuilder.append(context.getString(R.string.label_double))
             bedStringBuilder.append(context.getString(R.string.label_booking_count, doubleCount))
         }
 
-        val singleCount = bedTypeMap.get("SINGLE")!!
+        val singleCount = bedTypeMap["SINGLE"]!!
         if (singleCount > 0) {
-            if(bedStringBuilder.isNotEmpty()) {
+            if (bedStringBuilder.isNotEmpty()) {
                 bedStringBuilder.append(", ")
             }
             bedStringBuilder.append(context.getString(R.string.label_single))
             bedStringBuilder.append(context.getString(R.string.label_booking_count, singleCount))
         }
 
-        val inFloorHeatingCount = bedTypeMap.get("IN_FLOOR_HEATING")!!
+        val inFloorHeatingCount = bedTypeMap["IN_FLOOR_HEATING"]!!
         if (inFloorHeatingCount > 0) {
-            if(bedStringBuilder.isNotEmpty()) {
+            if (bedStringBuilder.isNotEmpty()) {
                 bedStringBuilder.append(", ")
             }
             bedStringBuilder.append(context.getString(R.string.label_in_floor_heating))
             bedStringBuilder.append(context.getString(R.string.label_booking_count, inFloorHeatingCount))
         }
 
-        val unKnownCount = bedTypeMap.get("UNKNOWN")!!
+        val unKnownCount = bedTypeMap["UNKNOWN"]!!
         if (unKnownCount > 0) {
-            if(bedStringBuilder.isNotEmpty()) {
+            if (bedStringBuilder.isNotEmpty()) {
                 bedStringBuilder.append(", ")
             }
             bedStringBuilder.append(context.getString(R.string.label_bed_type_unknown))
-            bedStringBuilder.append(context.getString(R.string.label_booking_count, unKnownCount))
         }
 
         return bedStringBuilder.toString()

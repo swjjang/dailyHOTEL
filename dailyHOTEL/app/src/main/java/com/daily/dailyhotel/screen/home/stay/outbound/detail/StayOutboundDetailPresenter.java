@@ -71,7 +71,6 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -158,7 +157,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     boolean mShowTrueVR;
 
     DailyDeepLink mDailyDeepLink;
-    private AppResearch mAppResearch;
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -212,8 +210,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         setContentView(R.layout.activity_stay_outbound_detail_data);
 
         mAnalytics = new StayOutboundDetailAnalyticsImpl();
-
-        mAppResearch = new AppResearch();
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl();
         mCommonRemoteImpl = new CommonRemoteImpl();
@@ -422,8 +418,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             getViewInterface().startCampaignStickerAnimation();
         }
-
-        mAppResearch.onResume(getActivity(), "outbound_스테이", mStayIndex);
     }
 
     @Override
@@ -432,8 +426,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         super.onPause();
 
         getViewInterface().stopCampaignStickerAnimation();
-
-        mAppResearch.onPause(getActivity(), "outbound_스테이", mStayIndex);
     }
 
     @Override

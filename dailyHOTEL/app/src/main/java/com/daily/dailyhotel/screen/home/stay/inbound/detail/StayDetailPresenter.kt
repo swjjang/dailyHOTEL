@@ -87,7 +87,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private val calendarImpl = CalendarImpl()
     private val recentlyLocalImpl = RecentlyLocalImpl()
-    private val appResearch = AppResearch()
 
     private var stayIndex: Int = 0
     private var viewPrice: Int = 0
@@ -255,16 +254,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled && stayDetail != null) {
             viewInterface.startRewardStickerAnimation()
         }
-
-        appResearch.onResume(activity, getString(R.string.label_stay), stayIndex)
     }
 
     override fun onPause() {
         super.onPause()
 
         viewInterface.stopRewardStickerAnimation()
-
-        appResearch.onPause(activity, getString(R.string.label_stay), stayIndex)
     }
 
     override fun onDestroy() {
@@ -384,17 +379,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun onCouponActivityResult(resultCode: Int, intent: Intent?) {
-        when (resultCode) {
-            Activity.RESULT_OK -> {
-                intent?.let {
-                    it.getBooleanExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, true).let {
-                        viewInterface.setCouponButtonEnabled(it)
+        intent?.let {
+            it.getBooleanExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, true).let {
+                viewInterface.setCouponButtonEnabled(it)
 
-                        stayDetail?.benefitInformation?.coupon?.couponDiscount?.let {
-                            viewInterface.setCouponButtonText(getString(R.string.label_detail_complete_coupon_download,
-                                    DailyTextUtils.getPriceFormat(activity, it, false)), false)
-                        }
-                    }
+                stayDetail?.benefitInformation?.coupon?.couponDiscount?.let {
+                    viewInterface.setCouponButtonText(getString(R.string.label_detail_complete_coupon_download,
+                            DailyTextUtils.getPriceFormat(activity, it, false)), false)
                 }
             }
         }

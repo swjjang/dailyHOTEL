@@ -95,6 +95,6 @@ class DailyDetailBenefitView : ConstraintLayout {
     }
 
     fun setCouponButtonClickListener(listener: OnClickListener) {
-        viewDataBinding.downloadCouponTextView.setOnClickListener(listener)
+        viewDataBinding.downloadCouponView.setOnClickListener(listener)
     }
 }
