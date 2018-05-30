@@ -80,10 +80,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         GoogleAddressRemoteImpl()
     }
 
-    private val profileRemoteImpl by lazy {
-        ProfileRemoteImpl()
-    }
-
     private val calendarImpl = CalendarImpl()
     private val recentlyLocalImpl = RecentlyLocalImpl()
 
@@ -354,7 +350,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         val currentOneNights = bookDateTime.nights == 1
 
                         if (previousOneNights && !currentOneNights) {
-                            onPriceTypeClick(PriceType.AVERAGE);
+                            onPriceTypeClick(PriceType.AVERAGE)
                         } else {
                             onPriceTypeClick(if (currentOneNights) PriceType.TOTAL else showRoomPriceType)
                         }
@@ -411,14 +407,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         it.wish = wish
                         it.wishCount += if (wish) 1 else -1
 
-                        notifyWishDataSetChanged();
+                        notifyWishDataSetChanged()
 
-                        setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
+                        setResult(BaseActivity.RESULT_CODE_DATA_CHANGED)
                     }
                 }
             }
 
-            else -> notifyWishDataSetChanged();
+            else -> notifyWishDataSetChanged()
         }
     }
 
@@ -590,7 +586,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             } catch (e: Exception) {
                 unLockAll()
 
-                ExLog.e(e.toString());
+                ExLog.e(e.toString())
             }
         } ?: Util.restartApp(activity)
     }
@@ -1204,19 +1200,24 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             if (checkOneTime == false) {
                 checkOneTime = true
 
-                if (isSoldOut()) {
-                    setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
+                when {
+                    isSoldOut() -> {
+                        setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
 
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
-                            , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
-                } else if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_filtered_empty_room)//
-                            , getString(R.string.dialog_btn_text_confirm), { _ ->
-                        setResetRoomFilter()
-                        setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
-                    }, null, true)
-                } else {
-                    checkChangedPrice(hasDeepLink, it, viewPrice, true)
+                        viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                                , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
+                    }
+
+
+                    getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0 -> {
+                        viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_filtered_empty_room)//
+                                , getString(R.string.dialog_btn_text_confirm), { _ ->
+                            setResetRoomFilter()
+                            setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+                        }, null, true)
+                    }
+
+                    else -> checkChangedPrice(hasDeepLink, it, viewPrice, true)
                 }
             }
 

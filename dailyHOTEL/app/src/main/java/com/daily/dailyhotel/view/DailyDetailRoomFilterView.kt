@@ -59,7 +59,7 @@ class DailyDetailRoomFilterView : ConstraintLayout {
         return if (count == 0) {
             context.getString(R.string.label_stay_detail_room_filter)
         } else {
-            val text = String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_stay_detail_room_filter), count);
+            val text = String.format(Locale.KOREA, "%s %d", context.getString(R.string.label_stay_detail_room_filter), count)
             val startIndex = text.lastIndexOf(' ')
             val endIndex = text.length
 

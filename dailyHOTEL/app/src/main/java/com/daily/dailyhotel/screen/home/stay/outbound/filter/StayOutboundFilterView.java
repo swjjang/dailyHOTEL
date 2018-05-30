@@ -45,7 +45,7 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
         viewDataBinding.confirmView.setOnClickListener(this);
 
         getViewDataBinding().sortInclude.sortRadioGroup.setOnCheckedChangeListener(this);
-        getViewDataBinding().sortDimmedView.setOnClickListener((View.OnClickListener) v -> {
+        getViewDataBinding().sortDimmedView.setOnClickListener(v -> {
         });
 
         getViewDataBinding().sortInclude.regionRadioButton.setText(R.string.label_sort_by_rank);

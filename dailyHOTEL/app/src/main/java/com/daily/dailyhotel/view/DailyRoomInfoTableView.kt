@@ -80,9 +80,7 @@ class DailyRoomInfoTableView : ConstraintLayout {
     }
 
     fun addTableRow(title: String = "", description: String = "", subDescription: String = "", largeView: Boolean) {
-        dataBinding.tableLayout.takeIf { itemCount > 0 }?.let {
-            it.addView(getHorizontalLine())
-        }
+        dataBinding.tableLayout.takeIf { itemCount > 0 }?.addView(getHorizontalLine())
 
         val row: TableRow = TableRow(context).apply {
             val titleView = DailyTextView(context).apply {

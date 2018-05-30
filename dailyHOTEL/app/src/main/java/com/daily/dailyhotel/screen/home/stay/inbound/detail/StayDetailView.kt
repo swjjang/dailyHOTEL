@@ -507,21 +507,19 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun setWishCount(count: Int) {
-        val wishCountText: String?
-
-        when {
-            count <= 0 -> wishCountText = null
+        val wishCountText = when {
+            count <= 0 -> null
 
             count > 9999 -> {
                 val wishCount = count / 1000
 
-                wishCountText = if (wishCount % 10 == 0)
+                if (wishCount % 10 == 0)
                     getString(R.string.wishlist_count_over_10_thousand, (wishCount / 10).toString())
                 else
                     getString(R.string.wishlist_count_over_10_thousand, (wishCount.toFloat() / 10.0f).toString())
             }
 
-            else -> wishCountText = DecimalFormat("###,##0").format(count)
+            else -> DecimalFormat("###,##0").format(count)
         }
 
         when {
@@ -988,7 +986,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
         val tabLayoutHeight = ScreenUtils.dpToPx(context, 41.0)
 
-        viewDataBinding.nestedScrollView.abortScrolling();
+        viewDataBinding.nestedScrollView.abortScrolling()
         viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.roomInformationTopLineView.y.toInt() - toolbarHeight - tabLayoutHeight + 1)
     }
 
@@ -996,7 +994,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
         val tabLayoutHeight = ScreenUtils.dpToPx(context, 41.0)
 
-        viewDataBinding.nestedScrollView.abortScrolling();
+        viewDataBinding.nestedScrollView.abortScrolling()
         viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.dailyCommentView.y.toInt() - toolbarHeight - tabLayoutHeight)
     }
 

@@ -128,9 +128,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     override fun setBookingButtonText(position: Int) {
-        val price = listAdapter.getItem(position)?.let {
-            it.amountInformation.discountTotal
-        } ?: 0
+        val price = listAdapter.getItem(position)?.amountInformation?.discountTotal ?: 0
 
         val text = context.resources.getString(R.string.label_stay_room_booking_button_text
                 , DailyTextUtils.getPriceFormat(context, price, false))
@@ -215,7 +213,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         setAttributeInformationView(dataBinding, room.attributeInformation)
 
-        var benefitList = mutableListOf<String>()
+        val benefitList = mutableListOf<String>()
 
         val breakfast = room.personsInformation?.breakfast ?: 0
         if (breakfast > 0) {
@@ -326,9 +324,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     private fun setPersonInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
         val personsInformation: Room.PersonsInformation? = room.personsInformation
 
-        var personVectorIconResId: Int = 0
-        var personTitle: String = ""
-        var personDescription: String = ""
+        var personVectorIconResId = 0
+        var personTitle = ""
+        var personDescription = ""
 
         personsInformation?.let {
             personTitle = context.resources.getString(R.string.label_standard_persons, it.fixed)
@@ -353,7 +351,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     private fun setBedInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
         val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
 
-        var bedVectorIconResId: Int = 0
+        var bedVectorIconResId = 0
 
         val typeStringList = mutableListOf<String>()
 
@@ -836,8 +834,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
         val paddingRight = roomViewHolder.dataBinding.root.paddingRight
 
-        var minWidth = width - paddingLeft - paddingRight
-        var invisibleWidth = when {
+        val minWidth = width - paddingLeft - paddingRight
+        val invisibleWidth = when {
             minWidth + -gap > ScreenUtils.getScreenWidth(context) -> ScreenUtils.getScreenWidth(context)
             minWidth + -gap < minWidth -> minWidth
             else -> minWidth + -gap.toInt()
@@ -854,7 +852,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val ratio: Float = ScreenUtils.getScreenWidth(context).toFloat() / ScreenUtils.getScreenHeight(context).toFloat()
 
         val minTransY = 0f - ((top + paddingTop) * ratio)
-        var transY = when {
+        val transY = when {
             minTransY + -gap > 0f -> 0f
             minTransY + -gap < minTransY -> minTransY
             else -> minTransY + -gap

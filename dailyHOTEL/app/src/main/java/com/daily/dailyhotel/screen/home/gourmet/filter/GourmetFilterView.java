@@ -392,7 +392,7 @@ public class GourmetFilterView extends BaseDialogView<GourmetFilterInterface.OnE
             return;
         }
 
-        getViewDataBinding().sortDimmedView.setOnClickListener((View.OnClickListener) v -> {
+        getViewDataBinding().sortDimmedView.setOnClickListener(v -> {
         });
 
         viewDataBinding.sortInclude.sortRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()

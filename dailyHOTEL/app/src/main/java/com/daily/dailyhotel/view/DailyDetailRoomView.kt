@@ -45,7 +45,7 @@ class DailyDetailRoomView : ConstraintLayout {
     fun setPriceAverageType(isAverageType: Boolean) {
         if (isPriceAverageType == isAverageType) return
 
-        isPriceAverageType = isAverageType;
+        isPriceAverageType = isAverageType
         viewDataBinding.discountPriceTextView.text = getPrice(isAverageType)
         viewDataBinding.wonTextView.text = context.getString(R.string.currency) + if (isAverageType) context.getString(R.string.label_stay_detail_slash_one_nights) else ""
     }

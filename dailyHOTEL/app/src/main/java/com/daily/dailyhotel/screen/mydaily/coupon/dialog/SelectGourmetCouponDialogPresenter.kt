@@ -140,7 +140,7 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
         isRefresh = false
         screenLock(showProgress)
 
-        var observable: Observable<Coupons>? = when (callByScreen) {
+        val observable: Observable<Coupons>? = when (callByScreen) {
             AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE -> {
                 couponRemoteImpl.getGourmetCouponListByPayment(ticketIndexes, ticketCounts)
             }
@@ -162,7 +162,7 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
         }
 
         addCompositeDisposable(observable.observeOn(AndroidSchedulers.mainThread()).subscribe({
-            val list: MutableList<Coupon> = it.coupons?.let { it } ?: mutableListOf<Coupon>()
+            val list: MutableList<Coupon> = it.coupons?.let { it } ?: mutableListOf()
             maxCouponAmount = it.maxCouponAmount
 
             when (callByScreen) {
@@ -183,7 +183,7 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
                 AnalyticsManager.Screen.DAILYGOURMET_DETAIL -> {
                     viewInterface.setVisibility(true)
 
-                    var hasDownloadable = list.any {
+                    val hasDownloadable = list.any {
                         !it.isDownloaded
                     }
 

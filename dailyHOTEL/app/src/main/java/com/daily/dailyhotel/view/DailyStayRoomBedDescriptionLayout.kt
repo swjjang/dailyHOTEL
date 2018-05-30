@@ -58,7 +58,7 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
                 val maxLineLength = paint.breakText(sampleText, true, maxWidth.toFloat(), null)
 
                 var lineCount = 0
-                var temp: String = ""
+                var temp = ""
 
                 list.forEachIndexed { index, string ->
                     var addString = if (temp.isTextEmpty()) string else separator + string

@@ -161,7 +161,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
         isRefresh = false
         screenLock(showProgress)
 
-        var observable: Observable<Coupons>? = when (callByScreen) {
+        val observable: Observable<Coupons>? = when (callByScreen) {
             AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE -> {
                 couponRemoteImpl.getStayCouponListByPayment(stayIndex, roomIndex, stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT))
             }
@@ -183,7 +183,7 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
         }
 
         addCompositeDisposable(observable.observeOn(AndroidSchedulers.mainThread()).subscribe({
-            val list: MutableList<Coupon> = it.coupons?.let { it } ?: mutableListOf<Coupon>()
+            val list: MutableList<Coupon> = it.coupons?.let { it } ?: mutableListOf()
             maxCouponAmount = it.maxCouponAmount
 
             when (callByScreen) {

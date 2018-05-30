@@ -12,7 +12,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
 
     companion object {
         @JvmStatic
-        fun newInstance(context: Context, roomList: List<Room>? = ArrayList<Room>()
+        fun newInstance(context: Context, roomList: List<Room>? = ArrayList()
                         , position: Int
                         , checkInDate: String?, checkOutDate: String?
                         , stayIndex: Int?, category: String?
