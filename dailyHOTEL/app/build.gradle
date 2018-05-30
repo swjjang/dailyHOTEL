@@ -233,8 +233,8 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.facebook.fresco:imagepipeline-okhttp3:1.9.0'
 
-    implementation 'com.kakao.sdk:usermgmt:1.11.0'
-    implementation 'com.kakao.sdk:kakaolink:1.11.0'
+    implementation 'com.kakao.sdk:usermgmt:1.11.1'
+    implementation 'com.kakao.sdk:kakaolink:1.11.1'
 
     implementation 'com.appboy:android-sdk-ui:2.4.+'
 
