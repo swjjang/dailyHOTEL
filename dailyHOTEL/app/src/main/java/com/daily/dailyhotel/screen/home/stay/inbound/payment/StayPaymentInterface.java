@@ -45,7 +45,7 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setEasyCard(Card card);
 
-    void setRefundPolicy(String refundPolicy, boolean hasRewardCard);
+    void setRefundPolicy(String refundPolicy, boolean hasRewardCard, boolean nrd);
 
     void setVendorName(String vendorName);
 

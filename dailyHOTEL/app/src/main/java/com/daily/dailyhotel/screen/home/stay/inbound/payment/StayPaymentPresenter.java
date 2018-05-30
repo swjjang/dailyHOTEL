@@ -2061,10 +2061,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         if (StayRefundPolicy.STATUS_NONE.equalsIgnoreCase(mStayRefundPolicy.refundPolicy) == true)
         {
-            getViewInterface().setRefundPolicy(null, hasDepositSticker());
+            getViewInterface().setRefundPolicy(null, hasDepositSticker(), false);
         } else
         {
-            getViewInterface().setRefundPolicy(mStayRefundPolicy.comment, hasDepositSticker());
+            getViewInterface().setRefundPolicy(mStayRefundPolicy.comment, hasDepositSticker(), StayRefundPolicy.STATUS_NRD.equalsIgnoreCase(mStayRefundPolicy.refundPolicy));
         }
     }
 

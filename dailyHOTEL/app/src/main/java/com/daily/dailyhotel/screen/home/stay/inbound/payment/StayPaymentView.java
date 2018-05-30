@@ -413,7 +413,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setRefundPolicy(String refundPolicy, boolean hasRewardCard)
+    public void setRefundPolicy(String refundPolicy, boolean hasRewardCard, boolean nrd)
     {
         if (getViewDataBinding() == null)
         {
@@ -447,7 +447,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             }
         }
 
-        getViewDataBinding().refundPolicyView.setRefundPolicyList(refundPolicyList);
+        getViewDataBinding().refundPolicyView.setRefundPolicyList(refundPolicyList, nrd);
     }
 
     @Override
