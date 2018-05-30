@@ -116,7 +116,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
             if (viewDataBinding.moreRoomsLayout.childCount > 0) {
                 for (i in 0..viewDataBinding.moreRoomsLayout.childCount) {
-                    (viewDataBinding.roomsLayout.getChildAt(i) as? DailyDetailRoomView)?.apply { setPriceAverageType(isAverageType) }
+                    (viewDataBinding.moreRoomsLayout.getChildAt(i) as? DailyDetailRoomView)?.apply { setPriceAverageType(isAverageType) }
                 }
             }
         }
