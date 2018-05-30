@@ -87,7 +87,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private val calendarImpl = CalendarImpl()
     private val recentlyLocalImpl = RecentlyLocalImpl()
-    private val appResearch = AppResearch()
 
     private var stayIndex: Int = 0
     private var viewPrice: Int = 0
@@ -255,16 +254,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled && stayDetail != null) {
             viewInterface.startRewardStickerAnimation()
         }
-
-        appResearch.onResume(activity, getString(R.string.label_stay), stayIndex)
     }
 
     override fun onPause() {
         super.onPause()
 
         viewInterface.stopRewardStickerAnimation()
-
-        appResearch.onPause(activity, getString(R.string.label_stay), stayIndex)
     }
 
     override fun onDestroy() {

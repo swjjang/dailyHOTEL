@@ -82,7 +82,6 @@ class DailyRemoteConfig(private val context: Context) {
         setStaticUlr(context, remoteConfig.getString("androidStaticUrl"))
         setSearch(context, remoteConfig.getString("ANDSearch"))
         setReward(context, remoteConfig.getString("Marketing_ANDRewardSticker"))
-        setAppResearch(context, remoteConfig.getString("androidAppResearch"))
         setPaymentCardEvent(context, remoteConfig.getString("Marketing_ANDPaymentCardEvent"))
 
         val versionPair = getVersionNsetMessages(context, remoteConfig.getString("ANDVersion"))
@@ -264,10 +263,6 @@ class DailyRemoteConfig(private val context: Context) {
                 ExLog.e(e.toString())
             }
         }
-    }
-
-    internal fun setAppResearch(context: Context, jsonString: String) {
-        jsonString.takeNotEmpty { DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigAppResearch = it }
     }
 
     internal fun setPaymentCardEvent(context: Context, jsonString: String) {

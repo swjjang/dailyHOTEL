@@ -187,9 +187,6 @@ public class DailyRemoteConfigDp
         // Reward Sticker
         writeRewardSticker(mContext, androidRewardSticker);
 
-        // 앱조사
-        writeAppResearch(mContext, androidAppResearch);
-
         // 고메 키워드
         writeGourmetSearchKeyword(mContext, androidGourmetSearchKeyword);
 
@@ -644,16 +641,6 @@ public class DailyRemoteConfigDp
                 ExLog.e(e.toString());
             }
         }
-    }
-
-    private void writeAppResearch(Context context, String jsonString)
-    {
-        if (context == null)
-        {
-            return;
-        }
-
-        DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigAppResearch(jsonString);
     }
 
     private void writeGourmetSearchKeyword(Context context, String jsonString)
