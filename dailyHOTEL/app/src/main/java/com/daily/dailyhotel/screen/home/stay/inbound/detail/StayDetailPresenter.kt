@@ -1157,9 +1157,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
                         setEmptyRoomVisible(true)
                         setEmptyRoomText(activity.getString(R.string.message_stay_empty_room))
+                        setActionButtonEnabled(false)
                     } else {
                         setEmptyRoomVisible(false)
+                        setActionButtonEnabled(true)
                     }
+
+                    setActionButtonText(getString(R.string.label_stay_detail_view_room_detail))
 
                     applyMoreRoomAction()
                     setPriceAverageTypeVisible(bookDateTime.nights > 1)
@@ -1168,6 +1172,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setRoomFilter(bookDateTime, null, bedTypeFilter, facilitiesFilter)
 
                     setEmptyRoomVisible(true)
+                    setActionButtonEnabled(false)
+                    setActionButtonText(getString(R.string.label_soldout))
                     setEmptyRoomText(activity.getString(R.string.message_stay_soldout_room))
                 }
 

@@ -1344,7 +1344,7 @@
     <string name="message_stay_detail_nrd">특가상품으로 설정된 객실은 위 내용과 상관없이 예약의 변경, 취소, 환불이 불가합니다.</string>
 
     <string name="label_stay_detail_pension_only_title">대기 예약이란?</string>
-    <string name="label_stay_detail_pension_only_description">예약이 확정되지 않은 대기 상태로\n예약 불가 시 100% 자동 환불됩니다.</string>
+    <string name="label_stay_detail_pension_only_description">예약이 확정되지 않은 대기 상태로 예약 불가 시 100% 자동 환불됩니다.</string>
 
     <!-- recent places -->
     <string name="recent_places_list_empty_message">최근 확인한 스테이/고메가 없습니다.</string>
