@@ -61,9 +61,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         initTabLayout(viewDataBinding)
         initRoomFilter(viewDataBinding)
 
-        viewDataBinding.showRoomTextView.setOnClickListener(View.OnClickListener { eventListener.onShowRoomClick() })
+        viewDataBinding.showRoomTextView.setOnClickListener({ eventListener.onShowRoomClick() })
         hideWishTooltip()
-        viewDataBinding.wishTooltipView.setOnClickListener(View.OnClickListener { eventListener.onHideWishTooltipClick() })
+        viewDataBinding.wishTooltipView.setOnClickListener({ eventListener.onHideWishTooltipClick() })
         viewDataBinding.topButtonImageView.setOnClickListener { scrollTop() }
     }
 

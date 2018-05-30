@@ -114,7 +114,7 @@ class DailyDetailDetailInformationView : LinearLayout {
                     }
                 }
 
-                text = spannableStringBuilder;
+                text = spannableStringBuilder
             }
         }
     }
@@ -195,7 +195,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         }
 
         ValueAnimator.ofInt(0, height).apply {
-            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+            addUpdateListener({ valueAnimator ->
                 valueAnimator?.let {
                     viewDataBinding.moreInformationLayout.apply {
                         layoutParams.height = valueAnimator.animatedValue as Int
