@@ -384,17 +384,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun onCouponActivityResult(resultCode: Int, intent: Intent?) {
-        when (resultCode) {
-            Activity.RESULT_OK -> {
-                intent?.let {
-                    it.getBooleanExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, true).let {
-                        viewInterface.setCouponButtonEnabled(it)
+        intent?.let {
+            it.getBooleanExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_HAS_DOWNLOADABLE_COUPON, true).let {
+                viewInterface.setCouponButtonEnabled(it)
 
-                        stayDetail?.benefitInformation?.coupon?.couponDiscount?.let {
-                            viewInterface.setCouponButtonText(getString(R.string.label_detail_complete_coupon_download,
-                                    DailyTextUtils.getPriceFormat(activity, it, false)), false)
-                        }
-                    }
+                stayDetail?.benefitInformation?.coupon?.couponDiscount?.let {
+                    viewInterface.setCouponButtonText(getString(R.string.label_detail_complete_coupon_download,
+                            DailyTextUtils.getPriceFormat(activity, it, false)), false)
                 }
             }
         }
