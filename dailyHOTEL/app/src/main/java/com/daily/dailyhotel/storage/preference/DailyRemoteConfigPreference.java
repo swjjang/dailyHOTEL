@@ -163,7 +163,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
 
     // App Research
-//    private static final String KEY_REMOTE_CONFIG_APP_RESEARCH = "1002";
+    //    private static final String KEY_REMOTE_CONFIG_APP_RESEARCH = "1002";
 
     private static DailyRemoteConfigPreference mInstance;
     private SharedPreferences mRemoteConfigPreferences;

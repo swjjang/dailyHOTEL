@@ -75,13 +75,11 @@ class DailyDetailDetailInformationView : LinearLayout {
 
         if (viewDataBinding.moreInformationLayout.childCount > 0) {
             viewDataBinding.moreTextView.visibility = View.VISIBLE
-            viewDataBinding.moreTextView.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View?) {
-                    v?.setOnClickListener(null)
+            viewDataBinding.moreTextView.setOnClickListener { v ->
+                v?.setOnClickListener(null)
 
-                    showMoreInformation(viewDataBinding)
-                }
-            })
+                showMoreInformation(viewDataBinding)
+            }
 
             viewDataBinding.moreInformationLayout.visibility = View.INVISIBLE
             viewDataBinding.moreInformationLayout.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -115,6 +113,8 @@ class DailyDetailDetailInformationView : LinearLayout {
                                 0, s.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
+
+                text = spannableStringBuilder
             }
         }
     }
@@ -195,7 +195,7 @@ class DailyDetailDetailInformationView : LinearLayout {
         }
 
         ValueAnimator.ofInt(0, height).apply {
-            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+            addUpdateListener({ valueAnimator ->
                 valueAnimator?.let {
                     viewDataBinding.moreInformationLayout.apply {
                         layoutParams.height = valueAnimator.animatedValue as Int

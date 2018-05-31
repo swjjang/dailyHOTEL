@@ -1,13 +1,10 @@
 package com.daily.dailyhotel.screen.home.gourmet.preview
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.view.View
 import com.daily.base.BaseActivity
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
@@ -215,18 +212,6 @@ class GourmetPreviewPresenter(activity: GourmetPreviewActivity)
     override fun onKakaoClick() {
         takeIf { it::detail.isInitialized && !lock() }.let {
             analytics.onEventKakaoClick(activity)
-
-            try {
-                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
-            } catch (e: PackageManager.NameNotFoundException) {
-                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)
-                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)
-                        , View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }
-                        , null, null, DialogInterface.OnDismissListener { onBackClick() }, true)
-
-                unLockAll()
-                return
-            }
 
             screenLock(true)
 

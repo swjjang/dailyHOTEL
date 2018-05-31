@@ -5,8 +5,6 @@ import android.app.Activity;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.HashMap;
-
 public class StayOutboundFilterAnalyticsImpl implements StayOutboundFilterPresenter.StayOutboundFilterAnalyticsInterface
 {
     @Override

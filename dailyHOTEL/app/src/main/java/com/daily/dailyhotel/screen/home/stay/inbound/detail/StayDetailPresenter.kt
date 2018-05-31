@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Spannable
@@ -79,10 +78,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private val googleAddressRemoteImpl by lazy {
         GoogleAddressRemoteImpl()
-    }
-
-    private val profileRemoteImpl by lazy {
-        ProfileRemoteImpl()
     }
 
     private val calendarImpl = CalendarImpl()
@@ -355,7 +350,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         val currentOneNights = bookDateTime.nights == 1
 
                         if (previousOneNights && !currentOneNights) {
-                            onPriceTypeClick(PriceType.AVERAGE);
+                            onPriceTypeClick(PriceType.AVERAGE)
                         } else {
                             onPriceTypeClick(if (currentOneNights) PriceType.TOTAL else showRoomPriceType)
                         }
@@ -412,14 +407,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         it.wish = wish
                         it.wishCount += if (wish) 1 else -1
 
-                        notifyWishDataSetChanged();
+                        notifyWishDataSetChanged()
 
-                        setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
+                        setResult(BaseActivity.RESULT_CODE_DATA_CHANGED)
                     }
                 }
             }
 
-            else -> notifyWishDataSetChanged();
+            else -> notifyWishDataSetChanged()
         }
     }
 
@@ -569,8 +564,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
         stayDetail?.let { stayDetail ->
             try {
-                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
-
                 val name: String? = DailyUserPreference.getInstance(activity).name
                 val urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk"
                 val longUrl = String.format(Locale.KOREA, urlFormat, stayDetail.index, bookDateTime.getCheckInDateTime("yyyy-MM-dd"), bookDateTime.nights)
@@ -593,9 +586,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             } catch (e: Exception) {
                 unLockAll()
 
-                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk),
-                        getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
-                        View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }, null)
+                ExLog.e(e.toString())
             }
         } ?: Util.restartApp(activity)
     }
@@ -858,17 +849,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     override fun onConciergeHappyTalkClick() {
         stayDetail?.let {
-            try {
-                // 카카오톡 패키지 설치 여부
-                activity.packageManager.getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA)
-
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(activity, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL
-                        , it.index, 0, it.baseInformation?.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK)
-            } catch (e: Exception) {
-                viewInterface.showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk),
-                        getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
-                        View.OnClickListener { Util.installPackage(activity, "com.kakao.talk") }, null)
-            }
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(activity, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL
+                    , it.index, 0, it.baseInformation?.name), StayDetailActivity.REQUEST_CODE_HAPPYTALK)
 
             analytics.onEventHappyTalkClick(activity)
         } ?: Util.restartApp(activity)
@@ -1175,9 +1157,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
                         setEmptyRoomVisible(true)
                         setEmptyRoomText(activity.getString(R.string.message_stay_empty_room))
+                        setActionButtonEnabled(false)
                     } else {
                         setEmptyRoomVisible(false)
+                        setActionButtonEnabled(true)
                     }
+
+                    setActionButtonText(getString(R.string.label_stay_detail_view_room_detail))
 
                     applyMoreRoomAction()
                     setPriceAverageTypeVisible(bookDateTime.nights > 1)
@@ -1186,6 +1172,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setRoomFilter(bookDateTime, null, bedTypeFilter, facilitiesFilter)
 
                     setEmptyRoomVisible(true)
+                    setActionButtonEnabled(false)
+                    setActionButtonText(getString(R.string.label_soldout))
                     setEmptyRoomText(activity.getString(R.string.message_stay_soldout_room))
                 }
 
@@ -1218,19 +1206,24 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             if (checkOneTime == false) {
                 checkOneTime = true
 
-                if (isSoldOut()) {
-                    setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
+                when {
+                    isSoldOut() -> {
+                        setResult(BaseActivity.RESULT_CODE_REFRESH, Intent().putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true))
 
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
-                            , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
-                } else if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
-                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_filtered_empty_room)//
-                            , getString(R.string.dialog_btn_text_confirm), { _ ->
-                        setResetRoomFilter()
-                        setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
-                    }, null, true)
-                } else {
-                    checkChangedPrice(hasDeepLink, it, viewPrice, true)
+                        viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                                , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
+                    }
+
+
+                    getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0 -> {
+                        viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_filtered_empty_room)//
+                                , getString(R.string.dialog_btn_text_confirm), { _ ->
+                            setResetRoomFilter()
+                            setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+                        }, null, true)
+                    }
+
+                    else -> checkChangedPrice(hasDeepLink, it, viewPrice, true)
                 }
             }
 

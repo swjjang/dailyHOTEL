@@ -253,7 +253,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         addCompositeDisposable(stayRemoteImpl.getRoomImages(stayIndex, room.index)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()
                 ).subscribe({
-                    var imageList = mutableListOf<DetailImageInformation>()
+                    val imageList = mutableListOf<DetailImageInformation>()
                     it.forEach {
                         val info = DetailImageInformation()
                         info.caption = it.description

@@ -246,7 +246,7 @@ public class StayFilter
 
         if ((flagRoomAmenitiesFilters & FLAG_ROOM_AMENITIES_BATH_AMENITY) == FLAG_ROOM_AMENITIES_BATH_AMENITY)
         {
-            roomAmenitiesFilterList.add("Amenity");
+            roomAmenitiesFilterList.add("BathAmenity");
         }
 
         if ((flagRoomAmenitiesFilters & FLAG_ROOM_AMENITIES_SHOWER_GOWN) == FLAG_ROOM_AMENITIES_SHOWER_GOWN)

@@ -143,7 +143,7 @@ class DailyRoomInfoGridView : LinearLayout {
                     SMALL_ITEM_HEIGHT + SMALL_LINE_MARGIN_TOP
                 }
 
-                var rect = Rect()
+                val rect = Rect()
                 it.getLocalVisibleRect(rect)
 
                 ExLog.d("sam : rect = $rect")

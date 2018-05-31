@@ -6,8 +6,8 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.old_StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
+import com.daily.dailyhotel.entity.old_StayDetail;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -629,7 +629,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
         analyticsParam.averageDiscount = stayRoom.discountAverage;
         analyticsParam.address = stayDetail.address;
         analyticsParam.nrd = stayRoom.nrd;
-//        analyticsParam.grade = stayDetail.grade;
+        //        analyticsParam.grade = stayDetail.grade;
         analyticsParam.provideRewardSticker = stayDetail.provideRewardSticker;
 
         return analyticsParam;

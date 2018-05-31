@@ -15,7 +15,6 @@ import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBenefitDataBinding
-import java.text.DecimalFormat
 
 class DailyDetailBenefitView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailBenefitDataBinding

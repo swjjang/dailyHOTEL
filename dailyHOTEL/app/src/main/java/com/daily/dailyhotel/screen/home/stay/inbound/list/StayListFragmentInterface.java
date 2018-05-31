@@ -77,8 +77,7 @@ public interface StayListFragmentInterface
 
         void onMoreRefreshing();
 
-        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs
-            , StayDetailActivity.TransGradientType transGradientType);
+        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, StayDetailActivity.TransGradientType transGradientType);
 
         void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs);
 

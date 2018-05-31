@@ -57,7 +57,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
             params[AnalyticsManager.KeyType.PLACE_INDEX] = stayDetail.index.toString()
             params[AnalyticsManager.KeyType.NAME] = stayDetail.baseInformation?.name
             params[AnalyticsManager.KeyType.GRADE] = stayDetail.baseInformation?.grade?.getName(activity)
-            params[AnalyticsManager.KeyType.DBENEFIT] = if (DailyTextUtils.isTextEmpty(stayDetail?.benefitInformation?.title)) "no" else "yes" // 3
+            params[AnalyticsManager.KeyType.DBENEFIT] = if (DailyTextUtils.isTextEmpty(stayDetail.benefitInformation?.title)) "no" else "yes" // 3
 
             params[AnalyticsManager.KeyType.PRICE] = if (stayDetail.roomInformation?.roomList == null || !stayDetail.roomInformation?.roomList.isNotNullAndNotEmpty())
                 "0"
@@ -92,7 +92,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
                 else
                     Integer.toString(it.totalListCount)
 
-                params[AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE] = it.getShowOriginalPriceYn()
+                params[AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE] = it.showOriginalPriceYn
                 params[AnalyticsManager.KeyType.DAILYCHOICE] = if (it.isDailyChoice) "y" else "n"
             }
 
@@ -147,7 +147,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
             params[AnalyticsManager.KeyType.SERVICE] = AnalyticsManager.ValueType.STAY
             params[AnalyticsManager.KeyType.COUNTRY] = AnalyticsManager.ValueType.DOMESTIC
 
-            params[AnalyticsManager.KeyType.PROVINCE] = analyticsParam?.getAreaGroupName()
+            params[AnalyticsManager.KeyType.PROVINCE] = analyticsParam?.areaGroupName
 
             if (login) {
                 params[AnalyticsManager.KeyType.USER_TYPE] = AnalyticsManager.ValueType.MEMBER
@@ -258,9 +258,9 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
             params[AnalyticsManager.KeyType.COUNTRY] = AnalyticsManager.ValueType.DOMESTIC
             params[AnalyticsManager.KeyType.CATEGORY] = stayDetail.baseInformation?.category
 
-            params[AnalyticsManager.KeyType.PROVINCE] = analyticsParam?.getAreaGroupName()
-            params[AnalyticsManager.KeyType.DISTRICT] = analyticsParam?.getAreaName()
-            params[AnalyticsManager.KeyType.AREA] = analyticsParam?.getAddressAreaName()
+            params[AnalyticsManager.KeyType.PROVINCE] = analyticsParam?.areaGroupName
+            params[AnalyticsManager.KeyType.DISTRICT] = analyticsParam?.areaName
+            params[AnalyticsManager.KeyType.AREA] = analyticsParam?.addressAreaName
 
             params[AnalyticsManager.KeyType.GRADE] = stayDetail.baseInformation?.grade?.getName(activity)
             params[AnalyticsManager.KeyType.PLACE_INDEX] = Integer.toString(stayDetail.index)
@@ -280,7 +280,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
             params[AnalyticsManager.KeyType.CHECK_IN] = stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")
             params[AnalyticsManager.KeyType.CHECK_OUT] = stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")
             params[AnalyticsManager.KeyType.LENGTH_OF_STAY] = nights.toString()
-            params[AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE] = analyticsParam?.getShowOriginalPriceYn()
+            params[AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE] = analyticsParam?.showOriginalPriceYn
 
             AnalyticsManager.getInstance(activity).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION_, //
@@ -363,7 +363,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         return when (bedType) {
             "SPAWALLPOOL" -> R.string.label_whirlpool
             "BATH" -> R.string.label_bathtub
-            "AMENITY" -> R.string.label_bath_amenity
+            "BATHAMENITY" -> R.string.label_bath_amenity
             "SHOWERGOWN" -> R.string.label_shower_gown
             "TOOTHBRUSHSET" -> R.string.label_toothbrush_set
             "PRIVATEBBQ" -> R.string.label_private_bbq

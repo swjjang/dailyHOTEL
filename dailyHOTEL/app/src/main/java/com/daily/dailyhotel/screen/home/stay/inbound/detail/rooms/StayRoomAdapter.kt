@@ -18,7 +18,10 @@ import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.util.*
+import com.daily.dailyhotel.util.isNotNullAndNotEmpty
+import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.letNotEmpty
+import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
@@ -152,9 +155,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
         dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
         dataBinding.vrIconView.setOnClickListener {
-            onEventListener?.let {
-                it.onVrImageClick(position)
-            }
+            onEventListener?.onVrImageClick(position)
         }
 
         val stringUrl: String?
@@ -163,9 +164,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             null
         } else {
             dataBinding.defaultImageLayout.setOnClickListener {
-                onEventListener?.let {
-                    it.onMoreImageClick(position)
-                }
+                onEventListener?.onMoreImageClick(position)
             }
 
             room.imageInformation.imageMap.bigUrl
@@ -182,7 +181,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         setAttributeInformationView(dataBinding, room.attributeInformation)
 
-        var benefitList = mutableListOf<String>()
+        val benefitList = mutableListOf<String>()
 
         val breakfast = room.personsInformation?.breakfast ?: 0
         if (breakfast > 0) {
@@ -289,9 +288,9 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     private fun setPersonInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
         val personsInformation: Room.PersonsInformation? = room.personsInformation
 
-        var personVectorIconResId: Int = 0
-        var personTitle: String = ""
-        var personDescription: String = ""
+        var personVectorIconResId = 0
+        var personTitle = ""
+        var personDescription = ""
 
         personsInformation?.let {
             personTitle = context.resources.getString(R.string.label_standard_persons, it.fixed)
@@ -316,7 +315,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     private fun setBedInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
         val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
 
-        var bedVectorIconResId: Int = 0
+        var bedVectorIconResId = 0
 
         val typeStringList = mutableListOf<String>()
 

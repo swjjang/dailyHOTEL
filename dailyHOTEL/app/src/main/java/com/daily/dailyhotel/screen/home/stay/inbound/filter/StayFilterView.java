@@ -389,7 +389,8 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             return;
         }
 
-        getViewDataBinding().sortDimmedView.setOnClickListener((View.OnClickListener) v -> {});
+        getViewDataBinding().sortDimmedView.setOnClickListener(v -> {
+        });
 
         viewDataBinding.sortInclude.sortRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {

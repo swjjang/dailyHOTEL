@@ -6,8 +6,8 @@ import android.widget.CheckBox;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.old_StayDetail;
 import com.daily.dailyhotel.entity.TrueAwards;
+import com.daily.dailyhotel.entity.old_StayDetail;
 
 import io.reactivex.Observable;
 

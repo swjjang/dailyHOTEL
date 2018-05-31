@@ -9,7 +9,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
-import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundFilterDataBinding;
 
@@ -46,7 +45,7 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
         viewDataBinding.confirmView.setOnClickListener(this);
 
         getViewDataBinding().sortInclude.sortRadioGroup.setOnCheckedChangeListener(this);
-        getViewDataBinding().sortDimmedView.setOnClickListener((View.OnClickListener) v -> {
+        getViewDataBinding().sortDimmedView.setOnClickListener(v -> {
         });
 
         getViewDataBinding().sortInclude.regionRadioButton.setText(R.string.label_sort_by_rank);

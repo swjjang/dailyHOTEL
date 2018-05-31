@@ -59,13 +59,9 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_information_data, this, true)
 
-        viewDataBinding.actionButtonView.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                listener?.let {
-                    it.onMoreRoomsClick(viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE)
-                }
-            }
-        })
+        viewDataBinding.actionButtonView.setOnClickListener {
+            listener?.onMoreRoomsClick(viewDataBinding.moreRoomsLayout.visibility == View.VISIBLE)
+        }
 
         viewDataBinding.averagePriceTextView.setOnClickListener { listener?.onAveragePriceClick() }
         viewDataBinding.totalPriceTextView.setOnClickListener { listener?.onTotalPriceClick() }
@@ -100,7 +96,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
     }
 
     fun setPriceAverageType(isAverageType: Boolean) {
-        isPriceAverageType = isAverageType;
+        isPriceAverageType = isAverageType
 
         viewDataBinding.averagePriceTextView.isSelected = isAverageType
         viewDataBinding.totalPriceTextView.isSelected = !isAverageType
@@ -120,7 +116,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
 
             if (viewDataBinding.moreRoomsLayout.childCount > 0) {
                 for (i in 0..viewDataBinding.moreRoomsLayout.childCount) {
-                    (viewDataBinding.roomsLayout.getChildAt(i) as? DailyDetailRoomView)?.apply { setPriceAverageType(isAverageType) }
+                    (viewDataBinding.moreRoomsLayout.getChildAt(i) as? DailyDetailRoomView)?.apply { setPriceAverageType(isAverageType) }
                 }
             }
         }
@@ -209,7 +205,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                         it.onComplete()
                     } else {
                         ValueAnimator.ofInt(0, height).apply {
-                            addUpdateListener(ValueAnimator.AnimatorUpdateListener { valueAnimator ->
+                            addUpdateListener({ valueAnimator ->
                                 valueAnimator?.let {
                                     viewDataBinding.moreRoomsLayout.apply {
                                         layoutParams.height = valueAnimator.animatedValue as Int

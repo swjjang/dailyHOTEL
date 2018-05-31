@@ -14,6 +14,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
  * Created by sheldon
  * Clean Architecture
  */
+@Deprecated
 public class StayDetailActivity extends BaseActivity<StayDetailPresenter>
 {
     public static final int NONE_PRICE = -1;

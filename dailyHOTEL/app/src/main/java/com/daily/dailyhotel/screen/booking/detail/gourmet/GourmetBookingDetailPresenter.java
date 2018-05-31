@@ -4,7 +4,6 @@ package com.daily.dailyhotel.screen.booking.detail.gourmet;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -976,30 +975,11 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
         RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
 
-        try
-        {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING//
+            , restaurantInfo.index, mReservationIndex, restaurantInfo.name), GourmetBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
 
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
-                , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING//
-                , restaurantInfo.index, mReservationIndex, restaurantInfo.name), GourmetBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
-
-            mAnalytics.onEventHappyTalkClick2(getActivity());
-        } catch (Exception e)
-        {
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
-        }
-
+        mAnalytics.onEventHappyTalkClick2(getActivity());
         mAnalytics.onEventHappyTalkClick(getActivity());
     }
 
@@ -1027,9 +1007,6 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
         try
         {
-            // 카카오톡 패키지 설치 여부
-            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
-
             screenLock(true);
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
@@ -1073,20 +1050,9 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.e(e.toString());
 
             unLockAll();
-
-            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
-                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.installPackage(getActivity(), "com.kakao.talk");
-                    }
-                }, null);
         }
     }
 

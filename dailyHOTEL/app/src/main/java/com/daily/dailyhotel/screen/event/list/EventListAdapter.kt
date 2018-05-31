@@ -44,7 +44,7 @@ class EventListAdapter(private val context: Context, private val eventList: Muta
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        var event = getItem(position) ?: return
+        val event = getItem(position) ?: return
 
         holder.itemView.rootView.tag = event
 
