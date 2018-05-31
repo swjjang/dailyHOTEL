@@ -266,9 +266,9 @@ class DailyDetailRoomInformationView : ConstraintLayout {
         viewDataBinding.soldOutRoomTextView.text = text
     }
 
-    fun setEmptyRoomVisible(visible: Boolean) {
+    fun setEmptyRoomVisible(visible: Boolean, hasFilter: Boolean) {
         viewDataBinding.soldOutRoomTextView.visibility = if (visible) View.VISIBLE else View.GONE
-        viewDataBinding.roomFilterView.setRoomFilterVisible(visible)
+        viewDataBinding.roomFilterView.setRoomFilterVisible(if (hasFilter) true else !visible)
 
         val flag = if (visible) View.GONE else View.VISIBLE
         viewDataBinding.priceTypeGroup.visibility = flag

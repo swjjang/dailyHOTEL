@@ -496,9 +496,6 @@ public class StayDetailData
         @JsonField(name = "title")
         public String title;
 
-        @JsonField(name = "type")
-        public String type;
-
         @JsonField(name = "contents")
         public List<String> contents;
 
@@ -512,7 +509,6 @@ public class StayDetailData
         {
             StayDetail.RefundInformation refundInformation = new StayDetail.RefundInformation();
             refundInformation.setTitle(title);
-            refundInformation.setType(type);
             refundInformation.setWarningMessage(warning);
             refundInformation.setContentList(contents);
             refundInformation.setContentList(contents);
@@ -535,9 +531,6 @@ public class StayDetailData
     @JsonObject
     static class DetailData
     {
-        @JsonField(name = "type")
-        public String type;
-
         @JsonField(name = "title")
         public String title;
 

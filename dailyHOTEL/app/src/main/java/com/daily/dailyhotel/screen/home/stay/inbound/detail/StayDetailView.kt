@@ -697,9 +697,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.roomInformationView.setEmptyRoomText(text)
     }
 
-    override fun setEmptyRoomVisible(visible: Boolean) {
-        viewDataBinding.roomInformationView.setEmptyRoomVisible(visible)
-        viewDataBinding.stickyRoomFilterView.setRoomFilterVisible(visible)
+    override fun setEmptyRoomVisible(visible: Boolean, hasFilter: Boolean) {
+        viewDataBinding.roomInformationView.setEmptyRoomVisible(visible, hasFilter)
+        viewDataBinding.stickyRoomFilterView.setRoomFilterVisible(if (hasFilter) true else !visible)
     }
 
     override fun setRoomList(roomList: List<Room>?) {

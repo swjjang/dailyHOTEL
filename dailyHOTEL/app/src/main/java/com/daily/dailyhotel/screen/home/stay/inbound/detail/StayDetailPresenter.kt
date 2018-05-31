@@ -24,7 +24,10 @@ import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam
 import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl
-import com.daily.dailyhotel.repository.remote.*
+import com.daily.dailyhotel.repository.remote.CalendarImpl
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl
+import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl
+import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity
@@ -1118,14 +1121,44 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (lock()) return
 
         stayDetail?.let {
-            setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
-            applyMoreRoomAction()
+            notifyRoomDataSetChanged()
             viewInterface.scrollRoomInformation()
             unLockAll()
             onCloseRoomFilterClick()
 
             analytics.onEventConfirmRoomFilterClick(activity, bedTypeFilter, facilitiesFilter)
         } ?: Util.restartApp(activity)
+    }
+
+    private fun notifyRoomDataSetChanged() {
+        stayDetail?.let {
+            if (it.roomInformation?.roomList.isNotNullAndNotEmpty()) {
+                setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+
+                if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
+                    viewInterface.setEmptyRoomVisible(true, checkedRoomFilter())
+                    viewInterface.setEmptyRoomText(activity.getString(R.string.message_stay_empty_room))
+                    viewInterface.setActionButtonEnabled(false)
+                    viewInterface.setRoomActionButtonVisible(false)
+                } else {
+                    viewInterface.setEmptyRoomVisible(false, checkedRoomFilter())
+                    viewInterface.setActionButtonEnabled(true)
+                    viewInterface.setPriceAverageTypeVisible(bookDateTime.nights > 1)
+                }
+
+                applyMoreRoomAction()
+
+                viewInterface.setActionButtonText(getString(R.string.label_stay_detail_view_room_detail))
+                viewInterface.setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
+            } else {
+                setRoomFilter(bookDateTime, null, bedTypeFilter, facilitiesFilter)
+
+                viewInterface.setEmptyRoomVisible(true, checkedRoomFilter())
+                viewInterface.setActionButtonEnabled(false)
+                viewInterface.setActionButtonText(getString(R.string.label_soldout))
+                viewInterface.setEmptyRoomText(activity.getString(R.string.message_stay_soldout_room))
+            }
+        }
     }
 
     private fun notifyDetailDataSetChanged() {
@@ -1151,31 +1184,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setBenefitInformationVisible(false)
                 }
 
-                if (it.roomInformation?.roomList.isNotNullAndNotEmpty()) {
-                    setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
-
-                    if (getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0) {
-                        setEmptyRoomVisible(true)
-                        setEmptyRoomText(activity.getString(R.string.message_stay_empty_room))
-                        setActionButtonEnabled(false)
-                    } else {
-                        setEmptyRoomVisible(false)
-                        setActionButtonEnabled(true)
-                    }
-
-                    setActionButtonText(getString(R.string.label_stay_detail_view_room_detail))
-
-                    applyMoreRoomAction()
-                    setPriceAverageTypeVisible(bookDateTime.nights > 1)
-                    setPriceAverageType(showRoomPriceType.compareTo(PriceType.AVERAGE) == 0)
-                } else {
-                    setRoomFilter(bookDateTime, null, bedTypeFilter, facilitiesFilter)
-
-                    setEmptyRoomVisible(true)
-                    setActionButtonEnabled(false)
-                    setActionButtonText(getString(R.string.label_soldout))
-                    setEmptyRoomText(activity.getString(R.string.message_stay_soldout_room))
-                }
+                notifyRoomDataSetChanged()
 
                 setDailyCommentVisible(it.dailyCommentList.letNotNullTrueElseNullFalse { setDailyComment(it) })
                 setFacilities(it.totalRoomCount, it.facilitiesList)
@@ -1213,7 +1222,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
                                 , getString(R.string.label_changing_date), { onCalendarClick() }, null, true)
                     }
-
 
                     getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) == 0 -> {
                         viewInterface.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_filtered_empty_room)//
@@ -1388,20 +1396,26 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             val showViewRoomMaxCount = 5
             val filteredRoomCount = getRoomFilterCount(stayDetail?.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
 
-            if (filteredRoomCount > showViewRoomMaxCount) {
-                viewInterface.setRoomActionButtonVisible(true)
-                viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_show_more_rooms, filteredRoomCount - showViewRoomMaxCount))
-            } else {
-                if (checkedRoomFilter()) {
+            when {
+                filteredRoomCount == 0 -> viewInterface.setRoomActionButtonVisible(false)
+
+                filteredRoomCount > showViewRoomMaxCount -> {
                     viewInterface.setRoomActionButtonVisible(true)
-                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter),
-                            R.drawable.ic_refresh,
-                            0,
-                            ScreenUtils.dpToPx(activity, 8.0),
-                            R.color.default_text_c4d4d4d,
-                            R.drawable.shape_fillrect_le8e8e9_bfafafb_r3)
-                } else {
-                    viewInterface.setRoomActionButtonVisible(false)
+                    viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_show_more_rooms, filteredRoomCount - showViewRoomMaxCount))
+                }
+
+                else -> {
+                    if (checkedRoomFilter()) {
+                        viewInterface.setRoomActionButtonVisible(true)
+                        viewInterface.setRoomActionButtonText(getString(R.string.label_stay_detail_reset_room_filter),
+                                R.drawable.ic_refresh,
+                                0,
+                                ScreenUtils.dpToPx(activity, 8.0),
+                                R.color.default_text_c4d4d4d,
+                                R.drawable.shape_fillrect_le8e8e9_bfafafb_r3)
+                    } else {
+                        viewInterface.setRoomActionButtonVisible(false)
+                    }
                 }
             }
         }
