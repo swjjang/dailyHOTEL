@@ -253,11 +253,9 @@ public class StayDetailData
 
             for (RoomData roomData : rooms)
             {
-                List<String> bedTypeFilterList = roomData.getBedTypeFilter();
-
                 roomList.add(roomData.getRoom(stayDetail.activeReward));
 
-                if (stayDetail.getHasNRDRoom() == false && roomData.refundPolicy != null && "nrd".equalsIgnoreCase(roomData.refundPolicy.type))
+                if (!stayDetail.getHasNRDRoom() && roomData.refundPolicy != null && "nrd".equalsIgnoreCase(roomData.refundPolicy.policy))
                 {
                     stayDetail.setHasNRDRoom(true);
                 }
@@ -469,8 +467,23 @@ public class StayDetailData
         StayDetail.CheckTimeInformation getCheckTimeInformation()
         {
             StayDetail.CheckTimeInformation checkTimeInformation = new StayDetail.CheckTimeInformation();
-            checkTimeInformation.setCheckIn(checkIn.substring(0, checkIn.lastIndexOf(':')));
-            checkTimeInformation.setCheckOut(checkOut.substring(0, checkIn.lastIndexOf(':')));
+
+            try
+            {
+                checkTimeInformation.setCheckIn(checkIn.substring(0, checkIn.lastIndexOf(':')));
+            } catch (Exception e)
+            {
+                checkTimeInformation.setCheckIn("00:00");
+            }
+
+            try
+            {
+                checkTimeInformation.setCheckOut(checkOut.substring(0, checkIn.lastIndexOf(':')));
+            } catch (Exception e)
+            {
+                checkTimeInformation.setCheckOut("00:00");
+            }
+
             checkTimeInformation.setDescription(descriptions);
 
             return checkTimeInformation;
@@ -492,6 +505,9 @@ public class StayDetailData
         @JsonField(name = "warning")
         public String warning;
 
+        @JsonField(name = "policy")
+        public String policy;
+
         StayDetail.RefundInformation getRefundInformation()
         {
             StayDetail.RefundInformation refundInformation = new StayDetail.RefundInformation();
@@ -499,6 +515,8 @@ public class StayDetailData
             refundInformation.setType(type);
             refundInformation.setWarningMessage(warning);
             refundInformation.setContentList(contents);
+            refundInformation.setContentList(contents);
+            refundInformation.setPolicy(policy);
 
             return refundInformation;
         }
@@ -741,8 +759,12 @@ public class StayDetailData
             room.descriptionList = descriptions;
             room.squareMeter = squareMeter;
             room.needToKnowList = needToKnows;
-            room.amountInformation = amount.getAmount();
             room.hasUsableCoupon = hasUsableCoupon;
+
+            if (amount != null)
+            {
+                room.amountInformation = amount.getAmount();
+            }
 
             if (bedInfo != null)
             {

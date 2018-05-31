@@ -126,6 +126,7 @@ class StayDetail : Configurations() {
         var type: String? = null
         var contentList: List<String>? = null
         var warningMessage: String? = null
+        var policy: String? = null
     }
 
     class CheckInformation {
