@@ -40,7 +40,6 @@ import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
-import kotlin.math.max
 
 class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.OnEventListener)//
     : BaseDialogView<StayRoomsInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
