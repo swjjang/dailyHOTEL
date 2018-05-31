@@ -2,84 +2,34 @@
 <resources>
     <color name="dh_theme_color">#EB2135</color>
     <color name="dh_theme_second_color">#CF9E5E</color>
-    <color name="dh_theme_color_a10">#1AEB2135</color>
-    <color name="dh_theme_color_a8">#14EB2135</color>
 
-    <color name="actionbar_border">#7f7f7f</color>
-
-    <color name="actionbar_underline">#b4b4b4</color>
     <color name="actionbar_background">#ffffff</color>
     <color name="actionbar_hamburger">#EB2135</color>
 
-    <color name="drawermenu_border">#d6d6d6</color>
-    <color name="common_border">#dcdcdc</color>
-    <color name="section_border">#ebebeb</color>
-    <color name="section_background">#fafafa</color>
-    <color name="rating_hotel_title_border">#33000000</color>
-    <color name="setting_fragment_section_border">#8c8c8c</color>
-    <color name="network_error_text">#cccccc</color>
-
-    <color name="textView_textColor_section">#969696</color>
-    <color name="textView_textColor_main">#5c5c5c</color>
-    <color name="textView_textColor_sub">#7f7f7f</color>
-    <color name="textView_textColor_disabled">#c5c5c5</color>
-    <color name="textView_textColor_reg_date">#c6c6c6</color>
-    <color name="textView_textColor_shadow">#7F000000</color>
     <color name="textView_textColor_shadow_soldout">#99000000</color>
-    <color name="drawer_entry_title">#737373</color>
-
-    <color name="kakaotalk_textcolkr">#3c1e1e</color>
     <color name="kakaotalk_background">#f9ed00</color>
-
-    <color name="tab_background">#f4f4f4</color>
-    <color name="button_background">#EB2135</color>
-    <color name="activity_background">#fdfdfd</color>
-    <color name="leftdrawer_divider">#f0f0f0</color>
-
-    <color name="bg_hotel_imgs_indicator">#7F000000</color>
-    <color name="bg_board_group_item">#f8f8f8</color>
-
-    <color name="vpi_fillcolor">#99000000</color>
-    <color name="vpi_pagecolor">#33000000</color>
-
-    <color name="grade_business">#78554a</color>
-    <color name="grade_boutique">#615060</color>
-    <color name="grade_design">#bd7171</color>
-    <color name="grade_residence">#576071</color>
-    <color name="grade_resort_pension_condo">#738253</color>
-    <color name="grade_special">#812144</color>
-    <color name="grade_guesthouse">#cb8e64</color>
-    <color name="grade_not_yet">#aca69c</color>
 
     <color name="white">#FFFFFF</color>
     <color name="white_a90">#e6ffffff</color>
     <color name="white_a80">#ccffffff</color>
     <color name="white_a70">#B3ffffff</color>
     <color name="white_a60">#99ffffff</color>
-    <color name="white_a55">#8cffffff</color>
     <color name="white_a50">#80ffffff</color>
     <color name="white_a40">#66ffffff</color>
     <color name="white_a30">#4dffffff</color>
     <color name="white_a20">#33ffffff</color>
-    <color name="white_a16">#29ffffff</color>
-    <color name="white_a10">#1Affffff</color>
     <color name="white_a8">#14ffffff</color>
-    <color name="white_a0">#00ffffff</color>
 
     <color name="black">#000000</color>
-    <color name="black_a80">#cc000000</color>
     <color name="black_a75">#bf000000</color>
     <color name="black_a67">#ab000000</color>
     <color name="black_a65">#a5000000</color>
     <color name="black_a60">#99000000</color>
     <color name="black_a50">#80000000</color>
-    <color name="black_a46">#75000000</color>
     <color name="black_a40">#66000000</color>
     <color name="black_a30">#4D000000</color>
     <color name="black_a28">#47000000</color>
     <color name="black_a25">#40000000</color>
-    <color name="black_a20">#33000000</color>
-    <color name="black_a14">#24000000</color>
      <color name="black_a10">#1A000000</color>
     <color name="black_a5">#0d000000</color>
     <color name="black_a0">#00000000</color>
@@ -89,129 +39,25 @@
 
     <color name="statusbar_background">#4d4d4d</color>
     <color name="tab_text">#929292</color>
-    <color name="tab_selected">#EB2135</color>
-    <color name="tab_underline">#e7e7e7</color>
-
-    <color name="daytab_text">#1c1c1c</color>
-    <color name="booking_vline">#c2c2c2</color>
-    <color name="booking_hline">#e0e0e0</color>
-    <color name="booking_hline01">#d4d4d4</color>
-    <color name="booking_tel_link">#2079b5</color>
-
-    <color name="booking_subtext">#cc7f7f7f</color>
-
 
     <color name="toast_background">#aa000000</color>
-    <color name="calendar_toast_background">#99000000</color>
-
-    <!-- banner -->
-    <color name="banner_title_text">#454545</color>
-    <color name="banner_subtitle_text">#b3454545</color>
-
-
-    <color name="hotel_list_item_underline">#3a3a3a</color>
-    <color name="hotel_list_background">#ececec</color>
-
-    <color name="floating_action_button_default">#EB2135</color>
-    <color name="floating_action_button_pressed">#ff5a5a</color>
 
     <color name="region_circle">#99eb2135</color>
     <color name="region_circle_text">#fffafa</color>
 
     <!-- Credit Card -->
-    <color name="creditcard_background">#fefbf6</color>
     <color name="creditcard_number_text">#58585a</color>
-    <color name="creditcard_introduce_text">#161616</color>
     <color name="creditcard_add_card_text">#858585</color>
-
-    <!-- Booking List -->
-    <color name="bookinglist_section_background">#292929</color>
-    <color name="bookinglist_used_text">#8b8b8b</color>
-
-    <!-- Map View -->
-    <color name="mapview_hotelwindow_topline">#292929</color>
-    <color name="mapview_hotelwindow_background">#e2e2e2</color>
 
     <!-- Receipt -->
     <color name="receipt_detail_text">#747474</color>
-
-    <!-- Selected Region -->
-    <color name="selectarea_text_group">#858585</color>
-    <color name="selectarea_background_child">#f0f0f0</color>
-    <color name="selectarea_underline">#dcdcdd</color>
-    <color name="selectarea_selcted">#a6a6a8</color>
-    <color name="selectarea_subtitle">#999999</color>
-    <color name="province_underline">#4ddcdcdd</color>
-
-    <!-- New Hotel Detail -->
-    <color name="hoteldetail_contents_text_color">#1c1c1c</color>
-    <color name="hoteldetail_room_simpleinfo_text">#989898</color>
-    <color name="hoteldetail_soldout_background">#5c5c5c</color>
-    <color name="hoteldetail_soldout_text">#8c8c8c</color>
-    <color name="hoteldetail_viewpager_background">#c3c3c3</color>
-    <color name="hoteldetail_dbenefit_background">#ebFFFFFF</color>
-    <color name="hoteldetail_image_tag_text">#FFFFFF</color>
-
-    <!-- Wait Popup -->
-    <color name="popup_underline">#e1e1e1</color>
-
-    <!-- Menu -->
-    <color name="menu_underline">#d7d9db</color>
-    <color name="menu_text">#4d4d4d</color>
-    <color name="menu_title_text">#312d2e</color>
-
-    <!-- Wait Fragment -->
-    <color name="waitfragment_number">#252325</color>
-    <color name="waitfragment_maintext">#443d3d</color>
-    <color name="waitfragment_subtext">#433d3c</color>
-
-    <!-- Setting Fragment -->
-    <color name="setting_business_license">#8f8f8f</color>
-
-    <!-- Custom Popup -->
-    <color name="dialog_title_text">#EB2135</color>
-    <color name="dialog_message_text">#3a3a3a</color>
-    <color name="dialog_agree_text">#EB2135</color>
-
-    <!-- GOURMET ListFragment -->
-    <color name="headersectionbar">#222222</color>
-    <color name="headersectionbar_text">#bcaaa4</color>
-
-    <!--  -->
-    <color name="empty_background_hotel">#313541</color>
-    <color name="empty_background_event">#727D81</color>
-    <color name="empty_background_bookings">#27549c</color>
-
-
-    <!-- -->
-    <color name="satisfaction_box_default">#c5c5c5</color>
-
-    <color name="dialog_inputmobile_hint">#4d3a3a3a</color>
-    <color name="dialog_inputmobile_line">#dfdfdf</color>
 
     <color name="countrycode_country_text_default">#272727</color>
     <color name="countrycode_code_text_default">#636363</color>
     <color name="countrycode_underline">#d9d9d9</color>
 
-    <!-- Country Code -->
-    <color name="countrycode_section_background">#f7f7f7</color>
-    <color name="countrycode_section_text">#4d272727</color>
-
     <!-- Calendar Code -->
-    <color name="calendar_day_text_select">#ffffff</color>
-    <color name="calendar_day_text_disable">#ebebeb</color>
-    <color name="calendar_week_text_default">#999999</color>
     <color name="calendar_sunday_text_default">#EB2135</color>
-    <color name="calendar_month_text">#969696</color>
-    <color name="calendar_month_line">#ebebeb</color>
-    <color name="calendar_month_background">#f7f7f7</color>
-
-    <!-- Sort -->
-    <color name="sort_by_default">#c5c5c5</color>
-    <color name="sort_by_select">#171717</color>
-
-    <!-- Splash -->
-    <color name="splash_background">#efefef</color>
 
     <!-- Information -->
     <color name="information_background">#f8f8f9</color>
@@ -220,7 +66,6 @@
 
     <!-- Etc -->
     <color name="c181818">#181818</color>
-    <color name="cd3d3d3">#d3d3d3</color>
 
     <!-- progress bar -->
     <color name="probressbar_default">#d3d3d3</color>
@@ -230,13 +75,6 @@
 
     <!-- Search -->
     <color name="search_hint_text">#c5c5c5</color>
-    <color name="search_autocomplete_pricetext">#929292</color>
-
-    <color name="payment_memo_hint">#d0d0d0</color>
-
-
-    <!-- Stay OutBound -->
-    <color name="stay_outbound_detail_grade">#cfad80</color>
 
     <!-- DEFAULT -->
     <color name="default_text_c323232">#323232</color>
@@ -244,7 +82,6 @@
     <color name="default_text_c929292">#929292</color>
     <color name="default_text_cf4a426">#f4a426</color>
     <color name="default_text_cc5c5c5">#c5c5c5</color>
-    <color name="default_text_cc2c2c2">#c2c2c2</color>
     <color name="default_text_cd0d0d0">#d0d0d0</color>
     <color name="default_text_cd1d1d1">#d1d1d1</color>
     <color name="default_text_c666666">#666666</color>
@@ -264,29 +101,25 @@
     <color name="default_text_cf27c7a">#f27c7a</color>
     <color name="default_text_c6185cd">#6185cd</color>
     <color name="default_text_c299aff">#299aff</color>
+    <color name="default_text_c989898">#989898</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
 
     <color name="default_background">#f8f8f9</color>
     <color name="default_background_section_cf2f2f3">#f2f2f3</color>
-    <color name="default_background_kakao">#f9ed00</color>
     <color name="default_background_facebook">#3b5998</color>
     <color name="default_background_button_in_section">#a6a6a8</color>
-    <color name="default_background_cd1d1d1">#d1d1d1</color>
     <color name="default_background_cfafafb">#fafafb</color>
     <color name="default_background_ca6a6a8">#a6a6a8</color>
     <color name="default_background_disable_cccffffff">#ccffffff</color>
-    <color name="default_background_disable_ce6e6e6">#e6e6e6</color>
     <color name="default_background_cf4f4f6">#f4f4f6</color>
     <color name="default_background_cf1f2f3">#f1f2f3</color>
     <color name="default_background_c929292">#929292</color>
-    <color name="default_background_ca9a9a9">#a9a9a9</color>
     <color name="default_background_ce8e8e9">#e8e8e9</color>
     <color name="default_background_ceaeaea">#EAEAEA</color>
     <color name="default_background_c454545">#454545</color>
     <color name="default_background_c454545_alpha_20">#33454545</color>
-    <color name="default_background_cf6f6f8">#f6f6f8</color>
     <color name="default_background_cffcd5b">#ffcd5b</color>
     <color name="default_background_cfedf72">#fedf72</color>
     <color name="default_background_cababab">#ABABAB</color>
@@ -296,10 +129,8 @@
     <color name="default_background_ce4e4e9">#e4e4e9</color>
     <color name="default_background_ccfad80">#cfad80</color>
     <color name="default_background_cf9f9fb">#f9f9fb</color>
-    <color name="default_background_c99cfad80">#99cfad80</color>
     <color name="default_background_cf0f0f2">#f0f0f2</color>
     <color name="default_background_cdfae6d">#dfae6d</color>
-    <color name="default_background_cf7f7f8">#f7f7f8</color>
     <color name="default_placeholder">#e6e6e7</color>
     <color name="default_background_ce6eb2135">#e6eb2135</color>
     <color name="default_background_cfff9ef">#fff9ef</color>
@@ -307,10 +138,6 @@
     <color name="default_background_cfdf1f1">#fdf1f1</color>
     <color name="default_background_c666666">#666666</color>
     <color name="default_background_cf1f7fd">#f1f7fd</color>
-
-    <color name="default_popup_button_background_ceb2135">#EB2135</color>
-    <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
-    <color name="default_popup_button_background_c5c93f8">#5c93f8</color>
 
     <color name="default_popup_button_text_cffffff">#ffffff</color>
     <color name="default_popup_button_text_cc5c5c5">#c5c5c5</color>
@@ -323,7 +150,6 @@
     <color name="default_line_cd0d0d0">#d0d0d0</color>
     <color name="default_line_c4d4d4d">#4d4d4d</color>
     <color name="default_line_cf0f0f0">#f0f0f0</color>
-    <color name="default_line_cdedee0">#dedee0</color>
     <color name="default_line_ceeeef0">#eeeef0</color>
     <color name="default_line_cd1d1d1">#d1d1d1</color>
     <color name="default_line_ce8e8e9">#e8e8e9</color>
@@ -333,7 +159,6 @@
     <color name="default_line_ce1e1e1">#e1e1e1</color>
     <color name="default_line_cfaae37">#faae37</color>
     <color name="default_line_cf3ebde">#f3ebde</color>
-    <color name="default_line_cd2d2d2">#d2d2d2</color>
     <color name="default_line_ceb2135">#eb2135</color>
     <color name="default_line_cebcea7">#ebcea7</color>
 
@@ -347,12 +172,7 @@
     <color name="location_progressbar_cc8c8c8">#c8c8c8</color>
 
     <!-- Coupon -->
-    <color name="coupon_expire_text">#929292</color>
     <color name="coupon_red_wine_text">#EB2135</color>
-    <color name="coupon_vertical_line">#d1d1d1</color>
     <color name="coupon_description_text">#b3b3b3</color>
-    <color name="coupon_use_notice_text">#8f8f8f</color>
-    <color name="coupon_history_state_button_background">#e6e6e6</color>
-    <color name="select_coupon_vertical_line_dimmed">#80d0d0d0</color>
 
 </resources>

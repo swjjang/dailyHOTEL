@@ -103,7 +103,7 @@
                 android:ellipsize="end"
                 android:freezesText="true"
                 android:maxLines="2"
-                android:textColor="@color/hoteldetail_room_simpleinfo_text"
+                android:textColor="@color/default_text_c989898"
                 android:textSize="12dp"
                 app:layout_constraintLeft_toLeftOf="@id/roomTypeTextView"
                 app:layout_constraintRight_toRightOf="parent"
