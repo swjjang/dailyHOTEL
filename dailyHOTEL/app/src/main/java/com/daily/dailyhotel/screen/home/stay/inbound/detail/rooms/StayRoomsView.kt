@@ -823,9 +823,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         private val MOVE_STATE_VIEWPAGER = 100
         private val MOVE_CALIBRATE_VALUE = 1.25f
 
-        private var mMoveState: Int = 0
-        private var mPrevX: Float = 0.toFloat()
-        private var mPrevY: Float = 0.toFloat()
+        private var moveState: Int = 0
+        private var prevX: Float = 0.toFloat()
+        private var prevY: Float = 0.toFloat()
         private var startScaleX = maxScaleX
         private var startTransY = minTransY
 
@@ -837,47 +837,53 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             when (event.action and MotionEventCompat.ACTION_MASK) {
                 MotionEvent.ACTION_DOWN -> {
-                    mPrevX = event.x
-                    mPrevY = event.y
+                    prevX = event.x
+                    prevY = event.y
                     startScaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
                     startTransY = viewDataBinding.invisibleLayout!!.roomLayout.translationY
 
-                    mMoveState = MOVE_STATE_NONE
+                    moveState = MOVE_STATE_NONE
                 }
 
                 MotionEvent.ACTION_UP -> run {
 
                     val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
 
-                    val x = (mPrevX - event.x).toInt()
-                    val y = (mPrevY - event.y).toInt()
+                    val x = (prevX - event.x).toInt()
+                    val y = (prevY - event.y).toInt()
 
                     val distance = Math.sqrt((x * x + y * y).toDouble()).toInt()
                     if (distance < touchSlop) {
-                        mMoveState = MOVE_STATE_NONE
+                        val oldMoveState = moveState
+                        moveState = MOVE_STATE_NONE
+
+                        if (MOVE_STATE_NONE == oldMoveState) {
+                            startInvisibleLayoutAnimation(true)
+                            return true
+                        }
                     }
 
                     // TODO : invisibleLayout 애니메이션 하기
                 }
 
                 MotionEvent.ACTION_CANCEL -> {
-                    mMoveState = MOVE_STATE_NONE
+                    moveState = MOVE_STATE_NONE
                 }
 
                 MotionEvent.ACTION_MOVE -> {
                     val x = event.x
                     val y = event.y
 
-                    when (mMoveState) {
+                    when (moveState) {
                         MOVE_STATE_NONE -> {
                             when {
-                                Math.abs(x - mPrevX) == Math.abs(y - mPrevY) -> {
+                                Math.abs(x - prevX) == Math.abs(y - prevY) -> {
                                     // 안 움직이거나 x, y 정확히 대각선 일때
                                 }
 
-                                Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY) -> {
+                                Math.abs(x - prevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - prevY) -> {
                                     // x 축으로 이동한 경우.
-                                    mMoveState = MOVE_STATE_VIEWPAGER
+                                    moveState = MOVE_STATE_VIEWPAGER
 
                                     if (viewDataBinding.invisibleLayout!!.roomLayout.visibility == View.VISIBLE) {
                                         viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.INVISIBLE
@@ -886,13 +892,13 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                                 else -> {
                                     // y축으로 이동한 경우.
-                                    mMoveState = MOVE_STATE_SCROLL
+                                    moveState = MOVE_STATE_SCROLL
 
                                     if (viewDataBinding.invisibleLayout!!.roomLayout.visibility != View.VISIBLE) {
                                         viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                                     }
 
-                                    setInvisibleLayout(mPrevY, y, startScaleX, startTransY)
+                                    setInvisibleLayout(prevY, y, startScaleX, startTransY)
                                 }
                             }
                         }
@@ -902,13 +908,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                 viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                             }
 
-                            setInvisibleLayout(mPrevY, y, startScaleX, startTransY)
-
-                            val scaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
-                            if (scaleX == maxScaleX) {
-                                val toScrollY = y - mPrevY - maxTransY
-                                viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = toScrollY.toInt()
-                            }
+                            setInvisibleLayout(prevY, y, startScaleX, startTransY)
                         }
 
                         MOVE_STATE_VIEWPAGER -> {
