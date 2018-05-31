@@ -1028,6 +1028,7 @@ public class RoomParcel implements Parcelable
             dest.writeString(refundInformation.getType());
             dest.writeStringList(refundInformation.getContentList());
             dest.writeString(refundInformation.getWarningMessage());
+            dest.writeString(refundInformation.getPolicy());
         }
 
         private void readFromParcel(Parcel in)
@@ -1040,6 +1041,7 @@ public class RoomParcel implements Parcelable
             in.readStringList(contentList);
             refundInformation.setContentList(contentList);
             refundInformation.setWarningMessage(in.readString());
+            refundInformation.setPolicy(in.readString());
         }
 
         @Override

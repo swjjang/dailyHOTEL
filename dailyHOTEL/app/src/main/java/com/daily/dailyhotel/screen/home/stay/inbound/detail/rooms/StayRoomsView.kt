@@ -278,7 +278,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             return
         }
 
-        val isNrd = !refundInformation.type.isTextEmpty() && refundInformation.type?.toLowerCase().equals("nrd", true)
+        val isNrd = !refundInformation.policy.isTextEmpty() && refundInformation.policy?.toLowerCase().equals("nrd", true)
         var text = refundInformation.warningMessage
         val backgroundResId: Int
         val textColorResId: Int
