@@ -60,7 +60,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val pagerSnapHelper = PagerSnapHelper()
             pagerSnapHelper.attachToRecyclerView(recyclerView)
 
-//            viewDataBinding.recyclerView.setOnTouchListener(recyclerTouchListener)
+            viewDataBinding.recyclerView.setOnTouchListener(recyclerTouchListener)
 
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -87,10 +87,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                 override fun onVrImageClick(position: Int) {
                     eventListener.onVrImageClick(position)
-                }
-
-                override fun onItemClick(position: Int) {
-                    startInvisibleLayoutAnimation(true)
                 }
             })
 
@@ -385,7 +381,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     private fun setSquareInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
         dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
 
-        val pyoung = Math.round(room.squareMeter / 400 * 121)
+        // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
+        val pyoung = Math.round(room.squareMeter / 0.3025)
         dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
     }
 
@@ -733,8 +730,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         minScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
 
-        ExLog.d("sam - top : $top , paddingTop : $paddingTop + paddingBottom : $paddingBottom , paddingLeft : $paddingLeft , minScaleX : $minScaleX")
-
         val scaleTransY = invisibleLayoutDataBinding.roomLayout.measuredHeight * (1f - minScaleX) / 2
         maxTransY = (top + paddingTop) - scaleTransY
 
@@ -743,8 +738,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             scaleX = minScaleX
             scaleY = minScaleX
-
-            ExLog.d("sam - translationY : $translationY , top : ${this.top} , measuredHeight : $measuredHeight , maxTransY : $maxTransY")
         }
 
         invisibleLayoutDataBinding.emptyCloseImageView.translationY = 0f
@@ -770,7 +763,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val startTransY = roomLayout.translationY
         val endTransY = if (scaleUp) 0.0f else maxTransY
 
-//        ExLog.d("sam - start : $startScale , end : $end , startTransY : $startTransY , endTransY : $endTransY")
         viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = 0
 
         val animatorSet = AnimatorSet()
@@ -779,17 +771,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val transAnimator = ValueAnimator.ofFloat(startTransY, endTransY)
         transAnimator.addUpdateListener { animation ->
             val transValue = animation.animatedValue as Float
-//            ExLog.d("sam - transValue : $transValue")
-
             roomLayout.translationY = transValue
         }
 
         val scaleAnimator = ValueAnimator.ofFloat(startScale * 100, end * 100)
         scaleAnimator.addUpdateListener { animation ->
             val value = animation.animatedValue as Float / 100
-
-//            ExLog.d("sam - value : $value")
-
             roomLayout.scaleX = value
             roomLayout.scaleY = value
         }
@@ -830,37 +817,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         animatorSet.start()
     }
 
-//    private fun setInvisibleLayout(increasing: Boolean, preY: Float, y: Float) {
-//        if (preY == y) {
-//            return
-//        }
-//
-//        val gap = y - preY // plus 값이면 상단으로 올림, minus 값이면 하단으로 내림
-//
-//        val horizontalRatio = mTouchHorizontalMargin.toFloat() / mTouchVerticalMargin.toFloat()
-//        val horizontalGap = (if (increasing) mTouchHorizontalMargin else 0) + gap * horizontalRatio
-//        val horizontal: Int
-//        if (horizontalGap > 0) {
-//            horizontal = if (horizontalGap > mTouchHorizontalMargin) mTouchHorizontalMargin else Math.round(horizontalGap)
-//        } else {
-//            horizontal = 0
-//        }
-//
-//        val vertical: Float
-//        val verticalGap = (if (increasing) mTouchVerticalMargin else 0) + gap
-//        vertical = if (verticalGap > 0) {
-//            if (verticalGap > mTouchVerticalMargin) mTouchVerticalMargin.toFloat() else verticalGap
-//        } else {
-//            0f
-//        }
-//
-//        viewDataBinding.invisibleLayout!!.nestedScrollView.setPadding(horizontal, vertical.toInt(), horizontal, 0)
-//
-//        if (increasing && verticalGap <= 0) {
-//            viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = (-verticalGap).toInt()
-//        }
-//    }
-
     private val recyclerTouchListener = object : View.OnTouchListener {
         private val MOVE_STATE_NONE = 0
         private val MOVE_STATE_SCROLL = 10
@@ -870,6 +826,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         private var mMoveState: Int = 0
         private var mPrevX: Float = 0.toFloat()
         private var mPrevY: Float = 0.toFloat()
+        private var startScaleX = maxScaleX
+        private var startTransY = minTransY
 
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (listAdapter.itemCount == 0) return false
@@ -881,6 +839,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 MotionEvent.ACTION_DOWN -> {
                     mPrevX = event.x
                     mPrevY = event.y
+                    startScaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
+                    startTransY = viewDataBinding.invisibleLayout!!.roomLayout.translationY
 
                     mMoveState = MOVE_STATE_NONE
                 }
@@ -932,7 +892,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                         viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                                     }
 
-//                                    setInvisibleLayout(mPrevY, y)
+                                    setInvisibleLayout(mPrevY, y, startScaleX, startTransY)
                                 }
                             }
                         }
@@ -942,7 +902,13 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                 viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
                             }
 
-//                            setInvisibleLayout(mPrevY, y)
+                            setInvisibleLayout(mPrevY, y, startScaleX, startTransY)
+
+                            val scaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
+                            if (scaleX == maxScaleX) {
+                                val toScrollY = y - mPrevY - maxTransY
+                                viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = toScrollY.toInt()
+                            }
                         }
 
                         MOVE_STATE_VIEWPAGER -> {
@@ -955,6 +921,34 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             }
 
             return false
+        }
+    }
+
+    private fun setInvisibleLayout(preY : Float, y:Float, startScaleX: Float, startTransY:Float) {
+        val value = y - preY
+        if (value != 0f) {
+
+            val scaleXGap = maxScaleX - minScaleX
+            val oneScaleX = scaleXGap / widthGap
+            val oneTransY = maxTransY / widthGap
+
+            var toScaleX = startScaleX - (oneScaleX * value)
+            if (toScaleX > maxScaleX) {
+                toScaleX = maxScaleX
+            } else if (toScaleX < minScaleX) {
+                toScaleX = minScaleX
+            }
+
+            var toTransY = startTransY - (-value * oneTransY)
+            if (toTransY > maxTransY) {
+                toTransY = maxTransY
+            } else if (toTransY < minTransY) {
+                toTransY = minTransY
+            }
+
+            viewDataBinding.invisibleLayout!!.roomLayout.translationY = toTransY
+            viewDataBinding.invisibleLayout!!.roomLayout.scaleX = toScaleX
+            viewDataBinding.invisibleLayout!!.roomLayout.scaleY = toScaleX
         }
     }
 
@@ -974,8 +968,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     preY = event.y
                     startScaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
                     startTransY = viewDataBinding.invisibleLayout!!.roomLayout.translationY
-
-                    ExLog.d("sam - down - startTransY : $startTransY")
                 }
 
                 MotionEvent.ACTION_UP -> {
@@ -987,11 +979,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                 MotionEvent.ACTION_MOVE -> {
                     val y = event.y
-                    val scrollY = viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY
                     val scaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
-                    val transY = viewDataBinding.invisibleLayout!!.roomLayout.translationY
-
-                    ExLog.d("sam - move 1 , scrollY : $scrollY , transY : $transY")
+                    val scrollY = viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY
 
                     if (scrollY > 0) {
                         preY = y
@@ -1000,44 +989,11 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         return false
                     }
 
-                    val value = y - preY
-                    if (value != 0f) {
-
-                        val scaleXGap = maxScaleX - minScaleX
-                        val oneScaleX = scaleXGap / widthGap
-                        val oneTransY = maxTransY / widthGap
-
-                        var toScaleX = startScaleX - (oneScaleX * value)
-                        if (toScaleX > maxScaleX) {
-                            toScaleX = maxScaleX
-                        } else if (toScaleX < minScaleX) {
-                            toScaleX = minScaleX
-                        }
-
-                        var toTransY = startTransY - (-value * oneTransY)
-
-                        ExLog.d("sam - move 2 , scrollY : $scrollY , toTransY : $toTransY , value * oneTransY : ${value * oneTransY}")
-
-                        if (toTransY > maxTransY) {
-                            toTransY = maxTransY
-                        } else if (toTransY < minTransY) {
-                            toTransY = minTransY
-                        }
-
-                        ExLog.d("sam - move 3 , scrollY : $scrollY , toTransY : $toTransY")
-
-                        viewDataBinding.invisibleLayout!!.roomLayout.translationY = toTransY
-                        viewDataBinding.invisibleLayout!!.roomLayout.scaleX = toScaleX
-                        viewDataBinding.invisibleLayout!!.roomLayout.scaleY = toScaleX
-
-                        ExLog.d("sam 2 , toScaleX : $toScaleX , toTransY : $toTransY, value : $value")
-                    }
+                    setInvisibleLayout(preY, y, startScaleX, startTransY)
 
                     if (scaleX < maxScaleX) {
                         return true
                     }
-
-
                 }
             }
 

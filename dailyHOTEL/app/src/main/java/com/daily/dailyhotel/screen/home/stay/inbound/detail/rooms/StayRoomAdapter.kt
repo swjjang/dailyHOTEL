@@ -83,7 +83,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     interface OnEventListener : OnBaseEventListener {
         fun onMoreImageClick(position: Int)
         fun onVrImageClick(position: Int)
-        fun onItemClick(position: Int)
     }
 
     fun setEventListener(listener: OnEventListener?) {
@@ -127,7 +126,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         holder.dataBinding.root.setTag(R.id.blurView, holder.dataBinding.blurView)
 
-        holder.dataBinding.roomLayout.setOnClickListener { onEventListener?.onItemClick(position) }
+//        holder.dataBinding.roomLayout.setOnClickListener { onEventListener?.onItemClick(position) }
 
         val margin = getLayoutMargin()
         (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).apply {
