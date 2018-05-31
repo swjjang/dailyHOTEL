@@ -93,7 +93,9 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     fun getItem(position: Int): Room? {
-        return (list.size > 0).let { list[position] }
+        return if (position in 0 until list.size) {
+            list[position]
+        } else null
     }
 
     fun setData(list: MutableList<Room>) {
