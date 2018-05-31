@@ -111,7 +111,13 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     }
 
     @Override
-    public void onFinish()
+    public void onPreFinish()
+    {
+
+    }
+
+    @Override
+    public void onPostFinish()
     {
 
     }

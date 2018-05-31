@@ -149,9 +149,9 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     }
 
     @Override
-    public void onFinish()
+    public void onPostFinish()
     {
-        super.onFinish();
+        super.onPostFinish();
 
         if (mTouchMoving == true)
         {

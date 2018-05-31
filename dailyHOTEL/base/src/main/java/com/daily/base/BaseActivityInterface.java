@@ -17,7 +17,9 @@ public interface BaseActivityInterface
 
     void onDestroy();
 
-    void onFinish();
+    void onPreFinish();
+
+    void onPostFinish();
 
     boolean onBackPressed();
 

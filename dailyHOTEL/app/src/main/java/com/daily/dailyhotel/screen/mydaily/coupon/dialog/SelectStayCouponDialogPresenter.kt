@@ -109,8 +109,8 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
         isRefresh.runTrue { onRefresh(true) }
     }
 
-    override fun onFinish() {
-        super.onFinish()
+    override fun onPreFinish() {
+        super.onPreFinish()
 
         if (!isSetOk) {
             if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equals(callByScreen, true)) {

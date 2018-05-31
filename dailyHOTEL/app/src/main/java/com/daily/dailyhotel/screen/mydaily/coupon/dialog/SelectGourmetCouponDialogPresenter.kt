@@ -92,8 +92,8 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
         isRefresh.runTrue { onRefresh(true) }
     }
 
-    override fun onFinish() {
-        super.onFinish()
+    override fun onPreFinish() {
+        super.onPreFinish()
 
         if (isSetOk) {
             if (AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equals(callByScreen, true)) {

@@ -264,8 +264,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         super.onDestroy()
     }
 
-    override fun onFinish() {
-        super.onFinish()
+    override fun onPostFinish() {
+        super.onPostFinish()
 
         if (!isUsedMultiTransition) activity.overridePendingTransition(R.anim.hold, R.anim.slide_out_right)
     }
