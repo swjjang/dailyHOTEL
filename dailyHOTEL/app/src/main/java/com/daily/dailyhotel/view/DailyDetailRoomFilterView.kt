@@ -71,6 +71,6 @@ class DailyDetailRoomFilterView : ConstraintLayout {
     }
 
     fun setRoomFilterVisible(visible: Boolean) {
-        viewDataBinding.roomFilterTextView.visibility = if (visible) View.GONE else View.VISIBLE
+        viewDataBinding.roomFilterTextView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

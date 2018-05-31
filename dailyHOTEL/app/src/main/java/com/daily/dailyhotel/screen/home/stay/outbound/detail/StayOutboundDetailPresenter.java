@@ -435,9 +435,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onFinish()
+    public void onPostFinish()
     {
-        super.onFinish();
+        super.onPostFinish();
 
         if (mIsUsedMultiTransition == false)
         {

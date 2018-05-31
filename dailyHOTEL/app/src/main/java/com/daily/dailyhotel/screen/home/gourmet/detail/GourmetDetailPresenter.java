@@ -451,9 +451,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    public void onFinish()
+    public void onPostFinish()
     {
-        super.onFinish();
+        super.onPostFinish();
 
         if (mIsUsedMultiTransition == false)
         {

@@ -64,7 +64,7 @@ interface StayDetailInterface {
 
         fun setEmptyRoomText(text: String?)
 
-        fun setEmptyRoomVisible(visible: Boolean)
+        fun setEmptyRoomVisible(visible: Boolean, hasFilter: Boolean)
 
         fun setRoomFilterInformation(calendarText: CharSequence, roomFilterCount: Int)
 

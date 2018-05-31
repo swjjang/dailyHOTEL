@@ -432,9 +432,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     @Override
-    public void onFinish()
+    public void onPostFinish()
     {
-        super.onFinish();
+        super.onPostFinish();
 
         if (mIsUsedMultiTransition == false)
         {

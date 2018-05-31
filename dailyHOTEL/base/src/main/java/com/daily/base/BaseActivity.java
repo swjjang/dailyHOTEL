@@ -191,10 +191,15 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     {
         if (mPresenter != null)
         {
-            mPresenter.onFinish();
+            mPresenter.onPreFinish();
         }
 
         super.finish();
+
+        if (mPresenter != null)
+        {
+            mPresenter.onPostFinish();
+        }
     }
 
     @Override
