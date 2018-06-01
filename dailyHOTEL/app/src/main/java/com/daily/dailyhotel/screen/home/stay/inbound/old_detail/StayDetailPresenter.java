@@ -88,6 +88,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
+@Deprecated
 public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivity, StayDetailViewInterface> implements StayDetailView.OnEventListener
 {
     private static final int DAYS_OF_MAX_COUNT = 60;

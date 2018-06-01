@@ -23,6 +23,7 @@ import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+@Deprecated
 public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAnalyticsInterface
 {
     StayDetailAnalyticsParam mAnalyticsParam;

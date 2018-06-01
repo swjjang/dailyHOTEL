@@ -11,6 +11,7 @@ import com.daily.dailyhotel.entity.old_StayDetail;
 
 import io.reactivex.Observable;
 
+@Deprecated
 public interface StayDetailViewInterface extends BaseDialogViewInterface
 {
     Observable<Boolean> showRoomList(boolean animation);
