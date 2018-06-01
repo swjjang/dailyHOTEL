@@ -190,7 +190,7 @@
             android:layout_width="48dp"
             android:layout_height="44dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r2"
+            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r3"
             android:drawablePadding="4dp"
             android:gravity="center_horizontal"
             android:paddingTop="9dp"
