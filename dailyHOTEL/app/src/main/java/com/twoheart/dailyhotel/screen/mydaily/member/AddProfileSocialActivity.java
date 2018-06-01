@@ -95,7 +95,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
                 {
                     @Override
-                    public void accept(User user) throws Exception
+                    public void accept(User user)
                     {
                         Customer customer = new Customer();
                         customer.setEmail(user.email);
@@ -108,7 +108,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 }, new Consumer<Throwable>()
                 {
                     @Override
-                    public void accept(Throwable throwable) throws Exception
+                    public void accept(Throwable throwable)
                     {
                         onUserProfile(null, null);
                     }
@@ -501,7 +501,7 @@ public class AddProfileSocialActivity extends BaseActivity
             }, new Consumer<Throwable>()
             {
                 @Override
-                public void accept(Throwable throwable) throws Exception
+                public void accept(Throwable throwable)
                 {
                     onHandleError(throwable);
                 }
@@ -614,14 +614,14 @@ public class AddProfileSocialActivity extends BaseActivity
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
                 {
                     @Override
-                    public void accept(User user) throws Exception
+                    public void accept(User user)
                     {
                         onUpdateSocialUserInformation(true, user.agreedAt);
                     }
                 }, new Consumer<Throwable>()
                 {
                     @Override
-                    public void accept(Throwable throwable) throws Exception
+                    public void accept(Throwable throwable)
                     {
                         onUpdateSocialUserInformation(false, null);
                     }

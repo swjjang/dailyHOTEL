@@ -83,7 +83,7 @@ public class CampaignTagRemoteImpl extends BaseRemoteImpl implements CampaignTag
                 @Override
                 public StayCampaignTags apply(@io.reactivex.annotations.NonNull BaseDto<StayCampaignTagsData> stayCampaignTagsDataBaseDto) throws Exception
                 {
-                    StayCampaignTags stayCampaignTags = null;
+                    StayCampaignTags stayCampaignTags;
 
                     if (stayCampaignTagsDataBaseDto != null)
                     {
@@ -119,7 +119,7 @@ public class CampaignTagRemoteImpl extends BaseRemoteImpl implements CampaignTag
                 @Override
                 public GourmetCampaignTags apply(@io.reactivex.annotations.NonNull BaseDto<GourmetCampaignTagsData> gourmetCampaignTagsDataBaseDto) throws Exception
                 {
-                    GourmetCampaignTags gourmetCampaignTags = null;
+                    GourmetCampaignTags gourmetCampaignTags;
 
                     if (gourmetCampaignTagsDataBaseDto != null)
                     {

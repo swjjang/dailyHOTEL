@@ -44,7 +44,7 @@ public class EventRemoteImpl extends BaseRemoteImpl implements EventInterface
                 @Override
                 public List<Event> apply(BaseListDto<Event> eventBaseListDto) throws Exception
                 {
-                    List<Event> eventList = new ArrayList<>();
+                    List<Event> eventList;
 
                     if (eventBaseListDto != null)
                     {
