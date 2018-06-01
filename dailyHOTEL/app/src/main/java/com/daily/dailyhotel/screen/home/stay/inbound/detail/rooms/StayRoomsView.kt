@@ -796,18 +796,26 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     override fun startInvisibleLayoutAnimation(scaleUp: Boolean) {
-        ExLog.d("sam - call start Animation scaleUp : $scaleUp")
+//        ExLog.d("sam - call start Animation scaleUp : $scaleUp")
         val roomLayout = viewDataBinding.invisibleLayout!!.roomLayout
 
         val startScale = roomLayout.scaleX
         val end = if (scaleUp) 1.0f else minScaleX
         val startTransY = roomLayout.translationY
         val endTransY = if (scaleUp) 0.0f else maxTransY
+//        val duration  = (200 / (maxTransY - startTransY)).toLong()
+        val duration = if (scaleUp) {
+            (startTransY / maxTransY * 200).toLong()
+        } else {
+            ((maxTransY - startTransY) / maxTransY * 200).toLong()
+        }
+
+        ExLog.d("sam - duration : $duration , transGap : ${(maxTransY - startTransY)} , maxTransY : $maxTransY , startTransY : $startTransY")
 
         viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = 0
 
         val animatorSet = AnimatorSet()
-        animatorSet.duration = 200
+        animatorSet.duration = duration
         animatorSet.interpolator = AccelerateDecelerateInterpolator()
         val transAnimator = ValueAnimator.ofFloat(startTransY, endTransY)
         transAnimator.addUpdateListener { animation ->
@@ -895,13 +903,13 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                         if (MOVE_STATE_NONE == oldMoveState) {
                             startInvisibleLayoutAnimation(true)
-                            return true
+                            return false
                         }
                     }
 
                     when (moveState) {
                         MOVE_STATE_END_ANIMATION, MOVE_STATE_VIEWPAGER -> {
-                            return true
+                            return false
                         }
                     }
 
@@ -966,7 +974,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         }
 
                         MOVE_STATE_END_ANIMATION -> {
-                            return false
+                            return true
                         }
 
                         MOVE_STATE_START_ANIMATION -> {
@@ -988,7 +996,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                             }
 
                             startInvisibleLayoutAnimation(scaleUp)
-                            return false
+                            return true
                         }
                     }
                 }
@@ -1059,7 +1067,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     }
 
                     if (MOVE_STATE_END_ANIMATION == moveState) {
-                        return false
+                        // Touch 및 scroll 이벤트가 들어옴으로 인해 scroll 이동 되는 이슈 방지
+                        return true
                     }
 
                     if (MOVE_STATE_START_ANIMATION == moveState) {
@@ -1081,7 +1090,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         }
 
                         startInvisibleLayoutAnimation(scaleUp)
-                        return false
+                        return true
                     }
 
                     if (setInvisibleLayout(preY, y, startScaleX, startTransY)) {
