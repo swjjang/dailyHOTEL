@@ -240,6 +240,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         viewInterface.setInvisibleData(position)
 
         real.runTrue {
+            (position in 0 until roomList.size).runFalse { return }
             val room = roomList[position]
             analytics.onScrolled(activity, stayIndex, room.index)
         }
@@ -247,6 +248,10 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
     override fun onMoreImageClick(position: Int) {
         lock().runTrue { return }
+        (position in 0 until roomList.size).runFalse {
+            unLockAll()
+            return
+        }
 
         val room = roomList[position]
 
@@ -278,8 +283,11 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     }
 
     override fun onVrImageClick(position: Int) {
-        (position in 0 until roomList.size).runFalse { return }
         lock().runTrue { return }
+        (position in 0 until roomList.size).runFalse {
+            unLockAll()
+            return
+        }
 
         val room = roomList[position]
 
