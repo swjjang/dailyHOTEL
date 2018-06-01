@@ -142,7 +142,7 @@
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
+                android:layout_marginBottom="2dp"
                 android:layout_marginLeft="5.5dp"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="12dp"

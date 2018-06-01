@@ -176,7 +176,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/default_text_c323232"
-                        android:layout_marginLeft="1px"
+                        android:layout_marginLeft="1dp"
                         android:textSize="14dp"
                         android:layout_marginBottom="3dp"
                         app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"
