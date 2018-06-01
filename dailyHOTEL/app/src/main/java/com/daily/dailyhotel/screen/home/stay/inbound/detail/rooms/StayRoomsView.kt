@@ -52,7 +52,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         private const val MOVE_STATE_VIEWPAGER = 100
         private const val MOVE_STATE_START_ANIMATION = 1000
         private const val MOVE_STATE_END_ANIMATION = 10000
-        private const val MOVE_CALIBRATE_VALUE = 1.25f
+        private const val MOVE_CALIBRATE_VALUE = 0.95f
     }
 
     @SuppressLint("ClickableViewAccessibility")
