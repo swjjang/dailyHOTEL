@@ -13,7 +13,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import androidx.core.view.doOnPreDraw
-import com.daily.base.util.ExLog
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.isTextEmpty
@@ -145,10 +144,6 @@ class DailyRoomInfoGridView : LinearLayout {
 
                 val rect = Rect()
                 it.getLocalVisibleRect(rect)
-
-                ExLog.d("sam : rect = $rect")
-
-//                    it.tag = ScreenUtils.dpToPx(context, itemHeight) * moreGridLayout.rowCount
                 it.tag = it.height
                 it.layoutParams.height = 0
                 it.requestLayout()

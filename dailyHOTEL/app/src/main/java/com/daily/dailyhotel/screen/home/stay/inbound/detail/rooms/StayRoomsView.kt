@@ -786,8 +786,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val checkValue = 0.3f * maxTransY
         var forceUpdate = Math.abs(startTransY - toTransY) >= checkValue
 
-//        ExLog.d("sam - startTransY : $startTransY , toTransY : $toTransY , value : $value , checkValue : $checkValue, forceUpdate : $forceUpdate")
-
         viewDataBinding.invisibleLayout!!.roomLayout.translationY = toTransY
         viewDataBinding.invisibleLayout!!.roomLayout.scaleX = toScaleX
         viewDataBinding.invisibleLayout!!.roomLayout.scaleY = toScaleX
@@ -796,7 +794,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     override fun startInvisibleLayoutAnimation(scaleUp: Boolean) {
-//        ExLog.d("sam - call start Animation scaleUp : $scaleUp")
         val roomLayout = viewDataBinding.invisibleLayout!!.roomLayout
 
         val startScale = roomLayout.scaleX
@@ -809,8 +806,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         } else {
             ((maxTransY - startTransY) / maxTransY * 200).toLong()
         }
-
-        ExLog.d("sam - duration : $duration , transGap : ${(maxTransY - startTransY)} , maxTransY : $maxTransY , startTransY : $startTransY")
 
         viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = 0
 
@@ -1015,8 +1010,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         override fun onTouch(v: View, event: MotionEvent): Boolean {
             if (viewDataBinding == null) return false
             if (listAdapter.itemCount == 0) return false
-
-            ExLog.d("sam - moveState : $moveState")
 
             setRecyclerScrollEnabled()
 

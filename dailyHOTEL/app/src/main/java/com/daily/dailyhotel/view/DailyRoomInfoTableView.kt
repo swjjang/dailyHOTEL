@@ -96,7 +96,6 @@ class DailyRoomInfoTableView : ConstraintLayout {
             }
 
             this.addView(titleView)
-//            this.addView(getVerticalLine())
 
             val descriptionLayout = LinearLayout(context).apply {
                 layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, itemHeight).apply {
@@ -143,13 +142,6 @@ class DailyRoomInfoTableView : ConstraintLayout {
 
         dataBinding.tableLayout.addView(row)
     }
-
-//    private fun getVerticalLine(): View {
-//        return View(context).apply {
-//            setBackgroundColor(context.resources.getColor(tableLineColorResId))
-//            layoutParams = ViewGroup.LayoutParams(ScreenUtils.dpToPx(context, 1.0), itemHeight)
-//        }
-//    }
 
     private fun getHorizontalLine(): View {
         return View(context).apply {
