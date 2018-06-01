@@ -29,7 +29,6 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
     private val sampleText = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     private var horizontalPadding = 0
     private val separator = ", "
-    private val endString = "개"
 
     fun setData(list: MutableList<String>?) {
         removeAllViews()
@@ -62,9 +61,6 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
 
                 list.forEachIndexed { index, string ->
                     var addString = if (temp.isTextEmpty()) string else separator + string
-                    if (index == listSize - 1) {
-                        addString += endString
-                    }
 
                     val sum = temp.length + addString.length
                     if (sum > maxLineLength) {
@@ -104,7 +100,9 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
             setBackgroundResource(R.drawable.shape_rect_stay_room_grid_description_background)
 
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                if (showTopMargin) topMargin = ScreenUtils.dpToPx(context, 2.0)
+                if (showTopMargin) {
+                    topMargin = ScreenUtils.dpToPx(context, 2.0)
+                }
 
                 setTextColor(context.resources.getColor(R.color.default_text_c929292))
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11f)

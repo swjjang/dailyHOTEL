@@ -204,6 +204,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             room.imageInformation.imageMap.bigUrl
         }
+
         Util.requestImageResize(context, dataBinding.simpleDraweeView, stringUrl)
 
         dataBinding.roomNameTextView.text = room.name
@@ -263,7 +264,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
 
         val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
-        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length -1)
+        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length - 1)
 
         val priceUnitText = context.resources.getString(R.string.currency) + if (listAdapter.getNights() > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
         dataBinding.discountPriceUnitTextView.text = priceUnitText
@@ -356,7 +357,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val typeStringList = mutableListOf<String>()
 
-        bedTypeList?.forEach { bedTypeInformation ->
+        bedTypeList?.forEachIndexed { index, bedTypeInformation ->
             val bedType: StayRoomAdapter.BedType = try {
                 StayRoomAdapter.BedType.valueOf(bedTypeInformation.bedType.toUpperCase())
             } catch (e: Exception) {
@@ -369,7 +370,15 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 R.drawable.vector_ic_detail_item_bed_double
             }
 
-            typeStringList += "${bedType.getName(context)} ${bedTypeInformation.count}"
+            typeStringList += if (StayRoomAdapter.BedType.UNKNOWN == bedType) {
+                bedType.getName(context)
+            } else {
+                "${bedType.getName(context)} ${bedTypeInformation.count}" + if (index == bedTypeList.size - 1) {
+                    context.resources.getString(R.string.label_bed_count_end_string)
+                } else {
+                    ""
+                }
+            }
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {

@@ -1923,5 +1923,6 @@
     <string name="label_person_age_range_format">%1$d세 - %2$d세</string>
     <string name="label_person_age_and_over_format">%1$d세 이상</string>
     <string name="label_person_age_under_format">%1$d세 미만</string>
-    <string name="dialog_message_check_consecutive">"2박 이상 투숙 시 현장에서\n추가요금 결제가 필요한 객실입니다.\n계속해서 예약하시겠습니까?"</string>
+    <string name="dialog_message_check_consecutive">2박 이상 투숙 시 현장에서\n추가요금 결제가 필요한 객실입니다.\n계속해서 예약하시겠습니까?</string>
+    <string name="label_bed_count_end_string">개</string>
 </resources>

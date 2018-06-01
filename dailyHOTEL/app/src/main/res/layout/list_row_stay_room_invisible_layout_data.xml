@@ -18,6 +18,7 @@
                 android:id="@+id/simpleDraweeView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="@color/default_line_cf0f0f0"
                 app:layout_constraintDimensionRatio="H,3:2"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -28,38 +29,6 @@
                 fresco:roundTopLeft="true"
                 fresco:roundTopRight="true"
                 fresco:roundedCornerRadius="6dp"/>
-
-            <!--<View-->
-                <!--android:id="@+id/moreIconView"-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_marginBottom="15dp"-->
-                <!--android:layout_marginRight="15dp"-->
-                <!--android:background="@drawable/detail_ic_more_img"-->
-                <!--app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"-->
-                <!--app:layout_constraintRight_toRightOf="@id/simpleDraweeView"/>-->
-
-            <!--<View-->
-                <!--android:id="@+id/vrIconView"-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_marginBottom="15dp"-->
-                <!--android:layout_marginLeft="15dp"-->
-                <!--android:background="@drawable/detail_ic_vr_img"-->
-                <!--android:visibility="gone"-->
-                <!--app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"-->
-                <!--app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView"/>-->
-
-            <!--<com.daily.base.widget.DailyImageView-->
-                <!--android:id="@+id/closeImageView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="11dp"-->
-                <!--android:paddingLeft="15dp"-->
-                <!--android:paddingRight="10dp"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="parent"-->
-                <!--app:srcCompat="@drawable/navibar_ic_x_white"/>-->
         </android.support.constraint.ConstraintLayout>
 
         <android.support.v4.widget.NestedScrollView
