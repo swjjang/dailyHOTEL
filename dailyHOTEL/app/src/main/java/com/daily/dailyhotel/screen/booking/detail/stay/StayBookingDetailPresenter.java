@@ -1217,7 +1217,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     @Override
     public void onViewDetailClick()
     {
-        if (getActivity() == null || mStayBookingDetail == null || mCommonDateTime == null || lock() == true)
+        if (getActivity() == null || mStayBookingDetail == null || mCommonDateTime == null || lock())
         {
             return;
         }
@@ -1249,7 +1249,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     @Override
     public void onNavigatorClick()
     {
-        if (getActivity() == null || mStayBookingDetail == null || lock() == true)
+        if (getActivity() == null || mStayBookingDetail == null || lock())
         {
             return;
         }

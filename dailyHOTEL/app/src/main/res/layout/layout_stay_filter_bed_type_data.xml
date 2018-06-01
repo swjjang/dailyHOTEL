@@ -6,7 +6,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bedTypeLayout"
         android:layout_width="match_parent"
-        android:layout_height="67dp">
+        android:layout_height="67dp"
+        android:layout_marginTop="10dp">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/doubleTextView"

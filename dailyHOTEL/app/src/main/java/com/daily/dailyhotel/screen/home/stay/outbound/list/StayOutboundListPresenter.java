@@ -763,7 +763,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             if (observable != null)
             {
-                screenLock(true);
+                screenLock(false);
 
                 setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
@@ -775,7 +775,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
                         notifyFilterChanged();
 
-                        onRefreshAll(true);
+                        onRefreshAll(false);
                     }
                 }, new Consumer<Throwable>()
                 {

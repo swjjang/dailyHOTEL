@@ -305,7 +305,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
 
             if (gourmet.latitude == latLng.latitude && gourmet.longitude == latLng.longitude)
             {
-                PlaceRenderer placeRenderer = new PlaceRenderer(getContext(), gourmet.discountPrice, R.drawable.bg_hotel_price_special1);
+                PlaceRenderer placeRenderer = new PlaceRenderer(getContext(), gourmet.discountPrice, R.drawable.bg_hotel_price_900034);
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -738,7 +738,7 @@ public class GourmetMapFragment extends com.google.android.gms.maps.SupportMapFr
             return;
         }
 
-        PlaceRenderer placeRenderer = new PlaceRenderer(context, gourmetClusterItem.getGourmet().discountPrice, R.drawable.bg_hotel_price_special1);
+        PlaceRenderer placeRenderer = new PlaceRenderer(context, gourmetClusterItem.getGourmet().discountPrice, R.drawable.bg_hotel_price_900034);
         BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
         if (icon == null)

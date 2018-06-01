@@ -24,6 +24,6 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="7dp"
-        android:textColor="@color/hoteldetail_image_tag_text"
+        android:textColor="@color/white"
         android:textSize="12dp"/>
 </RelativeLayout>

@@ -8,7 +8,7 @@
         android:layout_width="1px"
         android:layout_height="44dp"
         android:layout_centerHorizontal="true"
-        android:background="@color/selectarea_underline"/>
+        android:background="@color/default_line_cdcdcdd"/>
 
     <LinearLayout
         android:id="@+id/areaLayout1"
@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/verticalLine"
-        android:background="@color/selectarea_underline"/>
+        android:background="@color/default_line_cdcdcdd"/>
 
     <View
         android:id="@+id/lastUnderLineView"

@@ -315,8 +315,8 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
-                String type = null;
-                String displayName = null;
+                String type;
+                String displayName;
 
                 try
                 {
@@ -510,8 +510,8 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
 
-                String type = null;
-                String displayName = null;
+                String type;
+                String displayName;
 
                 try
                 {

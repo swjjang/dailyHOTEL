@@ -102,6 +102,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private var showRoomPriceType: PriceType = PriceType.TOTAL
     private var bedTypeFilter: LinkedHashSet<String> = linkedSetOf()
     private var facilitiesFilter: LinkedHashSet<String> = linkedSetOf()
+    private var tempBedTypeFilter: LinkedHashSet<String> = linkedSetOf()
+    private var tempFacilitiesFilter: LinkedHashSet<String> = linkedSetOf()
+
     private var checkOneTime = false
 
     private val bookDateTime = StayBookDateTime()
@@ -705,6 +708,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         status = Status.ROOM_FILTER
 
         stayDetail?.let {
+            tempBedTypeFilter.clear()
+            tempBedTypeFilter.addAll(bedTypeFilter)
+            tempFacilitiesFilter.clear()
+            tempFacilitiesFilter.addAll(facilitiesFilter)
+
+            viewInterface.setSelectedRoomFilter(tempBedTypeFilter, tempFacilitiesFilter)
+            viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, tempBedTypeFilter, tempFacilitiesFilter))
+
             addCompositeDisposable(viewInterface.showRoomFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
 
             analytics.onEventRoomFilterClick(activity)
@@ -1053,25 +1064,25 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     override fun onSelectedBedTypeFilter(selected: Boolean, bedType: String) {
         if (selected) {
-            bedTypeFilter.add(bedType)
+            tempBedTypeFilter.add(bedType)
         } else {
-            bedTypeFilter.remove(bedType)
+            tempBedTypeFilter.remove(bedType)
         }
 
         stayDetail?.let {
-            viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
+            viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, tempBedTypeFilter, tempFacilitiesFilter))
         } ?: Util.restartApp(activity)
     }
 
     override fun onSelectedFacilitiesFilter(selected: Boolean, facilities: String) {
         if (selected) {
-            facilitiesFilter.add(facilities)
+            tempFacilitiesFilter.add(facilities)
         } else {
-            facilitiesFilter.remove(facilities)
+            tempFacilitiesFilter.remove(facilities)
         }
 
         stayDetail?.let {
-            viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
+            viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, tempBedTypeFilter, tempFacilitiesFilter))
         } ?: Util.restartApp(activity)
     }
 
@@ -1079,6 +1090,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (lock()) return
 
         status = Status.BOOKING
+
+        tempBedTypeFilter.clear()
+        tempFacilitiesFilter.clear()
 
         addCompositeDisposable(viewInterface.hideRoomFilter().observeOn(AndroidSchedulers.mainThread()).subscribe { unLockAll() })
     }
@@ -1092,10 +1106,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun setResetRoomFilter() {
-        resetRoomFilter()
+        tempBedTypeFilter.clear()
+        tempFacilitiesFilter.clear()
 
         stayDetail?.let {
-            viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
+            viewInterface.setSelectedRoomFilter(tempBedTypeFilter, tempFacilitiesFilter)
             viewInterface.setSelectedRoomFilterCount(it.roomInformation?.roomList?.size ?: 0)
         }
     }
@@ -1112,13 +1127,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         analytics.onScreenStayInformation(activity)
     }
 
-    private fun resetRoomFilter() {
-        bedTypeFilter.clear()
-        facilitiesFilter.clear()
-    }
-
     override fun onConfirmRoomFilterClick() {
         if (lock()) return
+
+        bedTypeFilter.clear()
+        bedTypeFilter.addAll(tempBedTypeFilter)
+
+        facilitiesFilter.clear()
+        facilitiesFilter.addAll(tempFacilitiesFilter)
 
         stayDetail?.let {
             notifyRoomDataSetChanged()
@@ -1208,7 +1224,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
                 setConciergeInformation()
 
-                viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
             }
 

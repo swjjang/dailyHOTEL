@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.R;
 
 public class PlaceNameInfoWindowAdapter implements InfoWindowAdapter
 {
-    private LayoutInflater mLayoutInflater = null;
+    private LayoutInflater mLayoutInflater;
 
     public PlaceNameInfoWindowAdapter(Context context)
     {

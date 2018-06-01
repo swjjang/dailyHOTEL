@@ -89,6 +89,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
+@Deprecated
 public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListener, ActivityStayDetailDataOldBinding>//
     implements StayDetailViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
 {

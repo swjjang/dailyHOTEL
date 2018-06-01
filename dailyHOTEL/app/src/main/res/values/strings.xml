@@ -7,36 +7,23 @@
     <string name="app_name">DAILYHOTEL</string>
     <string name="facebook_app_id">268888829950610</string>
     <string name="fb_login_protocol_scheme">fb268888829950610</string>
-    <string name="homepage">http://dailyhotel.kr</string>
-    <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
     <string name="label_currency_more">원~</string>
-    <string name="currency_format">###,##0원</string>
-    <string name="currency_format_prefix">₩ ###,##0</string>
     <string name="label_map">지도</string>
     <string name="label_list">목록</string>
     <string name="label_dailychoice">데일리초이스</string>
     <string name="label_local_plus">지역 플러스</string>
-    <string name="label_google_map">Google Map</string>
     <string name="label_hotel">호텔</string>
     <string name="label_stay">스테이</string>
     <string name="label_gourmet">고메</string>
-    <string name="label_restaurant">레스토랑</string>
     <string name="label_shortcut_search_stay">스테이 검색하기</string>
     <string name="label_shortcut_search_gourmet">레스토랑 검색하기</string>
     <string name="label_shortcut_event_main">이벤트 확인하기</string>
     <string name="label_shortcut_booking_list">예약내역 확인하기</string>
     <string name="label_shortcut_disable_message">사용 할 수 없는 shortcut 입니다.</string>
-    <string name="label_dailygourmet">DAILYGOURMET</string>
-    <string name="label_dailyhotel">DAILYHOTEL</string>
-    <string name="label_paradise">PARADISE IS WHERE WE ARE</string>
-    <string name="label_share">공유</string>
     <string name="label_doshare">공유하기</string>
     <string name="label_share_kakao">카카오톡으로 보내기</string>
-    <string name="label_share_sms">문자메시지로 보내기</string>
     <string name="label_copy_link">링크 복사하기</string>
-    <string name="label_question">문의</string>
-    <string name="label_sort">정렬</string>
     <string name="label_daily_kakaotalk">데일리 카카오톡 문의</string>
     <string name="label_restaurant_direct_phone">레스토랑 직접 전화 문의</string>
     <string name="label_hotel_reservation_phone">스테이 전화 문의(예약 관련)</string>
@@ -54,14 +41,10 @@
     <string name="label_share_google_map">구글 지도</string>
     <string name="label_share_tmap_navi">티맵</string>
     <string name="label_share_kakao_navi">카카오내비</string>
-    <string name="label_completed">완료</string>
     <string name="label_navigator">길찾기</string>
     <string name="label_copy_address">주소복사</string>
     <string name="label_copy_account_number">계좌번호 복사</string>
-    <string name="label_register_card">카드 등록하기</string>
     <string name="label_manager">카드변경/관리하기</string>
-    <string name="label_search">검색</string>
-    <string name="label_do_search">검색 하기</string>
     <string name="label_filter">필터</string>
     <string name="label_phone">전화</string>
     <string name="label_location">위치</string>
@@ -74,16 +57,11 @@
     <string name="label_nights">%1$d박</string>
     <string name="label_gourmet_detail_satisfaction">실제 방문객 %1$d%%가 만족하였습니다. (%2$s명 평가)</string>
     <string name="label_list_satisfaction">%1$d%%</string>
-    <string name="label_sender">보낸사람</string>
-    <string name="label_send_mail">문의하기</string>
     <string name="label_daily_concierge_to_call">데일리 컨시어지 문의하기</string>
     <string name="label_how_to_visit">방문 방법</string>
     <string name="label_no_parking">주차 불가능</string>
     <string name="label_daily_gourmet">데일리고메</string>
     <string name="label_daily_hotel">데일리호텔</string>
-    <string name="label_detail">상세</string>
-    <string name="label_select_product">상품 선택하기</string>
-    <string name="label_product_detail">상품 상세</string>
     <string name="label_office_hours">이용시간</string>
     <string name="label_checklist">확인사항</string>
     <string name="label_available_persons">이용인원</string>
@@ -91,16 +69,11 @@
     <string name="label_truereview">트루리뷰</string>
     <string name="label_tripadvisorrating">트립어드바이저 평점</string>
     <string name="label_password">비밀번호</string>
-    <string name="label_daily_truereview">데일리 트루리뷰</string>
     <string name="label_dailyhotel_guide">데일리호텔 소개</string>
     <string name="label_dailyh_lifestyle">데일리 라이프스타일 프로젝트</string>
     <string name="label_dailyh_sns">데일리 SNS</string>
     <string name="label_customer">고객님</string>
-    <string name="label_region_name">지역명</string>
-    <string name="label_subway_station">지하철역</string>
-    <string name="label_trueview">트루뷰</string>
     <string name="label_dont_again">다시보지 않기</string>
-    <string name="label_search_stay_outbound">해외호텔 검색하기</string>
     <string name="label_do_booking">예약하기</string>
     <string name="label_changing_date">날짜 변경하기</string>
     <string name="label_collapse">접기</string>
@@ -113,7 +86,6 @@
     <string name="label_include_tax">(세금/봉사료 포함)</string>
     <string name="label_download_coupon_price">%1$s 쿠폰 다운받기</string>
     <string name="label_event">EVENT</string>
-    <string name="label_delete">삭제</string>
     <string name="label_area_list">지역명</string>
     <string name="label_subway_list">지하철역</string>
     <string name="label_allow_notification">알림허용</string>
@@ -124,13 +96,10 @@
     <string name="label_count_gourmet">%1$d개 고메</string>
     <string name="label_recently_stay">최근 확인한 스테이</string>
     <string name="label_recently_gourmet">최근 확인한 고메</string>
-    <string name="label_popular_tag">인기 태그</string>
 
     <string name="label_visit_walk">도보</string>
     <string name="label_visit_car">차량</string>
     <string name="label_parking_information">주차 정보 안내</string>
-    <string name="label_view_detail">자세히 보기</string>
-    <string name="label_truevr">트루VR</string>
     <string name="label_vr">VR</string>
     <string name="label_distance_km">%1$skm</string>
     <string name="label_distance_100m">100m 이내</string>
@@ -144,48 +113,13 @@
     <string name="label_bracket_free">(무료)</string>
     <string name="label_bracket_pay">(유료)</string>
 
-    <string name="label_cardcd01">외환</string>
-    <string name="label_cardcd03">롯데</string>
-    <string name="label_cardcd04">현대</string>
-    <string name="label_cardcd06">국민</string>
-    <string name="label_cardcd11">BC</string>
-    <string name="label_cardcd12">삼성</string>
-    <string name="label_cardcd14">신한</string>
-    <string name="label_cardcd15">한미</string>
-    <string name="label_cardcd16">NH</string>
-    <string name="label_cardcd17">하나 SK</string>
-    <string name="label_cardcd21">해외비자</string>
-    <string name="label_cardcd22">해외마스터</string>
-    <string name="label_cardcd23">JCB</string>
-    <string name="label_cardcd24">해외아멕스</string>
-    <string name="label_cardcd25">해외다이너스</string>
-    <string name="label_cardcd26">중국은련</string>
-    <string name="label_cardcd32">광주</string>
-    <string name="label_cardcd33">전북</string>
-    <string name="label_cardcd34">하나</string>
-    <string name="label_cardcd35">산업카드</string>
-    <string name="label_cardcd41">NH</string>
-    <string name="label_cardcd43">씨티</string>
-    <string name="label_cardcd44">우리</string>
-    <string name="label_cardcd48">신협체크</string>
-    <string name="label_cardcd51">수협</string>
-    <string name="label_cardcd52">제주</string>
-    <string name="label_cardcd54">MG새마을금고체크</string>
-    <string name="label_cardcd71">우체국체크</string>
-    <string name="label_cardcd95">저축은행체크</string>
-
     <string name="message_detail_copy_address">주소가 복사되었습니다.</string>
     <string name="message_detail_copy_account_number">계좌번호가 복사되었습니다.</string>
-    <string name="message_no_more_list">마지막 목록입니다.</string>
-    <string name="message_wishlist_tooltip">위시리스트, 확인한 스테이/레스토랑을 확인해보세요!</string>
-    <string name="message_end_event">이벤트 기간이 종료되었습니다.\n다른 이벤트를 확인하시겠어요?</string>
 
     <!-- Transition Name -->
     <string name="transition_place_image">placeImage</string>
     <string name="transition_gradient_bottom_view">gradientBottomView</string>
     <string name="transition_gradient_top_view">gradientTopView</string>
-    <string name="transition_title">title</string>
-    <string name="transition_subtitle">subTitle</string>
     <string name="transition_layout">layout</string>
 
     <!-- Stay Grade -->
@@ -211,13 +145,9 @@
     <!-- Actionbar Titles -->
     <string name="actionbar_title_booking_list_frag">예약내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
-    <string name="actionbar_title_invite_friends">친구 초대하기</string>
     <string name="actionbar_title_reg_creditcard">간편결제 카드 등록하기</string>
     <string name="actionbar_title_setting_frag">더보기</string>
     <string name="actionbar_title_error_frag">DAILY</string>
-    <string name="actionbar_title_wait_timer_frag">DAILYHOTEL</string>
-    <string name="actionbar_title_booking_tab_activity">예약확인</string>
-    <string name="actionbar_title_faq_activity">자주 묻는 질문</string>
     <string name="actionbar_title_forgot_pwd_activity">비밀번호 찾기</string>
     <string name="actionbar_title_login_activity">로그인</string>
     <string name="actionbar_title_notice_activity">공지사항</string>
@@ -231,8 +161,6 @@
     <string name="actionbar_title_signup_2_activity">회원가입(2/2)</string>
     <string name="actionbar_title_userinfo_update_activity">회원정보 수정</string>
     <string name="actionbar_title_term_activity">이용약관</string>
-    <string name="actionbar_title_version_activity">버전정보</string>
-    <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
     <string name="actionbar_title_payment_wait_reservation_title">예약 정보</string>
     <string name="actionbar_title_payment_wait_reservation_place_title">예약 장소</string>
@@ -262,15 +190,12 @@
     <string name="toast_msg_failed_to_get_payment_info">결제 정보를 가져올 수 없습니다.</string>
     <string name="toast_msg_retry_payment_after_install_app">해당 어플을 설치 후 다시 시도해 주세요.</string>
     <string name="toast_msg_cancel_payment">결제를 취소했습니다.</string>
-    <string name="toast_msg_profile_not_changed">변경된 사항이 없습니다.</string>
-    <string name="toast_msg_profile_success_to_change">업데이트를 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_phonenumber">휴대폰 번호 설정을 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_name">이름 설정을 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_password">비밀번호 설정을 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_email">이메일 설정을 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_birthday">생일 설정을 완료했습니다.</string>
     <string name="toast_msg_wrong_max_password_length">최대 50자까지 입력 가능합니다.</string>
-    <string name="toast_msg_please_check_checklist">확인사항 동의에 체크해주세요.</string>
 
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인했습니다.</string>
@@ -283,7 +208,6 @@
     <string name="toast_msg_failed_paswword_verify">회원님의 개인정보 보호를 위해\n보다 안전한 비밀번호를 사용해주세요.</string>
     <string name="toast_msg_success_to_signup">회원가입을 완료했습니다.</string>
     <string name="toast_msg_failed_to_signup">회원가입에 실패했습니다. 다시 시도해주세요.</string>
-    <string name="toast_msg_already_latest_version">이미 최신버전입니다.</string>
     <string name="toast_msg_thanks_to_your_opinion">소중한 의견 감사합니다.</string>
     <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다.</string>
     <string name="toast_msg_backpressed_has_cart">앱을 종료하시면 추가하신 메뉴가 모두 삭제됩니다. \'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다.</string>
@@ -297,36 +221,26 @@
     <string name="toast_msg_no_hotel_call">전화기능을 사용할 수 없는 기기입니다.\스테이 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_no_call_web">전화기능을 사용할 수 없는 기기입니다</string>
     <string name="toast_msg_no_gourmet_call">전화기능을 사용할 수 없는 기기입니다.\n레스토랑 전화번호는 %1$s입니다.</string>
-    <string name="toast_msg_dont_past_hotelinfo">이전 날짜 정보는 조회 할 수 없습니다.</string>
-    <string name="toast_msg_maxcount_ticket">한번에 구매할 수 있는 최대 수량은 %1$d개 입니다.</string>
-    <string name="toast_msg_none_reservationtime_ticket">방문 시간은 %1$s 사이로 선택해주세요.</string>
-    <string name="toast_msg_please_select_reservationtime">방문 시간을 선택하세요.</string>
     <string name="toast_msg_solodout_area">판매할 수 있는 지역이 없습니다.</string>
     <string name="toast_msg_input_error_phonenumber">휴대폰 번호를 다시 확인해주세요.</string>
-    <string name="toast_msg_confirm_mobilenumber">전화번호를 확인해주세요.</string>
     <string name="toast_msg_terms_agreement">이용약관 항목을 체크해주세요.</string>
     <string name="toast_msg_terms_fourteen">만 14세 이상 항목을 체크해주세요.</string>
     <string name="toast_msg_personal_agreement">개인정보 처리 방침 항목을 체크해주세요.</string>
     <string name="toast_message_failed_install">앱 설치 요청을 할 수 없습니다. 구글 플레이 스토어를 설치하고 사용해주세요.</string>
-    <string name="toast_msg_dont_support_service_phone">해당 기기는 서비스를 지원하지 않습니다. 다른 기기를 이용해 주세요.</string>
     <string name="toast_msg_dont_support_googleplay">연결 가능한 앱이 없습니다.\n구글 플레이 스토어 앱 설치를 확인해 주세요.</string>
     <string name="toast_msg_register_coupon_empty_keyword">할인쿠폰 코드를 정확하게 입력했는지 다시 확인해주세요.</string>
     <string name="toast_msg_copy_link">링크가 복사되었습니다.</string>
 
     <!-- Dialog Messages -->
-    <string name="dialog_title_notice">공지</string>
-    <string name="dialog_msg_sent_email">이메일이 발송되었습니다.</string>
     <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어있지 않습니다.\n설치를 눌러 진행해주세요.\n취소를 누르면 결제가 취소됩니다.</string>
     <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치되어있지 않습니다.\n설치하시겠어요?</string>
     <string name="dialog_msg_chk_wanna_login">로그아웃하시겠어요?</string>
     <string name="dialog_msg_chk_cancel_payment">결제를 취소하시겠어요?</string>
     <string name="dialog_msg_chk_cancel_payment_progress">결제 진행중입니다.\n취소하시겠어요?</string>
     <string name="dialog_msg_not_installed_kakaotalk">카카오톡이 설치되어 있지 않습니다.\n카카오톡을 설치하시겠습니까?</string>
-    <string name="dialog_msg_network_please_off_airplain">에어플레인 모드를 끄거나 WIFI를 사용해주세요.</string>
     <string name="dialog_msg_network_unstable_retry_or_set_wifi">인터넷에 연결할 수 없습니다.\n다시 시도하거나 네트워크 설정을 확인해주세요.</string>
     <string name="dialog_msg_please_update_new_version">지금 업데이트하여\n더욱 편리해진 데일리호텔을 경험해보세요!</string>
     <string name="dialog_msg_update_now">지금 업데이트하여\n더욱 편리해진 데일리호텔을 경험해보세요!</string>
-    <string name="dialog_msg_do_not_support_dailyhotel">데일리호텔앱은 Android  2.3.x 버전 이하 운영체제를 지원하지 않습니다.</string>
     <string name="dialog_msg_hotel_payment_message01">선택하신 상품의 &lt;b&gt;취소 및 환불 규정을 다시 한번 확인&lt;/b&gt;해주시기 바랍니다.</string>
     <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'의 경우 베드 타입을 보장하지 않으며 2인이 투숙할 수 있는 객실로 배정됩니다.</string>
     <string name="dialog_msg_hotel_payment_message03">미성년자는 보호자 동반시 투숙 가능합니다.</string>
@@ -339,7 +253,6 @@
     <string name="dialog_msg_hotel_payment_message_pension_4">해당 예약은 확정 예약이 아닌 &lt;b&gt;대기 예약&lt;/b&gt;으로, 결제 완료 시 예약대기 상태이며, &lt;b&gt;해당 스테이 영업시간 내에 예약확정 여부가 문자로 발송됩니다.&lt;/b&gt;</string>
     <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요.</string>
     <string name="dialog_msg_hotel_payment_message14">환불 불가 표시 상품의 경우 규정과 상관없이 변경, 취소, 환불이 &lt;b&gt;절대 불가&lt;/b&gt;합니다.</string>
-    <string name="dialog_msg_hotel_payment_overlap">동일한 체크인 날짜에\n예약한 건이 있습니다.\n예약을 진행할까요?</string>
     <string name="dialog_msg_hotel_payment_changed_price">가격이 변경되었으니 확인 후 결제해주세요.</string>
 
 
@@ -376,9 +289,6 @@
     <string name="dialog_btn_text_pay">결제완료</string>
     <string name="dialog_notice2">알림</string>
     <string name="dialog_title_payment">결제알림</string>
-    <string name="dialog_btn_text_see">보기</string>
-    <string name="dialog_btn_install">설치</string>
-    <string name="dialog_btn_update">업데이트</string>
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_btn_text_input_other_phonenumber">다른 번호 입력</string>
     <string name="dialog_btn_text_continue">계속 진행</string>
@@ -389,29 +299,18 @@
     <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소할까요?</string>
     <string name="dialog_msg_delete_register_creditcard">등록하신 결제카드를 삭제할까요?</string>
     <string name="dialog_msg_session_expired">세션이 만료되어 다시 시작합니다.</string>
-    <string name="dialog_msg_processing_payment">결제 진행중입니다. 잠시만 기다려주세요.</string>
     <string name="dialog_msg_delete_failed_creditcard">결제카드 삭제에 실패했습니다.</string>
     <string name="dialog_msg_delete_booking">이용 완료한 내역을 삭제할까요?</string>
-    <string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격 혹은 객실이 변경되었습니다. 확인 뒤 결제해주세요.</string>
-    <string name="dialog_msg_changed_bonus">적립금이 변동되었습니다.\n확인 뒤 결제해주세요.</string>
     <string name="dialog_title_used_gps">위치 정보 사용</string>
     <string name="dialog_msg_used_gps">내 위치 정보를 사용하려면, 단말기의 설정에서 \'위치 서비스\' 사용을 허용해주세요.</string>
-    <string name="dialog_msg_used_gps_android6">위치 정보 퍼미션에 \'허용\'되어 있는지 확인 부탁드립니다.</string>
     <string name="dialog_msg_stay_stop_onsale">선택하신 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 스테이를 확인해주세요.</string>
-    <string name="dialog_msg_gourmet_stop_onsale">선택하신 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
     <string name="dialog_title_googleplayservice">Google Play Services</string>
     <string name="dialog_msg_install_update_googleplayservice">맵을 사용하려면 Google Play Services를 설치하거나(사용가능) 업데이트해야 합니다.</string>
     <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족해 앱이 종료됩니다.\n메모리 정리 후 다시 실행해주세요.</string>
     <string name="dialog_msg_facebook_update">신속한 예약 진행을 위해 회원정보를 추가로 입력해주세요.</string>
     <string name="dialog_msg_invalid_email">이메일주소가 잘못 입력되어있습니다.\n수정 후 계속해서 예약을 진행해주세요.</string>
-    <string name="dialog_msg_none_gcmid">Google Play Service(업데이트 혹은 미설치)를 사용할 수 없어 결제 알림을 받지 못할 수 있습니다. 결제 후 예약 내역에서 확인해주세요.</string>
-    <string name="dialog_msg_internal_error">세션이 만료되었습니다. 종료 후 다시 시도해주세요.\n사용에 불편함이 있으시면 데일리 고객센터 1800–9120 문의해주세요.</string>
-    <string name="dialog_msg_exfired_session">세션이 만료되어 로그아웃되었습니다.\n다시 로그인해주세요.</string>
     <string name="dialog_msg_already_agree_benefit_on">이미 데일리호텔이 드리는 혜택 알림 수신에 동의하였습니다.</string>
 
-    <string name="dialog_msg_changed_price">상품의 가격이 변경되었습니다. 확인 후 결제해주세요.</string>
-    <string name="dialog_msg_changed_time">방문할 수 있는 시간이 변경되었습니다. 확인 후 다시 선택해주세요.</string>
-    <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
     <string name="dialog_message_coupon_list_login">로그인 후 할인 쿠폰함을 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="dialog_message_profile_login">로그인 후 내정보를 확인할 수 있습니다.\n로그인 할까요?</string>
@@ -419,9 +318,6 @@
     <string name="dialog_message_register_coupon_login">로그인 후 할인쿠폰 등록을 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="dialog_information">안내</string>
     <string name="dialog_message_none_operating_time"> 특별한 하루의 시작, 데일리입니다.\n아쉽게도 현재 상담시간이 아닙니다.\n상담 가능 시간에 다시 문의 부탁드립니다.\n\n상담시간 : 오전 %1$s시 ~ 익일 새벽%2$s시\n점심시간 : %3$s ~ %4$s</string>
-
-    <string name="dialog_message_check_stayoutbound_search">해외스테이를 검색 중이세요?</string>
-    <string name="dialog_message_check_gourmet_search">데일리고메 레스토랑을 검색 중이세요?</string>
 
     <string name="dialog_message_need_install_gms">Google Play 설치 후 이용해주세요.</string>
     <string name="dialog_message_need_reinstall_gms">현재 Google Play 버전 삭제 후 다시 설치하시고 이용해주세요.</string>
@@ -441,40 +337,22 @@
     <string name="mail_text_dialog_title">이메일 선택</string>
     <string name="mail_text_subject">데일리호텔에 문의합니다.</string>
     <string name="mail_text_desc">데일리호텔(v%1$s)의 안드로이드(%2$s) 어플리케이션에 관한 문의입니다.</string>
-    <string name="mail_base_information">데일리호텔 안드로이드 어플리케이션에 관한 문의입니다.\n(%1$s)</string>
 
     <!-- Prefix Text -->
     <string name="prefix_expire_time">유효기간</string>
 
-    <!-- KaKaoLink Message -->
-    <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인 코드  : </string>
-    <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
-    <string name="kakaolink_msg_invited_friend">%1$s님이 추천하는\nNo.1 호텔예약앱 데일리호텔!\n\n회원가입시 추천인 코드  [ %2$s ]를 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n추천인 코드 : [ %3$s ]\n\n데일리호텔에서 5,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 특가에 만나보세요!</string>
-    <string name="kakaolink_msg_none_name_invited_friend">No.1 호텔예약앱 데일리호텔!\n\n회원가입시 추천인 코드  [ %1$s ]를 넣으시고,\n바로 사용 가능한 적립금 5,000원을 받으세요.\n\n추천인 코드 : [ %2$s ]\n\n데일리호텔에서 5,000여개의 특급호텔, 펜션, 레스토랑을 최대 80%% 할인된 특가에 만나보세요!</string>
-
     <!-- Alarm Message -->
-    <string name="txt_payment_wait_confirm">입금 순서대로 예약이 확정되며,\n객실 예약이 조기에 마감될 수 있습니다.\n마감시 입금하신 계좌로 전액 환불됩니다.</string>
-    <string name="txt_payment_wait_when_complete">10분이내에 예약완료 문자가 도착합니다.</string>
     <string name="toast_msg_retry_login">다시 로그인해주세요</string>
-    <string name="toast_msg_is_not_available_google_service">구글 플레이 서비스를 이용할 수 없습니다.</string>
 
     <!-- Setting Fragment -->
-    <string name="frag_customer_center">고객센터</string>
     <string name="frag_call_res_contact">데일리 고객센터 전화 문의</string>
     <string name="frag_daily_kakao">데일리 카카오톡 문의</string>
     <string name="frag_send_mail">데일리 의견 메일 보내기</string>
-    <string name="frag_notice">공지사항</string>
     <string name="frag_faqs">자주 묻는 질문</string>
-    <string name="frag_info">소개</string>
     <string name="frag_terms_and_policy">약관 및 정책</string>
     <string name="frag_opensource_license">오픈소스 라이센스</string>
-    <string name="frag_app">앱</string>
-    <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">혜택 알림 받기</string>
     <string name="frag_push_alert_subtext">할인쿠폰, 이벤트 등의 특별한 혜택 및 상품 정보를 받아보실 수 있어요!\n수신 여부와 상관없이, 사용 가능 쿠폰 및 예약 알림 등의 알림은 발송됩니다.</string>
-    <string name="label_agree_sms">SMS 수신 동의</string>
-    <string name="frag_account">계정</string>
-    <string name="frag_profile">내정보</string>
     <string name="frag_login">로그인</string>
     <string name="frag_need_login">로그인해주세요.</string>
     <string name="frag_signup">회원가입</string>
@@ -485,7 +363,6 @@
     <string name="frag_view_creditcard">결제카드 관리</string>
     <string name="frag_count_decimal_format">(###,##0개)</string>
     <string name="frag_currency_decimal_format">(###,##0원)</string>
-    <string name="frag_recommend_text">친구 추천하고 5,000원 받기</string>
     <string name="frag_recent_places">최근 확인한 스테이/고메</string>
 
     <string name="label_link_facebook">데일리 페이스북</string>
@@ -496,62 +373,30 @@
 
     <string name="message_empty_notice">공지사항이 없습니다.</string>
     <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다. 여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>
-    <string name="message_input_email">이메일 주소를 입력해 주세요.</string>
-    <string name="message_input_email_body">이메일 내용을 입력해 주세요.</string>
-
-    <!-- Version Activity -->
-    <string name="act_current_version">현재 버전: </string>
-    <string name="act_new_version">최신 버전: </string>
-    <string name="act_btn_update">최신 버전 업데이트 하기</string>
 
     <!-- Login Activity -->
     <string name="label_email">이메일</string>
-    <string name="act_login_pwd">비밀번호</string>
-    <string name="act_login_autologin">자동로그인</string>
     <string name="act_login_btn_login">이메일로 로그인하기</string>
     <string name="act_login_forgot_pwd">비밀번호 찾기</string>
     <string name="act_login_signup">이메일로 가입하기</string>
     <string name="act_login_facebook">페이스북으로 계속하기</string>
     <string name="act_login_kakao">카카오계정으로 계속하기</string>
-    <string name="message_login_sns">SNS계정으로 로그인 및 회원가입을 할 수 있습니다.</string>
     <string name="message_login_signup">회원가입을 하시고 적립금, 이벤트 등 다양한 혜택을 누려보세요.</string>
 
     <!-- Bonus Activity -->
-    <string name="act_credit_line1">친구에게 데일리호텔을 추천하고\n5,000원을 선물하세요!</string>
-    <string name="act_credit_line2">(친구가 회원가입시 내 추천인 코드를 입력하면 됩니다.)</string>
-    <string name="act_credit_line3">친구가 데일리호텔에서 첫 예약을 하면\n5,000원을 받을 수 있어요!</string>
-    <string name="act_credit_line4">(친구의 체크아웃 기준으로\n최대 10만원까지 적립할 수 있습니다.)</string>
-    <string name="act_credit_line4_is_exceed_bonus">(최대 10만원을 이미 적립했습니다.)</string>
-    <string name="act_credit_sign_up">회원 가입하고 친구 초대하기</string>
-    <string name="act_credit_view_credit">적립금</string>
     <string name="act_credit_current_credit">보유 적립금</string>
     <string name="act_credit_history">적립금내역</string>
-    <string name="act_credit_kakao">카카오톡으로 친구 초대하기</string>
-    <string name="label_invite_friends">친구 초대하기</string>
-    <string name="label_invite_friends_login_button_text">기존 회원 로그인</string>
-    <string name="label_copy">복사</string>
-    <string name="label_code_copy">코드복사</string>
-    <string name="label_my_code">내 추천인 코드</string>
     <string name="label_bonus_guide">적립금 사용시 유의사항 안내</string>
     <string name="message_no_history_bonus">적립금 내역이 없습니다.</string>
-    <string name="message_daily_recommended_hotel_to_friend">친구에게 데일리호텔을 추천하고\n최대 10만원까지 적립금을 쌓아보세요!</string>
-    <string name="message_copy_recommender_code">추천인 코드가 복사되었습니다.</string>
     <string name="message_you_can_check_the_bonus_after_login">로그인 후 적립금을 확인할 수 있습니다.\n로그인 할까요?</string>
 
-    <!-- Credit List Activity -->
-    <string name="act_history_no_details">적립금 내역이 없습니다.</string>
-
     <!-- Profile Activity -->
-    <string name="act_profile_login_acc">로그인 계정</string>
     <string name="act_profile_email">이메일</string>
-    <string name="act_profile_user">사용자 정보</string>
     <string name="act_profile_name">이름</string>
     <string name="act_profile_password">비밀번호</string>
     <string name="act_profile_contact">휴대폰 번호</string>
-    <string name="act_profile_modify">수정하기</string>
     <string name="act_profile_btn_logout">로그아웃</string>
     <string name="act_profile_input_name">이름을 등록해주세요.</string>
-    <string name="act_profile_input_password">비밀번호를 입력해주세요.</string>
     <string name="act_profile_input_contact">휴대폰 번호를 등록해주세요.</string>
     <string name="act_profile_input_email">이메일을 등록해주세요.</string>
     <string name="act_profile_input_birthday">생일 정보를 입력해주세요.</string>
@@ -560,7 +405,6 @@
     <string name="label_confirm_name">이름 설정 완료</string>
     <string name="label_confirm_birthday">생일 설정 완료</string>
     <string name="label_confirm_password">비밀번호 설정 완료</string>
-    <string name="label_confirm_profile">비밀번호 설정 완료</string>
     <string name="label_dont_verification">(인증필요)</string>
     <string name="label_date_verification">"(%1$s 인증됨)"</string>
     <string name="label_privacy_valid_date">개인정보 유효기간</string>
@@ -581,26 +425,15 @@
     <string name="label_leave_daily_linked_text">여기</string>
 
     <!-- Booking Activity -->
-    <string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다.</string>
-    <string name="act_toast_payment_soldout">모든 객실이 판매되었습니다.\n다음에 이용해주세요.</string>
-    <string name="act_toast_payment_not_available">마지막 상품을 다른 고객님이 결제중입니다.\n추가 상품 확보를 위해 노력하고 있으니 잠시 후 다시 확인해주세요!</string>
     <string name="act_toast_payment_network_error">네트워크 오류가 발생했습니다.\n네트워크 연결을 확인해주세요.</string>
-    <string name="act_toast_payment_invalid_date">판매가 마감되었습니다.</string>
     <string name="act_toast_payment_fail">알 수 없는 오류가 발생했습니다.\n데일리 고객센터로 문의해주세요.</string>
     <string name="act_toast_payment_canceled">결제가 취소되었습니다.</string>
-    <string name="act_toast_payment_account_time_error">입금 대기 시간이 초과되었습니다.\n다시 시도해주세요.</string>
-    <string name="act_toast_payment_account_duplicate_type_hotel">이미 입금 대기 중인 스테이입니다.</string>
-    <string name="act_toast_payment_account_duplicate_type_gourmet">이미 입금 대기 중인 고메입니다.</string>
-    <string name="act_toast_payment_account_timeover">결제 대기시간이 초과되었습니다.\n다시 시도해주세요.</string>
-    <string name="act_booking_chkin_info">체크인 정보</string>
     <string name="act_booking_chkin">체크인</string>
     <string name="act_booking_chkout">체크아웃</string>
     <string name="act_booking_reserver_info">투숙자 정보</string>
     <string name="act_booking_mobile">연락처</string>
     <string name="act_booking_email">이메일</string>
     <string name="act_booking_payment">결제 정보</string>
-    <string name="act_booking_select_payment_type">결제 수단 선택</string>
-    <string name="act_booking_credit_use">적립금 사용</string>
     <string name="act_booking_price">예약 금액</string>
     <string name="act_booking_credit_discount">할인 금액</string>
     <string name="act_booking_price_real">총 결제금액(VAT 포함)</string>
@@ -608,28 +441,18 @@
     <string name="act_booking_pay_mobile">휴대폰 결제</string>
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
-    <string name="act_booking_0won">0원</string>
-    <string name="act_booking_payment_info01">결제가 안되시나요?</string>
-    <string name="act_booking_payment_info02">1800–9120</string>
-    <string name="act_booking_payment_info03">으로 전화주세요.</string>
     <string name="label_booking_hotel_nights">(총 %1$d박)</string>
-    <string name="label_booking_gourmet_count">(총 %1$d개)</string>
-    <string name="action_booking_cardmanager">카드관리</string>
     <string name="label_booking_easypayment">신용/체크카드 간편결제</string>
     <string name="label_booking_used_bonus">적립금 사용</string>
     <string name="label_booking_used_coupon">할인쿠폰 사용</string>
     <string name="label_booking_used_deposit_sticker">스티커 적립</string>
     <string name="label_booking_select_coupon">할인쿠폰 선택</string>
-    <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
     <string name="label_booking_confirm_signature">고객님, 확인하셨나요?</string>
     <string name="label_booking_room_info">객실 정보</string>
     <string name="label_booking_place_name">예약 장소</string>
     <string name="label_booking_room_type">객실 타입</string>
-    <string name="message_booking_easypayment">결제 완료 후 취소 및 환불 불가합니다.\n</string>
     <string name="label_booking_ticket_info">상품 정보</string>
     <string name="label_booking_ticket_type">상품 타입</string>
-    <string name="label_booking_select_ticket_count">수량 선택</string>
-    <string name="label_booking_checklist">확인사항 동의(필수)</string>
     <string name="label_booking_visit_persons">방문 인원</string>
     <string name="label_booking_visit_persons_format">%1$d명</string>
     <string name="label_booking_user_info">예약자 정보</string>
@@ -637,7 +460,6 @@
     <string name="label_booking_user_name">예약자명</string>
     <string name="label_booking_visitor_name">방문자명</string>
     <string name="label_booking_count">%1$d개</string>
-    <string name="label_booking_select">선택하세요</string>
     <string name="label_booking_simplecard_description">(법인카드 결제 가능, 일시불 결제만 가능)</string>
     <string name="label_booking_card_description">(할부 결제 가능)</string>
     <string name="label_booking_phonepay_description">(월 50만원 이내 결제 가능)</string>
@@ -646,7 +468,6 @@
     <string name="label_booking_own_bonus">(보유: %1$s)</string>
     <string name="label_booking_max_coupon_amount">(최대 할인쿠폰: %1$s)</string>
     <string name="label_booking_max_coupon_amount_empty">(사용가능: 없음)</string>
-    <string name="label_booking_memo">예약시 요청사항</string>
     <string name="label_booking_discount_information">할인 정보</string>
     <string name="label_booking_discount_reward_information">할인 및 적립 정보</string>
     <string name="label_booking_step1">1. 예약 정보 확인</string>
@@ -670,11 +491,8 @@
     <string name="label_payment_agree_personal_information04">제공정보</string>
     <string name="label_payment_agree_personal_information05">보유 및 이용기간</string>
 
-    <string name="message_booking_selected_time">시간을 선택해주세요</string>
     <string name="message_guide_name_memo">여권에 기재된 영문과 동일하게 입력</string>
-    <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요</string>
     <string name="message_discount_memo">할인 수단은 중복 사용 할 수 없습니다.</string>
-    <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
     <string name="message_gourmet_booking_please_input_visit_persons">방문 인원수를 선택해주세요.</string>
     <string name="message_gourmet_please_input_guest">방문자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
     <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
@@ -685,7 +503,6 @@
     <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
     <string name="message_stay_check_other_user">예약자와 투숙자가 다를 경우 체크해주세요.</string>
     <string name="message_gourmet_check_other_user">예약자와 방문자가 다를 경우 체크해주세요.</string>
-    <string name="message_gourmet_cancel_coupon_by_count">구매 수량 변경시\n사용하신 할인 쿠폰을\n다시 적용해야 합니다.\n수량을 변경할까요?</string>
     <string name="message_visit_car_memo">업체 사정상 주차장 이용이 어려울 수 있습니다.\n주차가 불가능할 경우 업체에서 사전에 연락을 드릴 예정입니다.</string>
     <string name="message_visit_no_parking_memo">업체 사정상 주차장 이용이 불가능합니다.\n방문 시 도보나 대중교통을 이용해주세요.</string>
     <string name="message_payment_free_payment">결제하실 금액이 없습니다.</string>
@@ -724,8 +541,6 @@
     <string name="label_confirm_password_8over">비밀번호 확인 (8자이상)</string>
     <string name="label_necessary_reservation">필수 입력 (예약시 사용)</string>
     <string name="label_option_benefit">선택 입력 (추후 혜택 제공시 사용)</string>
-    <string name="label_recommender_code_ex">추천인 코드 (예시:123456789)</string>
-    <string name="label_select">선택 입력</string>
     <string name="label_country">국가</string>
     <string name="label_phone_number_special_except">휴대폰 번호 (\'-\'제외)</string>
     <string name="label_certification_number_ndigit">인증번호</string>
@@ -736,6 +551,7 @@
     <string name="label_privacy_valid_date_5year">5년</string>
     <string name="label_sign_up_select_birthday">생일 선택</string>
     <string name="message_privacy_valid_date">미 선택 시에도 정보통신망법을 준수하여 개인정보를 보호합니다.</string>
+    <string name="message_profile_withdrawal">회원 탈퇴하려면 여기를 눌러주세요.</string>
 
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관 동의 (필수)</string>
@@ -746,8 +562,6 @@
     <string name="label_inputmobile">휴대폰 번호 입력</string>
     <string name="label_registeration_mobile">연락처 등록</string>
     <string name="label_view_content">내용보기</string>
-    <string name="label_terms_location">위치정보 이용약관</string>
-    <string name="label_terms_protectchild">청소년 보호 정책</string>
     <string name="label_next">다음</string>
     <string name="label_request_verification">인증번호 받기</string>
     <string name="label_confirm_signup">회원가입 완료</string>
@@ -760,33 +574,18 @@
     <string name="message_signup_step1_password_guide">추측이 너무 쉬운 문자열은 비밀번호로 사용하실 수 없습니다.\n(연속/반복되는 문자열, 이메일주소와 동일한 문자열 등)</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
-    <string name="frag_booking_tab_title">예약</string>
-    <string name="frag_booking_tab_year">년 </string>
-    <string name="frag_booking_tab_month">월 </string>
-    <string name="frag_booking_tab_day">일 </string>
-    <string name="frag_booking_tab_hour">시</string>
     <string name="frag_booking_tab_location">위치</string>
     <string name="frag_booking_tab_bed_type">객실 타입</string>
     <string name="frag_booking_tab_ticket_type">상품 타입</string>
-    <string name="frag_booking_tab_chkin_info">체크인 정보</string>
-    <string name="frag_booking_tab_chkin">체크인</string>
-    <string name="frag_booking_tab_chkout">체크아웃</string>
     <string name="frag_booking_tab_name">투숙자명</string>
     <string name="label_booking_reservation_name">예약자명</string>
     <string name="label_booking_guest_information">투숙자 정보</string>
-    <string name="frag_booking_tab_mobile">투숙자 전화번호</string>
-    <string name="frag_hotel_tab_add">주소</string>
-    <string name="frag_hotel_tab_bed_type">베드타입</string>
-    <string name="frag_hotel_tab_price">가격(세금&amp;봉사료 포함)</string>
-    <string name="label_consult_kakao">문의하기</string>
     <string name="label_booking_ticketcount">수량</string>
     <string name="label_booking_date">날짜</string>
-    <string name="label_reservation_contact">예약자 전화번호</string>
     <string name="label_booking_payment_date">결제일</string>
     <string name="label_booking_cancel_date">취소일</string>
     <string name="label_booking_view_detail">상세 정보 보기</string>
     <string name="label_booking_view_map">길찾기</string>
-    <string name="label_booking_call">문의하기</string>
     <string name="label_booking_input_review">리뷰 입력</string>
     <string name="label_booking_completed_input_review">리뷰 완료</string>
     <string name="label_booking_reservation_information">1. 예약 정보</string>
@@ -803,7 +602,6 @@
     <string name="message_consult03">(점심시간 : %1$s ~ %2$s)</string>
     <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 필수사항 동의 후 [결제하기] 버튼을 눌러주세요.</string>
     <string name="message_booking_detail_do_login">로그인 후 예약 내역을 확인할 수 있습니다.\n로그인 할까요?</string>
-    <string name="message_booking_already_input_review">리뷰를 이미 입력하셨습니다.\n입력하신 리뷰를 확인하실 수 있도록 준비 중입니다.</string>
 
     <string name="message_booking_stay_share_kakao">%1$s님의 예약 스테이\n%2$s</string>
     <string name="message_booking_stay_outbound_share_kakao">%1$s님의 예약 스테이</string>
@@ -825,12 +623,9 @@
     <string name="message_booking_reward_warning02">(4만원 이상 결제, 적립금 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
 
     <!-- TabInfo/TabMap Fragment -->
-    <string name="frag_tab_info_title">정보</string>
     <string name="frag_tab_map_title">지도</string>
 
     <!-- KaKaoLinkManager -->
-    <string name="kakao_btn_invited_friend">데일리호텔 다운받기</string>
-    <string name="label_kakao_web_link">모바일웹에서 확인</string>
     <string name="label_kakao_mobile_app">앱에서 확인</string>
     <string name="kakao_btn_share_hotel">%1$s 추천하는 근사한 스테이!\n%2$s</string>
     <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 고메!\n%2$s</string>
@@ -845,13 +640,10 @@
     <string name="act_base_network_connect">서버와의 접속이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <!-- ForgotPwd Activity -->
-    <string name="act_forgot_pwd_email">이메일</string>
     <string name="act_forgot_pwd_text">가입한 이메일 주소로 비밀번호 변경 메일이 발송됩니다.</string>
     <string name="act_forgot_pwd_forgot">비밀번호 찾기</string>
 
     <!-- HotelTab Activity -->
-    <string name="act_hotel_tab_btn">예약하기</string>
-    <string name="act_hotel_search_ticket">상품 선택하기</string>
     <string name="act_hotel_search_room">객실 선택하기</string>
     <string name="act_hotel_search_room_loading">객실 불러오는중...</string>
     <string name="act_hotel_booking">예약 진행하기</string>
@@ -864,12 +656,6 @@
     <!-- HotelList Fragment -->
     <string name="label_stay_category_change_region">지역 변경하여 확인하기</string>
     <string name="label_stay_category_change_date">날짜 변경하여 확인하기</string>
-    <string name="frag_hotel_list_no_hotels">원하시는 곳을 준비 중입니다.</string>
-    <string name="frag_hotel_list_no_line">다른 카테고리에도 멋진 곳이 많아요!\n한 번 둘러보시겠어요?</string>
-    <string name="frag_hotel_list_check">CHEC</string>
-    <string name="frag_hotel_list_checkin">K - IN</string>
-    <string name="frag_hotel_list_checkout">K - OUT</string>
-    <string name="frag_hotel_days_tab_to">TO</string>
     <string name="label_hotel_list_extendedstay_average">평균/1박</string>
     <string name="label_stay_1_nights">1박</string>
     <string name="label_hotel_list_changing_filter">필터 다시 적용하기</string>
@@ -891,31 +677,14 @@
     <string name="label_wait_payment_used_coupon">할인쿠폰 사용</string>
     <string name="label_wait_payment_total_price">총 입금금액(VAT 포함)</string>
     <string name="act_wait_payment_limit">입금기한</string>
-    <string name="act_wait_payment_confirm">확인사항</string>
-    <string name="act_wait_payment_msg1">입금이 완료되면</string>
-    <string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
     <string name="label_wait_payment_price_information">결제 금액 정보</string>
     <string name="message__wait_payment03">입금이 완료되면 자동으로 예약이 완료됩니다.</string>
 
     <!-- Region List Activity -->
-    <string name="act_list_region_select_region">지역을 선택해주세요.</string>
-    <string name="act_list_region_title">지역 설정</string>
-    <string name="act_list_region_korea">대한민국</string>
-    <string name="act_list_region_japan">일본</string>
     <string name="label_visit_date">방문 날짜 확인</string>
     <string name="label_region_change_date">날짜 변경하기</string>
     <string name="label_region_around_stay">내 주변 스테이 보기</string>
     <string name="message_region_search_date">방문하실 날짜가 맞나요?</string>
-
-    <string name="label_area_subway">지하철역</string>
-    <string name="label_area_capital_area">수도권</string>
-    <string name="label_area_busan">부산</string>
-    <string name="label_area_daegu">대구</string>
-    <string name="label_area_gwangju">광주</string>
-    <string name="label_area_daejeon">대전</string>
-
-    <!-- Main Tab -->
-    <string name="label_selecteday">선택 날짜</string>
 
     <!-- Map -->
     <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
@@ -931,7 +700,6 @@
     <!-- Issuingreceipt Activity -->
     <string name="label_receipt_bookinginfo">예약 세부정보</string>
     <string name="label_receipt_reservation_index">예약 번호</string>
-    <string name="label_receipt_hotelname">스테이명</string>
     <string name="label_receipt_restaurantname">레스토랑명</string>
     <string name="label_receipt_hoteladdress">주소</string>
     <string name="label_receipt_placeaddress">주소</string>
@@ -940,8 +708,6 @@
     <string name="label_receipt_nights_rooms">숙박 일수/객실수</string>
     <string name="label_receipt_paymentinfo">결제정보</string>
     <string name="label_receipt_paymentday">결제일</string>
-    <string name="label_receipt_supplyvalue">소계</string>
-    <string name="label_receipt_vat">세금 및 수수료</string>
     <string name="label_receipt_discount">총금액</string>
     <string name="label_receipt_total_payment">결제금액</string>
     <string name="label_receipt_discounted_amount">할인금액</string>
@@ -964,8 +730,6 @@
     <string name="eventfragment_emptylist_subtext">더욱 특별한 이벤트를\n준비 중이니 기대해주세요!</string>
 
     <!-- GOURMET ListFragment -->
-    <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
-    <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800–9120으로 전화주세요.</string>
     <string name="label_persons">%1$d인</string>
     <string name="label_standard_persons">%1$d인 기준</string>
 
@@ -976,7 +740,6 @@
     <string name="label_calendar_hotel_select_checkin">체크인 날짜 선택</string>
     <string name="label_calendar_hotel_select_checkout">체크아웃 날짜 선택</string>
     <string name="label_calendar_gourmet_select">날짜 선택</string>
-    <string name="message_calendar_reset">재설정 하시려면 다른 날짜를 선택해 주세요.</string>
     <string name="label_selected_date">날짜 선택 완료</string>
     <string name="label_message_dont_check_date">체크인할 수 없는 날짜입니다.</string>
 
@@ -987,8 +750,6 @@
     <string name="label_friday">금</string>
     <string name="label_saturday">토</string>
     <string name="label_sunday">일</string>
-
-    <string name="label_calendar_soldout">SOLD OUT</string>
 
     <!-- Curation Activity -->
     <string name="label_double">더블</string>
@@ -1003,7 +764,6 @@
     <string name="label_hotel_filter_result_count">%1$d개의 스테이 보기</string>
     <string name="label_hotel_filter_result_over_count">%1$d개 이상의 스테이 보기</string>
     <string name="label_gourmet_filter_result_count">%1$d개의 레스토랑 보기</string>
-    <string name="label_gourmet_filter_result_over_count">%1$d개 이상의 레스토랑 보기</string>
     <string name="label_hotel_filter_result_empty">0개의 스테이</string>
     <string name="label_gourmet_filter_result_empty">0개의 레스토랑</string>
     <string name="label_reset">초기화</string>
@@ -1027,7 +787,6 @@
     <string name="label_bathtub">욕조구비</string>
     <string name="label_pool">수영장</string>
     <string name="label_fitness">피트니스</string>
-    <string name="label_settime">시간설정</string>
     <string name="label_parking">주차가능</string>
     <string name="label_unabled_parking">주차불가</string>
     <string name="label_allowed_pet">반려동물</string>
@@ -1073,56 +832,36 @@
     <string name="message_filter_disabled_sort_filter">*지도 화면에서는 정렬 필터 사용 불가</string>
 
     <!-- PaymentResult Activity -->
-    <string name="label_booking_information">예약 정보</string>
     <string name="label_completed_payment">예약 완료</string>
-    <string name="label_booking_place">예약 장소</string>
-    <string name="label_product_type">상품 타입</string>
-    <string name="label_use_day">이용일</string>
     <string name="label_check_booking_history">예약내역 확인하기</string>
     <string name="message_completed_payment_format">%1$s님의\n결제가 완료되었습니다!</string>
     <string name="message_completed_payment_default">결제가 완료되었습니다!</string>
-    <string name="label_receipt_save_calendar">캘린더에 저장하기</string>
-    <string name="label_product_count">상품 수량</string>
     <string name="label_reservation_wait_message">현재 예약대기 상태입니다. 예약 확정시, 확정 문자를 발송해 드립니다.</string>
 
     <string name="message_stay_thankyou_disabled_notification">휴대폰 알림 설정이 꺼져있으면 체크인 안내등의 예약과 관련된 중요 알림을 못 보실수 있어요. 알림을 허용으로 바꿔주시겠어요?</string>
     <string name="message_gourmet_thankyou_disabled_notification">휴대폰 알림 설정이 꺼져있으면 방문일 안내등의 예약과 관련된 중요 알림을 못 보실수 있어요. 알림을 허용으로 바꿔주시겠어요?</string>
 
     <!-- Search -->
-    <string name="label_view_myaround_hotel">내 주변 스테이 보기</string>
     <string name="label_view_myaround_gourmet">내 주변 레스토랑 보기</string>
     <string name="label_view_my_around_daily_category_format">내 주변 %1$s 보기</string>
-    <string name="label_change_date">검색 날짜 변경하기</string>
     <string name="label_search_need_to_agree_termsoflocation">위치정보 이용동의 필요</string>
     <string name="label_search_agree_termsoflocation">위치정보 이용동의</string>
-    <string name="label_search_hotel_hint">스테이명 또는 지역명 입력</string>
-    <string name="label_search_gourmet_hint">레스토랑명 또는 지역명 입력</string>
-    <string name="label_search_recentsearches">최근 검색어</string>
-    <string name="label_search_deleteall">전체삭제</string>
-    <string name="label_search_recentsearches_none">최근 검색 내용이 없습니다.</string>
     <string name="label_search_agree_search_location">동의하고 검색하기</string>
     <string name="message_search_agree_termsoflocation">고객님 주변에 위치한 업체 검색을 위해\n위치 정보 이용에 동의해주세요.\n이용약관 상세보기</string>
-    <string name="message_search_tooltip">혹시 해외호텔 찾으세요? 해외호텔 검색은 여기서!</string>
 
     //
     <string name="label_searchresult_resultcount">결과 %1$d건</string>
     <string name="label_searchresult_over_resultcount">결과 %1$d건 이상</string>
-    <string name="label_searchresult_cancelsearch">검색종료</string>
     <string name="label_searchresult_empty">검색 결과가 없습니다.</string>
     <string name="label_searchresult_text01">날짜나 검색어를 변경하여 검색해 보세요.</string>
     <string name="label_searchresult_text02">찾으시는 스테이 또는 고메가 없으신가요?\n데일리 고객센터로 알려주세요!</string>
     <string name="label_searchresult_research">다시 검색하기</string>
-    <string name="label_searchresult_change_date">날짜 변경하여 확인하기</string>
-    <string name="label_searchresult_change_region">다른 지역 검색하기</string>
     <string name="label_searchresult_call_customercenter">고객센터로 전화하기</string>
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
     <string name="label_googlemap">구글 지도</string>
 
     <!-- New Search -->
     <string name="label_search_do_search">검색하기</string>
-    <string name="label_search_stay_title">국내스테이를\n검색하시겠어요?</string>
-    <string name="label_search_stayoutbound_title">해외스테이를\n검색하시겠어요?</string>
-    <string name="label_search_gourmet_title">고메를\n검색하시겠어요?</string>
     <string name="label_search_recently_search_result">최근 검색결과</string>
 
     <string name="label_search_stay">국내스테이</string>
@@ -1211,7 +950,6 @@
     <string name="coupon_dont_download_coupon">할인쿠폰 다운로드 완료</string>
     <string name="coupon_do_download_coupon">다운로드 하기</string>
     <string name="coupon_date_of_stay_available_text">%1$s - %2$s 중 방문시 사용 가능</string>
-    <string name="coupon_sort_default_text">전체 쿠폰 보기</string>
     <string name="coupon_toolbar_button_text">쿠폰코드등록</string>
     <string name="coupon_history_day_of_use">사용일</string>
     <string name="coupon_history_expiration_date">만료일</string>
@@ -1219,13 +957,8 @@
     <string name="label_coupon_stay_outbound">해외스테이</string>
     <string name="label_coupon_gourmet">고메</string>
 
-    <string name="label_coupon_sorting">할인쿠폰 보기</string>
     <string name="label_select_coupon">할인쿠폰 선택</string>
-    <string name="message_select_coupon_selected">사용할 쿠폰을 선택해주세요.</string>
     <string name="message_select_coupon_empty">사용 가능한 할인쿠폰이 없습니다.</string>
-    <string name="message_select_coupon_download">다운로드하기</string>
-    <string name="message_please_download_coupon">할인쿠폰을 다운로드해주세요.</string>
-    <string name="message_downloaded_all_coupon">할인쿠폰을 모두 다운로드했습니다.</string>
     <string name="register_coupon_title">쿠폰 등록</string>
     <string name="register_coupon_edittext_hint">할인쿠폰 코드 입력</string>
     <string name="register_coupon_complete">할인쿠폰 등록 완료</string>
@@ -1248,13 +981,9 @@
     <string name="message_eventweb_download_coupon">할인쿠폰을 다운로드했습니다.\n유효기간 : %1$s - %2$s\n(다운로드한 할인쿠폰은\n더보기 > 쿠폰함에서 확인해보세요!)</string>
 
     <!-- Search Calendar -->
-    <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>
     <string name="label_calendar_search_selected_date">날짜 선택 완료</string>
     <string name="label_calendar_gourmet_search_selected_date">방문일 선택 완료</string>
-    <string name="label_calendar_gourmet_search_selected_date_after_search">방문일 선택 완료하고 검색</string>
     <string name="label_calendar_stay_search_selected_date">%1$d박 선택 완료</string>
-    <string name="label_calendar_stay_search_selected_date_after_search">%1$d박 선택 완료하고 검색</string>
-    <string name="message_calendar_search_reset">검색할 날짜를 확인해주세요.\n다시 설정하려면 다른 날짜를 선택해주세요.</string>
     <string name="message_calendar_select_single_day">1박으로만 예약할 수 있습니다.</string>
 
     <string name="information_empty_name_n_email_after_login">신속한 예약 확인 및 안내를 위해\n고객님의 이름과 이메일을 등록해주세요.</string>
@@ -1272,15 +1001,10 @@
     <string name="message_guide_dialog_permission_read_phone_state">로그인 기능 및 고객 센터와의 연결을 위해\n앱 권한 설정이 필요합니다. 다음 팝업에서\n권한 설정을 \'허용\'으로 선택해 주세요.</string>
     <string name="message_guide_dialog_permission_access_fine_location">고객님의 현재 위치 기반 정보 제공을 위해 앱 권한 설정이 필요합니다. 다음 팝업에서 권한 설정을 \'허용\'으로 선택해 주세요.</string>
     <string name="message_guide_dialog_denied_permission01">전화 정보에 대한 앱 권한 설정을 거부했습니다.</string>
-    <string name="message_guide_dialog_denied_permission02">위치 정보에 대한 앱 권한 설정을 거부했습니다.</string>
     <string name="message_guide_dialog_denied_permission_read_phone_state">로그인 기능을 사용하거나 고객센터와 연결하려면 앱 권한 설정을 \'허용\'으로 변경해주세요.</string>
     <string name="message_guide_dialog_denied_permission_access_fine_location">고객님의 현재 위치 기반 정보를 보려면 앱 권한 설정을 \'허용\'으로 변경해주세요.</string>
 
     <!-- Detail -->
-    <string name="label_detail_change_date">날짜변경</string>
-    <string name="label_detail_special_discount">쿠폰 다운받고\n특별 할인 혜택 받으세요!</string>
-    <string name="label_detail_download_coupon01">할인쿠폰</string>
-    <string name="label_detail_download_coupon02">다운받기</string>
     <string name="label_detail_amenities">편의시설</string>
     <string name="label_detail_cancellation_refund_policy">취소 및 환불 규정</string>
     <string name="label_detail_waiting_reservation_guide">대기 예약 안내</string>
@@ -1320,13 +1044,11 @@
     <string name="label_stay_detail_range_age">(%1$d ~ %2$d세 이하)</string>
     <string name="label_detail_complete_coupon_download">%1$s 쿠폰 다운완료</string>
 
-    <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="message_stay_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
     <string name="message_stay_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 스테이를 확인해주세요.</string>
     <string name="message_gourmet_detail_changed_price">일부 상품의 요금이\n변동되었습니다.\n상품 금액을\n한번 더 확인해주시고\n원하시는 상품이 없으면\n날짜를 변경해보세요.</string>
     <string name="message_gourmet_detail_changed_price_has_cart">일부 상품의 요금이 변동되었습니다.\n결제 전 다시 한번 확인해주세요.</string>
-    <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
     <string name="message_gourmet_detail_sold_out_has_cart">판매가 완료되어 구매하실 수 없습니다.\n날짜를 변경하시거나 다른 레스토랑을 확인해주세요.</string>
     <string name="message_stay_used_data_guide">3G/LTE 환경에서는\n데이터 사용료가 발생할 수 있습니다.</string>
     <string name="message_stay_waiting_reservation_guide"><![CDATA[해당 예약은 확정 예약이 아닌 <font color="#6185cd">대기 예약</font>으로, 결제 완료 시 예약대기 상태이며, <font color="#6185cd">예약확정 여부가 문자로 발송됩니다.</font>]]></string>
@@ -1347,7 +1069,6 @@
     <string name="label_stay_detail_pension_only_description">예약이 확정되지 않은 대기 상태로 예약 불가 시 100% 자동 환불됩니다.</string>
 
     <!-- recent places -->
-    <string name="recent_places_list_empty_message">최근 확인한 스테이/고메가 없습니다.</string>
     <string name="recent_stay_list_empty_message">최근 확인한 스테이가 없습니다.</string>
     <string name="recent_gourmet_list_empty_message">최근 확인한 고메가 없습니다.</string>
     <string name="recent_stay_list_empty_button_message">스테이 보러가기</string>
@@ -1393,23 +1114,6 @@
     <string name="wishlist_detail_delete_message">위시리스트에서\n삭제했습니다.</string>
     <string name="wishlist_count_over_10_thousand">%1$s만</string>
     <string name="label_wishlist_login_button_text">로그인 또는 회원가입</string>
-
-    <!-- Review  -->
-    <string name="frag_rating_hotel_title">스테이는 만족스러우셨나요?</string>
-    <string name="frag_rating_gourmet_title">식사는 만족스러우셨나요?</string>
-    <string name="frag_rating_hotel_text1">%1$s에 이용하신</string>
-    <string name="frag_rating_hotel_recomm">만족함</string>
-    <string name="frag_rating_hotel_cancel">만족안함</string>
-    <string name="satisfaction_recommend_detailtext">특별히 만족스러우셨던 부분을 말씀해주세요!\n고객님의 평가를 반영하여\n앞으로도 최상의 서비스를 제공해드리겠습니다.</string>
-    <string name="satisfaction_not_recommend_detailtext">고객님께 불편을 드려 죄송합니다.\n고객님의 불편사항을 말씀해주시면,\n더 나은 서비스를 제공할 수 있도록\n최대한 반영하겠습니다.</string>
-    <string name="satisfaction_selectservice_title">불편하셨던 점을 선택해주세요. (복수 선택 가능)</string>
-    <string name="satisfaction_hotel_comments_hint01">만족하신 부분을 자유롭게 말씀해주세요.\n(ex. 객실이 너무 깔끔했어요 등)</string>
-    <string name="satisfaction_hotel_comments_hint02">불편사항을 자유롭게 말씀해주세요.\n(ex. 시설이 좀 오래됐어요 등)</string>
-    <string name="satisfaction_gourmet_comments_hint01">만족하신 부분을 자유롭게 말씀해주세요.\n(ex. 분위기가 너무 좋았어요 등)</string>
-    <string name="satisfaction_gourmet_comments_hint02">불편사항을 자유롭게 말씀해주세요.\n(ex. 역에서 너무 멀었어요 등)</string>
-    <string name="label_send_your_comments">의견 보내기</string>
-    <string name="satisfaction_recommend_title">만족하셨다니 기쁘네요!</string>
-    <string name="satisfaction_not_recommend_title">어떤 점이 불편하셨나요?</string>
 
     <string name="label_review_score_default">선택해주세요.</string>
     <string name="label_review_score0">최악이었어요.</string>
@@ -1492,7 +1196,6 @@
     <string name="label_home_category_boutique">부띠끄</string>
     <string name="label_home_category_pension">펜션</string>
     <string name="label_home_category_resort">리조트</string>
-    <string name="label_home_category_guest_house">게스트하우스</string>
     <string name="label_home_category_stay_nearby">내주변</string>
 
     <string name="code_home_category_all">all</string>
@@ -1500,7 +1203,6 @@
     <string name="code_home_category_boutique">boutique</string>
     <string name="code_home_category_pension">pension</string>
     <string name="code_home_category_resort">resort</string>
-    <string name="code_home_category_guest_house">guest_house</string>
     <string name="code_home_category_nearby">nearby</string>
     <string name="message_home_closed_sns_session">카카오 계정 연결이 해제되어 해당계정으로 이용하실 수 없습니다.</string>
 
@@ -1510,7 +1212,6 @@
     <string name="label_gourmet_detail_view_product_detail">메뉴 상세보기</string>
 
     <!-- Gourmet Product Detail -->
-    <string name="label_gourmet_product_detail_reservation">예약하기</string>
     <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
     <string name="label_gourmet_product_detail_operation_time_list">전체시간 메뉴</string>
@@ -1588,8 +1289,6 @@
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
     <!-- Stay Out Bound Search -->
-    <string name="label_stay_outbound_search">데일리 해외호텔 검색</string>
-    <string name="label_stay_outbound_search_keyword_hint">호텔명 또는 지역명 입력</string>
     <string name="label_stay_outbound_search_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_search_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_search_children_age">(만 %1$s)</string>
@@ -1601,8 +1300,6 @@
     <string name="label_stay_outbound_suggest_point">주요지점</string>
     <string name="label_stay_outbound_suggest_station">역</string>
     <string name="label_stay_outbound_suggest_airport">공항</string>
-    <string name="label_stay_outbound_suggest_popular_area">인기 지역</string>
-    <string name="label_stay_outbound_suggest_keyword_hint">해외 스테이명 또는 지역명 입력</string>
 
     <string name="message_stay_outbound_suggest_empty_suggest">검색어를 변경하거나 영문으로 검색해 보세요.</string>
 
@@ -1614,15 +1311,11 @@
     <string name="label_people_age_of_child3">아동3의 나이</string>
     <string name="label_people_confirm">선택완료</string>
     <string name="label_people_number_of_person">%1$d 명</string>
-    <string name="label_people_under_of_1_age">만 1세 미만</string>
 
     <!-- Stay Out Bound List -->
     <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
-    <string name="label_stay_outbound_research_filter_on">조건을 변경하여 검색해보세요.</string>
-
-    <string name="message_stay_outbound_search_empty">찾으시는 해외 호텔이 없으신가요?\n데일리 고객센터로 알려주세요!</string>
 
     <!-- Stay Out Bound Filter -->
     <string name="label_stay_outbound_filter_1_star_rate">1성급</string>
@@ -1641,7 +1334,6 @@
     <string name="label_stay_outbound_room_max_person_charge">최대 %1$d인(유료)</string>
     <string name="label_stay_outbound_amenities">편의시설</string>
     <string name="message_stay_outbound_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 호텔을 확인해주세요.</string>
-    <string name="message_stay_outbound_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
     <string name="label_stay_outbound_recommend_around_title">주변 추천 스테이</string>
     <string name="label_carousel_item_stay_1_nights">/1박</string>
 
@@ -1667,7 +1359,6 @@
 
 
     <!-- New Booking 예약 목록 -->
-    <string name="frag_booking_no_hotels">예약된 내역이 없습니다.</string>
     <string name="frag_booking_btn_login">로그인 또는 회원가입</string>
     <string name="frag_booking_wait_account">입금 대기</string>
     <string name="frag_booking_wait_refund">무료취소 대기</string>
@@ -1724,8 +1415,6 @@
     <string name="label_preview_map">네이버 지도\n길찾기</string>
     <string name="label_preview_google_map">구글 지도\n길찾기</string>
     <string name="label_preview_booking">지금 예약하기</string>
-    <string name="label_preview_review_count">지금 예약하기</string>
-    <string name="label_preview_wish_count">지금 예약하기</string>
     <string name="label_preview_extendedstay_average">(평균/1박)</string>
     <string name="label_preview_wish_guide">하트 아이콘을 눌러 위시리스트를 만들어보세요!</string>
 
@@ -1740,7 +1429,6 @@
 
     <!-- True VR -->
     <string name="message_truevr_not_support_hardware">트루VR을 지원하지 않는 단말입니다.</string>
-    <string name="message_truevr_not_support">트루VR 정보가 없습니다.</string>
     <string name="message_truevr_failed_load_truevr"> 트루VR 로드 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <!-- New Calendar -->
@@ -1762,10 +1450,6 @@
 
     <!-- Campaign Tag -->
     <string name="message_campaign_tag_finished">종료된 태그입니다.</string>
-    <string name="message_campaign_tag_empty">날짜나 인기검색 태그를 변경하여 검색해 보세요.</string>
-    <string name="message_campaign_tag_recheck_connection">연결 화면을 다시 확인해주세요.</string>
-    <string name="message_campaign_empty_popup_message">현재 모든 예약이 완료되었습니다.\n다른 날짜로 확인해보겠어요?</string>
-    <string name="message_empty_search_card_format">%1$s가 없습니다.</string>
 
 
     <!-- Daily Reward -->
@@ -1886,7 +1570,6 @@
     <string name="message_leave_daily_agreement_unchecked">탈퇴 안내 사항에 동의해주세요.</string>
 
     <!-- Stay Room -->
-    <string name="label_stay_room_average_nights">(1박 기준)</string>
     <string name="label_stay_room_check_time_title">객실 체크인/체크아웃 시간</string>
     <string name="label_stay_room_discount_info_title">할인 및 적립 안내</string>
     <string name="label_stay_room_extra_charge_info_title">추가 요금 정보</string>

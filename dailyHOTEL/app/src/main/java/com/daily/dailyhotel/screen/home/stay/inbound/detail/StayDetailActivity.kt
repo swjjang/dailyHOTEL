@@ -50,7 +50,7 @@ class StayDetailActivity : BaseActivity<StayDetailPresenter>() {
         const val INTENT_EXTRA_DATA_SOLD_OUT = "soldOut"
 
         @JvmStatic
-        fun newInstance(context: Context, stayIndex: Int, stayName: String, imageUrl: String,
+        fun newInstance(context: Context, stayIndex: Int, stayName: String, imageUrl: String?,
                         viewPrice: Int, checkInDateTime: String, checkOutDateTime: String,
                         bedTypeFilter: List<String>?, facilitiesFilter: List<String>?,
                         isUsedMultiTransition: Boolean, gradientType: TransGradientType = TransGradientType.NONE,
