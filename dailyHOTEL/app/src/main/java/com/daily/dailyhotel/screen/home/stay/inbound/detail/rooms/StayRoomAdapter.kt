@@ -225,13 +225,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        val nightsString = if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
         val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
+        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length -1)
 
-        val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
-        discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        dataBinding.discountPriceTextView.text = discountPriceSpan
+        val priceUnitText = context.resources.getString(R.string.currency) + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
+        dataBinding.discountPriceUnitTextView.text = priceUnitText
 
         showOriginPrice.runTrue {
             dataBinding.priceTextView.apply {

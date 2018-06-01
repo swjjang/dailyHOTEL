@@ -184,14 +184,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
         dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-        dataBinding.emptyMoreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
         dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-        dataBinding.emptyVrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-        dataBinding.emptyVrIconView.setOnClickListener {
+        dataBinding.vrIconView.setOnClickListener {
             eventListener.onVrImageClick(position)
         }
 
-        dataBinding.emptyCloseImageView.setOnClickListener {
+        dataBinding.closeImageView.setOnClickListener {
             eventListener.onCloseClick()
         }
 
@@ -264,13 +262,11 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             }
         }
 
-        val nightsString = if (listAdapter.getNights() > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
         val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
+        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length -1)
 
-        val discountPriceSpan = SpannableString("$discountPriceString$nightsString")
-        discountPriceSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        discountPriceSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 14.0)), discountPriceString.length - 1, discountPriceSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        dataBinding.discountPriceTextView.text = discountPriceSpan
+        val priceUnitText = context.resources.getString(R.string.currency) + if (listAdapter.getNights() > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
+        dataBinding.discountPriceUnitTextView.text = priceUnitText
 
         showOriginPrice.runTrue {
             dataBinding.priceTextView.apply {
@@ -746,16 +742,16 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             scaleY = minScaleX
         }
 
-        invisibleLayoutDataBinding.emptyCloseImageView.translationY = 0f
-        invisibleLayoutDataBinding.emptyMoreIconView.translationY = 0f
-        invisibleLayoutDataBinding.emptyVrIconView.translationY = 0f
+        invisibleLayoutDataBinding.closeImageView.translationY = 0f
+        invisibleLayoutDataBinding.moreIconView.translationY = 0f
+        invisibleLayoutDataBinding.vrIconView.translationY = 0f
 
         EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
 
         invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
-            invisibleLayoutDataBinding.emptyCloseImageView.translationY = scrollY.toFloat()
-            invisibleLayoutDataBinding.emptyMoreIconView.translationY = scrollY.toFloat()
-            invisibleLayoutDataBinding.emptyVrIconView.translationY = scrollY.toFloat()
+            invisibleLayoutDataBinding.closeImageView.translationY = scrollY.toFloat()
+            invisibleLayoutDataBinding.moreIconView.translationY = scrollY.toFloat()
+            invisibleLayoutDataBinding.vrIconView.translationY = scrollY.toFloat()
         })
 
         invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
