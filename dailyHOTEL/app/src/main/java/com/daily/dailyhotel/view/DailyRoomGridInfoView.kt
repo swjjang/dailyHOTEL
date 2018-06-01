@@ -204,7 +204,7 @@ class DailyRoomInfoGridView : LinearLayout {
 
         when (type) {
             DOT -> {
-                iconResId = R.drawable.info_ic_text_dot_black
+                iconResId = R.drawable.shape_circle_b666666
                 textColorResId = R.color.default_text_c4d4d4d
             }
 
