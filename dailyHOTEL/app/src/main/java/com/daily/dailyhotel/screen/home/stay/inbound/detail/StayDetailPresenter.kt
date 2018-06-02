@@ -1100,17 +1100,23 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     override fun onResetRoomFilterClick() {
         if (lock()) return
 
-        setResetRoomFilter()
-
-        unLockAll()
-    }
-
-    private fun setResetRoomFilter() {
         tempBedTypeFilter.clear()
         tempFacilitiesFilter.clear()
 
         stayDetail?.let {
             viewInterface.setSelectedRoomFilter(tempBedTypeFilter, tempFacilitiesFilter)
+            viewInterface.setSelectedRoomFilterCount(it.roomInformation?.roomList?.size ?: 0)
+        }
+
+        unLockAll()
+    }
+
+    private fun setResetRoomFilter() {
+        bedTypeFilter.clear()
+        facilitiesFilter.clear()
+
+        stayDetail?.let {
+            viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
             viewInterface.setSelectedRoomFilterCount(it.roomInformation?.roomList?.size ?: 0)
         }
     }
@@ -1243,6 +1249,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                                 , getString(R.string.dialog_btn_text_confirm), { _ ->
                             setResetRoomFilter()
                             setRoomFilter(bookDateTime, it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter)
+                            notifyRoomDataSetChanged()
                         }, null, true)
                     }
 
@@ -1446,7 +1453,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 if (bedTypeFilter.size == 0) {
                     it.forEach loop@{ room ->
                         facilitiesFilter.forEach {
-                            if (!room.amenityList.map { it.toUpperCase() }.contains(it)) {
+                            if (!room.amenityList.map { it.toUpperCase() }.contains(it.toUpperCase())) {
                                 return@loop
                             }
                         }
@@ -1456,9 +1463,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 } else {
                     it.forEach loop@{ room ->
                         bedTypeFilter.forEach {
-                            if (room.bedInformation.filterList.map { it.toUpperCase() }.contains(it)) {
+                            if (room.bedInformation.filterList.map { it.toUpperCase() }.contains(it.toUpperCase())) {
                                 facilitiesFilter.forEach {
-                                    if (!room.amenityList.map { it.toUpperCase() }.contains(it)) {
+                                    if (!room.amenityList.map { it.toUpperCase() }.contains(it.toUpperCase())) {
                                         return@loop
                                     }
                                 }
