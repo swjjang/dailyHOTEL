@@ -1228,7 +1228,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     setCancellationAndRefundPolicyVisible(false)
                 }
 
-                setCheckInformationVisible(it.checkInformation.letNotNullTrueElseNullFalse { setCheckInformation(it) })
+                if (hasCheckInformation(it.checkInformation)) {
+                    setCheckInformationVisible(true);
+                    setCheckInformation(it.checkInformation!!)
+                } else {
+                    setCheckInformationVisible(false);
+                }
                 setConciergeInformation()
 
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
@@ -1309,6 +1314,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         if (refundInformation?.contentList.isNotNullAndNotEmpty()) return true
 
         return false
+    }
+
+    private fun hasCheckInformation(checkInformation: StayDetail.CheckInformation?): Boolean {
+        return checkInformation != null
+                && (!checkInformation.title.isTextEmpty()
+                || checkInformation.contentList.isNotNullAndNotEmpty()
+                || checkInformation.waitingForBooking)
     }
 
     private fun checkChangedPrice(isDeepLink: Boolean, stayDetail: StayDetail, listViewPrice: Int, compareListPrice: Boolean) {
