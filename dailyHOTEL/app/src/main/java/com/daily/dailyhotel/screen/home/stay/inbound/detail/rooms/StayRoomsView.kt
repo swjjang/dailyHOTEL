@@ -32,7 +32,6 @@ import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
-import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.generic.RoundingParams
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
@@ -42,7 +41,6 @@ import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
-import kotlinx.android.synthetic.main.list_row_stay_room_invisible_layout_data.view.*
 
 class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.OnEventListener)//
     : BaseDialogView<StayRoomsInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
