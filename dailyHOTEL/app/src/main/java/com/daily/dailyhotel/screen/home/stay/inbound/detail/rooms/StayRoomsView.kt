@@ -32,6 +32,7 @@ import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
+import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.generic.RoundingParams
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
@@ -760,10 +761,24 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
 
+        val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
+
+        invisibleLayoutDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x)
+        invisibleLayoutDataBinding.toolbarView.setOnBackClickListener {
+            eventListener.onCloseClick()
+        }
+
         invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
             invisibleLayoutDataBinding.closeImageView.translationY = scrollY.toFloat()
             invisibleLayoutDataBinding.moreIconView.translationY = scrollY.toFloat()
             invisibleLayoutDataBinding.vrIconView.translationY = scrollY.toFloat()
+
+            val titleLayout = invisibleLayoutDataBinding.scrollLayout.getChildAt(1)
+            if (titleLayout.y - toolbarHeight > scrollY) {
+                invisibleLayoutDataBinding.toolbarView.hideAnimation()
+            } else {
+                invisibleLayoutDataBinding.toolbarView.showAnimation()
+            }
         })
 
         invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)

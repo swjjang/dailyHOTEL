@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
         xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -63,8 +64,8 @@
                         android:layout_height="30dp"
                         android:layout_marginBottom="15dp"
                         android:layout_marginRight="15dp"
-                        android:visibility="gone"
                         android:background="@drawable/detail_ic_more_img"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@id/roomEmptyView"
                         app:layout_constraintRight_toRightOf="@id/roomEmptyView"/>
 
@@ -144,13 +145,13 @@
                         android:id="@+id/discountPriceUnitTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/default_text_c323232"
-                        android:layout_marginLeft="1dp"
-                        android:textSize="14dp"
                         android:layout_marginBottom="3dp"
+                        android:layout_marginLeft="1dp"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
                         app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"
-                        app:layout_constraintRight_toLeftOf="@+id/priceTextView"
-                        app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"/>
+                        app:layout_constraintRight_toLeftOf="@+id/priceTextView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/priceTextView"
@@ -185,9 +186,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/baseInfoGroup"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:id="@+id/baseInfoGridLine"
@@ -383,9 +384,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/subInfoGroup"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:id="@+id/subInfoGridLine"
@@ -413,9 +414,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/roomBenefitGroup"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:id="@+id/roomBenefitGridLine"
@@ -443,9 +444,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/discountInfoGroup"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:id="@+id/discountInfoLine"
@@ -491,9 +492,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/checkTimeInfoLayout"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:layout_width="0dp"
@@ -594,9 +595,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/roomDescriptionGroup"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:id="@+id/roomDescriptionGridLine"
@@ -624,9 +625,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/roomAmenityGroup"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:id="@+id/roomAmenityGridLine"
@@ -654,9 +655,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/extraChargeLayout"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:paddingBottom="30dp">
 
                     <View
@@ -749,9 +750,9 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/roomCheckInfoGroup"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <View
                         android:id="@+id/roomCheckInfoGridLine"
@@ -768,10 +769,10 @@
                         android:id="@+id/roomCheckInfoGridView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="30dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:paddingTop="30dp"
-                        android:paddingBottom="30dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/roomCheckInfoGridLine"/>
@@ -781,12 +782,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:paddingTop="10dp"
                     android:paddingBottom="144dp"
+                    android:paddingTop="10dp"
                     app:srcCompat="@drawable/vector_end_list_logo"/>
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:visibility="invisible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
     </RelativeLayout>
 </layout>
