@@ -367,16 +367,29 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         dataBinding.subInfoGroup.visibility = View.VISIBLE
 
-        val roomType: RoomType = try {
-            RoomType.valueOf(attribute.roomStructure)
+        val roomType: StayRoomAdapter.RoomType? = try {
+            StayRoomAdapter.RoomType.valueOf(attribute.roomStructure)
         } catch (e: Exception) {
-            RoomType.ONE_ROOM
+            null
         }
 
-        var titleText = roomType.getName(context)
+        var titleText = roomType?.getName(context) ?: ""
 
-        attribute.isEntireHouse.runTrue { titleText += "/" + context.resources.getString(R.string.label_room_type_entire_house) }
-        attribute.isDuplex.run { titleText += "/" + context.resources.getString(R.string.label_room_type_duplex_room) }
+        attribute.isEntireHouse.runTrue {
+            if (!titleText.isTextEmpty()) {
+                titleText += "/"
+            }
+
+            titleText += context.resources.getString(R.string.label_room_type_entire_house)
+        }
+
+        attribute.isDuplex.runTrue {
+            if (!titleText.isTextEmpty()) {
+                titleText += "/"
+            }
+
+            titleText += context.resources.getString(R.string.label_room_type_duplex_room)
+        }
 
         dataBinding.subInfoGridView.columnCount = 2
 
@@ -421,6 +434,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         if (!roomString.isTextEmpty()) {
             stringList.add(0, roomString)
+        }
+
+        if (titleText.isTextEmpty() && !stringList.isNotNullAndNotEmpty()) {
+            dataBinding.subInfoGroup.visibility = View.GONE
+            return
         }
 
         dataBinding.subInfoGridView.setData(titleText, DailyRoomInfoGridView.ItemType.NONE, stringList, false)
