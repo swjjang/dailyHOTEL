@@ -24,7 +24,7 @@ public class StayRefundPolicyData
         StayRefundPolicy stayRefundPolicy = new StayRefundPolicy();
 
         stayRefundPolicy.comment = comment;
-        stayRefundPolicy.refundPolicy = comment;
+        stayRefundPolicy.refundPolicy = refundPolicy;
 
         return stayRefundPolicy;
     }
