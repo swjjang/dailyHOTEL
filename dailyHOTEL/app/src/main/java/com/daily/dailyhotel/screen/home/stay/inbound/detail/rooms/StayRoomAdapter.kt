@@ -354,7 +354,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     private fun setSquareInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
         dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
 
-        val pyoung = Math.round(room.squareMeter / 400 * 121)
+        // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
+        val pyoung = Math.round(room.squareMeter * 0.3025)
         dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
     }
 
