@@ -9,6 +9,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.daily.base.util.DailyImageSpan
+import com.daily.base.util.ScreenUtils
+import com.daily.base.util.VersionUtils
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isTextEmpty
 import com.twoheart.dailyhotel.R
@@ -38,6 +40,8 @@ class DailyDetailRoomView : ConstraintLayout {
 
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_room_data, this, true)
+
+        viewDataBinding.roomNameTextView.setLineSpacing(-ScreenUtils.dpToPx(context, if (VersionUtils.isOverAPI21()) 4.0 else 3.0).toFloat(), 1.0f)
 
         setPriceAverageType(true)
     }

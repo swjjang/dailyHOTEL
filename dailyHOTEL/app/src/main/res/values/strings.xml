@@ -759,7 +759,7 @@
     <string name="label_king">킹</string>
     <string name="label_queen">퀸</string>
     <string name="label_in_floor_heating">온돌</string>
-    <string name="label_bed_type_unknown">채크인 시 배정</string>
+    <string name="label_bed_type_unknown">체크인 시 배정</string>
     <string name="label_more_person">%1$d명 이상</string>
     <string name="label_hotel_filter_result_count">%1$d개의 스테이 보기</string>
     <string name="label_hotel_filter_result_over_count">%1$d개 이상의 스테이 보기</string>
