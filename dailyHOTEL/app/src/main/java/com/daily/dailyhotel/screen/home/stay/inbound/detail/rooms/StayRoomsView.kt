@@ -32,6 +32,7 @@ import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
+import com.facebook.drawee.generic.RoundingParams
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomInvisibleLayoutDataBinding
@@ -719,6 +720,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     private var maxTransY = 0f
     private val minTransY = 0f
     private var widthGap = 0f
+    private val minImageRadius = 0f
+    private val maxImageRadius = 6f
 
     private fun initInvisibleLayout() {
         if (listAdapter.itemCount == 0) return
@@ -789,11 +792,22 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
 
         val checkValue = 0.3f * maxTransY
+        var imageRoundRadius = Math.round(toTransY / (maxTransY / 6)).toFloat()
+        if (imageRoundRadius > maxImageRadius) {
+            imageRoundRadius = maxImageRadius
+        } else if (imageRoundRadius < minImageRadius) {
+            imageRoundRadius = minImageRadius
+        }
+
         var forceUpdate = Math.abs(startTransY - toTransY) >= checkValue
 
         viewDataBinding.invisibleLayout!!.roomLayout.translationY = toTransY
         viewDataBinding.invisibleLayout!!.roomLayout.scaleX = toScaleX
         viewDataBinding.invisibleLayout!!.roomLayout.scaleY = toScaleX
+
+        val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
+        val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
+        viewDataBinding.invisibleLayout!!.simpleDraweeView.hierarchy.roundingParams = roundingParams
 
         return forceUpdate
     }
@@ -805,7 +819,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val end = if (scaleUp) 1.0f else minScaleX
         val startTransY = roomLayout.translationY
         val endTransY = if (scaleUp) 0.0f else maxTransY
-//        val duration  = (200 / (maxTransY - startTransY)).toLong()
         val duration = if (scaleUp) {
             (startTransY / maxTransY * 200).toLong()
         } else {
@@ -814,6 +827,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = 0
 
+        val checkValue = 0.3f * maxTransY
+
         val animatorSet = AnimatorSet()
         animatorSet.duration = duration
         animatorSet.interpolator = AccelerateDecelerateInterpolator()
@@ -821,6 +836,17 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         transAnimator.addUpdateListener { animation ->
             val transValue = animation.animatedValue as Float
             roomLayout.translationY = transValue
+
+            var imageRoundRadius = Math.round(transValue / (maxTransY / 6)).toFloat()
+            if (imageRoundRadius > maxImageRadius) {
+                imageRoundRadius = maxImageRadius
+            } else if (imageRoundRadius < minImageRadius) {
+                imageRoundRadius = minImageRadius
+            }
+
+            val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
+            val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
+            viewDataBinding.invisibleLayout!!.simpleDraweeView.hierarchy.roundingParams = roundingParams
         }
 
         val scaleAnimator = ValueAnimator.ofFloat(startScale * 100, end * 100)
