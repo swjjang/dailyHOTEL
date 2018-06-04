@@ -1728,7 +1728,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         getViewInterface().showWishTooltip();
 
-        addCompositeDisposable(Observable.timer(3, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())//
+        addCompositeDisposable(Observable.timer(5, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())//
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
             {
                 @Override

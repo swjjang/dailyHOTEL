@@ -405,6 +405,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
     private fun onWishDialogActivityResult(resultCode: Int, intent: Intent?) {
         when (resultCode) {
+            BaseActivity.RESULT_CODE_REFRESH,
             Activity.RESULT_OK -> {
                 intent?.let {
                     val wish = it.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false)
@@ -415,7 +416,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
                         notifyWishDataSetChanged()
 
-                        setResult(BaseActivity.RESULT_CODE_DATA_CHANGED)
+                        setResult(BaseActivity.RESULT_CODE_REFRESH)
                     }
                 }
             }
@@ -528,7 +529,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private fun showWishTooltip() {
         viewInterface.showWishTooltip()
 
-        addCompositeDisposable(Completable.timer(3, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+        addCompositeDisposable(Completable.timer(5, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe {
                     DailyPreference.getInstance(activity).isWishTooltip = false
                     viewInterface.hideWishTooltip()

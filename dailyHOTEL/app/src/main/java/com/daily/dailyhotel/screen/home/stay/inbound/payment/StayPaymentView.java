@@ -424,8 +424,18 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
         if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
         {
+            String comment;
+
+            if (nrd)
+            {
+                comment = refundPolicy.replaceAll("B70038", "EB2135");
+            } else
+            {
+                comment = refundPolicy.replaceAll("B70038", "2C8DE6");
+            }
+
             refundPolicyList = new ArrayList<>();
-            refundPolicyList.add(refundPolicy);
+            refundPolicyList.add(comment);
 
             if (hasRewardCard == true)
             {
