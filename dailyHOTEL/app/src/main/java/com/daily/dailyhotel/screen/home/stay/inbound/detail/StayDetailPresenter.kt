@@ -528,7 +528,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     private fun showWishTooltip() {
         viewInterface.showWishTooltip()
 
-        addCompositeDisposable(Completable.timer(3, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+        addCompositeDisposable(Completable.timer(5, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe {
                     DailyPreference.getInstance(activity).isWishTooltip = false
                     viewInterface.hideWishTooltip()
