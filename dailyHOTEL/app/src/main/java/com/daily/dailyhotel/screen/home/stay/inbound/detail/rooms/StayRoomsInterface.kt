@@ -21,6 +21,8 @@ interface StayRoomsInterface {
 
         fun notifyDataSetChanged()
 
+        fun initInvisibleLayout()
+
         fun setInvisibleData(position: Int)
 
         fun showInvisibleLayout(): Boolean

@@ -148,6 +148,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 //
         addCompositeDisposable(observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
             viewInterface.notifyDataSetChanged()
+            viewInterface.initInvisibleLayout()
             onScrolled(position, false)
             unLockAll()
         }, {

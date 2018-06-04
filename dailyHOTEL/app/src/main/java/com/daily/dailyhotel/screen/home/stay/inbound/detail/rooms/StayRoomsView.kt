@@ -160,8 +160,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         viewDataBinding.recyclerView.post {
             (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)
                     .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
-
-            initInvisibleLayout()
         }
     }
 
@@ -741,64 +739,66 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     private val minImageRadius = 0f
     private val maxImageRadius = 6f
 
-    private fun initInvisibleLayout() {
-        if (listAdapter.itemCount == 0) return
+    override fun initInvisibleLayout() {
+        viewDataBinding.recyclerView.postDelayed({
+            if (listAdapter.itemCount == 0) return@postDelayed
 
-        val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(0) as? StayRoomAdapter.RoomViewHolder
-                ?: return
+            val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(0) as? StayRoomAdapter.RoomViewHolder
+                    ?: return@postDelayed
 
-        val invisibleLayoutDataBinding = viewDataBinding.invisibleLayout ?: return
+            val invisibleLayoutDataBinding = viewDataBinding.invisibleLayout ?: return@postDelayed
 
-        val top = viewDataBinding.recyclerView.top
-        val paddingTop = roomViewHolder.dataBinding.root.paddingTop
-        val paddingBottom = roomViewHolder.dataBinding.root.paddingBottom
-        val width = roomViewHolder.dataBinding.root.measuredWidth
-        val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
-        val paddingRight = roomViewHolder.dataBinding.root.paddingRight
+            val top = viewDataBinding.recyclerView.top
+            val paddingTop = roomViewHolder.dataBinding.root.paddingTop
+            val paddingBottom = roomViewHolder.dataBinding.root.paddingBottom
+            val width = roomViewHolder.dataBinding.root.measuredWidth
+            val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
+            val paddingRight = roomViewHolder.dataBinding.root.paddingRight
 
-        val invisibleWidth = width - paddingLeft - paddingRight
+            val invisibleWidth = width - paddingLeft - paddingRight
 
-        widthGap = ScreenUtils.getScreenWidth(context).toFloat() - invisibleWidth.toFloat()
+            widthGap = ScreenUtils.getScreenWidth(context).toFloat() - invisibleWidth.toFloat()
 
-        minScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
+            minScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
 
-        val scaleTransY = invisibleLayoutDataBinding.roomLayout.measuredHeight * (1f - minScaleX) / 2
-        maxTransY = (top + paddingTop) - scaleTransY
+            val scaleTransY = invisibleLayoutDataBinding.roomLayout.measuredHeight * (1f - minScaleX) / 2
+            maxTransY = (top + paddingTop) - scaleTransY
 
-        invisibleLayoutDataBinding.roomLayout.apply {
-            translationY = maxTransY
+            invisibleLayoutDataBinding.roomLayout.apply {
+                translationY = maxTransY
 
-            scaleX = minScaleX
-            scaleY = minScaleX
-        }
-
-        invisibleLayoutDataBinding.closeImageView.translationY = 0f
-        invisibleLayoutDataBinding.moreIconView.translationY = 0f
-        invisibleLayoutDataBinding.vrIconView.translationY = 0f
-
-        EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
-
-        val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
-
-        invisibleLayoutDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x)
-        invisibleLayoutDataBinding.toolbarView.setOnBackClickListener {
-            eventListener.onCloseClick()
-        }
-
-        invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
-            invisibleLayoutDataBinding.closeImageView.translationY = scrollY.toFloat()
-            invisibleLayoutDataBinding.moreIconView.translationY = scrollY.toFloat()
-            invisibleLayoutDataBinding.vrIconView.translationY = scrollY.toFloat()
-
-            val titleLayout = invisibleLayoutDataBinding.scrollLayout.getChildAt(1)
-            if (titleLayout.y - toolbarHeight > scrollY) {
-                invisibleLayoutDataBinding.toolbarView.hideAnimation()
-            } else {
-                invisibleLayoutDataBinding.toolbarView.showAnimation()
+                scaleX = minScaleX
+                scaleY = minScaleX
             }
-        })
 
-        invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
+            invisibleLayoutDataBinding.closeImageView.translationY = 0f
+            invisibleLayoutDataBinding.moreIconView.translationY = 0f
+            invisibleLayoutDataBinding.vrIconView.translationY = 0f
+
+            EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
+
+            val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
+
+            invisibleLayoutDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x)
+            invisibleLayoutDataBinding.toolbarView.setOnBackClickListener {
+                eventListener.onCloseClick()
+            }
+
+            invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
+                invisibleLayoutDataBinding.closeImageView.translationY = scrollY.toFloat()
+                invisibleLayoutDataBinding.moreIconView.translationY = scrollY.toFloat()
+                invisibleLayoutDataBinding.vrIconView.translationY = scrollY.toFloat()
+
+                val titleLayout = invisibleLayoutDataBinding.scrollLayout.getChildAt(1)
+                if (titleLayout.y - toolbarHeight > scrollY) {
+                    invisibleLayoutDataBinding.toolbarView.hideAnimation()
+                } else {
+                    invisibleLayoutDataBinding.toolbarView.showAnimation()
+                }
+            })
+
+            invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
+        }, 50)
     }
 
     private fun setInvisibleLayout(preY: Float, y: Float, startScaleX: Float, startTransY: Float): Boolean {
