@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
+import kotlinx.android.synthetic.main.list_row_stay_room_invisible_layout_data.view.*
 
 class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.OnEventListener)//
     : BaseDialogView<StayRoomsInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
@@ -820,6 +821,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         viewDataBinding.invisibleLayout!!.roomLayout.scaleX = toScaleX
         viewDataBinding.invisibleLayout!!.roomLayout.scaleY = toScaleX
 
+        setCloseImageAlphaVisible(toScaleX)
+
         val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
         val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
         viewDataBinding.invisibleLayout!!.simpleDraweeView.hierarchy.roundingParams = roundingParams
@@ -869,6 +872,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val value = animation.animatedValue as Float / 100
             roomLayout.scaleX = value
             roomLayout.scaleY = value
+
+            setCloseImageAlphaVisible(value)
         }
 
         animatorSet.addListener(object : Animator.AnimatorListener {
@@ -905,6 +910,48 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         animatorSet.playTogether(scaleAnimator, transAnimator)
         animatorSet.start()
+    }
+
+    private fun setCloseImageAlphaVisible(alphaValue : Float) {
+//        viewDataBinding.invisibleLayout!!.closeImageView.apply {
+//            when {
+//                alphaValue < 0.94f -> {
+//                    visibility = View.GONE
+//                }
+//
+//                alphaValue in 0.95f..0.99f -> {
+//                    visibility = View.VISIBLE
+//                    val toAlpha = (alphaValue - 0.94f) * 20
+//                    ExLog.d("sam - toAlpha : $toAlpha")
+//                    alpha = toAlpha
+//                }
+//
+//                alphaValue > 0.99f -> {
+//                    visibility = View.VISIBLE
+//                    alpha = 1f
+//                }
+//            }
+//        }
+
+        viewDataBinding.invisibleLayout!!.closeImageView.apply {
+            when {
+                alphaValue < 0.90f -> {
+                    visibility = View.GONE
+                }
+
+                alphaValue in 0.90f..0.94f -> {
+                    visibility = View.VISIBLE
+                    val toAlpha = (alphaValue - 0.89f) * 20
+                    ExLog.d("sam - toAlpha : $toAlpha")
+                    alpha = toAlpha
+                }
+
+                alphaValue > 0.94f -> {
+                    visibility = View.VISIBLE
+                    alpha = 1f
+                }
+            }
+        }
     }
 
     private val recyclerTouchListener = object : View.OnTouchListener {
