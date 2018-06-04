@@ -210,14 +210,16 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
                         , getString(R.string.label_do_booking)
                         , getString(R.string.dialog_btn_text_cancel2)
                         , View.OnClickListener {
-
                     analytics.onBookingClick(activity, stayIndex, room.index)
 
                     val intent = Intent()
                     intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, room.index)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                }, null)
+                }
+                        , View.OnClickListener { unLockAll() }
+                        , DialogInterface.OnCancelListener { unLockAll() }
+                        , null, true)
                 return
             }
 
