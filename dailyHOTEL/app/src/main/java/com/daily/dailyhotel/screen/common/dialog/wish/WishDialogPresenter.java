@@ -273,7 +273,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     {
         if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
         {
-            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH, resultData);
         } else
         {
             super.setResult(resultCode, resultData);
