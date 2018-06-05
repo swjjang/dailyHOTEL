@@ -4,17 +4,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <!--<merge-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
-
-    <android.support.constraint.ConstraintLayout
+    <merge
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/white">-->
 
         <android.support.constraint.Guideline
             android:id="@+id/leftGuideLine"
@@ -108,8 +109,8 @@
             android:textColor="@color/default_text_cc5c5c5"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/ratingValueTextView"
-            app:layout_constraintTop_toTopOf="@+id/ratingValueTextView"
-            app:layout_constraintLeft_toRightOf="@+id/ratingValueTextView"/>
+            app:layout_constraintLeft_toRightOf="@+id/ratingValueTextView"
+            app:layout_constraintTop_toTopOf="@+id/ratingValueTextView"/>
 
         <android.support.constraint.Group
             android:id="@+id/previewTrueReviewGroup"
@@ -131,6 +132,6 @@
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/reviewerTextView"
             dailyFont:style="Medium"/>
-    </android.support.constraint.ConstraintLayout>
-    <!--</merge>-->
+        <!--</android.support.constraint.ConstraintLayout>-->
+    </merge>
 </layout>

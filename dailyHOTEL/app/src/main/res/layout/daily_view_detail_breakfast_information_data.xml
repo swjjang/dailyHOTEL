@@ -6,11 +6,6 @@
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     >
 
-    <!--<merge-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,5 +83,4 @@
             app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/breakfastTableLayout"/>
     </android.support.constraint.ConstraintLayout>
-    <!--</merge>-->
 </layout>

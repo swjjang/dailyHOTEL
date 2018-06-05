@@ -54,7 +54,9 @@ class DailyDetailFacilitiesView : ConstraintLayout {
 
             }
 
-            for (i in 0..it.size % 5) {
+            val columnCount = viewDataBinding.facilitiesGridLayout.columnCount - (it.size % viewDataBinding.facilitiesGridLayout.columnCount)
+
+            for (i in 0 until columnCount) {
                 viewDataBinding.facilitiesGridLayout.addView(getFacilitiesEmptyView())
             }
         }

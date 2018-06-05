@@ -4,12 +4,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <merge
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/white">-->
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/simpleDraweeView"
@@ -172,5 +178,6 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/wonTextView"/>
-    </android.support.constraint.ConstraintLayout>
+        <!--</android.support.constraint.ConstraintLayout>-->
+    </merge>
 </layout>
