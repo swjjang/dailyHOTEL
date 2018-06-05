@@ -628,7 +628,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         if (info.extraInformation == null || info.extraInformation.isAllHidden) {
             dataBinding.extraChargeBedTableLayout.visibility = View.GONE
-            dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
         } else {
             dataBinding.extraChargeBedTableLayout.visibility = View.VISIBLE
 
@@ -650,11 +649,17 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             }
 
             dataBinding.extraChargeBedTableLayout.visibility = if (dataBinding.extraChargeBedTableLayout.getItemCount() == 0) View.GONE else View.VISIBLE
+        }
+
+        if (info.descriptionList == null || info.descriptionList.size == 0) {
+            dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
+        } else {
+            dataBinding.extraChargeDescriptionGridView.visibility = View.VISIBLE
 
             dataBinding.extraChargeDescriptionGridView.columnCount = 1
             dataBinding.extraChargeDescriptionGridView.setData(
                     ""
-                    , DailyRoomInfoGridView.ItemType.DOT, info.extraInformation.descriptionList, true)
+                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, true)
         }
 
         if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {

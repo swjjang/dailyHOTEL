@@ -547,6 +547,7 @@ public class RoomParcel implements Parcelable
             dest.writeParcelable(consecutiveInformationParcel, flags);
             dest.writeParcelable(extraInformationParcel, flags);
             dest.writeList(extraPersonInformationParcelList);
+            dest.writeStringList(chargeInformation.descriptionList);
         }
 
         private void readFromParcel(Parcel in)
@@ -569,6 +570,9 @@ public class RoomParcel implements Parcelable
             chargeInformation.consecutiveInformation = consecutiveInformationParcel != null ? consecutiveInformationParcel.getConsecutiveInformation() : null;
             chargeInformation.extraInformation = extraInformationParcel != null ? extraInformationParcel.getExtraInformation() : null;
             chargeInformation.extraPersonInformationList = list;
+
+            chargeInformation.descriptionList = new ArrayList<String>();
+            in.readStringList(chargeInformation.descriptionList);
         }
 
         @Override
@@ -746,7 +750,6 @@ public class RoomParcel implements Parcelable
         @Override
         public void writeToParcel(Parcel dest, int flags)
         {
-            dest.writeStringList(extraInformation.descriptionList);
             dest.writeInt(extraInformation.extraBed);
             dest.writeInt(extraInformation.extraBedEnable ? 1 : 0);
             dest.writeInt(extraInformation.extraBedding);
@@ -757,8 +760,6 @@ public class RoomParcel implements Parcelable
         {
             extraInformation = new Room.ChargeInformation.ExtraInformation();
 
-            extraInformation.descriptionList = new ArrayList<String>();
-            in.readStringList(extraInformation.descriptionList);
             extraInformation.extraBed = in.readInt();
             extraInformation.extraBedEnable = in.readInt() == 1;
             extraInformation.extraBedding = in.readInt();

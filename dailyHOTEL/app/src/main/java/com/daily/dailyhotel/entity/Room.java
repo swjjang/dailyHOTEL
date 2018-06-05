@@ -94,6 +94,8 @@ public class Room
 
         public List<ExtraPersonInformation> extraPersonInformationList;
 
+        public List<String> descriptionList;
+
         public boolean isAllHidden()
         {
             boolean isEmptyPersonInformationList = false;
@@ -102,9 +104,15 @@ public class Room
                 isEmptyPersonInformationList = true;
             }
 
+            boolean isEmptyDescriptionList = false;
+            if (descriptionList == null || descriptionList.size() == 0) {
+                isEmptyDescriptionList = true;
+            }
+
             return isEmptyPersonInformationList //
                 && (extraInformation == null || extraInformation.isAllHidden()) //
-                && (consecutiveInformation == null || !consecutiveInformation.enable);
+                && (consecutiveInformation == null || !consecutiveInformation.enable)
+                && isEmptyDescriptionList;
         }
 
         public static class ConsecutiveInformation
@@ -124,7 +132,6 @@ public class Room
 
         public static class ExtraInformation
         {
-            public List<String> descriptionList;
             public int extraBed;
             public boolean extraBedEnable;
             public int extraBedding;
@@ -132,13 +139,7 @@ public class Room
 
             public boolean isAllHidden()
             {
-                boolean isEmptyDescriptionList = false;
-                if (descriptionList == null || descriptionList.size() == 0)
-                {
-                    isEmptyDescriptionList = true;
-                }
-
-                return isEmptyDescriptionList && !extraBedEnable && !extraBeddingEnable;
+                return !extraBedEnable && !extraBeddingEnable;
             }
         }
     }

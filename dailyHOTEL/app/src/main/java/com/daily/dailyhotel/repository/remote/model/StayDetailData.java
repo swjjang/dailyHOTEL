@@ -876,6 +876,9 @@ public class StayDetailData
             @JsonField(name = "extraPerson")
             public List<ExtraPersonData> extraPersonList;
 
+            @JsonField(name = "descriptions")
+            public List<String> descriptions;
+
             @JsonObject
             static class ConsecutiveData
             {
@@ -929,9 +932,6 @@ public class StayDetailData
             @JsonObject
             static class ExtraData
             {
-                @JsonField(name = "descriptions")
-                public List<String> descriptions;
-
                 @JsonField(name = "extraBed")
                 public int extraBed;
 
@@ -947,7 +947,6 @@ public class StayDetailData
                 Room.ChargeInformation.ExtraInformation getExtra()
                 {
                     Room.ChargeInformation.ExtraInformation extra = new Room.ChargeInformation.ExtraInformation();
-                    extra.descriptionList = descriptions;
                     extra.extraBed = extraBed;
                     extra.extraBedEnable = extraBedEnable;
                     extra.extraBedding = extraBedding;
@@ -982,6 +981,8 @@ public class StayDetailData
 
                     roomCharge.extraPersonInformationList = list;
                 }
+
+                roomCharge.descriptionList = descriptions;
 
                 return roomCharge;
             }

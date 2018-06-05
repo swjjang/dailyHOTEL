@@ -588,7 +588,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         if (info.extraInformation == null || info.extraInformation.isAllHidden) {
             dataBinding.extraChargeBedTableLayout.visibility = View.GONE
-            dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
         } else {
             dataBinding.extraChargeBedTableLayout.visibility = View.VISIBLE
 
@@ -609,11 +608,17 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
 
             dataBinding.extraChargeBedTableLayout.visibility = if (dataBinding.extraChargeBedTableLayout.getItemCount() == 0) View.GONE else View.VISIBLE
+        }
+
+        if (info.descriptionList == null || info.descriptionList.size == 0) {
+            dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
+        } else {
+            dataBinding.extraChargeDescriptionGridView.visibility = View.VISIBLE
 
             dataBinding.extraChargeDescriptionGridView.columnCount = 1
             dataBinding.extraChargeDescriptionGridView.setData(
                     ""
-                    , DailyRoomInfoGridView.ItemType.DOT, info.extraInformation.descriptionList, false)
+                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, false)
         }
 
         if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
