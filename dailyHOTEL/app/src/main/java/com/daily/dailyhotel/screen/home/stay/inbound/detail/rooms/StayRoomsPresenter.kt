@@ -5,11 +5,14 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.view.View
 import android.widget.CompoundButton
+import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.RoomParcel
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.runFalse
@@ -17,11 +20,16 @@ import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
+import com.twoheart.dailyhotel.model.Customer
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity
+import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity
+import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.Constants
+import com.twoheart.dailyhotel.util.Util
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 class StayRoomsPresenter(activity: StayRoomsActivity)//
@@ -36,6 +44,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     private var position = 0
     private var centerPosition = -1
     private val stayRemoteImpl = StayRemoteImpl()
+    private val profileRemoteImpl = ProfileRemoteImpl()
 
     private val analytics: StayRoomsInterface.AnalyticsInterface by lazy {
         StayRoomsAnalyticsImpl()
@@ -112,7 +121,8 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         unLockAll()
 
         when (requestCode) {
-            Constants.CODE_REQUEST_ACTIVITY_LOGIN -> {
+            Constants.CODE_REQUEST_ACTIVITY_LOGIN,
+            StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE -> {
                 (resultCode == Activity.RESULT_OK).runTrue {
                     onBookingClick()
                 }
@@ -194,44 +204,69 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onBookingClick() {
         lock().runTrue { return }
 
-        DailyHotel.isLogin().runFalse {
-            val intent = LoginActivity.newInstance(activity)
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_LOGIN)
-            return
-        }
-
-        (centerPosition in 0..roomList.size).runTrue {
-            val room = roomList[centerPosition]
-
-            val consecutive: Boolean = room.roomChargeInformation?.consecutiveInformation?.enable
-                    ?: false
-
-            (bookDateTime.nights > 1 && consecutive).runTrue {
-                viewInterface.showSimpleDialog(getString(R.string.dialog_notice2)
-                        , getString(R.string.dialog_message_check_consecutive)
-                        , getString(R.string.label_do_booking)
-                        , getString(R.string.dialog_btn_text_cancel2)
-                        , View.OnClickListener {
-                    analytics.onBookingClick(activity, stayIndex, room.index)
-
-                    val intent = Intent()
-                    intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, room.index)
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
-                }
-                        , View.OnClickListener { unLockAll() }
-                        , DialogInterface.OnCancelListener { unLockAll() }
-                        , null, true)
-                return
+        when (DailyHotel.isLogin()) {
+            false -> {
+                DailyToast.showToast(activity, R.string.toast_msg_please_login, DailyToast.LENGTH_LONG)
+                val intent = LoginActivity.newInstance(activity)
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_LOGIN)
             }
 
-            analytics.onBookingClick(activity, stayIndex, room.index)
+            true -> {
+                (centerPosition in 0..roomList.size).runTrue {
+                    val room = roomList[centerPosition]
 
-            val intent = Intent()
-            intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, room.index)
-            setResult(Activity.RESULT_OK, intent)
-            finish()
+                    addCompositeDisposable(profileRemoteImpl.profile.subscribe({ user ->
+                        when (Util.verifyUserInformation(user)) {
+                            Util.VERIFY_USER -> {
+                                val consecutive: Boolean = room.roomChargeInformation?.consecutiveInformation?.enable
+                                        ?: false
+
+                                (bookDateTime.nights > 1 && consecutive).runTrue {
+                                    viewInterface.showSimpleDialog(getString(R.string.dialog_notice2)
+                                            , getString(R.string.dialog_message_check_consecutive)
+                                            , getString(R.string.label_do_booking)
+                                            , getString(R.string.dialog_btn_text_cancel2)
+                                            , View.OnClickListener {
+                                        analytics.onBookingClick(activity, stayIndex, room.index)
+
+                                        finishRoomDetailList(room.index)
+                                    }
+                                            , View.OnClickListener { unLockAll() }
+                                            , DialogInterface.OnCancelListener { unLockAll() }
+                                            , null, true)
+                                    return@subscribe
+                                }
+
+                                analytics.onBookingClick(activity, stayIndex, room.index)
+
+                                finishRoomDetailList(room.index)
+                            }
+
+                            Util.VERIFY_DAILY_USER_NOT_VERIFY_PHONE -> startActivityForResult(EditProfilePhoneActivity.newInstance(activity//
+                                    , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
+                                    , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+
+                            Util.VERIFY_SOCIAL_USER_NOT_VERIFY, Util.VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL -> startActivityForResult(AddProfileSocialActivity.newInstance(activity//
+                                    , Customer(user), user.birthday), StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+
+                            Util.VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE -> startActivityForResult(EditProfilePhoneActivity.newInstance(activity//
+                                    , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
+                                    , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+
+                            else -> {
+                            }
+                        }
+                    }, { throwable -> onHandleError(throwable) }))
+                }
+            }
         }
+    }
+
+    private fun finishRoomDetailList(roomIndex : Int) {
+        val intent = Intent()
+        intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, roomIndex)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     override fun onScrolled(position: Int, real: Boolean) {

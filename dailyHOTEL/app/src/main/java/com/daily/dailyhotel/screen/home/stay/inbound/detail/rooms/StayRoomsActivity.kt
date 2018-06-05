@@ -44,6 +44,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
 
         const val REQUEST_CODE_TRUE_VR = 10000
         const val REQUEST_CODE_IMAGE_LIST = 10001
+        const val REQUEST_CODE_PROFILE_UPDATE = 10002
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
