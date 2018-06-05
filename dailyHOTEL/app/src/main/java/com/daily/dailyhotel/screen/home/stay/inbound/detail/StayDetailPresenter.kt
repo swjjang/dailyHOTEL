@@ -200,8 +200,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             showRoomPriceType = if (bookDateTime.nights == 1) PriceType.TOTAL else PriceType.AVERAGE
 
-            intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_BEDTYPE_FILTER)?.let { bedTypeFilter.addAll(it) }
-            intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_FACILITIES_FILTER)?.let { facilitiesFilter.addAll(it) }
+            intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_BEDTYPE_FILTER)?.let {
+                it.forEach { bedTypeFilter.add(it.toUpperCase()) }
+            }
+
+            intent.getStringArrayListExtra(StayDetailActivity.REQUEST_CODE_FACILITIES_FILTER)?.let {
+                it.forEach { facilitiesFilter.add(it.toUpperCase()) }
+            }
 
             analytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS))
         } catch (e: Exception) {
@@ -1239,7 +1244,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
                 setConciergeInformation()
 
-                viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
             }
 
