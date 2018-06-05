@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
+import com.twoheart.dailyhotel.R;
 
 /**
  * Created by sheldon
@@ -36,6 +37,8 @@ public class NavigatorDialogActivity extends BaseActivity<NavigatorDialogPresent
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.hold, R.anim.hold);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -50,5 +53,7 @@ public class NavigatorDialogActivity extends BaseActivity<NavigatorDialogPresent
     public void finish()
     {
         super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.hold);
     }
 }

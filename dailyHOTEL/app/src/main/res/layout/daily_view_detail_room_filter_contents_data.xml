@@ -454,7 +454,7 @@
             android:background="@drawable/selector_fillrect_ceb2135_ce8e8e9_r3"
             android:gravity="center"
             android:text="@string/label_stay_detail_show_filtered_room"
-            android:textColor="@color/white"
+            android:textColor="@drawable/selector_button_default_text_color"
             android:textSize="17dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/resetTextView"

@@ -1239,6 +1239,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
                 setConciergeInformation()
 
+                viewInterface.setSelectedRoomFilter(bedTypeFilter, facilitiesFilter)
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
             }
 

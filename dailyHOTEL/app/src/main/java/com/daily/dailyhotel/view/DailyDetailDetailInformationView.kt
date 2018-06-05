@@ -109,7 +109,7 @@ class DailyDetailDetailInformationView : LinearLayout {
                     spannableStringBuilder.append(s)
 
                     if (index == 0) {
-                        spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).boldTypeface),
+                        spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).mediumTypeface),
                                 0, s.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
