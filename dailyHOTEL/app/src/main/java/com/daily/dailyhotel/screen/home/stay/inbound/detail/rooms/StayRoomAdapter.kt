@@ -333,15 +333,21 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 R.drawable.vector_ic_detail_item_bed_double
             }
 
-            typeStringList += if (BedType.UNKNOWN == bedType) {
-                bedType.getName(context)
-            } else {
-                "${bedType.getName(context)} ${bedTypeInformation.count}" + if (index == bedTypeList.size - 1) {
-                    context.resources.getString(R.string.label_bed_count_end_string)
-                } else {
-                    ""
+            var bedString = bedType.getName(context)
+
+            when {
+                bedTypeInformation.count > 1 -> {
+                    bedString += " ${bedTypeInformation.count}"
+
+                    (index == bedTypeList.size - 1).runTrue {
+                        bedString += context.resources.getString(R.string.label_bed_count_end_string)
+                    }
                 }
+
+                else -> {}
             }
+
+            typeStringList += bedString
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
