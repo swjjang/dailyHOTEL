@@ -23,7 +23,7 @@ interface StayRoomsInterface {
 
         fun setRecyclerPosition(position: Int)
 
-        fun initInvisibleLayout()
+        fun initInvisibleLayout(position: Int)
 
         fun setInvisibleData(position: Int)
 

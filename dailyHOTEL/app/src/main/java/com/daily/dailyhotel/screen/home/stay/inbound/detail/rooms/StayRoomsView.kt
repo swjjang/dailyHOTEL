@@ -383,7 +383,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     }
                 }
 
-                else -> {}
+                else -> {
+                }
             }
 
             typeStringList += bedString
@@ -753,18 +754,17 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     private val minImageRadius = 0f
     private val maxImageRadius = 6f
 
-    override fun initInvisibleLayout() {
+    override fun initInvisibleLayout(position: Int) {
         viewDataBinding.recyclerView.postDelayed({
             if (listAdapter.itemCount == 0) return@postDelayed
 
-            val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(0) as? StayRoomAdapter.RoomViewHolder
+            val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(position) as? StayRoomAdapter.RoomViewHolder
                     ?: return@postDelayed
 
             val invisibleLayoutDataBinding = viewDataBinding.invisibleLayout ?: return@postDelayed
 
             val top = viewDataBinding.recyclerView.top
             val paddingTop = roomViewHolder.dataBinding.root.paddingTop
-            val paddingBottom = roomViewHolder.dataBinding.root.paddingBottom
             val width = roomViewHolder.dataBinding.root.measuredWidth
             val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
             val paddingRight = roomViewHolder.dataBinding.root.paddingRight
