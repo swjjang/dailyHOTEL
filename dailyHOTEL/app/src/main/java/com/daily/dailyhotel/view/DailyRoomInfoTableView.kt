@@ -84,14 +84,14 @@ class DailyRoomInfoTableView : ConstraintLayout {
 
         val row: TableRow = TableRow(context).apply {
             val titleView = DailyTextView(context).apply {
-                width = ScreenUtils.dpToPx(context, if (largeView) SMALL_LEFT_VIEW_WIDTH else LARGE_LEFT_VIEW_WIDTH)
+                width = ScreenUtils.dpToPx(context, if (largeView) LARGE_LEFT_VIEW_WIDTH else SMALL_LEFT_VIEW_WIDTH)
                 height = itemHeight
                 setBackgroundColor(context.resources.getColor(R.color.information_background))
                 setTextColor(context.resources.getColor(R.color.default_text_c929292))
                 freezesText = true
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
                 gravity = Gravity.CENTER_VERTICAL
-                setPadding(ScreenUtils.dpToPx(context, if (largeView) SMALL_TABLE_ROW_LEFT_MARGIN else LARGE_TABLE_ROW_LEFT_MARGIN), 0, 0, 0)
+                setPadding(ScreenUtils.dpToPx(context, if (largeView) LARGE_TABLE_ROW_LEFT_MARGIN else SMALL_TABLE_ROW_LEFT_MARGIN), 0, 0, 0)
                 text = title
             }
 
@@ -103,7 +103,7 @@ class DailyRoomInfoTableView : ConstraintLayout {
                     orientation = LinearLayout.HORIZONTAL
                 }
 
-                val horizontalMargin = ScreenUtils.dpToPx(context, if (largeView) SMALL_TABLE_ROW_LEFT_MARGIN else LARGE_TABLE_ROW_LEFT_MARGIN)
+                val horizontalMargin = ScreenUtils.dpToPx(context, if (largeView) LARGE_TABLE_ROW_LEFT_MARGIN else SMALL_TABLE_ROW_LEFT_MARGIN)
                 setPadding(horizontalMargin, 0, horizontalMargin, 0)
                 setBackgroundColor(context.resources.getColor(R.color.white))
             }
@@ -130,7 +130,7 @@ class DailyRoomInfoTableView : ConstraintLayout {
                 freezesText = true
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
                 text = subDescription
-                setPadding(ScreenUtils.dpToPx(context, if (largeView) SMALL_TABLE_ROW_SUB_LEFT_MARGIN else LARGE_TABLE_ROW_SUB_LEFT_MARGIN), 0, 0, 0)
+                setPadding(ScreenUtils.dpToPx(context, if (largeView) LARGE_TABLE_ROW_SUB_LEFT_MARGIN else SMALL_TABLE_ROW_SUB_LEFT_MARGIN), 0, 0, 0)
             }
 
             descriptionLayout.addView(subDescriptionView)
