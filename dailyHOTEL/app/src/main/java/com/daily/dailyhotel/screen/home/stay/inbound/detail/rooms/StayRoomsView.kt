@@ -156,15 +156,17 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         }
 
         listAdapter.setData(roomList)
-
-        viewDataBinding.recyclerView.post {
-            (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)
-                    .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
-        }
     }
 
     override fun notifyDataSetChanged() {
         listAdapter.notifyDataSetChanged()
+    }
+
+    override fun setRecyclerPosition(position: Int) {
+        viewDataBinding.recyclerView.post {
+            (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)
+                    .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
+        }
     }
 
     private fun setRecyclerScrollEnabled() {
