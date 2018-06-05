@@ -18,6 +18,7 @@ import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
+import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
@@ -155,7 +156,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
         dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.visibility = if (room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
+        dataBinding.vrIconView.visibility = if (DailyPreference.getInstance(context).trueVRSupport > 0 && room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
         dataBinding.vrIconView.setOnClickListener {
             onEventListener?.onVrImageClick(position)
         }
