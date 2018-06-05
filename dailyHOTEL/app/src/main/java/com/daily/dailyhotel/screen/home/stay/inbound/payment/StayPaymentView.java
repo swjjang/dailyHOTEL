@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -194,7 +195,16 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             @Override
             public void onClick(View v)
             {
-                getEventListener().onChangedGuestClick(getViewDataBinding().guestCheckBox.isChecked());
+                getViewDataBinding().guestCheckBox.setChecked(!getViewDataBinding().guestCheckBox.isChecked());
+            }
+        });
+
+        getViewDataBinding().guestCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                getEventListener().onChangedGuestClick(isChecked);
             }
         });
     }
