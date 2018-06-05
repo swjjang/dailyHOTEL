@@ -297,7 +297,7 @@ interface StayDetailInterface {
 
         fun onEventRoomFilterClick(activity: Activity)
 
-        fun onEventConfirmRoomFilterClick(activity: Activity, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>)
+        fun onEventConfirmRoomFilterClick(activity: Activity, index: Int, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>)
 
         fun onEventResetFilterAndShowAllRoom(activity: Activity)
 

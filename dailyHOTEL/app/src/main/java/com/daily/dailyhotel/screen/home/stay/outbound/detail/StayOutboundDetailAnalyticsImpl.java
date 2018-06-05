@@ -92,7 +92,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
 
             params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
 
-            params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.city);
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
@@ -109,7 +109,8 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.nightlyBaseRate > 0 ? "y" : "n");
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OUTBOUND);
+            params.put(AnalyticsManager.KeyType.COUNTRY, mAnalyticsParam.country);
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayOutboundDetail.address);
 
             boolean hasNRD = false;
 

@@ -15,6 +15,8 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
     public int nightlyRate;
     public int nightlyBaseRate;
     public boolean dailyChoice;
+    public String country;
+    public String city;
 
     public StayOutboundDetailAnalyticsParam()
     {
@@ -38,6 +40,8 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
         dest.writeInt(nightlyRate);
         dest.writeInt(nightlyBaseRate);
         dest.writeInt(dailyChoice ? 1 : 0);
+        dest.writeString(country);
+        dest.writeString(city);
     }
 
     void readFromParcel(Parcel in)
@@ -52,6 +56,8 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
         nightlyRate = in.readInt();
         nightlyBaseRate = in.readInt();
         dailyChoice = in.readInt() == 1;
+        country = in.readString();
+        city = in.readString();
     }
 
     @Override

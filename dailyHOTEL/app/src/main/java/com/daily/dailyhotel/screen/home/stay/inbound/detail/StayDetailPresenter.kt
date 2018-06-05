@@ -1157,7 +1157,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             unLockAll()
             onCloseRoomFilterClick()
 
-            analytics.onEventConfirmRoomFilterClick(activity, bedTypeFilter, facilitiesFilter)
+            analytics.onEventConfirmRoomFilterClick(activity, it.index, bedTypeFilter, facilitiesFilter)
         } ?: Util.restartApp(activity)
     }
 
