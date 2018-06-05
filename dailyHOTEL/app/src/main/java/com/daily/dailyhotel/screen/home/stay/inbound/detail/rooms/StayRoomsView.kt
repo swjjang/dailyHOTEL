@@ -372,22 +372,15 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 R.drawable.vector_ic_detail_item_bed_double
             }
 
-            var bedString = bedType.getName(context)
-
-            when {
-                bedTypeInformation.count > 1 -> {
-                    bedString += " ${bedTypeInformation.count}"
-
-                    (index == bedTypeList.size - 1).runTrue {
-                        bedString += context.resources.getString(R.string.label_bed_count_end_string)
-                    }
-                }
-
-                else -> {
+            typeStringList += if (StayRoomAdapter.BedType.UNKNOWN == bedType) {
+                bedType.getName(context)
+            } else {
+                "${bedType.getName(context)} ${bedTypeInformation.count}" + if (index == bedTypeList.size - 1) {
+                    context.resources.getString(R.string.label_bed_count_end_string)
+                } else {
+                    ""
                 }
             }
-
-            typeStringList += bedString
         }
 
         bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
@@ -450,7 +443,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         roomString += ", "
                     }
 
-                    roomString += context.resources.getString(R.string.label_bed_room_format, it.count)
+                    roomString += context.resources.getString(R.string.label_bed_room) + if (it.count > 1) {
+                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
+                    } else ""
                 }
 
                 "IN_FLOOR_HEATING_ROOM" -> {
@@ -458,19 +453,27 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         roomString += ", "
                     }
 
-                    roomString += context.resources.getString(R.string.label_in_floor_heating_room_format, it.count)
+                    roomString += context.resources.getString(R.string.label_in_floor_heating_room) + if (it.count > 1) {
+                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
+                    } else ""
                 }
 
                 "LIVING_ROOM" -> {
-                    stringList += context.resources.getString(R.string.label_living_room_format, it.count)
+                    stringList += context.resources.getString(R.string.label_living_room) + if (it.count > 1) {
+                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
+                    } else ""
                 }
 
                 "KITCHEN" -> {
-                    stringList += context.resources.getString(R.string.label_kitchen_format, it.count)
+                    stringList += context.resources.getString(R.string.label_kitchen) + if (it.count > 1) {
+                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
+                    } else ""
                 }
 
                 "REST_ROOM" -> {
-                    stringList += context.resources.getString(R.string.label_rest_room_format, it.count)
+                    stringList += context.resources.getString(R.string.label_rest_room) + if (it.count > 1) {
+                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
+                    } else ""
                 }
 
                 else -> {

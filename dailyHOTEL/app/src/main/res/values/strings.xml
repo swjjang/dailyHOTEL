@@ -1596,11 +1596,11 @@
     <string name="label_room_type_living_room">거실+방</string>
     <string name="label_room_type_duplex_room">복층</string>
     <string name="label_room_type_entire_house">독채</string>
-    <string name="label_bed_room_format">침대룸 %d개</string>
-    <string name="label_in_floor_heating_room_format">온돌룸 %d개</string>
-    <string name="label_living_room_format">거실 %d개</string>
-    <string name="label_kitchen_format">주방 %d개</string>
-    <string name="label_rest_room_format">"화장실 %d개</string>
+    <string name="label_bed_room">침대룸</string>
+    <string name="label_in_floor_heating_room">온돌룸</string>
+    <string name="label_living_room">거실</string>
+    <string name="label_kitchen">주방</string>
+    <string name="label_rest_room">"화장실</string>
     <string name="label_pyoung_format">%d평</string>
     <string name="label_room_max_person_range_format">(최대 %d인 까지)</string>
     <string name="label_person_age_range_format">%1$d세 - %2$d세 이하</string>
