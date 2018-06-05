@@ -32,7 +32,6 @@ class DailyDetailFacilitiesView : ConstraintLayout {
 
     private fun initLayout(context: Context) {
         viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_facilities_data, this, true)
-
     }
 
     fun setRoomCountVisible(visible: Boolean) {
@@ -49,10 +48,7 @@ class DailyDetailFacilitiesView : ConstraintLayout {
         }
 
         facilities.takeNotEmpty {
-            it.forEach {
-                viewDataBinding.facilitiesGridLayout.addView(getFacilitiesView(it))
-
-            }
+            it.forEach { viewDataBinding.facilitiesGridLayout.addView(getFacilitiesView(it)) }
 
             val columnCount = viewDataBinding.facilitiesGridLayout.columnCount - (it.size % viewDataBinding.facilitiesGridLayout.columnCount)
 

@@ -180,8 +180,7 @@ class StayPreviewPresenter(activity: StayPreviewActivity)
 
                 unLockAll()
             }, { throwable ->
-                onHandleError(throwable)
-                hideAnimationAfterFinish()
+                onHandleErrorAndFinish(throwable)
             }))
         }
     }
