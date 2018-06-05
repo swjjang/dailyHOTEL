@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -123,7 +122,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf3ebde));
         } else
         {
-            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9ef));
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cf0f0f2));
             getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_c929292));
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_ce7e7e7));
         }
@@ -190,12 +189,12 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         getViewDataBinding().roomInformationView.addInformation(getString(R.string.label_booking_place_name), stayName);
         getViewDataBinding().roomInformationView.addInformation(getString(R.string.label_booking_room_type), roomName);
 
-        getViewDataBinding().guestCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        getViewDataBinding().guestCheckLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            public void onClick(View v)
             {
-                getEventListener().onChangedGuestClick(isChecked);
+                getEventListener().onChangedGuestClick(getViewDataBinding().guestCheckBox.isChecked());
             }
         });
     }

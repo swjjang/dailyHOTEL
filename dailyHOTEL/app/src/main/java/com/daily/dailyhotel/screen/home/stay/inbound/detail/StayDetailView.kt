@@ -995,7 +995,21 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         val tabLayoutHeight = ScreenUtils.dpToPx(context, 41.0)
 
         viewDataBinding.nestedScrollView.abortScrolling()
-        viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.dailyCommentView.y.toInt() - toolbarHeight - tabLayoutHeight)
+
+        when {
+            viewDataBinding.dailyCommentView.visibility == View.VISIBLE -> {
+                viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.dailyCommentView.y.toInt() - toolbarHeight - tabLayoutHeight)
+            }
+
+            viewDataBinding.facilitiesView.visibility == View.VISIBLE -> {
+                viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.facilitiesView.y.toInt() - toolbarHeight - tabLayoutHeight)
+            }
+
+            else -> {
+
+                viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.addressView.y.toInt() - toolbarHeight - tabLayoutHeight)
+            }
+        }
     }
 
     override fun showMoreRooms(animated: Boolean): Completable {

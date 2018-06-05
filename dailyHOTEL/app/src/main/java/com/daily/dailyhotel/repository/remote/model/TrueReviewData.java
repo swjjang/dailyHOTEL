@@ -38,7 +38,7 @@ public class TrueReviewData
         trueReview.comment = comment;
         trueReview.createdAt = createdAt;
         trueReview.averageScore = avgScore;
-        trueReview.productName = itemName;
+        trueReview.productName = itemName.trim();
 
         if (reviewReply != null)
         {
