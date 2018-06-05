@@ -504,7 +504,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }, {
             ExLog.e(it.toString())
 
+            disposable?.dispose()
             onHandleErrorAndFinish(it)
+
+            setResult(BaseActivity.RESULT_CODE_REFRESH)
         }))
     }
 
