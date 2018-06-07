@@ -19,8 +19,6 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Typeface;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +28,6 @@ import com.twoheart.dailyhotel.R;
 
 public class PlaceIconGenerator
 {
-    private static final float TEXT_SIZE_DP = 12.0f;
-    private static final float SELECTED_TEXT_SIZE_DP = 16.0f;
-
     private ViewGroup mContainer;
     private TextView mTextView;
 
@@ -56,8 +51,6 @@ public class PlaceIconGenerator
         {
             mTextView.setText(text);
             mTextView.setTextColor(mTextView.getContext().getResources().getColor(R.color.default_text_c4d4d4d));
-            mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DP);
-            mTextView.setTypeface(mTextView.getTypeface(), Typeface.NORMAL);
             mTextView.setBackgroundResource(drawableResId);
         }
 
@@ -70,8 +63,6 @@ public class PlaceIconGenerator
         {
             mTextView.setText(text);
             mTextView.setTextColor(mTextView.getContext().getResources().getColor(R.color.white));
-            mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, SELECTED_TEXT_SIZE_DP);
-            mTextView.setTypeface(mTextView.getTypeface(), Typeface.BOLD);
             mTextView.setBackgroundResource(drawableResId);
         }
 
