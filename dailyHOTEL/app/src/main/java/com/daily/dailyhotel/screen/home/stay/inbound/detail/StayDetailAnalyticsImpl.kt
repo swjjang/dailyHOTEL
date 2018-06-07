@@ -329,7 +329,7 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.DETAILVIEW_STAY, "filter_roomtype", AnalyticsManager.ValueType.EMPTY, null)
     }
 
-    override fun onEventConfirmRoomFilterClick(activity: Activity, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>) {
+    override fun onEventConfirmRoomFilterClick(activity: Activity, index: Int, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>) {
         try {
             bedTypeFilter.forEach {
                 getBedTypeResourceName(it).takeIf { it > 0 }?.let {
@@ -344,6 +344,30 @@ class StayDetailAnalyticsImpl : StayDetailInterface.AnalyticsInterface {
                             "filter_room_amenities", activity.getString(it), null)
                 }
             }
+
+            val params = HashMap<String, String?>()
+
+            params[AnalyticsManager.KeyType.PLACE_INDEX] = index.toString()
+
+            // 베드타입
+            params[AnalyticsManager.KeyType.BEDTYPE_DOUBLE] = bedTypeFilter.contains("DOUBLE").toString()
+            params[AnalyticsManager.KeyType.BEDTYPE_TWIN] = bedTypeFilter.contains("TWIN").toString()
+            params[AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING] = bedTypeFilter.contains("IN_FLOOR_HEATING").toString()
+            params[AnalyticsManager.KeyType.BEDTYPE_SINGLE] = bedTypeFilter.contains("SINGLE").toString()
+
+            // 시설
+            analyticsParam?.let {
+                params[AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM] = it.amenitiesFilter.contains("KidsPlayroom").toString()
+                params[AnalyticsManager.KeyType.FACILITY_POOL] = it.amenitiesFilter.contains("Pool").toString()
+                params[AnalyticsManager.KeyType.FACILITY_PET] = it.amenitiesFilter.contains("Pet").toString()
+            }
+
+            params[AnalyticsManager.KeyType.FACILITY_BREAKFAST] = facilitiesFilter.contains("Breakfast").toString()
+            params[AnalyticsManager.KeyType.FACILITY_PART_ROOM] = facilitiesFilter.contains("PartyRoom").toString()
+            params[AnalyticsManager.KeyType.FACILITY_WHIRLPOOL] = facilitiesFilter.contains("SpaWallpool").toString()
+
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.AnalyticsType.BRAZE,
+                    AnalyticsManager.Category.DETAILVIEW_STAY, "filter_room_amenities", null, params)
         } catch (e: Exception) {
             ExLog.e(e.toString())
         }

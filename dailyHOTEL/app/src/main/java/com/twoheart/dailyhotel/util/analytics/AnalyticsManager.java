@@ -30,6 +30,16 @@ public class AnalyticsManager
     private KakaoManager mKakaoManager;
     private List<BaseAnalyticsManager> mAnalyticsManagerList;
 
+    public enum AnalyticsType
+    {
+        GOOGLE,
+        FACEBOOK,
+        BRAZE,
+        ADJUST,
+        FIREBASE,
+        KAKAO
+    }
+
     public synchronized static AnalyticsManager getInstance(Context context)
     {
         if (mInstance == null)
@@ -307,6 +317,36 @@ public class AnalyticsManager
             {
                 ExLog.d(TAG + e.toString());
             }
+        }
+    }
+
+    public void recordEvent(AnalyticsType type, String category, String action, String label, Map<String, String> params)
+    {
+        switch (type)
+        {
+            case GOOGLE:
+                mGoogleAnalyticsManager.recordEvent(category, action, label, params);
+                break;
+
+            case FACEBOOK:
+                mFacebookManager.recordEvent(category, action, label, params);
+                break;
+
+            case BRAZE:
+                mAppboyManager.recordEvent(category, action, label, params);
+                break;
+
+            case ADJUST:
+                mAdjustManager.recordEvent(category, action, label, params);
+                break;
+
+            case FIREBASE:
+                mFirebaseManager.recordEvent(category, action, label, params);
+                break;
+
+            case KAKAO:
+                mKakaoManager.recordEvent(category, action, label, params);
+                break;
         }
     }
 

@@ -1061,6 +1061,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             , getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating)//
             , rankingPosition, mStayOutboundList.size());
 
+        analyticsParam.country = mStayOutboundSuggest.country;
+        analyticsParam.city = mStayOutboundSuggest.city;
+
         if (Util.isUsedMultiTransition() == true && pair != null)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()

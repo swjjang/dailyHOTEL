@@ -89,6 +89,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
             appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
             appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+            appboyProperties.addProperty("bed type_싱글", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_SINGLE)));
             appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
             appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
             appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
@@ -107,10 +108,13 @@ public class AppboyManager extends BaseAnalyticsManager
             AppboyProperties appboyProperties = new AppboyProperties();
 
             appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+            appboyProperties.addProperty("idx", params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
             appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
             appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.ADDRESS, params.get(AnalyticsManager.KeyType.ADDRESS));
             appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
             appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
 
@@ -193,6 +197,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
                 appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
                 appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+                appboyProperties.addProperty("bed type_싱글", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_SINGLE)));
                 appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
                 appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
                 appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
@@ -587,6 +592,31 @@ public class AppboyManager extends BaseAnalyticsManager
                 if (DEBUG == true)
                 {
                     ExLog.d(TAG + " : " + EventName.OB_SORTFILTER_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
+            }
+        } else if (AnalyticsManager.Category.DETAILVIEW_STAY.equalsIgnoreCase(category) == true)
+        {
+            if ("filter_room_amenities".equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty("idx", Integer.valueOf(params.get(AnalyticsManager.KeyType.PLACE_INDEX)));
+                appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
+                appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
+                appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+                appboyProperties.addProperty("bed type_싱글", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_SINGLE)));
+                appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
+                appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
+                appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
+                appboyProperties.addProperty("facility_객실내_조식", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_BREAKFAST)));
+                appboyProperties.addProperty("facility_객실내_파티룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PART_ROOM)));
+                appboyProperties.addProperty("facility_객실내_스파월풀", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_WHIRLPOOL)));
+
+                mAppboy.logCustomEvent(EventName.STAY_DETAIL_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_DETAIL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
                 }
             }
         }

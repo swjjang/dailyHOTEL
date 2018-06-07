@@ -930,6 +930,9 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
         StayDetailAnalyticsParam analyticsParam = getAnalyticsParam(stay, listCount);
         StayBookDateTime bookDateTime = mViewModel.getBookDateTime();
 
+        List<String> bedTypeFilter = mViewModel.getFilter().getBedTypeList();
+        List<String> facilitiesFilter = mViewModel.getFilter().getRoomAmenitiesFilterList();
+
         if (Util.isUsedMultiTransition() == true && pairs != null)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
@@ -955,7 +958,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , null, null//
+                , bedTypeFilter, facilitiesFilter//
                 , true, transGradientType//
                 , analyticsParam);
 
@@ -966,7 +969,7 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , null, null//
+                , bedTypeFilter, facilitiesFilter//
                 , false, StayDetailActivity.TransGradientType.NONE//
                 , analyticsParam);
 
