@@ -11,6 +11,7 @@ import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.StayFilter;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -204,6 +205,41 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty("facility_객실내_조식", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_BREAKFAST)));
                 appboyProperties.addProperty("facility_객실내_파티룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PART_ROOM)));
                 appboyProperties.addProperty("facility_객실내_스파월풀", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_WHIRLPOOL)));
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+
+                try
+                {
+                    StayFilter.SortType sortType = StayFilter.SortType.valueOf(params.get(AnalyticsManager.KeyType.SORTING));
+
+                    switch (sortType)
+                    {
+                        case DEFAULT:
+                            appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.DISTRICT);
+                            break;
+
+                        case DISTANCE:
+                            appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.DISTANCE);
+                            break;
+
+                        case LOW_PRICE:
+                            appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.LOWTOHIGH_PRICE_SORTED);
+                            break;
+
+                        case HIGH_PRICE:
+                            appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.HIGHTOLOW_PRICE_SORTED);
+                            break;
+
+                        case SATISFACTION:
+                            appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.RATING_SORTED);
+                            break;
+                    }
+                } catch (Exception e)
+                {
+                    appboyProperties.addProperty(AnalyticsManager.KeyType.SORTING, ValueName.DISTRICT);
+                }
 
                 mAppboy.logCustomEvent(EventName.STAY_SORTFILTER_CLICKED, appboyProperties);
 
