@@ -35,13 +35,17 @@
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:freezesText="true"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/default_text_c4d4d4d"
             android:textSize="18dp"
             app:layout_constraintLeft_toLeftOf="@+id/leftGuideLine"
+            app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
             app:layout_constraintTop_toBottomOf="@+id/topLineView"
             dailyFont:style="Medium"/>
 

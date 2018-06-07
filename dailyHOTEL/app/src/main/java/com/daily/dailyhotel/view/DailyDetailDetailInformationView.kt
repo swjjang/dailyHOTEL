@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -23,7 +24,6 @@ import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailBreakfastInformationDataBinding
@@ -106,27 +106,28 @@ class DailyDetailDetailInformationView : LinearLayout {
         return viewDataBinding
     }
 
-    private fun getContentBoldView(content: String): DailyTextView? {
-        return content.letNotEmpty {
-            DailyTextView(context).apply {
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16.0f)
-                setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
-                setLineSpacing(1.0f, 1.0f)
-                setPadding(0, ScreenUtils.dpToPx(context, 20.0), 0, 0)
+    private fun getContentBoldView(content: String): DailyTextView {
+        return DailyTextView(context).apply {
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16.0f)
+            setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
+            setLineSpacing(1.0f, 1.0f)
+            setPadding(0, ScreenUtils.dpToPx(context, 20.0), 0, 0)
+            ellipsize = TextUtils.TruncateAt.END
+            maxLines = 1
+            setSingleLine()
 
-                val spannableStringBuilder = SpannableStringBuilder()
+            val spannableStringBuilder = SpannableStringBuilder()
 
-                it.split("**").filter { !it.isTextEmpty() }.forEachIndexed { index, s ->
-                    spannableStringBuilder.append(s)
+            content.split("**").filter { !it.isTextEmpty() }.forEachIndexed { index, s ->
+                spannableStringBuilder.append(s)
 
-                    if (index == 0) {
-                        spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).mediumTypeface),
-                                0, s.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    }
+                if (index == 0) {
+                    spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).mediumTypeface),
+                            0, s.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
-
-                text = spannableStringBuilder
             }
+
+            text = spannableStringBuilder
         }
     }
 
