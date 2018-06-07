@@ -290,7 +290,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
 
             if (place.latitude == latLng.latitude && place.longitude == latLng.longitude)
             {
-                PlaceRenderer placeRenderer = new PlaceRenderer(getContext(), place.discountPrice, place.getGradeMarkerResId());
+                PlaceRenderer placeRenderer = new PlaceRenderer(getContext(), place.discountPrice, R.drawable.bg_hotel_price_on);
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -721,7 +721,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        PlaceRenderer placeRenderer = new PlaceRenderer(context, placeClusterItem.getPlace().discountPrice, placeClusterItem.getPlace().getGradeMarkerResId());
+        PlaceRenderer placeRenderer = new PlaceRenderer(context, placeClusterItem.getPlace().discountPrice, R.drawable.bg_hotel_price_on);
         BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
         if (icon == null)

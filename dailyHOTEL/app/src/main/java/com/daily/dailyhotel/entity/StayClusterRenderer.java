@@ -38,7 +38,7 @@ public class StayClusterRenderer extends DefaultClusterRenderer<StayClusterItem>
 
         Stay stay = clusterItem.getStay();
 
-        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, stay.discountPrice, R.drawable.bg_hotel_price_900034);
+        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, stay.discountPrice, R.drawable.bg_hotel_price_off);
 
         BitmapDescriptor icon = placeRenderer.getBitmap(false);
 

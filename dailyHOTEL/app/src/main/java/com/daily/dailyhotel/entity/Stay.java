@@ -46,31 +46,31 @@ public class Stay
 
     public enum Grade
     {
-        special(R.string.grade_special, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        special1(R.string.grade_special1, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        special2(R.string.grade_special2, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
+        special(R.string.grade_special, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        special1(R.string.grade_special1, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        special2(R.string.grade_special2, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
         //
-        biz(R.string.grade_biz, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        hostel(R.string.grade_hostel, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        grade1(R.string.grade_1, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        grade2(R.string.grade_2, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        grade3(R.string.grade_3, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
+        biz(R.string.grade_biz, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        hostel(R.string.grade_hostel, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        grade1(R.string.grade_1, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        grade2(R.string.grade_2, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        grade3(R.string.grade_3, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
         //
-        resort(R.string.grade_resort, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        pension(R.string.grade_pension, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        fullvilla(R.string.grade_fullvilla, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        condo(R.string.grade_condo, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
+        resort(R.string.grade_resort, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        pension(R.string.grade_pension, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        fullvilla(R.string.grade_fullvilla, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        condo(R.string.grade_condo, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
         //
-        boutique(R.string.grade_boutique, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
-        motel(R.string.grade_motel, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
+        boutique(R.string.grade_boutique, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
+        motel(R.string.grade_motel, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
         //
-        design(R.string.grade_design, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
+        design(R.string.grade_design, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
         //
-        residence(R.string.grade_residence, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
+        residence(R.string.grade_residence, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
         //
-        guest_house(R.string.grade_guesthouse, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034),
+        guest_house(R.string.grade_guesthouse, R.color.default_background_c929292, R.drawable.bg_hotel_price_off),
         //
-        etc(R.string.grade_not_yet, R.color.default_background_c929292, R.drawable.bg_hotel_price_900034);
+        etc(R.string.grade_not_yet, R.color.default_background_c929292, R.drawable.bg_hotel_price_off);
 
         private int mNameResId;
         private int mColorResId;

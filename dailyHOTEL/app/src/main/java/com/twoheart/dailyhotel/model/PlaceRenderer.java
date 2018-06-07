@@ -19,7 +19,7 @@ public class PlaceRenderer
         mPrice = DailyTextUtils.getPriceFormat(context, price, false);
         mMarkerResId = markerResId;
         mIconGenerator = new PlaceIconGenerator(context);
-        mIconGenerator.setTextColor(context.getResources().getColor(R.color.white));
+        mIconGenerator.setTextColor(context.getResources().getColor(R.color.default_text_c4d4d4d));
     }
 
     public BitmapDescriptor getBitmap(boolean isSelected)
