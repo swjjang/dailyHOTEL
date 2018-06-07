@@ -822,7 +822,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 } else {
                     viewInterface.hideMoreRooms()
 
-                    analytics.onEventUnfoldRoom(activity, false)
+                    analytics.onEventFoldRoom(activity, false)
 
                     Completable.complete()
                 }
@@ -831,7 +831,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     val showViewRoomMaxCount = 5
 
                     if (getRoomFilterCount(stayDetail?.roomInformation?.roomList, bedTypeFilter, facilitiesFilter) > showViewRoomMaxCount) {
-                        analytics.onEventFoldRoom(activity, true)
+                        analytics.onEventUnfoldRoom(activity, true)
                         viewInterface.showMoreRooms(true)
                     } else {
                         setResetRoomFilter()
@@ -843,7 +843,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                         viewInterface.showMoreRooms(false)
                     }
                 } else {
-                    analytics.onEventFoldRoom(activity, false)
+                    analytics.onEventUnfoldRoom(activity, false)
                     viewInterface.showMoreRooms(true)
                 }
             }
