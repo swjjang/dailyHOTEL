@@ -633,12 +633,12 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 switch (stayOutboundBookingDetail.refundStatus)
                 {
                     case NRD:
-                        comment = comment.replaceAll("900034", "EB2135");
+                        comment = comment.replaceAll("(900034|B70038|b70038)", "EB2135");
                         break;
 
                     case FULL:
                     case PARTIAL:
-                        comment = comment.replaceAll("900034", "2C8DE6");
+                        comment = comment.replaceAll("(900034|B70038|b70038)", "2C8DE6");
                         break;
                 }
 

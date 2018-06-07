@@ -82,10 +82,10 @@ public class DailyBookingRefundPolicyView extends ConstraintLayout
 
                 if (nrd)
                 {
-                    comment = comment.replaceAll("b70038", "EB2135");
+                    comment = comment.replaceAll("(900034|B70038|b70038)", "EB2135");
                 } else
                 {
-                    comment = comment.replaceAll("b70038", "2C8DE6");
+                    comment = comment.replaceAll("(900034|B70038|b70038)", "2C8DE6");
                 }
 
                 detailInformationDataBinding.textView.setText(Html.fromHtml(comment));
