@@ -89,6 +89,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
             appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
             appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+            appboyProperties.addProperty("bed type_싱글", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_SINGLE)));
             appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
             appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
             appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
@@ -603,6 +604,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty("bed type_더블", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_DOUBLE)));
                 appboyProperties.addProperty("bed type_트윈", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_TWIN)));
                 appboyProperties.addProperty("bed type_온돌", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_IN_FLOOR_HEATING)));
+                appboyProperties.addProperty("bed type_싱글", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.BEDTYPE_SINGLE)));
                 appboyProperties.addProperty("facility_부대_키즈플레이룸", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_KIDS_PLAY_ROOM)));
                 appboyProperties.addProperty("facility_부대_수영장", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_POOL)));
                 appboyProperties.addProperty("facility_부대_반려동물", "true".equalsIgnoreCase(params.get(AnalyticsManager.KeyType.FACILITY_PET)));
