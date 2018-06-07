@@ -1465,10 +1465,10 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         LayoutGourmetDetailMapDataBinding viewDataBinding = getViewDataBinding().mapViewDataBinding;
 
         // 주소지
-        viewDataBinding.detailAddressTextView.setText(stayOutboundDetail.address);
+        viewDataBinding.addressTextView.setText(stayOutboundDetail.address);
 
         // 주소 복사
-        viewDataBinding.copyAddressLayout.setOnClickListener(new View.OnClickListener()
+        viewDataBinding.copyAddressTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -1478,7 +1478,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         });
 
         // 길찾기
-        viewDataBinding.navigatorLayout.setOnClickListener(new View.OnClickListener()
+        viewDataBinding.searchAddressTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

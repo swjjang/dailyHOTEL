@@ -20,106 +20,105 @@
         <ImageView
             android:id="@+id/mapImageView"
             android:layout_width="0dp"
-            android:layout_height="86dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitEnd"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,5:2"
+            android:scaleType="centerCrop"
             android:src="@drawable/detail_map_img"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mapDividerView"/>
 
         <View
+            android:id="@+id/backgroundView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginRight="66dp"
-            android:background="@drawable/detail_map_gradient"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_fillrect_bffffff_r3"
             app:layout_constraintBottom_toBottomOf="@+id/mapImageView"
             app:layout_constraintLeft_toLeftOf="@+id/mapImageView"
             app:layout_constraintRight_toRightOf="@+id/mapImageView"
             app:layout_constraintTop_toTopOf="@+id/mapImageView"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/detailAddressTextView"
+            android:id="@+id/addressTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="100dp"
-            android:freezesText="true"
-            android:maxLines="3"
-            android:textColor="@color/default_text_c4d4d4d"
-            android:textSize="13dp"
-            app:layout_constraintBottom_toBottomOf="@+id/mapImageView"
-            app:layout_constraintLeft_toLeftOf="@+id/mapImageView"
-            app:layout_constraintRight_toRightOf="@+id/mapImageView"
-            app:layout_constraintTop_toTopOf="@+id/mapImageView"/>
-
-        <View
-            android:id="@+id/mapUnderLine"
-            android:layout_width="0dp"
-            android:layout_height="1px"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="@color/default_line_cdcdcdd"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapImageView"/>
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="3"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalLineView"
+            app:layout_constraintLeft_toLeftOf="@+id/backgroundView"
+            app:layout_constraintRight_toLeftOf="@+id/mapIconImageView"
+            app:layout_constraintTop_toTopOf="@+id/backgroundView"/>
 
-        <FrameLayout
-            android:id="@+id/copyAddressLayout"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/navigatorLayout"
-            app:layout_constraintTop_toBottomOf="@+id/mapUnderLine">
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="4dp"
-                android:freezesText="true"
-                android:gravity="center"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@string/label_copy_address"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/detail_ic_copy"/>
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/navigatorLayout"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@+id/copyAddressLayout"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapUnderLine">
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:drawablePadding="4dp"
-                android:freezesText="true"
-                android:gravity="center"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="@string/label_navigator"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/detail_ic_directions"/>
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/mapIconImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalLineView"
+            app:layout_constraintRight_toRightOf="@+id/backgroundView"
+            app:layout_constraintTop_toTopOf="@+id/backgroundView"
+            app:srcCompat="@drawable/vector_detail_ic_map"/>
 
         <View
+            android:id="@+id/horizontalLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginBottom="39dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cf0f0f0"
+            app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
+            app:layout_constraintLeft_toLeftOf="@+id/backgroundView"
+            app:layout_constraintRight_toRightOf="@+id/backgroundView"/>
+
+        <View
+            android:id="@+id/verticalLineView"
             android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:background="@color/default_line_ce8e8e9"
-            app:layout_constraintBottom_toBottomOf="@+id/copyAddressLayout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/navigatorLayout"/>
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="9dp"
+            android:background="@color/default_line_cf0f0f0"
+            app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
+            app:layout_constraintLeft_toLeftOf="@+id/backgroundView"
+            app:layout_constraintRight_toRightOf="@+id/backgroundView"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/copyAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginLeft="15dp"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_copy_address"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:drawableCompatLeft="@drawable/vector_detail_ic_copy"
+            app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
+            app:layout_constraintLeft_toLeftOf="@+id/mapImageView"
+            app:layout_constraintRight_toLeftOf="@+id/verticalLineView"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/searchAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginRight="15dp"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_navigator"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="14dp"
+            app:drawableCompatLeft="@drawable/vector_detail_ic_directions"
+            app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
+            app:layout_constraintLeft_toRightOf="@+id/verticalLineView"
+            app:layout_constraintRight_toRightOf="@+id/mapImageView"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalLineView"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

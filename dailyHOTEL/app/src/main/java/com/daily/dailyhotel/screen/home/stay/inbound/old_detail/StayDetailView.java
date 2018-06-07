@@ -1492,10 +1492,10 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         LayoutGourmetDetailMapDataBinding viewDataBinding = getViewDataBinding().mapViewDataBinding;
 
         // 주소지
-        viewDataBinding.detailAddressTextView.setText(address);
+        viewDataBinding.addressTextView.setText(address);
 
         // 주소지 COPY
-        viewDataBinding.copyAddressLayout.setOnClickListener(new View.OnClickListener()
+        viewDataBinding.copyAddressTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -1505,7 +1505,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         });
 
         //길찾기
-        viewDataBinding.navigatorLayout.setOnClickListener(new View.OnClickListener()
+        viewDataBinding.searchAddressTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
