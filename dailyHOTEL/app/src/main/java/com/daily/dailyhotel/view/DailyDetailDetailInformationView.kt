@@ -112,9 +112,6 @@ class DailyDetailDetailInformationView : LinearLayout {
             setTextColor(context.resources.getColor(R.color.default_text_c4d4d4d))
             setLineSpacing(1.0f, 1.0f)
             setPadding(0, ScreenUtils.dpToPx(context, 20.0), 0, 0)
-            ellipsize = TextUtils.TruncateAt.END
-            maxLines = 1
-            setSingleLine()
 
             val spannableStringBuilder = SpannableStringBuilder()
 
