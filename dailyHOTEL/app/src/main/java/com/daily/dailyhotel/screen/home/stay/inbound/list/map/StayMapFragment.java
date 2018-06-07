@@ -305,7 +305,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
 
             if (stay.latitude == latLng.latitude && stay.longitude == latLng.longitude)
             {
-                PlaceRenderer placeRenderer = new PlaceRenderer(getContext(), stay.discountPrice, R.drawable.bg_hotel_price_900034);
+                PlaceRenderer placeRenderer = new PlaceRenderer(getContext(), stay.discountPrice, R.drawable.bg_hotel_price_on);
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -737,7 +737,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
             return;
         }
 
-        PlaceRenderer placeRenderer = new PlaceRenderer(context, stayClusterItem.getStay().discountPrice, R.drawable.bg_hotel_price_900034);
+        PlaceRenderer placeRenderer = new PlaceRenderer(context, stayClusterItem.getStay().discountPrice, R.drawable.bg_hotel_price_on);
         BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
         if (icon == null)

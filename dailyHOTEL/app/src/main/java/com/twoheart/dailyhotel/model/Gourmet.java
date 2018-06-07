@@ -346,7 +346,7 @@ public class Gourmet extends Place
 
     public enum Grade
     {
-        gourmet(R.string.grade_not_yet, R.color.dh_theme_color, R.drawable.bg_hotel_price_900034);
+        gourmet(R.string.grade_not_yet, R.color.dh_theme_color, R.drawable.bg_hotel_price_off);
 
         private int mNameResId;
         private int mColorResId;

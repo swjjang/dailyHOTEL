@@ -38,7 +38,7 @@ public class GourmetClusterRenderer extends DefaultClusterRenderer<GourmetCluste
 
         Gourmet gourmet = clusterItem.getGourmet();
 
-        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, gourmet.discountPrice, R.drawable.bg_hotel_price_900034);
+        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, gourmet.discountPrice, R.drawable.bg_hotel_price_off);
 
         BitmapDescriptor icon = placeRenderer.getBitmap(false);
 

@@ -55,6 +55,7 @@ public class PlaceIconGenerator
         if (mTextView != null)
         {
             mTextView.setText(text);
+            mTextView.setTextColor(mTextView.getContext().getResources().getColor(R.color.default_text_c4d4d4d));
             mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DP);
             mTextView.setTypeface(mTextView.getTypeface(), Typeface.NORMAL);
             mTextView.setBackgroundResource(drawableResId);
@@ -68,6 +69,7 @@ public class PlaceIconGenerator
         if (mTextView != null)
         {
             mTextView.setText(text);
+            mTextView.setTextColor(mTextView.getContext().getResources().getColor(R.color.white));
             mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, SELECTED_TEXT_SIZE_DP);
             mTextView.setTypeface(mTextView.getTypeface(), Typeface.BOLD);
             mTextView.setBackgroundResource(drawableResId);

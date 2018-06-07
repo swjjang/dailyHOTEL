@@ -629,7 +629,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.discountPrice, place.getGradeMarkerResId());
+                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.discountPrice, R.drawable.bg_hotel_price_on);
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
@@ -905,7 +905,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.discountPrice, place.getGradeMarkerResId());
+                PlaceRenderer placeRenderer = new PlaceRenderer(mBaseActivity, place.discountPrice, R.drawable.bg_hotel_price_on);
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (icon == null)
