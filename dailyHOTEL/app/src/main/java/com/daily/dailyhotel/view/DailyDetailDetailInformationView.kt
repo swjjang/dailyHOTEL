@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.databinding.DataBindingUtil
+import android.support.constraint.ConstraintLayout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
@@ -53,10 +54,20 @@ class DailyDetailDetailInformationView : LinearLayout {
             removeAllViews()
         }
 
-        information.takeNotEmpty { it.forEach { addView(getInformationView(it)) } }
+        information.takeNotEmpty {
+            it.forEachIndexed { index, content ->
+                val viewDataBinding = getInformationView(content)
+
+                if (index == 0) {
+                    (viewDataBinding.topLineView.layoutParams as ConstraintLayout.LayoutParams).topMargin = 0
+                }
+
+                addView(viewDataBinding.root)
+            }
+        }
     }
 
-    private fun getInformationView(information: StayDetail.DetailInformation.Item): View {
+    private fun getInformationView(information: StayDetail.DetailInformation.Item): DailyViewDetailDetailInformationDataBinding {
         val viewDataBinding: DailyViewDetailDetailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_detail_detail_information_data, this, false)
 
         viewDataBinding.titleTextView.text = information.title
@@ -92,7 +103,7 @@ class DailyDetailDetailInformationView : LinearLayout {
             viewDataBinding.moreTextView.visibility = View.GONE
         }
 
-        return viewDataBinding.root
+        return viewDataBinding
     }
 
     private fun getContentBoldView(content: String): DailyTextView? {
