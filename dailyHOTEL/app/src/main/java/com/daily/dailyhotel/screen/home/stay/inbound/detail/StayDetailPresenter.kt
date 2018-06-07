@@ -891,8 +891,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let { stayDetail ->
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, getFilteredRoomList(it, bedTypeFilter, facilitiesFilter),
-                            getRoomPosition(it, room),
+                    val filterRoomList = getFilteredRoomList(it, bedTypeFilter, facilitiesFilter)
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, filterRoomList,
+                            getRoomPosition(filterRoomList, room),
                             bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
                             bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
                             stayDetail.index,
@@ -1043,7 +1044,8 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         stayDetail?.let { stayDetail ->
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, getFilteredRoomList(it, bedTypeFilter, facilitiesFilter),
+                    val filterRoomList = getFilteredRoomList(it, bedTypeFilter, facilitiesFilter)
+                    startActivityForResult(StayRoomsActivity.newInstance(activity, filterRoomList,
                             0,
                             bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
                             bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
