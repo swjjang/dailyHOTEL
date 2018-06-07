@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.DialogInterface
-import android.graphics.Paint
 import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
@@ -14,8 +13,6 @@ import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.view.MotionEvent
 import android.view.View
@@ -37,7 +34,6 @@ import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomInvisibleLayoutDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
-import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
 
@@ -164,8 +160,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     override fun setRecyclerPosition(position: Int) {
         viewDataBinding.recyclerView.post {
-            (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)
-                    .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
+            (viewDataBinding.recyclerView.layoutManager as? LinearLayoutManager)?.run {
+                scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
+            }
         }
     }
 
@@ -187,7 +184,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         dataBinding.roomNameTextView.text = room.name
 
-        setAmountInformationView(dataBinding, room.amountInformation)
+        listAdapter.setAmountInformationView(dataBinding.root, room.amountInformation, true)
 
         setRefundInformationView(dataBinding, room.refundInformation)
 
@@ -222,38 +219,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     override fun showInvisibleLayout(): Boolean {
         return viewDataBinding.invisibleLayout?.roomLayout?.visibility == View.VISIBLE
-    }
-
-    private fun setAmountInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, amountInformation: Room.AmountInformation) {
-        dataBinding.discountPercentTextView.visibility = View.GONE
-        dataBinding.priceTextView.visibility = View.GONE
-
-        val showOriginPrice = amountInformation.priceAverage > 0 && amountInformation.priceAverage > amountInformation.discountAverage
-        val showDiscountRate = amountInformation.discountRate in 5..100 && showOriginPrice
-
-        showDiscountRate.runTrue {
-            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
-            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 14.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            dataBinding.discountPercentTextView.apply {
-                text = discountRateSpan
-                visibility = View.VISIBLE
-            }
-        }
-
-        val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
-        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length - 1)
-
-        val priceUnitText = context.resources.getString(R.string.currency) + if (listAdapter.getNights() > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
-        dataBinding.discountPriceUnitTextView.text = priceUnitText
-
-        showOriginPrice.runTrue {
-            dataBinding.priceTextView.apply {
-                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                this.text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
-                this.visibility = View.VISIBLE
-            }
-        }
     }
 
     private fun setRefundInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, refundInformation: StayDetail.RefundInformation?) {

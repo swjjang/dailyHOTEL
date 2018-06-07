@@ -16,6 +16,7 @@ import com.daily.base.util.DailyImageSpan
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
+import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.storage.preference.DailyPreference
@@ -153,7 +154,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         dataBinding.roomNameTextView.text = room.name
 
-        setAmountInformationView(dataBinding, room.amountInformation)
+        setAmountInformationView(dataBinding.root, room.amountInformation, false)
 
         setRefundInformationView(dataBinding, room.refundInformation)
 
@@ -258,35 +259,58 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
-        dataBinding.discountPercentTextView.visibility = View.GONE
-        dataBinding.priceTextView.visibility = View.GONE
+    fun setAmountInformationView(root: View, amountInformation: Room.AmountInformation, largeView: Boolean) {
+        val discountPercentTextView: DailyTextView? = root.findViewById(R.id.discountPercentTextView)
+        val priceTextView: DailyTextView? = root.findViewById(R.id.priceTextView)
+        val discountPriceTextView: DailyTextView? = root.findViewById(R.id.discountPriceTextView)
+        val discountPriceUnitTextView: DailyTextView? = root.findViewById(R.id.discountPriceUnitTextView)
 
-        val showOriginPrice = amountInformation.priceAverage > 0 && amountInformation.priceAverage > amountInformation.discountAverage
+        val showOriginPrice = amountInformation.priceAverage > 0
+                && amountInformation.priceAverage > amountInformation.discountAverage
         val showDiscountRate = amountInformation.discountRate in 5..100 && showOriginPrice
 
-        showDiscountRate.runTrue {
-            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
-            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            dataBinding.discountPercentTextView.apply {
-                text = discountRateSpan
-                visibility = View.VISIBLE
+        discountPercentTextView?.run {
+            when (showDiscountRate) {
+                true -> {
+                    val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
+                    discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface)
+                            , discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                    val discountRateTextSize = if (largeView) 14.0 else 12.0
+                    discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, discountRateTextSize))
+                            , discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    text = discountRateSpan
+                    visibility = View.VISIBLE
+                }
+
+                false -> {
+                    visibility = View.GONE
+                }
             }
         }
 
-        val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
-        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length - 1)
+        priceTextView?.run {
+            when (showOriginPrice) {
+                true -> {
+                    paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
+                    visibility = View.VISIBLE
+                }
 
-        val priceUnitText = context.resources.getString(R.string.currency) + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
-        dataBinding.discountPriceUnitTextView.text = priceUnitText
-
-        showOriginPrice.runTrue {
-            dataBinding.priceTextView.apply {
-                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                this.text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
-                this.visibility = View.VISIBLE
+                false -> {
+                    visibility = View.GONE
+                }
             }
+        }
+
+        discountPriceTextView?.run {
+            val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
+            text = discountPriceString.substring(0, discountPriceString.length - 1)
+        }
+
+        discountPriceUnitTextView?.run {
+            val discountPriceUnitText = context.resources.getString(R.string.currency) + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
+            text = discountPriceUnitText
         }
     }
 
