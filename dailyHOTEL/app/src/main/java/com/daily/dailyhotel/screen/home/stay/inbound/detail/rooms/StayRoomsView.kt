@@ -27,7 +27,6 @@ import com.daily.base.BaseDialogView
 import com.daily.base.util.*
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
@@ -38,7 +37,6 @@ import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomInvisibleLayoutDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
-import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -89,6 +87,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             listAdapter.setEventListener(object : StayRoomAdapter.OnEventListener {
                 override fun finish() {
+                    eventListener.onCloseClick()
                 }
 
                 override fun onMoreImageClick(position: Int) {
@@ -184,30 +183,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val dataBinding: ListRowStayRoomInvisibleLayoutDataBinding = viewDataBinding.invisibleLayout!!
 
-        dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
-        dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.visibility = if (DailyPreference.getInstance(context).trueVRSupport > 0 && room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.setOnClickListener {
-            eventListener.onVrImageClick(position)
-        }
-
-        dataBinding.closeImageView.setOnClickListener {
-            eventListener.onCloseClick()
-        }
-
-        val stringUrl: String?
-        stringUrl = if (room.imageInformation == null) {
-            dataBinding.emptyLayout.setOnClickListener(null)
-            null
-        } else {
-            dataBinding.emptyLayout.setOnClickListener {
-                eventListener.onMoreImageClick(position)
-            }
-
-            room.imageInformation.imageMap.bigUrl
-        }
-
-        Util.requestImageResize(context, dataBinding.simpleDraweeView, stringUrl)
+        listAdapter.setImageInformationView(dataBinding.root, position, room)
 
         dataBinding.roomNameTextView.text = room.name
 

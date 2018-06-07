@@ -334,7 +334,6 @@
                                 android:layout_height="wrap_content"
                                 android:freezesText="true"
                                 android:gravity="center"
-                                android:text="67.1m"
                                 android:textColor="@color/default_text_c4d4d4d"
                                 android:textSize="12dp"
                                 app:layout_constraintHorizontal_chainStyle="packed"

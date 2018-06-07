@@ -19,11 +19,9 @@ import com.daily.base.util.ScreenUtils
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.storage.preference.DailyPreference
-import com.daily.dailyhotel.util.isNotNullAndNotEmpty
-import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.letNotEmpty
-import com.daily.dailyhotel.util.runTrue
+import com.daily.dailyhotel.util.*
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
@@ -151,25 +149,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
-        dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.visibility = if (DailyPreference.getInstance(context).trueVRSupport > 0 && room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.setOnClickListener {
-            onEventListener?.onVrImageClick(position)
-        }
-
-        val stringUrl: String?
-        stringUrl = if (room.imageInformation == null) {
-            dataBinding.defaultImageLayout.setOnClickListener(null)
-            null
-        } else {
-            dataBinding.defaultImageLayout.setOnClickListener {
-                onEventListener?.onMoreImageClick(position)
-            }
-
-            room.imageInformation.imageMap.bigUrl
-        }
-        Util.requestImageResize(context, dataBinding.simpleDraweeView, stringUrl)
+        setImageInformationView(dataBinding.root, position, room)
 
         dataBinding.roomNameTextView.text = room.name
 
@@ -204,6 +184,78 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         setRoomChargeInformationView(dataBinding, room.roomChargeInformation)
 
         setNeedToKnowInformationView(dataBinding, room.needToKnowList)
+    }
+
+    fun setImageInformationView(root: View, position: Int, room: Room) {
+        val defaultImageLayout: View? = root.findViewById(R.id.defaultImageLayout)
+        val simpleDraweeView: SimpleDraweeView? = root.findViewById(R.id.simpleDraweeView)
+        val moreIconView: View? = root.findViewById(R.id.moreIconView)
+        val vrIconView: View? = root.findViewById(R.id.vrIconView)
+        // StayRoomsView 의 invisibleLayout 에서 사용하는 뷰들 - 메소드 량 줄이기의 일환으로 여기서 처리
+        val emptyLayout: View? = root.findViewById(R.id.emptyLayout)
+        val closeImageView: View? = root.findViewById(R.id.closeImageView)
+
+        moreIconView?.run {
+            visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
+        }
+
+        vrIconView?.run {
+            visibility = if (DailyPreference.getInstance(context).trueVRSupport > 0
+                    && room.vrInformationList.isNotNullAndNotEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            setOnClickListener {
+                onEventListener?.onVrImageClick(position)
+            }
+        }
+
+        closeImageView?.run {
+            setOnClickListener {
+                onEventListener?.finish()
+            }
+        }
+
+        val stringUrl: String? = if (room.imageInformation == null) {
+            null
+        } else {
+            room.imageInformation.imageMap.bigUrl
+        }
+
+        defaultImageLayout?.run {
+            when {
+                stringUrl.isTextEmpty() -> {
+                    setOnClickListener(null)
+                }
+
+                else -> {
+                    setOnClickListener {
+                        onEventListener?.onMoreImageClick(position)
+                    }
+                }
+            }
+        }
+
+        emptyLayout?.run {
+            when {
+                stringUrl.isTextEmpty() -> {
+                    setOnClickListener(null)
+                }
+
+                else -> {
+                    setOnClickListener {
+                        onEventListener?.onMoreImageClick(position)
+                    }
+                }
+            }
+        }
+
+        simpleDraweeView?.run {
+            hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
+            Util.requestImageResize(context, this, stringUrl)
+        }
     }
 
     private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
