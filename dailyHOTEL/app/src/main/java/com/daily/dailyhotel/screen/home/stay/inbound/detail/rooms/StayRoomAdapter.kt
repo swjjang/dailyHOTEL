@@ -16,14 +16,13 @@ import com.daily.base.util.DailyImageSpan
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
+import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.storage.preference.DailyPreference
-import com.daily.dailyhotel.util.isNotNullAndNotEmpty
-import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.letNotEmpty
-import com.daily.dailyhotel.util.runTrue
+import com.daily.dailyhotel.util.*
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
@@ -35,7 +34,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     companion object {
         const val MENU_WIDTH_RATIO = 0.865f
     }
-
 
     enum class RoomType(private val stringResId: Int) {
         ONE_ROOM(R.string.label_room_type_one_room),
@@ -132,8 +130,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         holder.dataBinding.root.setTag(R.id.blurView, holder.dataBinding.blurView)
 
-//        holder.dataBinding.roomLayout.setOnClickListener { onEventListener?.onItemClick(position) }
-
         val margin = getLayoutMargin()
         (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).apply {
             when (position) {
@@ -154,29 +150,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
-        dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.visibility = if (DailyPreference.getInstance(context).trueVRSupport > 0 && room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.setOnClickListener {
-            onEventListener?.onVrImageClick(position)
-        }
-
-        val stringUrl: String?
-        stringUrl = if (room.imageInformation == null) {
-            dataBinding.defaultImageLayout.setOnClickListener(null)
-            null
-        } else {
-            dataBinding.defaultImageLayout.setOnClickListener {
-                onEventListener?.onMoreImageClick(position)
-            }
-
-            room.imageInformation.imageMap.bigUrl
-        }
-        Util.requestImageResize(context, dataBinding.simpleDraweeView, stringUrl)
+        setImageInformationView(dataBinding.root, position, room)
 
         dataBinding.roomNameTextView.text = room.name
 
-        setAmountInformationView(dataBinding, room.amountInformation)
+        setAmountInformationView(dataBinding.root, room.amountInformation, false)
 
         setRefundInformationView(dataBinding, room.refundInformation)
 
@@ -209,35 +187,130 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         setNeedToKnowInformationView(dataBinding, room.needToKnowList)
     }
 
-    private fun setAmountInformationView(dataBinding: ListRowStayRoomDataBinding, amountInformation: Room.AmountInformation) {
-        dataBinding.discountPercentTextView.visibility = View.GONE
-        dataBinding.priceTextView.visibility = View.GONE
+    fun setImageInformationView(root: View, position: Int, room: Room) {
+        val defaultImageLayout: View? = root.findViewById(R.id.defaultImageLayout)
+        val simpleDraweeView: SimpleDraweeView? = root.findViewById(R.id.simpleDraweeView)
+        val moreIconView: View? = root.findViewById(R.id.moreIconView)
+        val vrIconView: View? = root.findViewById(R.id.vrIconView)
+        // StayRoomsView 의 invisibleLayout 에서 사용하는 뷰들 - 메소드 량 줄이기의 일환으로 여기서 처리
+        val emptyLayout: View? = root.findViewById(R.id.emptyLayout)
+        val closeImageView: View? = root.findViewById(R.id.closeImageView)
 
-        val showOriginPrice = amountInformation.priceAverage > 0 && amountInformation.priceAverage > amountInformation.discountAverage
-        val showDiscountRate = amountInformation.discountRate in 5..100 && showOriginPrice
+        moreIconView?.run {
+            visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
+        }
 
-        showDiscountRate.runTrue {
-            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
-            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 12.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            dataBinding.discountPercentTextView.apply {
-                text = discountRateSpan
-                visibility = View.VISIBLE
+        vrIconView?.run {
+            visibility = if (DailyPreference.getInstance(context).trueVRSupport > 0
+                    && room.vrInformationList.isNotNullAndNotEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            setOnClickListener {
+                onEventListener?.onVrImageClick(position)
             }
         }
 
-        val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
-        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length - 1)
-
-        val priceUnitText = context.resources.getString(R.string.currency) + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
-        dataBinding.discountPriceUnitTextView.text = priceUnitText
-
-        showOriginPrice.runTrue {
-            dataBinding.priceTextView.apply {
-                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                this.text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
-                this.visibility = View.VISIBLE
+        closeImageView?.run {
+            setOnClickListener {
+                onEventListener?.finish()
             }
+        }
+
+        val stringUrl: String? = if (room.imageInformation == null) {
+            null
+        } else {
+            room.imageInformation.imageMap.bigUrl
+        }
+
+        defaultImageLayout?.run {
+            when {
+                stringUrl.isTextEmpty() -> {
+                    setOnClickListener(null)
+                }
+
+                else -> {
+                    setOnClickListener {
+                        onEventListener?.onMoreImageClick(position)
+                    }
+                }
+            }
+        }
+
+        emptyLayout?.run {
+            when {
+                stringUrl.isTextEmpty() -> {
+                    setOnClickListener(null)
+                }
+
+                else -> {
+                    setOnClickListener {
+                        onEventListener?.onMoreImageClick(position)
+                    }
+                }
+            }
+        }
+
+        simpleDraweeView?.run {
+            hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
+            Util.requestImageResize(context, this, stringUrl)
+        }
+    }
+
+    fun setAmountInformationView(root: View, amountInformation: Room.AmountInformation, largeView: Boolean) {
+        val discountPercentTextView: DailyTextView? = root.findViewById(R.id.discountPercentTextView)
+        val priceTextView: DailyTextView? = root.findViewById(R.id.priceTextView)
+        val discountPriceTextView: DailyTextView? = root.findViewById(R.id.discountPriceTextView)
+        val discountPriceUnitTextView: DailyTextView? = root.findViewById(R.id.discountPriceUnitTextView)
+
+        val showOriginPrice = amountInformation.priceAverage > 0
+                && amountInformation.priceAverage > amountInformation.discountAverage
+        val showDiscountRate = amountInformation.discountRate in 5..100 && showOriginPrice
+
+        discountPercentTextView?.run {
+            when (showDiscountRate) {
+                true -> {
+                    val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
+                    discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface)
+                            , discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                    val discountRateTextSize = if (largeView) 14.0 else 12.0
+                    discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, discountRateTextSize))
+                            , discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    text = discountRateSpan
+                    visibility = View.VISIBLE
+                }
+
+                false -> {
+                    visibility = View.GONE
+                }
+            }
+        }
+
+        priceTextView?.run {
+            when (showOriginPrice) {
+                true -> {
+                    paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
+                    visibility = View.VISIBLE
+                }
+
+                false -> {
+                    visibility = View.GONE
+                }
+            }
+        }
+
+        discountPriceTextView?.run {
+            val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
+            text = discountPriceString.substring(0, discountPriceString.length - 1)
+        }
+
+        discountPriceUnitTextView?.run {
+            val discountPriceUnitText = context.resources.getString(R.string.currency) + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
+            text = discountPriceUnitText
         }
     }
 
@@ -353,11 +426,17 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     private fun setSquareInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
-        dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
-
-        // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
         val pyoung = Math.round(room.squareMeter * 0.3025)
-        dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
+        when {
+            pyoung < 1 -> dataBinding.squareInformationLayout.visibility = View.GONE
+            else -> {
+                dataBinding.squareInformationLayout.visibility = View.VISIBLE
+                dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
+
+                // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
+                dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
+            }
+        }
     }
 
     private fun setAttributeInformationView(dataBinding: ListRowStayRoomDataBinding, attribute: Room.AttributeInformation?) {

@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.DialogInterface
-import android.graphics.Paint
 import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
@@ -14,8 +13,6 @@ import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.view.MotionEvent
 import android.view.View
@@ -27,7 +24,6 @@ import com.daily.base.BaseDialogView
 import com.daily.base.util.*
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
@@ -38,8 +34,6 @@ import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomInvisibleLayoutDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
-import com.twoheart.dailyhotel.util.Util
-import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import io.reactivex.Observable
 import io.reactivex.Observer
 
@@ -89,6 +83,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             listAdapter.setEventListener(object : StayRoomAdapter.OnEventListener {
                 override fun finish() {
+                    eventListener.onCloseClick()
                 }
 
                 override fun onMoreImageClick(position: Int) {
@@ -165,8 +160,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     override fun setRecyclerPosition(position: Int) {
         viewDataBinding.recyclerView.post {
-            (viewDataBinding.recyclerView.layoutManager as LinearLayoutManager)
-                    .scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
+            (viewDataBinding.recyclerView.layoutManager as? LinearLayoutManager)?.run {
+                scrollToPositionWithOffset(position, listAdapter.getLayoutMargin().toInt())
+            }
         }
     }
 
@@ -184,34 +180,11 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         val dataBinding: ListRowStayRoomInvisibleLayoutDataBinding = viewDataBinding.invisibleLayout!!
 
-        dataBinding.simpleDraweeView.hierarchy.setPlaceholderImage(R.drawable.layerlist_room_no_image_holder)
-        dataBinding.moreIconView.visibility = if (room.imageCount > 0) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.visibility = if (DailyPreference.getInstance(context).trueVRSupport > 0 && room.vrInformationList.isNotNullAndNotEmpty()) View.VISIBLE else View.GONE
-        dataBinding.vrIconView.setOnClickListener {
-            eventListener.onVrImageClick(position)
-        }
-
-        dataBinding.closeImageView.setOnClickListener {
-            eventListener.onCloseClick()
-        }
-
-        val stringUrl: String?
-        stringUrl = if (room.imageInformation == null) {
-            dataBinding.emptyLayout.setOnClickListener(null)
-            null
-        } else {
-            dataBinding.emptyLayout.setOnClickListener {
-                eventListener.onMoreImageClick(position)
-            }
-
-            room.imageInformation.imageMap.bigUrl
-        }
-
-        Util.requestImageResize(context, dataBinding.simpleDraweeView, stringUrl)
+        listAdapter.setImageInformationView(dataBinding.root, position, room)
 
         dataBinding.roomNameTextView.text = room.name
 
-        setAmountInformationView(dataBinding, room.amountInformation)
+        listAdapter.setAmountInformationView(dataBinding.root, room.amountInformation, true)
 
         setRefundInformationView(dataBinding, room.refundInformation)
 
@@ -246,38 +219,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     override fun showInvisibleLayout(): Boolean {
         return viewDataBinding.invisibleLayout?.roomLayout?.visibility == View.VISIBLE
-    }
-
-    private fun setAmountInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, amountInformation: Room.AmountInformation) {
-        dataBinding.discountPercentTextView.visibility = View.GONE
-        dataBinding.priceTextView.visibility = View.GONE
-
-        val showOriginPrice = amountInformation.priceAverage > 0 && amountInformation.priceAverage > amountInformation.discountAverage
-        val showDiscountRate = amountInformation.discountRate in 5..100 && showOriginPrice
-
-        showDiscountRate.runTrue {
-            val discountRateSpan = SpannableString("${amountInformation.discountRate}%")
-            discountRateSpan.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).regularTypeface), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            discountRateSpan.setSpan(AbsoluteSizeSpan(ScreenUtils.dpToPx(context, 14.0)), discountRateSpan.length - 1, discountRateSpan.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            dataBinding.discountPercentTextView.apply {
-                text = discountRateSpan
-                visibility = View.VISIBLE
-            }
-        }
-
-        val discountPriceString = DailyTextUtils.getPriceFormat(context, amountInformation.discountAverage, false)
-        dataBinding.discountPriceTextView.text = discountPriceString.substring(0, discountPriceString.length - 1)
-
-        val priceUnitText = context.resources.getString(R.string.currency) + if (listAdapter.getNights() > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
-        dataBinding.discountPriceUnitTextView.text = priceUnitText
-
-        showOriginPrice.runTrue {
-            dataBinding.priceTextView.apply {
-                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                this.text = DailyTextUtils.getPriceFormat(context, amountInformation.priceAverage, false)
-                this.visibility = View.VISIBLE
-            }
-        }
     }
 
     private fun setRefundInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, refundInformation: StayDetail.RefundInformation?) {
@@ -392,11 +333,17 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     private fun setSquareInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
-        dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
-
-        // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
         val pyoung = Math.round(room.squareMeter * 0.3025)
-        dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
+        when {
+            pyoung < 1 -> dataBinding.squareInformationLayout.visibility = View.GONE
+            else -> {
+                dataBinding.squareInformationLayout.visibility = View.VISIBLE
+                dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
+
+                // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
+                dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
+            }
+        }
     }
 
     private fun setAttributeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, attribute: Room.AttributeInformation?) {
@@ -946,26 +893,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     private fun setCloseImageAlphaVisible(alphaValue: Float) {
-//        viewDataBinding.invisibleLayout!!.closeImageView.apply {
-//            when {
-//                alphaValue < 0.94f -> {
-//                    visibility = View.GONE
-//                }
-//
-//                alphaValue in 0.95f..0.99f -> {
-//                    visibility = View.VISIBLE
-//                    val toAlpha = (alphaValue - 0.94f) * 20
-//                    ExLog.d("sam - toAlpha : $toAlpha")
-//                    alpha = toAlpha
-//                }
-//
-//                alphaValue > 0.99f -> {
-//                    visibility = View.VISIBLE
-//                    alpha = 1f
-//                }
-//            }
-//        }
-
         viewDataBinding.invisibleLayout!!.closeImageView.apply {
             when {
                 alphaValue < 0.90f -> {
@@ -975,7 +902,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 alphaValue in 0.90f..0.94f -> {
                     visibility = View.VISIBLE
                     val toAlpha = (alphaValue - 0.89f) * 20
-                    ExLog.d("sam - toAlpha : $toAlpha")
                     alpha = toAlpha
                 }
 

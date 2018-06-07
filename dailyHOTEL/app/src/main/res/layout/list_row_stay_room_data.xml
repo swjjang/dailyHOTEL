@@ -93,7 +93,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:maxLines="2"
                 android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="18dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -183,7 +182,7 @@
 
         <android.support.v7.widget.GridLayout
             android:id="@+id/baseInfoGridLayout"
-            android:layout_width="285dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="12dp"
             android:paddingTop="2dp"
@@ -195,10 +194,9 @@
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/personInformationLayout"
-                android:layout_width="0dp"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:layout_columnWeight="1">
+                android:background="@color/white">
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/personIconImageView"
@@ -245,10 +243,9 @@
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/bedInformationLayout"
-                android:layout_width="0dp"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:layout_columnWeight="1">
+                android:background="@color/white">
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/bedIconImageView"
@@ -293,10 +290,9 @@
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/squareInformationLayout"
-                android:layout_width="0dp"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:layout_columnWeight="1">
+                android:background="@color/white">
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/squareIconImageView"

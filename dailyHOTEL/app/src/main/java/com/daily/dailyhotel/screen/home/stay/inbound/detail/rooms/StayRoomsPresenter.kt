@@ -107,8 +107,6 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         super.onStart()
 
         isRefresh.runTrue { onRefresh(true) }
-
-
     }
 
     override fun onResume() {
@@ -155,7 +153,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
             Observable.just(true)
         })
-//
+
         addCompositeDisposable(observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
             viewInterface.notifyDataSetChanged()
             viewInterface.setRecyclerPosition(position)
@@ -262,7 +260,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         }
     }
 
-    private fun finishRoomDetailList(roomIndex : Int) {
+    private fun finishRoomDetailList(roomIndex: Int) {
         val intent = Intent()
         intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, roomIndex)
         setResult(Activity.RESULT_OK, intent)
@@ -349,11 +347,11 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             viewInterface.showVrDialog(
                     CompoundButton.OnCheckedChangeListener { _, checked -> DailyPreference.getInstance(activity).isTrueVRCheckDataGuide = checked }
                     , View.OnClickListener {
-                startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList//
+                startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList
                         , Constants.PlaceType.HOTEL, category), StayRoomsActivity.REQUEST_CODE_TRUE_VR)
             }, DialogInterface.OnDismissListener { unLockAll() })
         } else {
-            startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList//
+            startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList
                     , Constants.PlaceType.HOTEL, category), StayRoomsActivity.REQUEST_CODE_TRUE_VR)
         }
     }
