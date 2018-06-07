@@ -810,13 +810,13 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
             switch (refundPolicy.refundPolicy)
             {
                 case RefundPolicy.STATUS_NRD:
-                    comment = comment.replaceAll("900034", "EB2135");
+                    comment = comment.replaceAll("(900034|B70038|b70038)", "EB2135");
                     break;
 
                 case RefundPolicy.STATUS_NO_CHARGE_REFUND:
                 case RefundPolicy.STATUS_SURCHARGE_REFUND:
                 case RefundPolicy.STATUS_WAIT_REFUND:
-                    comment = comment.replaceAll("900034", "2C8DE6");
+                    comment = comment.replaceAll("(900034|B70038|b70038)", "2C8DE6");
                     break;
             }
 

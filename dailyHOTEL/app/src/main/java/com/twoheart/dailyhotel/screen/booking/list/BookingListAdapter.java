@@ -198,7 +198,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
         {
             case Booking.BOOKING_STATE_WAITING_REFUND:
                 holder.dataBinding.bookingStatusTextView.setText(R.string.frag_booking_wait_refund);
-                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cda2853));
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c6185cd));
                 holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
                 holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_free_cancel_waiting);
                 holder.dataBinding.buttonLayout.setVisibility(View.GONE);
@@ -316,7 +316,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
             case Booking.BOOKING_STATE_RESERVATION_WAITING:
                 holder.dataBinding.bookingStatusTextView.setText(R.string.frag_booking_wait_reservation);
-                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cda2853));
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c6185cd));
                 holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
                 holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_reservation_waiting);
                 holder.dataBinding.buttonLayout.setVisibility(View.GONE);

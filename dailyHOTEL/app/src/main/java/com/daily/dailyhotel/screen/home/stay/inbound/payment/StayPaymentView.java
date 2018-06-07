@@ -437,10 +437,10 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
             if (nrd)
             {
-                comment = refundPolicy.replaceAll("B70038", "EB2135");
+                comment = refundPolicy.replaceAll("(900034|B70038|b70038)", "EB2135");
             } else
             {
-                comment = refundPolicy.replaceAll("B70038", "2C8DE6");
+                comment = refundPolicy.replaceAll("(900034|B70038|b70038)", "2C8DE6");
             }
 
             refundPolicyList = new ArrayList<>();
