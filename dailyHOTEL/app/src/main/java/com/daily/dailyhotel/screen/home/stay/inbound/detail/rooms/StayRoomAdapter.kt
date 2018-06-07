@@ -36,7 +36,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         const val MENU_WIDTH_RATIO = 0.865f
     }
 
-
     enum class RoomType(private val stringResId: Int) {
         ONE_ROOM(R.string.label_room_type_one_room),
         LIVING_ROOM(R.string.label_room_type_living_room);
@@ -131,8 +130,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val room = getItem(position) ?: return
 
         holder.dataBinding.root.setTag(R.id.blurView, holder.dataBinding.blurView)
-
-//        holder.dataBinding.roomLayout.setOnClickListener { onEventListener?.onItemClick(position) }
 
         val margin = getLayoutMargin()
         (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).apply {

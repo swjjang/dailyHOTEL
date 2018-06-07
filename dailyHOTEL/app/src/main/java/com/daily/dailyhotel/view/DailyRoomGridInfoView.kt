@@ -72,22 +72,6 @@ class DailyRoomInfoGridView : LinearLayout {
         })
     }
 
-//    fun setTitleText(textResId: Int) {
-//        if (textResId == 0) {
-//            return
-//        }
-//
-//        viewDataBinding.titleTextView.setText(textResId)
-//    }
-//
-//    fun setTitleText(text: String) {
-//        viewDataBinding.titleTextView.text = text
-//    }
-//
-//    fun setTitleVisible(visible: Boolean) {
-//        viewDataBinding.titleTextLayout.visibility = if (visible) View.VISIBLE else View.GONE
-//    }
-
     fun setData(title: String, type: ItemType, list: MutableList<String> = mutableListOf(), largeView: Boolean) {
         viewDataBinding.run {
             if (title.isTextEmpty()) {

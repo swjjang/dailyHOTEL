@@ -946,26 +946,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     private fun setCloseImageAlphaVisible(alphaValue: Float) {
-//        viewDataBinding.invisibleLayout!!.closeImageView.apply {
-//            when {
-//                alphaValue < 0.94f -> {
-//                    visibility = View.GONE
-//                }
-//
-//                alphaValue in 0.95f..0.99f -> {
-//                    visibility = View.VISIBLE
-//                    val toAlpha = (alphaValue - 0.94f) * 20
-//                    ExLog.d("sam - toAlpha : $toAlpha")
-//                    alpha = toAlpha
-//                }
-//
-//                alphaValue > 0.99f -> {
-//                    visibility = View.VISIBLE
-//                    alpha = 1f
-//                }
-//            }
-//        }
-
         viewDataBinding.invisibleLayout!!.closeImageView.apply {
             when {
                 alphaValue < 0.90f -> {
@@ -975,7 +955,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 alphaValue in 0.90f..0.94f -> {
                     visibility = View.VISIBLE
                     val toAlpha = (alphaValue - 0.89f) * 20
-                    ExLog.d("sam - toAlpha : $toAlpha")
                     alpha = toAlpha
                 }
 
