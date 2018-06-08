@@ -16,12 +16,14 @@ import com.daily.base.util.DailyImageSpan
 import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
+import com.daily.base.widget.DailyImageView
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.*
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
+import com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
 import com.facebook.drawee.view.SimpleDraweeView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
@@ -158,7 +160,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         setRefundInformationView(dataBinding.root, room.refundInformation)
 
-        setBaseInformationGridView(dataBinding, room)
+        setBaseInformationGridView(dataBinding.root, room)
 
         setAttributeInformationView(dataBinding, room.attributeInformation)
 
@@ -351,23 +353,30 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    private fun setBaseInformationGridView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
-        val personsInformation: Room.PersonsInformation? = room.personsInformation
-        val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
+    fun setBaseInformationGridView(root: View, room: Room) {
+        val baseInfoGroup: View? = root.findViewById(R.id.baseInfoGroup)
+        baseInfoGroup?.run {
+            val personsInformation: Room.PersonsInformation? = room.personsInformation
+            val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
 
-        if (personsInformation == null && !bedTypeList.isNotNullAndNotEmpty() && room.squareMeter == 0f) {
-            dataBinding.baseInfoGroup.visibility = View.GONE
-            return
+            if (personsInformation == null && !bedTypeList.isNotNullAndNotEmpty() && room.squareMeter == 0f) {
+                baseInfoGroup.visibility = View.GONE
+                return
+            }
+
+            baseInfoGroup.visibility = View.VISIBLE
+
+            setPersonInformationView(root, room)
+            setBedInformationView(root, room)
+            setSquareInformationView(root, room)
         }
-
-        dataBinding.baseInfoGroup.visibility = View.VISIBLE
-
-        setPersonInformationView(dataBinding, room)
-        setBedInformationView(dataBinding, room)
-        setSquareInformationView(dataBinding, room)
     }
 
-    private fun setPersonInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
+    private fun setPersonInformationView(root: View, room: Room) {
+        val personIconImageView: DailyImageView? = root.findViewById(R.id.personIconImageView)
+        val personTitleTextView: DailyTextView? = root.findViewById(R.id.personTitleTextView)
+        val personDescriptionTextView: DailyTextView? = root.findViewById(R.id.personDescriptionTextView)
+
         val personsInformation: Room.PersonsInformation? = room.personsInformation
 
         var personVectorIconResId = 0
@@ -385,16 +394,25 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 else -> R.drawable.vector_ic_detail_item_people_3
             }
 
-            val subDescription = if (it.extra == 0) "" else " " + context.resources.getString(if (it.extraCharge) R.string.label_bracket_pay else R.string.label_bracket_free)
+            val subDescription = if (it.extra == 0) "" else {
+                " " + context.resources.getString(if (it.extraCharge) {
+                    R.string.label_bracket_pay
+                } else {
+                    R.string.label_bracket_free
+                })
+            }
             personDescription = context.resources.getString(R.string.label_stay_outbound_room_max_person_free, it.fixed + it.extra) + subDescription
         }
 
-        dataBinding.personIconImageView.setVectorImageResource(personVectorIconResId)
-        dataBinding.personTitleTextView.text = personTitle
-        dataBinding.personDescriptionTextView.text = personDescription
+        personIconImageView?.setVectorImageResource(personVectorIconResId)
+        personTitleTextView?.text = personTitle
+        personDescriptionTextView?.text = personDescription
     }
 
-    private fun setBedInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
+    private fun setBedInformationView(root: View, room: Room) {
+        val bedIconImageView: DailyImageView? = root.findViewById(R.id.bedIconImageView)
+        val bedDescriptionLayout: DailyStayRoomBedDescriptionLayout? = root.findViewById(R.id.bedDescriptionLayout)
+
         val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
 
         var bedVectorIconResId = 0
@@ -429,20 +447,24 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             BedType.UNKNOWN.vectorIconResId
         }
 
-        dataBinding.bedIconImageView.setVectorImageResource(bedVectorIconResId)
-        dataBinding.bedDescriptionLayout.setData(typeStringList)
+        bedIconImageView?.setVectorImageResource(bedVectorIconResId)
+        bedDescriptionLayout?.setData(typeStringList)
     }
 
-    private fun setSquareInformationView(dataBinding: ListRowStayRoomDataBinding, room: Room) {
+    private fun setSquareInformationView(root: View, room: Room) {
+        val squareInformationLayout: View? = root.findViewById(R.id.squareInformationLayout)
+        val squareTitleTextView: DailyTextView? = root.findViewById(R.id.squareTitleTextView)
+        val squareDescriptionTextView: DailyTextView? = root.findViewById(R.id.squareDescriptionTextView)
+
         val pyoung = Math.round(room.squareMeter * 0.3025)
         when {
-            pyoung < 1 -> dataBinding.squareInformationLayout.visibility = View.GONE
+            pyoung < 1 -> squareInformationLayout?.visibility = View.GONE
             else -> {
-                dataBinding.squareInformationLayout.visibility = View.VISIBLE
-                dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
+                squareInformationLayout?.visibility = View.VISIBLE
+                squareTitleTextView?.text = "${room.squareMeter}m"
 
                 // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
-                dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
+                squareDescriptionTextView?.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
             }
         }
     }

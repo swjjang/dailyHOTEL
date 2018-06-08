@@ -188,7 +188,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         listAdapter.setRefundInformationView(dataBinding.root, room.refundInformation)
 
-        setBaseInformationGridView(dataBinding, room)
+        listAdapter.setBaseInformationGridView(dataBinding.root, room)
 
         setAttributeInformationView(dataBinding, room.attributeInformation)
 
@@ -219,102 +219,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     override fun showInvisibleLayout(): Boolean {
         return viewDataBinding.invisibleLayout?.roomLayout?.visibility == View.VISIBLE
-    }
-
-    private fun setBaseInformationGridView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
-        val personsInformation: Room.PersonsInformation? = room.personsInformation
-        val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
-
-        if (personsInformation == null && !bedTypeList.isNotNullAndNotEmpty() && room.squareMeter == 0f) {
-            dataBinding.baseInfoGroup.visibility = View.GONE
-            return
-        }
-
-        dataBinding.baseInfoGroup.visibility = View.VISIBLE
-
-        setPersonInformationView(dataBinding, room)
-        setBedInformationView(dataBinding, room)
-        setSquareInformationView(dataBinding, room)
-    }
-
-    private fun setPersonInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
-        val personsInformation: Room.PersonsInformation? = room.personsInformation
-
-        var personVectorIconResId = 0
-        var personTitle = ""
-        var personDescription = ""
-
-        personsInformation?.let {
-            personTitle = context.resources.getString(R.string.label_standard_persons, it.fixed)
-
-            personVectorIconResId = when (it.fixed) {
-                0, 1 -> R.drawable.vector_ic_detail_item_people_1
-
-                2 -> R.drawable.vector_ic_detail_item_people_2
-
-                else -> R.drawable.vector_ic_detail_item_people_3
-            }
-
-            val subDescription = if (it.extra == 0) "" else " " + context.resources.getString(if (it.extraCharge) R.string.label_bracket_pay else R.string.label_bracket_free)
-            personDescription = context.resources.getString(R.string.label_stay_outbound_room_max_person_free, it.fixed + it.extra) + subDescription
-        }
-
-        dataBinding.personIconImageView.setVectorImageResource(personVectorIconResId)
-        dataBinding.personTitleTextView.text = personTitle
-        dataBinding.personDescriptionTextView.text = personDescription
-    }
-
-    private fun setBedInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
-        val bedTypeList: List<Room.BedInformation.BedTypeInformation>? = room.bedInformation?.bedTypeList
-
-        var bedVectorIconResId = 0
-
-        val typeStringList = mutableListOf<String>()
-
-        bedTypeList?.forEachIndexed { index, bedTypeInformation ->
-            val bedType: StayRoomAdapter.BedType = try {
-                StayRoomAdapter.BedType.valueOf(bedTypeInformation.bedType.toUpperCase())
-            } catch (e: Exception) {
-                StayRoomAdapter.BedType.UNKNOWN
-            }
-
-            bedVectorIconResId = if (bedVectorIconResId != 0) {
-                bedType.vectorIconResId
-            } else {
-                R.drawable.vector_ic_detail_item_bed_double
-            }
-
-            typeStringList += if (StayRoomAdapter.BedType.UNKNOWN == bedType) {
-                bedType.getName(context)
-            } else {
-                "${bedType.getName(context)} ${bedTypeInformation.count}" + if (index == bedTypeList.size - 1) {
-                    context.resources.getString(R.string.label_bed_count_end_string)
-                } else {
-                    ""
-                }
-            }
-        }
-
-        bedVectorIconResId.takeIf { bedVectorIconResId == 0 }.let {
-            StayRoomAdapter.BedType.UNKNOWN.vectorIconResId
-        }
-
-        dataBinding.bedIconImageView.setVectorImageResource(bedVectorIconResId)
-        dataBinding.bedDescriptionLayout.setData(typeStringList)
-    }
-
-    private fun setSquareInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
-        val pyoung = Math.round(room.squareMeter * 0.3025)
-        when {
-            pyoung < 1 -> dataBinding.squareInformationLayout.visibility = View.GONE
-            else -> {
-                dataBinding.squareInformationLayout.visibility = View.VISIBLE
-                dataBinding.squareTitleTextView.text = "${room.squareMeter}m"
-
-                // ㎡×0.3025=평 - / 400 * 121  /   평×3.3058=㎡ - / 121 * 400
-                dataBinding.squareDescriptionTextView.text = context.resources.getString(R.string.label_pyoung_format, pyoung)
-            }
-        }
     }
 
     private fun setAttributeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, attribute: Room.AttributeInformation?) {
