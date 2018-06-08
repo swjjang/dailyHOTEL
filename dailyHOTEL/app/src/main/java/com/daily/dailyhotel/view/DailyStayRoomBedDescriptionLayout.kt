@@ -4,7 +4,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.Rect
-import android.graphics.drawable.Drawable
+import android.graphics.Typeface
 import android.os.Build
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -19,31 +19,53 @@ import com.daily.dailyhotel.util.runTrue
 import com.twoheart.dailyhotel.R
 
 class DailyStayRoomBedDescriptionLayout : LinearLayout {
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context?) : super(context) {
+        initLayout(context)
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        initLayout(context)
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        initLayout(context)
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+        initLayout(context)
+    }
+
+    private fun initLayout(context: Context?) {
+        if (context == null) return
+
+        fontTypeFace = FontManager.getInstance(context).mediumTypeface
+        itemTextColor = context.resources.getColor(R.color.default_text_c929292)
+        itemTopMargin = ScreenUtils.dpToPx(context, 2.0)
+
+        val drawable = context.resources.getDrawable(R.drawable.shape_rect_stay_room_grid_description_background)
+        val rect = Rect()
+        drawable.getPadding(rect)
+
+        horizontalPadding = rect.left + rect.right
+    }
 
     private val paint = Paint()
-    private val sampleText = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     private var horizontalPadding = 0
     private val separator = ", "
+    private val itemTextSize: Float = 11f
+    private var itemTextColor: Int = 0
+    private var itemTopMargin: Int = 0
+    private lateinit var fontTypeFace: Typeface
+
 
     fun setData(list: MutableList<String>?) {
         removeAllViews()
 
         val listSize = list?.size ?: 0
-
         if (list == null || listSize == 0) {
             return
         }
-
-        val drawable: Drawable = context.resources.getDrawable(R.drawable.shape_rect_stay_room_grid_description_background)
-        val rect = Rect()
-        drawable.getPadding(rect)
-
-        horizontalPadding = rect.left + rect.right
 
         viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
@@ -51,19 +73,17 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
 
                 val maxWidth = measuredWidth - horizontalPadding
 
-                paint.textSize = ScreenUtils.dpToPx(context, 11.0).toFloat()
-                paint.typeface = FontManager.getInstance(context).mediumTypeface
-
-                val maxLineLength = paint.breakText(sampleText, true, maxWidth.toFloat(), null)
+                paint.textSize = ScreenUtils.dpToPx(context, itemTextSize.toDouble()).toFloat()
+                paint.typeface = fontTypeFace
 
                 var lineCount = 0
                 var temp = ""
 
-                list.forEachIndexed { index, string ->
+                list.forEachIndexed { _, string ->
                     var addString = if (temp.isTextEmpty()) string else separator + string
 
-                    val sum = temp.length + addString.length
-                    if (sum > maxLineLength) {
+                    val textWidth = paint.measureText(temp + addString)
+                    if (textWidth > maxWidth) {
                         (!temp.isTextEmpty()).runTrue {
                             val textView = getItemTextView(lineCount > 0)
                             lineCount++
@@ -101,13 +121,13 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
 
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 if (showTopMargin) {
-                    topMargin = ScreenUtils.dpToPx(context, 2.0)
+                    topMargin = itemTopMargin
                 }
 
-                setTextColor(context.resources.getColor(R.color.default_text_c929292))
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11f)
+                setTextColor(itemTextColor)
+                setTextSize(TypedValue.COMPLEX_UNIT_DIP, itemTextSize)
                 gravity = Gravity.CENTER
-                typeface = FontManager.getInstance(context).mediumTypeface
+                typeface = fontTypeFace
             }
         }
     }
