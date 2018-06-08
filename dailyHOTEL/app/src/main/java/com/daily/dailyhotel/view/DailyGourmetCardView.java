@@ -370,7 +370,7 @@ public class DailyGourmetCardView extends ConstraintLayout
             mViewDataBinding.discountPriceWonTextView.setVisibility(GONE);
         }
 
-        if (price <= 0 || price <= discountPrice || discountPercent <= 0)
+        if (price <= 0 || price <= discountPrice || discountPercent < 0)
         {
             mViewDataBinding.priceTextView.setVisibility(GONE);
         } else
