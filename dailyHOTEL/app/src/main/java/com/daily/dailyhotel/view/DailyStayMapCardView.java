@@ -203,10 +203,11 @@ public class DailyStayMapCardView extends ConstraintLayout
             return null;
         }
 
-        Pair[] pairs = new Pair[3];
+        Pair[] pairs = new Pair[4];
         pairs[0] = Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image));
         pairs[1] = Pair.create(mViewDataBinding.gradientTopView, getContext().getString(R.string.transition_gradient_top_view));
         pairs[2] = Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
+        pairs[3] = Pair.create(mViewDataBinding.transitionRoundTopView, getContext().getString(R.string.transition_round_top_view));
 
         return pairs;
     }

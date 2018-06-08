@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <merge
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:parentTag="android.widget.LinearLayout">
+
+        <View
+            android:id="@+id/trueReviewViewTopLineView"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"/>
+
+        <com.daily.dailyhotel.view.DailyDetailTrueReviewExView
+            android:id="@+id/trueReviewView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="30dp"/>
+
+        <View
+            android:id="@+id/businessBenefitTopLineView"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"
+            android:visibility="visible"/>
+
+        <com.daily.dailyhotel.view.DailyDetailBenefitView
+            android:id="@+id/businessBenefitView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="30dp"/>
+
+        <View
+            android:id="@+id/roomInformationTopLineView"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"
+            android:visibility="visible"/>
+
+        <com.daily.dailyhotel.view.DailyDetailRoomInformationView
+            android:id="@+id/roomInformationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"/>
+
+        <View
+            android:id="@+id/roomInformationViewBottomLineView"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"/>
+
+        <com.daily.dailyhotel.view.DailyDetailDailyCommentView
+            android:id="@+id/dailyCommentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/default_background"/>
+
+        <com.daily.dailyhotel.view.DailyDetailFacilitiesView
+            android:id="@+id/facilitiesView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"/>
+
+        <com.daily.dailyhotel.view.DailyDetailAddressView
+            android:id="@+id/addressView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.daily.dailyhotel.view.DailyDetailCheckTimeInformationView
+            android:id="@+id/checkTimeInformationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="30dp"/>
+
+        <com.daily.dailyhotel.view.DailyDetailDetailInformationView
+            android:id="@+id/detailInformationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="30dp"/>
+
+        <View
+            android:id="@+id/refundInformationTopLineView"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"/>
+
+        <com.daily.dailyhotel.view.DailyDetailRefundInformationView
+            android:id="@+id/refundInformationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"/>
+
+        <View
+            android:id="@+id/checkInformationTopLineView"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"/>
+
+        <com.daily.dailyhotel.view.DailyDetailCheckInformationView
+            android:id="@+id/checkInformationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/rewardCardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/default_background"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/rewardTopLineView"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_line_ce7e7e7"/>
+
+            <com.daily.dailyhotel.view.DailyRewardCardView
+                android:id="@+id/rewardCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rewardTopLineView"/>
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/conciergeTopLineView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/layerlist_top_line_divider_le7e7e7"/>
+    </merge>
+</layout>

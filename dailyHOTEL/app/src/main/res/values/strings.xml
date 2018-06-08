@@ -121,6 +121,7 @@
     <string name="transition_gradient_bottom_view">gradientBottomView</string>
     <string name="transition_gradient_top_view">gradientTopView</string>
     <string name="transition_layout">layout</string>
+    <string name="transition_round_top_view">roundTopView</string>
 
     <!-- Stay Grade -->
     <string name="grade_special">특급</string>
