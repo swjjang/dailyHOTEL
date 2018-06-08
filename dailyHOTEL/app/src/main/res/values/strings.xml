@@ -509,6 +509,8 @@
     <string name="message_payment_free_payment">결제하실 금액이 없습니다.</string>
     <string name="message_gourmet_payment_changed_price">업체 사정으로 해당 상품의 요금이 변동되었습니다.\n상품 금액을 한번 더 확인하신 후 결제해주세요.</string>
     <string name="message_stay_payment_changed_price">업체 사정으로 해당 객실의 요금이 변동되었습니다.\n객실 금액을 한번 더 확인해주세요.</string>
+    <string name="message_stay_payment_changed_nrd">무료취소 정보가 변경되었으니 취소 및 환불 규정을 다시한번 확인해주세요.</string>
+    <string name="message_stay_payment_changed_price_nrd">무료취소 정보와 객실 요금이 변동되었습니다.\n한번 더 확인해주세요.</string>
     <string name="message_payment_agree_personal_information">개인정보 제 3자 제공 동의 (필수)</string>
     <string name="message_payment_none_payment_type">일시적으로 결제를 이용할 수 없습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="message_payment_none_payment_phone_type">일시적으로 휴대폰 결제 수단은 사용할 수 없습니다. 잠시 후 다시 시도해주세요.</string>

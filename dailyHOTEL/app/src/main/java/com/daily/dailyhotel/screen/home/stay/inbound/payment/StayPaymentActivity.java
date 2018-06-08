@@ -34,7 +34,7 @@ public class StayPaymentActivity extends BaseActivity<StayPaymentPresenter>
     static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_ROOM_INDEX = "roomIndex";
-    static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
+    static final String INTENT_EXTRA_DATA_NRD = "nrd";
     static final String INTENT_EXTRA_DATA_CATEGORY = "category";
     static final String INTENT_EXTRA_DATA_ROOM_NAME = "roomName";
     static final String INTENT_EXTRA_DATA_LATITUDE = "latitude";
@@ -42,7 +42,7 @@ public class StayPaymentActivity extends BaseActivity<StayPaymentPresenter>
 
 
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
-        , int roomIndex, int roomPrice, String roomName, String checkInDateTime, String checkOutDateTime, boolean overseas//
+        , int roomIndex, int roomPrice, String roomName, String checkInDateTime, String checkOutDateTime, boolean nrd//
         , String category, double latitude, double longitude, StayPaymentAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayPaymentActivity.class);
@@ -54,7 +54,7 @@ public class StayPaymentActivity extends BaseActivity<StayPaymentPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_PRICE, roomPrice);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
+        intent.putExtra(INTENT_EXTRA_DATA_NRD, nrd);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_NAME, roomName);
         intent.putExtra(INTENT_EXTRA_DATA_LATITUDE, latitude);

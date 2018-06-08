@@ -2010,7 +2010,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             , stayDetail.name, imageUrl, stayRoom.index, stayRoom.discountTotal, stayRoom.name//
             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , stayDetail.overseas, stayDetail.category //
+            , stayRoom.nrd, stayDetail.category //
             , stayDetail.latitude, stayDetail.longitude //
             , mAnalytics.getStayPaymentAnalyticsParam(stayDetail, stayRoom));
 

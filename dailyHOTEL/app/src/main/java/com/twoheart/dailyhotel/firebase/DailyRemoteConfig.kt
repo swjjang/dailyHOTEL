@@ -79,7 +79,7 @@ class DailyRemoteConfig(private val context: Context) {
         setMessages(context, remoteConfig.getString("Marketing_ANDMessages"))
         setHomeDefaultEvent(context, remoteConfig.getString("Marketing_ANDHomeDefaultEvent"))
         setConfig(context, remoteConfig.getString("ANDConfig"))
-        setStaticUlr(context, remoteConfig.getString("androidStaticUrl"))
+        setStaticUlr(context, remoteConfig.getString("ANDStaticUrl"))
         setSearch(context, remoteConfig.getString("ANDSearch"))
         setReward(context, remoteConfig.getString("Marketing_ANDRewardSticker"))
         setPaymentCardEvent(context, remoteConfig.getString("Marketing_ANDPaymentCardEvent"))
