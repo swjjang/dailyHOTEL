@@ -113,6 +113,7 @@
             android:text="@string/label_currency_more"
             android:textColor="@color/default_text_c323232"
             android:textSize="14dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/discountPriceTextView"
             app:layout_constraintLeft_toRightOf="@id/discountPriceTextView"
             dailyFont:style="Medium"/>

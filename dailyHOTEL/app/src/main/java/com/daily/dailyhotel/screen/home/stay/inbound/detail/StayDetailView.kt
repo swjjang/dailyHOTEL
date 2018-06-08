@@ -37,10 +37,7 @@ import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.DraweeTransition
 import com.facebook.imagepipeline.image.ImageInfo
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding
-import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding
-import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding
-import com.twoheart.dailyhotel.databinding.DialogShareDataBinding
+import com.twoheart.dailyhotel.databinding.*
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 import com.twoheart.dailyhotel.widget.AlphaTransition
 import io.reactivex.Completable
@@ -51,15 +48,15 @@ import java.util.*
 class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface.OnEventListener)//
     : BaseDialogView<StayDetailInterface.OnEventListener, ActivityStayDetailDataBinding>(activity, listener), StayDetailInterface.ViewInterface {
 
-    var tabLayoutShowAnimator: ObjectAnimator? = null
-    var tabLayoutHideAnimator: ObjectAnimator? = null
+    private var tabLayoutShowAnimator: ObjectAnimator? = null
+    private var tabLayoutHideAnimator: ObjectAnimator? = null
+
+    private var scrollLayoutDataBinding: DailyViewStayDetailScrollDataBinding? = null
+    private var conciergeLayoutDataBinding: LayoutGourmetDetailConciergeDataBinding? = null
 
     override fun setContentView(viewDataBinding: ActivityStayDetailDataBinding) {
         initToolbar(viewDataBinding)
-        initScrollView(viewDataBinding)
-        initEmptyView(viewDataBinding)
         initTabLayout(viewDataBinding)
-        initRoomFilter(viewDataBinding)
 
         viewDataBinding.showRoomTextView.setOnClickListener({ eventListener.onShowRoomClick() })
         hideWishTooltip()
@@ -84,7 +81,20 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null) { eventListener.onShareClick() }
     }
 
-    private fun initRoomFilter(viewDataBinding: ActivityStayDetailDataBinding) {
+    override fun initializedScrollLayout() {
+        if (scrollLayoutDataBinding == null) {
+            scrollLayoutDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_detail_scroll_data, viewDataBinding.scrollLayout, true)
+            conciergeLayoutDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_gourmet_detail_concierge_data, viewDataBinding.scrollLayout, true)
+
+            initScrollView(viewDataBinding, scrollLayoutDataBinding!!)
+            initEmptyView(viewDataBinding, scrollLayoutDataBinding!!)
+            initRoomFilter(viewDataBinding, scrollLayoutDataBinding!!)
+
+            setConciergeInformation()
+        }
+    }
+
+    private fun initRoomFilter(viewDataBinding: ActivityStayDetailDataBinding, scrollLayoutDataBinding: DailyViewStayDetailScrollDataBinding) {
         viewDataBinding.roomFilterView.setOnDailyDetailRoomFilterListener(object : DailyDetailRoomFilterContentsView.OnDailyDetailRoomFilterListener {
             override fun onSelectedBedTypeFilter(selected: Boolean, bedType: String) {
                 eventListener.onSelectedBedTypeFilter(selected, bedType)
@@ -107,7 +117,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             }
         })
 
-        viewDataBinding.roomInformationView.setRoomInformationListener(object : DailyDetailRoomInformationView.OnDailyDetailRoomInformationListener {
+        scrollLayoutDataBinding.roomInformationView.setRoomInformationListener(object : DailyDetailRoomInformationView.OnDailyDetailRoomInformationListener {
             override fun onCalendarClick() {
                 eventListener.onCalendarClick()
             }
@@ -144,11 +154,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         })
     }
 
-    override fun setScrollViewVisible(visible: Boolean) {
-        viewDataBinding.nestedScrollView.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-    }
-
     override fun setInitializedLayout(name: String?, url: String?) {
+        setStayName(name)
+
         if (url.isTextEmpty()) {
             viewDataBinding.imageLoopView.setLineIndicatorVisible(false)
         } else {
@@ -170,9 +178,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
-    private fun initScrollView(viewDataBinding: ActivityStayDetailDataBinding) {
-        setScrollViewVisible(false)
-
+    private fun initScrollView(viewDataBinding: ActivityStayDetailDataBinding, scrollLayoutDataBinding: DailyViewStayDetailScrollDataBinding) {
         val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
         val tabLayoutHeight = ScreenUtils.dpToPx(context, 41.0)
         val stickyTopHeight = ScreenUtils.dpToPx(context, 69.0)
@@ -181,25 +187,25 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         var previousInformationPosition = -1
 
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
-            if (getViewDataBinding().scrollLayout.childCount < 2) {
-                getViewDataBinding().toolbarView.visibility = View.GONE
+            if (viewDataBinding.scrollLayout.childCount < 2) {
+                viewDataBinding.toolbarView.visibility = View.GONE
                 return@OnScrollChangeListener
             }
 
-            val titleLayout = getViewDataBinding().scrollLayout.getChildAt(1)
+            val titleLayout = viewDataBinding.scrollLayout.getChildAt(1)
 
             if (titleLayout.y - toolbarHeight > scrollY) {
-                getViewDataBinding().toolbarView.hideAnimation()
+                viewDataBinding.toolbarView.hideAnimation()
             } else {
-                getViewDataBinding().toolbarView.showAnimation()
+                viewDataBinding.toolbarView.showAnimation()
             }
 
-            getViewDataBinding().fakeVRImageView.isEnabled = scrollY <= toolbarHeight
+            viewDataBinding.fakeVRImageView.isEnabled = scrollY <= toolbarHeight
 
             val targetY = scrollY + toolbarHeight + tabLayoutHeight
             var scrollInformationPosition = 0
 
-            if (getViewDataBinding().roomInformationTopLineView.y >= targetY) {
+            if (scrollLayoutDataBinding.roomInformationTopLineView.y >= targetY) {
                 hideTabLayout()
                 hideRoomDetailButton()
 
@@ -214,13 +220,13 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 scrollInformationPosition = 1
             }
 
-            if (getViewDataBinding().roomInformationView.y + stickyTopHeight >= targetY) {
+            if (scrollLayoutDataBinding.roomInformationView.y + stickyTopHeight >= targetY) {
                 hideRoomFilterLayout()
                 hideRoomDetailButton()
             } else {
                 val transitionY = targetY + stickyHeight
 
-                if (getViewDataBinding().roomInformationView.bottom >= transitionY) {
+                if (scrollLayoutDataBinding.roomInformationView.bottom >= transitionY) {
                     showRoomFilterLayout()
                     translationRoomFilterLayout(0.0f)
 
@@ -231,9 +237,9 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
                     hideRoomDetailButton()
                 } else {
-                    translationRoomFilterLayout((getViewDataBinding().roomInformationView.bottom - transitionY).toFloat())
+                    translationRoomFilterLayout((scrollLayoutDataBinding.roomInformationView.bottom - transitionY).toFloat())
 
-                    if (transitionY - getViewDataBinding().roomInformationView.bottom < stickyHeight) {
+                    if (transitionY - scrollLayoutDataBinding.roomInformationView.bottom < stickyHeight) {
                         viewDataBinding.roomInformationTextView.isSelected = true
                         viewDataBinding.stayInformationTextView.isSelected = false
 
@@ -265,7 +271,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
     }
 
-    private fun initEmptyView(viewDataBinding: ActivityStayDetailDataBinding) {
+    private fun initEmptyView(viewDataBinding: ActivityStayDetailDataBinding, scrollLayoutDataBinding: DailyViewStayDetailScrollDataBinding) {
         viewDataBinding.detailEmptyView.setOnEventListener(object : DailyDetailEmptyView.OnEventListener {
             override fun onStopMove(event: MotionEvent) {
                 viewDataBinding.nestedScrollView.isScrollingEnabled = false
@@ -339,6 +345,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
             addTransition(outBottomAlphaTransition)
             addTransition(outTopAlphaTransition)
+
             duration = 200
         }
 
@@ -351,6 +358,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
                     it.onNext(true)
                     it.onComplete()
+
+                    viewDataBinding.scrollTopRoundView.alpha = 1.0f
                 }
 
                 override fun onTransitionCancel(transition: Transition) {}
@@ -371,6 +380,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             viewDataBinding.transImageView.transitionName = getString(R.string.transition_place_image)
             viewDataBinding.transGradientBottomView.transitionName = getString(R.string.transition_gradient_bottom_view)
             viewDataBinding.imageLoopView.transitionName = getString(R.string.transition_gradient_top_view)
+            viewDataBinding.scrollTopRoundView.transitionName = getString(R.string.transition_round_top_view)
 
             when (gradientType) {
                 StayDetailActivity.TransGradientType.LIST -> viewDataBinding.transGradientBottomView.background = getGradientBottomDrawable()
@@ -573,6 +583,10 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         viewDataBinding.imageLoopView.setImageList(imageList)
     }
 
+    private fun setStayName(name: String?) {
+        viewDataBinding.baseInformationView.setNameText(name)
+    }
+
     override fun setBaseInformation(baseInformation: StayDetail.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean) {
         viewDataBinding.baseInformationView.apply {
             setGradeName(baseInformation.grade.getName(context))
@@ -594,61 +608,71 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun setTrueReviewInformationVisible(visible: Boolean) {
-        viewDataBinding.trueReviewGroup.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.let {
+            val flag = if (visible) View.VISIBLE else View.GONE
+
+            it.trueReviewViewTopLineView.visibility = flag
+            it.trueReviewView.visibility = flag
+        }
     }
 
     override fun setTrueReviewInformation(trueReviewInformation: StayDetail.TrueReviewInformation) {
-        viewDataBinding.trueReviewView.apply {
+        scrollLayoutDataBinding?.trueReviewView?.let {
 
             if (trueReviewInformation.ratingPercent > 0 || trueReviewInformation.ratingCount > 0) {
-                setSatisfactionVisible(true)
-                setSatisfaction(trueReviewInformation.ratingPercent, trueReviewInformation.ratingCount)
+                it.setSatisfactionVisible(true)
+                it.setSatisfaction(trueReviewInformation.ratingPercent, trueReviewInformation.ratingCount)
             } else {
-                setSatisfactionVisible(false)
+                it.setSatisfactionVisible(false)
             }
 
-            setPreviewTrueReviewVisible(trueReviewInformation.review.letNotNullTrueElseNullFalse {
-                setPreviewTrueReview(it.comment, it.score.toString(), it.userId, it.createdAt)
+            it.setPreviewTrueReviewVisible(trueReviewInformation.review.letNotNullTrueElseNullFalse { primaryReview ->
+                it.setPreviewTrueReview(primaryReview.comment, primaryReview.score.toString(), primaryReview.userId, primaryReview.createdAt)
             })
 
             if (trueReviewInformation.reviewTotalCount > 0) {
-                setShowTrueReviewButtonVisible(true)
-                setShowTrueReviewButtonText(trueReviewInformation.reviewTotalCount)
-                setTrueReviewClickListener(View.OnClickListener { eventListener.onTrueReviewClick() })
+                it.setShowTrueReviewButtonVisible(true)
+                it.setShowTrueReviewButtonText(trueReviewInformation.reviewTotalCount)
+                it.setTrueReviewClickListener(View.OnClickListener { eventListener.onTrueReviewClick() })
             } else {
-                setShowTrueReviewButtonVisible(false)
+                it.setShowTrueReviewButtonVisible(false)
             }
         }
     }
 
     override fun setBenefitInformationVisible(visible: Boolean) {
-        viewDataBinding.businessBenefitGroup.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.let {
+            val flag = if (visible) View.VISIBLE else View.GONE
+
+            it.businessBenefitTopLineView.visibility = flag
+            it.businessBenefitView.visibility = flag
+        }
     }
 
     override fun setBenefitInformation(benefitInformation: StayDetail.BenefitInformation) {
-        viewDataBinding.businessBenefitView.apply {
+        scrollLayoutDataBinding?.businessBenefitView?.let {
             if (benefitInformation.title.isTextEmpty() && !benefitInformation.contentList.isNotNullAndNotEmpty()) {
-                setBenefitVisible(false)
+                it.setBenefitVisible(false)
             } else {
-                setBenefitVisible(true)
+                it.setBenefitVisible(true)
 
                 if (benefitInformation.title.isTextEmpty()) {
-                    setTitleVisible(false)
+                    it.setTitleVisible(false)
                 } else {
-                    setTitleVisible(true)
-                    setTitleText(benefitInformation.title)
+                    it.setTitleVisible(true)
+                    it.setTitleText(benefitInformation.title)
                 }
 
                 if (benefitInformation.contentList.isNotNullAndNotEmpty()) {
-                    setContentsVisible(true)
-                    setContents(benefitInformation.contentList)
+                    it.setContentsVisible(true)
+                    it.setContents(benefitInformation.contentList)
                 } else {
-                    setContentsVisible(false)
+                    it.setContentsVisible(false)
                 }
             }
 
             if (benefitInformation.coupon != null && benefitInformation.coupon!!.couponDiscount > 0) {
-                setCouponButtonVisible(true)
+                it.setCouponButtonVisible(true)
 
                 val couponPrice = DailyTextUtils.getPriceFormat(context, benefitInformation.coupon!!.couponDiscount, false)
 
@@ -660,33 +684,33 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                     setCouponButtonText(context.getString(R.string.label_detail_complete_coupon_download, couponPrice), false)
                 }
 
-                setCouponButtonClickListener(View.OnClickListener { eventListener.onDownloadCouponClick() })
+                it.setCouponButtonClickListener(View.OnClickListener { eventListener.onDownloadCouponClick() })
             } else {
-                setCouponButtonVisible(false)
+                it.setCouponButtonVisible(false)
             }
         }
     }
 
     override fun setCouponButtonText(text: String, iconVisible: Boolean) {
-        viewDataBinding.businessBenefitView.setCouponButtonText(text, iconVisible)
+        scrollLayoutDataBinding?.businessBenefitView?.setCouponButtonText(text, iconVisible)
     }
 
     override fun setCouponButtonEnabled(enabled: Boolean) {
-        viewDataBinding.businessBenefitView.setCouponButtonEnabled(enabled)
+        scrollLayoutDataBinding?.businessBenefitView?.setCouponButtonEnabled(enabled)
     }
 
     override fun setPriceAverageTypeVisible(visible: Boolean) {
-        viewDataBinding.roomInformationView.setPriceAverageTypeVisible(visible)
+        scrollLayoutDataBinding?.roomInformationView?.setPriceAverageTypeVisible(visible)
     }
 
     override fun setPriceAverageType(isAverageType: Boolean) {
-        viewDataBinding.roomInformationView.setPriceAverageType(isAverageType)
+        scrollLayoutDataBinding?.roomInformationView?.setPriceAverageType(isAverageType)
     }
 
     override fun setRoomFilterInformation(calendarText: CharSequence, roomFilterCount: Int) {
-        viewDataBinding.roomInformationView.apply {
-            setCalendar(calendarText)
-            setRoomFilterCount(roomFilterCount)
+        scrollLayoutDataBinding?.roomInformationView?.let {
+            it.setCalendar(calendarText)
+            it.setRoomFilterCount(roomFilterCount)
         }
 
         viewDataBinding.stickyRoomFilterView.setCalendar(calendarText)
@@ -694,62 +718,62 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun setEmptyRoomText(text: String?) {
-        viewDataBinding.roomInformationView.setEmptyRoomText(text)
+        scrollLayoutDataBinding?.roomInformationView?.setEmptyRoomText(text)
     }
 
     override fun setEmptyRoomVisible(visible: Boolean, hasFilter: Boolean) {
-        viewDataBinding.roomInformationView.setEmptyRoomVisible(visible, hasFilter)
+        scrollLayoutDataBinding?.roomInformationView?.setEmptyRoomVisible(visible, hasFilter)
         viewDataBinding.stickyRoomFilterView.setRoomFilterVisible(if (hasFilter) true else !visible)
     }
 
     override fun setRoomList(roomList: List<Room>?) {
-        viewDataBinding.roomInformationView.setRoomList(roomList)
+        scrollLayoutDataBinding?.roomInformationView?.setRoomList(roomList)
     }
 
     override fun setRoomActionButtonVisible(visible: Boolean) {
-        viewDataBinding.roomInformationView.setActionButtonVisible(visible)
+        scrollLayoutDataBinding?.roomInformationView?.setActionButtonVisible(visible)
     }
 
     override fun setRoomActionButtonText(text: String, leftResourceId: Int, rightResourceId: Int, drawablePadding: Int,
                                          textColorResourceId: Int, backgroundResourceId: Int) {
-        viewDataBinding.roomInformationView.setActionButton(text, leftResourceId, rightResourceId, drawablePadding, textColorResourceId, backgroundResourceId)
+        scrollLayoutDataBinding?.roomInformationView?.setActionButton(text, leftResourceId, rightResourceId, drawablePadding, textColorResourceId, backgroundResourceId)
     }
 
     override fun setDailyCommentVisible(visible: Boolean) {
-        viewDataBinding.dailyCommentView.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.dailyCommentView?.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setDailyComment(commentList: List<String>) {
-        viewDataBinding.dailyCommentView.setComments(commentList)
+        scrollLayoutDataBinding?.dailyCommentView?.setComments(commentList)
     }
 
     override fun setFacilities(roomCount: Int, facilities: List<FacilitiesPictogram>?) {
-        viewDataBinding.facilitiesView.apply {
+        scrollLayoutDataBinding?.facilitiesView?.let {
             if (roomCount <= 0 && !facilities.isNotNullAndNotEmpty()) {
-                visibility = View.GONE
+                it.visibility = View.GONE
             } else {
-                visibility = View.VISIBLE
+                it.visibility = View.VISIBLE
 
                 if (roomCount > 0) {
-                    setRoomCountVisible(true)
-                    setRoomCount(roomCount)
+                    it.setRoomCountVisible(true)
+                    it.setRoomCount(roomCount)
                 } else {
-                    setRoomCountVisible(false)
+                    it.setRoomCountVisible(false)
                 }
 
-                setFacilities(facilities)
+                it.setFacilities(facilities)
             }
         }
     }
 
     override fun setAddressInformationVisible(visible: Boolean) {
-        viewDataBinding.addressView.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.addressView?.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setAddressInformation(addressInformation: StayDetail.AddressInformation) {
-        viewDataBinding.addressView.apply {
-            setAddressText(addressInformation.address)
-            setOnAddressClickListener(object : DailyDetailAddressView.OnAddressClickListener {
+        scrollLayoutDataBinding?.addressView?.let {
+            it.setAddressText(addressInformation.address)
+            it.setOnAddressClickListener(object : DailyDetailAddressView.OnAddressClickListener {
                 override fun onMapClick() {
                     eventListener.onMapClick()
                 }
@@ -766,81 +790,95 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun setCheckTimeInformationVisible(visible: Boolean) {
-        viewDataBinding.checkTimeInformationView.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.checkTimeInformationView?.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setCheckTimeInformation(checkTimeInformation: StayDetail.CheckTimeInformation) {
-        viewDataBinding.checkTimeInformationView.apply {
-            setCheckTimeText(checkTimeInformation.checkIn, checkTimeInformation.checkOut)
+        scrollLayoutDataBinding?.checkTimeInformationView?.let {
+            it.setCheckTimeText(checkTimeInformation.checkIn, checkTimeInformation.checkOut)
 
             if (checkTimeInformation.description.isNotNullAndNotEmpty()) {
-                setInformationVisible(true)
-                setInformation(checkTimeInformation.description)
+                it.setInformationVisible(true)
+                it.setInformation(checkTimeInformation.description)
             } else {
-                setInformationVisible(false)
+                it.setInformationVisible(false)
             }
         }
     }
 
     override fun setDetailInformationVisible(visible: Boolean) {
-        viewDataBinding.detailInformationView.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.detailInformationView?.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun setDetailInformation(detailInformation: StayDetail.DetailInformation?, breakfastInformation: StayDetail.BreakfastInformation?) {
-        viewDataBinding.detailInformationView.setInformation(detailInformation?.itemList)
-        viewDataBinding.detailInformationView.setBreakfastInformation(breakfastInformation)
+        scrollLayoutDataBinding?.let {
+            it.detailInformationView.setInformation(detailInformation?.itemList)
+            it.detailInformationView.setBreakfastInformation(breakfastInformation)
+        }
     }
 
     override fun setCancellationAndRefundPolicyVisible(visible: Boolean) {
-        viewDataBinding.refundInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.let {
+            val flag = if (visible) View.VISIBLE else View.GONE
+
+            it.refundInformationTopLineView.visibility = flag
+            it.refundInformationView.visibility = flag
+        }
     }
 
     override fun setCancellationAndRefundPolicy(refundInformation: StayDetail.RefundInformation?, hasNRDRoom: Boolean) {
-        viewDataBinding.refundInformationView.setInformation(refundInformation)
+        scrollLayoutDataBinding?.refundInformationView?.setInformation(refundInformation)
     }
 
     override fun setCheckInformationVisible(visible: Boolean) {
-        viewDataBinding.checkInformationGroup.visibility = if (visible) View.VISIBLE else View.GONE
+        scrollLayoutDataBinding?.let {
+            val flag = if (visible) View.VISIBLE else View.GONE
+
+            it.checkInformationTopLineView.visibility = flag
+            it.checkInformationView.visibility = flag
+        }
     }
 
     override fun setCheckInformation(checkInformation: StayDetail.CheckInformation) {
-        viewDataBinding.checkInformationView.setInformation(checkInformation)
+        scrollLayoutDataBinding?.checkInformationView?.setInformation(checkInformation)
     }
 
     override fun setRewardVisible(visible: Boolean) {
-        if (visible) {
-            viewDataBinding.rewardCardLayout.visibility = View.VISIBLE
-            viewDataBinding.conciergeTopLineView.layoutParams.height = ScreenUtils.dpToPx(context, 1.0)
-        } else {
-            viewDataBinding.rewardCardLayout.visibility = View.GONE
-            viewDataBinding.conciergeTopLineView.layoutParams.height = ScreenUtils.dpToPx(context, 12.0)
-        }
+        scrollLayoutDataBinding?.let {
+            if (visible) {
+                it.rewardCardLayout.visibility = View.VISIBLE
+                it.conciergeTopLineView.layoutParams.height = ScreenUtils.dpToPx(context, 1.0)
+            } else {
+                it.rewardCardLayout.visibility = View.GONE
+                it.conciergeTopLineView.layoutParams.height = ScreenUtils.dpToPx(context, 12.0)
+            }
 
-        viewDataBinding.conciergeTopLineView.requestLayout()
+            it.conciergeTopLineView.requestLayout()
+        }
     }
 
     override fun setRewardMemberInformation(titleText: String, optionText: String?, nights: Int, descriptionText: String) {
-        viewDataBinding.rewardCardView.apply {
-            setGuideVisible(true)
-            setOnGuideClickListener { eventListener.onRewardGuideClick() }
+        scrollLayoutDataBinding?.rewardCardView?.let {
+            it.setGuideVisible(true)
+            it.setOnGuideClickListener { eventListener.onRewardGuideClick() }
 
             if (optionText.isTextEmpty()) {
-                setOptionVisible(false)
+                it.setOptionVisible(false)
             } else {
-                setOptionVisible(true)
-                setOptionText(optionText)
-                setOnOptionClickListener { eventListener.onRewardClick() }
+                it.setOptionVisible(true)
+                it.setOptionText(optionText)
+                it.setOnOptionClickListener { eventListener.onRewardClick() }
             }
 
-            setRewardTitleText(titleText)
-            setDescriptionText(descriptionText)
-            setStickerCount(nights)
+            it.setRewardTitleText(titleText)
+            it.setDescriptionText(descriptionText)
+            it.setStickerCount(nights)
         }
     }
 
 
     override fun setRewardNonMemberInformation(titleText: String, optionText: String?, campaignFreeNights: Int, descriptionText: String) {
-        viewDataBinding.rewardCardView.apply {
+        scrollLayoutDataBinding?.rewardCardView?.run {
             setGuideVisible(true)
             setOnGuideClickListener { eventListener.onRewardGuideClick() }
 
@@ -859,24 +897,30 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun startRewardStickerAnimation() {
-        (viewDataBinding.rewardCardLayout.visibility == View.VISIBLE).runTrue { viewDataBinding.rewardCardView.startCampaignStickerAnimation() }
+        scrollLayoutDataBinding?.let {
+            (it.rewardCardLayout.visibility == View.VISIBLE).runTrue { it.rewardCardView.startCampaignStickerAnimation() }
+        }
     }
 
     override fun stopRewardStickerAnimation() {
-        (viewDataBinding.rewardCardLayout.visibility == View.VISIBLE).runTrue { viewDataBinding.rewardCardView.stopCampaignStickerAnimation() }
+        scrollLayoutDataBinding?.let {
+            (it.rewardCardLayout.visibility == View.VISIBLE).runTrue { it.rewardCardView.stopCampaignStickerAnimation() }
+        }
     }
 
-    override fun setConciergeInformation() {
-        val hour = DailyPreference.getInstance(context).operationTime.split("\\,".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val startHour = hour[0]
-        val endHour = hour[1]
-        val lunchTimes = DailyRemoteConfigPreference.getInstance(context).remoteConfigOperationLunchTime.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val startLunchTime = lunchTimes[0]
-        val endLunchTime = lunchTimes[1]
+    private fun setConciergeInformation() {
+        conciergeLayoutDataBinding?.let {
+            val hour = DailyPreference.getInstance(context).operationTime.split("\\,".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val startHour = hour[0]
+            val endHour = hour[1]
+            val lunchTimes = DailyRemoteConfigPreference.getInstance(context).remoteConfigOperationLunchTime.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val startLunchTime = lunchTimes[0]
+            val endLunchTime = lunchTimes[1]
 
-        viewDataBinding.conciergeViewDataBinding?.conciergeTime01TextView?.text = getString(R.string.message_consult02, startHour, endHour)
-        viewDataBinding.conciergeViewDataBinding?.conciergeTime02TextView?.text = getString(R.string.message_consult03, startLunchTime, endLunchTime)
-        viewDataBinding.conciergeViewDataBinding?.conciergeView?.setOnClickListener { eventListener.onConciergeClick() }
+            it.conciergeTime01TextView.text = getString(R.string.message_consult02, startHour, endHour)
+            it.conciergeTime02TextView.text = getString(R.string.message_consult03, startLunchTime, endLunchTime)
+            it.conciergeView.setOnClickListener { eventListener.onConciergeClick() }
+        }
     }
 
     override fun scrollTop() {
@@ -983,11 +1027,13 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
     }
 
     override fun scrollRoomInformation() {
-        val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
-        val tabLayoutHeight = ScreenUtils.dpToPx(context, 41.0)
+        scrollLayoutDataBinding?.let {
+            val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
+            val tabLayoutHeight = ScreenUtils.dpToPx(context, 41.0)
 
-        viewDataBinding.nestedScrollView.abortScrolling()
-        viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.roomInformationTopLineView.y.toInt() - toolbarHeight - tabLayoutHeight + 1)
+            viewDataBinding.nestedScrollView.abortScrolling()
+            viewDataBinding.nestedScrollView.scrollTo(0, it.roomInformationTopLineView.y.toInt() - toolbarHeight - tabLayoutHeight + 1)
+        }
     }
 
     override fun scrollStayInformation() {
@@ -996,33 +1042,35 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
 
         viewDataBinding.nestedScrollView.abortScrolling()
 
-        when {
-            viewDataBinding.dailyCommentView.visibility == View.VISIBLE -> {
-                viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.dailyCommentView.y.toInt() - toolbarHeight - tabLayoutHeight)
-            }
+        scrollLayoutDataBinding?.let {
+            when {
+                it.dailyCommentView.visibility == View.VISIBLE -> {
+                    viewDataBinding.nestedScrollView.scrollTo(0, it.dailyCommentView.y.toInt() - toolbarHeight - tabLayoutHeight)
+                }
 
-            viewDataBinding.facilitiesView.visibility == View.VISIBLE -> {
-                viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.facilitiesView.y.toInt() - toolbarHeight - tabLayoutHeight)
-            }
+                it.facilitiesView.visibility == View.VISIBLE -> {
+                    viewDataBinding.nestedScrollView.scrollTo(0, it.facilitiesView.y.toInt() - toolbarHeight - tabLayoutHeight)
+                }
 
-            else -> {
-
-                viewDataBinding.nestedScrollView.scrollTo(0, viewDataBinding.addressView.y.toInt() - toolbarHeight - tabLayoutHeight)
+                else -> {
+                    viewDataBinding.nestedScrollView.scrollTo(0, it.addressView.y.toInt() - toolbarHeight - tabLayoutHeight)
+                }
             }
         }
     }
 
     override fun showMoreRooms(animated: Boolean): Completable {
-        return viewDataBinding.roomInformationView.showMoreRoom(animated)
+        return scrollLayoutDataBinding?.roomInformationView?.showMoreRoom(animated)
+                ?: Completable.complete()
     }
 
     override fun hideMoreRooms() {
         scrollRoomInformation()
-        viewDataBinding.roomInformationView.hideMoreRoom()
+        scrollLayoutDataBinding?.roomInformationView?.hideMoreRoom()
     }
 
     override fun isShowMoreRooms(): Boolean {
-        return viewDataBinding.roomInformationView.isShowMoreRoom()
+        return scrollLayoutDataBinding?.roomInformationView?.isShowMoreRoom() ?: false
     }
 
     override fun setSelectedRoomFilter(selectedBedTypeSet: LinkedHashSet<String>, selectedFacilitiesSet: LinkedHashSet<String>) {

@@ -26,6 +26,8 @@ interface StayDetailInterface {
         fun setSharedElementTransitionEnabled(enabled: Boolean, gradientType: StayDetailActivity.TransGradientType)
 
 
+        fun initializedScrollLayout()
+
         fun showWishTooltip()
 
         fun hideWishTooltip()
@@ -45,8 +47,6 @@ interface StayDetailInterface {
         fun setMoreImageVisible(visible: Boolean)
 
         fun setImageList(imageList: List<DetailImageInformation>)
-
-        fun setScrollViewVisible(visible: Boolean)
 
         fun setBaseInformation(baseInformation: StayDetail.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean)
 
@@ -118,8 +118,6 @@ interface StayDetailInterface {
         fun startRewardStickerAnimation()
 
         fun stopRewardStickerAnimation()
-
-        fun setConciergeInformation()
 
 
         fun scrollTop()

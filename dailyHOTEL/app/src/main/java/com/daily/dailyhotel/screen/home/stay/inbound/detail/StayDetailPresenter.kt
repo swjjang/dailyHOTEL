@@ -236,9 +236,9 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         return !hasDeepLink && isUsedMultiTransition
     }
 
-    private fun screenLockDelay(delay: Int): Disposable {
+    private fun screenLockDelay(delay: Long): Disposable {
 
-        val disposable = Completable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+        val disposable = Completable.timer(delay, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe { screenLock(true) }
 
         addCompositeDisposable(disposable)
@@ -494,6 +494,12 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             stayDetail
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({ stayDetail ->
+            if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled && stayDetail != null) {
+                viewInterface.startRewardStickerAnimation()
+            }
+
+            viewInterface.initializedScrollLayout()
+
             notifyDetailDataSetChanged()
             notifyWishDataSetChanged()
             notifyRewardDataSetChanged()
@@ -1204,7 +1210,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             }
 
             viewInterface.apply {
-                setScrollViewVisible(true)
                 setVRVisible(DailyPreference.getInstance(activity).trueVRSupport > 0 && it.vrInformation.isNotNullAndNotEmpty())
                 setMoreImageVisible(it.imageList.isNotNullAndNotEmpty() && it.imageList!!.size > 1)
 
@@ -1247,7 +1252,6 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 } else {
                     setCheckInformationVisible(false);
                 }
-                setConciergeInformation()
 
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
             }
