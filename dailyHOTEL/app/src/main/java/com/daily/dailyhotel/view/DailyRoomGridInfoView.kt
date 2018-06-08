@@ -35,13 +35,11 @@ class DailyRoomInfoGridView : LinearLayout {
         private const val SMALL_TITLE_TEXT_SIZE = 16.0
         private const val SMALL_ICON_DRAW_PADDING = 6.0
         private const val SMALL_ITEM_TEXT_SIZE = 14.0
-        private const val SMALL_ITEM_HEIGHT = 22.0
         private const val SMALL_LINE_MARGIN_TOP = 12.0
 
         private const val LARGE_TITLE_TEXT_SIZE = 18.0
         private const val LARGE_ICON_DRAW_PADDING = 10.0
         private const val LARGE_ITEM_TEXT_SIZE = 14.0
-        private const val LARGE_ITEM_HEIGHT = 22.0
         private const val LARGE_LINE_MARGIN_TOP = 15.0
     }
 
@@ -72,7 +70,7 @@ class DailyRoomInfoGridView : LinearLayout {
         })
     }
 
-    fun setData(title: String, type: ItemType, list: MutableList<String> = mutableListOf(), largeView: Boolean) {
+    fun setData(title: String, type: ItemType, list: MutableList<String> = mutableListOf(), largeView: Boolean, showAll: Boolean = false) {
         viewDataBinding.run {
             if (title.isTextEmpty()) {
                 titleTextLayout.visibility = View.GONE
@@ -93,12 +91,12 @@ class DailyRoomInfoGridView : LinearLayout {
                 columnCount = gridLayout.columnCount
                 val maxIndex = DEFAULT_SHOW_LINE_COUNT * columnCount
                 val hasMore = list.size > maxIndex
-                moreTextView.visibility = if (hasMore) View.VISIBLE else View.GONE
+                moreTextView.visibility = if (hasMore && !showAll) View.VISIBLE else View.GONE
 
                 it.forEachIndexed { index, text ->
                     val itemView: DailyTextView = getItemView(type, text, index >= columnCount, largeView)
 
-                    if (index < maxIndex) {
+                    if (showAll || index < maxIndex) {
                         gridLayout.addView(itemView)
                     } else {
                         moreGridLayout.addView(itemView)
@@ -110,7 +108,7 @@ class DailyRoomInfoGridView : LinearLayout {
                     for (index in 1..columnCount - remainder) {
                         val itemView = getItemView(NONE, "", index >= columnCount, largeView)
 
-                        if (hasMore) {
+                        if (hasMore && !showAll) {
                             moreGridLayout.addView(itemView)
                         } else {
                             gridLayout.addView(itemView)
@@ -120,12 +118,6 @@ class DailyRoomInfoGridView : LinearLayout {
             }
 
             moreGridLayout.doOnPreDraw {
-                if (largeView) {
-                    LARGE_ITEM_HEIGHT + LARGE_LINE_MARGIN_TOP
-                } else {
-                    SMALL_ITEM_HEIGHT + SMALL_LINE_MARGIN_TOP
-                }
-
                 val rect = Rect()
                 it.getLocalVisibleRect(rect)
                 it.tag = it.height

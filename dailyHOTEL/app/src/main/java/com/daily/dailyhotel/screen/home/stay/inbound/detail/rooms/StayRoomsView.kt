@@ -492,7 +492,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             dataBinding.extraChargeDescriptionGridView.columnCount = 1
             dataBinding.extraChargeDescriptionGridView.setData(
                     ""
-                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, true)
+                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, true, true)
         }
 
         if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
@@ -522,7 +522,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         dataBinding.roomCheckInfoGridView.columnCount = 1
         dataBinding.roomCheckInfoGridView.setData(
                 context.resources.getString(R.string.label_stay_room_need_to_know_title)
-                , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, true)
+                , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, true, true)
     }
 
     override fun setGuideVisible(visible: Boolean) {

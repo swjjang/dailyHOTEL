@@ -738,7 +738,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             dataBinding.extraChargeDescriptionGridView.columnCount = 1
             dataBinding.extraChargeDescriptionGridView.setData(
                     ""
-                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, false)
+                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, false, true)
         }
 
         if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
@@ -787,7 +787,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         dataBinding.roomCheckInfoGridView.columnCount = 1
         dataBinding.roomCheckInfoGridView.setData(
                 context.resources.getString(R.string.label_stay_room_need_to_know_title)
-                , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, false)
+                , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, false, true)
     }
 
     fun getLayoutWidth(): Float {
