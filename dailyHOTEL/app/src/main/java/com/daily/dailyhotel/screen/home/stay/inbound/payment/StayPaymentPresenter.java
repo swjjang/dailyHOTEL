@@ -652,7 +652,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 notifyRefundPolicyChanged();
 
                 if ((mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)//
-                    && (mNRD == true && StayRefundPolicy.STATUS_NRD.equalsIgnoreCase(stayRefundPolicy.refundPolicy)))
+                    && (mNRD == false && StayRefundPolicy.STATUS_NRD.equalsIgnoreCase(stayRefundPolicy.refundPolicy)))
                 {
                     mCheckChangedPrice = true;
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
