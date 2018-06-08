@@ -2,6 +2,8 @@ package com.daily.dailyhotel.entity;
 
 public class StayOutboundFilters
 {
+    public static final int FILTER_ALL_RATING = -1;
+
     public int rating;
     public SortType sortType;
     public SortType defaultSortType;
@@ -37,7 +39,7 @@ public class StayOutboundFilters
     public void reset()
     {
         sortType = defaultSortType;
-        rating = -1;
+        rating = FILTER_ALL_RATING;
     }
 
     public boolean isDefaultFilter()

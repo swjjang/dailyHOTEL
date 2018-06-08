@@ -1318,6 +1318,7 @@
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
 
     <!-- Stay Out Bound Filter -->
+    <string name="label_stay_outbound_filter_alll_star_rate">전체</string>
     <string name="label_stay_outbound_filter_1_star_rate">1성급</string>
     <string name="label_stay_outbound_filter_2_star_rate">2성급</string>
     <string name="label_stay_outbound_filter_3_star_rate">3성급</string>

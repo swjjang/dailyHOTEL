@@ -133,6 +133,10 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
             {
                 switch (checkedId)
                 {
+                    case R.id.ratingAllRadioButton:
+                        getEventListener().onRatingClick(StayOutboundFilters.FILTER_ALL_RATING);
+                        break;
+
                     case R.id.rating1RadioButton:
                         getEventListener().onRatingClick(1);
                         break;
@@ -200,6 +204,10 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
 
         switch (rating)
         {
+            case StayOutboundFilters.FILTER_ALL_RATING:
+                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().ratingAllRadioButton.getId());
+                break;
+
             case 1:
                 getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating1RadioButton.getId());
                 break;
