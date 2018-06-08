@@ -118,6 +118,19 @@
                     android:paddingBottom="20dp">
 
                     <com.daily.base.widget.DailyRadioButton
+                        android:id="@+id/ratingAllRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:drawableRight="@drawable/selector_filter_radio_button"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_stay_outbound_filter_alll_star_rate"
+                        android:textColor="@color/selector_text_color_d4d4d4d_seb2135"
+                        android:textSize="14dp"/>
+
+                    <com.daily.base.widget.DailyRadioButton
                         android:id="@+id/rating1RadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
