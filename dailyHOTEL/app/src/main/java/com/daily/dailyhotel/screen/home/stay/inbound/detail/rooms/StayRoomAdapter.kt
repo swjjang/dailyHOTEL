@@ -156,7 +156,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         setAmountInformationView(dataBinding.root, room.amountInformation, false)
 
-        setRefundInformationView(dataBinding, room.refundInformation)
+        setRefundInformationView(dataBinding.root, room.refundInformation)
 
         setBaseInformationGridView(dataBinding, room)
 
@@ -314,33 +314,41 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    private fun setRefundInformationView(dataBinding: ListRowStayRoomDataBinding, refundInformation: StayDetail.RefundInformation?) {
-        if (refundInformation == null) {
-            dataBinding.refundPolicyTextView.visibility = View.GONE
-            return
-        }
+    fun setRefundInformationView(root: View, refundInformation: StayDetail.RefundInformation?) {
+        val refundPolicyTextView: DailyTextView? = root.findViewById(R.id.refundPolicyTextView)
 
-        val isNrd = !refundInformation.policy.isTextEmpty() && refundInformation.policy?.toLowerCase().equals("nrd", true)
-        var text = refundInformation.warningMessage
-        val backgroundResId: Int
-        val textColorResId: Int
+        refundPolicyTextView?.run {
+            when (refundInformation) {
+                null -> {
+                    refundPolicyTextView.visibility = View.GONE
+                }
 
-        if (isNrd) {
-            backgroundResId = R.drawable.shape_stay_room_refund_policy_nrd_background
-            textColorResId = R.color.default_text_cfb234a
+                else -> {
+                    val isNrd = !refundInformation.policy.isTextEmpty()
+                            && refundInformation.policy?.toLowerCase().equals("nrd", true)
+                    var text = refundInformation.warningMessage
+                    val backgroundResId: Int
+                    val textColorResId: Int
 
-            if (text.isTextEmpty()) {
-                text = context.resources.getString(R.string.label_stay_room_default_nrd_text)
+                    if (isNrd) {
+                        backgroundResId = R.drawable.shape_stay_room_refund_policy_nrd_background
+                        textColorResId = R.color.default_text_cfb234a
+
+                        if (text.isTextEmpty()) {
+                            text = context.resources.getString(R.string.label_stay_room_default_nrd_text)
+                        }
+                    } else {
+                        backgroundResId = R.drawable.shape_stay_room_refund_policy_refundable_background
+                        textColorResId = R.color.default_text_c299aff
+                    }
+
+                    refundPolicyTextView.setTextColor(context.resources.getColor(textColorResId))
+                    refundPolicyTextView.setBackgroundResource(backgroundResId)
+                    refundPolicyTextView.visibility = if (text.isTextEmpty()) View.GONE else View.VISIBLE
+                    refundPolicyTextView.text = text
+                }
             }
-        } else {
-            backgroundResId = R.drawable.shape_stay_room_refund_policy_refundable_background
-            textColorResId = R.color.default_text_c299aff
         }
-
-        dataBinding.refundPolicyTextView.setTextColor(context.resources.getColor(textColorResId))
-        dataBinding.refundPolicyTextView.setBackgroundResource(backgroundResId)
-        dataBinding.refundPolicyTextView.visibility = if (text.isTextEmpty()) View.GONE else View.VISIBLE
-        dataBinding.refundPolicyTextView.text = text
     }
 
     private fun setBaseInformationGridView(dataBinding: ListRowStayRoomDataBinding, room: Room) {

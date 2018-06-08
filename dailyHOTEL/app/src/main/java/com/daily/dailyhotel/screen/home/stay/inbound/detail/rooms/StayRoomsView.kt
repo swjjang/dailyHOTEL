@@ -186,7 +186,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         listAdapter.setAmountInformationView(dataBinding.root, room.amountInformation, true)
 
-        setRefundInformationView(dataBinding, room.refundInformation)
+        listAdapter.setRefundInformationView(dataBinding.root, room.refundInformation)
 
         setBaseInformationGridView(dataBinding, room)
 
@@ -219,35 +219,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     override fun showInvisibleLayout(): Boolean {
         return viewDataBinding.invisibleLayout?.roomLayout?.visibility == View.VISIBLE
-    }
-
-    private fun setRefundInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, refundInformation: StayDetail.RefundInformation?) {
-        if (refundInformation == null) {
-            dataBinding.refundPolicyTextView.visibility = View.GONE
-            return
-        }
-
-        val isNrd = !refundInformation.policy.isTextEmpty() && refundInformation.policy?.toLowerCase().equals("nrd", true)
-        var text = refundInformation.warningMessage
-        val backgroundResId: Int
-        val textColorResId: Int
-
-        if (isNrd) {
-            backgroundResId = R.drawable.shape_stay_room_refund_policy_nrd_background
-            textColorResId = R.color.default_text_cfb234a
-
-            if (text.isTextEmpty()) {
-                text = context.resources.getString(R.string.label_stay_room_default_nrd_text)
-            }
-        } else {
-            backgroundResId = R.drawable.shape_stay_room_refund_policy_refundable_background
-            textColorResId = R.color.default_text_c299aff
-        }
-
-        dataBinding.refundPolicyTextView.setTextColor(context.resources.getColor(textColorResId))
-        dataBinding.refundPolicyTextView.setBackgroundResource(backgroundResId)
-        dataBinding.refundPolicyTextView.visibility = if (text.isTextEmpty()) View.GONE else View.VISIBLE
-        dataBinding.refundPolicyTextView.text = text
     }
 
     private fun setBaseInformationGridView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, room: Room) {
