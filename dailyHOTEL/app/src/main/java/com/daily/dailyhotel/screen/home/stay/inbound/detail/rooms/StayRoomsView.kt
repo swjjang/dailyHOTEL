@@ -190,7 +190,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         listAdapter.setBaseInformationGridView(dataBinding.root, room)
 
-        setAttributeInformationView(dataBinding, room.attributeInformation)
+        listAdapter.setAttributeInformationView(dataBinding.root, room.attributeInformation, true)
 
         val benefitList = mutableListOf<String>()
 
@@ -219,101 +219,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     override fun showInvisibleLayout(): Boolean {
         return viewDataBinding.invisibleLayout?.roomLayout?.visibility == View.VISIBLE
-    }
-
-    private fun setAttributeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, attribute: Room.AttributeInformation?) {
-        if (attribute == null) {
-            dataBinding.subInfoGroup.visibility = View.GONE
-            return
-        }
-
-        dataBinding.subInfoGroup.visibility = View.VISIBLE
-
-        val roomType: StayRoomAdapter.RoomType? = try {
-            StayRoomAdapter.RoomType.valueOf(attribute.roomStructure)
-        } catch (e: Exception) {
-            null
-        }
-
-        var titleText = roomType?.getName(context) ?: ""
-
-        attribute.isEntireHouse.runTrue {
-            if (!titleText.isTextEmpty()) {
-                titleText += "/"
-            }
-
-            titleText += context.resources.getString(R.string.label_room_type_entire_house)
-        }
-
-        attribute.isDuplex.runTrue {
-            if (!titleText.isTextEmpty()) {
-                titleText += "/"
-            }
-
-            titleText += context.resources.getString(R.string.label_room_type_duplex_room)
-        }
-
-        dataBinding.subInfoGridView.columnCount = 2
-
-        val stringList = mutableListOf<String>()
-        var roomString = ""
-
-        attribute.structureInformationList?.forEach {
-            when (it.type) {
-                "BED_ROOM" -> {
-                    if (!roomString.isTextEmpty()) {
-                        roomString += ", "
-                    }
-
-                    roomString += context.resources.getString(R.string.label_bed_room) + if (it.count > 1) {
-                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
-                    } else ""
-                }
-
-                "IN_FLOOR_HEATING_ROOM" -> {
-                    if (!roomString.isTextEmpty()) {
-                        roomString += ", "
-                    }
-
-                    roomString += context.resources.getString(R.string.label_in_floor_heating_room) + if (it.count > 1) {
-                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
-                    } else ""
-                }
-
-                "LIVING_ROOM" -> {
-                    stringList += context.resources.getString(R.string.label_living_room) + if (it.count > 1) {
-                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
-                    } else ""
-                }
-
-                "KITCHEN" -> {
-                    stringList += context.resources.getString(R.string.label_kitchen) + if (it.count > 1) {
-                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
-                    } else ""
-                }
-
-                "REST_ROOM" -> {
-                    stringList += context.resources.getString(R.string.label_rest_room) + if (it.count > 1) {
-                        " ${it.count}${context.resources.getString(R.string.label_bed_count_end_string)}"
-                    } else ""
-                }
-
-                else -> {
-                    // do nothing
-                }
-            }
-        }
-
-        if (!roomString.isTextEmpty()) {
-            stringList.add(0, roomString)
-        }
-
-        if (titleText.isTextEmpty() && !stringList.isNotNullAndNotEmpty()) {
-            dataBinding.subInfoGroup.visibility = View.GONE
-            return
-        }
-
-        dataBinding.subInfoGridView.setData(titleText, DailyRoomInfoGridView.ItemType.NONE, stringList, true)
     }
 
     private fun setRoomBenefitInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, benefitList: MutableList<String>) {
