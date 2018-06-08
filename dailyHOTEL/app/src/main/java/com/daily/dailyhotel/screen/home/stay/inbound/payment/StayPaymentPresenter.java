@@ -651,7 +651,22 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 // 위의 리워드 스티커 여부와 정책 여부에 따라서 순서 및 단어가 바뀐다.
                 notifyRefundPolicyChanged();
 
-                if ((mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)//
+                if (mStayPayment.soldOut == true) // 솔드 아웃인 경우
+                {
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stay_stop_onsale)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+
+                    mAnalytics.onEventSoldOut(getActivity(), mStayName);
+                } else if ((mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)//
                     && (mNRD == false && StayRefundPolicy.STATUS_NRD.equalsIgnoreCase(stayRefundPolicy.refundPolicy)))
                 {
                     mCheckChangedPrice = true;
@@ -700,21 +715,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                                 onBackClick();
                             }
                         });
-                } else if (mStayPayment.soldOut == true) // 솔드 아웃인 경우
-                {
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
-
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stay_stop_onsale)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                onBackClick();
-                            }
-                        });
-
-                    mAnalytics.onEventSoldOut(getActivity(), mStayName);
                 } else if (DailyTextUtils.isTextEmpty(mStayPayment.mWarningMessage) == false)
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), mStayPayment.mWarningMessage//
