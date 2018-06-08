@@ -445,7 +445,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                                 room.index, room.amountInformation.discountTotal, room.name,
                                 bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
                                 bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
-                                false, it.baseInformation?.category,
+                                StayRefundPolicy.STATUS_NRD.equals(room.refundInformation.policy, true), it.baseInformation?.category,
                                 it.addressInformation?.latitude ?: 0.0,
                                 it.addressInformation?.longitude ?: 0.0,
                                 analytics.getStayPaymentAnalyticsParam(it, room)),

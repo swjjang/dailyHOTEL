@@ -126,7 +126,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     Coupon mSelectedCoupon;
     private String mTransportationType;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;
-    boolean mOverseas, mAgreedThirdPartyTerms;
+    boolean mNRD, mAgreedThirdPartyTerms;
     private boolean mGuestInformationVisible;
     UserSimpleInformation mUserSimpleInformation;
     private int mWaitingForBookingMessageType;
@@ -242,7 +242,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
-        mOverseas = intent.getBooleanExtra(StayPaymentActivity.INTENT_EXTRA_DATA_OVERSEAS, false);
+        mNRD = intent.getBooleanExtra(StayPaymentActivity.INTENT_EXTRA_DATA_NRD, false);
         mCategory = intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_CATEGORY);
         mRoomName = intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_ROOM_NAME);
 
@@ -272,7 +272,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mSelectedCoupon = null;
 
         getViewInterface().setDepositStickerVisible(false);
-        getViewInterface().setOverseas(mOverseas);
+        getViewInterface().setOverseas(false);
     }
 
     @Override
@@ -338,7 +338,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             outState.putString("paymentType", mPaymentType.name());
         }
 
-        outState.putBoolean("overseas", mOverseas);
+        outState.putBoolean("nrd", mNRD);
         outState.putInt("saleType", mSaleType);
         outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
         outState.putBoolean("guestInformationVisible", mGuestInformationVisible);
@@ -390,7 +390,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             mPaymentType = DailyBookingPaymentTypeView.PaymentType.EASY_CARD;
         }
 
-        mOverseas = savedInstanceState.getBoolean("overseas");
+        mNRD = savedInstanceState.getBoolean("nrd");
         mSaleType = savedInstanceState.getInt("saleType", NONE);
         mAgreedThirdPartyTerms = savedInstanceState.getBoolean("agreedThirdPartyTerms");
         mGuestInformationVisible = savedInstanceState.getBoolean("guestInformationVisible");
@@ -620,7 +620,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             @Override
             public void accept(StayRefundPolicy stayRefundPolicy) throws Exception
             {
-
                 if (mNeedOverwritePrice == true)
                 {
                     mNeedOverwritePrice = false;
@@ -638,10 +637,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                 notifyUserInformationChanged();
 
-                if (mOverseas == true)
-                {
-                    notifyGuestInformationChanged(getOverseasGustInformation(mUserSimpleInformation));
-                }
+                //                if (mOverseas == true)
+                //                {
+                //                    notifyGuestInformationChanged(getOverseasGustInformation(mUserSimpleInformation));
+                //                }
 
                 notifyCardEventChanged(mCommonDateTime);
                 notifyBonusEnabledChanged();
@@ -652,10 +651,29 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 // 위의 리워드 스티커 여부와 정책 여부에 따라서 순서 및 단어가 바뀐다.
                 notifyRefundPolicyChanged();
 
-                if (mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)
+                if ((mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)//
+                    && (mNRD == true && StayRefundPolicy.STATUS_NRD.equalsIgnoreCase(stayRefundPolicy.refundPolicy)))
                 {
                     mCheckChangedPrice = true;
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
+
+                    // 가격이 변동되고 nrd가 되어버린 경우
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price_nrd)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface)
+                            {
+                                onBackClick();
+                            }
+                        });
+
+                    mAnalytics.onEventChangedPrice(getActivity(), mStayName);
+                } else if (mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)
+                {
+                    mCheckChangedPrice = true;
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+
                     // 가격이 변동된 경우
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -668,15 +686,31 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         });
 
                     mAnalytics.onEventChangedPrice(getActivity(), mStayName);
+                } else if (mNRD == false && StayRefundPolicy.STATUS_NRD.equalsIgnoreCase(stayRefundPolicy.refundPolicy))
+                {
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+
+                    // 무료에서 NRD로 변경된 경우
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_nrd)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface)
+                            {
+                                onBackClick();
+                            }
+                        });
                 } else if (mStayPayment.soldOut == true) // 솔드 아웃인 경우
                 {
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stay_stop_onsale)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
-
+                                onBackClick();
                             }
                         });
 
@@ -1050,13 +1084,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         if (DailyTextUtils.isTextEmpty(mGuest.name) == true)
         {
-            if (mOverseas == true)
-            {
-                DailyToast.showToast(getActivity(), R.string.toast_msg_please_input_guest_typeoverseas, DailyToast.LENGTH_SHORT);
-            } else
-            {
-                DailyToast.showToast(getActivity(), R.string.toast_msg_please_input_guest, DailyToast.LENGTH_SHORT);
-            }
+            //            if (mOverseas == true)
+            //            {
+            //                DailyToast.showToast(getActivity(), R.string.toast_msg_please_input_guest_typeoverseas, DailyToast.LENGTH_SHORT);
+            //            } else
+            //            {
+            DailyToast.showToast(getActivity(), R.string.toast_msg_please_input_guest, DailyToast.LENGTH_SHORT);
+            //            }
 
             unLockAll();
             return;
@@ -1238,10 +1272,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         screenLock(true);
 
         // 입력된 내용을 저장한다.
-        if (mOverseas == true)
-        {
-            DailyUserPreference.getInstance(getActivity()).setOverseasInformation(mGuest.name, mGuest.phone, mGuest.email);
-        }
+        //        if (mOverseas == true)
+        //        {
+        //            DailyUserPreference.getInstance(getActivity()).setOverseasInformation(mGuest.name, mGuest.phone, mGuest.email);
+        //        }
 
         String couponCode = mSelectedCoupon != null ? mSelectedCoupon.couponCode : null;
 
@@ -1385,7 +1419,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     {
         try
         {
-            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId, mOverseas);
+            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId, false);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1414,7 +1448,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             }
         }
 
-        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
+        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), false, mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mRoomName, aggregationId, mStayPayment.waitingForBooking //
