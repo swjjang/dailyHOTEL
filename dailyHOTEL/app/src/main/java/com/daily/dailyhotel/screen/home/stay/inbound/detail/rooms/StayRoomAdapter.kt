@@ -133,7 +133,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         holder.dataBinding.root.setTag(R.id.blurView, holder.dataBinding.blurView)
 
         val margin = getLayoutMargin()
-        (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).apply {
+        (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).run {
             when (position) {
                 0 -> {
                     leftMargin = margin.toInt()

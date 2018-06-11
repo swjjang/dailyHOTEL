@@ -74,6 +74,10 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     val position = viewDataBinding.recyclerView.getChildAdapterPosition(view)
 
                     eventListener.onScrolled(position, true)
+
+                    if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+                        setInvisibleData(position)
+                    }
                 }
             })
 

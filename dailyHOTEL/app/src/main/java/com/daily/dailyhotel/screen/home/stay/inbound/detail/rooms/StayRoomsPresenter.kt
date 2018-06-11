@@ -159,6 +159,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             viewInterface.setRecyclerPosition(position)
             viewInterface.initInvisibleLayout(position)
             onScrolled(position, false)
+            viewInterface.setInvisibleData(position)
             unLockAll()
         }, {
             onHandleError(it)
@@ -274,7 +275,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
         viewInterface.setIndicatorText(position + 1)
         viewInterface.setBookingButtonText(position)
-        viewInterface.setInvisibleData(position)
+//        viewInterface.setInvisibleData(position)
 
         real.runTrue {
             (position in 0 until roomList.size).runFalse { return }
