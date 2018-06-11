@@ -174,13 +174,13 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         if (!room.benefit.isTextEmpty()) {
             benefitList.add(room.benefit)
         }
-        setRoomBenefitInformationView(dataBinding, benefitList)
+        setRoomBenefitInformationView(dataBinding.root, benefitList, false)
 
-        setRewardAndCouponInformationView(dataBinding, room.provideRewardSticker, room.hasUsableCoupon)
+        setRewardAndCouponInformationView(dataBinding.root, room.provideRewardSticker, room.hasUsableCoupon)
 
-        setCheckTimeInformationView(dataBinding, room.checkTimeInformation)
+        setCheckTimeInformationView(dataBinding.root, room.checkTimeInformation)
 
-        setRoomDescriptionInformationView(dataBinding, room.descriptionList)
+        setRoomDescriptionInformationView(dataBinding.root, room.descriptionList, false)
 
         setRoomAmenityInformationView(dataBinding, room.amenityList)
 
@@ -567,91 +567,108 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    private fun setRoomBenefitInformationView(dataBinding: ListRowStayRoomDataBinding, benefitList: MutableList<String>) {
+    fun setRoomBenefitInformationView(root: View, benefitList: MutableList<String>, largeView: Boolean) {
+        val roomBenefitGroup: View = root.findViewById(R.id.roomBenefitGroup) ?: return
+        val roomBenefitGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomBenefitGridView)
+
         if (benefitList.isEmpty()) {
-            dataBinding.roomBenefitGroup.visibility = View.GONE
+            roomBenefitGroup.visibility = View.GONE
             return
         }
 
-        dataBinding.roomBenefitGroup.visibility = View.VISIBLE
+        roomBenefitGroup.visibility = View.VISIBLE
 
-        dataBinding.roomBenefitGridView.columnCount = 1
-        dataBinding.roomBenefitGridView.setData(
-                context.resources.getString(R.string.label_stay_room_benefit_title)
-                , DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList, false)
+        roomBenefitGridView?.run {
+            columnCount = 1
+            setData(context.resources.getString(R.string.label_stay_room_benefit_title)
+                    , DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList, largeView)
+        }
     }
 
-    private fun setRewardAndCouponInformationView(dataBinding: ListRowStayRoomDataBinding, rewardable: Boolean, useCoupon: Boolean) {
-        if (rewardable || useCoupon) {
-            dataBinding.discountInfoGroup.visibility = View.VISIBLE
+    fun setRewardAndCouponInformationView(root: View, rewardAble: Boolean, useCoupon: Boolean) {
+        val discountInfoGroup: View = root.findViewById(R.id.discountInfoGroup) ?: return
+        val discountInfoTextView: DailyTextView? = root.findViewById(R.id.discountInfoTextView)
+
+        if (rewardAble || useCoupon) {
+            discountInfoGroup.visibility = View.VISIBLE
         } else {
-            dataBinding.discountInfoGroup.visibility = View.GONE
+            discountInfoGroup.visibility = View.GONE
             return
         }
 
-        var text = ""
-        val rewardString = context.resources.getString(R.string.label_stay_room_rewardable)
-        val couponString = context.resources.getString(R.string.label_stay_room_coupon_useable)
+        discountInfoTextView?.run {
+            var temp = ""
+            val rewardString = context.resources.getString(R.string.label_stay_room_rewardable)
+            val couponString = context.resources.getString(R.string.label_stay_room_coupon_useable)
 
-        if (rewardable) {
-            text = "  $rewardString"
-        }
-
-        if (useCoupon) {
-            if (!text.isTextEmpty()) {
-                text += " ${context.resources.getString(R.string.label_stay_room_reward_coupon_or)} "
+            if (rewardAble) {
+                temp = "  $rewardString"
             }
 
-            text += couponString
+            if (useCoupon) {
+                if (!temp.isTextEmpty()) {
+                    temp += " ${context.resources.getString(R.string.label_stay_room_reward_coupon_or)} "
+                }
+
+                temp += couponString
+            }
+
+            if (!temp.isTextEmpty()) {
+                temp += context.resources.getString(R.string.label_stay_room_end_description)
+            }
+
+            val spannableString = SpannableString(temp)
+
+            val rewardStart = temp.indexOf(rewardString)
+
+            if (rewardStart != -1) {
+                spannableString.setSpan(DailyImageSpan(context, R.drawable.r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_line_cfaae37)), rewardStart, rewardStart + rewardString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            val couponStart = temp.indexOf(couponString)
+            if (couponStart != -1) {
+                spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_cf27c7a)), couponStart, couponStart + couponString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            this.text = spannableString
         }
-
-        if (!text.isTextEmpty()) {
-            text += context.resources.getString(R.string.label_stay_room_end_description)
-        }
-
-        val spannableString = SpannableString(text)
-
-        val rewardStart = text.indexOf(rewardString)
-
-        if (rewardStart != -1) {
-            spannableString.setSpan(DailyImageSpan(context, R.drawable.r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_line_cfaae37)), rewardStart, rewardStart + rewardString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        val couponStart = text.indexOf(couponString)
-        if (couponStart != -1) {
-            spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_cf27c7a)), couponStart, couponStart + couponString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        dataBinding.discountInfoTextView.text = spannableString
     }
 
-    private fun setCheckTimeInformationView(dataBinding: ListRowStayRoomDataBinding, checkTimeInformation: StayDetail.CheckTimeInformation?) {
+    fun setCheckTimeInformationView(root: View, checkTimeInformation: StayDetail.CheckTimeInformation?) {
         if (checkTimeInformation == null) return
 
+        val checkTimeInfoLayout: View = root.findViewById(R.id.checkTimeInfoLayout) ?: return
+        val checkInTimeTextView: DailyTextView? = root.findViewById(R.id.checkInTimeTextView)
+        val checkOutTimeTextView: DailyTextView? = root.findViewById(R.id.checkOutTimeTextView)
+
         if (isTextEmpty(checkTimeInformation.checkIn, checkTimeInformation.checkOut)) {
-            dataBinding.checkTimeInfoLayout.visibility = View.GONE
+            checkTimeInfoLayout.visibility = View.GONE
             return
         }
 
-        dataBinding.checkTimeInfoLayout.visibility = View.VISIBLE
+        checkTimeInfoLayout.visibility = View.VISIBLE
 
-        dataBinding.checkInTimeTextView.text = checkTimeInformation.checkIn
-        dataBinding.checkOutTimeTextView.text = checkTimeInformation.checkOut
+        checkInTimeTextView?.text = checkTimeInformation.checkIn
+        checkOutTimeTextView?.text = checkTimeInformation.checkOut
     }
 
-    private fun setRoomDescriptionInformationView(dataBinding: ListRowStayRoomDataBinding, descriptionList: MutableList<String>?) {
+    fun setRoomDescriptionInformationView(root: View, descriptionList: MutableList<String>?, largeView: Boolean) {
+        val roomDescriptionGroup: View = root.findViewById(R.id.roomDescriptionGroup) ?: return
+        val roomDescriptionGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomDescriptionGridView)
+
         if (descriptionList == null || descriptionList.size == 0) {
-            dataBinding.roomDescriptionGroup.visibility = View.GONE
+            roomDescriptionGroup.visibility = View.GONE
             return
         }
 
-        dataBinding.roomDescriptionGroup.visibility = View.VISIBLE
+        roomDescriptionGroup.visibility = View.VISIBLE
 
-        dataBinding.roomDescriptionGridView.columnCount = 1
-        dataBinding.roomDescriptionGridView.setData(
-                context.resources.getString(R.string.label_stay_room_description_title)
-                , DailyRoomInfoGridView.ItemType.DOT, descriptionList, false)
+        roomDescriptionGridView?.run {
+            columnCount = 1
+            setData(context.resources.getString(R.string.label_stay_room_description_title)
+                    , DailyRoomInfoGridView.ItemType.DOT, descriptionList, largeView)
+        }
     }
 
     private fun setRoomAmenityInformationView(dataBinding: ListRowStayRoomDataBinding, amenityList: MutableList<String>) {
