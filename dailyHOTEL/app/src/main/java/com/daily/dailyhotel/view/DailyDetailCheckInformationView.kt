@@ -36,6 +36,8 @@ class DailyDetailCheckInformationView : LinearLayout {
     }
 
     fun setInformation(information: StayDetail.CheckInformation) {
+        removeAllViews()
+
         if (information.contentList.isNotNullAndNotEmpty()) {
             createInformationView(information, information.waitingForBooking)
 
