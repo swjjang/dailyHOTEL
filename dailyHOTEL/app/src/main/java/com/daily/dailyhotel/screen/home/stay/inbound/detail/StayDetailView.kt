@@ -607,6 +607,11 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
+    override fun setLowestPriceRoom(discountAveragePrice: Int, nightsEnabled: Boolean) {
+        viewDataBinding.baseInformationView.setPrice(DecimalFormat("###,##0").format(discountAveragePrice))
+        viewDataBinding.baseInformationView.setNightsEnabled(nightsEnabled)
+    }
+
     override fun setTrueReviewInformationVisible(visible: Boolean) {
         scrollLayoutDataBinding?.let {
             val flag = if (visible) View.VISIBLE else View.GONE
