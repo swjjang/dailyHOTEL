@@ -716,7 +716,8 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                     android.support.v4.util.Pair[] pairs = { //
                         android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
                         , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
-                        , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
+                        , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view)) //
+                        , android.support.v4.util.Pair.create(dataBinding.transitionRoundTopView, mContext.getResources().getString(R.string.transition_round_top_view))};
 
                     mItemClickListener.onItemClick(v, pairs);
                 }
@@ -737,7 +738,8 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                             android.support.v4.util.Pair[] pairs = { //
                                 android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
                                 , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
-                                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
+                                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view)) //
+                                , android.support.v4.util.Pair.create(dataBinding.transitionRoundTopView, mContext.getResources().getString(R.string.transition_round_top_view))};
 
                             Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(70);

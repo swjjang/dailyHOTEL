@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import com.daily.base.util.DailyTextUtils;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.twoheart.dailyhotel.R;
 
 public class PlaceRenderer
 {

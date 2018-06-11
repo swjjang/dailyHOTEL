@@ -40,6 +40,14 @@
             app:layout_constraintTop_toTopOf="@+id/contentImageView"
             app:layout_constraintBottom_toBottomOf="@+id/contentImageView"/>
 
+        <View
+            android:id="@+id/transitionRoundTopView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/contentImageView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
         <ImageView
             android:id="@+id/soldoutView"
             android:layout_width="0dp"
