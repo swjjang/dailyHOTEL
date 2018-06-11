@@ -160,7 +160,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
         setRefundInformationView(dataBinding.root, room.refundInformation)
 
-        setBaseInformationGridView(dataBinding.root, room)
+        setBaseInformationView(dataBinding.root, room)
 
         setAttributeInformationView(dataBinding.root, room.attributeInformation)
 
@@ -353,7 +353,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    fun setBaseInformationGridView(root: View, room: Room) {
+    fun setBaseInformationView(root: View, room: Room) {
         val baseInfoGroup: View? = root.findViewById(R.id.baseInfoGroup)
         baseInfoGroup?.run {
             val personsInformation: Room.PersonsInformation? = room.personsInformation

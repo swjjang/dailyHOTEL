@@ -169,34 +169,36 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <View
-            android:id="@+id/baseInfoGridLine"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/baseInfoGroup"
             android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:background="@color/default_line_cf0f0f0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/defaultInfoLayout"/>
-
-        <android.support.v7.widget.GridLayout
-            android:id="@+id/baseInfoGridLayout"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:paddingBottom="12dp"
-            android:paddingTop="2dp"
-            app:columnCount="3"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/baseInfoGridLine"
-            app:orientation="horizontal">
+            app:layout_constraintTop_toBottomOf="@+id/defaultInfoLayout">
+
+            <View
+                android:id="@+id/baseInfoLine"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:background="@color/default_line_cf0f0f0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/personInformationLayout"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:layout_marginTop="2dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/bedInformationLayout"
+                app:layout_constraintTop_toBottomOf="@+id/baseInfoLine">
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/personIconImageView"
@@ -245,7 +247,9 @@
                 android:id="@+id/bedInformationLayout"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                app:layout_constraintLeft_toRightOf="@+id/personInformationLayout"
+                app:layout_constraintRight_toLeftOf="@+id/squareInformationLayout"
+                app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/bedIconImageView"
@@ -270,7 +274,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/bedIconImageView"
                     dailyFont:style="Medium"/>
 
-
                 <com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
                     android:id="@+id/bedDescriptionLayout"
                     android:layout_width="0dp"
@@ -292,7 +295,9 @@
                 android:id="@+id/squareInformationLayout"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                app:layout_constraintLeft_toRightOf="@+id/bedInformationLayout"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/squareIconImageView"
@@ -353,13 +358,8 @@
                     dailyFont:style="Medium"/>
 
             </android.support.constraint.ConstraintLayout>
-        </android.support.v7.widget.GridLayout>
 
-        <android.support.constraint.Group
-            android:id="@+id/baseInfoGroup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="baseInfoGridLine, baseInfoGridLayout"/>
+        </android.support.constraint.ConstraintLayout>
 
         <View
             android:id="@+id/subInfoGridLine"
@@ -370,7 +370,7 @@
             android:background="@color/default_line_cf0f0f0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/baseInfoGridLayout"/>
+            app:layout_constraintTop_toBottomOf="@+id/baseInfoGroup"/>
 
         <com.daily.dailyhotel.view.DailyRoomInfoGridView
             android:id="@+id/subInfoGridView"

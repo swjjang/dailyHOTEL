@@ -48,6 +48,8 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
         drawable.getPadding(rect)
 
         horizontalPadding = rect.left + rect.right
+
+        orientation = LinearLayout.VERTICAL
     }
 
     private val paint = Paint()

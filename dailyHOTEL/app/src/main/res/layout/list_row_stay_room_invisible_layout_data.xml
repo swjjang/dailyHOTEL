@@ -187,10 +187,11 @@
                     android:id="@+id/baseInfoGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:paddingBottom="15dp">
 
                     <View
-                        android:id="@+id/baseInfoGridLine"
+                        android:id="@+id/baseInfoLine"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginLeft="20dp"
@@ -200,180 +201,175 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
 
-                    <android.support.v7.widget.GridLayout
-                        android:id="@+id/baseInfoGridLayout"
-                        android:layout_width="wrap_content"
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/personInformationLayout"
+                        android:layout_width="95dp"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
-                        android:paddingTop="5dp"
-                        app:columnCount="3"
+                        android:layout_marginTop="5dp"
+                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/bedInformationLayout"
+                        app:layout_constraintTop_toBottomOf="@+id/baseInfoLine">
+
+                        <com.daily.base.widget.DailyImageView
+                            android:id="@+id/personIconImageView"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/personTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:textColor="@color/default_text_c4d4d4d"
+                            android:textSize="12dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/personIconImageView"
+                            dailyFont:style="Medium"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/personDescriptionTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/shape_rect_stay_room_grid_description_background"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:textColor="@color/default_text_c929292"
+                            android:textSize="11dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/personTitleTextView"
+                            dailyFont:style="Medium"/>
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/bedInformationLayout"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/personInformationLayout"
+                        app:layout_constraintRight_toLeftOf="@+id/squareInformationLayout"
+                        app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
+
+                        <com.daily.base.widget.DailyImageView
+                            android:id="@+id/bedIconImageView"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/bedTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:text="@string/label_stay_room_bed_type_title"
+                            android:textColor="@color/default_text_c4d4d4d"
+                            android:textSize="12dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/bedIconImageView"
+                            dailyFont:style="Medium"/>
+
+
+                        <com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
+                            android:id="@+id/bedDescriptionLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView"/>
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/squareInformationLayout"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/bedInformationLayout"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/baseInfoGridLine"
-                        app:orientation="horizontal">
+                        app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
 
-                        <android.support.constraint.ConstraintLayout
-                            android:id="@+id/personInformationLayout"
-                            android:layout_width="95dp"
+                        <com.daily.base.widget.DailyImageView
+                            android:id="@+id/squareIconImageView"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/vector_ic_detail_item_floorspace"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/squareTitleTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/white">
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:textColor="@color/default_text_c4d4d4d"
+                            android:textSize="12dp"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@+id/squareIconTextView"
+                            app:layout_constraintTop_toBottomOf="@+id/squareIconImageView"
+                            dailyFont:style="Medium"/>
 
-                            <com.daily.base.widget.DailyImageView
-                                android:id="@+id/personIconImageView"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginTop="10dp"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"/>
-
-                            <com.daily.base.widget.DailyTextView
-                                android:id="@+id/personTitleTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:freezesText="true"
-                                android:gravity="center"
-                                android:textColor="@color/default_text_c4d4d4d"
-                                android:textSize="12dp"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/personIconImageView"
-                                dailyFont:style="Medium"/>
-
-                            <com.daily.base.widget.DailyTextView
-                                android:id="@+id/personDescriptionTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="7dp"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
-                                android:layout_marginTop="5dp"
-                                android:background="@drawable/shape_rect_stay_room_grid_description_background"
-                                android:freezesText="true"
-                                android:gravity="center"
-                                android:textColor="@color/default_text_c929292"
-                                android:textSize="11dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/personTitleTextView"
-                                dailyFont:style="Medium"/>
-
-                        </android.support.constraint.ConstraintLayout>
-
-                        <android.support.constraint.ConstraintLayout
-                            android:id="@+id/bedInformationLayout"
-                            android:layout_width="95dp"
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/squareIconTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/white">
+                            android:layout_marginTop="1dp"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:text="2"
+                            android:textColor="@color/default_text_c4d4d4d"
+                            android:textSize="5dp"
+                            app:layout_constraintLeft_toRightOf="@+id/squareTitleTextView"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/squareTitleTextView"
+                            dailyFont:style="Medium"/>
 
-                            <com.daily.base.widget.DailyImageView
-                                android:id="@+id/bedIconImageView"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginTop="10dp"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"/>
-
-                            <com.daily.base.widget.DailyTextView
-                                android:id="@+id/bedTitleTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:freezesText="true"
-                                android:gravity="center"
-                                android:text="@string/label_stay_room_bed_type_title"
-                                android:textColor="@color/default_text_c4d4d4d"
-                                android:textSize="12dp"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/bedIconImageView"
-                                dailyFont:style="Medium"/>
-
-
-                            <com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
-                                android:id="@+id/bedDescriptionLayout"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="7dp"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:orientation="vertical"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView"/>
-
-                        </android.support.constraint.ConstraintLayout>
-
-                        <android.support.constraint.ConstraintLayout
-                            android:id="@+id/squareInformationLayout"
-                            android:layout_width="95dp"
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/squareDescriptionTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/white">
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/shape_rect_stay_room_grid_description_background"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:textColor="@color/default_text_c929292"
+                            android:textSize="11dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/squareTitleTextView"
+                            dailyFont:style="Medium"/>
 
-                            <com.daily.base.widget.DailyImageView
-                                android:id="@+id/squareIconImageView"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginTop="10dp"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/vector_ic_detail_item_floorspace"/>
-
-                            <com.daily.base.widget.DailyTextView
-                                android:id="@+id/squareTitleTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:freezesText="true"
-                                android:gravity="center"
-                                android:textColor="@color/default_text_c4d4d4d"
-                                android:textSize="12dp"
-                                app:layout_constraintHorizontal_chainStyle="packed"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toLeftOf="@+id/squareIconTextView"
-                                app:layout_constraintTop_toBottomOf="@+id/squareIconImageView"
-                                dailyFont:style="Medium"/>
-
-                            <com.daily.base.widget.DailyTextView
-                                android:id="@+id/squareIconTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
-                                android:freezesText="true"
-                                android:gravity="center"
-                                android:text="2"
-                                android:textColor="@color/default_text_c4d4d4d"
-                                android:textSize="5dp"
-                                app:layout_constraintLeft_toRightOf="@+id/squareTitleTextView"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/squareTitleTextView"
-                                dailyFont:style="Medium"/>
-
-                            <com.daily.base.widget.DailyTextView
-                                android:id="@+id/squareDescriptionTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="7dp"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="4dp"
-                                android:layout_marginTop="5dp"
-                                android:background="@drawable/shape_rect_stay_room_grid_description_background"
-                                android:freezesText="true"
-                                android:gravity="center"
-                                android:textColor="@color/default_text_c929292"
-                                android:textSize="11dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/squareTitleTextView"
-                                dailyFont:style="Medium"/>
-
-                        </android.support.constraint.ConstraintLayout>
-                    </android.support.v7.widget.GridLayout>
+                    </android.support.constraint.ConstraintLayout>
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout

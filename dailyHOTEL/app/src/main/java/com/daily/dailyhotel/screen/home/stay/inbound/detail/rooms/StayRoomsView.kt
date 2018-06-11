@@ -192,7 +192,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         listAdapter.setRefundInformationView(dataBinding.root, room.refundInformation)
 
-        listAdapter.setBaseInformationGridView(dataBinding.root, room)
+        listAdapter.setBaseInformationView(dataBinding.root, room)
 
         listAdapter.setAttributeInformationView(dataBinding.root, room.attributeInformation, true)
 

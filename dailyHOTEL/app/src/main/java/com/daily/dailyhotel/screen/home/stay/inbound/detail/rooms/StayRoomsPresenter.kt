@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.view.View
 import android.widget.CompoundButton
+import com.daily.base.util.ExLog
 import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.*
@@ -12,7 +13,6 @@ import com.daily.dailyhotel.parcel.RoomParcel
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
-import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.runFalse
@@ -272,6 +272,8 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         (centerPosition == position).runTrue { return }
 
         centerPosition = position
+
+        ExLog.d("sam - onScrolled , position : $position")
 
         viewInterface.setIndicatorText(position + 1)
         viewInterface.setBookingButtonText(position)
