@@ -111,6 +111,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     {
         super.onStart();
 
+        if (mPlaceType == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         switch (mPlaceType)
         {
             case HOTEL:
