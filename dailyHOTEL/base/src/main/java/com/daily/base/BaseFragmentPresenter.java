@@ -168,36 +168,71 @@ public abstract class BaseFragmentPresenter<T1 extends BaseFragment, T2 extends 
 
     protected void onHandleError(Throwable throwable)
     {
+        if (getActivityPresenter() == null)
+        {
+            return;
+        }
+
         getActivityPresenter().onHandleError(throwable);
     }
 
     protected boolean isLock()
     {
+        if (getActivityPresenter() == null)
+        {
+            return false;
+        }
+
         return getActivityPresenter().isLock();
     }
 
     protected boolean isScreenLock()
     {
+        if (getActivityPresenter() == null)
+        {
+            return false;
+        }
+
         return getActivityPresenter().isScreenLock();
     }
 
     protected boolean lock()
     {
+        if (getActivityPresenter() == null)
+        {
+            return false;
+        }
+
         return getActivityPresenter().lock();
     }
 
     protected void unLock()
     {
+        if (getActivityPresenter() == null)
+        {
+            return;
+        }
+
         getActivityPresenter().unLock();
     }
 
     protected void screenLock(boolean showProgress)
     {
+        if (getActivityPresenter() == null)
+        {
+            return;
+        }
+
         getActivityPresenter().screenLock(showProgress);
     }
 
     protected void screenUnLock()
     {
+        if (getActivityPresenter() == null)
+        {
+            return;
+        }
+
         getActivityPresenter().screenUnLock();
     }
 
