@@ -36,6 +36,8 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
         initLayout(context)
     }
 
+    var maxWidth = -1
+
     private fun initLayout(context: Context?) {
         if (context == null) return
 
@@ -50,6 +52,14 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
         horizontalPadding = rect.left + rect.right
 
         orientation = LinearLayout.VERTICAL
+
+        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                viewTreeObserver.removeOnPreDrawListener(this)
+                maxWidth = measuredWidth - horizontalPadding
+                return true
+            }
+        })
     }
 
     private val paint = Paint()
@@ -60,7 +70,6 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
     private var itemTopMargin: Int = 0
     private lateinit var fontTypeFace: Typeface
 
-
     fun setData(list: MutableList<String>?) {
         removeAllViews()
 
@@ -69,39 +78,17 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
             return
         }
 
-        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                viewTreeObserver.removeOnPreDrawListener(this)
+        paint.textSize = ScreenUtils.dpToPx(context, itemTextSize.toDouble()).toFloat()
+        paint.typeface = fontTypeFace
 
-                val maxWidth = measuredWidth - horizontalPadding
+        var lineCount = 0
+        var temp = ""
 
-                paint.textSize = ScreenUtils.dpToPx(context, itemTextSize.toDouble()).toFloat()
-                paint.typeface = fontTypeFace
+        list.forEachIndexed { _, string ->
+            val addString = if (temp.isTextEmpty()) string else separator + string
 
-                var lineCount = 0
-                var temp = ""
-
-                list.forEachIndexed { _, string ->
-                    val addString = if (temp.isTextEmpty()) string else separator + string
-
-                    val textWidth = paint.measureText(temp + addString)
-                    if (textWidth > maxWidth) {
-                        (!temp.isTextEmpty()).runTrue {
-                            val textView = getItemTextView(lineCount > 0)
-                            lineCount++
-
-                            textView.text = temp
-                            temp = ""
-
-                            addView(textView)
-                        }
-
-                        temp = addString.removePrefix(separator)
-                    } else {
-                        temp += addString
-                    }
-                }
-
+            val textWidth = paint.measureText(temp + addString)
+            if (textWidth > maxWidth) {
                 (!temp.isTextEmpty()).runTrue {
                     val textView = getItemTextView(lineCount > 0)
                     lineCount++
@@ -112,9 +99,21 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
                     addView(textView)
                 }
 
-                return false
+                temp = addString.removePrefix(separator)
+            } else {
+                temp += addString
             }
-        })
+        }
+
+        (!temp.isTextEmpty()).runTrue {
+            val textView = getItemTextView(lineCount > 0)
+            lineCount++
+
+            textView.text = temp
+            temp = ""
+
+            addView(textView)
+        }
     }
 
     private fun getItemTextView(showTopMargin: Boolean): DailyTextView {
