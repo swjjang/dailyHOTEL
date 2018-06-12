@@ -185,8 +185,13 @@ class DailyDetailRoomView : ConstraintLayout {
 
     private fun getPersons(fixed: Int, extra: Int, extraCharge: Boolean): CharSequence? {
         return if (fixed > 0) {
-            val text = context.getString(R.string.label_stay_detail_person_information,
-                    fixed, fixed + extra, if (extraCharge) context.getString(R.string.label_pay) else context.getString(R.string.label_free))
+            val text = if (extra > 0) {
+                context.getString(R.string.label_stay_detail_person_information,
+                        fixed, fixed + extra, if (extraCharge) context.getString(R.string.label_pay) else context.getString(R.string.label_free))
+            } else {
+                context.getString(R.string.label_stay_detail_person_information_empty_charge, fixed, fixed)
+            }
+
             val startIndex = text.indexOf('돋')
 
             SpannableStringBuilder(text).apply {
