@@ -783,7 +783,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     {
         int lastIndex = mMainFragmentManager.getLastIndexFragment();
 
-        if (lastIndex == MainFragmentManager.INDEX_HOME_FRAGMENT)
+        if (mIsInitialization == true || lastIndex == MainFragmentManager.INDEX_HOME_FRAGMENT)
         {
             addCompositeDisposable(mBackButtonHandler.onBackPressed().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
