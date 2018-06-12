@@ -310,8 +310,11 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
 
         discountPriceUnitTextView?.run {
-            val discountPriceUnitText = context.resources.getString(R.string.currency) + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else ""
-            text = discountPriceUnitText
+            val currencyString = context.resources.getString(R.string.currency)
+            val discountPriceUnitSpan = SpannableString(currencyString + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else "")
+
+            discountPriceUnitSpan.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_c323232)), 0, currencyString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text = discountPriceUnitSpan
         }
     }
 
