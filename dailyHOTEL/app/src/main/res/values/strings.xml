@@ -1032,6 +1032,7 @@
     <string name="label_detail_download_coupon">%1$s 쿠폰 다운받기</string>
     <string name="label_stay_detail_show_more_rooms">%1$d개 객실 더보기</string>
     <string name="label_stay_detail_include_person_breakfast">조식 %1$d인 포함</string>
+    <string name="label_stay_detail_person_information_empty_charge">%1$d인 기준돋최대 %2$d인</string>
     <string name="label_stay_detail_person_information">%1$d인 기준돋최대 %2$d인 (%3$s)</string>
     <string name="label_stay_detail_room_total_count">객실수: %1$d개</string>
     <string name="label_detail_daily_comment">데일리’s comment</string>
