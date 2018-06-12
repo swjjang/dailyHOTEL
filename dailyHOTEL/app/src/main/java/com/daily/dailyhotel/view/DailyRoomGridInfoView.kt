@@ -40,7 +40,7 @@ class DailyRoomInfoGridView : LinearLayout {
         private const val LARGE_TITLE_TEXT_SIZE = 18.0
         private const val LARGE_ICON_DRAW_PADDING = 10.0
         private const val LARGE_ITEM_TEXT_SIZE = 14.0
-        private const val LARGE_LINE_MARGIN_TOP = 15.0
+        private const val LARGE_LINE_MARGIN_TOP = 17.0
     }
 
     enum class ItemType {
