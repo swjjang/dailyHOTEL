@@ -390,7 +390,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             imageRoundRadius = minImageRadius
         }
 
-        var forceUpdate = Math.abs(startTransY - toTransY) >= checkValue
+        val forceUpdate = Math.abs(startTransY - toTransY) >= checkValue
 
         rootView.translationY = toTransY
         rootView.scaleX = toScaleX

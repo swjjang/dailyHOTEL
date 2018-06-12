@@ -977,11 +977,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         View simpleDraweeView = view.findViewById(R.id.contentImageView);
                         View gradientTopView = view.findViewById(R.id.gradientTopView);
                         View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+                        View transitionRoundTopView = view.findViewById(R.id.transitionRoundTopView);
 
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity//
                             , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
                             , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
-                            , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                            , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)) //
+                            , android.support.v4.util.Pair.create(transitionRoundTopView, getString(R.string.transition_round_top_view)));
 
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else

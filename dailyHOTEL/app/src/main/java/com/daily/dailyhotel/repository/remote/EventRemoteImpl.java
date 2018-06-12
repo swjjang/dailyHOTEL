@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;

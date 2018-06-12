@@ -1475,7 +1475,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                     String endLunchTime = lunchTimes[1];
 
                     String operatingTimeMessage = getString(R.string.dialog_msg_call) //
-                        + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
+                        + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour) + "\n" + getString(R.string.message_consult03, startLunchTime, endLunchTime);
 
                     showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
                         getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //

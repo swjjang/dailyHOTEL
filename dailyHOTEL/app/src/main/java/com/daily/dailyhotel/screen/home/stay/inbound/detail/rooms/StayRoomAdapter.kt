@@ -477,7 +477,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             return
         }
 
-        subInfoGridView?.run {
+        subInfoGridView.run {
             val roomType: StayRoomAdapter.RoomType? = try {
                 StayRoomAdapter.RoomType.valueOf(attribute.roomStructure)
             } catch (e: Exception) {

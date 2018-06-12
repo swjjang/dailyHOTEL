@@ -494,11 +494,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             stayDetail
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({ stayDetail ->
+            viewInterface.initializedScrollLayout()
+
             if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled && stayDetail != null) {
                 viewInterface.startRewardStickerAnimation()
             }
-
-            viewInterface.initializedScrollLayout()
 
             notifyDetailDataSetChanged()
             notifyWishDataSetChanged()
@@ -1345,10 +1345,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             val hasPrice = if (listViewPrice == StayDetailActivity.NONE_PRICE) {
                 true
             } else {
-                stayDetail.roomInformation?.roomList?.any { listViewPrice == it.amountInformation.discountAverage }
+                getFilteredRoomList(stayDetail.roomInformation?.roomList, bedTypeFilter, facilitiesFilter).any { listViewPrice == it.amountInformation.discountAverage }
             }
 
-            if (hasPrice != true) {
+            if (!hasPrice) {
                 setResult(BaseActivity.RESULT_CODE_REFRESH,
                         Intent().putExtra(com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE, true))
 
@@ -1427,6 +1427,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             viewInterface.setRoomFilterInformation(spannableString, bedTypeFilter.size + facilitiesFilter.size)
             viewInterface.setRoomList(filteredRoomList)
+        }
+
+        roomList?.let {
+            viewInterface.setLowestPriceRoom(getLowestPriceRoom(it, bedTypeFilter, facilitiesFilter), bookDateTime.nights > 1)
         }
     }
 
@@ -1511,6 +1515,14 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         }
 
         return filteredRoomSet.toList()
+    }
+
+    private fun getLowestPriceRoom(roomList: List<Room>, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): Int {
+        val filteredRoomList = getFilteredRoomList(roomList, bedTypeFilter, facilitiesFilter).sortedWith(Comparator<Room> { room1, room2 ->
+            room1.amountInformation.discountAverage - room2.amountInformation.discountAverage
+        })
+
+        return if (filteredRoomList.isEmpty()) roomList[0].amountInformation.discountAverage else filteredRoomList[0].amountInformation.discountAverage
     }
 
     private fun getRoomFilterCount(roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): Int {

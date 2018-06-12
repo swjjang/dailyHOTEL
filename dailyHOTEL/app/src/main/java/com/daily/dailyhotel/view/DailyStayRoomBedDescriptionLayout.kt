@@ -82,7 +82,7 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
                 var temp = ""
 
                 list.forEachIndexed { _, string ->
-                    var addString = if (temp.isTextEmpty()) string else separator + string
+                    val addString = if (temp.isTextEmpty()) string else separator + string
 
                     val textWidth = paint.measureText(temp + addString)
                     if (textWidth > maxWidth) {

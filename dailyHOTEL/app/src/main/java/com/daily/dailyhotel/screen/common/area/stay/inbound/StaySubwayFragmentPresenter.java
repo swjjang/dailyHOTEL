@@ -382,7 +382,7 @@ public class StaySubwayFragmentPresenter extends BasePagerFragmentPresenter<Stay
     {
         StaySubwayAreaGroup areaGroup = getAreaGroup(groupPosition);
 
-        if (areaGroup == null || area == null)
+        if (areaGroup == null || area == null || getFragment() == null || getFragment().getFragmentEventListener() == null)
         {
             return;
         }
