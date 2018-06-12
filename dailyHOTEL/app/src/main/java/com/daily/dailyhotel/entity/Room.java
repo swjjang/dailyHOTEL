@@ -105,14 +105,14 @@ public class Room
             }
 
             boolean isEmptyDescriptionList = false;
-            if (descriptionList == null || descriptionList.size() == 0) {
+            if (descriptionList == null || descriptionList.size() == 0)
+            {
                 isEmptyDescriptionList = true;
             }
 
             return isEmptyPersonInformationList //
                 && (extraInformation == null || extraInformation.isAllHidden()) //
-                && (consecutiveInformation == null || !consecutiveInformation.enable)
-                && isEmptyDescriptionList;
+                && (consecutiveInformation == null || !consecutiveInformation.enable) && isEmptyDescriptionList;
         }
 
         public static class ConsecutiveInformation

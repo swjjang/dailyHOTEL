@@ -7,7 +7,6 @@ import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ExLog
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference
 import com.twoheart.dailyhotel.firebase.model.SplashDelegate
-import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before

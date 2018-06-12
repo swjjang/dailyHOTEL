@@ -1,9 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.preview
 
-import android.support.test.InstrumentationRegistry
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import android.text.SpannableStringBuilder
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -14,10 +12,10 @@ import kotlin.test.assertTrue
 @RunWith(AndroidJUnit4::class)
 class StayPreviewPresenterTest {
 
-    private lateinit var presenter : StayPreviewPresenter
+    private lateinit var presenter: StayPreviewPresenter
 
     @Rule
-    lateinit var activityTestRule : ActivityTestRule<StayPreviewActivity>
+    lateinit var activityTestRule: ActivityTestRule<StayPreviewActivity>
 
     @Before
     fun setUp() {
