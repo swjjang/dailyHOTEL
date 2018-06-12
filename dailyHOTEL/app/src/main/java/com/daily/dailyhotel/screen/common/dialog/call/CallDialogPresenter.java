@@ -267,7 +267,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
         String endLunchTime = lunchTimes[1];
 
         String message = getString(R.string.dialog_msg_call) //
-            + "\n" + getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
+            + "\n" + getString(R.string.message_consult02, startHour, endHour) + "\n" + getString(R.string.message_consult03, startLunchTime, endLunchTime);
 
         getViewInterface().showCallDialog(message, new DialogInterface.OnCancelListener()
         {

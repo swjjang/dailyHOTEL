@@ -1522,7 +1522,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             room1.amountInformation.discountAverage - room2.amountInformation.discountAverage
         })
 
-        return if (filteredRoomList.isEmpty()) roomList.get(0).amountInformation.discountAverage else filteredRoomList.get(0).amountInformation.discountAverage
+        return if (filteredRoomList.isEmpty()) roomList[0].amountInformation.discountAverage else filteredRoomList[0].amountInformation.discountAverage
     }
 
     private fun getRoomFilterCount(roomList: List<Room>?, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): Int {
