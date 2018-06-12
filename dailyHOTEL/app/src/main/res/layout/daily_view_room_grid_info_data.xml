@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <merge
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/default_text_c4d4d4d"
                 android:textSize="16dp"
-                dailyFont:style="Medium" />
+                dailyFont:style="Medium"/>
 
         </FrameLayout>
 
@@ -29,14 +29,14 @@
             android:id="@+id/gridLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:columnCount="1" />
+            app:columnCount="1"/>
 
         <android.support.v7.widget.GridLayout
             android:id="@+id/moreGridLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:columnCount="1" />
+            app:columnCount="1"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/moreTextView"
@@ -48,7 +48,7 @@
             android:text="@string/label_more"
             android:textColor="@color/default_text_ceb2135"
             android:textSize="14dp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
     </merge>
 </layout>

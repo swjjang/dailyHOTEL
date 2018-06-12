@@ -132,7 +132,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         holder.rootView.setTag(R.id.blurView, blurView)
 
         val margin = getLayoutMargin()
-        ( holder.rootView.layoutParams as RecyclerView.LayoutParams).run {
+        (holder.rootView.layoutParams as RecyclerView.LayoutParams).run {
             when (position) {
                 0 -> {
                     leftMargin = margin.toInt()
@@ -180,12 +180,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         setCheckTimeInformationView(holder.rootView, room.checkTimeInformation)
 
         setRoomDescriptionInformationView(holder.rootView, room.descriptionList, false)
-
-        setRoomAmenityInformationView(holder.rootView, room.amenityList, false)
-
-        setRoomChargeInformationView(holder.rootView, room.roomChargeInformation, false)
-
-        setNeedToKnowInformationView(holder.rootView, room.needToKnowList, false)
     }
 
     fun setImageInformationView(root: View, position: Int, room: Room) {
@@ -840,7 +834,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    fun getPersonRangeText(minAge: Int, maxAge: Int): String {
+    private fun getPersonRangeText(minAge: Int, maxAge: Int): String {
         return if (minAge == -1 && maxAge == -1) {
             ""
         } else if (minAge != -1 && maxAge != -1) {
@@ -852,7 +846,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    fun getExtraChargePrice(price: Int): String {
+    private fun getExtraChargePrice(price: Int): String {
         if (price <= 0) {
             return context.resources.getString(R.string.label_free)
         }
@@ -860,7 +854,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         return DailyTextUtils.getPriceFormat(context, price, false)
     }
 
-    fun getLayoutWidth(): Float {
+    private fun getLayoutWidth(): Float {
         return ScreenUtils.getScreenWidth(context) * MENU_WIDTH_RATIO
     }
 
