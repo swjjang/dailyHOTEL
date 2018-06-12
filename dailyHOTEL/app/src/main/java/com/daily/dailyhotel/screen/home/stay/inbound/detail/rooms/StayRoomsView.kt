@@ -14,14 +14,17 @@ import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
+import android.widget.LinearLayout
 import com.daily.base.BaseDialogView
 import com.daily.base.util.*
+import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.util.isNotNullAndNotEmpty
@@ -29,10 +32,11 @@ import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
+import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.generic.RoundingParams
+import com.facebook.drawee.view.SimpleDraweeView
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
-import com.twoheart.dailyhotel.databinding.ListRowStayRoomInvisibleLayoutDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -74,6 +78,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     val position = viewDataBinding.recyclerView.getChildAdapterPosition(view)
 
                     eventListener.onScrolled(position, true)
+
+                    ExLog.d("sam - onScrollStateChanged : newState : $newState, position : $position")
 
                     if (RecyclerView.SCROLL_STATE_IDLE == newState) {
                         setInvisibleData(position)
@@ -172,7 +178,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
     private fun setRecyclerScrollEnabled() {
         val layoutManager = viewDataBinding.recyclerView.layoutManager as ZoomCenterLayoutManager
-        if (viewDataBinding.invisibleLayout?.root?.visibility == View.VISIBLE) {
+        if (viewDataBinding.invisibleLayout?.visibility == View.VISIBLE) {
             layoutManager.setScrollEnabled(false)
         } else {
             layoutManager.setScrollEnabled(true)
@@ -182,19 +188,21 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     override fun setInvisibleData(position: Int) {
         val room = listAdapter.getItem(position) ?: return
 
-        val dataBinding: ListRowStayRoomInvisibleLayoutDataBinding = viewDataBinding.invisibleLayout!!
+        val rootView = viewDataBinding.invisibleLayout ?: return
 
-        listAdapter.setImageInformationView(dataBinding.root, position, room)
+        val roomNameTextView: DailyTextView? = rootView.findViewById(R.id.roomNameTextView)
 
-        dataBinding.roomNameTextView.text = room.name
+        listAdapter.setImageInformationView(rootView, position, room)
 
-        listAdapter.setAmountInformationView(dataBinding.root, room.amountInformation, true)
+        roomNameTextView?.text = room.name
 
-        listAdapter.setRefundInformationView(dataBinding.root, room.refundInformation)
+        listAdapter.setAmountInformationView(rootView, room.amountInformation, true)
 
-        listAdapter.setBaseInformationView(dataBinding.root, room)
+        listAdapter.setRefundInformationView(rootView, room.refundInformation)
 
-        listAdapter.setAttributeInformationView(dataBinding.root, room.attributeInformation, true)
+        listAdapter.setBaseInformationView(rootView, room)
+
+        listAdapter.setAttributeInformationView(rootView, room.attributeInformation, true)
 
         val benefitList = mutableListOf<String>()
 
@@ -206,145 +214,23 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         if (!room.benefit.isTextEmpty()) {
             benefitList.add(room.benefit)
         }
-        listAdapter.setRoomBenefitInformationView(dataBinding.root, benefitList, true)
+        listAdapter.setRoomBenefitInformationView(rootView, benefitList, true)
 
-        listAdapter.setRewardAndCouponInformationView(dataBinding.root, room.provideRewardSticker, room.hasUsableCoupon)
+        listAdapter.setRewardAndCouponInformationView(rootView, room.provideRewardSticker, room.hasUsableCoupon)
 
-        listAdapter.setCheckTimeInformationView(dataBinding.root, room.checkTimeInformation)
+        listAdapter.setCheckTimeInformationView(rootView, room.checkTimeInformation)
 
-        listAdapter.setRoomDescriptionInformationView(dataBinding.root, room.descriptionList, true)
+        listAdapter.setRoomDescriptionInformationView(rootView, room.descriptionList, true)
 
-        setRoomAmenityInformationView(dataBinding, room.amenityList)
+        listAdapter.setRoomAmenityInformationView(rootView, room.amenityList, true)
 
-        setRoomChargeInformationView(dataBinding, room.roomChargeInformation)
+        listAdapter.setRoomChargeInformationView(rootView, room.roomChargeInformation, true)
 
-        setNeedToKnowInformationView(dataBinding, room.needToKnowList)
+        listAdapter.setNeedToKnowInformationView(rootView, room.needToKnowList, true)
     }
 
     override fun showInvisibleLayout(): Boolean {
-        return viewDataBinding.invisibleLayout?.roomLayout?.visibility == View.VISIBLE
-    }
-
-    private fun setRoomAmenityInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, amenityList: MutableList<String>) {
-        if (amenityList.size == 0) {
-            dataBinding.roomAmenityGroup.visibility = View.GONE
-            return
-        }
-
-        val list = mutableListOf<String>()
-        amenityList.forEach {
-            val amenityType: StayRoomAdapter.RoomAmenityType? = try {
-                StayRoomAdapter.RoomAmenityType.valueOf(it)
-            } catch (e: Exception) {
-                null
-            }
-
-            amenityType?.run { list += amenityType.getName(context) }
-        }
-
-        if (list.isEmpty()) {
-            dataBinding.roomAmenityGroup.visibility = View.GONE
-            return
-        }
-
-        dataBinding.roomAmenityGroup.visibility = View.VISIBLE
-        dataBinding.roomAmenityGridView.columnCount = 2
-        dataBinding.roomAmenityGridView.setData(
-                context.resources.getString(R.string.label_stay_room_amenity_title)
-                , DailyRoomInfoGridView.ItemType.DOT, list, true)
-    }
-
-    private fun setRoomChargeInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, info: Room.ChargeInformation?) {
-        if (info == null || info.isAllHidden) {
-            dataBinding.extraChargeLayout.visibility = View.GONE
-            return
-        }
-
-        if (!info.extraPersonInformationList.isNotNullAndNotEmpty()) {
-            dataBinding.extraChargePersonTableLayout.visibility = View.GONE
-        } else {
-            dataBinding.extraChargePersonTableLayout.visibility = View.VISIBLE
-
-            dataBinding.extraChargePersonTableLayout.setTitleText(R.string.label_stay_room_extra_charge_person_title)
-            dataBinding.extraChargePersonTableLayout.setTitleTextSize(16f)
-            dataBinding.extraChargePersonTableLayout.setTitleVisible(true)
-            dataBinding.extraChargePersonTableLayout.clearTableLayout()
-
-            info.extraPersonInformationList.forEach {
-                var title = it.title
-
-                listAdapter.getPersonRangeText(it.minAge, it.maxAge).letNotEmpty { title += " ($it)" }
-
-                val subDescription = if (it.maxPersons > 0) context.resources.getString(R.string.label_room_max_person_range_format, it.maxPersons) else ""
-
-                dataBinding.extraChargePersonTableLayout.addTableRow(title, listAdapter.getExtraChargePrice(it.amount), subDescription, true)
-            }
-        }
-
-        if (info.extraInformation == null || info.extraInformation.isAllHidden) {
-            dataBinding.extraChargeBedTableLayout.visibility = View.GONE
-        } else {
-            dataBinding.extraChargeBedTableLayout.visibility = View.VISIBLE
-
-            dataBinding.extraChargeBedTableLayout.setTitleVisible(true)
-            dataBinding.extraChargeBedTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
-            dataBinding.extraChargePersonTableLayout.setTitleTextSize(16f)
-            dataBinding.extraChargeBedTableLayout.clearTableLayout()
-
-            (info.extraInformation.extraBeddingEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(
-                        context.resources.getString(R.string.label_bedding)
-                        , listAdapter.getExtraChargePrice(info.extraInformation.extraBedding), "", true)
-            }
-
-            (info.extraInformation.extraBedEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(
-                        context.resources.getString(R.string.label_extra_bed)
-                        , listAdapter.getExtraChargePrice(info.extraInformation.extraBed), "", true)
-            }
-
-            dataBinding.extraChargeBedTableLayout.visibility = if (dataBinding.extraChargeBedTableLayout.getItemCount() == 0) View.GONE else View.VISIBLE
-        }
-
-        if (info.descriptionList == null || info.descriptionList.size == 0) {
-            dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
-        } else {
-            dataBinding.extraChargeDescriptionGridView.visibility = View.VISIBLE
-
-            dataBinding.extraChargeDescriptionGridView.columnCount = 1
-            dataBinding.extraChargeDescriptionGridView.setData(
-                    ""
-                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, true, true)
-        }
-
-        if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
-            dataBinding.extraChargeNightsTableLayout.visibility = View.GONE
-        } else {
-            dataBinding.extraChargeNightsTableLayout.visibility = View.VISIBLE
-
-            dataBinding.extraChargeNightsTableLayout.setTitleVisible(true)
-            dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_consecutive_title)
-            dataBinding.extraChargePersonTableLayout.setTitleTextSize(16f)
-            dataBinding.extraChargeNightsTableLayout.clearTableLayout()
-
-            dataBinding.extraChargeNightsTableLayout.addTableRow(
-                    context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title)
-                    , listAdapter.getExtraChargePrice(info.consecutiveInformation.charge), "", true)
-        }
-    }
-
-    private fun setNeedToKnowInformationView(dataBinding: ListRowStayRoomInvisibleLayoutDataBinding, needToKnowList: MutableList<String>?) {
-        if (needToKnowList == null || needToKnowList.size == 0) {
-            dataBinding.roomCheckInfoGroup.visibility = View.GONE
-            return
-        }
-
-        dataBinding.roomCheckInfoGroup.visibility = View.VISIBLE
-
-        dataBinding.roomCheckInfoGridView.columnCount = 1
-        dataBinding.roomCheckInfoGridView.setData(
-                context.resources.getString(R.string.label_stay_room_need_to_know_title)
-                , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, true, true)
+        return viewDataBinding.invisibleLayout?.visibility == View.VISIBLE
     }
 
     override fun setGuideVisible(visible: Boolean) {
@@ -408,13 +294,19 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(position) as? StayRoomAdapter.RoomViewHolder
                     ?: return@postDelayed
 
-            val invisibleLayoutDataBinding = viewDataBinding.invisibleLayout ?: return@postDelayed
+            val rootView = viewDataBinding.invisibleLayout ?: return@postDelayed
+            val closeImageView: View? = rootView.findViewById(R.id.closeImageView)
+            val moreIconView: View? = rootView.findViewById(R.id.moreIconView)
+            val vrIconView: View? = rootView.findViewById(R.id.vrIconView)
+            val nestedScrollView: NestedScrollView? = rootView.findViewById(R.id.nestedScrollView)
+            val toolbarView: DailyToolbarView? = rootView.findViewById(R.id.toolbarView)
+            val scrollLayout: LinearLayout? = rootView.findViewById(R.id.scrollLayout)
 
             val top = viewDataBinding.recyclerView.top
-            val paddingTop = roomViewHolder.dataBinding.root.paddingTop
-            val width = roomViewHolder.dataBinding.root.measuredWidth
-            val paddingLeft = roomViewHolder.dataBinding.root.paddingLeft
-            val paddingRight = roomViewHolder.dataBinding.root.paddingRight
+            val paddingTop = roomViewHolder.rootView.paddingTop
+            val width = roomViewHolder.rootView.measuredWidth
+            val paddingLeft = roomViewHolder.rootView.paddingLeft
+            val paddingRight = roomViewHolder.rootView.paddingRight
 
             val invisibleWidth = width - paddingLeft - paddingRight
 
@@ -422,49 +314,55 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             minScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
 
-            val scaleTransY = invisibleLayoutDataBinding.roomLayout.measuredHeight * (1f - minScaleX) / 2
+            val scaleTransY = rootView.measuredHeight * (1f - minScaleX) / 2
             maxTransY = (top + paddingTop) - scaleTransY
 
-            invisibleLayoutDataBinding.roomLayout.apply {
+            rootView.apply {
                 translationY = maxTransY
 
                 scaleX = minScaleX
                 scaleY = minScaleX
             }
 
-            invisibleLayoutDataBinding.closeImageView.translationY = 0f
-            invisibleLayoutDataBinding.moreIconView.translationY = 0f
-            invisibleLayoutDataBinding.vrIconView.translationY = 0f
+            closeImageView?.translationY = 0f
+            moreIconView?.translationY = 0f
+            vrIconView?.translationY = 0f
 
-            EdgeEffectColor.setEdgeGlowColor(invisibleLayoutDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge))
+            EdgeEffectColor.setEdgeGlowColor(nestedScrollView, getColor(R.color.default_over_scroll_edge))
 
             val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
 
-            invisibleLayoutDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x)
-            invisibleLayoutDataBinding.toolbarView.setOnBackClickListener {
+            toolbarView?.setBackImageResource(R.drawable.navibar_ic_x)
+            toolbarView?.setOnBackClickListener {
                 eventListener.onCloseClick()
             }
 
-            invisibleLayoutDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
-                invisibleLayoutDataBinding.closeImageView.translationY = scrollY.toFloat()
-                invisibleLayoutDataBinding.moreIconView.translationY = scrollY.toFloat()
-                invisibleLayoutDataBinding.vrIconView.translationY = scrollY.toFloat()
+            nestedScrollView?.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
+                closeImageView?.translationY = scrollY.toFloat()
+                moreIconView?.translationY = scrollY.toFloat()
+                vrIconView?.translationY = scrollY.toFloat()
 
-                val titleLayout = invisibleLayoutDataBinding.scrollLayout.getChildAt(1)
-                if (titleLayout.y - toolbarHeight > scrollY) {
-                    invisibleLayoutDataBinding.toolbarView.hideAnimation()
-                } else {
-                    invisibleLayoutDataBinding.toolbarView.showAnimation()
+                val titleLayout = scrollLayout?.getChildAt(1)
+                titleLayout?.run {
+                    if (y - toolbarHeight > scrollY) {
+                        toolbarView?.hideAnimation()
+                    } else {
+                        toolbarView?.showAnimation()
+                    }
                 }
             })
 
-            invisibleLayoutDataBinding.nestedScrollView.setOnTouchListener(invisibleLayoutTouchListener)
+            nestedScrollView?.setOnTouchListener(invisibleLayoutTouchListener)
         }, 50)
     }
 
     private fun setInvisibleLayout(preY: Float, y: Float, startScaleX: Float, startTransY: Float): Boolean {
         val value = y - preY
         if (value == 0f) return false
+
+        val rootView = viewDataBinding.invisibleLayout!!
+
+        val simpleDraweeView: SimpleDraweeView? = rootView.findViewById(R.id.simpleDraweeView)
 
         val scaleXGap = maxScaleX - minScaleX
         val oneScaleX = scaleXGap / widthGap
@@ -494,21 +392,23 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         var forceUpdate = Math.abs(startTransY - toTransY) >= checkValue
 
-        viewDataBinding.invisibleLayout!!.roomLayout.translationY = toTransY
-        viewDataBinding.invisibleLayout!!.roomLayout.scaleX = toScaleX
-        viewDataBinding.invisibleLayout!!.roomLayout.scaleY = toScaleX
+        rootView.translationY = toTransY
+        rootView.scaleX = toScaleX
+        rootView.scaleY = toScaleX
 
         setCloseImageAlphaVisible(toScaleX)
 
         val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
         val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
-        viewDataBinding.invisibleLayout!!.simpleDraweeView.hierarchy.roundingParams = roundingParams
+        simpleDraweeView?.hierarchy?.roundingParams = roundingParams
 
         return forceUpdate
     }
 
     override fun startInvisibleLayoutAnimation(scaleUp: Boolean) {
-        val roomLayout = viewDataBinding.invisibleLayout!!.roomLayout
+        val roomLayout = viewDataBinding.invisibleLayout!!
+        val nestedScrollView: NestedScrollView? = roomLayout.findViewById(R.id.nestedScrollView)
+        val simpleDraweeView: SimpleDraweeView? = roomLayout.findViewById(R.id.simpleDraweeView)
 
         val startScale = roomLayout.scaleX
         val end = if (scaleUp) 1.0f else minScaleX
@@ -520,7 +420,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             ((maxTransY - startTransY) / maxTransY * 200).toLong()
         }
 
-        viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY = 0
+        nestedScrollView?.scrollY = 0
 
         val checkValue = 0.3f * maxTransY
 
@@ -541,7 +441,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
             val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
-            viewDataBinding.invisibleLayout!!.simpleDraweeView.hierarchy.roundingParams = roundingParams
+            simpleDraweeView?.hierarchy?.roundingParams = roundingParams
         }
 
         val scaleAnimator = ValueAnimator.ofFloat(startScale * 100, end * 100)
@@ -555,8 +455,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         animatorSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
-                if (scaleUp && viewDataBinding.invisibleLayout!!.roomLayout.visibility != View.VISIBLE) {
-                    viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
+                if (scaleUp && roomLayout.visibility != View.VISIBLE) {
+                    roomLayout.visibility = View.VISIBLE
                 }
             }
 
@@ -565,12 +465,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     roomLayout.scaleX = maxScaleX
                     roomLayout.scaleY = maxScaleX
                     roomLayout.translationY = minTransY
-                    viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
+                    roomLayout.visibility = View.VISIBLE
                 } else {
                     roomLayout.scaleX = minScaleX
                     roomLayout.scaleY = minScaleX
                     roomLayout.translationY = maxTransY
-                    viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.INVISIBLE
+                    roomLayout.visibility = View.INVISIBLE
                 }
 
                 setRecyclerScrollEnabled()
@@ -590,7 +490,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     private fun setCloseImageAlphaVisible(alphaValue: Float) {
-        viewDataBinding.invisibleLayout!!.closeImageView.apply {
+        val closeImageView: View? = viewDataBinding.invisibleLayout?.findViewById(R.id.closeImageView)
+
+        closeImageView?.run {
             when {
                 alphaValue < 0.90f -> {
                     visibility = View.GONE
@@ -627,8 +529,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                 MotionEvent.ACTION_DOWN -> {
                     prevX = event.x
                     prevY = event.y
-                    startScaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
-                    startTransY = viewDataBinding.invisibleLayout!!.roomLayout.translationY
+                    startScaleX = viewDataBinding.invisibleLayout!!.scaleX
+                    startTransY = viewDataBinding.invisibleLayout!!.translationY
 
                     moveState = MOVE_STATE_NONE
                 }
@@ -681,8 +583,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                     // x 축으로 이동한 경우.
                                     moveState = MOVE_STATE_VIEWPAGER
 
-                                    if (viewDataBinding.invisibleLayout!!.roomLayout.visibility == View.VISIBLE) {
-                                        viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.INVISIBLE
+                                    if (viewDataBinding.invisibleLayout!!.visibility == View.VISIBLE) {
+                                        viewDataBinding.invisibleLayout!!.visibility = View.INVISIBLE
                                     }
                                 }
 
@@ -690,8 +592,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                     // y축으로 이동한 경우.
                                     moveState = MOVE_STATE_SCROLL
 
-                                    if (viewDataBinding.invisibleLayout!!.roomLayout.visibility != View.VISIBLE) {
-                                        viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
+                                    if (viewDataBinding.invisibleLayout!!.visibility != View.VISIBLE) {
+                                        viewDataBinding.invisibleLayout!!.visibility = View.VISIBLE
                                     }
 
                                     if (setInvisibleLayout(prevY, y, startScaleX, startTransY)) {
@@ -702,8 +604,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         }
 
                         MOVE_STATE_SCROLL -> {
-                            if (viewDataBinding.invisibleLayout!!.roomLayout.visibility != View.VISIBLE) {
-                                viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.VISIBLE
+                            if (viewDataBinding.invisibleLayout!!.visibility != View.VISIBLE) {
+                                viewDataBinding.invisibleLayout!!.visibility = View.VISIBLE
                             }
 
                             if (setInvisibleLayout(prevY, y, startScaleX, startTransY)) {
@@ -712,8 +614,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         }
 
                         MOVE_STATE_VIEWPAGER -> {
-                            if (viewDataBinding.invisibleLayout!!.roomLayout.visibility == View.VISIBLE) {
-                                viewDataBinding.invisibleLayout!!.roomLayout.visibility = View.INVISIBLE
+                            if (viewDataBinding.invisibleLayout!!.visibility == View.VISIBLE) {
+                                viewDataBinding.invisibleLayout!!.visibility = View.INVISIBLE
                             }
                         }
 
@@ -760,19 +662,21 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             if (viewDataBinding == null) return false
             if (listAdapter.itemCount == 0) return false
 
+            val nestedScrollView: NestedScrollView = viewDataBinding.invisibleLayout!!.findViewById(R.id.nestedScrollView)!!
+
             setRecyclerScrollEnabled()
 
             when (event.action and MotionEventCompat.ACTION_MASK) {
                 MotionEvent.ACTION_DOWN -> {
                     preY = event.y
-                    startScaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
-                    startTransY = viewDataBinding.invisibleLayout!!.roomLayout.translationY
+                    startScaleX = viewDataBinding.invisibleLayout!!.scaleX
+                    startTransY = viewDataBinding.invisibleLayout!!.translationY
 
                     moveState = MOVE_STATE_NONE
                 }
 
                 MotionEvent.ACTION_UP -> {
-                    if (viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY != 0) {
+                    if (nestedScrollView.scrollY != 0) {
                         moveState = MOVE_STATE_NONE
                         return false
                     }
@@ -798,8 +702,8 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     }
 
                     val y = event.y
-                    val scaleX = viewDataBinding.invisibleLayout!!.roomLayout.scaleX
-                    val scrollY = viewDataBinding.invisibleLayout!!.nestedScrollView.scrollY
+                    val scaleX = viewDataBinding.invisibleLayout!!.scaleX
+                    val scrollY = nestedScrollView.scrollY
 
                     if (scrollY > 0) {
                         preY = y

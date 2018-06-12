@@ -23,10 +23,10 @@ import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.*
 import com.daily.dailyhotel.view.DailyRoomInfoGridView
+import com.daily.dailyhotel.view.DailyRoomInfoTableView
 import com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
 import com.facebook.drawee.view.SimpleDraweeView
 import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.databinding.ListRowStayRoomDataBinding
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
@@ -117,23 +117,22 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
-        val dataBinding = DataBindingUtil.inflate<ListRowStayRoomDataBinding>(
-                LayoutInflater.from(parent.context), R.layout.list_row_stay_room_data, parent, false)
+        val roomLayout: View = LayoutInflater.from(context).inflate(R.layout.list_row_stay_room_data, parent, false)
 
-        dataBinding.roomLayout.layoutParams = RecyclerView.LayoutParams(getLayoutWidth().toInt(), RecyclerView.LayoutParams.MATCH_PARENT)
+        roomLayout.layoutParams = RecyclerView.LayoutParams(getLayoutWidth().toInt(), RecyclerView.LayoutParams.MATCH_PARENT)
 
-        return RoomViewHolder(dataBinding)
+        return RoomViewHolder(roomLayout)
     }
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
-        val dataBinding: ListRowStayRoomDataBinding = holder.dataBinding
-
         val room = getItem(position) ?: return
+        val blurView: View? = holder.rootView.findViewById(R.id.blurView)
+        val roomNameTextView: DailyTextView? = holder.itemView.findViewById(R.id.roomNameTextView)
 
-        holder.dataBinding.root.setTag(R.id.blurView, holder.dataBinding.blurView)
+        holder.rootView.setTag(R.id.blurView, blurView)
 
         val margin = getLayoutMargin()
-        (dataBinding.roomLayout.layoutParams as RecyclerView.LayoutParams).run {
+        ( holder.rootView.layoutParams as RecyclerView.LayoutParams).run {
             when (position) {
                 0 -> {
                     leftMargin = margin.toInt()
@@ -152,17 +151,17 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        setImageInformationView(dataBinding.root, position, room)
+        setImageInformationView(holder.itemView, position, room)
 
-        dataBinding.roomNameTextView.text = room.name
+        roomNameTextView?.text = room.name
 
-        setAmountInformationView(dataBinding.root, room.amountInformation, false)
+        setAmountInformationView(holder.rootView, room.amountInformation, false)
 
-        setRefundInformationView(dataBinding.root, room.refundInformation)
+        setRefundInformationView(holder.rootView, room.refundInformation)
 
-        setBaseInformationView(dataBinding.root, room)
+        setBaseInformationView(holder.rootView, room)
 
-        setAttributeInformationView(dataBinding.root, room.attributeInformation)
+        setAttributeInformationView(holder.rootView, room.attributeInformation)
 
         val benefitList = mutableListOf<String>()
 
@@ -174,19 +173,19 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         if (!room.benefit.isTextEmpty()) {
             benefitList.add(room.benefit)
         }
-        setRoomBenefitInformationView(dataBinding.root, benefitList, false)
+        setRoomBenefitInformationView(holder.rootView, benefitList, false)
 
-        setRewardAndCouponInformationView(dataBinding.root, room.provideRewardSticker, room.hasUsableCoupon)
+        setRewardAndCouponInformationView(holder.rootView, room.provideRewardSticker, room.hasUsableCoupon)
 
-        setCheckTimeInformationView(dataBinding.root, room.checkTimeInformation)
+        setCheckTimeInformationView(holder.rootView, room.checkTimeInformation)
 
-        setRoomDescriptionInformationView(dataBinding.root, room.descriptionList, false)
+        setRoomDescriptionInformationView(holder.rootView, room.descriptionList, false)
 
-        setRoomAmenityInformationView(dataBinding, room.amenityList)
+        setRoomAmenityInformationView(holder.rootView, room.amenityList, false)
 
-        setRoomChargeInformationView(dataBinding, room.roomChargeInformation)
+        setRoomChargeInformationView(holder.rootView, room.roomChargeInformation, false)
 
-        setNeedToKnowInformationView(dataBinding, room.needToKnowList)
+        setNeedToKnowInformationView(holder.rootView, room.needToKnowList, false)
     }
 
     fun setImageInformationView(root: View, position: Int, room: Room) {
@@ -671,9 +670,12 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
     }
 
-    private fun setRoomAmenityInformationView(dataBinding: ListRowStayRoomDataBinding, amenityList: MutableList<String>) {
+    fun setRoomAmenityInformationView(root: View, amenityList: MutableList<String>, largeView: Boolean) {
+        val roomAmenityGroup: View = root.findViewById(R.id.roomAmenityGroup) ?: return
+        val roomAmenityGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomAmenityGridView)
+
         if (amenityList.size == 0) {
-            dataBinding.roomAmenityGroup.visibility = View.GONE
+            roomAmenityGroup.visibility = View.GONE
             return
         }
 
@@ -689,90 +691,149 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         }
 
         if (list.isEmpty()) {
-            dataBinding.roomAmenityGroup.visibility = View.GONE
+            roomAmenityGroup.visibility = View.GONE
             return
         }
 
-        dataBinding.roomAmenityGroup.visibility = View.VISIBLE
-        dataBinding.roomAmenityGridView.columnCount = 2
-        dataBinding.roomAmenityGridView.setData(
-                context.resources.getString(R.string.label_stay_room_amenity_title)
-                , DailyRoomInfoGridView.ItemType.DOT, list, false)
+        roomAmenityGroup.visibility = View.VISIBLE
+        roomAmenityGridView?.run {
+            columnCount = 2
+            setData(context.resources.getString(R.string.label_stay_room_amenity_title)
+                    , DailyRoomInfoGridView.ItemType.DOT, list, largeView)
+        }
     }
 
-    private fun setRoomChargeInformationView(dataBinding: ListRowStayRoomDataBinding, info: Room.ChargeInformation?) {
+    fun setRoomChargeInformationView(root: View, info: Room.ChargeInformation?, largeView: Boolean) {
+        val extraChargeLayout: View = root.findViewById(R.id.extraChargeLayout) ?: return
+        val extraChargePersonTableLayout: DailyRoomInfoTableView? = root.findViewById(R.id.extraChargePersonTableLayout)
+        val extraChargeBedTableLayout: DailyRoomInfoTableView? = root.findViewById(R.id.extraChargeBedTableLayout)
+        val extraChargeNightsTableLayout: DailyRoomInfoTableView? = root.findViewById(R.id.extraChargeNightsTableLayout)
+        val extraChargeDescriptionGridView: DailyRoomInfoGridView? = root.findViewById(R.id.extraChargeDescriptionGridView)
+
+
         if (info == null || info.isAllHidden) {
-            dataBinding.extraChargeLayout.visibility = View.GONE
+            extraChargeLayout.visibility = View.GONE
             return
         }
 
-        if (!info.extraPersonInformationList.isNotNullAndNotEmpty()) {
-            dataBinding.extraChargePersonTableLayout.visibility = View.GONE
-        } else {
-            dataBinding.extraChargePersonTableLayout.visibility = View.VISIBLE
+        extraChargeLayout.visibility = View.VISIBLE
 
-            dataBinding.extraChargePersonTableLayout.setTitleText(R.string.label_stay_room_extra_charge_person_title)
-            dataBinding.extraChargePersonTableLayout.setTitleVisible(true)
-            dataBinding.extraChargePersonTableLayout.clearTableLayout()
+        extraChargePersonTableLayout?.run {
+            if (!info.extraPersonInformationList.isNotNullAndNotEmpty()) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
 
-            info.extraPersonInformationList.forEach {
-                var title = it.title
+                largeView.runTrue {
+                    setTitleTextSize(16f)
+                }
 
-                getPersonRangeText(it.minAge, it.maxAge).letNotEmpty { title += " ($it)" }
+                setTitleText(R.string.label_stay_room_extra_charge_person_title)
+                setTitleVisible(true)
+                clearTableLayout()
 
-                val subDescription = if (it.maxPersons > 0) context.resources.getString(R.string.label_room_max_person_range_format, it.maxPersons) else ""
+                info.extraPersonInformationList.forEach {
+                    var title = it.title
 
-                dataBinding.extraChargePersonTableLayout.addTableRow(title, getExtraChargePrice(it.amount), subDescription, false)
+                    getPersonRangeText(it.minAge, it.maxAge).letNotEmpty { title += " ($it)" }
+
+                    val subDescription = if (it.maxPersons > 0) context.resources.getString(R.string.label_room_max_person_range_format, it.maxPersons) else ""
+
+                    addTableRow(title, getExtraChargePrice(it.amount), subDescription, largeView)
+                }
             }
         }
 
-        if (info.extraInformation == null || info.extraInformation.isAllHidden) {
-            dataBinding.extraChargeBedTableLayout.visibility = View.GONE
-        } else {
-            dataBinding.extraChargeBedTableLayout.visibility = View.VISIBLE
+        extraChargeBedTableLayout?.run {
+            if (info.extraInformation == null || info.extraInformation.isAllHidden) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
 
-            dataBinding.extraChargeBedTableLayout.setTitleVisible(true)
-            dataBinding.extraChargeBedTableLayout.setTitleText(R.string.label_stay_room_extra_charge_bed_title)
-            dataBinding.extraChargeBedTableLayout.clearTableLayout()
+                largeView.runTrue {
+                    setTitleTextSize(16f)
+                }
 
-            (info.extraInformation.extraBeddingEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(
-                        context.resources.getString(R.string.label_bedding)
-                        , getExtraChargePrice(info.extraInformation.extraBedding), "", false)
+                setTitleVisible(true)
+                setTitleText(R.string.label_stay_room_extra_charge_bed_title)
+                clearTableLayout()
+
+                (info.extraInformation.extraBeddingEnable).runTrue {
+                    addTableRow(context.resources.getString(R.string.label_bedding)
+                            , getExtraChargePrice(info.extraInformation.extraBedding), "", largeView)
+                }
+
+                (info.extraInformation.extraBedEnable).runTrue {
+                    addTableRow(context.resources.getString(R.string.label_extra_bed)
+                            , getExtraChargePrice(info.extraInformation.extraBed), "", largeView)
+                }
+
+                visibility = if (getItemCount() == 0) View.GONE else View.VISIBLE
             }
-
-            (info.extraInformation.extraBedEnable).runTrue {
-                dataBinding.extraChargeBedTableLayout.addTableRow(
-                        context.resources.getString(R.string.label_extra_bed)
-                        , getExtraChargePrice(info.extraInformation.extraBed), "", false)
-            }
-
-            dataBinding.extraChargeBedTableLayout.visibility = if (dataBinding.extraChargeBedTableLayout.getItemCount() == 0) View.GONE else View.VISIBLE
         }
 
-        if (info.descriptionList == null || info.descriptionList.size == 0) {
-            dataBinding.extraChargeDescriptionGridView.visibility = View.GONE
-        } else {
-            dataBinding.extraChargeDescriptionGridView.visibility = View.VISIBLE
+        extraChargeDescriptionGridView?.run {
+            if (info.descriptionList == null || info.descriptionList.size == 0) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
 
-            dataBinding.extraChargeDescriptionGridView.columnCount = 1
-            dataBinding.extraChargeDescriptionGridView.setData(
-                    ""
-                    , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, false, true)
+                columnCount = 1
+                setData(""
+                        , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, largeView, true)
+            }
         }
 
-        if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
-            dataBinding.extraChargeNightsTableLayout.visibility = View.GONE
-        } else {
-            dataBinding.extraChargeNightsTableLayout.visibility = View.VISIBLE
+        extraChargeNightsTableLayout?.run {
+            if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
 
-            dataBinding.extraChargeNightsTableLayout.setTitleVisible(true)
-            dataBinding.extraChargeNightsTableLayout.setTitleText(R.string.label_stay_room_extra_charge_consecutive_title)
-            dataBinding.extraChargeNightsTableLayout.clearTableLayout()
+                largeView.runTrue {
+                    setTitleTextSize(16f)
+                }
 
-            dataBinding.extraChargeNightsTableLayout.addTableRow(
-                    context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title)
-                    , getExtraChargePrice(info.consecutiveInformation.charge), "", false)
+                setTitleVisible(true)
+                setTitleText(R.string.label_stay_room_extra_charge_consecutive_title)
+                clearTableLayout()
+
+                addTableRow(context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title)
+                        , getExtraChargePrice(info.consecutiveInformation.charge), "", largeView)
+            }
+        }
+
+        extraChargeNightsTableLayout?.run {
+            if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
+
+                setTitleVisible(true)
+                setTitleText(R.string.label_stay_room_extra_charge_consecutive_title)
+                clearTableLayout()
+
+                addTableRow(context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title)
+                        , getExtraChargePrice(info.consecutiveInformation.charge), "", false)
+            }
+        }
+    }
+
+    fun setNeedToKnowInformationView(root: View, needToKnowList: MutableList<String>?, largeView: Boolean) {
+        val roomCheckInfoGroup: View = root.findViewById(R.id.roomCheckInfoGroup) ?: return
+        val roomCheckInfoGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomCheckInfoGridView)
+
+        if (needToKnowList == null || needToKnowList.size == 0) {
+            roomCheckInfoGroup.visibility = View.GONE
+            return
+        }
+
+        roomCheckInfoGroup.visibility = View.VISIBLE
+
+        roomCheckInfoGridView?.run {
+            columnCount = 1
+            setData(context.resources.getString(R.string.label_stay_room_need_to_know_title)
+                    , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, largeView, true)
         }
     }
 
@@ -796,20 +857,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         return DailyTextUtils.getPriceFormat(context, price, false)
     }
 
-    private fun setNeedToKnowInformationView(dataBinding: ListRowStayRoomDataBinding, needToKnowList: MutableList<String>?) {
-        if (needToKnowList == null || needToKnowList.size == 0) {
-            dataBinding.roomCheckInfoGroup.visibility = View.GONE
-            return
-        }
-
-        dataBinding.roomCheckInfoGroup.visibility = View.VISIBLE
-
-        dataBinding.roomCheckInfoGridView.columnCount = 1
-        dataBinding.roomCheckInfoGridView.setData(
-                context.resources.getString(R.string.label_stay_room_need_to_know_title)
-                , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, false, true)
-    }
-
     fun getLayoutWidth(): Float {
         return ScreenUtils.getScreenWidth(context) * MENU_WIDTH_RATIO
     }
@@ -818,5 +865,5 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         return ScreenUtils.getScreenWidth(context) * (1.0f - MENU_WIDTH_RATIO) / 2.0f
     }
 
-    inner class RoomViewHolder(val dataBinding: ListRowStayRoomDataBinding) : RecyclerView.ViewHolder(dataBinding.root)
+    inner class RoomViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
 }
