@@ -50,7 +50,7 @@ interface StayDetailInterface {
 
         fun setBaseInformation(baseInformation: StayDetail.BaseInformation, nightsEnabled: Boolean, soldOut: Boolean)
 
-        fun setLowestPriceRoom(discountAveragePrice : Int, nightsEnabled: Boolean)
+        fun setLowestPriceRoom(discountAveragePrice: Int, nightsEnabled: Boolean)
 
         fun setTrueReviewInformationVisible(visible: Boolean)
 
