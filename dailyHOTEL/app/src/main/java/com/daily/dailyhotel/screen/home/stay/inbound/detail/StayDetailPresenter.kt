@@ -494,11 +494,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
             stayDetail
         }).observeOn(AndroidSchedulers.mainThread()).subscribe({ stayDetail ->
+            viewInterface.initializedScrollLayout()
+
             if (!DailyHotel.isLogin() && DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerCampaignEnabled && stayDetail != null) {
                 viewInterface.startRewardStickerAnimation()
             }
-
-            viewInterface.initializedScrollLayout()
 
             notifyDetailDataSetChanged()
             notifyWishDataSetChanged()
