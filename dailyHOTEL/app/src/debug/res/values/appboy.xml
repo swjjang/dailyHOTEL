@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_appboy_api_key" translatable="false">1ca58612-33ef-43a7-891d-2d32e23fcff1</string>
+    <string name="com_appboy_api_key" translatable="false">c0d3d080-978d-4839-87f5-27c3b066ed7c</string>
     <bool name="com_appboy_push_gcm_messaging_registration_enabled">false</bool>
     <bool name="com_appboy_push_adm_messaging_registration_enabled">false</bool>
     <bool name="com_appboy_newsfeed_unread_visual_indicator_on">true</bool>
