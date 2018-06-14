@@ -26,12 +26,7 @@ import com.daily.base.BaseDialogView
 import com.daily.base.util.*
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
-import com.daily.dailyhotel.entity.StayDetail
-import com.daily.dailyhotel.util.isNotNullAndNotEmpty
 import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.letNotEmpty
-import com.daily.dailyhotel.util.runTrue
-import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView

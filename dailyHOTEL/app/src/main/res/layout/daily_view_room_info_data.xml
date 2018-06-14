@@ -25,18 +25,20 @@
 
         </FrameLayout>
 
-        <android.support.v7.widget.GridLayout
-            android:id="@+id/gridLayout"
+        <LinearLayout
+            android:id="@+id/itemLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:columnCount="1"/>
+            android:orientation="vertical"
+            />
 
-        <android.support.v7.widget.GridLayout
-            android:id="@+id/moreGridLayout"
+        <LinearLayout
+            android:id="@+id/moreItemLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:columnCount="1"/>
+            android:orientation="vertical"
+            />
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/moreTextView"

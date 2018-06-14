@@ -22,8 +22,8 @@ import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.storage.preference.DailyPreference
 import com.daily.dailyhotel.util.*
-import com.daily.dailyhotel.view.DailyRoomInfoGridView
 import com.daily.dailyhotel.view.DailyRoomInfoTableView
+import com.daily.dailyhotel.view.DailyRoomInfoView
 import com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
 import com.facebook.drawee.view.SimpleDraweeView
 import com.twoheart.dailyhotel.R
@@ -467,7 +467,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
     fun setAttributeInformationView(root: View, attribute: Room.AttributeInformation?, largeView: Boolean = false) {
         val subInfoGroup: View = root.findViewById(R.id.subInfoGroup) ?: return
-        val subInfoGridView: DailyRoomInfoGridView = root.findViewById(R.id.subInfoGridView)
+        val subInfoGridView: DailyRoomInfoView = root.findViewById(R.id.subInfoGridView)
 
         if (attribute == null) {
             subInfoGroup.visibility = View.GONE
@@ -558,14 +558,14 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 subInfoGroup.visibility = View.GONE
             } else {
                 subInfoGroup.visibility = View.VISIBLE
-                subInfoGridView.setData(titleText, DailyRoomInfoGridView.ItemType.NONE, stringList, largeView)
+                subInfoGridView.setData(titleText, DailyRoomInfoView.ItemType.NONE, stringList, largeView)
             }
         }
     }
 
     fun setRoomBenefitInformationView(root: View, benefitList: MutableList<String>, largeView: Boolean) {
         val roomBenefitGroup: View = root.findViewById(R.id.roomBenefitGroup) ?: return
-        val roomBenefitGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomBenefitGridView)
+        val roomBenefitGridView: DailyRoomInfoView? = root.findViewById(R.id.roomBenefitGridView)
 
         if (benefitList.isEmpty()) {
             roomBenefitGroup.visibility = View.GONE
@@ -577,7 +577,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         roomBenefitGridView?.run {
             columnCount = 1
             setData(context.resources.getString(R.string.label_stay_room_benefit_title)
-                    , DailyRoomInfoGridView.ItemType.DOWN_CARET, benefitList, largeView)
+                    , DailyRoomInfoView.ItemType.DOWN_CARET, benefitList, largeView)
         }
     }
 
@@ -651,7 +651,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
     fun setRoomDescriptionInformationView(root: View, descriptionList: MutableList<String>?, largeView: Boolean) {
         val roomDescriptionGroup: View = root.findViewById(R.id.roomDescriptionGroup) ?: return
-        val roomDescriptionGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomDescriptionGridView)
+        val roomDescriptionGridView: DailyRoomInfoView? = root.findViewById(R.id.roomDescriptionGridView)
 
         if (descriptionList == null || descriptionList.size == 0) {
             roomDescriptionGroup.visibility = View.GONE
@@ -663,13 +663,13 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         roomDescriptionGridView?.run {
             columnCount = 1
             setData(context.resources.getString(R.string.label_stay_room_description_title)
-                    , DailyRoomInfoGridView.ItemType.DOT, descriptionList, largeView)
+                    , DailyRoomInfoView.ItemType.DOT, descriptionList, largeView)
         }
     }
 
     fun setRoomAmenityInformationView(root: View, amenityList: MutableList<String>, largeView: Boolean) {
         val roomAmenityGroup: View = root.findViewById(R.id.roomAmenityGroup) ?: return
-        val roomAmenityGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomAmenityGridView)
+        val roomAmenityGridView: DailyRoomInfoView? = root.findViewById(R.id.roomAmenityGridView)
 
         if (amenityList.size == 0) {
             roomAmenityGroup.visibility = View.GONE
@@ -696,7 +696,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         roomAmenityGridView?.run {
             columnCount = 2
             setData(context.resources.getString(R.string.label_stay_room_amenity_title)
-                    , DailyRoomInfoGridView.ItemType.DOT, list, largeView)
+                    , DailyRoomInfoView.ItemType.DOT, list, largeView)
         }
     }
 
@@ -705,7 +705,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val extraChargePersonTableLayout: DailyRoomInfoTableView? = root.findViewById(R.id.extraChargePersonTableLayout)
         val extraChargeBedTableLayout: DailyRoomInfoTableView? = root.findViewById(R.id.extraChargeBedTableLayout)
         val extraChargeNightsTableLayout: DailyRoomInfoTableView? = root.findViewById(R.id.extraChargeNightsTableLayout)
-        val extraChargeDescriptionGridView: DailyRoomInfoGridView? = root.findViewById(R.id.extraChargeDescriptionGridView)
+        val extraChargeDescriptionGridView: DailyRoomInfoView? = root.findViewById(R.id.extraChargeDescriptionGridView)
 
 
         if (info == null || info.isAllHidden) {
@@ -777,7 +777,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
                 columnCount = 1
                 setData(""
-                        , DailyRoomInfoGridView.ItemType.DOT, info.descriptionList, largeView, true)
+                        , DailyRoomInfoView.ItemType.DOT, info.descriptionList, largeView, true)
             }
         }
 
@@ -818,7 +818,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
     fun setNeedToKnowInformationView(root: View, needToKnowList: MutableList<String>?, largeView: Boolean) {
         val roomCheckInfoGroup: View = root.findViewById(R.id.roomCheckInfoGroup) ?: return
-        val roomCheckInfoGridView: DailyRoomInfoGridView? = root.findViewById(R.id.roomCheckInfoGridView)
+        val roomCheckInfoGridView: DailyRoomInfoView? = root.findViewById(R.id.roomCheckInfoGridView)
 
         if (needToKnowList == null || needToKnowList.size == 0) {
             roomCheckInfoGroup.visibility = View.GONE
@@ -830,7 +830,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         roomCheckInfoGridView?.run {
             columnCount = 1
             setData(context.resources.getString(R.string.label_stay_room_need_to_know_title)
-                    , DailyRoomInfoGridView.ItemType.DOT, needToKnowList, largeView, true)
+                    , DailyRoomInfoView.ItemType.DOT, needToKnowList, largeView, true)
         }
     }
 
