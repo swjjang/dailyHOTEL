@@ -10,7 +10,6 @@ import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.*
 import com.daily.dailyhotel.parcel.RoomParcel
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
@@ -29,13 +28,8 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity
 import com.twoheart.dailyhotel.util.Constants
 import com.twoheart.dailyhotel.util.Util
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.annotations.NonNull
-import io.reactivex.functions.Consumer
-import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
-import org.json.JSONObject
 
 class StayRoomsPresenter(activity: StayRoomsActivity)//
     : BaseExceptionPresenter<StayRoomsActivity, StayRoomsInterface.ViewInterface>(activity), StayRoomsInterface.OnEventListener {
@@ -282,7 +276,6 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
         viewInterface.setIndicatorText(position + 1)
         viewInterface.setBookingButtonText(position)
-//        viewInterface.setInvisibleData(position)
 
         real.runTrue {
             (position in 0 until roomList.size).runFalse { return }

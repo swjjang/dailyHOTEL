@@ -11,10 +11,6 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -525,6 +521,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (listAdapter.itemCount == 0) return false
             if (event == null) return false
+            if (viewDataBinding.recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE) return false
 
             setRecyclerScrollEnabled()
 
