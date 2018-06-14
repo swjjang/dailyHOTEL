@@ -422,7 +422,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 BedType.UNKNOWN
             }
 
-            bedVectorIconResId = if (bedVectorIconResId != 0) {
+            bedVectorIconResId = if (bedType.vectorIconResId != 0) {
                 bedType.vectorIconResId
             } else {
                 R.drawable.vector_ic_detail_item_bed_double
