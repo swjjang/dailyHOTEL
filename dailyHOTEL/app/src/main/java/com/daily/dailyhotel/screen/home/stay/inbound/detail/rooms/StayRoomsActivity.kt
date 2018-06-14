@@ -47,7 +47,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold)
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold)
 
         super.onCreate(savedInstanceState)
     }
@@ -59,6 +59,6 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
     override fun finish() {
         super.finish()
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right)
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom)
     }
 }
