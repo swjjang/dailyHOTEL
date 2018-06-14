@@ -399,6 +399,12 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
         simpleDraweeView?.hierarchy?.roundingParams = roundingParams
 
+        if (toScaleX > minScaleX) {
+            rootView.visibility = View.VISIBLE
+        } else {
+            rootView.visibility = View.INVISIBLE
+        }
+
         return forceUpdate
     }
 
@@ -589,10 +595,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                                     // y축으로 이동한 경우.
                                     moveState = MOVE_STATE_SCROLL
 
-                                    if (viewDataBinding.invisibleLayout!!.visibility != View.VISIBLE) {
-                                        viewDataBinding.invisibleLayout!!.visibility = View.VISIBLE
-                                    }
-
                                     if (setInvisibleLayout(prevY, y, startScaleX, startTransY)) {
                                         moveState = MOVE_STATE_START_ANIMATION
                                     }
@@ -601,10 +603,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                         }
 
                         MOVE_STATE_SCROLL -> {
-                            if (viewDataBinding.invisibleLayout!!.visibility != View.VISIBLE) {
-                                viewDataBinding.invisibleLayout!!.visibility = View.VISIBLE
-                            }
-
                             if (setInvisibleLayout(prevY, y, startScaleX, startTransY)) {
                                 moveState = MOVE_STATE_START_ANIMATION
                             }
