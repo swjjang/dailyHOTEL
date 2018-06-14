@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="com_appboy_api_key" translatable="false">1ca58612-33ef-43a7-891d-2d32e23fcff1</string>
-    <bool name="com_appboy_push_gcm_messaging_registration_enabled">true</bool>
-    <bool name="com_appboy_push_adm_messaging_registration_enabled">true</bool>
-    <string name="com_appboy_push_gcm_sender_id" translatable="false">1025681158000</string>
+    <bool name="com_appboy_push_gcm_messaging_registration_enabled">false</bool>
+    <bool name="com_appboy_push_adm_messaging_registration_enabled">false</bool>
     <bool name="com_appboy_newsfeed_unread_visual_indicator_on">true</bool>
     <bool name="com_appboy_handle_push_deep_links_automatically">true</bool>
     <drawable name="com_appboy_push_small_notification_icon">@drawable/icon_noti_small</drawable>
@@ -11,4 +10,6 @@
     <integer name="com_appboy_default_notification_accent_color">0xffeb2135</integer>
     <bool name="com_appboy_disable_location_collection">true</bool>
     <bool name="com_appboy_enable_fresco_library_use">true</bool>
+    <bool translatable="false" name="com_appboy_firebase_cloud_messaging_registration_enabled">true</bool>
+    <string translatable="false" name="com_appboy_firebase_cloud_messaging_sender_id">506429493485</string>
 </resources>
