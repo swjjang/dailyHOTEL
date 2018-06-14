@@ -82,7 +82,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     ExLog.d("sam - onScrollStateChanged : newState : $newState, position : $position")
 
                     if (RecyclerView.SCROLL_STATE_IDLE == newState) {
-                        setInvisibleData(position)
+                        recyclerView?.post {
+                            setInvisibleData(position)
+                        }
                     }
                 }
             })
