@@ -117,8 +117,8 @@
                     android:id="@+id/discountPercentTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="6dp"
                     android:layout_marginLeft="20dp"
+                    android:layout_marginRight="6dp"
                     android:textColor="@color/default_text_ceb2135"
                     android:textSize="20dp"
                     app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
@@ -169,9 +169,9 @@
                     android:id="@+id/refundPolicyTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:layout_marginTop="16dp"
                     android:background="@drawable/shape_stay_room_refund_policy_nrd_background"
                     android:paddingBottom="4dp"
                     android:paddingLeft="6dp"
@@ -190,8 +190,7 @@
                 android:id="@+id/baseInfoGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingBottom="15dp">
+                android:background="@color/white">
 
                 <View
                     android:id="@+id/baseInfoLine"
@@ -204,11 +203,13 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
-                <android.support.constraint.ConstraintLayout
+                <LinearLayout
                     android:id="@+id/personInformationLayout"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/bedInformationLayout"
@@ -218,10 +219,7 @@
                         android:id="@+id/personIconImageView"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        android:layout_marginTop="10dp"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/personTitleTextView"
@@ -231,16 +229,12 @@
                         android:gravity="center"
                         android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/personIconImageView"
                         dailyFont:style="Medium"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/personDescriptionTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
                         android:layout_marginTop="5dp"
@@ -249,18 +243,20 @@
                         android:gravity="center"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="11dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/personTitleTextView"
                         dailyFont:style="Medium"/>
 
-                </android.support.constraint.ConstraintLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"/>
 
-                <android.support.constraint.ConstraintLayout
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/bedInformationLayout"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
                     app:layout_constraintLeft_toRightOf="@+id/personInformationLayout"
                     app:layout_constraintRight_toLeftOf="@+id/squareInformationLayout"
                     app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
@@ -269,10 +265,7 @@
                         android:id="@+id/bedIconImageView"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        android:layout_marginTop="10dp"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/bedTitleTextView"
@@ -283,33 +276,29 @@
                         android:text="@string/label_stay_room_bed_type_title"
                         android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="12dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/bedIconImageView"
                         dailyFont:style="Medium"/>
-
 
                     <com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
                         android:id="@+id/bedDescriptionLayout"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/bedTitleTextView"/>
+                        android:orientation="vertical"/>
 
-                </android.support.constraint.ConstraintLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"/>
+                </LinearLayout>
 
-                <android.support.constraint.ConstraintLayout
+                <LinearLayout
                     android:id="@+id/squareInformationLayout"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
                     app:layout_constraintLeft_toRightOf="@+id/bedInformationLayout"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
@@ -319,45 +308,47 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginTop="10dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/vector_ic_detail_item_floorspace"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/squareTitleTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:freezesText="true"
-                        android:gravity="center"
-                        android:textColor="@color/default_text_c4d4d4d"
-                        android:textSize="12dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@+id/squareIconTextView"
-                        app:layout_constraintTop_toBottomOf="@+id/squareIconImageView"
-                        dailyFont:style="Medium"/>
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/squareIconTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:freezesText="true"
-                        android:gravity="center"
-                        android:text="2"
-                        android:textColor="@color/default_text_c4d4d4d"
-                        android:textSize="5dp"
-                        app:layout_constraintLeft_toRightOf="@+id/squareTitleTextView"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/squareTitleTextView"
-                        dailyFont:style="Medium"/>
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/squareTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:textColor="@color/default_text_c4d4d4d"
+                            android:textSize="12dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@+id/squareIconTextView"
+                            app:layout_constraintTop_toTopOf="parent"
+                            dailyFont:style="Medium"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/squareIconTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:text="2"
+                            android:textColor="@color/default_text_c4d4d4d"
+                            android:textSize="5dp"
+                            app:layout_constraintLeft_toRightOf="@+id/squareTitleTextView"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/squareTitleTextView"
+                            dailyFont:style="Medium"/>
+                    </android.support.constraint.ConstraintLayout>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/squareDescriptionTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
                         android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp"
                         android:layout_marginTop="5dp"
@@ -366,13 +357,13 @@
                         android:gravity="center"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="11dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/squareTitleTextView"
                         dailyFont:style="Medium"/>
 
-                </android.support.constraint.ConstraintLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"/>
+
+                </LinearLayout>
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout

@@ -230,7 +230,6 @@
                 android:id="@+id/bedInformationLayout"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 app:layout_constraintLeft_toRightOf="@+id/personInformationLayout"
@@ -274,7 +273,6 @@
                 android:id="@+id/squareInformationLayout"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 app:layout_constraintLeft_toRightOf="@+id/bedInformationLayout"
@@ -283,8 +281,8 @@
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/squareIconImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginTop="10dp"
                     app:srcCompat="@drawable/vector_ic_detail_item_floorspace"/>
 
