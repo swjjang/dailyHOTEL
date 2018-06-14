@@ -13,9 +13,6 @@ public class AppboyFirebaseInstanceIdService extends FirebaseInstanceIdService
         try
         {
             String token = FirebaseInstanceId.getInstance().getToken();
-
-            ExLog.d("token : " + token);
-
             Appboy.getInstance(getApplicationContext()).registerAppboyPushMessages(token);
         } catch (Exception e)
         {
