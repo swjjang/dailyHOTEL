@@ -6,6 +6,8 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.graphics.Rect
 import android.support.v7.widget.GridLayout
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import androidx.core.view.doOnPreDraw
+import com.daily.base.util.FontManager
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.util.isTextEmpty
@@ -21,6 +24,7 @@ import com.daily.dailyhotel.util.takeNotEmpty
 import com.daily.dailyhotel.view.DailyRoomInfoView.ItemType.*
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewRoomInfoDataBinding
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 
 class DailyRoomInfoView : LinearLayout {
 
@@ -35,13 +39,16 @@ class DailyRoomInfoView : LinearLayout {
 
         private const val SMALL_TITLE_TEXT_SIZE = 16.0
         private const val SMALL_ICON_DRAW_PADDING = 6.0
-        private const val SMALL_ITEM_TEXT_SIZE = 14.0
         private const val SMALL_LINE_MARGIN_TOP = 12.0
 
         private const val LARGE_TITLE_TEXT_SIZE = 18.0
         private const val LARGE_ICON_DRAW_PADDING = 10.0
-        private const val LARGE_ITEM_TEXT_SIZE = 14.0
         private const val LARGE_LINE_MARGIN_TOP = 17.0
+
+        private const val NORMAL_ITEM_TEXT_SIZE = 14f
+        private const val BOLD_ITEM_TEXT_SIZE = 16f
+        private const val BOLD_FIRST_LINE_MARGIN_TOP = 4.0
+        private const val BOLD_LINE_MARGIN_TOP = 20.0
     }
 
     enum class ItemType {
@@ -91,13 +98,14 @@ class DailyRoomInfoView : LinearLayout {
                 val hasMore = list.size > maxIndex
                 moreTextView.visibility = if (hasMore && !showAll) View.VISIBLE else View.GONE
 
-                var subLayout: LinearLayout = getSubLayout(largeView, false)
+                var subLayout: LinearLayout = getSubLayout(largeView, false, false)
                 it.forEachIndexed { index, text ->
                     val needSubLayout = (index % columnCount) == 0
                     val showTopMargin = index >= columnCount
+                    val isBold = columnCount == 1 && text.startsWith("**")
 
                     needSubLayout?.runTrue {
-                        subLayout = getSubLayout(largeView, showTopMargin)
+                        subLayout = getSubLayout(largeView, showTopMargin, isBold)
                         subLayout.removeAllViews()
 
                         if (showAll || index < maxIndex) {
@@ -107,14 +115,14 @@ class DailyRoomInfoView : LinearLayout {
                         }
                     }
 
-                    val itemView: DailyTextView = getItemView(type, text, largeView)
+                    val itemView: DailyTextView = getItemView(type, text, largeView, isBold)
                     subLayout.addView(itemView)
                 }
 
                 val remainder = it.size % columnCount
                 if (remainder != 0) {
                     for (index in 1..columnCount - remainder) {
-                        val itemView = getItemView(NONE, "", largeView)
+                        val itemView = getItemView(NONE, "", largeView, false)
                         subLayout.addView(itemView)
                     }
                 }
@@ -177,21 +185,35 @@ class DailyRoomInfoView : LinearLayout {
         valueAnimator.start()
     }
 
-    private fun getSubLayout(largeView: Boolean, showTopMargin: Boolean): LinearLayout {
+    private fun getSubLayout(largeView: Boolean, showTopMargin: Boolean, isBold: Boolean): LinearLayout {
         return LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 width = LinearLayout.LayoutParams.MATCH_PARENT
                 height = LinearLayout.LayoutParams.WRAP_CONTENT
 
-                if (showTopMargin) {
-                    topMargin = ScreenUtils.dpToPx(context, if (largeView) LARGE_LINE_MARGIN_TOP else SMALL_LINE_MARGIN_TOP)
+                topMargin = when {
+                    isBold && showTopMargin -> {
+                        ScreenUtils.dpToPx(context, BOLD_LINE_MARGIN_TOP)
+                    }
+
+                    isBold -> {
+                        ScreenUtils.dpToPx(context, BOLD_FIRST_LINE_MARGIN_TOP)
+                    }
+
+                    showTopMargin -> {
+                        ScreenUtils.dpToPx(context, if (largeView) LARGE_LINE_MARGIN_TOP else SMALL_LINE_MARGIN_TOP)
+                    }
+
+                    else -> {
+                        0
+                    }
                 }
             }
         }
     }
 
-    private fun getItemView(type: ItemType, text: String, largeView: Boolean): DailyTextView {
+    private fun getItemView(type: ItemType, itemText: String, largeView: Boolean, isBold: Boolean): DailyTextView {
         val iconResId: Int
         val textColorResId: Int
 
@@ -213,15 +235,36 @@ class DailyRoomInfoView : LinearLayout {
         }
 
         return DailyTextView(context).apply {
-            if (iconResId != 0) {
-                setDrawableCompatLeftAndRightFixedFirstLine(true)
-                setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
-                compoundDrawablePadding = ScreenUtils.dpToPx(context, if (largeView) LARGE_ICON_DRAW_PADDING else SMALL_ICON_DRAW_PADDING)
-            }
-
             setTextColor(context.resources.getColor(textColorResId))
-            this.text = text
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, if (largeView) LARGE_ITEM_TEXT_SIZE.toFloat() else SMALL_ITEM_TEXT_SIZE.toFloat())
+
+            when (isBold) {
+                true -> {
+                    val spannableStringBuilder = SpannableStringBuilder()
+
+                    itemText.split("**").filter { !it.isTextEmpty() }.forEachIndexed { index, s ->
+                        spannableStringBuilder.append(s)
+
+                        if (index == 0) {
+                            spannableStringBuilder.setSpan(CustomFontTypefaceSpan(FontManager.getInstance(context).mediumTypeface),
+                                    0, s.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        }
+                    }
+
+                    text = spannableStringBuilder
+                    setTextSize(TypedValue.COMPLEX_UNIT_DIP, BOLD_ITEM_TEXT_SIZE)
+                }
+
+                false -> {
+                    if (iconResId != 0) {
+                        setDrawableCompatLeftAndRightFixedFirstLine(true)
+                        setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
+                        compoundDrawablePadding = ScreenUtils.dpToPx(context, if (largeView) LARGE_ICON_DRAW_PADDING else SMALL_ICON_DRAW_PADDING)
+                    }
+
+                    this.text = itemText
+                    setTextSize(TypedValue.COMPLEX_UNIT_DIP, NORMAL_ITEM_TEXT_SIZE)
+                }
+            }
 
             this.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 weight = 1f
