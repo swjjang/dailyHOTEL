@@ -563,8 +563,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
                 viewDataBinding.toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, DailyToolbarView.MenuItem.WISH_OFF) { eventListener.onWishClick() }
             }
 
-            if (viewDataBinding.toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF)) {
-                viewDataBinding.toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, DailyToolbarView.MenuItem.WISH_OFF) { eventListener.onWishClick() }
+            if (viewDataBinding.fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF)) {
+                viewDataBinding.fakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, DailyToolbarView.MenuItem.WISH_OFF) { eventListener.onWishClick() }
             }
         }
     }
