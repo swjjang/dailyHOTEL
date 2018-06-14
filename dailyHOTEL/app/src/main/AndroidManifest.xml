@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -24,8 +23,6 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
 
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
@@ -35,9 +32,6 @@
 
     <permission
         android:name="${applicationId}.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature"/>
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
 
     <application
@@ -951,9 +945,6 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyACc8hv-TecbnEBvl8Z758hBMP1ssqo4gQ"/>
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
         <meta-data
@@ -978,13 +969,19 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".firebase.fcm.AppboyFirebaseInstanceIdService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
         <receiver
             android:name="com.appboy.AppboyGcmReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
-
                 <category android:name="com.twoheart.dailyhotel"/>
             </intent-filter>
         </receiver>
