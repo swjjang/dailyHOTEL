@@ -223,6 +223,7 @@ class DailyRemoteConfig(private val context: Context) {
                 DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyRewardTerms = staticUrl.dailyRewardTerms
                 DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyRewardCouponTerms = staticUrl.dailyRewardCouponTerms
                 DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyTrueAwards = staticUrl.dailyTrueAwards
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigStaticUrlDailyPriceLab = staticUrl.dailyPriceLab
             } catch (e: Exception) {
                 ExLog.e(e.toString())
             }

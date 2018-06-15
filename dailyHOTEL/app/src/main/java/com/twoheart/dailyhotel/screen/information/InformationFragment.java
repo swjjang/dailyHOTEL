@@ -338,6 +338,22 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
         }
 
         @Override
+        public void onDailyPriceLabClick()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_dailyh_price_lab)//
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyPriceLab()), Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
+        }
+
+        @Override
         public void finish()
         {
             //do nothing.

@@ -72,6 +72,7 @@
     <string name="label_dailyhotel_guide">데일리호텔 소개</string>
     <string name="label_dailyh_lifestyle">데일리 라이프스타일 프로젝트</string>
     <string name="label_dailyh_sns">데일리 SNS</string>
+    <string name="label_dailyh_price_lab">데일리 프라이스랩</string>
     <string name="label_customer">고객님</string>
     <string name="label_dont_again">다시보지 않기</string>
     <string name="label_do_booking">예약하기</string>

@@ -104,6 +104,11 @@ class StaticUrlDelegate(jsonString: String) {
             return staticUrl?.dailyTrueAwards
         }
 
+    val dailyPriceLab: String?
+        get() {
+            return staticUrl?.dailyPriceLab
+        }
+
     @JsonObject
     internal class StaticUrl {
         @JsonField(name = ["privacy"])
@@ -159,5 +164,8 @@ class StaticUrlDelegate(jsonString: String) {
 
         @JsonField(name = ["dailyTrueAwards"])
         var dailyTrueAwards: String? = null
+
+        @JsonField(name = ["dailyPriceLab"])
+        var dailyPriceLab: String? = null
     }
 }

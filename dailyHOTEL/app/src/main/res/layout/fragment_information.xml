@@ -158,6 +158,31 @@
                     android:text="@string/label_dailyh_sns"
                     android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/default_line_cdcdcdd"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/dailyPriceLabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/white">
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_dailyh_price_lab"
+                    android:textColor="@color/default_text_c4d4d4d"
+                    android:textSize="15dp"/>
             </RelativeLayout>
 
             <include layout="@layout/view_separate_line_no_linear"/>

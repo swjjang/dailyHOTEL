@@ -199,7 +199,7 @@ class DailyRemoteConfigTest {
 
     @Test
     fun testSetStaticUrl() {
-        val testJson01 = "{\"version\":\"2018-01-17T11:00:00+09:00\",\"privacy\":\"https://prod-policies.dailyhotel.me/privacy/\",\"collectPersonalInformation\":\"https://prod-policies.dailyhotel.me/join_privacy/\",\"terms\":\"https://prod-policies.dailyhotel.me/terms/\",\"about\":\"https://prod-policies.dailyhotel.me/about/\",\"location\":\"https://prod-policies.dailyhotel.me/location/\",\"childProtect\":\"https://prod-policies.dailyhotel.me/child_protect_160404/\",\"bonus\":\"http://dailyhotel.kr/webview_cnote/bonus\",\"coupon\":\"http://dailyhotel.kr/webview_cnote/coupon\",\"prodCouponNote\":\"http://dailyhotel.kr/webview_coupon_note/\",\"devCouponNote\":\"http://dev-extranet-hotel.dailyhotel.me/webview_coupon_note/\",\"faq\":\"http://dailyhotel.co.kr/wp/webview/faq.html\",\"license\":\"http://wp.me/P7uuuR-4Z1\",\"stamp\":\"http://hotel.dailyhotel.kr/webview_cnote/stamp\",\"review\":\"https://prod-policies.dailyhotel.me/review/\",\"lifeStyleProject\":\"http://m.dailyhotel.co.kr/banner/lifestyleproject/\",\"dailyStampHome\":\"http://m.dailyhotel.co.kr/banner/dailystamp_home\",\"dailyReward\":\"http://m.dailyhotel.co.kr/banner/dailyrewards\",\"dailyRewardTerms\":\"http://m.dailyhotel.co.kr/banner/dailyrewards_notice/\",\"dailyRewardCouponTerms\":\"https://hotel.dailyhotel.kr/webview_cnote/reward_coupon\",\"dailyTrueAwards\":\"http://m.dailyhotel.co.kr/banner/dailytrueawards_fixed\"}"
+        val testJson01 = "{\"version\":\"2018-06-15T11:00:00+09:00\", \"privacy\":\"https://prod-policies.dailyhotel.me/privacy/\", \"collectPersonalInformation\":\"https://prod-policies.dailyhotel.me/join_privacy/\",\"terms\":\"https://prod-policies.dailyhotel.me/terms/\",\"about\":\"https://prod-policies.dailyhotel.me/about/\",\"location\":\"https://prod-policies.dailyhotel.me/location/\",\"childProtect\":\"https://prod-policies.dailyhotel.me/child_protect_160404/\",\"bonus\":\"http://dailyhotel.kr/webview_cnote/bonus\",\"coupon\":\"http://dailyhotel.kr/webview_cnote/coupon\",\"prodCouponNote\":\"http://dailyhotel.kr/webview_coupon_note/\",\"devCouponNote\":\"http://dev-extranet-hotel.dailyhotel.me/webview_coupon_note/\",\"faq\":\"http://dailyhotel.co.kr/wp/webview/faq.html\",\"license\":\"http://wp.me/P7uuuR-4Z1\",\"stamp\":\"http://hotel.dailyhotel.kr/webview_cnote/stamp\",\"review\":\"https://prod-policies.dailyhotel.me/review/\",\"lifeStyleProject\":\"http://m.dailyhotel.co.kr/banner/lifestyleproject/\",\"dailyStampHome\":\"http://m.dailyhotel.co.kr/banner/dailystamp_home\",\"dailyReward\":\"http://m.dailyhotel.co.kr/banner/dailyrewards\",\"dailyRewardTerms\":\"http://m.dailyhotel.co.kr/banner/dailyrewards_notice/\",\"dailyRewardCouponTerms\":\"https://hotel.dailyhotel.kr/webview_cnote/reward_coupon\",\"dailyPriceLab\":\"\"}";
 
         remoteConfig.setStaticUlr(context, testJson01)
 
@@ -221,12 +221,13 @@ class DailyRemoteConfigTest {
         assertEquals("http://m.dailyhotel.co.kr/banner/dailyrewards_notice/", preference.keyRemoteConfigStaticUrlDailyRewardTerms)
         assertEquals("https://hotel.dailyhotel.kr/webview_cnote/reward_coupon", preference.keyRemoteConfigStaticUrlDailyRewardCouponTerms)
         assertEquals("http://m.dailyhotel.co.kr/banner/dailytrueawards_fixed", preference.keyRemoteConfigStaticUrlDailyTrueAwards)
+        assertEquals("", preference.keyRemoteConfigStaticUrlDailyPriceLab)
 
         val testJson02 = "{\"version\":\"2018-01-17T11:00:00+09:00\",\"privacy\":\"privacy\",\"collectPersonalInformation\":\"collectPersonalInformation\"" +
                 ",\"terms\":\"terms\",\"about\":\"about\",\"location\":\"location\",\"childProtect\":\"childProtect\",\"bonus\":\"bonus\"" +
                 ",\"coupon\":\"coupon\",\"prodCouponNote\":\"prodCouponNote\",\"devCouponNote\":\"devCouponNote\",\"faq\":\"faq\",\"license\":\"license\"" +
                 ",\"stamp\":\"stamp\",\"review\":\"review\",\"lifeStyleProject\":\"lifeStyleProject\",\"dailyStampHome\":\"dailyStampHome\",\"dailyReward\":\"dailyReward\"" +
-                ",\"dailyRewardTerms\":\"dailyRewardTerms\",\"dailyRewardCouponTerms\":\"dailyRewardCouponTerms\",\"dailyTrueAwards\":\"dailyTrueAwards\"}"
+                ",\"dailyRewardTerms\":\"dailyRewardTerms\",\"dailyRewardCouponTerms\":\"dailyRewardCouponTerms\",\"dailyTrueAwards\":\"dailyTrueAwards\",\"dailyPriceLab\":\"dailyPriceLab\"}"
 
         remoteConfig.setStaticUlr(context, testJson02)
 
@@ -248,6 +249,7 @@ class DailyRemoteConfigTest {
         assertEquals("dailyRewardTerms", preference.keyRemoteConfigStaticUrlDailyRewardTerms)
         assertEquals("dailyRewardCouponTerms", preference.keyRemoteConfigStaticUrlDailyRewardCouponTerms)
         assertEquals("dailyTrueAwards", preference.keyRemoteConfigStaticUrlDailyTrueAwards)
+        assertEquals("dailyPriceLab", preference.keyRemoteConfigStaticUrlDailyPriceLab)
     }
 
     @Test

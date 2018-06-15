@@ -57,6 +57,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         void onDailyRewardClick();
 
         void onDailyTrueAwardsClick();
+
+        void onDailyPriceLabClick();
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -300,6 +302,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.snsLayout:
                 ((OnEventListener) mOnEventListener).startSNS();
+                break;
+
+            case R.id.dailyPriceLabLayout:
+                ((OnEventListener) mOnEventListener).onDailyPriceLabClick();
                 break;
 
             case R.id.eventLayout:
