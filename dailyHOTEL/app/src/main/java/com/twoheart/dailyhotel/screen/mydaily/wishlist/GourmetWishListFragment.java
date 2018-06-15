@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.preview.GourmetPreviewActivity;
@@ -193,8 +194,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
 
             if (isSuccess == false)
             {
-                mBaseActivity.showSimpleDialog(getResources().getString(R.string.dialog_notice2) //
-                    , message, getResources().getString(R.string.dialog_btn_text_confirm), null);
+                DailyToast.showToast(mBaseActivity, message, DailyToast.LENGTH_SHORT);
                 return;
             }
 

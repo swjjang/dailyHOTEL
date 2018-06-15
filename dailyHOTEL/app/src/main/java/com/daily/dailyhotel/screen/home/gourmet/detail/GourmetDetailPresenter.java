@@ -764,7 +764,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, true);
                             setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
-                            if (wishResult.success == true)
+                            if (wishResult.success)
                             {
                                 mGourmetDetail.myWish = true;
                                 mGourmetDetail.wishCount++;
@@ -792,10 +792,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             } else
                             {
                                 notifyWishChanged(mGourmetDetail.wishCount, mGourmetDetail.myWish);
-
-                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
-                                    , getString(R.string.dialog_btn_text_confirm), null);
-
+                                getViewInterface().showToast(wishResult.message, DailyToast.LENGTH_LONG);
                                 unLockAll();
                             }
                         }
@@ -821,7 +818,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false);
                             setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
-                            if (wishResult.success == true)
+                            if (wishResult.success)
                             {
                                 mGourmetDetail.myWish = false;
                                 mGourmetDetail.wishCount--;
@@ -849,10 +846,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             } else
                             {
                                 notifyWishChanged(mGourmetDetail.wishCount, mGourmetDetail.myWish);
-
-                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
-                                    , getString(R.string.dialog_btn_text_confirm), null);
-
+                                getViewInterface().showToast(wishResult.message, DailyToast.LENGTH_LONG);
                                 unLockAll();
                             }
                         }
