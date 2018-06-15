@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
