@@ -182,6 +182,12 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         setCheckTimeInformationView(holder.rootView, room.checkTimeInformation)
 
         setRoomDescriptionInformationView(holder.rootView, room.descriptionList, false)
+
+        setRoomAmenityInformationView(holder.rootView, room.amenityList, false)
+
+        setRoomChargeInformationView(holder.rootView, room.roomChargeInformation, false)
+
+        setNeedToKnowInformationView(holder.rootView, room.needToKnowList, false)
     }
 
     fun setImageInformationView(root: View, position: Int, room: Room) {
@@ -730,7 +736,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 visibility = View.VISIBLE
 
                 largeView.runTrue {
-                    setTitleTextSize(16f)
+                    setTitleTextSize(if (largeView) 16f else 15f)
                 }
 
                 setTitleText(R.string.label_stay_room_extra_charge_person_title)
@@ -756,7 +762,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 visibility = View.VISIBLE
 
                 largeView.runTrue {
-                    setTitleTextSize(16f)
+                    setTitleTextSize(if (largeView) 16f else 15f)
                 }
 
                 setTitleVisible(true)
@@ -777,18 +783,6 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        extraChargeDescriptionGridView?.run {
-            if (info.descriptionList == null || info.descriptionList.size == 0) {
-                visibility = View.GONE
-            } else {
-                visibility = View.VISIBLE
-
-                columnCount = 1
-                setData(""
-                        , DailyRoomInfoView.ItemType.DOT, info.descriptionList, largeView, true)
-            }
-        }
-
         extraChargeNightsTableLayout?.run {
             if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
                 visibility = View.GONE
@@ -796,7 +790,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
                 visibility = View.VISIBLE
 
                 largeView.runTrue {
-                    setTitleTextSize(16f)
+                    setTitleTextSize(if (largeView) 16f else 15f)
                 }
 
                 setTitleVisible(true)
@@ -808,18 +802,15 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             }
         }
 
-        extraChargeNightsTableLayout?.run {
-            if (info.consecutiveInformation == null || !info.consecutiveInformation.enable) {
+        extraChargeDescriptionGridView?.run {
+            if (info.descriptionList == null || info.descriptionList.size == 0) {
                 visibility = View.GONE
             } else {
                 visibility = View.VISIBLE
 
-                setTitleVisible(true)
-                setTitleText(R.string.label_stay_room_extra_charge_consecutive_title)
-                clearTableLayout()
-
-                addTableRow(context.resources.getString(R.string.label_stay_room_extra_charge_consecutive_item_title)
-                        , getExtraChargePrice(info.consecutiveInformation.charge), "", false)
+                columnCount = 1
+                setData(""
+                        , DailyRoomInfoView.ItemType.DOT, info.descriptionList, largeView, true)
             }
         }
     }
