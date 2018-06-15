@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.util.Constants
 import com.twoheart.dailyhotel.util.Util
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 class StayRoomsPresenter(activity: StayRoomsActivity)//
@@ -277,7 +276,6 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
         viewInterface.setIndicatorText(position + 1)
         viewInterface.setBookingButtonText(position)
-//        viewInterface.setInvisibleData(position)
 
         real.runTrue {
             (position in 0 until roomList.size).runFalse { return }

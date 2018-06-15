@@ -11,10 +11,6 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -77,9 +73,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     ExLog.d("sam - onScrollStateChanged : newState : $newState, position : $position")
 
                     if (RecyclerView.SCROLL_STATE_IDLE == newState) {
-                        recyclerView?.post {
-                            setInvisibleData(position)
-                        }
+                        setInvisibleData(position)
                     }
                 }
             })
@@ -183,47 +177,49 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     }
 
     override fun setInvisibleData(position: Int) {
-        val room = listAdapter.getItem(position) ?: return
+        viewDataBinding.recyclerView.post {
+            val room = listAdapter.getItem(position) ?: return@post
 
-        val rootView = viewDataBinding.invisibleLayout ?: return
+            val rootView = viewDataBinding.invisibleLayout ?: return@post
 
-        val roomNameTextView: DailyTextView? = rootView.findViewById(R.id.roomNameTextView)
+            val roomNameTextView: DailyTextView? = rootView.findViewById(R.id.roomNameTextView)
 
-        listAdapter.setImageInformationView(rootView, position, room)
+            listAdapter.setImageInformationView(rootView, position, room)
 
-        roomNameTextView?.text = room.name
+            roomNameTextView?.text = room.name
 
-        listAdapter.setAmountInformationView(rootView, room.amountInformation, true)
+            listAdapter.setAmountInformationView(rootView, room.amountInformation, true)
 
-        listAdapter.setRefundInformationView(rootView, room.refundInformation)
+            listAdapter.setRefundInformationView(rootView, room.refundInformation)
 
-        listAdapter.setBaseInformationView(rootView, room)
+            listAdapter.setBaseInformationView(rootView, room)
 
-        listAdapter.setAttributeInformationView(rootView, room.attributeInformation, true)
+            listAdapter.setAttributeInformationView(rootView, room.attributeInformation, true)
 
-        val benefitList = mutableListOf<String>()
+            val benefitList = mutableListOf<String>()
 
-        val breakfast = room.personsInformation?.breakfast ?: 0
-        if (breakfast > 0) {
-            benefitList.add(context.resources.getString(R.string.label_stay_room_breakfast_person, breakfast))
+            val breakfast = room.personsInformation?.breakfast ?: 0
+            if (breakfast > 0) {
+                benefitList.add(context.resources.getString(R.string.label_stay_room_breakfast_person, breakfast))
+            }
+
+            if (!room.benefit.isTextEmpty()) {
+                benefitList.add(room.benefit)
+            }
+            listAdapter.setRoomBenefitInformationView(rootView, benefitList, true)
+
+            listAdapter.setRewardAndCouponInformationView(rootView, room.provideRewardSticker, room.hasUsableCoupon)
+
+            listAdapter.setCheckTimeInformationView(rootView, room.checkTimeInformation)
+
+            listAdapter.setRoomDescriptionInformationView(rootView, room.descriptionList, true)
+
+            listAdapter.setRoomAmenityInformationView(rootView, room.amenityList, true)
+
+            listAdapter.setRoomChargeInformationView(rootView, room.roomChargeInformation, true)
+
+            listAdapter.setNeedToKnowInformationView(rootView, room.needToKnowList, true)
         }
-
-        if (!room.benefit.isTextEmpty()) {
-            benefitList.add(room.benefit)
-        }
-        listAdapter.setRoomBenefitInformationView(rootView, benefitList, true)
-
-        listAdapter.setRewardAndCouponInformationView(rootView, room.provideRewardSticker, room.hasUsableCoupon)
-
-        listAdapter.setCheckTimeInformationView(rootView, room.checkTimeInformation)
-
-        listAdapter.setRoomDescriptionInformationView(rootView, room.descriptionList, true)
-
-        listAdapter.setRoomAmenityInformationView(rootView, room.amenityList, true)
-
-        listAdapter.setRoomChargeInformationView(rootView, room.roomChargeInformation, true)
-
-        listAdapter.setNeedToKnowInformationView(rootView, room.needToKnowList, true)
     }
 
     override fun showInvisibleLayout(): Boolean {
@@ -525,6 +521,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (listAdapter.itemCount == 0) return false
             if (event == null) return false
+            if (viewDataBinding.recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE) return false
 
             setRecyclerScrollEnabled()
 
