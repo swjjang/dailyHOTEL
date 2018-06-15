@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.text.Spannable

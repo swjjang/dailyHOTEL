@@ -23,6 +23,7 @@ import com.daily.base.util.*
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyToolbarView
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
@@ -421,8 +422,6 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
         nestedScrollView?.scrollY = 0
 
-        val checkValue = 0.3f * maxTransY
-
         val animatorSet = AnimatorSet()
         animatorSet.duration = duration
         animatorSet.interpolator = AccelerateDecelerateInterpolator()
@@ -517,6 +516,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         private var prevY: Float = 0.toFloat()
         private var startScaleX = maxScaleX
         private var startTransY = minTransY
+        private var canClickAble = true
 
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (listAdapter.itemCount == 0) return false
@@ -531,26 +531,20 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
                     prevY = event.y
                     startScaleX = viewDataBinding.invisibleLayout!!.scaleX
                     startTransY = viewDataBinding.invisibleLayout!!.translationY
+                    canClickAble = true
 
                     moveState = MOVE_STATE_NONE
                 }
 
                 MotionEvent.ACTION_UP -> run {
+                    canClickAble.runTrue {
+                        canClickAble = getClickAble(prevX, prevY, event.x, event.y)
+                    }
 
-                    val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-
-                    val x = (prevX - event.x).toInt()
-                    val y = (prevY - event.y).toInt()
-
-                    val distance = Math.sqrt((x * x + y * y).toDouble()).toInt()
-                    if (distance < touchSlop) {
-                        val oldMoveState = moveState
+                    if (canClickAble) {
                         moveState = MOVE_STATE_NONE
-
-                        if (MOVE_STATE_NONE == oldMoveState) {
-                            startInvisibleLayoutAnimation(true)
-                            return false
-                        }
+                        startInvisibleLayoutAnimation(true)
+                        return true
                     }
 
                     when (moveState) {
@@ -566,11 +560,16 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
                 MotionEvent.ACTION_CANCEL -> {
                     moveState = MOVE_STATE_NONE
+                    canClickAble = true
                 }
 
                 MotionEvent.ACTION_MOVE -> {
                     val x = event.x
                     val y = event.y
+
+                    canClickAble.runTrue {
+                        canClickAble = getClickAble(prevX, prevY, x, y)
+                    }
 
                     when (moveState) {
                         MOVE_STATE_NONE -> {
@@ -642,6 +641,15 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             return false
         }
+    }
+
+    private fun getClickAble(preX: Float, preY: Float, eventX: Float, eventY: Float): Boolean {
+        val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+        val x = (preX - eventX).toInt()
+        val y = (preY - eventY).toInt()
+        val distance = Math.sqrt((x * x + y * y).toDouble()).toInt()
+
+        return distance < touchSlop
     }
 
     private val invisibleLayoutTouchListener = object : View.OnTouchListener {
