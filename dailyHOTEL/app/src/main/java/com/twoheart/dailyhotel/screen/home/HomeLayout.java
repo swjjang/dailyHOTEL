@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -45,6 +46,7 @@ import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowHomeSeasonBannerDataBinding;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
@@ -100,6 +102,7 @@ public class HomeLayout extends BaseBlurLayout
     DailyCarouselAnimationLayout mRecentListLayout;
     DailyCarouselAnimationLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
+    private ListRowHomeSeasonBannerDataBinding mListRowHomeSeasonBannerDataBinding;
 
     private DailyRewardCardView mDailyRewardCardView;
 
@@ -157,6 +160,8 @@ public class HomeLayout extends BaseBlurLayout
         void onRewardLoginClick();
 
         void onRewardDetailClick();
+
+        void onSeasonBannerClick(Event event);
     }
 
     public enum MessageType
@@ -335,6 +340,7 @@ public class HomeLayout extends BaseBlurLayout
         initEventLayout(mHomeContentLayout);
         initScrollButtonLayout(mHomeContentLayout);
         initCategoryLayout(mHomeContentLayout);
+        initSeasonBannerLayout(mHomeContentLayout);
         initTextMessageLayout(mHomeContentLayout);
 
         if (DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() == true)
@@ -416,6 +422,18 @@ public class HomeLayout extends BaseBlurLayout
         layout.addView(mCategoryLayout);
 
         mCategoryLayout.setOnItemClickListener(dailyCategoryType -> ((OnEventListener) mOnEventListener).onCategoryItemClick(dailyCategoryType));
+    }
+
+    private void initSeasonBannerLayout(LinearLayout layout)
+    {
+        if (layout == null || mContext == null)
+        {
+            return;
+        }
+
+        mListRowHomeSeasonBannerDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_home_season_banner_data, layout, true);
+        mListRowHomeSeasonBannerDataBinding.getRoot().setVisibility(View.GONE);
+        mListRowHomeSeasonBannerDataBinding.seasonBannerSimpleDraweeView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onSeasonBannerClick((Event) v.getTag()));
     }
 
     private void initTextMessageLayout(LinearLayout layout)
@@ -869,6 +887,31 @@ public class HomeLayout extends BaseBlurLayout
 
                 mEventCountTextView.setText(spannableString);
             }
+        }
+    }
+
+    public void setSeasonBannerVisible(boolean visible)
+    {
+        if (mListRowHomeSeasonBannerDataBinding == null)
+        {
+            return;
+        }
+
+        mListRowHomeSeasonBannerDataBinding.getRoot().setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    public void setSeasonBanner(String imageUrl, Event event)
+    {
+        if (mListRowHomeSeasonBannerDataBinding == null)
+        {
+            return;
+        }
+
+        mListRowHomeSeasonBannerDataBinding.seasonBannerSimpleDraweeView.setTag(event);
+
+        if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+        {
+            mListRowHomeSeasonBannerDataBinding.seasonBannerSimpleDraweeView.setImageURI(imageUrl);
         }
     }
 

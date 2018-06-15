@@ -83,6 +83,7 @@ class DailyRemoteConfig(private val context: Context) {
         setSearch(context, remoteConfig.getString("ANDSearch"))
         setReward(context, remoteConfig.getString("Marketing_ANDRewardSticker"))
         setPaymentCardEvent(context, remoteConfig.getString("Marketing_ANDPaymentCardEvent"))
+        setHomeSeasonBanner(context, remoteConfig.getString("Marketing_ANDHomeSeasonBanner"))
 
         val versionPair = getVersionNsetMessages(context, remoteConfig.getString("ANDVersion"))
         listener.onComplete(versionPair?.first, versionPair?.second)
@@ -280,6 +281,22 @@ class DailyRemoteConfig(private val context: Context) {
         }
     }
 
+    internal fun setHomeSeasonBanner(context: Context, jsonString: String) {
+        jsonString.takeNotEmpty {
+            try {
+                val jsonObject = JSONObject(it)
+
+                DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigHomeSeasonBannerEnabled = jsonObject.getBoolean("enabled")
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigHomeSeasonBannerImageUrl = jsonObject.getString("imageUrl")
+                DailyRemoteConfigPreference.getInstance(context).keyRemoteConfigHomeSeasonBannerEventIndex = jsonObject.getInt("eventIndex")
+            } catch (e: Exception) {
+                ExLog.e(e.toString())
+
+                DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigHomeSeasonBannerEnabled = false
+            }
+        }
+    }
+
     internal fun getVersionNsetMessages(context: Context, jsonString: String): Pair<String?, String?>? {
         jsonString.takeNotEmpty {
             try {
@@ -306,6 +323,4 @@ class DailyRemoteConfig(private val context: Context) {
 
         return null
     }
-
-
 }

@@ -153,11 +153,11 @@ class DailyRemoteConfigTest {
 
     @Test
     fun testSetHomeDefaultEvent() {
-        val testJson01 = "{\"updateTime\":\"2017-02-16T09:00:00+09:00\",\"index\":0,\"title\":\"데일리, 추천을 발견하다\",\"eventUrl\":\"http://m.dailyhotel.co.kr/banner/170215default\",\"lowResolution\":\"http://img.dailyhotel.me/inapp_marketing/home_default_720-405.jpg\",\"highResolution\":\"http://img.dailyhotel.me/inapp_marketing/home_default_1440-810.jpg\"}"
+        val testJson01 = "{\"updateTime\":\"2018-05-25T09:00:00+09:00\",\"index\":0,\"title\":\"데일리, 추천을 발견하다\",\"eventUrl\":\"http://m.dailyhotel.co.kr/banner/170215default\",\"lowResolution\":\"http://img.dailyhotel.me/inapp_marketing/home_default_720-405.jpg\",\"highResolution\":\"http://img.dailyhotel.me/inapp_marketing/home_default_720-405.jpg\"}"
 
         remoteConfig.setHomeDefaultEvent(context, testJson01)
 
-        assertEquals("2017-02-16T09:00:00+09:00", preference.remoteConfigHomeEventCurrentVersion)
+        assertEquals("2018-05-25T09:00:00+09:00", preference.remoteConfigHomeEventCurrentVersion)
         assertTrue(preference.remoteConfigHomeEventIndex == 0)
 
         assertEquals("데일리, 추천을 발견하다", preference.remoteConfigHomeEventTitle)
@@ -327,27 +327,6 @@ class DailyRemoteConfigTest {
     }
 
     @Test
-    fun testSetAppResearch() {
-        val testJson01 = "[\"com.cultsotry.yanolja.nativeapp\",\"kr.goodchoice.abouthere\"]"
-
-        remoteConfig.setAppResearch(context, testJson01)
-
-        assertEquals("[\"com.cultsotry.yanolja.nativeapp\",\"kr.goodchoice.abouthere\"]", preference.keyRemoteConfigAppResearch)
-
-        val testJson02 = ""
-
-        remoteConfig.setAppResearch(context, testJson02)
-
-        assertEquals("[\"com.cultsotry.yanolja.nativeapp\",\"kr.goodchoice.abouthere\"]", preference.keyRemoteConfigAppResearch)
-
-        val testJson03 = "[]"
-
-        remoteConfig.setAppResearch(context, testJson03)
-
-        assertEquals("[]", preference.keyRemoteConfigAppResearch)
-    }
-
-    @Test
     fun testSetPaymentCardEvent() {
         val testJson01 = "{\"enabled\":true,\"events\":[{\"enabled\":true,\"startDateTime\":\"2017-12-31T09:00:00+09:00\",\"endDateTime\":\"2017-12-31T09:00:00+09:00\",\"title\":\"BC 카드 결제시 할인\",\"messages\":[\"10만원 이상 결제시 10,000원 할인\"]},{\"enabled\":false,\"startDateTime\":\"2018-01-02T09:00:00+09:00\",\"endDateTime\":\"2018-03-20T09:00:00+09:00\",\"title\":\"PAYCO 결제시 할인\",\"messages\":[\"생애 첫 결제 7,000원 즉시 할이\",\"10만원 이상 결제시 10,000원 할인\"]}]}"
 
@@ -360,5 +339,27 @@ class DailyRemoteConfigTest {
         remoteConfig.setPaymentCardEvent(context, testJson02)
 
         assertTrue(preference.keyRemoteConfigPaymentCardEvent.isNullOrEmpty())
+    }
+
+    @Test
+    fun testSetHomeSeasonBanner() {
+        val testJson01 = "{\"enabled\":true,\"imageUrl\":\"http://img.dailyhotel.me/resources/images/home_event/180406_glad_lg.jpg\",\"eventIndex\":205}"
+
+        remoteConfig.setHomeSeasonBanner(context, testJson01)
+
+        assertTrue(preference.isKeyRemoteConfigHomeSeasonBannerEnabled)
+        assertEquals(preference.keyRemoteConfigHomeSeasonBannerImageUrl, "http://img.dailyhotel.me/resources/images/home_event/180406_glad_lg.jpg")
+        assertEquals(preference.keyRemoteConfigHomeSeasonBannerEventIndex, 205)
+
+        val testJson02 = "{\"enabled\":false,\"imageUrl\":\"http://img.dailyhotel.me/resources/images/home_event/180406_glad_lg.jpg\",\"eventIndex\":205}"
+
+        remoteConfig.setHomeSeasonBanner(context, testJson02)
+        assertFalse(preference.isKeyRemoteConfigHomeSeasonBannerEnabled)
+
+
+        val testJson03 = "ilyhotel.me/resources/images/home_event/180406_glad_lg.jpg\",\"eventIndex\":205}"
+
+        remoteConfig.setHomeSeasonBanner(context, testJson03)
+        assertFalse(preference.isKeyRemoteConfigHomeSeasonBannerEnabled)
     }
 }

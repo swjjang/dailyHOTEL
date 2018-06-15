@@ -158,6 +158,11 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE = "451";
     private static final String KEY_REMOTE_CONFIG_GOURMET_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE = "452";
 
+    // 성수기 배너
+    private static final String KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_ENABLED = "455";
+    private static final String KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_IMAGE_URL = "456";
+    private static final String KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_EVENT_INDEX = "457";
+
     // A/B Test
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
@@ -1235,5 +1240,37 @@ public class DailyRemoteConfigPreference
     public boolean isKeyRemoteConfigGourmetDetailTrueReviewProductVisible()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_DETAIL_TRUEREVIEW_PRODUCT_VISIBLE, true);
+    }
+
+    // 성수기 배너
+
+    public void setKeyRemoteConfigHomeSeasonBannerEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_ENABLED, value);
+    }
+
+    public boolean isKeyRemoteConfigHomeSeasonBannerEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_ENABLED, false);
+    }
+
+    public void setKeyRemoteConfigHomeSeasonBannerImageUrl(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_IMAGE_URL, value);
+    }
+
+    public String getKeyRemoteConfigHomeSeasonBannerImageUrl()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_IMAGE_URL, null);
+    }
+
+    public void setKeyRemoteConfigHomeSeasonBannerEventIndex(int value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_EVENT_INDEX, value);
+    }
+
+    public int getKeyRemoteConfigHomeSeasonBannerEventIndex()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_SEASON_BANNER_EVENT_INDEX, -1);
     }
 }

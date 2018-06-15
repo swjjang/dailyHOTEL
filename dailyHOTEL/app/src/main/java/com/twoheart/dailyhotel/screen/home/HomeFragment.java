@@ -1943,6 +1943,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
+            if (lockUiComponentAndIsLockUiComponent())
+            {
+                return;
+            }
+
             String imageUrl = DailyTextUtils.isTextEmpty(event.lowResolutionImageUrl) ? event.defaultImageUrl : event.lowResolutionImageUrl;
 
             HomeFragment.this.startEventWebActivity(event.linkUrl, event.title, event.description, imageUrl);
@@ -2479,6 +2484,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
+        public void onSeasonBannerClick(Event event)
+        {
+            onEventItemClick(event);
+        }
+
+        @Override
         public void finish()
         {
             unLockUI();
@@ -2494,6 +2505,34 @@ public class HomeFragment extends BaseMenuNavigationFragment
             if (mHomeLayout != null)
             {
                 mHomeLayout.setEventList(list);
+
+                if (DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigHomeSeasonBannerEnabled())
+                {
+                    int index = DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigHomeSeasonBannerEventIndex();
+
+                    Event seasonEvent = null;
+
+                    for (Event event : list)
+                    {
+                        if (index == event.index)
+                        {
+                            seasonEvent = event;
+                            break;
+                        }
+                    }
+
+                    if (seasonEvent == null)
+                    {
+                        mHomeLayout.setSeasonBannerVisible(false);
+                    } else
+                    {
+                        mHomeLayout.setSeasonBannerVisible(true);
+                        mHomeLayout.setSeasonBanner(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigHomeSeasonBannerImageUrl(), seasonEvent);
+                    }
+                } else
+                {
+                    mHomeLayout.setSeasonBannerVisible(false);
+                }
             }
         }
 
