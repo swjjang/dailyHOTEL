@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
@@ -595,9 +596,7 @@ public class StayWishListFragment extends PlaceWishListFragment
 
                     if (wishResult.success == false)
                     {
-                        mBaseActivity.showSimpleDialog(getResources().getString(R.string.dialog_notice2) //
-                            , wishResult.message, getResources().getString(R.string.dialog_btn_text_confirm), null);
-
+                        DailyToast.showToast(mBaseActivity, wishResult.message, DailyToast.LENGTH_SHORT);
                         return;
                     }
 

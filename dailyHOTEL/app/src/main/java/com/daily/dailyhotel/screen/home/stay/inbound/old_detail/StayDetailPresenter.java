@@ -719,7 +719,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             intent.putExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, true);
                             setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
-                            if (wishResult.success == true)
+                            if (wishResult.success)
                             {
                                 mStayDetail.myWish = true;
                                 mStayDetail.wishCount++;
@@ -747,10 +747,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             } else
                             {
                                 notifyWishChanged(mStayDetail.wishCount, mStayDetail.myWish);
-
-                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
-                                    , getString(R.string.dialog_btn_text_confirm), null);
-
+                                getViewInterface().showToast(wishResult.message, DailyToast.LENGTH_LONG);
                                 unLockAll();
                             }
                         }
@@ -776,7 +773,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             intent.putExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false);
                             setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
-                            if (wishResult.success == true)
+                            if (wishResult.success)
                             {
                                 mStayDetail.myWish = false;
                                 mStayDetail.wishCount -= 1;
@@ -804,10 +801,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             } else
                             {
                                 notifyWishChanged(mStayDetail.wishCount, mStayDetail.myWish);
-
-                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
-                                    , getString(R.string.dialog_btn_text_confirm), null);
-
+                                getViewInterface().showToast(wishResult.message, DailyToast.LENGTH_LONG);
                                 unLockAll();
                             }
                         }
