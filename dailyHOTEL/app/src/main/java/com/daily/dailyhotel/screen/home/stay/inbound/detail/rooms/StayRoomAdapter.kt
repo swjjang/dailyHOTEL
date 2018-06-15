@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.text.Spannable
@@ -21,7 +20,10 @@ import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.storage.preference.DailyPreference
-import com.daily.dailyhotel.util.*
+import com.daily.dailyhotel.util.isNotNullAndNotEmpty
+import com.daily.dailyhotel.util.isTextEmpty
+import com.daily.dailyhotel.util.letNotEmpty
+import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoTableView
 import com.daily.dailyhotel.view.DailyRoomInfoView
 import com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout

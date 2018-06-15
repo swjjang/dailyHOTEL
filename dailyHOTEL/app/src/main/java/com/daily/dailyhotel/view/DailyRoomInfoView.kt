@@ -104,7 +104,7 @@ class DailyRoomInfoView : LinearLayout {
                     val showTopMargin = index >= columnCount
                     val isBold = columnCount == 1 && text.startsWith("**")
 
-                    needSubLayout?.runTrue {
+                    needSubLayout.runTrue {
                         subLayout = getSubLayout(largeView, showTopMargin, isBold)
                         subLayout.removeAllViews()
 
