@@ -243,7 +243,7 @@ dependencies {
 
     implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.3@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 
