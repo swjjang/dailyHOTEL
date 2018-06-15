@@ -1247,10 +1247,10 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 }
 
                 if (hasCheckInformation(it.checkInformation)) {
-                    setCheckInformationVisible(true);
+                    setCheckInformationVisible(true)
                     setCheckInformation(it.checkInformation!!)
                 } else {
-                    setCheckInformationVisible(false);
+                    setCheckInformationVisible(false)
                 }
 
                 viewInterface.setSelectedRoomFilterCount(getRoomFilterCount(it.roomInformation?.roomList, bedTypeFilter, facilitiesFilter))
@@ -1518,7 +1518,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
     }
 
     private fun getLowestPriceRoom(roomList: List<Room>, bedTypeFilter: LinkedHashSet<String>, facilitiesFilter: LinkedHashSet<String>): Int {
-        val filteredRoomList = getFilteredRoomList(roomList, bedTypeFilter, facilitiesFilter).sortedWith(Comparator<Room> { room1, room2 ->
+        val filteredRoomList = getFilteredRoomList(roomList, bedTypeFilter, facilitiesFilter).sortedWith(Comparator { room1, room2 ->
             room1.amountInformation.discountAverage - room2.amountInformation.discountAverage
         })
 

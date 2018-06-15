@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.common.dialog.wish;
 
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -290,7 +289,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
         screenLock(false);
 
-        if (wishResult.success == true)
+        if (wishResult.success)
         {
             Observable<Boolean> observable = getViewInterface().showWishView(wish);
 
@@ -316,16 +315,9 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
             }
         } else
         {
-            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
-                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        finish();
-                    }
-                });
-
+            getViewInterface().showToast(wishResult.message, DailyToast.LENGTH_LONG);
+            setResult(BaseActivity.RESULT_CODE_ERROR, new Intent().putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, !mWish));
+            finish();
             unLockAll();
         }
     }

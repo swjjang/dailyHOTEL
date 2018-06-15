@@ -19,7 +19,9 @@ import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
 import android.widget.LinearLayout
 import com.daily.base.BaseDialogView
-import com.daily.base.util.*
+import com.daily.base.util.DailyTextUtils
+import com.daily.base.util.ExLog
+import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.util.isTextEmpty

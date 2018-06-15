@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil
 import android.support.constraint.ConstraintLayout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -51,7 +52,16 @@ class DailyDetailRoomView : ConstraintLayout {
 
         isPriceAverageType = isAverageType
         viewDataBinding.discountPriceTextView.text = getPrice(isAverageType)
-        viewDataBinding.wonTextView.text = context.getString(R.string.currency) + if (isAverageType) context.getString(R.string.label_stay_detail_slash_one_nights) else ""
+
+        if (isAverageType) {
+            val spannableStringBuilder = SpannableStringBuilder(context.getString(R.string.currency) + context.getString(R.string.label_stay_detail_slash_one_nights))
+            spannableStringBuilder.setSpan(ForegroundColorSpan(resources.getColor(R.color.default_text_c4d4d4d)), //
+                    1, spannableStringBuilder.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            viewDataBinding.wonTextView.text = spannableStringBuilder
+        } else {
+            viewDataBinding.wonTextView.text = context.getString(R.string.currency)
+        }
     }
 
     private fun getPrice(isAverageType: Boolean): String? {
