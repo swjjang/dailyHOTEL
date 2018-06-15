@@ -667,6 +667,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
 
             setRecyclerScrollEnabled()
 
+            @Suppress("DEPRECATION")
             when (event.action and MotionEventCompat.ACTION_MASK) {
                 MotionEvent.ACTION_DOWN -> {
                     preY = event.y
