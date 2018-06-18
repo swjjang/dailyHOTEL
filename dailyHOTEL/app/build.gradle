@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply from: "$project.rootDir/app/script-git-version.gradle"
 
 buildscript {
     repositories {
@@ -85,6 +86,7 @@ android {
             debuggable true
             applicationIdSuffix ".debug"
             buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+            buildConfigField ("String", "GIT_VERSION", "\"${gitVersionName}\"")
         }
     }
 
