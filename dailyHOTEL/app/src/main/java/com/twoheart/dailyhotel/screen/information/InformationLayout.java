@@ -15,6 +15,7 @@ import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.twoheart.dailyhotel.BuildConfig;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
@@ -118,11 +119,16 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             , Integer.parseInt(DailyHotel.VERSION_CODE.substring(3, 5)) //
             , DailyHotel.VERSION_CODE.substring(5, 7));
 
+        if (Constants.DEBUG)
+        {
+            dotVersion += " - " + BuildConfig.GIT_VERSION;
+        }
+
         versionTextView.setText(dotVersion);
 
         View debugLayout = view.findViewById(R.id.debugLayout);
 
-        if (Constants.DEBUG == true)
+        if (Constants.DEBUG)
         {
             debugLayout.setVisibility(View.VISIBLE);
 
