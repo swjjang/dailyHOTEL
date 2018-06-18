@@ -40,12 +40,10 @@ class DailyRoomInfoView : LinearLayout {
         private const val SMALL_TITLE_TEXT_SIZE = 16.0
         private const val SMALL_ICON_DRAW_PADDING = 6.0
         private const val SMALL_LINE_MARGIN_TOP = 12.0
-        private const val SMALL_MORE_TEXT_MARGIN_TOP = 12.0
 
         private const val LARGE_TITLE_TEXT_SIZE = 18.0
         private const val LARGE_ICON_DRAW_PADDING = 10.0
         private const val LARGE_LINE_MARGIN_TOP = 17.0
-        private const val LARGE_MORE_TEXT_MARGIN_TOP = 14.0
 
         private const val NORMAL_ITEM_TEXT_SIZE = 14f
         private const val BOLD_ITEM_TEXT_SIZE = 16f
@@ -73,9 +71,9 @@ class DailyRoomInfoView : LinearLayout {
 
         orientation = LinearLayout.VERTICAL
 
-        viewDataBinding.moreTextView.setOnClickListener({
+        viewDataBinding.moreTextView.setOnClickListener {
             showMoreList()
-        })
+        }
     }
 
     fun setData(title: String, type: ItemType, list: MutableList<String> = mutableListOf(), largeView: Boolean, showAll: Boolean = false) {
@@ -89,7 +87,7 @@ class DailyRoomInfoView : LinearLayout {
             }
 
             (moreTextView.layoutParams as LinearLayout.LayoutParams).run {
-                topMargin = ScreenUtils.dpToPx(context, if (largeView) LARGE_MORE_TEXT_MARGIN_TOP else SMALL_MORE_TEXT_MARGIN_TOP)
+                topMargin = ScreenUtils.dpToPx(context, if (largeView) LARGE_LINE_MARGIN_TOP else SMALL_LINE_MARGIN_TOP)
             }
 
             itemLayout.removeAllViews()
