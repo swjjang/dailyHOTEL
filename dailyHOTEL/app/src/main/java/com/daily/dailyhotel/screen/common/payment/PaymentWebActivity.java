@@ -121,11 +121,25 @@ public class PaymentWebActivity extends BasePaymentWebActivity
         webViewPostAsyncTask.execute(url);
     }
 
-    protected class WebViewPostAsyncTask extends AsyncTask<String, Void, Response>
+    protected class WebViewPostAsyncTask extends AsyncTask<String, Void, WebViewPostAsyncTask.ResponseData>
     {
         private WebView mWebView;
         private String mJSONString;
         private String mUrl;
+
+        class ResponseData
+        {
+            int resultCode;
+            String message;
+            String data;
+
+            ResponseData(int resultCode, String message, String data)
+            {
+                this.resultCode = resultCode;
+                this.message = message;
+                this.data = data;
+            }
+        }
 
         public WebViewPostAsyncTask(WebView webView, String jsonString)
         {
@@ -134,7 +148,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
         }
 
         @Override
-        protected Response doInBackground(String... params)
+        protected ResponseData doInBackground(String... params)
         {
             mUrl = params[0];
 
@@ -159,17 +173,21 @@ public class PaymentWebActivity extends BasePaymentWebActivity
                     .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), mJSONString)).build();
 
                 Response response = okHttpClient.newCall(request).execute();
-                return response;
+
+                if (response != null)
+                {
+                    return new ResponseData(response.code(), response.message(), response.body().string());
+                }
             } catch (Exception e)
             {
-                ExLog.d(e.toString());
+                ExLog.e(e.toString());
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(Response response)
+        protected void onPostExecute(ResponseData response)
         {
             if (response == null)
             {
@@ -178,7 +196,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
                 return;
             }
 
-            int code = response.code();
+            int code = response.resultCode;
 
             // 세션이 만료된 경우
             if (code == 401)
@@ -191,7 +209,8 @@ public class PaymentWebActivity extends BasePaymentWebActivity
             // 가격이 변동된 경우
             if (code == 1190)
             {
-                String message = response.message();
+                String message = response.message;
+
                 if (DailyTextUtils.isTextEmpty(message) == true)
                 {
                     message = getString(R.string.dialog_msg_hotel_payment_changed_price);
@@ -217,14 +236,11 @@ public class PaymentWebActivity extends BasePaymentWebActivity
                 return;
             }
 
-            String data = null;
+            String data = response.data;
 
-            try
+            if (DEBUG == true)
             {
-                data = response.body().string();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
+                ExLog.d("pinkred : " + data);
             }
 
             if (DailyTextUtils.isTextEmpty(data) == true)

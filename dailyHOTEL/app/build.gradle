@@ -85,6 +85,18 @@ android {
             debuggable true
             applicationIdSuffix ".debug"
             buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+
+            def getGitHash = { ->
+                def stdout = new ByteArrayOutputStream()
+                exec {
+                    commandLine 'git', 'rev-parse', '--short', 'HEAD'
+                    standardOutput = stdout
+                }
+
+                return stdout.toString().trim()
+            }
+
+            buildConfigField ("String", "GIT_VERSION", "\"${getGitHash()}\"")
         }
     }
 
