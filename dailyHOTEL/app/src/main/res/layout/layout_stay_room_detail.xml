@@ -173,7 +173,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/shape_stay_room_refund_policy_nrd_background"
-                    android:paddingBottom="4dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
                     android:paddingTop="3dp"
@@ -690,7 +690,7 @@
                     android:layout_below="@+id/extraChargePersonTableLayout"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="30dp"/>
+                    android:layout_marginTop="20dp"/>
 
                 <com.daily.dailyhotel.view.DailyRoomInfoTableView
                     android:id="@+id/extraChargeNightsTableLayout"
@@ -699,7 +699,7 @@
                     android:layout_below="@+id/extraChargeBedTableLayout"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="30dp"/>
+                    android:layout_marginTop="20dp"/>
 
                 <com.daily.dailyhotel.view.DailyRoomInfoView
                     android:id="@+id/extraChargeDescriptionGridView"
@@ -708,7 +708,7 @@
                     android:layout_below="@+id/extraChargeNightsTableLayout"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="30dp"/>
+                    android:layout_marginTop="20dp"/>
 
                 <View
                     android:layout_width="match_parent"
