@@ -36,7 +36,14 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
         initLayout(context)
     }
 
-    var maxWidth = -1
+    private var maxWidth = -1
+    private val paint = Paint()
+    private var horizontalPadding = 0
+    private val separator = ", "
+    private val itemTextSize: Float = 11f
+    private var itemTextColor: Int = 0
+    private var itemTopMargin: Int = 0
+    private lateinit var fontTypeFace: Typeface
 
     private fun initLayout(context: Context?) {
         if (context == null) return
@@ -53,22 +60,9 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
 
         orientation = LinearLayout.VERTICAL
 
-        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                viewTreeObserver.removeOnPreDrawListener(this)
-                maxWidth = measuredWidth - horizontalPadding
-                return true
-            }
-        })
+        paint.textSize = ScreenUtils.dpToPx(context, itemTextSize.toDouble()).toFloat()
+        paint.typeface = fontTypeFace
     }
-
-    private val paint = Paint()
-    private var horizontalPadding = 0
-    private val separator = ", "
-    private val itemTextSize: Float = 11f
-    private var itemTextColor: Int = 0
-    private var itemTopMargin: Int = 0
-    private lateinit var fontTypeFace: Typeface
 
     fun setData(list: MutableList<String>?) {
         removeAllViews()
@@ -78,8 +72,23 @@ class DailyStayRoomBedDescriptionLayout : LinearLayout {
             return
         }
 
-        paint.textSize = ScreenUtils.dpToPx(context, itemTextSize.toDouble()).toFloat()
-        paint.typeface = fontTypeFace
+        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                viewTreeObserver.removeOnPreDrawListener(this)
+                maxWidth = measuredWidth - horizontalPadding
+
+                post {
+                    addAllItemView(list)
+                }
+                return true
+            }
+        })
+    }
+
+    private fun addAllItemView(list: MutableList<String>) {
+        removeAllViews()
+
+        (list.isEmpty()).runTrue { return }
 
         var lineCount = 0
         var temp = ""

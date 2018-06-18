@@ -533,11 +533,11 @@ class StayDetailPresenter(activity: StayDetailActivity)//
 
         val imageUrl = if (defaultImageUrl.isTextEmpty()) stayDetail.imageList?.get(0)?.imageMap?.bigUrl else defaultImageUrl
 
-        addCompositeDisposable(observable.flatMap({
+        addCompositeDisposable(observable.flatMap {
             recentlyLocalImpl.addRecentlyItem(activity, Constants.ServiceType.HOTEL,
                     stayDetail.index, stayDetail.baseInformation?.name, null,
-                    imageUrl, it, false)
-        }).subscribe({}, { ExLog.e(it.toString()) }))
+                    imageUrl, it, true)
+        }.subscribe({}, { ExLog.e(it.toString()) }))
     }
 
     private fun showWishTooltip() {

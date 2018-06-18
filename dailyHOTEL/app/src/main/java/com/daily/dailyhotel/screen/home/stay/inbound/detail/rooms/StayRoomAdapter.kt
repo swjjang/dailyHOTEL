@@ -11,10 +11,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.daily.base.util.DailyImageSpan
-import com.daily.base.util.DailyTextUtils
-import com.daily.base.util.FontManager
-import com.daily.base.util.ScreenUtils
+import com.daily.base.util.*
 import com.daily.base.widget.DailyImageView
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
