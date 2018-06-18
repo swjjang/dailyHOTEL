@@ -462,6 +462,7 @@
                     android:layout_below="@+id/discountInfoTitleView"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:lineSpacingExtra="2dp"
                     android:layout_marginTop="14dp"
                     android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="14dp"/>
