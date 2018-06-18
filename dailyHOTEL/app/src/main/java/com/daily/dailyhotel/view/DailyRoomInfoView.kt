@@ -40,10 +40,12 @@ class DailyRoomInfoView : LinearLayout {
         private const val SMALL_TITLE_TEXT_SIZE = 16.0
         private const val SMALL_ICON_DRAW_PADDING = 6.0
         private const val SMALL_LINE_MARGIN_TOP = 12.0
+        private const val SMALL_MORE_TEXT_MARGIN_TOP = 12.0
 
         private const val LARGE_TITLE_TEXT_SIZE = 18.0
         private const val LARGE_ICON_DRAW_PADDING = 10.0
         private const val LARGE_LINE_MARGIN_TOP = 17.0
+        private const val LARGE_MORE_TEXT_MARGIN_TOP = 14.0
 
         private const val NORMAL_ITEM_TEXT_SIZE = 14f
         private const val BOLD_ITEM_TEXT_SIZE = 16f
@@ -84,6 +86,10 @@ class DailyRoomInfoView : LinearLayout {
                 titleTextLayout.visibility = View.VISIBLE
                 titleTextView.text = title
                 titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, if (largeView) LARGE_TITLE_TEXT_SIZE.toFloat() else SMALL_TITLE_TEXT_SIZE.toFloat())
+            }
+
+            (moreTextView.layoutParams as LinearLayout.LayoutParams).run {
+                topMargin = ScreenUtils.dpToPx(context, if (largeView) LARGE_MORE_TEXT_MARGIN_TOP else SMALL_MORE_TEXT_MARGIN_TOP)
             }
 
             itemLayout.removeAllViews()
@@ -268,6 +274,7 @@ class DailyRoomInfoView : LinearLayout {
 
             this.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 weight = 1f
+                setLineSpacing(2f, 1f)
             }
         }
     }
