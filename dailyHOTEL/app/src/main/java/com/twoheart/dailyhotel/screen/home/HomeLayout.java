@@ -342,15 +342,15 @@ public class HomeLayout extends BaseBlurLayout
         initCategoryLayout(mHomeContentLayout);
         initSeasonBannerLayout(mHomeContentLayout);
         initTextMessageLayout(mHomeContentLayout);
+        initRecentListLayout(mHomeContentLayout);
+        initRecommendationLayout(mHomeContentLayout);
+        initWishListLayout(mHomeContentLayout);
 
         if (DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() == true)
         {
             initRewardLayout(mHomeContentLayout);
         }
 
-        initRecentListLayout(mHomeContentLayout);
-        initWishListLayout(mHomeContentLayout);
-        initRecommendationLayout(mHomeContentLayout);
         initProviderInfoLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);
     }

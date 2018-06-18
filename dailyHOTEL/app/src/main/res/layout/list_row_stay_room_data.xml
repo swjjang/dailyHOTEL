@@ -563,6 +563,152 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/roomAmenityGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <View
+                android:id="@+id/roomAmenityGridLine"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <com.daily.dailyhotel.view.DailyRoomInfoView
+                android:id="@+id/roomAmenityGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/roomAmenityGridView"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/extraChargeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/extraChargeTitleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/label_stay_room_extra_charge_info_title"
+                android:textColor="@color/default_text_c4d4d4d"
+                android:textSize="16dp"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/extraChargeDescriptionView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/extraChargeTitleView"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/extraChargeTitleView"
+                android:layout_marginLeft="7.5dp"
+                android:layout_marginRight="14dp"
+                android:layout_toRightOf="@+id/extraChargeTitleView"
+                android:gravity="right|center_vertical"
+                android:text="@string/label_stay_room_extra_charge_info_description"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"/>
+
+            <com.daily.dailyhotel.view.DailyRoomInfoTableView
+                android:id="@+id/extraChargePersonTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/extraChargeTitleView"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"/>
+
+            <com.daily.dailyhotel.view.DailyRoomInfoTableView
+                android:id="@+id/extraChargeBedTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/extraChargePersonTableLayout"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"/>
+
+            <com.daily.dailyhotel.view.DailyRoomInfoTableView
+                android:id="@+id/extraChargeNightsTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/extraChargeBedTableLayout"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"/>
+
+            <com.daily.dailyhotel.view.DailyRoomInfoView
+                android:id="@+id/extraChargeDescriptionGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/extraChargeNightsTableLayout"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/extraChargeDescriptionGridView"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/roomCheckInfoGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <View
+                android:id="@+id/roomCheckInfoGridLine"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <com.daily.dailyhotel.view.DailyRoomInfoView
+                android:id="@+id/roomCheckInfoGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_below="@+id/roomCheckInfoGridLine"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/roomCheckInfoGridView"/>
+        </RelativeLayout>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
