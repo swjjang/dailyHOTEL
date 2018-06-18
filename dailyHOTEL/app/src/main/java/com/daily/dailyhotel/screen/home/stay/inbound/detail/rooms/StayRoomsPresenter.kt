@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.view.View
 import android.widget.CompoundButton
-import com.daily.base.util.ExLog
 import com.daily.base.widget.DailyToast
 import com.daily.dailyhotel.base.BaseExceptionPresenter
 import com.daily.dailyhotel.entity.*
@@ -146,7 +145,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
                 Observable.just(false)
             }
 
-            viewInterface.setToolbarTitle("$checkInDate - $checkOutDate ${bookDateTime.nights}박")
+            viewInterface.setToolbarTitle("$checkInDate - $checkOutDate ${activity.resources.getString(R.string.label_nights, bookDateTime.nights)}")
             viewInterface.setNights(bookDateTime.nights)
             viewInterface.setRoomList(roomList, position)
 
@@ -156,9 +155,9 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         addCompositeDisposable(observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
             viewInterface.notifyDataSetChanged()
             viewInterface.setRecyclerPosition(position)
-            viewInterface.initInvisibleLayout(position)
+            viewInterface.initRoomDetailLayout(position)
             onScrolled(position, false)
-            viewInterface.setInvisibleData(position)
+            viewInterface.setRoomDetailData(position)
             unLockAll()
         }, {
             onHandleError(it)
@@ -166,8 +165,8 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     }
 
     override fun onBackClick() {
-        if (viewInterface.showInvisibleLayout()) {
-            viewInterface.startInvisibleLayoutAnimation(false)
+        (viewInterface.showRoomDetailLayout()).runTrue {
+            viewInterface.startRoomDetailLayoutAnimation(false)
             return
         }
 
@@ -175,12 +174,16 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     }
 
     override fun onBackPressed(): Boolean {
-        if (viewInterface.showInvisibleLayout()) {
-            viewInterface.startInvisibleLayoutAnimation(false)
-            return true
-        }
+        return when (viewInterface.showRoomDetailLayout()) {
+            true -> {
+                viewInterface.startRoomDetailLayoutAnimation(false)
+                true
+            }
 
-        return super.onBackPressed()
+            else -> {
+                super.onBackPressed()
+            }
+        }
     }
 
     override fun onCloseClick() {
@@ -240,16 +243,22 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
                                 finishRoomDetailList(room.index)
                             }
 
-                            Util.VERIFY_DAILY_USER_NOT_VERIFY_PHONE -> startActivityForResult(EditProfilePhoneActivity.newInstance(activity//
-                                    , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
-                                    , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                            Util.VERIFY_DAILY_USER_NOT_VERIFY_PHONE -> {
+                                startActivityForResult(EditProfilePhoneActivity.newInstance(activity
+                                        , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)
+                                        , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                            }
 
-                            Util.VERIFY_SOCIAL_USER_NOT_VERIFY, Util.VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL -> startActivityForResult(AddProfileSocialActivity.newInstance(activity//
-                                    , Customer(user), user.birthday), StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                            Util.VERIFY_SOCIAL_USER_NOT_VERIFY, Util.VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL -> {
+                                startActivityForResult(AddProfileSocialActivity.newInstance(activity
+                                        , Customer(user), user.birthday), StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                            }
 
-                            Util.VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE -> startActivityForResult(EditProfilePhoneActivity.newInstance(activity//
-                                    , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
-                                    , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                            Util.VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE -> {
+                                startActivityForResult(EditProfilePhoneActivity.newInstance(activity
+                                        , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)
+                                        , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                            }
 
                             else -> {
                             }
@@ -271,8 +280,6 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         (centerPosition == position).runTrue { return }
 
         centerPosition = position
-
-        ExLog.d("sam - onScrolled , position : $position")
 
         viewInterface.setIndicatorText(position + 1)
         viewInterface.setBookingButtonText(position)
@@ -344,16 +351,22 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             trueVrList.add(trueVr)
         }
 
-        if (!DailyPreference.getInstance(activity).isTrueVRCheckDataGuide) {
-            viewInterface.showVrDialog(
-                    CompoundButton.OnCheckedChangeListener { _, checked -> DailyPreference.getInstance(activity).isTrueVRCheckDataGuide = checked }
-                    , View.OnClickListener {
+        when (DailyPreference.getInstance(activity).isTrueVRCheckDataGuide) {
+            true -> {
                 startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList
                         , Constants.PlaceType.HOTEL, category), StayRoomsActivity.REQUEST_CODE_TRUE_VR)
-            }, DialogInterface.OnDismissListener { unLockAll() })
-        } else {
-            startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList
-                    , Constants.PlaceType.HOTEL, category), StayRoomsActivity.REQUEST_CODE_TRUE_VR)
+            }
+
+            false -> {
+                viewInterface.showVrDialog(
+                        CompoundButton.OnCheckedChangeListener { _, checked ->
+                            DailyPreference.getInstance(activity).isTrueVRCheckDataGuide = checked
+                        }
+                        , View.OnClickListener {
+                    startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList
+                            , Constants.PlaceType.HOTEL, category), StayRoomsActivity.REQUEST_CODE_TRUE_VR)
+                }, DialogInterface.OnDismissListener { unLockAll() })
+            }
         }
     }
 }
