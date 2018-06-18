@@ -414,10 +414,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             return
         }
 
-        if (tabLayoutHideAnimator != null) {
-            tabLayoutHideAnimator?.cancel()
-            tabLayoutHideAnimator = null
-        }
+        tabLayoutHideAnimator?.cancel()
+        tabLayoutHideAnimator = null
 
         tabLayoutShowAnimator = ObjectAnimator.ofFloat(viewDataBinding.tabLayout, View.ALPHA, viewDataBinding.tabLayout.alpha, 1.0f).apply {
             duration = 200
@@ -450,10 +448,8 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             return
         }
 
-        if (tabLayoutShowAnimator != null) {
-            tabLayoutShowAnimator?.cancel()
-            tabLayoutShowAnimator = null
-        }
+        tabLayoutShowAnimator?.cancel()
+        tabLayoutShowAnimator = null
 
         tabLayoutHideAnimator = ObjectAnimator.ofFloat(viewDataBinding.tabLayout, View.ALPHA, viewDataBinding.tabLayout.alpha, 0.0f).apply {
             duration = 200

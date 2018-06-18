@@ -309,6 +309,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
             val currencyString = context.resources.getString(R.string.currency)
             val discountPriceUnitSpan = SpannableString(currencyString + if (nights > 1) context.resources.getString(R.string.label_stay_detail_slash_one_nights) else "")
 
+            @Suppress("DEPRECATION")
             discountPriceUnitSpan.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_text_c323232)), 0, currencyString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             text = discountPriceUnitSpan
         }
@@ -625,6 +626,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
             if (rewardStart != -1) {
                 spannableString.setSpan(DailyImageSpan(context, R.drawable.r_ic_xs_14, DailyImageSpan.ALIGN_VERTICAL_CENTER), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                @Suppress("DEPRECATION")
                 spannableString.setSpan(ForegroundColorSpan(context.resources.getColor(R.color.default_line_cfaae37)), rewardStart, rewardStart + rewardString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
 
