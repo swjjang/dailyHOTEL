@@ -8,12 +8,14 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import com.daily.base.util.DailyTextUtils
 import com.daily.base.util.ScreenUtils
 import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.FacilitiesPictogram
 import com.daily.dailyhotel.util.takeNotEmpty
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.DailyViewDetailFacilitiesDataBinding
+import java.text.DecimalFormat
 
 class DailyDetailFacilitiesView : ConstraintLayout {
     private lateinit var viewDataBinding: DailyViewDetailFacilitiesDataBinding
@@ -39,7 +41,7 @@ class DailyDetailFacilitiesView : ConstraintLayout {
     }
 
     fun setRoomCount(count: Int) {
-        viewDataBinding.roomCountTextView.text = context.getString(R.string.label_stay_detail_room_total_count, count)
+        viewDataBinding.roomCountTextView.text = context.getString(R.string.label_stay_detail_room_total_count, DecimalFormat("###,##0").format(count))
     }
 
     fun setFacilities(facilities: List<FacilitiesPictogram>?) {
