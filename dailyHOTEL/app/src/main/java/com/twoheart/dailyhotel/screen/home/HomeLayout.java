@@ -474,6 +474,7 @@ public class HomeLayout extends BaseBlurLayout
         layoutParams.leftMargin = DP_15;
         layoutParams.rightMargin = DP_15;
         layoutParams.topMargin = DP_15;
+        layoutParams.bottomMargin = DP_15;
 
         mDailyRewardCardView.setLayoutParams(layoutParams);
 
