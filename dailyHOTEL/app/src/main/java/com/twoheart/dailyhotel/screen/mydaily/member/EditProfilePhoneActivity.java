@@ -202,6 +202,7 @@ public class EditProfilePhoneActivity extends BaseActivity
     @Override
     public void finish()
     {
+        mEditProfilePhoneLayout.hideKeypad();
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
