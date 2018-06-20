@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
@@ -26,13 +28,10 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Sticker;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -47,8 +46,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class CollectionStayActivity extends CollectionBaseActivity
 {
@@ -318,8 +317,29 @@ public class CollectionStayActivity extends CollectionBaseActivity
             String salesDate = stayBookingDay.getCheckInDay("yyyy-MM-dd");
             int period = stayBookingDay.getNights();
 
-            DailyMobileAPI.getInstance(this).requestRecommendationStayList(mNetworkTag, mRecommendationIndex, salesDate, period, mRecommendationStayListCallback);
+            addCompositeDisposable(mRecommendationRemoteImpl.getRecommendationStayList(mRecommendationIndex, salesDate, period) //
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RecommendationPlaceList<RecommendationStay>>()
+                {
+                    @Override
+                    public void accept(RecommendationPlaceList<RecommendationStay> recommendationStayRecommendationPlaceList) throws Exception
+                    {
+                        ArrayList<RecommendationStay> stayList = new ArrayList<>(recommendationStayRecommendationPlaceList.items);
 
+                        onPlaceList(recommendationStayRecommendationPlaceList.imageBaseUrl //
+                            , recommendationStayRecommendationPlaceList.recommendation, stayList //
+                            , recommendationStayRecommendationPlaceList.stickers //
+                            , recommendationStayRecommendationPlaceList.configurations != null && recommendationStayRecommendationPlaceList.configurations.activeReward);
+
+                        unLockUI();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -353,9 +373,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    protected void setPlaceBookingDay(CommonDateTime commonDateTime)
     {
-        if (todayDateTime == null)
+        if (commonDateTime == null)
         {
             return;
         }
@@ -363,8 +383,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
         try
         {
             StayBookingDay stayBookingDay = new StayBookingDay();
-            stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-            stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
+            stayBookingDay.setCheckInDay(commonDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(commonDateTime.dailyDateTime, 1);
 
             switch (mType)
             {
@@ -401,8 +421,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     {
                         try
                         {
-                            stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, mAfterDay);
-                            stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, mAfterDay + mNights);
+                            stayBookingDay.setCheckInDay(commonDateTime.dailyDateTime, mAfterDay);
+                            stayBookingDay.setCheckOutDay(commonDateTime.dailyDateTime, mAfterDay + mNights);
                         } catch (Exception e)
                         {
                             ExLog.e(e.toString());
@@ -452,9 +472,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void startCalendarActivity(TodayDateTime todayDateTime, PlaceBookingDay placeBookingDay)
+    protected void startCalendarActivity(CommonDateTime commonDateTime, PlaceBookingDay placeBookingDay)
     {
-        if (todayDateTime == null || placeBookingDay == null)
+        if (commonDateTime == null || placeBookingDay == null)
         {
             return;
         }
@@ -464,7 +484,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         try
         {
             Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(DailyCalendar.convertDate(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
+            calendar.setTime(DailyCalendar.convertDate(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
 
             String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
@@ -495,11 +515,11 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void onCommonDateTime(TodayDateTime todayDateTime)
+    protected void onCommonDateTime(CommonDateTime commonDateTime)
     {
-        mTodayDateTime = todayDateTime;
+        mCommonDateTime = commonDateTime;
 
-        setPlaceBookingDay(todayDateTime);
+        setPlaceBookingDay(commonDateTime);
 
         mCollectionBaseLayout.setCalendarText(getCalendarDate(mPlaceBookingDay));
 
@@ -580,9 +600,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
+            startCalendarActivity(mCommonDateTime, mPlaceBookingDay);
         }
 
+        @SuppressLint("RestrictedApi")
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count)
@@ -749,55 +770,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
         public void finish()
         {
             CollectionStayActivity.this.onBackPressed();
-        }
-    };
-
-    private retrofit2.Callback mRecommendationStayListCallback = new retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationStay>>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<RecommendationPlaceList<RecommendationStay>>> call, Response<BaseDto<RecommendationPlaceList<RecommendationStay>>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    BaseDto<RecommendationPlaceList<RecommendationStay>> baseDto = response.body();
-
-                    switch (baseDto.msgCode)
-                    {
-                        case 100:
-                            ArrayList<RecommendationStay> stayList = new ArrayList<>(baseDto.data.items);
-
-                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList, baseDto.data.stickers//
-                                , baseDto.data.configurations != null && baseDto.data.configurations.activeReward);
-                            break;
-
-                        // 인트라넷에서 숨김처리가 된경우
-                        case 801:
-                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
-                            break;
-
-                        default:
-                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
-                            break;
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
-            } else
-            {
-                CollectionStayActivity.this.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BaseDto<RecommendationPlaceList<RecommendationStay>>> call, Throwable t)
-        {
-            CollectionStayActivity.this.onError(t);
         }
     };
 }

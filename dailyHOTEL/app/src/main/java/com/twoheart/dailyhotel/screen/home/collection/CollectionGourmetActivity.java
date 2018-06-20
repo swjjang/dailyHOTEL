@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +16,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.calendar.gourmet.GourmetCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
@@ -27,13 +29,10 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.Sticker;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -47,8 +46,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class CollectionGourmetActivity extends CollectionBaseActivity
 {
@@ -309,7 +308,28 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
         String period = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
 
-        DailyMobileAPI.getInstance(this).requestRecommendationGourmetList(mNetworkTag, mRecommendationIndex, period, 0, mRecommendationGourmetListCallback);
+        addCompositeDisposable(mRecommendationRemoteImpl.getRecommendationGourmetList(mRecommendationIndex, period, 0) //
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RecommendationPlaceList<RecommendationGourmet>>()
+            {
+                @Override
+                public void accept(RecommendationPlaceList<RecommendationGourmet> recommendationGourmetRecommendationPlaceList) throws Exception
+                {
+                    ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>(recommendationGourmetRecommendationPlaceList.items);
+
+                    onPlaceList(recommendationGourmetRecommendationPlaceList.imageBaseUrl //
+                        , recommendationGourmetRecommendationPlaceList.recommendation, gourmetList //
+                        , recommendationGourmetRecommendationPlaceList.stickers, false);
+
+                    unLockUI();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     @Override
@@ -324,9 +344,9 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    protected void setPlaceBookingDay(CommonDateTime commonDateTime)
     {
-        if (todayDateTime == null)
+        if (commonDateTime == null)
         {
             return;
         }
@@ -334,7 +354,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         try
         {
             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+            gourmetBookingDay.setVisitDay(commonDateTime.dailyDateTime);
 
             switch (mType)
             {
@@ -370,7 +390,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     {
                         try
                         {
-                            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, mAfterDay);
+                            gourmetBookingDay.setVisitDay(commonDateTime.dailyDateTime, mAfterDay);
                         } catch (Exception e)
                         {
                             ExLog.e(e.toString());
@@ -420,9 +440,9 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void startCalendarActivity(TodayDateTime todayDateTime, PlaceBookingDay placeBookingDay)
+    protected void startCalendarActivity(CommonDateTime commonDateTime, PlaceBookingDay placeBookingDay)
     {
-        if (todayDateTime == null || placeBookingDay == null)
+        if (commonDateTime == null || placeBookingDay == null)
         {
             return;
         }
@@ -431,7 +451,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
         try
         {
-            Calendar calendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
+            Calendar calendar = DailyCalendar.getInstance(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT);
             String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
             calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAX_COUNT - 1);
             String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
@@ -459,11 +479,11 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void onCommonDateTime(TodayDateTime todayDateTime)
+    protected void onCommonDateTime(CommonDateTime commonDateTime)
     {
-        mTodayDateTime = todayDateTime;
+        mCommonDateTime = commonDateTime;
 
-        setPlaceBookingDay(todayDateTime);
+        setPlaceBookingDay(commonDateTime);
 
         mCollectionBaseLayout.setCalendarText(getCalendarDate(mPlaceBookingDay));
 
@@ -575,9 +595,10 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
+            startCalendarActivity(mCommonDateTime, mPlaceBookingDay);
         }
 
+        @SuppressLint("RestrictedApi")
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count)
@@ -729,54 +750,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         public void finish()
         {
             CollectionGourmetActivity.this.onBackPressed();
-        }
-    };
-
-    private retrofit2.Callback mRecommendationGourmetListCallback = new retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationGourmet>>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<RecommendationPlaceList<RecommendationGourmet>>> call, Response<BaseDto<RecommendationPlaceList<RecommendationGourmet>>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    BaseDto<RecommendationPlaceList<RecommendationGourmet>> baseDto = response.body();
-
-                    switch (baseDto.msgCode)
-                    {
-                        case 100:
-                            ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>(baseDto.data.items);
-
-                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, gourmetList, baseDto.data.stickers, false);
-                            break;
-
-                        // 인트라넷에서 숨김처리가 된경우
-                        case 801:
-                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
-                            break;
-
-                        default:
-                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
-                            break;
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
-            } else
-            {
-                CollectionGourmetActivity.this.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BaseDto<RecommendationPlaceList<RecommendationGourmet>>> call, Throwable t)
-        {
-            CollectionGourmetActivity.this.onError(t);
         }
     };
 }

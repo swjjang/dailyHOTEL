@@ -1159,4 +1159,22 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseListDto<Event>> getEventList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("storeType") String store);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // RecommendationRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<Recommendation>> getRecommendationList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<RecommendationPlaceList<RecommendationStay>>> getRecommendationStayList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("salesDate") String salesDate, @Query("period") int period);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<RecommendationPlaceList<RecommendationGourmet>>> getRecommendationGourmetList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("salesDate") String salesDate, @Query("period") int period);
 }

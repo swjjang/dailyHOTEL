@@ -10,18 +10,18 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RecommendationRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.Sticker;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -34,14 +34,13 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public abstract class CollectionBaseActivity extends BaseActivity
 {
+    protected CommonRemoteImpl mCommonRemoteImpl;
+    protected RecommendationRemoteImpl mRecommendationRemoteImpl;
     protected PlaceBookingDay mPlaceBookingDay;
-    protected TodayDateTime mTodayDateTime;
+    protected CommonDateTime mCommonDateTime;
 
     int mRecommendationIndex;
     CollectionBaseLayout mCollectionBaseLayout;
@@ -57,21 +56,30 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     protected abstract String getCalendarDate(PlaceBookingDay placeBookingDay);
 
-    protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
+    protected abstract void setPlaceBookingDay(CommonDateTime commonDateTime);
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void startCalendarActivity(TodayDateTime todayDateTime, PlaceBookingDay placeBookingDay);
+    protected abstract void startCalendarActivity(CommonDateTime commonDateTime, PlaceBookingDay placeBookingDay);
 
     protected abstract String getSectionTitle(int count);
 
-    protected abstract void onCommonDateTime(TodayDateTime todayDateTime);
+    protected abstract void onCommonDateTime(CommonDateTime commonDateTime);
 
     protected abstract ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList, List<Sticker> stickerList);
 
     protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
 
     protected abstract void onChangedWish(int position, boolean wish);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mCommonRemoteImpl = new CommonRemoteImpl();
+        mRecommendationRemoteImpl = new RecommendationRemoteImpl();
+    }
 
     @Override
     protected void onResume()
@@ -86,40 +94,21 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     void requestCommonDateTime()
     {
-        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new Callback<BaseDto<TodayDateTime>>()
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
         {
             @Override
-            public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
+            public void accept(CommonDateTime commonDateTime) throws Exception
             {
-                if (response != null && response.isSuccessful() && response.body() != null)
-                {
-                    try
-                    {
-                        BaseDto<TodayDateTime> baseDto = response.body();
-
-                        if (baseDto.msgCode == 100)
-                        {
-                            onCommonDateTime(baseDto.data);
-                        } else
-                        {
-                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
-                        }
-                    } catch (Exception e)
-                    {
-                        onError(e);
-                    }
-                } else
-                {
-                    onErrorResponse(call, response);
-                }
+                onCommonDateTime(commonDateTime);
             }
-
+        }, new Consumer<Throwable>()
+        {
             @Override
-            public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
+            public void accept(Throwable throwable) throws Exception
             {
-                onError(t);
+                onHandleError(throwable);
             }
-        });
+        }));
     }
 
     @Override
@@ -235,7 +224,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         long currentTime, endTime;
         try
         {
-            currentTime = DailyCalendar.convertDate(mTodayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
+            currentTime = DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
             endTime = DailyCalendar.convertDate(recommendation.endedAt, DailyCalendar.ISO_8601_FORMAT).getTime();
         } catch (Exception e)
         {
@@ -279,7 +268,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         @Override
                         public void onClick(View v)
                         {
-                            startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
+                            startCalendarActivity(mCommonDateTime, mPlaceBookingDay);
                         }
                     }, null);
             }
