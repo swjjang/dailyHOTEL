@@ -359,6 +359,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val rootView = viewDataBinding.roomDetailLayout!!
 
         val simpleDraweeView: SimpleDraweeView? = rootView.findViewById(R.id.simpleDraweeView)
+        val imageGradientView: SimpleDraweeView? = rootView.findViewById(R.id.imageGradientView)
 
         val scaleXGap = maxScaleX - minScaleX
         val oneScaleX = scaleXGap / widthGap
@@ -397,6 +398,14 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
         val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
         simpleDraweeView?.hierarchy?.roundingParams = roundingParams
+        imageGradientView?.hierarchy?.roundingParams = roundingParams
+        when (toScaleX) {
+            in 0.90f .. 1f -> {
+                imageGradientView?.alpha = (toScaleX - 0.90f) * 10
+            }
+
+            else -> imageGradientView?.alpha = 0f
+        }
 
         if (toScaleX > minScaleX) {
             rootView.visibility = View.VISIBLE
@@ -411,6 +420,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         val roomLayout = viewDataBinding.roomDetailLayout!!
         val nestedScrollView: NestedScrollView? = roomLayout.findViewById(R.id.nestedScrollView)
         val simpleDraweeView: SimpleDraweeView? = roomLayout.findViewById(R.id.simpleDraweeView)
+        val imageGradientView: SimpleDraweeView? = roomLayout.findViewById(R.id.imageGradientView)
 
         val startScale = roomLayout.scaleX
         val end = if (scaleUp) 1.0f else minScaleX
@@ -442,6 +452,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
             val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
             simpleDraweeView?.hierarchy?.roundingParams = roundingParams
+            imageGradientView?.hierarchy?.roundingParams = roundingParams
         }
 
         val scaleAnimator = ValueAnimator.ofFloat(startScale * 100, end * 100)
@@ -449,6 +460,14 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             val value = animation.animatedValue as Float / 100
             roomLayout.scaleX = value
             roomLayout.scaleY = value
+
+            when (value) {
+                in 0.90f .. 1f -> {
+                    imageGradientView?.alpha = (value - 0.90f) * 10
+                }
+
+                else -> imageGradientView?.alpha = 0f
+            }
 
             setCloseImageAlphaVisible(value)
         }

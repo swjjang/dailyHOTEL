@@ -962,7 +962,7 @@ public class DailyDeepLinkTest
     }
 
     @Test
-    public void test_DeepLink_국내스테이상세() throws Exception
+    public void test_00_DeepLink_국내스테이상세() throws Exception
     {
         final int nights = new Random(System.currentTimeMillis()).nextInt(NIGHTS_RANGE) + 1;
         final int randomDay = new Random(System.currentTimeMillis()).nextInt(DAYS_RANGE) + 2;
@@ -993,9 +993,14 @@ public class DailyDeepLinkTest
 
             }
 
-            onView(Matchers.allOf(withId(R.id.nameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.titleInformationView))))).check(matches(withText(name)));
-            onView(withId(R.id.date1TextView)).check(matches(withText(bookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"))));
-            onView(withId(R.id.date2TextView)).check(matches(withText(bookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"))));
+            onView(Matchers.allOf(withId(R.id.nameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.baseInformationView))))).check(matches(withText(name)));
+
+            String calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
+                bookDateTime.getCheckInDateTime("M.d(EEE)"),
+                bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                bookDateTime.getNights());
+
+            onView(Matchers.allOf(withId(R.id.calendarTextView), isDescendantOfA(Matchers.allOf(withId(R.id.stickyRoomFilterView))))).check(matches(withText(calendarText)));
         }
 
 
@@ -1019,9 +1024,14 @@ public class DailyDeepLinkTest
 
             }
 
-            onView(Matchers.allOf(withId(R.id.nameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.titleInformationView))))).check(matches(withText(name)));
-            onView(withId(R.id.date1TextView)).check(matches(withText(bookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"))));
-            onView(withId(R.id.date2TextView)).check(matches(withText(bookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"))));
+            onView(Matchers.allOf(withId(R.id.nameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.baseInformationView))))).check(matches(withText(name)));
+
+            String calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
+                bookDateTime.getCheckInDateTime("M.d(EEE)"),
+                bookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                bookDateTime.getNights());
+
+            onView(Matchers.allOf(withId(R.id.calendarTextView), isDescendantOfA(Matchers.allOf(withId(R.id.stickyRoomFilterView))))).check(matches(withText(calendarText)));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1045,9 +1055,14 @@ public class DailyDeepLinkTest
 
             }
 
-            onView(Matchers.allOf(withId(R.id.nameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.titleInformationView))))).check(matches(withText(name)));
-            onView(withId(R.id.date1TextView)).check(matches(withText(weekBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"))));
-            onView(withId(R.id.date2TextView)).check(matches(withText(weekBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"))));
+            onView(Matchers.allOf(withId(R.id.nameTextView), isDescendantOfA(Matchers.allOf(withId(R.id.baseInformationView))))).check(matches(withText(name)));
+
+            String calendarText = String.format(Locale.KOREA, "%s-%s돋%d박",
+                weekBookDateTime.getCheckInDateTime("M.d(EEE)"),
+                weekBookDateTime.getCheckOutDateTime("M.d(EEE)"),
+                weekBookDateTime.getNights());
+
+            onView(Matchers.allOf(withId(R.id.calendarTextView), isDescendantOfA(Matchers.allOf(withId(R.id.stickyRoomFilterView))))).check(matches(withText(calendarText)));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

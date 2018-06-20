@@ -18,7 +18,7 @@
             android:id="@+id/simpleDraweeView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/default_line_cf0f0f0"
+            android:background="@color/default_background"
             app:layout_constraintDimensionRatio="H,3:2"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -29,6 +29,21 @@
             fresco:roundTopLeft="true"
             fresco:roundTopRight="true"
             fresco:roundedCornerRadius="6dp"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/imageGradientView"
+            android:layout_width="0dp"
+            android:layout_height="112dp"
+            android:background="@drawable/img_detail_gradient"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            fresco:roundBottomLeft="false"
+            fresco:roundBottomRight="false"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="true"
+            fresco:roundedCornerRadius="6dp"/>
+
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v4.widget.NestedScrollView
@@ -462,8 +477,8 @@
                     android:layout_below="@+id/discountInfoTitleView"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:lineSpacingExtra="2dp"
                     android:layout_marginTop="14dp"
+                    android:lineSpacingExtra="2dp"
                     android:textColor="@color/default_text_c4d4d4d"
                     android:textSize="14dp"/>
 
@@ -525,10 +540,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:gravity="center"
                         android:layout_below="@+id/checkInTimeTitleView"
                         android:layout_marginTop="2dp"
                         android:layout_toLeftOf="@+id/verticalLine"
+                        android:gravity="center"
                         android:textColor="@color/default_text_c4d4d4d"
                         android:textSize="16dp"
                         dailyFont:style="Medium"/>
