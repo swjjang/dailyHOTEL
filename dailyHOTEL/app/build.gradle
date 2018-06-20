@@ -231,7 +231,7 @@ dependencies {
     implementation 'com.android.support:gridlayout-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "android.arch.lifecycle:extensions:1.+"
     implementation "android.arch.lifecycle:common-java8:1.+"
     implementation 'com.google.android:flexbox:1.0.0'
@@ -280,7 +280,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-base:15.0.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
-    implementation 'com.google.android.gms:play-services-analytics:16.0.0'
+    implementation 'com.google.android.gms:play-services-analytics:16.0.1'
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-config:16.0.0'
     implementation 'com.google.firebase:firebase-perf:16.0.0'
