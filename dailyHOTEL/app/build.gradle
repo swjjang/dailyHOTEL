@@ -79,6 +79,7 @@ android {
             zipAlignEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-fresco.pro'
+            buildConfigField ("String", "GIT_VERSION", "000000000")
         }
 
         debug {
