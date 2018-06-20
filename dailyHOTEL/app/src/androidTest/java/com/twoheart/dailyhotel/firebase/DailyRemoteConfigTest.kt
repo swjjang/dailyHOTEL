@@ -327,27 +327,6 @@ class DailyRemoteConfigTest {
     }
 
     @Test
-    fun testSetAppResearch() {
-        val testJson01 = "[\"com.cultsotry.yanolja.nativeapp\",\"kr.goodchoice.abouthere\"]"
-
-        remoteConfig.setAppResearch(context, testJson01)
-
-        assertEquals("[\"com.cultsotry.yanolja.nativeapp\",\"kr.goodchoice.abouthere\"]", preference.keyRemoteConfigAppResearch)
-
-        val testJson02 = ""
-
-        remoteConfig.setAppResearch(context, testJson02)
-
-        assertEquals("[\"com.cultsotry.yanolja.nativeapp\",\"kr.goodchoice.abouthere\"]", preference.keyRemoteConfigAppResearch)
-
-        val testJson03 = "[]"
-
-        remoteConfig.setAppResearch(context, testJson03)
-
-        assertEquals("[]", preference.keyRemoteConfigAppResearch)
-    }
-
-    @Test
     fun testSetPaymentCardEvent() {
         val testJson01 = "{\"enabled\":true,\"events\":[{\"enabled\":true,\"startDateTime\":\"2017-12-31T09:00:00+09:00\",\"endDateTime\":\"2017-12-31T09:00:00+09:00\",\"title\":\"BC 카드 결제시 할인\",\"messages\":[\"10만원 이상 결제시 10,000원 할인\"]},{\"enabled\":false,\"startDateTime\":\"2018-01-02T09:00:00+09:00\",\"endDateTime\":\"2018-03-20T09:00:00+09:00\",\"title\":\"PAYCO 결제시 할인\",\"messages\":[\"생애 첫 결제 7,000원 즉시 할이\",\"10만원 이상 결제시 10,000원 할인\"]}]}"
 
