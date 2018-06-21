@@ -78,6 +78,7 @@ class SelectGourmetCouponDialogAnalyticsImpl : SelectGourmetCouponDialogInterfac
             }
         } catch (e: ParseException) {
             Crashlytics.log("Select Coupon::coupon.validTo: ${if (coupon != null) coupon.validTo else ""}")
+            Crashlytics.logException(e)
             ExLog.d(e.toString())
         } catch (e: Exception) {
             ExLog.d(e.toString())

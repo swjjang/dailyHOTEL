@@ -91,7 +91,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
             } else if (throwable instanceof HttpException)
             {
                 retrofit2.HttpException httpException = (HttpException) throwable;
-                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.log("httpException url : " + httpException.response().raw().request().url().toString());
                 Crashlytics.logException(throwable);
 
                 ExLog.e(httpException.response().raw().request().url().toString());
@@ -142,7 +142,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
             {
                 DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.log("HttpException url : " + httpException.response().raw().request().url().toString());
                 Crashlytics.logException(throwable);
 
                 getActivity().onBackPressed();

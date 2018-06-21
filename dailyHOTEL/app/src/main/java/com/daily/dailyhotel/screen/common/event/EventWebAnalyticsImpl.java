@@ -74,6 +74,7 @@ public class EventWebAnalyticsImpl implements EventWebInterface.AnalyticsInterfa
         } catch (ParseException e)
         {
             Crashlytics.log("requestDownloadEventCoupon::CouponCode: " + couponCode + ", validTo: " + validTo);
+            Crashlytics.logException(e);
             ExLog.d(e.toString());
         } catch (Exception e)
         {

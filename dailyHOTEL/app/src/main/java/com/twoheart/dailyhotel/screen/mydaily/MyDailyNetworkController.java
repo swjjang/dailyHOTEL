@@ -237,7 +237,8 @@ public class MyDailyNetworkController extends BaseNetworkController
                     }
                 } catch (ParseException e)
                 {
-                    Crashlytics.log("Url: " + call.request().url().toString());
+                    Crashlytics.log("Call url: " + call.request().url().toString());
+                    Crashlytics.logException(e);
                     mOnNetworkControllerListener.onError(e);
                 } catch (Exception e)
                 {

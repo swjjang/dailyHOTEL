@@ -522,6 +522,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             } catch (ParseException e)
             {
                 Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
+                Crashlytics.logException(e);
                 ExLog.d(e.toString());
             } catch (Exception e)
             {

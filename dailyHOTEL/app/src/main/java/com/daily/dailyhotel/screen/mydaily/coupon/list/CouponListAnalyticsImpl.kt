@@ -38,6 +38,7 @@ class CouponListAnalyticsImpl : CouponListInterface.AnalyticsInterface {
                     , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "couponbox-" + coupon.title, paramMap)
         } catch (e: ParseException) {
             Crashlytics.log("Coupon List::coupon.validTo: " + if (coupon != null) coupon.validTo else "")
+            Crashlytics.logException(e)
             ExLog.d(e.toString())
         } catch (e: Exception) {
             ExLog.d(e.toString())

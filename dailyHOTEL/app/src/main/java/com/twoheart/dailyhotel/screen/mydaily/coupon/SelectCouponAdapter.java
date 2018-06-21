@@ -134,6 +134,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         } catch (ParseException e)
         {
             Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
+            Crashlytics.logException(e);
             ExLog.d(e.getMessage());
             holder.dataBinding.expireTextView.setVisibility(View.GONE);
         }

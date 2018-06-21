@@ -110,7 +110,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
                     observer.onComplete();
                 } catch (Exception e)
                 {
-                    Crashlytics.log(EXCEPTION_TAG);
+                    Crashlytics.log("EXCEPTION_TAG : " + EXCEPTION_TAG);
                     Crashlytics.logException(e);
 
                     ExLog.e(EXCEPTION_TAG + " : " + e.toString());

@@ -271,7 +271,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
                         } catch (Exception e)
                         {
-                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.log("ExternalDeepLink : " + externalDeepLink.getDeepLink());
                             Crashlytics.logException(e);
                             finish();
                             return;
@@ -294,7 +294,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        Crashlytics.log(mDailyDeepLink.getDeepLink());
+                        Crashlytics.log("DeepLink : " + mDailyDeepLink.getDeepLink());
                         Crashlytics.logException(throwable);
 
                         onHandleError(throwable);
@@ -758,7 +758,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-            Crashlytics.log(httpException.response().raw().request().url().toString());
+            Crashlytics.log("httpException : " + httpException.response().raw().request().url().toString());
             Crashlytics.logException(throwable);
         } else
         {

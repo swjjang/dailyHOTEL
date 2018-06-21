@@ -279,7 +279,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
                         } catch (Exception e)
                         {
-                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.log("ExternalDeepLink : " + externalDeepLink.getDeepLink());
                             Crashlytics.logException(e);
                             finish();
                             return;
@@ -302,7 +302,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        Crashlytics.log(mDailyDeepLink.getDeepLink());
+                        Crashlytics.log("DeepLink : " + mDailyDeepLink.getDeepLink());
                         Crashlytics.logException(throwable);
 
                         onHandleError(throwable);
