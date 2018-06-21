@@ -454,8 +454,8 @@ public class DailyDeepLinkTest
     @Test
     public void test_DeepLink_검색결과_캠페인태그_국내스테이() throws Exception
     {
-        final String campaignTag = "#쿠폰특가";
-        final int campaignTagIndex = 111;
+        final String campaignTag = "#부산호텔";
+        final int campaignTagIndex = 165;
 
         final int nights = new Random(System.currentTimeMillis()).nextInt(NIGHTS_RANGE) + 1;
         final int randomDay = new Random(System.currentTimeMillis()).nextInt(DAYS_RANGE) + 1;
@@ -703,8 +703,8 @@ public class DailyDeepLinkTest
         bookDateTime.setCheckInDateTime(DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT), randomDay);
         bookDateTime.setCheckOutDateTime(bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
 
-        final int index = 295;
-        final String name = "부산 오션뷰 BEST 10";
+        final int index = 331;
+        final String name = "수영장이 있는 풀빌라&펜션";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // d=yyyyMMMdd
@@ -746,8 +746,8 @@ public class DailyDeepLinkTest
         final GourmetBookDateTime bookDateTime = new GourmetBookDateTime();
         bookDateTime.setVisitDateTime(DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT), randomDay);
 
-        final int index = 300;
-        final String name = "벚꽃 옆 레스토랑";
+        final int index = 330;
+        final String name = "국내 BEST 호텔뷔페";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // d=yyyyMMMdd
@@ -971,8 +971,8 @@ public class DailyDeepLinkTest
         bookDateTime.setCheckInDateTime(DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT), randomDay);
         bookDateTime.setCheckOutDateTime(bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
 
-        final int index = 15731;
-        final String name = "코트야드 메리어트 서울 남대문";
+        final int index = 15738;
+        final String name = "비스타 워커힐 서울 (구. W 워커힐 서울)";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // d=yyyyMMMdd
@@ -1249,8 +1249,8 @@ public class DailyDeepLinkTest
         final GourmetBookDateTime bookDateTime = new GourmetBookDateTime();
         bookDateTime.setVisitDateTime(DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT), randomDay);
 
-        final int index = 51597;
-        final String name = "도쿄등심 압구정점";
+        final int index = 51488;
+        final String name = "리미니 강남점";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // d=yyyyMMMdd
@@ -1356,8 +1356,8 @@ public class DailyDeepLinkTest
         bookDateTime.setCheckInDateTime(DailyCalendar.format(new Date(), DailyCalendar.ISO_8601_FORMAT), randomDay);
         bookDateTime.setCheckOutDateTime(bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
 
-        final int index = 251391;
-        final String name = "호텔 WBF 남바 모토마치";
+        final int index = 202688;
+        final String name = "호텔 앤드룸스 오사카 혼마치";
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // d=yyyyMMMdd
