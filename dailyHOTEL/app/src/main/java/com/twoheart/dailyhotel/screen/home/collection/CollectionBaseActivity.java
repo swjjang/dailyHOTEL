@@ -8,7 +8,6 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -23,7 +22,6 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -213,8 +211,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
     }
 
-
-    //    protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list, List<Sticker> stickerList, boolean activeReward)
     protected void onPlaceList(boolean isOverShowDate, ArrayList<PlaceViewItem> list, boolean activeReward)
     {
         if (isFinishing() == true)
@@ -253,5 +249,40 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
 
         checkRequestCollection = true;
+    }
+
+    protected void startCollectionPlace(Recommendation recommendation)
+    {
+        if (recommendation == null) {
+            return;
+        }
+
+        Intent intent;
+
+        switch (recommendation.serviceType)
+        {
+            case "GOURMET":
+                intent = CollectionGourmetActivity.newInstance(this, recommendation.idx//
+                    , ScreenUtils.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                    , recommendation.title, recommendation.subtitle, false);
+                break;
+
+            case "HOTEL":
+            default:
+                intent = CollectionStayActivity.newInstance(this, recommendation.idx//
+                    , ScreenUtils.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                    , recommendation.title, recommendation.subtitle, false);
+                break;
+        }
+
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+        finish();
+
+//        AnalyticsManager.getInstance(this).recordEvent(//
+//            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECOMMEND_LIST_CLICK,//
+//            Integer.toString(recommendation.idx), null);
     }
 }
