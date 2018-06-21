@@ -17,6 +17,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -38,7 +39,7 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
 
     private Handler mHandler = new Handler();
 
-    protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
+    protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener, View.OnClickListener recommendationListener);
 
     protected abstract void setUsedMultiTransition(boolean isUsedMultiTransition);
 
@@ -53,6 +54,8 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem, int count);
 
         void onWishClick(int position, PlaceViewItem placeViewItem);
+
+        void onRecommendationClick(Recommendation recommendation);
     }
 
     public CollectionBaseLayout(Context context, OnBaseEventListener listener)
@@ -114,7 +117,7 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
 
         if (mPlaceListAdapter == null)
         {
-            mPlaceListAdapter = getPlaceListAdapter(mOnItemClickListener);
+            mPlaceListAdapter = getPlaceListAdapter(mOnItemClickListener, mOnRecommendationItemClickListener);
         }
 
         if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
@@ -337,7 +340,8 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         mImageUrl = imageUrl;
     }
 
-    protected void notifyChangedTitleLayout() {
+    protected void notifyChangedTitleLayout()
+    {
         mTitleTextView.setText(mTitleText);
         mSubTitleTextView.setText(mSubTitleText);
 
@@ -462,6 +466,21 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
             {
                 ((OnEventListener) mOnEventListener).onWishClick(position, placeViewItem);
             }
+        }
+    };
+
+    private View.OnClickListener mOnRecommendationItemClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            if (v.getTag() == null)
+            {
+                return;
+            }
+
+            Recommendation recommendation = (Recommendation) v.getTag();
+            ((OnEventListener) mOnEventListener).onRecommendationClick(recommendation);
         }
     };
 

@@ -357,6 +357,13 @@ public class CollectionStayActivity extends CollectionBaseActivity
                         ArrayList<PlaceViewItem> placeViewItems = makePlaceList( //
                             recommendationPlaceList.imageBaseUrl, (mIsOverShowDate ? null : stayList), recommendationPlaceList.stickers);
 
+                        for (Recommendation item : recommendationList) {
+                            if (item.idx == recommendation.idx) {
+                                recommendationList.remove(item);
+                                break;
+                            }
+                        }
+
                         placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_RECOMMEND_VIEW, recommendationList));
 
                         return placeViewItems;
@@ -802,6 +809,16 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                 , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        }
+
+        @Override
+        public void onRecommendationClick(Recommendation recommendation)
+        {
+            if (recommendation == null) {
+                return;
+            }
+
+            startCollectionPlace(recommendation);
         }
 
         @Override

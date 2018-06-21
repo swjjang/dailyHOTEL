@@ -17,9 +17,9 @@ public class CollectionGourmetLayout extends CollectionBaseLayout
     }
 
     @Override
-    protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener)
+    protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener, View.OnClickListener recommendationListener)
     {
-        return new CollectionGourmetAdapter(mContext, new ArrayList<PlaceViewItem>(), listener);
+        return new CollectionGourmetAdapter(mContext, new ArrayList<PlaceViewItem>(), listener, recommendationListener);
     }
 
     @Override

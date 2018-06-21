@@ -343,7 +343,14 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     ArrayList<PlaceViewItem> placeViewItems = makePlaceList( //
                         recommendationPlaceList.imageBaseUrl, (mIsOverShowDate ? null : gourmetList), recommendationPlaceList.stickers);
 
-//                    placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_RECOMMEND_VIEW, recommendationList));
+                    for (Recommendation item : recommendationList) {
+                        if (item.idx == recommendation.idx) {
+                            recommendationList.remove(item);
+                            break;
+                        }
+                    }
+
+                    placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_RECOMMEND_VIEW, recommendationList));
 
                     return placeViewItems;
                 }
@@ -778,6 +785,16 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                 , AnalyticsManager.Action.WISH_GOURMET, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        }
+
+        @Override
+        public void onRecommendationClick(Recommendation recommendation)
+        {
+            if (recommendation == null) {
+                return;
+            }
+
+            startCollectionPlace(recommendation);
         }
 
         @Override

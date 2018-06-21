@@ -29,13 +29,16 @@ import java.util.ArrayList;
 public class CollectionGourmetAdapter extends PlaceListAdapter
 {
     private boolean mIsUsedMultiTransition;
-    View.OnClickListener mOnClickListener;
+    private View.OnClickListener mOnClickListener;
+    private View.OnClickListener mOnRecommendationClickListener;
 
-    public CollectionGourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
+    public CollectionGourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList //
+        , View.OnClickListener listener, View.OnClickListener recommendationListener)
     {
         super(context, arrayList);
 
         mOnClickListener = listener;
+        mOnRecommendationClickListener = recommendationListener;
 
         setSortType(Constants.SortType.DEFAULT);
     }
@@ -253,7 +256,12 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                 @Override
                 public void onRecommendationClick(View view, Recommendation recommendation, int position)
                 {
-                    ExLog.d("sam - todo");
+                    view.setTag(recommendation);
+
+                    if (mOnRecommendationClickListener != null)
+                    {
+                        mOnRecommendationClickListener.onClick(view);
+                    }
                 }
             });
         }

@@ -16,9 +16,9 @@ public class CollectionStayLayout extends CollectionBaseLayout
     }
 
     @Override
-    protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener)
+    protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener, View.OnClickListener recommendationListener)
     {
-        return new CollectionStayAdapter(mContext, new ArrayList<>(), listener);
+        return new CollectionStayAdapter(mContext, new ArrayList<>(), listener, recommendationListener);
     }
 
     @Override
