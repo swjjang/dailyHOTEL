@@ -113,7 +113,7 @@ interface StayDetailInterface {
 
         fun setRewardVisible(visible: Boolean)
 
-        fun setRewardMemberInformation(titleText: String, optionText: String?, nights: Int, descriptionText: String)
+        fun setRewardMemberInformation(titleText: String, optionText: String?, nights: Int, descriptionText: String?)
 
         fun setRewardNonMemberInformation(titleText: String, optionText: String?, campaignFreeNights: Int, descriptionText: String)
 

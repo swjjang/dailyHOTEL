@@ -859,7 +859,7 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
         }
     }
 
-    override fun setRewardMemberInformation(titleText: String, optionText: String?, nights: Int, descriptionText: String) {
+    override fun setRewardMemberInformation(titleText: String, optionText: String?, nights: Int, descriptionText: String?) {
         scrollLayoutDataBinding?.rewardCardView?.let {
             it.setGuideVisible(true)
             it.setOnGuideClickListener { eventListener.onRewardGuideClick() }
