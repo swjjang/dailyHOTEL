@@ -10,6 +10,7 @@ public class PlaceViewItem
     public static final int TYPE_HEADER_VIEW = 6;
     public static final int TYPE_OB_ENTRY = 7;
     public static final int TYPE_EMPTY_VIEW = 8;
+    public static final int TYPE_RECOMMEND_VIEW = 9;
 
     public int mType;
     private Object mItem;

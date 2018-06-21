@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 public class RecommendationRemoteImpl extends BaseRemoteImpl implements RecommendationInterface
 {
     @Override
-    public Observable<List<Recommendation>> getRecommendationList(Context context)
+    public Observable<List<Recommendation>> getRecommendationList()
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendations"//
             : "MTckNjMkNDIkMjIkNDIkNDEkODckMzEkMjEkNTIkMjUkNTckNzEkMjkkNjIkNzYk$RjFGRUIyQzFDQjhBNBTAxANCDPI2NCkEwRMTg0NDMyNDhUDUNXDE3MHzE2BMjZJDMkMwQzIyRGDOVQxNUVDQjc5NDFDQzJFQXkEwNw==$";

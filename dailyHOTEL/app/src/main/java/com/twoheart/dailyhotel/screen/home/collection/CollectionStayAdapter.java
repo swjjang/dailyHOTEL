@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
@@ -17,8 +18,10 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
+import com.twoheart.dailyhotel.screen.home.HomeRecommendationLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -109,6 +112,21 @@ public class CollectionStayAdapter extends PlaceListAdapter
                 View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
                 return new BaseViewHolder(view);
             }
+
+            case PlaceViewItem.TYPE_RECOMMEND_VIEW:
+            {
+                HomeRecommendationLayout view = new HomeRecommendationLayout(mContext);
+                view.setListener(new HomeRecommendationLayout.HomeRecommendationListener()
+                {
+                    @Override
+                    public void onRecommendationClick(View view, Recommendation recommendation, int position)
+                    {
+                        ExLog.d("sam - todo");
+                    }
+                });
+
+                return new CollectionStayAdapter.RecommendViewHolder(view);
+            }
         }
 
         return null;
@@ -133,6 +151,9 @@ public class CollectionStayAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item);
                 break;
+
+            case PlaceViewItem.TYPE_RECOMMEND_VIEW:
+                onBindViewHolder((RecommendViewHolder) holder, item);
         }
     }
 
@@ -176,6 +197,13 @@ public class CollectionStayAdapter extends PlaceListAdapter
         }
     }
 
+    private void onBindViewHolder(RecommendViewHolder holder, PlaceViewItem placeViewItem)
+    {
+        final ArrayList<Recommendation> list = placeViewItem.getItem();
+
+        holder.recommendationLayout.setData(list);
+    }
+
     class StayViewHolder extends RecyclerView.ViewHolder
     {
         DailyStayCardView stayCardView;
@@ -213,6 +241,29 @@ public class CollectionStayAdapter extends PlaceListAdapter
                 if (mOnWishClickListener != null)
                 {
                     mOnWishClickListener.onClick(stayCardView);
+                }
+            });
+        }
+    }
+
+    class RecommendViewHolder extends RecyclerView.ViewHolder
+    {
+        HomeRecommendationLayout recommendationLayout;
+
+        public RecommendViewHolder(HomeRecommendationLayout recommendationLayout)
+        {
+            super(recommendationLayout);
+
+            this.recommendationLayout = recommendationLayout;
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            this.recommendationLayout.setLayoutParams(params);
+
+            recommendationLayout.setListener(new HomeRecommendationLayout.HomeRecommendationListener()
+            {
+                @Override
+                public void onRecommendationClick(View view, Recommendation recommendation, int position)
+                {
+                    ExLog.d("sam - todo");
                 }
             });
         }

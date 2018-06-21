@@ -13,7 +13,7 @@ import io.reactivex.Observable;
 
 public interface RecommendationInterface
 {
-    Observable<List<Recommendation>> getRecommendationList(Context context);
+    Observable<List<Recommendation>> getRecommendationList();
 
     Observable<RecommendationPlaceList<RecommendationStay>> getRecommendationStayList(int index, String salesDate, int period);
 

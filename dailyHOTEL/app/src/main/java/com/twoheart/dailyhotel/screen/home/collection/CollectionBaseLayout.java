@@ -326,13 +326,23 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         });
     }
 
-    protected void setTitleLayout(String title, String subTitle, String imageUrl)
+    private String mTitleText;
+    private String mSubTitleText;
+    private String mImageUrl;
+
+    protected void setTitleLayoutData(String title, String subTitle, String imageUrl)
     {
-        mTitleTextView.setText(title);
-        mSubTitleTextView.setText(subTitle);
+        mTitleText = title;
+        mSubTitleText = subTitle;
+        mImageUrl = imageUrl;
+    }
+
+    protected void notifyChangedTitleLayout() {
+        mTitleTextView.setText(mTitleText);
+        mSubTitleTextView.setText(mSubTitleText);
 
         mSimpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-        Util.requestImageResize(mContext, mSimpleDraweeView, imageUrl);
+        Util.requestImageResize(mContext, mSimpleDraweeView, mImageUrl);
     }
 
     protected void setCalendarText(String date)

@@ -51,6 +51,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected int mListCountByLongPress;
     protected View mViewByLongPress;
     protected int mWishPosition;
+    protected boolean mIsOverShowDate;
 
     protected abstract void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay);
 
@@ -212,7 +213,9 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
     }
 
-    protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list, List<Sticker> stickerList, boolean activeReward)
+
+    //    protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list, List<Sticker> stickerList, boolean activeReward)
+    protected void onPlaceList(boolean isOverShowDate, ArrayList<PlaceViewItem> list, boolean activeReward)
     {
         if (isFinishing() == true)
         {
@@ -221,57 +224,32 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         DailyRemoteConfigPreference.getInstance(this).setKeyRemoteConfigRewardStickerEnabled(activeReward);
 
-        long currentTime, endTime;
-        try
+        mCollectionBaseLayout.setData(list, mPlaceBookingDay, activeReward);
+
+        if (isOverShowDate)
         {
-            currentTime = DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
-            endTime = DailyCalendar.convertDate(recommendation.endedAt, DailyCalendar.ISO_8601_FORMAT).getTime();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-
-            currentTime = 0;
-            endTime = -1;
-        }
-
-        mCollectionBaseLayout.setTitleLayout(recommendation.title, recommendation.subtitle, ScreenUtils.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
-
-        if (endTime < currentTime)
-        {
-            mCollectionBaseLayout.setData(null, mPlaceBookingDay, activeReward);
-
-            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null, stickerList);
-
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, activeReward);
-
-            showSimpleDialog(null, getString(R.string.message_collection_finished_recommendation), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
+            showSimpleDialog(null, getString(R.string.message_collection_finished_recommendation) //
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
-                    finish();
-                }
-            });
-        } else
-        {
-            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list, stickerList);
-
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, activeReward);
-
-            if ((list == null || list.size() == 0) && checkRequestCollection == false)
-            {
-                showSimpleDialog(null, getString(R.string.message_collection_empty_popup_message)//
-                    , getString(R.string.dialog_btn_text_yes)//
-                    , getString(R.string.dialog_btn_text_no)//
-                    , new View.OnClickListener()
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
                     {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            startCalendarActivity(mCommonDateTime, mPlaceBookingDay);
-                        }
-                    }, null);
-            }
+                        finish();
+                    }
+                });
+        } else if ((list == null || list.size() == 0) && checkRequestCollection == false)
+        {
+            showSimpleDialog(null, getString(R.string.message_collection_empty_popup_message)//
+                , getString(R.string.dialog_btn_text_yes)//
+                , getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        startCalendarActivity(mCommonDateTime, mPlaceBookingDay);
+                    }
+                }, null);
         }
 
         checkRequestCollection = true;

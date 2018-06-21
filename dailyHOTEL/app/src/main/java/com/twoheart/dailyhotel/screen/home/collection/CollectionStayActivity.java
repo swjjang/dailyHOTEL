@@ -14,6 +14,7 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.calendar.stay.StayCalendarActivity;
@@ -28,6 +29,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
@@ -46,6 +48,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -188,12 +191,14 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
         if (mType == TYPE_DEFAULT && mIsUsedMultiTransition == true)
         {
-            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+            mCollectionBaseLayout.setTitleLayoutData(title, subTitle, imageUrl);
+            mCollectionBaseLayout.notifyChangedTitleLayout();
 
             initTransition();
         } else
         {
-            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+            mCollectionBaseLayout.setTitleLayoutData(title, subTitle, imageUrl);
+            mCollectionBaseLayout.notifyChangedTitleLayout();
 
             lockUI();
 
@@ -302,6 +307,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
         }
     }
 
+    private boolean mActiveReward;
+
     @Override
     protected void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay)
     {
@@ -317,29 +324,60 @@ public class CollectionStayActivity extends CollectionBaseActivity
             String salesDate = stayBookingDay.getCheckInDay("yyyy-MM-dd");
             int period = stayBookingDay.getNights();
 
-            addCompositeDisposable(mRecommendationRemoteImpl.getRecommendationStayList(mRecommendationIndex, salesDate, period) //
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RecommendationPlaceList<RecommendationStay>>()
+            addCompositeDisposable(Observable.zip(mRecommendationRemoteImpl.getRecommendationList() //
+                , mRecommendationRemoteImpl.getRecommendationStayList(mRecommendationIndex, salesDate, period) //
+                , new BiFunction<List<Recommendation>, RecommendationPlaceList<RecommendationStay>, ArrayList<PlaceViewItem>>()
                 {
                     @Override
-                    public void accept(RecommendationPlaceList<RecommendationStay> recommendationStayRecommendationPlaceList) throws Exception
+                    public ArrayList<PlaceViewItem> apply(List<Recommendation> recommendationList, RecommendationPlaceList<RecommendationStay> recommendationPlaceList) throws Exception
                     {
-                        ArrayList<RecommendationStay> stayList = new ArrayList<>(recommendationStayRecommendationPlaceList.items);
+                        Recommendation recommendation = recommendationPlaceList.recommendation;
+                        mCollectionBaseLayout.setTitleLayoutData(recommendation.title, recommendation.subtitle //
+                            , ScreenUtils.getResolutionImageUrl(CollectionStayActivity.this //
+                                , recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
 
-                        onPlaceList(recommendationStayRecommendationPlaceList.imageBaseUrl //
-                            , recommendationStayRecommendationPlaceList.recommendation, stayList //
-                            , recommendationStayRecommendationPlaceList.stickers //
-                            , recommendationStayRecommendationPlaceList.configurations != null && recommendationStayRecommendationPlaceList.configurations.activeReward);
+                        long currentTime, endTime;
+                        try
+                        {
+                            currentTime = DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
+                            endTime = DailyCalendar.convertDate(recommendation.endedAt, DailyCalendar.ISO_8601_FORMAT).getTime();
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
 
-                        unLockUI();
+                            currentTime = 0;
+                            endTime = -1;
+                        }
+
+                        mIsOverShowDate = endTime < currentTime;
+
+                        mActiveReward = recommendationPlaceList.configurations.activeReward;
+
+                        ArrayList<RecommendationStay> stayList = new ArrayList<>(recommendationPlaceList.items);
+                        ArrayList<PlaceViewItem> placeViewItems = makePlaceList( //
+                            recommendationPlaceList.imageBaseUrl, (mIsOverShowDate ? null : stayList), recommendationPlaceList.stickers);
+
+                        placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_RECOMMEND_VIEW, recommendationList));
+
+                        return placeViewItems;
                     }
-                }, new Consumer<Throwable>()
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+            {
+                @Override
+                public void accept(ArrayList<PlaceViewItem> placeViewItems) throws Exception
                 {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        onHandleError(throwable);
-                    }
-                }));
+                    mCollectionBaseLayout.notifyChangedTitleLayout();
+                    onPlaceList(mIsOverShowDate, placeViewItems, mActiveReward);
+                    unLockUI();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

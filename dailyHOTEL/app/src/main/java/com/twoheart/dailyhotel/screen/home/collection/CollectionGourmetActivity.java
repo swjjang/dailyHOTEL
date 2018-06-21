@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -46,6 +47,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -182,12 +184,14 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
         if (isDeepLink == false && mIsUsedMultiTransition == true)
         {
-            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+            mCollectionBaseLayout.setTitleLayoutData(title, subTitle, imageUrl);
+            mCollectionBaseLayout.notifyChangedTitleLayout();
 
             initTransition();
         } else
         {
-            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+            mCollectionBaseLayout.setTitleLayoutData(title, subTitle, imageUrl);
+            mCollectionBaseLayout.notifyChangedTitleLayout();
 
             lockUI();
 
@@ -308,28 +312,58 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
         String period = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
 
-        addCompositeDisposable(mRecommendationRemoteImpl.getRecommendationGourmetList(mRecommendationIndex, period, 0) //
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RecommendationPlaceList<RecommendationGourmet>>()
+        addCompositeDisposable(Observable.zip(mRecommendationRemoteImpl.getRecommendationList() //
+            , mRecommendationRemoteImpl.getRecommendationGourmetList(mRecommendationIndex, period, 0) //
+            , new BiFunction<List<Recommendation>, RecommendationPlaceList<RecommendationGourmet>, ArrayList<PlaceViewItem>>()
             {
                 @Override
-                public void accept(RecommendationPlaceList<RecommendationGourmet> recommendationGourmetRecommendationPlaceList) throws Exception
+                public ArrayList<PlaceViewItem> apply(List<Recommendation> recommendationList, RecommendationPlaceList<RecommendationGourmet> recommendationPlaceList) throws Exception
                 {
-                    ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>(recommendationGourmetRecommendationPlaceList.items);
+                    Recommendation recommendation = recommendationPlaceList.recommendation;
+                    mCollectionBaseLayout.setTitleLayoutData(recommendation.title, recommendation.subtitle //
+                        , ScreenUtils.getResolutionImageUrl(CollectionGourmetActivity.this //
+                            , recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
 
-                    onPlaceList(recommendationGourmetRecommendationPlaceList.imageBaseUrl //
-                        , recommendationGourmetRecommendationPlaceList.recommendation, gourmetList //
-                        , recommendationGourmetRecommendationPlaceList.stickers, false);
+                    long currentTime, endTime;
+                    try
+                    {
+                        currentTime = DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
+                        endTime = DailyCalendar.convertDate(recommendation.endedAt, DailyCalendar.ISO_8601_FORMAT).getTime();
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
 
-                    unLockUI();
+                        currentTime = 0;
+                        endTime = -1;
+                    }
+
+                    mIsOverShowDate = endTime < currentTime;
+
+                    ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>(recommendationPlaceList.items);
+                    ArrayList<PlaceViewItem> placeViewItems = makePlaceList( //
+                        recommendationPlaceList.imageBaseUrl, (mIsOverShowDate ? null : gourmetList), recommendationPlaceList.stickers);
+
+//                    placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_RECOMMEND_VIEW, recommendationList));
+
+                    return placeViewItems;
                 }
-            }, new Consumer<Throwable>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+        {
+            @Override
+            public void accept(ArrayList<PlaceViewItem> placeViewItems) throws Exception
             {
-                @Override
-                public void accept(Throwable throwable) throws Exception
-                {
-                    onHandleError(throwable);
-                }
-            }));
+                mCollectionBaseLayout.notifyChangedTitleLayout();
+                onPlaceList(mIsOverShowDate, placeViewItems, false);
+                unLockUI();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override
