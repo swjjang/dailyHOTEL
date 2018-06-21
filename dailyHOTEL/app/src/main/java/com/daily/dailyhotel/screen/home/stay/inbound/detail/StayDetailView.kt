@@ -592,12 +592,13 @@ class StayDetailView(activity: StayDetailActivity, listener: StayDetailInterface
             if (soldOut) {
                 setPrice(getString(R.string.label_soldout))
                 setPriceWonVisible(false)
+                setNightsEnabled(false)
             } else {
                 setPrice(DecimalFormat("###,##0").format(baseInformation.discount))
                 setPriceWonVisible(true)
+                setNightsEnabled(nightsEnabled)
             }
 
-            setNightsEnabled(nightsEnabled)
             setAwardsVisible(baseInformation.awards.letNotNullTrueElseNullFalse { setAwardsTitle(it.title) })
             setAwardsClickListener(View.OnClickListener { eventListener.onTrueAwardsClick() })
         }
