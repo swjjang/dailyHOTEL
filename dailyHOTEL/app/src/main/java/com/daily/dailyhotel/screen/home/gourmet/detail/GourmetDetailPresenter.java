@@ -293,7 +293,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             mGourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
                         } catch (Exception e)
                         {
-                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.log("ExternalDeepLink : " + externalDeepLink.getDeepLink());
                             Crashlytics.logException(e);
                             finish();
                             return;
@@ -315,7 +315,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        Crashlytics.log(mDailyDeepLink.getDeepLink());
+                        Crashlytics.log("deepLink : " + mDailyDeepLink.getDeepLink());
                         Crashlytics.logException(throwable);
 
                         onHandleError(throwable);

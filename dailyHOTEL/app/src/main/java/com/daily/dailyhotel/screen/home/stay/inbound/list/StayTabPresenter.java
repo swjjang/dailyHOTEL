@@ -1207,7 +1207,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     } catch (Exception e)
                     {
                         // 예외 처리 추가 원인 찾기
-                        Crashlytics.log(data.toString());
+                        Crashlytics.log("Filter IntentData : " + data.toString());
                         Crashlytics.logException(e);
 
                         // 지역이 수정 되면 필터가 초기화 된다.

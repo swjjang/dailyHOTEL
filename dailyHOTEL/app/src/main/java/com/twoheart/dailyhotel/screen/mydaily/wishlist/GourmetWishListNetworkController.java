@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -98,12 +99,13 @@ public class GourmetWishListNetworkController extends BaseNetworkController
                     {
                         String message = baseDto.msg;
 
-                        Crashlytics.log(call.request().url().toString());
+                        Crashlytics.logException(new BaseException(msgCode, "Call url : " + call.request().url().toString()));
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
                 } catch (Exception e)
                 {
-                    Crashlytics.log(call.request().url().toString());
+                    Crashlytics.log("Call url : " + call.request().url().toString());
+                    Crashlytics.logException(e);
                     mOnNetworkControllerListener.onError(e);
                 }
             } else

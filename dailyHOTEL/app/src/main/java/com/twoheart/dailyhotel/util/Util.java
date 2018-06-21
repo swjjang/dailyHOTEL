@@ -852,6 +852,7 @@ public class Util implements Constants
             logMessage = logMessage + " : " + placeName + " : " + latitude + " : " + longitude;
 
             Crashlytics.log(logMessage);
+            Crashlytics.logException(e);
 
             showFailedTMapNaviDialog(activity);
         }

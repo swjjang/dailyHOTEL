@@ -1078,7 +1078,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     if (response.body() != null)
                     {
-                        Crashlytics.log(response.body().toString());
+                        Crashlytics.log("Login Response Body : " + response.body().toString());
+                        Crashlytics.logException(e);
                     }
 
                     LoginActivity.this.onError(e);

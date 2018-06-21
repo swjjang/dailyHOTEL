@@ -82,6 +82,7 @@ class SelectCouponAdapter(val context: Context, val list: MutableList<Coupon>, v
                     visibility = View.VISIBLE
                 } catch (e: ParseException) {
                     Crashlytics.log("Select Coupon::coupon.validTo: " + coupon.validTo)
+                    Crashlytics.logException(e)
                     ExLog.d(e.message)
                     visibility = View.GONE
                 }

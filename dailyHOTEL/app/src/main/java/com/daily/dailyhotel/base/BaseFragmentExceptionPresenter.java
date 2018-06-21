@@ -91,7 +91,7 @@ public abstract class BaseFragmentExceptionPresenter<T1 extends BaseFragment, T2
             } else if (throwable instanceof HttpException)
             {
                 HttpException httpException = (HttpException) throwable;
-                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.log("HttpException url : " + httpException.response().raw().request().url().toString());
                 Crashlytics.logException(throwable);
 
                 ExLog.e(httpException.response().raw().request().url().toString());
@@ -142,7 +142,7 @@ public abstract class BaseFragmentExceptionPresenter<T1 extends BaseFragment, T2
             {
                 DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.log("HttpException url : " + httpException.response().raw().request().url().toString());
                 Crashlytics.logException(throwable);
 
                 getActivity().onBackPressed();
