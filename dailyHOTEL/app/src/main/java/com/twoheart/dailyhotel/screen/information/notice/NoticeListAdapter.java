@@ -109,6 +109,7 @@ public class NoticeListAdapter extends ArrayAdapter<Notice>
         } catch (ParseException e)
         {
             Crashlytics.log("notice.createdAt: " + (notice != null ? notice.createdAt : ""));
+            Crashlytics.logException(e);
             ExLog.d(e.toString());
         } catch (Exception e)
         {

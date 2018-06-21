@@ -111,7 +111,7 @@ public abstract class DailyDeepLink
                 nights = Integer.parseInt(externalDeepLink.getNights());
             } catch (Exception e)
             {
-                Crashlytics.log(externalDeepLink.getDeepLink());
+                Crashlytics.log("ExternalDeepLink : " + externalDeepLink.getDeepLink());
                 Crashlytics.logException(e);
             } finally
             {
@@ -155,7 +155,7 @@ public abstract class DailyDeepLink
                 }
             } catch (Exception e)
             {
-                Crashlytics.log(externalDeepLink.getDeepLink());
+                Crashlytics.log("ExternalDeepLink : " + externalDeepLink.getDeepLink());
                 Crashlytics.logException(e);
             }
         }
@@ -221,7 +221,7 @@ public abstract class DailyDeepLink
                 }
             } catch (Exception e)
             {
-                Crashlytics.log(externalDeepLink.getDeepLink());
+                Crashlytics.log("ExternalDeepLink : " + externalDeepLink.getDeepLink());
                 Crashlytics.logException(e);
             }
         }

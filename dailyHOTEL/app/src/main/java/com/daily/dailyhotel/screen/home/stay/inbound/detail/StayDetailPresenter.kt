@@ -164,13 +164,13 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                     isRefresh = true
                     onRefresh(true)
                 } catch (e: Exception) {
-                    Crashlytics.log(externalDeepLink.deepLink)
+                    Crashlytics.log("DailyExternalDeepLink , deepLink : ${externalDeepLink.deepLink}")
                     Crashlytics.logException(e)
                     finish()
                 }
             }
         }, {
-            Crashlytics.log(this@StayDetailPresenter.deepLink?.deepLink)
+            Crashlytics.log("commonDateTime , deepLink : ${this@StayDetailPresenter.deepLink?.deepLink}")
             Crashlytics.logException(it)
 
             onHandleErrorAndFinish(it)

@@ -466,7 +466,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         if (call != null && e != null)
         {
-            Crashlytics.log(call.request().url().toString());
+            Crashlytics.log("Error call Url : " + call.request().url().toString());
             Crashlytics.logException(e);
 
             ExLog.e(e.toString());
@@ -636,7 +636,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             } else if (throwable instanceof HttpException)
             {
                 retrofit2.HttpException httpException = (HttpException) throwable;
-                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.log("HttpException : " + httpException.response().raw().request().url().toString());
                 Crashlytics.logException(throwable);
 
                 ExLog.e(httpException.response().raw().request().url().toString());
