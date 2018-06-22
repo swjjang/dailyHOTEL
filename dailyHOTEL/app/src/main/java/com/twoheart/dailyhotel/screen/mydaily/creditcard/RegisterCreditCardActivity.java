@@ -226,7 +226,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         {
             super.onPageStarted(view, url, favicon);
 
-            lockUI();
             //			handler.removeCallbacks(networkCheckRunner); // 결제 완료시 항상 네트워크
             // 불안정뜨므로, 네트워크 체크는
             // 제거하도록 함.

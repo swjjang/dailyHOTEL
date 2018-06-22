@@ -27,8 +27,6 @@ public interface EventWebInterface
         void setShareButtonVisible(boolean visible);
 
         void showShareDialog(DialogInterface.OnDismissListener listener);
-
-        void onEnabledProgress(boolean enabled);
     }
 
     interface OnEventListener extends OnBaseEventListener

@@ -635,10 +635,7 @@ public abstract class BasePaymentWebActivity extends BaseActivity implements Con
             // handler.removeCallbacks(networkCheckRunner);
             // 결제 완료시 항상 네트워크 불안정뜨므로, 네트워크 체크는 제거하도록 함.
 
-            if (VersionUtils.isOverAPI14() == true)
-            {
-                setSupportProgressBarIndeterminateVisibility(true);
-            }
+            setSupportProgressBarIndeterminateVisibility(true);
         }
 
         @Override
@@ -646,10 +643,7 @@ public abstract class BasePaymentWebActivity extends BaseActivity implements Con
         {
             super.onPageFinished(view, url);
 
-            if (VersionUtils.isOverAPI14() == true)
-            {
-                setSupportProgressBarIndeterminateVisibility(false);
-            }
+            setSupportProgressBarIndeterminateVisibility(false);
         }
 
         @Override
