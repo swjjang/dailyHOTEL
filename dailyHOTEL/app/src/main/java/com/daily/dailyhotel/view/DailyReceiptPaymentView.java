@@ -59,7 +59,7 @@ public class DailyReceiptPaymentView extends LinearLayout
     {
         try
         {
-            mDataBinding.paymentDateTextView.setText(DailyCalendar.convertDateFormatString(paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
+            mDataBinding.paymentDateTextView.setText(paymentDate);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
