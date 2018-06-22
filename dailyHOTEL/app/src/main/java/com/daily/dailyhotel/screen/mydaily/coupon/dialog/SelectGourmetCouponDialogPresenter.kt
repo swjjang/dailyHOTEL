@@ -95,7 +95,7 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
     override fun onPreFinish() {
         super.onPreFinish()
 
-        if (isSetOk) {
+        if (!isSetOk) {
             if (AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equals(callByScreen, true)) {
                 analytics.onCancelByPayment(activity, viewInterface.getCouponCount())
             }
