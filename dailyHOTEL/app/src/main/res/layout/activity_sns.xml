@@ -90,6 +90,24 @@
             android:background="@color/default_line_cdcdcdd"/>
 
         <com.daily.base.widget.DailyTextView
+            android:id="@+id/naverBlogLinkView"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/label_link_naver_blog"
+            android:textColor="@color/default_text_c4d4d4d"
+            android:textSize="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/stayInstagramLinkView"
             android:layout_width="match_parent"
             android:layout_height="41dp"

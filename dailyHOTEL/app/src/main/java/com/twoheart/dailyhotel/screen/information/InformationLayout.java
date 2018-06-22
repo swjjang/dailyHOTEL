@@ -92,6 +92,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View dailyRewardLayout = view.findViewById(R.id.dailyRewardLayout);
         View dailyTrueAwardsLayout = view.findViewById(R.id.dailyTrueAwardsLayout);
         View snsLayout = view.findViewById(R.id.snsLayout);
+        View dailyPriceLabLayout = view.findViewById(R.id.dailyPriceLabLayout);
         View eventLayout = view.findViewById(R.id.eventLayout);
         View noticeLayout = view.findViewById(R.id.noticeLayout);
         View faqLayout = view.findViewById(R.id.faqLayout);
@@ -103,6 +104,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         dailyRewardLayout.setOnClickListener(this);
         dailyTrueAwardsLayout.setOnClickListener(this);
         snsLayout.setOnClickListener(this);
+        dailyPriceLabLayout.setOnClickListener(this);
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
         faqLayout.setOnClickListener(this);

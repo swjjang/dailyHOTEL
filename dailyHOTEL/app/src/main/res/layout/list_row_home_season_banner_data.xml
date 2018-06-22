@@ -16,7 +16,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:placeholderImageScaleType="centerCrop"
-            app:backgroundImage="@drawable/bnr_sample"
+            app:backgroundImage="@drawable/banner_open_default"
             app:layout_constraintTop_toTopOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

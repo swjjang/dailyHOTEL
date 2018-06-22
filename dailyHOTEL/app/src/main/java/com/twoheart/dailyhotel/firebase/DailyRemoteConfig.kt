@@ -37,12 +37,12 @@ class DailyRemoteConfig(private val context: Context) {
 
         val fetchTime = if (Constants.DEBUG) 0L else 600L
 
-        remoteConfig.fetch(fetchTime).addOnCompleteListener({
+        remoteConfig.fetch(fetchTime).addOnCompleteListener {
             if (it.isSuccessful) {
                 remoteConfig.activateFetched()
                 setRemoteConfig(listener)
             }
-        }).addOnFailureListener(OnFailureListener {
+        }.addOnFailureListener(OnFailureListener {
             if (it is FirebaseRemoteConfigFetchThrottledException) {
                 try {
                     setRemoteConfig(listener)
