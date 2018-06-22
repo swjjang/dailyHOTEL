@@ -123,7 +123,7 @@ public interface Constants
     String URL_WEB_DAILY_REWARD_TERMS = "http://m.dailyhotel.co.kr/banner/dailyrewards_notice/";
     String URL_WEB_DAILY_REWARD_COUPON_TERMS = "https://hotel.dailyhotel.kr/webview_cnote/reward_coupon";
     String URL_WEB_DAILY_AWARDS = "http://m.dailyhotel.co.kr/banner/dailytrueawards_fixed";
-    String URL_WEB_DAILY_PRICE_LAB = "http://m.dailyhotel.co.kr/banner/dailytrueawards_fixed";
+    String URL_WEB_DAILY_PRICE_LAB = "http://m.dailyhotel.co.kr/banner/dailypricelab";
 
     // 테스트 서버
     String URL_WEB_EACH_COUPON_TERMS_DEV = UNENCRYPTED_URL ? "http://dev-extranet-hotel.dailyhotel.me/webview_coupon_note/" : "NjMkMjkkOTAkMTYwJDEyNiQ0MSQxMDAkMTQyJDEwMCQxNDMkOTUkMTY3JDEwNyQzNSQ5MCQ5NCQ=$Q0VEQUNEOTlEOUM4RTdBQTk5NEQxNCUE4RUNRDMzY1DNTRERDY3QjJDRjJCNTIwQzMYzQ0YzNzY0MzA2NzMzMkZCMUCQ0QROEUXxNUVFJTRjAxZMTE4OTdGREM1NEI3NUJDODIJ3ODU4NkUyQzk1KMQUI2RUUwQ0M5MTEzRjI1NTOUE1OEE0M0U4RUI=$";

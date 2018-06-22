@@ -372,6 +372,7 @@
     <string name="label_link_gourmet_instagram">데일리고메 인스타그램</string>
     <string name="label_link_naver">데일리 포스트</string>
     <string name="label_link_youtube">데일리 유튜브</string>
+    <string name="label_link_naver_blog">데일리 블로그</string>
 
     <string name="message_empty_notice">공지사항이 없습니다.</string>
     <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다. 여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>

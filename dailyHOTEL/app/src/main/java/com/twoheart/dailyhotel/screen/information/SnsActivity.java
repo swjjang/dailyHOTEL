@@ -69,6 +69,7 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
     {
         findViewById(R.id.facebookLinkView).setOnClickListener(this);
         findViewById(R.id.naverLinkView).setOnClickListener(this);
+        findViewById(R.id.naverBlogLinkView).setOnClickListener(this);
         findViewById(R.id.youtubeLinkView).setOnClickListener(this);
         findViewById(R.id.stayInstagramLinkView).setOnClickListener(this);
         findViewById(R.id.gourmetInstagramLinkView).setOnClickListener(this);
@@ -175,6 +176,24 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             , AnalyticsManager.Action.INSTAGRAM_CLICK, null, null);
     }
 
+    private void startNaverPost()
+    {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        try
+        {
+            startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://post.naver.com/dailyhotel")));
+        } catch (ActivityNotFoundException e)
+        {
+        }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.BLOG_CLICK, null, null);
+    }
+
     private void startNaverBlog()
     {
         if (lockUiComponentAndIsLockUiComponent() == true)
@@ -182,25 +201,15 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-
         try
         {
-            intent.setData(Uri.parse("naversearchapp://inappbrowser?url=http%3A%2F%2Fpost.naver" + ".com%2Fdailyhotel&target=new&version=6"));
-            startActivity(intent);
-        } catch (Exception e)
+            startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://blog.naver.com/dailyhotel")));
+        } catch (ActivityNotFoundException e)
         {
-            try
-            {
-                intent.setData(Uri.parse("http://post.naver.com/dailyhotel"));
-                startActivity(intent);
-            } catch (ActivityNotFoundException e1)
-            {
-            }
         }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.BLOG_CLICK, null, null);
+        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        //            , AnalyticsManager.Action.BLOG_CLICK, null, null);
     }
 
     private void startYouTube()
@@ -241,11 +250,15 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
                 break;
 
             case R.id.naverLinkView:
-                startNaverBlog();
+                startNaverPost();
                 break;
 
             case R.id.youtubeLinkView:
                 startYouTube();
+                break;
+
+            case R.id.naverBlogLinkView:
+                startNaverBlog();
                 break;
 
             case R.id.stayInstagramLinkView:
