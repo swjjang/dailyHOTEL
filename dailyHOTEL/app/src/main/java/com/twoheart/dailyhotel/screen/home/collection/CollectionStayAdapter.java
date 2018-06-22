@@ -8,10 +8,9 @@ import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
@@ -103,11 +102,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 View view = mInflater.inflate(R.layout.view_empty_stay_collection, parent, false);
-
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , ScreenUtils.getScreenHeight(mContext) - ScreenUtils.dpToPx(mContext, 97) - ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
-                view.setLayoutParams(layoutParams);
-
                 return new BaseViewHolder(view);
             }
 
@@ -170,6 +164,41 @@ public class CollectionStayAdapter extends PlaceListAdapter
                 params.bottomMargin = marginBottom;
 
                 holder.itemView.setLayoutParams(params);
+                break;
+            }
+
+            case PlaceViewItem.TYPE_EMPTY_VIEW:
+            {
+                boolean isLast = getItemCount() - 1 == position;
+                int height;
+                int topMargin;
+
+                if (isLast)
+                {
+                    height = ScreenUtils.getScreenHeight(mContext) - ScreenUtils.dpToPx(mContext, 97) //
+                        - ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) //
+                        + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97);
+
+                    topMargin = ScreenUtils.dpToPx(mContext, -30d);
+                } else
+                {
+                    height = ScreenUtils.dpToPx(mContext, 256d);
+                    topMargin = ScreenUtils.dpToPx(mContext, -15d);
+                }
+
+                View itemLayout = holder.itemView.findViewById(R.id.emptyLayout);
+                FrameLayout.LayoutParams itemLayoutLayoutParams = (FrameLayout.LayoutParams) itemLayout.getLayoutParams();
+                if (itemLayoutLayoutParams == null)
+                {
+                    itemLayoutLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                }
+
+                itemLayoutLayoutParams.topMargin = topMargin;
+
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
+                    , height);
+
+                holder.itemView.setLayoutParams(layoutParams);
                 break;
             }
 
