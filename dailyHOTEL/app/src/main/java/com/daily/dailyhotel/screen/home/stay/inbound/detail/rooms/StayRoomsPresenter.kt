@@ -138,7 +138,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         isRefresh = false
         screenLock(showProgress)
 
-        val observable: Observable<Boolean> = Observable.defer({
+        val observable: Observable<Boolean> = Observable.defer {
             val checkInDate = bookDateTime.getCheckInDateTime("M.d(EEE)")
             val checkOutDate = bookDateTime.getCheckOutDateTime("M.d(EEE)")
             if (isTextEmpty(checkInDate, checkOutDate)) {
@@ -150,9 +150,9 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
             viewInterface.setRoomList(roomList, position)
 
             Observable.just(true)
-        })
+        }
 
-        addCompositeDisposable(observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe({
             viewInterface.notifyDataSetChanged()
             viewInterface.setRecyclerPosition(position)
             viewInterface.initRoomDetailLayout(position)
