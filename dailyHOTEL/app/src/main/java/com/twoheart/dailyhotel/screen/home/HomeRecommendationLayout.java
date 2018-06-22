@@ -38,6 +38,8 @@ public class HomeRecommendationLayout extends LinearLayout
     LinearLayout mContentLayout;
     HomeRecommendationListener mListener;
     ValueAnimator mValueAnimator;
+    private View mTopMarginView;
+    private View mBottomMarginView;
 
     private boolean mIsUseAnimation;
     private int mImageWidth = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -102,6 +104,8 @@ public class HomeRecommendationLayout extends LinearLayout
         mExpectedItemHeight = mImageHeight + ScreenUtils.dpToPx(mContext, 78d);
 
         mContentLayout = view.findViewById(R.id.contentLayout);
+        mTopMarginView = view.findViewById(R.id.topMarginView);
+        mBottomMarginView = view.findViewById(R.id.bottomMarginView);
 
         setVisibility(View.GONE);
 
@@ -334,5 +338,15 @@ public class HomeRecommendationLayout extends LinearLayout
         });
 
         mValueAnimator.start();
+    }
+
+    public void showTopMarginViewVisible(boolean show)
+    {
+        mTopMarginView.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    public void showBottomMarginViewVisible(boolean show)
+    {
+        mBottomMarginView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 }

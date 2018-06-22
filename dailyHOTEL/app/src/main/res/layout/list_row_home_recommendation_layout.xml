@@ -3,6 +3,7 @@
        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
     <View
+        android:id="@+id/topMarginView"
         android:layout_width="match_parent"
         android:layout_height="15dp"
         android:background="@color/default_background"/>
@@ -43,4 +44,11 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/default_line_cf0f0f0"/>
+
+    <View
+        android:id="@+id/bottomMarginView"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:visibility="gone"
+        android:background="@color/default_background"/>
 </merge>

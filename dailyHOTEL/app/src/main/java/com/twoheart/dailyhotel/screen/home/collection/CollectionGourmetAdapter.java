@@ -100,15 +100,6 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_RECOMMEND_VIEW:
             {
                 HomeRecommendationLayout view = new HomeRecommendationLayout(mContext);
-                view.setListener(new HomeRecommendationLayout.HomeRecommendationListener()
-                {
-                    @Override
-                    public void onRecommendationClick(View view, Recommendation recommendation, int position)
-                    {
-                        ExLog.d("sam - todo");
-                    }
-                });
-
                 return new RecommendViewHolder(view);
             }
         }
@@ -136,8 +127,35 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                 onBindViewHolder((SectionViewHolder) holder, item);
                 break;
 
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                int marginBottom;
+                if (position == getItemCount() - 1)
+                {
+                    marginBottom = ScreenUtils.dpToPx(mContext, 82d);
+                } else
+                {
+                    marginBottom = ScreenUtils.dpToPx(mContext, 48d);
+                }
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+                if (params == null)
+                {
+                    params = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 34d));
+                    params.topMargin = ScreenUtils.dpToPx(mContext, 15d);
+                    params.leftMargin = ScreenUtils.dpToPx(mContext, 24d);
+                    params.rightMargin = ScreenUtils.dpToPx(mContext, 24d);
+                }
+
+                params.bottomMargin = marginBottom;
+
+                holder.itemView.setLayoutParams(params);
+                break;
+            }
+
             case PlaceViewItem.TYPE_RECOMMEND_VIEW:
                 onBindViewHolder((RecommendViewHolder) holder, item);
+                break;
         }
     }
 
@@ -248,6 +266,9 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             super(recommendationLayout);
 
             this.recommendationLayout = recommendationLayout;
+            this.recommendationLayout.showTopMarginViewVisible(false);
+            this.recommendationLayout.showBottomMarginViewVisible(true);
+
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             this.recommendationLayout.setLayoutParams(params);
 
