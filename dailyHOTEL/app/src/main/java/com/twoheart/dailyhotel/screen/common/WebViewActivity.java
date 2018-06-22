@@ -332,11 +332,6 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
-            if (mEnabledProgress == true)
-            {
-                lockUI();
-            }
-
             super.onPageStarted(view, url, favicon);
         }
 
