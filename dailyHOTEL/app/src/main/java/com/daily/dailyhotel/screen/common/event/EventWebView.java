@@ -33,7 +33,6 @@ import io.reactivex.Observer;
 public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListener, ActivityWebDataBinding> implements EventWebInterface.ViewInterface
 {
     private JavaScriptExtension mJavaScriptExtension;
-    boolean mEnabledProgress = true;
 
     public EventWebView(BaseActivity baseActivity, EventWebInterface.OnEventListener listener)
     {
@@ -298,12 +297,6 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
         showSimpleDialog(dataBinding.getRoot(), null, listener, true);
     }
 
-    @Override
-    public void onEnabledProgress(boolean enabled)
-    {
-        mEnabledProgress = enabled;
-    }
-
     private class DailyWebViewClient extends WebViewClient
     {
         public static final String INTENT_PROTOCOL_START = "intent:";
@@ -362,11 +355,6 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
-            if (mEnabledProgress)
-            {
-                getEventListener().onScreenLock();
-            }
-
             super.onPageStarted(view, url, favicon);
         }
 
