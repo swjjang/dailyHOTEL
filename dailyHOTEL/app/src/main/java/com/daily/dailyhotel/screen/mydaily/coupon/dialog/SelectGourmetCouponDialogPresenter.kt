@@ -53,13 +53,12 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
     }
 
     override fun onIntent(intent: Intent?): Boolean {
-        var result = true
+        var result = false
 
         intent?.run {
             callByScreen = getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN)
             if (callByScreen.isTextEmpty()) {
                 Util.restartApp(activity)
-                result = false
             }
 
             visitDay = getStringExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_VISIT_DAY)
@@ -100,9 +99,14 @@ class SelectGourmetCouponDialogPresenter(activity: SelectGourmetCouponDialogActi
                 analytics.onCancelByPayment(activity, viewInterface.getCouponCount())
             }
 
-            activity.setResult(Activity.RESULT_OK, Intent()
-                    .putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount))
+            setFinishResult()
         }
+    }
+
+    private fun setFinishResult() {
+        val intent = Intent().putExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, maxCouponAmount)
+
+        activity.setResult(Activity.RESULT_CANCELED, intent)
     }
 
     override fun onDestroy() {
