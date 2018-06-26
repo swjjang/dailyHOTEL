@@ -8,6 +8,7 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -17,11 +18,14 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -253,25 +257,46 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     protected void startCollectionPlace(Recommendation recommendation)
     {
-        if (recommendation == null) {
+        if (recommendation == null)
+        {
             return;
         }
 
         Intent intent;
+
+
+        String checkInDateTime = null;
+        String checkOutDateTime = null;
+        if (mPlaceBookingDay != null)
+        {
+            try
+            {
+                if (mPlaceBookingDay instanceof StayBookingDay)
+                {
+                    checkInDateTime = ((StayBookingDay) mPlaceBookingDay).getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+                    checkOutDateTime = ((StayBookingDay) mPlaceBookingDay).getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+                } else if (mPlaceBookingDay instanceof GourmetBookingDay) {
+                    checkInDateTime = ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
 
         switch (recommendation.serviceType)
         {
             case "GOURMET":
                 intent = CollectionGourmetActivity.newInstance(this, recommendation.idx//
                     , ScreenUtils.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                    , recommendation.title, recommendation.subtitle, false);
+                    , recommendation.title, recommendation.subtitle, checkInDateTime, false);
                 break;
 
             case "HOTEL":
             default:
                 intent = CollectionStayActivity.newInstance(this, recommendation.idx//
                     , ScreenUtils.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                    , recommendation.title, recommendation.subtitle, false);
+                    , recommendation.title, recommendation.subtitle, checkInDateTime, checkOutDateTime, false);
                 break;
         }
 
@@ -281,8 +306,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         finish();
 
-//        AnalyticsManager.getInstance(this).recordEvent(//
-//            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECOMMEND_LIST_CLICK,//
-//            Integer.toString(recommendation.idx), null);
+        //        AnalyticsManager.getInstance(this).recordEvent(//
+        //            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECOMMEND_LIST_CLICK,//
+        //            Integer.toString(recommendation.idx), null);
     }
 }

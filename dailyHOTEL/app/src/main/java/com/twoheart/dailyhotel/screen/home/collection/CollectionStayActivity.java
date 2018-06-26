@@ -103,7 +103,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle, boolean isUsedMultiTransition)
+    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle //
+        , String checkInDateTime, String checkOutDateTime, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
 
@@ -113,6 +114,16 @@ public class CollectionStayActivity extends CollectionBaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
         intent.putExtra(INTENT_EXTRA_DATA_SUBTITLE, subTitle);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+
+        if (DailyTextUtils.isTextEmpty(checkInDateTime) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDateTime);
+        }
+
+        if (DailyTextUtils.isTextEmpty(checkOutDateTime) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDateTime);
+        }
 
         return intent;
     }
@@ -152,6 +163,30 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
                 subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
                 imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
+
+                String checkInDateTime = intent.getStringExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE);
+                String checkOutDateTime = intent.getStringExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE);
+
+                if (DailyTextUtils.isTextEmpty(checkInDateTime) == false)
+                {
+                    try
+                    {
+                        mStartStayBookingDay = new StayBookingDay();
+                        mStartStayBookingDay.setCheckInDay(checkInDateTime);
+
+                        if (DailyTextUtils.isTextEmpty(checkOutDateTime) == false)
+                        {
+                            mStartStayBookingDay.setCheckOutDay(checkOutDateTime);
+                        } else
+                        {
+                            mStartStayBookingDay.setCheckOutDay(checkInDateTime, 1);
+                        }
+                    } catch (Exception e)
+                    {
+                        mStartStayBookingDay = null;
+                    }
+                }
+
                 break;
             }
 
@@ -357,8 +392,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
                         ArrayList<PlaceViewItem> placeViewItems = makePlaceList( //
                             recommendationPlaceList.imageBaseUrl, (mIsOverShowDate ? null : stayList), recommendationPlaceList.stickers);
 
-                        for (Recommendation item : recommendationList) {
-                            if (item.idx == recommendation.idx) {
+                        for (Recommendation item : recommendationList)
+                        {
+                            if (item.idx == recommendation.idx)
+                            {
                                 recommendationList.remove(item);
                                 break;
                             }
@@ -434,6 +471,26 @@ public class CollectionStayActivity extends CollectionBaseActivity
             switch (mType)
             {
                 case TYPE_DEFAULT:
+                    if (mStartStayBookingDay != null)
+                    {
+                        try
+                        {
+                            int startCheckInDay = Integer.parseInt(mStartStayBookingDay.getCheckInDay("yyyyMMdd"));
+                            int dailyCheckInDay = Integer.parseInt(stayBookingDay.getCheckInDay("yyyyMMdd"));
+
+                            // 데일리타임 이후 날짜인 경우에는
+                            if (startCheckInDay >= dailyCheckInDay)
+                            {
+                                stayBookingDay.setCheckInDay(mStartStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+                                stayBookingDay.setCheckOutDay(mStartStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mStartStayBookingDay = null;
+                    }
                     break;
 
                 case TYPE_DATE:
@@ -814,7 +871,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
         @Override
         public void onRecommendationClick(Recommendation recommendation)
         {
-            if (recommendation == null) {
+            if (recommendation == null)
+            {
                 return;
             }
 

@@ -1989,14 +1989,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     case "GOURMET":
                         intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
                             , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                            , recommendation.title, recommendation.subtitle, true);
+                            , recommendation.title, recommendation.subtitle, null, true);
                         break;
 
                     case "HOTEL":
                     default:
                         intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
                             , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                            , recommendation.title, recommendation.subtitle, true);
+                            , recommendation.title, recommendation.subtitle, null, null, true);
                         break;
                 }
 
@@ -2015,14 +2015,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     case "GOURMET":
                         intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
                             , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                            , recommendation.title, recommendation.subtitle, false);
+                            , recommendation.title, recommendation.subtitle, null, false);
                         break;
 
                     case "HOTEL":
                     default:
                         intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
                             , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                            , recommendation.title, recommendation.subtitle, false);
+                            , recommendation.title, recommendation.subtitle, null, null, false);
                         break;
                 }
 

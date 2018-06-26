@@ -97,7 +97,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle, boolean isUsedMultiTransition)
+    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle //
+        , String visitDateTime, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
@@ -107,6 +108,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
         intent.putExtra(INTENT_EXTRA_DATA_SUBTITLE, subTitle);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDateTime);
 
         return intent;
     }
@@ -146,6 +148,20 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
                 subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
                 imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
+
+                String visitDateTime = intent.getStringExtra(INTENT_EXTRA_DATA_VISIT_DATE);
+
+                if (DailyTextUtils.isTextEmpty(visitDateTime) == false)
+                {
+                    try
+                    {
+                        mStartGourmetBookingDay = new GourmetBookingDay();
+                        mStartGourmetBookingDay.setVisitDay(visitDateTime);
+                    } catch (Exception e)
+                    {
+                        mStartGourmetBookingDay = null;
+                    }
+                }
                 break;
             }
 
@@ -400,6 +416,25 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             switch (mType)
             {
                 case TYPE_DEFAULT:
+                    if (mStartGourmetBookingDay != null)
+                    {
+                        try
+                        {
+                            int startVisitDay = Integer.parseInt(mStartGourmetBookingDay.getVisitDay("yyyyMMdd"));
+                            int dailyVisitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
+
+                            // 데일리타임 이후 날짜인 경우에는
+                            if (startVisitDay >= dailyVisitDay)
+                            {
+                                gourmetBookingDay.setVisitDay(mStartGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mStartGourmetBookingDay = null;
+                    }
                     break;
 
                 case TYPE_DATE:
