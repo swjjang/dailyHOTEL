@@ -2512,12 +2512,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                     Event seasonEvent = null;
 
-                    for (Event event : list)
+                    if (list != null && list.isEmpty() == false)
                     {
-                        if (index == event.index)
+                        for (Event event : list)
                         {
-                            seasonEvent = event;
-                            break;
+                            if (index == event.index)
+                            {
+                                seasonEvent = event;
+                                break;
+                            }
                         }
                     }
 
