@@ -66,7 +66,6 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
             callByScreen = getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN)
             if (callByScreen.isTextEmpty()) {
                 Util.restartApp(activity)
-                result = false
             }
 
             try {
@@ -76,7 +75,6 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
                 ExLog.e(e.toString())
 
                 Util.restartApp(activity)
-                result = false
             }
 
             stayIndex = getIntExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_STAY_IDX, -1)
@@ -243,7 +241,6 @@ class SelectStayCouponDialogPresenter(activity: SelectStayCouponDialogActivity)/
         }
 
         setResult(Activity.RESULT_OK, intent)
-
         finish()
 
         analytics.onSelectedCouponResult(activity, coupon.title)
