@@ -40,7 +40,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setDepositStickerCardVisible(boolean visible);
 
-    void setDepositStickerCard(String titleText, int nights, String warningText, CharSequence descriptionText);
+    void setDepositStickerCard(String titleText, int nights, String warningText, CharSequence descriptionText, boolean warningTextColor);
 
     void setStayOutboundPayment(int nights, int totalPrice, int discountPrice, double taxPrice);
 

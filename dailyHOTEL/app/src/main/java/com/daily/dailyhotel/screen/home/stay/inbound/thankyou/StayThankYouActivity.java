@@ -32,12 +32,13 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
     static final String INTENT_EXTRA_DATA_LONGITUDE = "longitude";
     static final String INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE = "descriptionTitle";
     static final String INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE = "descriptionMessage";
+    static final String INTENT_EXTRA_DATA_REWARD_WARNING_TEXT_COLOR = "warningTextColor";
 
 
     public static Intent newInstance(Context context, boolean overseas, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime, String roomName, String aggregationId//
         , boolean waitingForBooking, double latitude, double longitude, String descriptionTitle//
-        , String descriptionMessage, StayThankYouAnalyticsParam analyticsParam)
+        , String descriptionMessage, boolean warningTextColor, StayThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayThankYouActivity.class);
 
@@ -53,6 +54,7 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_LONGITUDE, longitude);
         intent.putExtra(INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE, descriptionTitle);
         intent.putExtra(INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE, descriptionMessage);
+        intent.putExtra(INTENT_EXTRA_DATA_REWARD_WARNING_TEXT_COLOR, warningTextColor);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

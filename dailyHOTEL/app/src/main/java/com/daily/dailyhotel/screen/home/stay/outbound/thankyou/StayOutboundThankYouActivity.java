@@ -26,10 +26,12 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
     static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
     static final String INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE = "descriptionTitle";
     static final String INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE = "descriptionMessage";
+    static final String INTENT_EXTRA_DATA_REWARD_WARNING_TEXT_COLOR = "warningTextColor";
 
     public static Intent newInstance(Context context, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime, String checkInTime, String checkOutTime//
         , String roomType, String aggregationId, String descriptionTitle, String descriptionMessage//
+        , boolean warningTextColor //
         , StayOutboundThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundThankYouActivity.class);
@@ -44,6 +46,7 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
         intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
         intent.putExtra(INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE, descriptionTitle);
         intent.putExtra(INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE, descriptionMessage);
+        intent.putExtra(INTENT_EXTRA_DATA_REWARD_WARNING_TEXT_COLOR, warningTextColor);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

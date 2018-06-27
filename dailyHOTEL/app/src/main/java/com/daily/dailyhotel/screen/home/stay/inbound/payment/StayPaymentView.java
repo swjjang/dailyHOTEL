@@ -123,9 +123,9 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf3ebde));
         } else
         {
-            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cf0f0f2));
-            getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_c929292));
-            getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_ce7e7e7));
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfdf1f1));
+            getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_cfb234a));
+            getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf1e4e4));
         }
 
         getViewDataBinding().cheeringTitleTextView.setText(titleText);
@@ -357,7 +357,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setDepositStickerCard(String titleText, int nights, String warningText, CharSequence descriptionText)
+    public void setDepositStickerCard(String titleText, int nights, String warningText, CharSequence descriptionText, boolean warningTextColor)
     {
         if (getViewDataBinding() == null)
         {
@@ -368,6 +368,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         getViewDataBinding().rewardCardView.setOptionVisible(false);
         getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
         getViewDataBinding().rewardCardView.setStickerCount(nights);
+        getViewDataBinding().rewardCardView.setWarningTextColor(warningTextColor);
 
         if (DailyTextUtils.isTextEmpty(warningText) == true)
         {
