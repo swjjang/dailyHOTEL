@@ -803,6 +803,11 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public void onInternalLink(String uri)
     {
+        if (Constants.DEBUG)
+        {
+            ExLog.d("DeepLink : " + uri);
+        }
+
         switch (mEventType)
         {
             case HOME_EVENT:
