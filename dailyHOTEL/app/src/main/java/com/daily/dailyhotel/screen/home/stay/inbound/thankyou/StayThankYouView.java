@@ -277,7 +277,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     }
 
     @Override
-    public void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText)
+    public void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText, boolean warningTextColor)
     {
         if (getViewDataBinding() == null)
         {
@@ -288,6 +288,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
         getViewDataBinding().rewardCardView.setOptionVisible(false);
         getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
         getViewDataBinding().rewardCardView.setStickerCount(nights);
+        getViewDataBinding().rewardCardView.setWarningTextColor(warningTextColor);
 
         if (DailyTextUtils.isTextEmpty(warningText) == true)
         {

@@ -99,6 +99,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     private RewardInformation mRewardInformation;
     private String mRewardDescriptionTitle;
     private String mRewardDescriptionMessage;
+    private boolean mRewardWarningTextColor;
 
     public interface StayThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -182,6 +183,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mRewardDescriptionTitle = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE);
         mRewardDescriptionMessage = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE);
+
+        mRewardWarningTextColor = intent.getBooleanExtra(StayThankYouActivity.INTENT_EXTRA_DATA_REWARD_WARNING_TEXT_COLOR, false);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -880,7 +883,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         if (mRewardInformation.activeReward == true)
         {
             getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
-                , mRewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage);
+                , mRewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage, mRewardWarningTextColor);
         }
     }
 

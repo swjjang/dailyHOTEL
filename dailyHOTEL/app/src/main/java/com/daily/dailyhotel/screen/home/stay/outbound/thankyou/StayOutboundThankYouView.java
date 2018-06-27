@@ -170,7 +170,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
     }
 
     @Override
-    public void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText)
+    public void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText, boolean warningTextColor)
     {
         if (getViewDataBinding() == null)
         {
@@ -181,6 +181,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
         getViewDataBinding().rewardCardView.setOptionVisible(false);
         getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
         getViewDataBinding().rewardCardView.setStickerCount(nights);
+        getViewDataBinding().rewardCardView.setWarningTextColor(warningTextColor);
 
         if (DailyTextUtils.isTextEmpty(warningText) == true)
         {

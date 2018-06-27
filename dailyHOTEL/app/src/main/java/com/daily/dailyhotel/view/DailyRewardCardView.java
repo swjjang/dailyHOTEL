@@ -399,6 +399,21 @@ public class DailyRewardCardView extends ConstraintLayout
         mViewDataBinding.descriptionTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
+    public void setWarningTextColor(boolean warningTextColor) {
+        if (mViewDataBinding == null) {
+            return;
+        }
+
+        if (getContext() == null || getContext().getResources() == null) {
+            return;
+        }
+
+        int color = getContext().getResources().getColor(warningTextColor ? R.color.default_text_ceb2135 : R.color.default_text_c929292);
+
+        mViewDataBinding.warningTextView.setTextColor(color);
+        mViewDataBinding.descriptionTextView.setTextColor(color);
+    }
+
     public void startCampaignStickerAnimation()
     {
         if (mStickerAnimatorSet != null)

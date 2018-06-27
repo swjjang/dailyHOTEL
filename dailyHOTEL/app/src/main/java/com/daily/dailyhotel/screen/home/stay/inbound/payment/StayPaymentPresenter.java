@@ -1452,7 +1452,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mRoomName, aggregationId, mStayPayment.waitingForBooking //
-            , mLatitude, mLongitude, descriptionTitle, descriptionMessage, mAnalytics.getThankYouAnalyticsParam())//
+            , mLatitude, mLongitude, descriptionTitle, descriptionMessage //
+            , mSaleType != STICKER, mAnalytics.getThankYouAnalyticsParam())//
             , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);
@@ -2440,7 +2441,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         if (mSaleType == STICKER)
         {
             getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
-                , stayPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));
+                , stayPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()), false);
         } else
         {
             if (hasDepositSticker() == true)
@@ -2454,7 +2455,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     startIndex, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
-                    , stayPayment.rewardStickerCount, null, spannableString);
+                    , stayPayment.rewardStickerCount, null, spannableString, true);
             }
         }
     }
