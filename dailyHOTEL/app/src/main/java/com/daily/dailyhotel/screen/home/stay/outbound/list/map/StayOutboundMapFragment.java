@@ -34,6 +34,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
+import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -671,7 +672,10 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 }
             }
 
-            //            ExLog.d("pinkred - remove size : " + (beforeSize - ((List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems()).size()));
+            if (Constants.DEBUG)
+            {
+                ExLog.d("pinkred - beforeSize : " + beforeSize + ", remove size : " + (beforeSize - ((List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems()).size()));
+            }
         }
     }
 
