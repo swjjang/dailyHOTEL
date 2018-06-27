@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -305,6 +306,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             return;
         }
 
+        mCollectionBaseLayout.setListScrollTop();
+
         GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
 
         String period = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
@@ -578,6 +581,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
         }
 
+        @SuppressLint("RestrictedApi")
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count)
