@@ -1339,7 +1339,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        int numberOfResults = zoom >= 13.0f ? 200 : 20;
+        int numberOfResults = zoom >= 13.0f ? 100 : 20;
 
         if (mChangedLocationDisposable != null)
         {

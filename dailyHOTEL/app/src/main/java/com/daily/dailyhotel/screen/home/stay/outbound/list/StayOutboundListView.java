@@ -685,7 +685,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        mStayOutboundMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
+        mStayOutboundMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true, true);
     }
 
     @Override
