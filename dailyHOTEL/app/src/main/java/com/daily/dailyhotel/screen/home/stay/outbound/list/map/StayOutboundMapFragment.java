@@ -344,7 +344,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
     }
 
-    public void setMyLocation(LatLng latLng, boolean isVisibleMarker)
+    public void setMyLocation(LatLng latLng, boolean isVisibleMarker, boolean moveCamera)
     {
         if (mGoogleMap == null || latLng == null)
         {
@@ -360,14 +360,17 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         mMyLocationMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)//
             .icon(new MyLocationMarker(getContext()).makeIcon()).visible(isVisibleMarker).anchor(0.5f, 0.5f).zIndex(1.0f));
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).build();
+        if (moveCamera)
+        {
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).build();
 
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        } else
-        {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            if (VersionUtils.isOverAPI21() == true)
+            {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            } else
+            {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
         }
     }
 
@@ -511,7 +514,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         // 나의 위치 마커를 생성시켜 놓는다.
         if (myLatLng != null)
         {
-            setMyLocation(myLatLng, true);
+            setMyLocation(myLatLng, true, false);
 
             boundsBuilder.include(myLatLng);
         }
