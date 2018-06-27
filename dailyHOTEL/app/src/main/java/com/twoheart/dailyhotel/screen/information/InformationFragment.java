@@ -349,8 +349,11 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_dailyh_price_lab)//
-                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyPriceLab()), Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
+            baseActivity.startActivityForResult(com.daily.dailyhotel.screen.common.event.EventWebActivity.newInstance( //
+                baseActivity, com.daily.dailyhotel.screen.common.event.EventWebActivity.EventType.HOME_EVENT//
+                , DailyRemoteConfigPreference.getInstance(baseActivity).getKeyRemoteConfigStaticUrlDailyPriceLab() //
+                , getString(R.string.label_dailyh_price_lab), null, null, false) //
+                , Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
         }
 
         @Override

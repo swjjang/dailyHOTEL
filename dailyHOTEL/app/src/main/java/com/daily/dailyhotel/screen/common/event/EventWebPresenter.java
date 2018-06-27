@@ -78,6 +78,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
     private String mCouponCode;
     private String mDeepLinkUrl;
+    private boolean mShare;
     String mConfirmText;
 
     public EventWebPresenter(@NonNull EventWebActivity activity)
@@ -129,9 +130,10 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
             return false;
         }
 
-        mEventName = intent.getStringExtra((EventWebActivity.INTENT_EXTRA_DATA_EVENT_NAME));
-        mEventDescription = intent.getStringExtra((EventWebActivity.INTENT_EXTRA_DATA_EVENT_DESCRIPTION));
-        mImageUrl = intent.getStringExtra((EventWebActivity.INTENT_EXTRA_DATA_IMAGE_URL));
+        mEventName = intent.getStringExtra(EventWebActivity.INTENT_EXTRA_DATA_EVENT_NAME);
+        mEventDescription = intent.getStringExtra(EventWebActivity.INTENT_EXTRA_DATA_EVENT_DESCRIPTION);
+        mImageUrl = intent.getStringExtra(EventWebActivity.INTENT_EXTRA_DATA_IMAGE_URL);
+        mShare = intent.getBooleanExtra(EventWebActivity.INTENT_EXTRA_DATA_SHARE, true);
 
         return true;
     }
@@ -146,7 +148,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mEventName);
-        getViewInterface().setShareButtonVisible(DailyTextUtils.isTextEmpty(mEventUrl, mEventName) == false);
+        getViewInterface().setShareButtonVisible(DailyTextUtils.isTextEmpty(mEventUrl, mEventName) == false && mShare);
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
