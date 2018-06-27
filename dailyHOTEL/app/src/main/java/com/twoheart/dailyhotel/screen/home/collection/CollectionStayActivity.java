@@ -352,6 +352,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
             return;
         }
 
+        mCollectionBaseLayout.setListScrollTop();
+
         try
         {
             StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;

@@ -324,6 +324,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             return;
         }
 
+        mCollectionBaseLayout.setListScrollTop();
+
         GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
 
         String period = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
