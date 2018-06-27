@@ -16,7 +16,7 @@ public interface StayOutboundThankYouInterface extends BaseDialogViewInterface
 
     void setDepositStickerCardVisible(boolean visible);
 
-    void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText);
+    void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText, boolean warningTextColor);
 
     Observable<Boolean> getReceiptAnimation();
 }

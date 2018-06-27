@@ -1313,7 +1313,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, aggregationId//
             , descriptionTitle, descriptionMessage//
-            , mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mSaleType, mSelectedCard != null, mStayIndex)) //
+            , mSaleType != STICKER, mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mSaleType, mSelectedCard != null, mStayIndex)) //
             , StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName//
@@ -2128,7 +2128,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         if (mSaleType == STICKER)
         {
             getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
-                , stayOutboundPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayOutboundPayment.providableRewardStickerCount));
+                , stayOutboundPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayOutboundPayment.providableRewardStickerCount), false);
         } else
         {
             if (hasDepositSticker() == true)
@@ -2142,7 +2142,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     startIndex, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
-                    , stayOutboundPayment.rewardStickerCount, null, spannableString);
+                    , stayOutboundPayment.rewardStickerCount, null, spannableString, true);
             }
         }
     }
