@@ -622,7 +622,7 @@
     <string name="message_booking_cancel_gourmet_share_sms">[데일리호텔]%1$s님의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s</string>
 
     <string name="message_booking_reward_cheering_title01">예약 후 숙박 완료 시 스티커 %1$d개가 적립됩니다.</string>
-    <string name="message_booking_reward_cheering_title02">스티커 적립을 할수 없는 예약입니다.</string>
+    <string name="message_booking_reward_cheering_title02">스티커 적립을 할 수 없는 예약입니다.</string>
     <string name="message_booking_reward_cheering_warning">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시 적립 불가)</string>
     <string name="message_booking_reward_warning01">(4만원 이상 결제, 적립금/할인쿠폰 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
     <string name="message_booking_reward_warning02">(4만원 이상 결제, 적립금 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
