@@ -241,6 +241,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                     }
 
                     roomFindConditionJSONObject.put("childAges", jsonArray);
+                    roomFindConditionJSONObject.put("numberOfChildren", childAgeList.size());
                 } else
                 {
                     roomFindConditionJSONObject.put("numberOfChildren", 0);

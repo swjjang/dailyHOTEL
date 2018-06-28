@@ -101,6 +101,7 @@ public class SelectStayOutboundCouponDialogPresenter//
         mRateCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_CODE);
         mRateKey = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_KEY);
         mRoomTypeCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_ROOM_TYPE_CODE);
+        mRoomBedTypeId = intent.getIntExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID, 0);
 
         int numberOfAdults = intent.getIntExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
         ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHILD_LIST);
