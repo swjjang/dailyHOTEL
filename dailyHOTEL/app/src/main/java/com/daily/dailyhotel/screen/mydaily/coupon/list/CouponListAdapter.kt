@@ -127,7 +127,7 @@ class CouponListAdapter(private val context: Context, private val list: MutableL
                 text = dueDateString
 
                 // 8일 남음 이상 true , 7일 남음 부터 오늘까지 false
-                setTextColor(context.resources.getColor(if (dueDate > 7) R.color.coupon_description_text else R.color.coupon_red_wine_text))
+                setTextColor(context.resources.getColor(if (dueDate > 7) R.color.coupon_description_text else R.color.default_text_c2c8de6))
             }
 
             var lastLineText = ""

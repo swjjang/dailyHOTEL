@@ -189,7 +189,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else
             {
                 // 7일 남음 부터 오늘까지
-                dataBinding.dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
+                dataBinding.dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c2c8de6));
             }
 
             dataBinding.dueDateTextView.setText(strDueDate);
