@@ -997,9 +997,15 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                                 @Override
                                 public void onClick(View v)
                                 {
-                                    setSaleType(NONE);
-                                    getViewInterface().setDepositSticker(false);
-                                    notifyStayPaymentChanged();
+                                    if (mStayPayment.totalPrice >= PHONE_MAX_PRICE)
+                                    {
+                                        getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_phone_over_50), getString(R.string.dialog_btn_text_confirm), null);
+                                    } else
+                                    {
+                                        setSaleType(NONE);
+                                        getViewInterface().setDepositSticker(false);
+                                        notifyStayPaymentChanged();
+                                    }
                                 }
                             }, null);
                     }

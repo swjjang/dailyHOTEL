@@ -14,7 +14,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutReceiptPaymentDataBinding;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 /**
  * Created by android_sam on 2017. 12. 14..

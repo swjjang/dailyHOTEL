@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.domain;
 
-import android.content.Context;
-
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;

@@ -49,7 +49,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class CollectionGourmetActivity extends CollectionBaseActivity
 {
@@ -361,8 +360,10 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     ArrayList<PlaceViewItem> placeViewItems = makePlaceList( //
                         recommendationPlaceList.imageBaseUrl, (mIsOverShowDate ? null : gourmetList), recommendationPlaceList.stickers);
 
-                    for (Recommendation item : recommendationList) {
-                        if (item.idx == recommendation.idx) {
+                    for (Recommendation item : recommendationList)
+                    {
+                        if (item.idx == recommendation.idx)
+                        {
                             recommendationList.remove(item);
                             break;
                         }
@@ -827,7 +828,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         @Override
         public void onRecommendationClick(Recommendation recommendation)
         {
-            if (recommendation == null) {
+            if (recommendation == null)
+            {
                 return;
             }
 

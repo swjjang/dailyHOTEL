@@ -18,7 +18,7 @@ class RegisterCouponView(activity: RegisterCouponActivity, listener: RegisterCou
     override fun setContentView(viewDataBinding: ActivityRegisterCouponDataBinding) {
         initToolbar(viewDataBinding)
 
-        viewDataBinding.run({
+        viewDataBinding.run {
             couponEditText.run {
                 setDeleteButtonVisible(null)
                 onFocusChangeListener = this@RegisterCouponView
@@ -44,7 +44,7 @@ class RegisterCouponView(activity: RegisterCouponActivity, listener: RegisterCou
             }
 
             registerCouponCompleteView.setOnClickListener(this@RegisterCouponView)
-        })
+        }
     }
 
     override fun setToolbarTitle(title: String?) {

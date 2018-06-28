@@ -493,6 +493,11 @@ public class SearchStayResultListFragmentPresenter extends BasePagerFragmentPres
     @Override
     public void onRefresh()
     {
+        if (mViewType == null)
+        {
+            return;
+        }
+
         mNeedToRefresh = false;
 
         switch (mViewType)

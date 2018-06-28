@@ -307,11 +307,11 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
                     it.forEach {
                         val info = DetailImageInformation()
                         info.caption = it.description
-                        info.imageMap = ImageMap().apply({
+                        info.imageMap = ImageMap().apply {
                             smallUrl = it.url
                             mediumUrl = it.url
                             bigUrl = it.url
-                        })
+                        }
 
                         imageList.add(info)
                     }
