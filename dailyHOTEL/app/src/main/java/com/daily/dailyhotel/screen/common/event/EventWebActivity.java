@@ -23,6 +23,7 @@ public class EventWebActivity extends BaseActivity<EventWebPresenter>
     protected static final String INTENT_EXTRA_DATA_EVENT_DESCRIPTION = "eventDescription";
     protected static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     protected static final String INTENT_EXTRA_DATA_SHARE = "share";
+    protected static final String INTENT_EXTRA_DATA_HOME = "home";
 
     public enum EventType
     {
@@ -49,14 +50,16 @@ public class EventWebActivity extends BaseActivity<EventWebPresenter>
     }
 
     public static Intent newInstance(Context context, EventType eventType, String pageUrl, String eventName //
-        , String eventDescription, String imageUrl, boolean share)
+        , String eventDescription, String imageUrl, boolean share, boolean home)
     {
         if (eventType == null || DailyTextUtils.isTextEmpty(pageUrl))
         {
             return null;
         }
 
-        return newInstance(context, eventType, pageUrl, eventName, eventDescription, imageUrl).putExtra(INTENT_EXTRA_DATA_SHARE, share);
+        return newInstance(context, eventType, pageUrl, eventName, eventDescription, imageUrl)//
+            .putExtra(INTENT_EXTRA_DATA_SHARE, share)//
+            .putExtra(INTENT_EXTRA_DATA_HOME, home);
     }
 
     @Override
