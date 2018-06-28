@@ -1274,6 +1274,8 @@ public class AnalyticsManager
 
         // Room List
         public static final String DETAIL_VIEW_ROOM = "detailview_room";
+
+        public static final String RECOMMEND_LIST = "recommend_list";
     }
 
     public static class Label
