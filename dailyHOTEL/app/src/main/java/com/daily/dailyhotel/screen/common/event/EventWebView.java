@@ -74,12 +74,6 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
             @Override
             public void onClick(View v)
             {
-                if (viewDataBinding.webView.canGoBack())
-                {
-                    viewDataBinding.webView.goBack();
-                    return;
-                }
-
                 EventWebView.this.getEventListener().onBackClick();
             }
         });
@@ -200,6 +194,17 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
         }
 
         getViewDataBinding().webView.goBack();
+    }
+
+    @Override
+    public String getCurrentUrl()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return null;
+        }
+
+        return getViewDataBinding().webView.getUrl();
     }
 
     @Override

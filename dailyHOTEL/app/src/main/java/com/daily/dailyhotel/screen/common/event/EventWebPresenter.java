@@ -80,6 +80,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     private String mDeepLinkUrl;
     private boolean mShare, mHome;
     String mConfirmText;
+    String mOverlapUrl;
 
     public EventWebPresenter(@NonNull EventWebActivity activity)
     {
@@ -207,8 +208,11 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public boolean onBackPressed()
     {
-        if (getViewInterface().canGoBack() == true)
+        if (getViewInterface().canGoBack()//
+            && (DailyTextUtils.isTextEmpty(mOverlapUrl) || !mOverlapUrl.equalsIgnoreCase(getViewInterface().getCurrentUrl())))
         {
+            mOverlapUrl = getViewInterface().getCurrentUrl();
+
             getViewInterface().goBack();
 
             return true;
