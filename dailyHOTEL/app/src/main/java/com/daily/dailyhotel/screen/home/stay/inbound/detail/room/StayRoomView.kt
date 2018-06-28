@@ -37,7 +37,7 @@ import io.reactivex.Observer
 
 class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEventListener)//
     : BaseDialogView<StayRoomInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
-        , StayRoomInterface.ViewInterface, View.OnClickListener {
+        , StayRoomInterface.ViewInterface {
     private lateinit var listAdapter: StayRoomAdapter
 
     private companion object {
@@ -52,9 +52,7 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
     @SuppressLint("ClickableViewAccessibility")
     override fun setContentView(viewDataBinding: ActivityStayRoomsDataBinding) {
         viewDataBinding.run {
-            closeImageView.setOnClickListener {
-                eventListener.onBackClick()
-            }
+            closeImageView.setOnClickListener { eventListener.onBackClick() }
 
             recyclerView.layoutManager = RoomLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge))
@@ -72,8 +70,6 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
                     val position = viewDataBinding.recyclerView.getChildAdapterPosition(view)
 
                     eventListener.onScrolled(position, true)
-
-                    ExLog.d("sam - onScrollStateChanged : newState : $newState, position : $position")
 
                     if (RecyclerView.SCROLL_STATE_IDLE == newState) {
                         setRoomDetailData(position)
@@ -101,9 +97,9 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
 
             recyclerView.adapter = listAdapter
 
-            bookingTextView.setOnClickListener(this@StayRoomView)
+            bookingTextView.setOnClickListener { eventListener.onBookingClick() }
 
-            guideLayout.setOnClickListener(this@StayRoomView)
+            guideLayout.setOnClickListener { eventListener.onGuideClick() }
             guideLayout.visibility = View.GONE
         }
     }
@@ -116,21 +112,6 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
         val count = if (listAdapter.itemCount == 0) 1 else listAdapter.itemCount
 
         viewDataBinding.indicatorTextView.text = "$position / ${if (count == 0) 1 else count}"
-    }
-
-    override fun onClick(v: View?) {
-        if (v == null) return
-
-        when (v.id) {
-            R.id.closeImageView -> eventListener.onCloseClick()
-
-            R.id.guideLayout -> eventListener.onGuideClick()
-
-            R.id.bookingTextView -> eventListener.onBookingClick()
-
-            else -> {
-            }
-        }
     }
 
     override fun setBookingButtonText(position: Int) {
@@ -400,7 +381,7 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
         simpleDraweeView?.hierarchy?.roundingParams = roundingParams
         imageGradientView?.hierarchy?.roundingParams = roundingParams
         when (toScaleX) {
-            in 0.90f .. 1f -> {
+            in 0.90f..1f -> {
                 imageGradientView?.alpha = (toScaleX - 0.90f) * 10
             }
 
@@ -462,7 +443,7 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
             roomLayout.scaleY = value
 
             when (value) {
-                in 0.90f .. 1f -> {
+                in 0.90f..1f -> {
                     imageGradientView?.alpha = (value - 0.90f) * 10
                 }
 
