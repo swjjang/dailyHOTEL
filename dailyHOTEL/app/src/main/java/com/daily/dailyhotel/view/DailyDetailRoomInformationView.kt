@@ -205,13 +205,13 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                         it.onComplete()
                     } else {
                         ValueAnimator.ofInt(0, height).apply {
-                            addUpdateListener({ valueAnimator ->
+                            addUpdateListener { valueAnimator ->
                                 valueAnimator?.let {
                                     viewDataBinding.moreRoomsLayout.apply {
                                         layoutParams.height = valueAnimator.animatedValue as Int
                                     }.requestLayout()
                                 }
-                            })
+                            }
 
                             duration = 200
                             interpolator = AccelerateDecelerateInterpolator()

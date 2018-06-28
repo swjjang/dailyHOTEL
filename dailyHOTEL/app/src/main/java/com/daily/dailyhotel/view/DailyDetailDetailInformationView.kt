@@ -203,14 +203,14 @@ class DailyDetailDetailInformationView : LinearLayout {
         }
 
         ValueAnimator.ofInt(0, height).apply {
-            addUpdateListener({ valueAnimator ->
+            addUpdateListener { valueAnimator ->
                 valueAnimator?.let {
                     viewDataBinding.moreInformationLayout.apply {
                         layoutParams.height = valueAnimator.animatedValue as Int
                         requestLayout()
                     }
                 }
-            })
+            }
 
             duration = 200
             interpolator = AccelerateDecelerateInterpolator()

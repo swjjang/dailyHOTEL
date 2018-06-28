@@ -29,8 +29,8 @@ import java.util.ArrayList;
 public class CollectionGourmetAdapter extends PlaceListAdapter
 {
     private boolean mIsUsedMultiTransition;
-    private View.OnClickListener mOnClickListener;
-    private View.OnClickListener mOnRecommendationClickListener;
+    View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnRecommendationClickListener;
 
     public CollectionGourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList //
         , View.OnClickListener listener, View.OnClickListener recommendationListener)

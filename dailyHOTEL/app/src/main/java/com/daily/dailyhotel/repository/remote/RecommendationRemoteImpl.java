@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.repository.remote;
 
-import android.content.Context;
-
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.RecommendationInterface;
 import com.twoheart.dailyhotel.network.dto.BaseDto;

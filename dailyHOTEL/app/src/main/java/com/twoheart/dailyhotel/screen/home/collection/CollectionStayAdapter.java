@@ -32,8 +32,8 @@ public class CollectionStayAdapter extends PlaceListAdapter
     private boolean mIsUsedMultiTransition;
     private int mNights;
 
-    private View.OnClickListener mOnClickListener;
-    private View.OnClickListener mOnRecommendationClickListener;
+    View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnRecommendationClickListener;
 
     public CollectionStayAdapter(Context context, ArrayList<PlaceViewItem> arrayList //
         , View.OnClickListener listener, View.OnClickListener recommendationListener)

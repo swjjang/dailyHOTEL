@@ -50,7 +50,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class CollectionStayActivity extends CollectionBaseActivity
 {
@@ -71,6 +70,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
     private StayBookingDay mStartStayBookingDay;
     private int mType;
     private int mAfterDay, mNights;
+    boolean mActiveReward;
 
     /**
      * @param context
@@ -341,8 +341,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 break;
         }
     }
-
-    private boolean mActiveReward;
 
     @Override
     protected void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay)

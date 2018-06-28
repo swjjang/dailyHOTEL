@@ -52,9 +52,9 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
     @SuppressLint("ClickableViewAccessibility")
     override fun setContentView(viewDataBinding: ActivityStayRoomsDataBinding) {
         viewDataBinding.run {
-            closeImageView.setOnClickListener({
+            closeImageView.setOnClickListener {
                 eventListener.onBackClick()
-            })
+            }
 
             recyclerView.layoutManager = ZoomCenterLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge))
