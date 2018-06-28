@@ -891,7 +891,7 @@
             android:theme="@style/Theme.AppCompat.Translucent"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms.StayRoomsActivity"
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.room.StayRoomActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

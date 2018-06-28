@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
+package com.daily.dailyhotel.screen.home.stay.inbound.detail.room
 
 import android.app.Activity
 import android.content.DialogInterface
@@ -30,8 +30,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class StayRoomsPresenter(activity: StayRoomsActivity)//
-    : BaseExceptionPresenter<StayRoomsActivity, StayRoomsInterface.ViewInterface>(activity), StayRoomsInterface.OnEventListener {
+class StayRoomPresenter(activity: StayRoomActivity)//
+    : BaseExceptionPresenter<StayRoomActivity, StayRoomInterface.ViewInterface>(activity), StayRoomInterface.OnEventListener {
 
     private val roomList = mutableListOf<Room>()
     private var activeReward: Boolean = false
@@ -44,15 +44,15 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     private val stayRemoteImpl = StayRemoteImpl()
     private val profileRemoteImpl = ProfileRemoteImpl()
 
-    private val analytics: StayRoomsInterface.AnalyticsInterface by lazy {
-        StayRoomsAnalyticsImpl()
+    private val analytics: StayRoomInterface.AnalyticsInterface by lazy {
+        StayRoomAnalyticsImpl()
     }
 
-    override fun createInstanceViewInterface(): StayRoomsInterface.ViewInterface {
-        return StayRoomsView(activity, this)
+    override fun createInstanceViewInterface(): StayRoomInterface.ViewInterface {
+        return StayRoomView(activity, this)
     }
 
-    override fun constructorInitialize(activity: StayRoomsActivity) {
+    override fun constructorInitialize(activity: StayRoomActivity) {
         setContentView(R.layout.activity_stay_rooms_data)
 
         isRefresh = true
@@ -68,29 +68,29 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
     override fun onIntent(intent: Intent?): Boolean {
         var result = true
         intent?.run {
-            val parcelList: ArrayList<RoomParcel> = getParcelableArrayListExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_LIST)
+            val parcelList: ArrayList<RoomParcel> = getParcelableArrayListExtra(StayRoomActivity.INTENT_EXTRA_ROOM_LIST)
             parcelList.forEach { roomList += it.room }
 
             if (roomList.isEmpty()) {
                 result = false
             }
 
-            val checkInDate = getStringExtra(StayRoomsActivity.INTENT_EXTRA_CHECK_IN_DATE)
-            val checkOutDate = getStringExtra(StayRoomsActivity.INTENT_EXTRA_CHECK_OUT_DATE)
+            val checkInDate = getStringExtra(StayRoomActivity.INTENT_EXTRA_CHECK_IN_DATE)
+            val checkOutDate = getStringExtra(StayRoomActivity.INTENT_EXTRA_CHECK_OUT_DATE)
             if (checkInDate.isTextEmpty() || checkOutDate.isTextEmpty()) {
                 result = false
             }
 
             bookDateTime.setBookDateTime(checkInDate, checkOutDate)
 
-            stayIndex = getIntExtra(StayRoomsActivity.INTENT_EXTRA_STAY_INDEX, 0)
+            stayIndex = getIntExtra(StayRoomActivity.INTENT_EXTRA_STAY_INDEX, 0)
             if (stayIndex == 0) {
                 result = false
             }
 
-            category = getStringExtra(StayRoomsActivity.INTENT_EXTRA_STAY_CATEGORY)
-            position = getIntExtra(StayRoomsActivity.INTENT_EXTRA_POSITION, 0)
-            activeReward = getBooleanExtra(StayRoomsActivity.INTENT_EXTRA_ACTIVE_REWARD, false)
+            category = getStringExtra(StayRoomActivity.INTENT_EXTRA_STAY_CATEGORY)
+            position = getIntExtra(StayRoomActivity.INTENT_EXTRA_POSITION, 0)
+            activeReward = getBooleanExtra(StayRoomActivity.INTENT_EXTRA_ACTIVE_REWARD, false)
 
             result = true
         }
@@ -118,7 +118,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
         when (requestCode) {
             Constants.CODE_REQUEST_ACTIVITY_LOGIN,
-            StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE -> {
+            StayRoomActivity.REQUEST_CODE_PROFILE_UPDATE -> {
                 (resultCode == Activity.RESULT_OK).runTrue {
                     onBookingClick()
                 }
@@ -246,18 +246,18 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
                             Util.VERIFY_DAILY_USER_NOT_VERIFY_PHONE -> {
                                 startActivityForResult(EditProfilePhoneActivity.newInstance(activity
                                         , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)
-                                        , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                                        , StayRoomActivity.REQUEST_CODE_PROFILE_UPDATE)
                             }
 
                             Util.VERIFY_SOCIAL_USER_NOT_VERIFY, Util.VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL -> {
                                 startActivityForResult(AddProfileSocialActivity.newInstance(activity
-                                        , Customer(user), user.birthday), StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                                        , Customer(user), user.birthday), StayRoomActivity.REQUEST_CODE_PROFILE_UPDATE)
                             }
 
                             Util.VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE -> {
                                 startActivityForResult(EditProfilePhoneActivity.newInstance(activity
                                         , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)
-                                        , StayRoomsActivity.REQUEST_CODE_PROFILE_UPDATE)
+                                        , StayRoomActivity.REQUEST_CODE_PROFILE_UPDATE)
                             }
 
                             else -> {
@@ -271,7 +271,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
     private fun finishRoomDetailList(roomIndex: Int) {
         val intent = Intent()
-        intent.putExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, roomIndex)
+        intent.putExtra(StayRoomActivity.INTENT_EXTRA_ROOM_INDEX, roomIndex)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -318,7 +318,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
 
                     imageList.takeNotEmpty {
                         startActivityForResult(ImageListActivity.newInstance(activity, room.name
-                                , it, 0, null), StayRoomsActivity.REQUEST_CODE_IMAGE_LIST)
+                                , it, 0, null), StayRoomActivity.REQUEST_CODE_IMAGE_LIST)
                     }
 
                     unLockAll()
@@ -354,7 +354,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
         when (DailyPreference.getInstance(activity).isTrueVRCheckDataGuide) {
             true -> {
                 startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList
-                        , Constants.PlaceType.HOTEL, category), StayRoomsActivity.REQUEST_CODE_TRUE_VR)
+                        , Constants.PlaceType.HOTEL, category), StayRoomActivity.REQUEST_CODE_TRUE_VR)
             }
 
             false -> {
@@ -364,7 +364,7 @@ class StayRoomsPresenter(activity: StayRoomsActivity)//
                         }
                         , View.OnClickListener {
                     startActivityForResult(TrueVRActivity.newInstance(activity, stayIndex, trueVrList
-                            , Constants.PlaceType.HOTEL, category), StayRoomsActivity.REQUEST_CODE_TRUE_VR)
+                            , Constants.PlaceType.HOTEL, category), StayRoomActivity.REQUEST_CODE_TRUE_VR)
                 }, DialogInterface.OnDismissListener { unLockAll() })
             }
         }

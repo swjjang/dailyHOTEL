@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
+package com.daily.dailyhotel.screen.home.stay.inbound.detail.room
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,7 @@ import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.parcel.RoomParcel
 import com.twoheart.dailyhotel.R
 
-class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
+class StayRoomActivity : BaseActivity<StayRoomPresenter>() {
 
     companion object {
         @JvmStatic
@@ -17,7 +17,7 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
                         , checkInDate: String?, checkOutDate: String?
                         , stayIndex: Int?, category: String?
                         , activeReward: Boolean = false): Intent {
-            return Intent(context, StayRoomsActivity::class.java).apply {
+            return Intent(context, StayRoomActivity::class.java).apply {
 
                 val list = arrayListOf<RoomParcel>()
                 roomList?.forEach { list.add(RoomParcel(it)) }
@@ -52,8 +52,8 @@ class StayRoomsActivity : BaseActivity<StayRoomsPresenter>() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun createInstancePresenter(): StayRoomsPresenter {
-        return StayRoomsPresenter(this)
+    override fun createInstancePresenter(): StayRoomPresenter {
+        return StayRoomPresenter(this)
     }
 
     override fun finish() {

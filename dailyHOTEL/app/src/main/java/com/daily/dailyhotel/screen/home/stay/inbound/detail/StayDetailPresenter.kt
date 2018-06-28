@@ -35,7 +35,7 @@ import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity
 import com.daily.dailyhotel.screen.common.event.EventWebActivity
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms.StayRoomsActivity
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.room.StayRoomActivity
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity
 import com.daily.dailyhotel.screen.mydaily.coupon.dialog.SelectStayCouponDialogActivity
@@ -434,7 +434,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
         when (resultCode) {
             Activity.RESULT_OK -> {
                 intent?.let {
-                    val roomIndex = it.getIntExtra(StayRoomsActivity.INTENT_EXTRA_ROOM_INDEX, -1)
+                    val roomIndex = it.getIntExtra(StayRoomActivity.INTENT_EXTRA_ROOM_INDEX, -1)
 
                     stayDetail?.let {
                         val room = getRoom(it.roomInformation?.roomList, roomIndex) ?: return
@@ -901,7 +901,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
                     val filterRoomList = getFilteredRoomList(it, bedTypeFilter, facilitiesFilter)
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, filterRoomList,
+                    startActivityForResult(StayRoomActivity.newInstance(activity, filterRoomList,
                             getRoomPosition(filterRoomList, room),
                             bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
                             bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),
@@ -1054,7 +1054,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
             stayDetail.roomInformation?.let {
                 it.roomList.takeNotEmpty {
                     val filterRoomList = getFilteredRoomList(it, bedTypeFilter, facilitiesFilter)
-                    startActivityForResult(StayRoomsActivity.newInstance(activity, filterRoomList,
+                    startActivityForResult(StayRoomActivity.newInstance(activity, filterRoomList,
                             0,
                             bookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT),
                             bookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT),

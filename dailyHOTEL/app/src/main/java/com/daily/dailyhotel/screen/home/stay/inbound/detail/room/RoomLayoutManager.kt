@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
+package com.daily.dailyhotel.screen.home.stay.inbound.detail.room
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.twoheart.dailyhotel.R
 
-class ZoomCenterLayoutManager : LinearLayoutManager {
+class RoomLayoutManager : LinearLayoutManager {
 
     constructor(context: Context) : super(context) {
 
@@ -27,31 +27,6 @@ class ZoomCenterLayoutManager : LinearLayoutManager {
     private fun initialize(context: Context) {}
 
     private var scrollEnabled = true
-
-    override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler?, state: RecyclerView.State?): Int {
-        val scrolled = super.scrollHorizontallyBy(dx, recycler, state)
-        val midpoint = width / 2f
-        val d1 = DISTANCE * midpoint
-        val s0 = 1f
-        //            final float s1 = 1.f - AMOUNT;
-        val childCount = childCount
-
-        for (i in 0 until childCount) {
-            val childView = getChildAt(i)
-            val childMidpoint = (getDecoratedRight(childView) + getDecoratedLeft(childView)) / 2f
-            val d = Math.min(d1, Math.abs(midpoint - childMidpoint))
-            val scale = s0 - AMOUNT * d / d1
-            val vectorValue = (1.0f - scale) / AMOUNT
-
-            val blurView = childView.getTag(R.id.blurView) as View
-
-            if (blurView != null) {
-                blurView.alpha = vectorValue
-            }
-        }
-
-        return scrolled
-    }
 
     override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State?, position: Int) {
         super.smoothScrollToPosition(recyclerView, state, position)
@@ -73,11 +48,5 @@ class ZoomCenterLayoutManager : LinearLayoutManager {
 
     override fun canScrollVertically(): Boolean {
         return scrollEnabled && super.canScrollVertically()
-    }
-
-    companion object {
-        private const val MIN_SCALE = 0.90f
-        private const val AMOUNT = 1.0f - MIN_SCALE // 1.0f - AMOUNT = MIN_SCALE
-        private const val DISTANCE = 0.75f
     }
 }

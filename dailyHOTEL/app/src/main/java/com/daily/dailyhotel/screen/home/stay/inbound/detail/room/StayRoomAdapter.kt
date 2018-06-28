@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.detail.rooms
+package com.daily.dailyhotel.screen.home.stay.inbound.detail.room
 
 import android.content.Context
 import android.graphics.Paint
@@ -125,10 +125,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         val room = getItem(position) ?: return
-        val blurView: View? = holder.rootView.findViewById(R.id.blurView)
         val roomNameTextView: DailyTextView? = holder.itemView.findViewById(R.id.roomNameTextView)
-
-        holder.rootView.setTag(R.id.blurView, blurView)
 
         val margin = getLayoutMargin()
         (holder.rootView.layoutParams as RecyclerView.LayoutParams).run {
@@ -192,7 +189,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val simpleDraweeView: SimpleDraweeView? = root.findViewById(R.id.simpleDraweeView)
         val moreIconView: View? = root.findViewById(R.id.moreIconView)
         val vrIconView: View? = root.findViewById(R.id.vrIconView)
-        // StayRoomsView 의 invisibleLayout 에서 사용하는 뷰들 - 메소드 량 줄이기의 일환으로 여기서 처리
+        // StayRoomView 의 invisibleLayout 에서 사용하는 뷰들 - 메소드 량 줄이기의 일환으로 여기서 처리
         val emptyLayout: View? = root.findViewById(R.id.emptyLayout)
         val closeImageView: View? = root.findViewById(R.id.closeImageView)
 
