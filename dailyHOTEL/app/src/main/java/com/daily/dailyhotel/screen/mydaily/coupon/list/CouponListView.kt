@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.daily.base.BaseDialogView
 import com.daily.dailyhotel.entity.Coupon
 import com.daily.dailyhotel.entity.ObjectItem
+import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityCouponListDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 
