@@ -27,7 +27,7 @@ public class AnalyticsManager
     private AppboyManager mAppboyManager;
     private AdjustManager mAdjustManager;
     private FirebaseManager mFirebaseManager;
-    private KakaoManager mKakaoManager;
+    //    private KakaoManager mKakaoManager;
     private List<BaseAnalyticsManager> mAnalyticsManagerList;
 
     public enum AnalyticsType
@@ -36,8 +36,8 @@ public class AnalyticsManager
         FACEBOOK,
         BRAZE,
         ADJUST,
-        FIREBASE,
-        KAKAO
+        FIREBASE
+        //        KAKAO
     }
 
     public synchronized static AnalyticsManager getInstance(Context context)
@@ -104,13 +104,13 @@ public class AnalyticsManager
             ExLog.d(e.toString());
         }
 
-        try
-        {
-            mKakaoManager = new KakaoManager(context);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        //        try
+        //        {
+        //            mKakaoManager = new KakaoManager(context);
+        //        } catch (Exception e)
+        //        {
+        //            ExLog.d(e.toString());
+        //        }
 
         if (mGoogleAnalyticsManager != null)
         {
@@ -137,10 +137,10 @@ public class AnalyticsManager
             mAnalyticsManagerList.add(mFirebaseManager);
         }
 
-        if (mKakaoManager != null)
-        {
-            mAnalyticsManagerList.add(mKakaoManager);
-        }
+        //        if (mKakaoManager != null)
+        //        {
+        //            mAnalyticsManagerList.add(mKakaoManager);
+        //        }
     }
 
     public GoogleAnalyticsManager getGoogleAnalyticsManager()
@@ -343,10 +343,10 @@ public class AnalyticsManager
             case FIREBASE:
                 mFirebaseManager.recordEvent(category, action, label, params);
                 break;
-
-            case KAKAO:
-                mKakaoManager.recordEvent(category, action, label, params);
-                break;
+            //
+            //            case KAKAO:
+            //                mKakaoManager.recordEvent(category, action, label, params);
+            //                break;
         }
     }
 
