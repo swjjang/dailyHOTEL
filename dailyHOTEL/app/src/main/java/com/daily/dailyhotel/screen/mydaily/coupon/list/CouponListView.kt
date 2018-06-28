@@ -11,7 +11,6 @@ import android.widget.TextView
 import com.daily.base.BaseDialogView
 import com.daily.dailyhotel.entity.Coupon
 import com.daily.dailyhotel.entity.ObjectItem
-import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityCouponListDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 
@@ -34,17 +33,16 @@ class CouponListView(activity: CouponListActivity, listener: CouponListInterface
         viewDataBinding.sortSpinner.adapter = sortArrayAdapter
 
         viewDataBinding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 sortArrayAdapter.selectedPosition = position
 
                 // 최초 진입 시 sortSpinner 가 선택 되면서 setData를 2번 하게되는 이슈로 처리 추가
                 if (::listAdapter.isInitialized) {
                     eventListener.onItemSelectedSpinner(position)
                 }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-
             }
         }
     }
