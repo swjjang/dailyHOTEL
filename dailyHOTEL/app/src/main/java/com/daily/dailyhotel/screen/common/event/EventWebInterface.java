@@ -26,6 +26,8 @@ public interface EventWebInterface
 
         void setShareButtonVisible(boolean visible);
 
+        void setHomeButtonVisible(boolean visible);
+
         void showShareDialog(DialogInterface.OnDismissListener listener);
     }
 

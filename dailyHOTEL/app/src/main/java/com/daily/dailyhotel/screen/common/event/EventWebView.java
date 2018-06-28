@@ -109,6 +109,17 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
         });
     }
 
+    @Override
+    public void setHomeButtonVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().homeImageView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     private void initWebView()
     {
         if (getViewDataBinding() == null)

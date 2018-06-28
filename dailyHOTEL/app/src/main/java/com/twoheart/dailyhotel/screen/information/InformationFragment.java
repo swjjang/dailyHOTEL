@@ -330,7 +330,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
             baseActivity.startActivityForResult(com.daily.dailyhotel.screen.common.event.EventWebActivity.newInstance( //
                 baseActivity, com.daily.dailyhotel.screen.common.event.EventWebActivity.EventType.HOME_EVENT//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards() //
-                , getString(R.string.label_daily_true_awards), getString(R.string.label_daily_true_awards_share_description), lowImageUrl) //
+                , getString(R.string.label_daily_true_awards), getString(R.string.label_daily_true_awards_share_description), lowImageUrl, true, true) //
                 , Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.TRUE_AWARDS //
@@ -352,7 +352,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
             baseActivity.startActivityForResult(com.daily.dailyhotel.screen.common.event.EventWebActivity.newInstance( //
                 baseActivity, com.daily.dailyhotel.screen.common.event.EventWebActivity.EventType.HOME_EVENT//
                 , DailyRemoteConfigPreference.getInstance(baseActivity).getKeyRemoteConfigStaticUrlDailyPriceLab() //
-                , getString(R.string.label_dailyh_price_lab), null, null, false) //
+                , getString(R.string.label_dailyh_price_lab), null, null, false, true) //
                 , Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
         }
 
