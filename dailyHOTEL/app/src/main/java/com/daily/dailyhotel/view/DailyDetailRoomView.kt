@@ -73,7 +73,7 @@ class DailyDetailRoomView : ConstraintLayout {
         viewDataBinding.roomNameTextView.text = text
     }
 
-    fun setImageUlr(url: String?) {
+    fun setImageUrl(url: String?) {
         Util.requestImageResize(context, viewDataBinding.simpleDraweeView, url)
     }
 

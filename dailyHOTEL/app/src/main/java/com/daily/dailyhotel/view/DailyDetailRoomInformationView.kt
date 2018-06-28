@@ -142,7 +142,7 @@ class DailyDetailRoomInformationView : ConstraintLayout {
                     addView(DailyDetailRoomView(context).apply {
                         setPriceAverageType(isPriceAverageType)
                         setName(room.name)
-                        setImageUlr(room.imageInformation?.imageMap?.smallUrl)
+                        setImageUrl(room.imageInformation?.imageMap?.bigUrl)
                         setRewardVisible(room.provideRewardSticker)
                         setBedTypeText(room.bedInformation.bedTypeList)
                         setPersons(room.personsInformation)
