@@ -1,9 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.detail.room
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.animation.*
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.support.v4.view.MotionEventCompat
