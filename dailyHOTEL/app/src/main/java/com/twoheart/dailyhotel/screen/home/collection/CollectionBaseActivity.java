@@ -306,8 +306,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         finish();
 
-        //        AnalyticsManager.getInstance(this).recordEvent(//
-        //            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECOMMEND_LIST_CLICK,//
-        //            Integer.toString(recommendation.idx), null);
+        AnalyticsManager.getInstance(CollectionBaseActivity.this).recordEvent(AnalyticsManager.Category.RECOMMEND_LIST
+            , "other_contents", mRecommendationIndex + "_" + recommendation.idx, null);
     }
 }
