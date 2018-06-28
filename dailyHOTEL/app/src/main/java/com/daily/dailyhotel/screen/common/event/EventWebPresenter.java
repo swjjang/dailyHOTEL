@@ -301,7 +301,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+        finish();
     }
 
     @Override
