@@ -400,7 +400,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
         simpleDraweeView?.hierarchy?.roundingParams = roundingParams
         imageGradientView?.hierarchy?.roundingParams = roundingParams
         when (toScaleX) {
-            in 0.90f .. 1f -> {
+            in 0.90f..1f -> {
                 imageGradientView?.alpha = (toScaleX - 0.90f) * 10
             }
 
@@ -462,7 +462,7 @@ class StayRoomsView(activity: StayRoomsActivity, listener: StayRoomsInterface.On
             roomLayout.scaleY = value
 
             when (value) {
-                in 0.90f .. 1f -> {
+                in 0.90f..1f -> {
                     imageGradientView?.alpha = (value - 0.90f) * 10
                 }
 

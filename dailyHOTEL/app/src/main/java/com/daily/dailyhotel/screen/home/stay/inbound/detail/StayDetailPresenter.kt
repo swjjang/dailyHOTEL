@@ -528,7 +528,7 @@ class StayDetailPresenter(activity: StayDetailActivity)//
                 if (regionName.isTextEmpty())
                     googleAddressRemoteImpl.getLocationAddress(stayDetail.addressInformation?.latitude
                             ?: 0.0
-                            , stayDetail.addressInformation?.longitude ?: 0.0).map{ it.address }
+                            , stayDetail.addressInformation?.longitude ?: 0.0).map { it.address }
                 else Observable.just(regionName)
 
         val imageUrl = if (defaultImageUrl.isTextEmpty()) stayDetail.imageList?.get(0)?.imageMap?.bigUrl else defaultImageUrl

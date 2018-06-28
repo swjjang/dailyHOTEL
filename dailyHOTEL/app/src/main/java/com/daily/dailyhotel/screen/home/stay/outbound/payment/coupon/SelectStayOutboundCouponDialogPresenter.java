@@ -13,10 +13,13 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.DownloadCouponResult;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -38,6 +41,8 @@ public class SelectStayOutboundCouponDialogPresenter//
     StayBookDateTime mStayBookDateTime;
     String mRateCode, mRateKey, mRoomTypeCode, mVendorType;
     int mMaxCouponAmount;
+    People mPeople;
+    int mRoomBedTypeId;
 
     public SelectStayOutboundCouponDialogPresenter(@NonNull SelectStayOutboundCouponDialogActivity activity)
     {
@@ -96,6 +101,12 @@ public class SelectStayOutboundCouponDialogPresenter//
         mRateCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_CODE);
         mRateKey = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_KEY);
         mRoomTypeCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_ROOM_TYPE_CODE);
+
+        int numberOfAdults = intent.getIntExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+        ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+        setPeople(numberOfAdults, childAgeList);
+
         mVendorType = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_VENDOR_TYPE);
 
         if (DailyTextUtils.isTextEmpty(mRateCode, mRateKey, mRoomTypeCode) == true)
@@ -104,6 +115,17 @@ public class SelectStayOutboundCouponDialogPresenter//
         }
 
         return true;
+    }
+
+    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.numberOfAdults = numberOfAdults;
+        mPeople.setChildAgeList(childAgeList);
     }
 
     @Override
@@ -193,7 +215,7 @@ public class SelectStayOutboundCouponDialogPresenter//
 
 
         addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(getActivity(), mStayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
-            , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT), mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+            , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT), mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {
             @Override
             public void accept(Coupons coupons) throws Exception

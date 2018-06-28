@@ -5,6 +5,7 @@ import android.content.Context;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.DownloadCouponResult;
+import com.daily.dailyhotel.entity.People;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface CouponInterface
     Observable<Coupons> getStayCouponListByPayment(int stayIndex, int roomIndex, String checkIn, String checkOut);
 
     Observable<Coupons> getStayOutboundCouponListByPayment(Context context, String checkInDate, String checkOutDate//
-        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType);
+        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType);
 
     Observable<Coupons> getStayOutboundCouponListByDetail(Context context, String checkInDate, String checkOutDate//
         , int stayIndex, String[] vendorTypes);

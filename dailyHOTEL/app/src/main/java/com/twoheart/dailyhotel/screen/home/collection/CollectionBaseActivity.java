@@ -275,7 +275,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
                 {
                     checkInDateTime = ((StayBookingDay) mPlaceBookingDay).getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
                     checkOutDateTime = ((StayBookingDay) mPlaceBookingDay).getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
-                } else if (mPlaceBookingDay instanceof GourmetBookingDay) {
+                } else if (mPlaceBookingDay instanceof GourmetBookingDay)
+                {
                     checkInDateTime = ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT);
                 }
             } catch (Exception e)
@@ -306,7 +307,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         finish();
 
-        AnalyticsManager.getInstance(CollectionBaseActivity.this).recordEvent(AnalyticsManager.Category.RECOMMEND_LIST
-            , "other_contents", mRecommendationIndex + "_" + recommendation.idx, null);
+        AnalyticsManager.getInstance(CollectionBaseActivity.this).recordEvent(AnalyticsManager.Category.RECOMMEND_LIST, "other_contents", mRecommendationIndex + "_" + recommendation.idx, null);
     }
 }
