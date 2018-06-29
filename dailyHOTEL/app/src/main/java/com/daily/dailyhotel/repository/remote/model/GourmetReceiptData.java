@@ -3,6 +3,9 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.GourmetReceipt;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+
+import java.text.ParseException;
 
 /**
  * Created by android_sam on 2017. 12. 7..
@@ -52,19 +55,27 @@ public class GourmetReceiptData
     public GourmetReceipt getGourmetReceipt()
     {
         GourmetReceipt gourmetReceipt = new GourmetReceipt();
-        gourmetReceipt.couponAmount = this.couponAmount;
-        gourmetReceipt.gourmetReservationIdx = this.gourmetReservationIdx;
-        gourmetReceipt.price = this.price;
-        gourmetReceipt.paidAt = this.paidAt;
-        gourmetReceipt.paymentAmount = this.paymentAmount;
-        gourmetReceipt.paymentType = this.paymentType;
-        gourmetReceipt.restaurantAddress = this.restaurantAddress;
-        gourmetReceipt.restaurantName = this.restaurantName;
-        gourmetReceipt.sday = this.sday;
-        gourmetReceipt.ticketCount = this.ticketCount;
-        gourmetReceipt.userName = this.userName;
-        gourmetReceipt.userPhone = this.userPhone;
-        gourmetReceipt.notice = this.notice;
+        gourmetReceipt.couponAmount = couponAmount;
+        gourmetReceipt.gourmetReservationIdx = gourmetReservationIdx;
+        gourmetReceipt.price = price;
+
+        try
+        {
+            gourmetReceipt.paidAt = DailyCalendar.convertDateFormatString(paidAt, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd");
+        } catch (ParseException e)
+        {
+            gourmetReceipt.paidAt = paidAt;
+        }
+
+        gourmetReceipt.paymentAmount = paymentAmount;
+        gourmetReceipt.paymentType = paymentType;
+        gourmetReceipt.restaurantAddress = restaurantAddress;
+        gourmetReceipt.restaurantName = restaurantName;
+        gourmetReceipt.sday = sday;
+        gourmetReceipt.ticketCount = ticketCount;
+        gourmetReceipt.userName = userName;
+        gourmetReceipt.userPhone = userPhone;
+        gourmetReceipt.notice = notice;
 
         return gourmetReceipt;
     }

@@ -3,6 +3,9 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+
+import java.text.ParseException;
 
 @JsonObject
 public class StayOutboundReceiptData
@@ -74,7 +77,15 @@ public class StayOutboundReceiptData
         stayOutboundReceipt.paymentTypeName = paymentTypeName;
         stayOutboundReceipt.placeName = hotelName;
         stayOutboundReceipt.placeAddress = hotelAddress;
-        stayOutboundReceipt.paymentDate = paymentDate;
+
+        try
+        {
+            stayOutboundReceipt.paymentDate = DailyCalendar.convertDateFormatString(paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd");
+        } catch (ParseException e)
+        {
+            stayOutboundReceipt.paymentDate = paymentDate;
+        }
+
         stayOutboundReceipt.paymentAmount = paymentAmount;
         stayOutboundReceipt.totalPrice = total;
         stayOutboundReceipt.bonus = bonus;
