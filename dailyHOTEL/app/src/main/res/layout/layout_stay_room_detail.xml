@@ -34,7 +34,7 @@
             android:id="@+id/imageGradientView"
             android:layout_width="0dp"
             android:layout_height="112dp"
-            android:background="@drawable/img_detail_gradient"
+            fresco:placeholderImage="@drawable/img_detail_gradient"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
