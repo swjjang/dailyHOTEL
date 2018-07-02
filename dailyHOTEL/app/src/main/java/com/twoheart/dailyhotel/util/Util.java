@@ -56,6 +56,7 @@ import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.network.Tls12SocketFactory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 
 import java.lang.ref.SoftReference;
@@ -88,15 +89,24 @@ public class Util implements Constants
     public static void initializeFresco(Context context)
     {
         ImagePipelineConfig imagePipelineConfig;
+        OkHttpClient okHttpClient;
 
-        if (VersionUtils.isOverAPI11() == true && ScreenUtils.getScreenWidth(context) >= 720)
+        if (VersionUtils.isOverAPI22())
+        {
+            okHttpClient = new OkHttpClient();
+        } else
+        {
+            okHttpClient = Tls12SocketFactory.getOkHttpClient();
+        }
+
+        if (VersionUtils.isOverAPI11() && ScreenUtils.getScreenWidth(context) >= 720)
         {
             imagePipelineConfig = OkHttpImagePipelineConfigFactory//
-                .newBuilder(context, new OkHttpClient()).build();
+                .newBuilder(context, okHttpClient).build();
         } else
         {
             imagePipelineConfig = OkHttpImagePipelineConfigFactory//
-                .newBuilder(context, new OkHttpClient())//
+                .newBuilder(context, okHttpClient)//
                 .setBitmapsConfig(Config.RGB_565).build();
         }
 
