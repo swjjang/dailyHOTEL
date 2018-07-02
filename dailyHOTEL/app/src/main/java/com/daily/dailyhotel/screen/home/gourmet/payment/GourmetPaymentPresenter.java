@@ -2130,7 +2130,14 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                                     @Override
                                     public void onDismiss(DialogInterface dialog)
                                     {
-                                        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), paymentResult.aggregationId));
+                                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart(getActivity()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                        {
+                                            @Override
+                                            public void accept(Boolean aBoolean) throws Exception
+                                            {
+                                                startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), paymentResult.aggregationId));
+                                            }
+                                        }));
                                     }
                                 });
                             break;
