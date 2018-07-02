@@ -7,6 +7,7 @@ import com.daily.base.BaseAnalyticsInterface
 import com.daily.base.BaseDialogViewInterface
 import com.daily.base.OnBaseEventListener
 import com.daily.dailyhotel.entity.Room
+import com.daily.dailyhotel.entity.TrueVR
 import io.reactivex.Observable
 
 interface StayRoomInterface {
@@ -49,9 +50,9 @@ interface StayRoomInterface {
 
         fun onScrolled(position: Int, real: Boolean)
 
-        fun onMoreImageClick(position: Int)
+        fun onMoreImageClick(roomName: String, roomIndex: Int)
 
-        fun onVrImageClick(position: Int)
+        fun onVrImageClick(trueVrList: List<TrueVR>)
     }
 
     interface AnalyticsInterface : BaseAnalyticsInterface {

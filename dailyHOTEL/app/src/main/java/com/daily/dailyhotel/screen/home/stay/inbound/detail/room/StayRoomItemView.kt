@@ -19,7 +19,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import com.daily.base.OnBaseEventListener
 import com.daily.base.util.*
+import com.daily.base.widget.DailyNestedScrollView
 import com.daily.dailyhotel.entity.Room
 import com.daily.dailyhotel.entity.StayDetail
 import com.daily.dailyhotel.entity.TrueVR
@@ -87,6 +89,12 @@ class StayRoomItemView : RelativeLayout {
         }
     }
 
+    interface OnEventListener: OnBaseEventListener {
+        fun onCloseClick()
+        fun onMoreImageClick(roomName: String, roomIndex: Int)
+        fun onVrImageClick(trueVrList: List<TrueVR>)
+    }
+
     private lateinit var viewDataBinding: LayoutStayRoomDetailDataBinding
     private lateinit var bgDrawable: Drawable
     private var backgroundPaddingTop: Int = 0
@@ -100,6 +108,13 @@ class StayRoomItemView : RelativeLayout {
     private var nights = 1
     private var currentScale: Float = MAX_SCALE_VALUE
     private var startScale: Float = MAX_SCALE_VALUE
+    private val bedTypeStringList = mutableListOf<String>()
+    private var bedTypeIconResId: Int = BedType.UNKNOWN.vectorIconResId
+    private var attributeTitleText: String = ""
+    private var attributeStructureList = mutableListOf<String>()
+    private var roomBenefitList = mutableListOf<String>()
+    var onEventListener: OnEventListener? = null
+
 
     constructor(context: Context?) : super(context) {
         initLayout(context, null)
@@ -144,6 +159,10 @@ class StayRoomItemView : RelativeLayout {
 
     fun setBackgroundVisibile(visible : Boolean) {
         setBackgroundDrawable(if (visible) bgDrawable else null)
+    }
+
+    fun setScrollingEnabled(enabled: Boolean) {
+        (viewDataBinding.nestedScrollView as DailyNestedScrollView).isScrollingEnabled = enabled
     }
 
     fun getBackgroundPaddingTop(): Int {
@@ -259,12 +278,6 @@ class StayRoomItemView : RelativeLayout {
 
         animator.start()
     }
-
-    private val bedTypeStringList = mutableListOf<String>()
-    private var bedTypeIconResId: Int = BedType.UNKNOWN.vectorIconResId
-    private var attributeTitleText: String = ""
-    private var attributeStructureList = mutableListOf<String>()
-    private var roomBenefitList = mutableListOf<String>()
 
     fun setData(room: Room, nights: Int = 1) {
         this.room = room
@@ -431,7 +444,7 @@ class StayRoomItemView : RelativeLayout {
 
         viewDataBinding.roomNameTextView.text = room.name
 
-        setImageInformationView(imageUrl, room.imageCount > 0, trueVrList)
+        setImageInformationView(imageUrl, room.name, room.index, room.imageCount > 0, trueVrList)
         setAmountInformationView(room.amountInformation)
         setRefundInformationView(room.refundInformation)
         setBaseInformationView(room.personsInformation, bedTypeIconResId, bedTypeStringList, room.squareMeter)
@@ -448,7 +461,7 @@ class StayRoomItemView : RelativeLayout {
     private var imageUrl: String? = null
     private val trueVrList = mutableListOf<TrueVR>()
 
-    private fun setImageInformationView(imageUrl: String? = "", showMore: Boolean = false, trueVrList: List<TrueVR> = listOf()) {
+    private fun setImageInformationView(imageUrl: String? = "", roomName: String, roomIndex: Int, showMore: Boolean = false, trueVrList: List<TrueVR> = listOf()) {
         viewDataBinding.run {
             moreIconView.visibility = if (showMore) View.VISIBLE else View.GONE
             vrIconView.run {
@@ -460,12 +473,12 @@ class StayRoomItemView : RelativeLayout {
                 }
 
                 setOnClickListener {
-                    // TODO : trueVr Click event
+                    onEventListener?.onVrImageClick(trueVrList)
                 }
             }
 
             closeImageView.setOnClickListener {
-                // TODO : close image Click event
+                onEventListener?.onCloseClick()
             }
 
             emptyLayout.run {
@@ -476,7 +489,7 @@ class StayRoomItemView : RelativeLayout {
 
                     else -> {
                         setOnClickListener {
-                            // TODO : image Click event
+                            onEventListener?.onMoreImageClick(roomName, roomIndex)
                         }
                     }
                 }

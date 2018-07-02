@@ -13,10 +13,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl
 import com.daily.dailyhotel.screen.common.images.ImageListActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference
-import com.daily.dailyhotel.util.isTextEmpty
-import com.daily.dailyhotel.util.runFalse
-import com.daily.dailyhotel.util.runTrue
-import com.daily.dailyhotel.util.takeNotEmpty
+import com.daily.dailyhotel.util.*
 import com.twoheart.dailyhotel.DailyHotel
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.model.Customer
@@ -291,16 +288,14 @@ class StayRoomPresenter(activity: StayRoomActivity)//
         }
     }
 
-    override fun onMoreImageClick(position: Int) {
+    override fun onMoreImageClick(roomName: String, roomIndex: Int) {
         lock().runTrue { return }
-        (position in 0 until roomList.size).runFalse {
+        (roomIndex == 0).runTrue {
             unLockAll()
             return
         }
 
-        val room = roomList[position]
-
-        addCompositeDisposable(stayRemoteImpl.getRoomImages(stayIndex, room.index)
+        addCompositeDisposable(stayRemoteImpl.getRoomImages(stayIndex, roomIndex)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()
                 ).subscribe({
                     val imageList = mutableListOf<DetailImageInformation>()
@@ -317,7 +312,7 @@ class StayRoomPresenter(activity: StayRoomActivity)//
                     }
 
                     imageList.takeNotEmpty {
-                        startActivityForResult(ImageListActivity.newInstance(activity, room.name
+                        startActivityForResult(ImageListActivity.newInstance(activity, roomName
                                 , it, 0, null), StayRoomActivity.REQUEST_CODE_IMAGE_LIST)
                     }
 
@@ -327,28 +322,11 @@ class StayRoomPresenter(activity: StayRoomActivity)//
                 }))
     }
 
-    override fun onVrImageClick(position: Int) {
+    override fun onVrImageClick(trueVrList: List<TrueVR>) {
         lock().runTrue { return }
-        (position in 0 until roomList.size).runFalse {
+        (trueVrList.isNotNullAndNotEmpty()).runFalse {
             unLockAll()
             return
-        }
-
-        val room = roomList[position]
-
-        if (room.vrInformationList == null || room.vrInformationList.isEmpty()) {
-            return
-        }
-
-        val trueVrList = mutableListOf<TrueVR>()
-        room.vrInformationList.forEach {
-            val trueVr = TrueVR()
-            trueVr.name = it.name
-            trueVr.type = it.type
-            trueVr.typeIndex = it.typeIndex
-            trueVr.url = it.url
-
-            trueVrList.add(trueVr)
         }
 
         when (DailyPreference.getInstance(activity).isTrueVRCheckDataGuide) {

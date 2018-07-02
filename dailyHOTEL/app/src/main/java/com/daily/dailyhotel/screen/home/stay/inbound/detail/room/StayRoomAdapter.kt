@@ -4,20 +4,12 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.daily.base.util.*
-import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
-import com.twoheart.dailyhotel.R
-import com.twoheart.dailyhotel.place.base.OnBaseEventListener
 
 class StayRoomAdapter(private val context: Context, private val list: MutableList<Room>, private var nights: Int = 1) : RecyclerView.Adapter<StayRoomAdapter.RoomViewHolder>() {
-    private var onEventListener: OnEventListener? = null
+    private var onEventListener: StayRoomItemView.OnEventListener? = null
 
-    interface OnEventListener : OnBaseEventListener {
-        fun onMoreImageClick(position: Int)
-        fun onVrImageClick(position: Int)
-    }
-
-    fun setEventListener(listener: OnEventListener?) {
+    fun setEventListener(listener: StayRoomItemView.OnEventListener?) {
         onEventListener = listener
     }
 
@@ -49,6 +41,8 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         roomLayout.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT)
         roomLayout.setScale(StayRoomItemView.MIN_SCALE_VALUE)
         roomLayout.setBackgroundVisibile(true)
+        roomLayout.onEventListener = onEventListener
+        roomLayout.setScrollingEnabled(false)
 
         return RoomViewHolder(roomLayout)
     }

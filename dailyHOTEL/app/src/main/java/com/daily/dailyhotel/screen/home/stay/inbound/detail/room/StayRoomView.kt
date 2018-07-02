@@ -3,27 +3,18 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail.room
 import android.animation.*
 import android.annotation.SuppressLint
 import android.content.DialogInterface
-import android.graphics.Rect
-import android.graphics.drawable.Drawable
 import android.support.constraint.ConstraintLayout
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnimationSet
 import android.view.animation.LinearInterpolator
 import android.widget.CompoundButton
-import androidx.core.animation.addListener
 import com.daily.base.BaseDialogView
 import com.daily.base.util.DailyTextUtils
-import com.daily.base.util.ScreenUtils
-import com.daily.base.widget.DailyTextView
 import com.daily.dailyhotel.entity.Room
-import com.daily.dailyhotel.util.isTextEmpty
-import com.facebook.drawee.generic.RoundingParams
-import com.facebook.drawee.view.SimpleDraweeView
+import com.daily.dailyhotel.entity.TrueVR
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.room.StayRoomItemView.OnEventListener
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
@@ -77,17 +68,20 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
                 listAdapter = StayRoomAdapter(context, mutableListOf())
             }
 
-            listAdapter.setEventListener(object : StayRoomAdapter.OnEventListener {
-                override fun finish() {
+            listAdapter.setEventListener(object : OnEventListener {
+                override fun onBackClick() {
+                }
+
+                override fun onCloseClick() {
                     eventListener.onCloseClick()
                 }
 
-                override fun onMoreImageClick(position: Int) {
-                    eventListener.onMoreImageClick(position)
+                override fun onMoreImageClick(roomName: String, roomIndex: Int) {
+                    eventListener.onMoreImageClick(roomName, roomIndex)
                 }
 
-                override fun onVrImageClick(position: Int) {
-                    eventListener.onVrImageClick(position)
+                override fun onVrImageClick(trueVrList: List<TrueVR>) {
+                    eventListener.onVrImageClick(trueVrList)
                 }
             })
 
@@ -215,35 +209,36 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
                 , null, null, onDismissListener, true)
     }
 
-//    private var defaultRoomDetailWidth: Int = ConstraintLayout.LayoutParams.MATCH_PARENT
     private var defaultRoomDetailMarginTop: Int = 0
-//    private var screenRatio = 1
 
     override fun initRoomDetailLayout(position: Int) {
-//        val d: Drawable = context.resources.getDrawable(R.drawable.product_detail_card)
-//        val rect = Rect()
-//        d.getPadding(rect)
-
-//        defaultRoomDetailWidth = (ScreenUtils.getScreenWidth(context) * StayRoomAdapter.MENU_WIDTH_RATIO - rect.left - rect.right).toInt()
-//
-//        screenRatio = ScreenUtils.getScreenHeight(context) / ScreenUtils.getScreenWidth(context)
-
         val root = viewDataBinding.roomDetailLayout
 
         defaultRoomDetailMarginTop = viewDataBinding.recyclerView.top + root.getBackgroundPaddingTop()
 
-
         val layoutParams = root.layoutParams as? ConstraintLayout.LayoutParams
         layoutParams?.run {
-//            width = defaultRoomDetailWidth
             topMargin = defaultRoomDetailMarginTop
         }
 
         root.setBackgroundVisibile(false)
-
         root.setScale(root.getMinScale())
+        root.onEventListener = object : OnEventListener {
+            override fun onBackClick() {
+            }
 
-        root.visibility = View.VISIBLE
+            override fun onCloseClick() {
+                eventListener.onCloseClick()
+            }
+
+            override fun onMoreImageClick(roomName: String, roomIndex: Int) {
+                eventListener.onMoreImageClick(roomName, roomIndex)
+            }
+
+            override fun onVrImageClick(trueVrList: List<TrueVR>) {
+                eventListener.onVrImageClick(trueVrList)
+            }
+        }
     }
 
     override fun startRoomDetailLayoutAnimation(scaleUp: Boolean) {
@@ -300,82 +295,6 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
     }
 
     //
-//    private val maxScaleX = 1f
-//    private var minScaleX = 1f
-//    private var maxTransY = 0f
-//    private val minTransY = 0f
-//    private var widthGap = 0f
-//    private val minImageRadius = 0f
-//    private val maxImageRadius = 6f
-//
-//    override fun initRoomDetailLayout(position: Int) {
-//        viewDataBinding.recyclerView.postDelayed({
-//            if (listAdapter.itemCount == 0) return@postDelayed
-//
-//            val roomViewHolder: StayRoomAdapter.RoomViewHolder = viewDataBinding.recyclerView.findViewHolderForAdapterPosition(position) as? StayRoomAdapter.RoomViewHolder
-//                    ?: return@postDelayed
-//
-//            val rootView = viewDataBinding.roomDetailLayout ?: return@postDelayed
-//            val closeImageView: View? = rootView.findViewById(R.id.closeImageView)
-//            val moreIconView: View? = rootView.findViewById(R.id.moreIconView)
-//            val vrIconView: View? = rootView.findViewById(R.id.vrIconView)
-//            val nestedScrollView: NestedScrollView? = rootView.findViewById(R.id.nestedScrollView)
-//            val toolbarView: DailyToolbarView? = rootView.findViewById(R.id.toolbarView)
-//            val scrollLayout: LinearLayout? = rootView.findViewById(R.id.scrollLayout)
-//
-//            val top = viewDataBinding.recyclerView.top
-//            val paddingTop = roomViewHolder.rootView.paddingTop
-//            val width = roomViewHolder.rootView.measuredWidth
-//            val paddingLeft = roomViewHolder.rootView.paddingLeft
-//            val paddingRight = roomViewHolder.rootView.paddingRight
-//
-//            val invisibleWidth = width - paddingLeft - paddingRight
-//
-//            widthGap = ScreenUtils.getScreenWidth(context).toFloat() - invisibleWidth.toFloat()
-//
-//            minScaleX = invisibleWidth.toFloat() / ScreenUtils.getScreenWidth(context).toFloat()
-//
-//            val scaleTransY = rootView.measuredHeight * (1f - minScaleX) / 2
-//            maxTransY = (top + paddingTop) - scaleTransY
-//
-//            rootView.apply {
-//                translationY = maxTransY
-//
-//                scaleX = minScaleX
-//                scaleY = minScaleX
-//            }
-//
-//            closeImageView?.translationY = 0f
-//            moreIconView?.translationY = 0f
-//            vrIconView?.translationY = 0f
-//
-//            EdgeEffectColor.setEdgeGlowColor(nestedScrollView, getColor(R.color.default_over_scroll_edge))
-//
-//            val toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height)
-//
-//            toolbarView?.setBackImageResource(R.drawable.navibar_ic_x)
-//            toolbarView?.setOnBackClickListener {
-//                eventListener.onCloseClick()
-//            }
-//
-//            nestedScrollView?.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
-//                closeImageView?.translationY = scrollY.toFloat()
-//                moreIconView?.translationY = scrollY.toFloat()
-//                vrIconView?.translationY = scrollY.toFloat()
-//
-//                val titleLayout = scrollLayout?.getChildAt(1)
-//                titleLayout?.run {
-//                    if (y - toolbarHeight > scrollY) {
-//                        toolbarView?.hideAnimation()
-//                    } else {
-//                        toolbarView?.showAnimation()
-//                    }
-//                }
-//            })
-//
-//            nestedScrollView?.setOnTouchListener(roomDetailLayoutTouchListener)
-//        }, 50)
-//    }
 //
 //    private fun setRoomDetailLayout(preY: Float, y: Float, startScaleX: Float, startTransY: Float): Boolean {
 //        val value = y - preY
