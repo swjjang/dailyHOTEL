@@ -1257,34 +1257,34 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
         }
 
-        @Override
-        public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state)
-        {
-            int scrolled = super.scrollHorizontallyBy(dx, recycler, state);
-            final float midpoint = getWidth() / 2.f;
-            final float d1 = DISTANCE * midpoint;
-            final float s0 = 1.f;
-            //            final float s1 = 1.f - AMOUNT;
-            int childCount = getChildCount();
-
-            for (int i = 0; i < childCount; i++)
-            {
-                View childView = getChildAt(i);
-                float childMidpoint = (getDecoratedRight(childView) + getDecoratedLeft(childView)) / 2.f;
-                float d = Math.min(d1, Math.abs(midpoint - childMidpoint));
-                float scale = s0 - AMOUNT * d / d1;
-                float vectorValue = (1.0f - scale) / AMOUNT;
-
-                View blurView = (View) childView.getTag(R.id.blurView);
-
-                if (blurView != null)
-                {
-                    blurView.setAlpha(vectorValue);
-                }
-            }
-
-            return scrolled;
-        }
+        //        @Override
+        //        public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state)
+        //        {
+        //            int scrolled = super.scrollHorizontallyBy(dx, recycler, state);
+        //            final float midpoint = getWidth() / 2.f;
+        //            final float d1 = DISTANCE * midpoint;
+        //            final float s0 = 1.f;
+        //            //            final float s1 = 1.f - AMOUNT;
+        //            int childCount = getChildCount();
+        //
+        //            for (int i = 0; i < childCount; i++)
+        //            {
+        //                View childView = getChildAt(i);
+        //                float childMidpoint = (getDecoratedRight(childView) + getDecoratedLeft(childView)) / 2.f;
+        //                float d = Math.min(d1, Math.abs(midpoint - childMidpoint));
+        //                float scale = s0 - AMOUNT * d / d1;
+        //                float vectorValue = (1.0f - scale) / AMOUNT;
+        //
+        //                View blurView = (View) childView.getTag(R.id.blurView);
+        //
+        //                if (blurView != null)
+        //                {
+        //                    blurView.setAlpha(vectorValue);
+        //                }
+        //            }
+        //
+        //            return scrolled;
+        //        }
 
         @Override
         public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position)

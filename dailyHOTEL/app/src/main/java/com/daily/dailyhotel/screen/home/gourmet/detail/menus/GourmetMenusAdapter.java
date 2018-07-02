@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,10 @@ import android.widget.LinearLayout;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.LayoutGourmetMenuDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowGourmetMenuDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -283,13 +284,14 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         // 이용시간
         if (DailyTextUtils.isTextEmpty(gourmetMenu.openTime, gourmetMenu.closeTime) == true)
         {
-            holder.dataBinding.timeLayout.setVisibility(View.GONE);
+            holder.dataBinding.timeTitleTextView.setVisibility(View.GONE);
+            holder.dataBinding.timeTextView.setVisibility(View.GONE);
         } else
         {
-            holder.dataBinding.timeLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.timeTitleTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.timeTextView.setVisibility(View.VISIBLE);
 
             String closeTime = "00:00".equalsIgnoreCase(gourmetMenu.closeTime) ? "24:00" : gourmetMenu.closeTime;
-
             String timeFormat = String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, closeTime);
 
             if (DailyTextUtils.isTextEmpty(gourmetMenu.lastOrderTime) == false)
@@ -303,30 +305,36 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         // 이용인원
         if (gourmetMenu.persons > 0)
         {
-            holder.dataBinding.personsLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.personsTitleTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.personsTextView.setVisibility(View.VISIBLE);
             holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persons, gourmetMenu.persons));
         } else
         {
-            holder.dataBinding.personsLayout.setVisibility(View.GONE);
+            holder.dataBinding.personsTitleTextView.setVisibility(View.GONE);
+            holder.dataBinding.personsTextView.setVisibility(View.GONE);
         }
 
         // 확인사항
         if (DailyTextUtils.isTextEmpty(gourmetMenu.needToKnow) == true)
         {
-            holder.dataBinding.checkLayout.setVisibility(View.GONE);
+            holder.dataBinding.checkTitleTextView.setVisibility(View.GONE);
+            holder.dataBinding.checkTextView.setVisibility(View.GONE);
         } else
         {
-            holder.dataBinding.checkLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.checkTitleTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.checkTextView.setVisibility(View.VISIBLE);
             holder.dataBinding.checkTextView.setText(gourmetMenu.needToKnow);
         }
 
         // 예약 조건
         if (DailyTextUtils.isTextEmpty(gourmetMenu.reserveCondition) == true)
         {
-            holder.dataBinding.conditionLayout.setVisibility(View.GONE);
+            holder.dataBinding.conditionTitleTextView.setVisibility(View.GONE);
+            holder.dataBinding.conditionTextView.setVisibility(View.GONE);
         } else
         {
-            holder.dataBinding.conditionLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.conditionTitleTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.conditionTextView.setVisibility(View.VISIBLE);
             holder.dataBinding.conditionTextView.setText(gourmetMenu.reserveCondition);
         }
 
@@ -358,8 +366,6 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         {
             holder.dataBinding.menuTextView.setVisibility(View.VISIBLE);
         }
-
-        holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
     }
 
     public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount//
@@ -457,15 +463,35 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
                 continue;
             }
 
-            LayoutGourmetMenuDetailInformationDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_gourmet_menu_detail_information_data, viewGroup, true);
-            dataBinding.textView.setText(contentText);
+            DailyTextView dailyTextView = getContentBulletView(mContext, contentText);
+
+            //            LayoutGourmetMenuDetailInformationDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_gourmet_menu_detail_information_data, viewGroup, true);
+            //            dataBinding.textView.setText(contentText);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             if (i != 0)
             {
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dataBinding.getRoot().getLayoutParams();
                 layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 10);
             }
+
+            viewGroup.addView(dailyTextView, layoutParams);
         }
+    }
+
+    private DailyTextView getContentBulletView(Context context, String text)
+    {
+        DailyTextView dailyTextView = new DailyTextView(context);
+
+        dailyTextView.setText(text);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.0f);
+        dailyTextView.setTextColor(context.getResources().getColor(R.color.default_text_c4d4d4d));
+        dailyTextView.setLineSpacing(ScreenUtils.dpToPx(context, -2), 1.0f);
+        dailyTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(context, 5));
+        dailyTextView.setDrawableCompatLeftAndRightFixedFirstLine(true);
+        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0);
+
+        return dailyTextView;
     }
 
     static class GourmetMenuViewHolder extends RecyclerView.ViewHolder

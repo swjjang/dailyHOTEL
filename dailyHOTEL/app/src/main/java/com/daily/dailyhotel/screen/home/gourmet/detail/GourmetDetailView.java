@@ -76,7 +76,6 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
@@ -1999,17 +1998,18 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 continue;
             }
 
-            LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
-                , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
+            //            LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
+            //                , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
+            //
+            //            detailInformationDataBinding.textView.setText(informationList.get(i));
 
-            detailInformationDataBinding.textView.setText(informationList.get(i));
+            DailyTextView dailyTextView = getContentBulletView(getContext(), informationList.get(i));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 19);
+            layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 15);
+            layoutParams.bottomMargin = i == size - 1 ? 0 : ScreenUtils.dpToPx(getContext(), 10);
 
-            if (i == size - 1)
-            {
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
-                layoutParams.bottomMargin = 0;
-                detailInformationDataBinding.textView.setLayoutParams(layoutParams);
-            }
+            viewDataBinding.informationLayout.addView(dailyTextView, layoutParams);
         }
 
         if (lastView == true)
@@ -2018,6 +2018,21 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 20);
             viewDataBinding.informationLayout.setLayoutParams(layoutParams);
         }
+    }
+
+    private DailyTextView getContentBulletView(Context context, String text)
+    {
+        DailyTextView dailyTextView = new DailyTextView(context);
+
+        dailyTextView.setText(text);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.0f);
+        dailyTextView.setTextColor(context.getResources().getColor(R.color.default_text_c4d4d4d));
+        dailyTextView.setLineSpacing(ScreenUtils.dpToPx(context, -2), 1.0f);
+        dailyTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(context, 5));
+        dailyTextView.setDrawableCompatLeftAndRightFixedFirstLine(true);
+        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0);
+
+        return dailyTextView;
     }
 
     /**
