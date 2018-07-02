@@ -34,6 +34,7 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
     : BaseDialogView<StayRoomInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
         , StayRoomInterface.ViewInterface {
     private lateinit var listAdapter: StayRoomAdapter
+    private var nights = 1
 
     private companion object {
         private const val MOVE_STATE_NONE = 0
@@ -119,6 +120,7 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
     }
 
     override fun setNights(nights: Int) {
+        this.nights = nights
         listAdapter.setNights(nights)
 
         viewDataBinding.nightsTextView.text = context.resources.getString(R.string.label_nights, nights)
@@ -158,46 +160,8 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
     override fun setRoomDetailData(position: Int) {
         viewDataBinding.recyclerView.post {
             val room = listAdapter.getItem(position) ?: return@post
-
-            val rootView = viewDataBinding.roomDetailLayout ?: return@post
-
-            val roomNameTextView: DailyTextView? = rootView.findViewById(R.id.roomNameTextView)
-
-            listAdapter.setImageInformationView(rootView, position, room)
-
-            roomNameTextView?.text = room.name
-
-            listAdapter.setAmountInformationView(rootView, room.amountInformation, true)
-
-            listAdapter.setRefundInformationView(rootView, room.refundInformation)
-
-            listAdapter.setBaseInformationView(rootView, room)
-
-            listAdapter.setAttributeInformationView(rootView, room.attributeInformation, true)
-
-            val benefitList = mutableListOf<String>()
-
-            val breakfast = room.personsInformation?.breakfast ?: 0
-            if (breakfast > 0) {
-                benefitList.add(context.resources.getString(R.string.label_stay_room_breakfast_person, breakfast))
-            }
-
-            if (!room.benefit.isTextEmpty()) {
-                benefitList.add(room.benefit)
-            }
-            listAdapter.setRoomBenefitInformationView(rootView, benefitList, true)
-
-            listAdapter.setRewardAndCouponInformationView(rootView, room.provideRewardSticker, room.hasUsableCoupon)
-
-            listAdapter.setCheckTimeInformationView(rootView, room.checkTimeInformation)
-
-            listAdapter.setRoomDescriptionInformationView(rootView, room.descriptionList, true)
-
-            listAdapter.setRoomAmenityInformationView(rootView, room.amenityList, true)
-
-            listAdapter.setRoomChargeInformationView(rootView, room.roomChargeInformation, true)
-
-            listAdapter.setNeedToKnowInformationView(rootView, room.needToKnowList, true)
+            viewDataBinding.roomDetailLayout.setData(room, listAdapter.getNights())
+            viewDataBinding.roomDetailLayout.notifyDataSetChanged()
         }
     }
 
@@ -251,169 +215,88 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
                 , null, null, onDismissListener, true)
     }
 
-    private var defaultRoomDetailWidth: Int = ConstraintLayout.LayoutParams.MATCH_PARENT
+//    private var defaultRoomDetailWidth: Int = ConstraintLayout.LayoutParams.MATCH_PARENT
     private var defaultRoomDetailMarginTop: Int = 0
-    private var screenRatio = 1
+//    private var screenRatio = 1
 
     override fun initRoomDetailLayout(position: Int) {
-        val d: Drawable = context.resources.getDrawable(R.drawable.product_detail_card)
-        val rect = Rect()
-        d.getPadding(rect)
+//        val d: Drawable = context.resources.getDrawable(R.drawable.product_detail_card)
+//        val rect = Rect()
+//        d.getPadding(rect)
 
-        defaultRoomDetailWidth = (ScreenUtils.getScreenWidth(context) * StayRoomAdapter.MENU_WIDTH_RATIO - rect.left - rect.right).toInt()
+//        defaultRoomDetailWidth = (ScreenUtils.getScreenWidth(context) * StayRoomAdapter.MENU_WIDTH_RATIO - rect.left - rect.right).toInt()
+//
+//        screenRatio = ScreenUtils.getScreenHeight(context) / ScreenUtils.getScreenWidth(context)
 
-        screenRatio = ScreenUtils.getScreenHeight(context) / ScreenUtils.getScreenWidth(context)
+        val root = viewDataBinding.roomDetailLayout
 
-        defaultRoomDetailMarginTop = viewDataBinding.recyclerView.top + rect.top
+        defaultRoomDetailMarginTop = viewDataBinding.recyclerView.top + root.getBackgroundPaddingTop()
 
-        val root = viewDataBinding.roomDetailLayout ?: return
 
         val layoutParams = root.layoutParams as? ConstraintLayout.LayoutParams
         layoutParams?.run {
-            width = defaultRoomDetailWidth
+//            width = defaultRoomDetailWidth
             topMargin = defaultRoomDetailMarginTop
         }
 
-        viewDataBinding.roomDetailLayout?.visibility = View.VISIBLE
+        root.setBackgroundVisibile(false)
+
+        root.setScale(root.getMinScale())
+
+        root.visibility = View.VISIBLE
     }
 
     override fun startRoomDetailLayoutAnimation(scaleUp: Boolean) {
-        val root = viewDataBinding.roomDetailLayout ?: return
-        val nestedScrollView: NestedScrollView? = root.findViewById(R.id.nestedScrollView)
-        val simpleDraweeView: SimpleDraweeView? = root.findViewById(R.id.simpleDraweeView)
-        val imageGradientView: SimpleDraweeView? = root.findViewById(R.id.imageGradientView)
-
-        val layoutParams = root.layoutParams as ConstraintLayout.LayoutParams
-        val startTopMargin = layoutParams.topMargin
-
-        val oneDuration = 200 / defaultRoomDetailMarginTop
-
-        val duration: Long = if (scaleUp) {
-            (startTopMargin * oneDuration).toLong()
-        } else {
-            ((defaultRoomDetailMarginTop - startTopMargin) * oneDuration).toLong()
-        }
-
-        val ratio = ScreenUtils.getScreenWidth(context) / ScreenUtils.getScreenHeight(context)
-
-        val endTopMargin = if (scaleUp) 0 else defaultRoomDetailMarginTop
-
-        val animator = ValueAnimator.ofInt(startTopMargin, endTopMargin)
-        animator.addUpdateListener { animation ->
-            val marginTop = animation.animatedValue as Int
-            layoutParams.topMargin = marginTop
-        }
-
-        animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                if (scaleUp) {
-                    root.visibility = View.VISIBLE
-                } else {
-                    root.visibility = View.INVISIBLE
-                }
-
-                setRecyclerScrollEnabled()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-                if (scaleUp && root.visibility != View.VISIBLE) {
-                    root.visibility = View.VISIBLE
-                }
-            }
-
-        })
-
-
-//        val startScale = root.scaleX
-//        val end = if (scaleUp) 1.0f else minScaleX
-//        val startTransY = root.translationY
-//        val endTransY = if (scaleUp) 0.0f else maxTransY
-//        val duration = if (scaleUp) {
-//            (startTransY / maxTransY * 200).toLong()
+//        val root = viewDataBinding.roomDetailLayout ?: return
+//        val nestedScrollView: NestedScrollView? = root.findViewById(R.id.nestedScrollView)
+//        val simpleDraweeView: SimpleDraweeView? = root.findViewById(R.id.simpleDraweeView)
+//        val imageGradientView: SimpleDraweeView? = root.findViewById(R.id.imageGradientView)
+//
+//        val layoutParams = root.layoutParams as ConstraintLayout.LayoutParams
+//        val startTopMargin = layoutParams.topMargin
+//
+//        val oneDuration = 200 / defaultRoomDetailMarginTop
+//
+//        val duration: Long = if (scaleUp) {
+//            (startTopMargin * oneDuration).toLong()
 //        } else {
-//            ((maxTransY - startTransY) / maxTransY * 200).toLong()
+//            ((defaultRoomDetailMarginTop - startTopMargin) * oneDuration).toLong()
 //        }
 //
-//        nestedScrollView?.scrollY = 0
+//        val ratio = ScreenUtils.getScreenWidth(context) / ScreenUtils.getScreenHeight(context)
 //
-//        val animatorSet = AnimatorSet()
-//        animatorSet.duration = duration
-//        animatorSet.interpolator = AccelerateDecelerateInterpolator()
-//        val transAnimator = ValueAnimator.ofFloat(startTransY, endTransY)
-//        transAnimator.addUpdateListener { animation ->
-//            val transValue = animation.animatedValue as Float
-//            root.translationY = transValue
+//        val endTopMargin = if (scaleUp) 0 else defaultRoomDetailMarginTop
 //
-//            var imageRoundRadius = Math.round(transValue / (maxTransY / 6)).toFloat()
-//            if (imageRoundRadius > maxImageRadius) {
-//                imageRoundRadius = maxImageRadius
-//            } else if (imageRoundRadius < minImageRadius) {
-//                imageRoundRadius = minImageRadius
-//            }
-//
-//            val imageValue = ScreenUtils.dpToPx(context, imageRoundRadius.toDouble())
-//            val roundingParams: RoundingParams = RoundingParams.fromCornersRadii(imageValue.toFloat(), imageValue.toFloat(), 0f, 0f)
-//            simpleDraweeView?.hierarchy?.roundingParams = roundingParams
-//            imageGradientView?.hierarchy?.roundingParams = roundingParams
+//        val animator = ValueAnimator.ofInt(startTopMargin, endTopMargin)
+//        animator.addUpdateListener { animation ->
+//            val marginTop = animation.animatedValue as Int
+//            layoutParams.topMargin = marginTop
 //        }
 //
-//        val scaleAnimator = ValueAnimator.ofFloat(startScale * 100, end * 100)
-//        scaleAnimator.addUpdateListener { animation ->
-//            val value = animation.animatedValue as Float / 100
-//            root.scaleX = value
-//            root.scaleY = value
-//
-//            when (value) {
-//                in 0.90f..1f -> {
-//                    imageGradientView?.alpha = (value - 0.90f) * 10
-//                }
-//
-//                else -> imageGradientView?.alpha = 0f
+//        animator.addListener(object : Animator.AnimatorListener {
+//            override fun onAnimationRepeat(animation: Animator?) {
 //            }
 //
-//            setCloseImageAlphaVisible(value)
-//        }
-//
-//        animatorSet.addListener(object : Animator.AnimatorListener {
-//            override fun onAnimationStart(animation: Animator) {
-//                if (scaleUp && root.visibility != View.VISIBLE) {
-//                    root.visibility = View.VISIBLE
-//                }
-//            }
-//
-//            override fun onAnimationEnd(animation: Animator) {
+//            override fun onAnimationEnd(animation: Animator?) {
 //                if (scaleUp) {
-//                    root.scaleX = maxScaleX
-//                    root.scaleY = maxScaleX
-//                    root.translationY = minTransY
 //                    root.visibility = View.VISIBLE
 //                } else {
-//                    root.scaleX = minScaleX
-//                    root.scaleY = minScaleX
-//                    root.translationY = maxTransY
 //                    root.visibility = View.INVISIBLE
 //                }
 //
 //                setRecyclerScrollEnabled()
 //            }
 //
-//            override fun onAnimationCancel(animation: Animator) {
-//
+//            override fun onAnimationCancel(animation: Animator?) {
 //            }
 //
-//            override fun onAnimationRepeat(animation: Animator) {
-//
+//            override fun onAnimationStart(animation: Animator?) {
+//                if (scaleUp && root.visibility != View.VISIBLE) {
+//                    root.visibility = View.VISIBLE
+//                }
 //            }
+//
 //        })
-//
-//        animatorSet.playTogether(scaleAnimator, transAnimator)
-//        animatorSet.start()
     }
 
     //

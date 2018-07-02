@@ -1,724 +1,727 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/roomLayout"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/product_detail_card">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/itemLayout"
+    <com.daily.dailyhotel.screen.home.stay.inbound.detail.room.StayRoomItemView
+        android:id="@+id/roomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/defaultImageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/simpleDraweeView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="H,3:2"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                fresco:actualImageScaleType="centerCrop"
-                fresco:roundBottomLeft="false"
-                fresco:roundBottomRight="false"
-                fresco:roundTopLeft="true"
-                fresco:roundTopRight="true"
-                fresco:roundedCornerRadius="6dp"/>
-
-            <View
-                android:id="@+id/moreIconView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/detail_ic_more_img"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-                app:layout_constraintRight_toRightOf="@id/simpleDraweeView"/>
-
-            <View
-                android:id="@+id/vrIconView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/detail_ic_vr_img"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-                app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView"/>
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/defaultInfoLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:paddingTop="17dp">
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/roomNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="18dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/discountPercentTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="4.5dp"
-                android:textColor="@color/default_text_ceb2135"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/discountPriceTextView"
-                dailyFont:style="Medium"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/discountPriceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toTopOf="@+id/refundPolicyTextView"
-                app:layout_constraintLeft_toRightOf="@+id/discountPercentTextView"
-                app:layout_constraintRight_toLeftOf="@+id/discountPriceUnitTextView"
-                app:layout_constraintTop_toBottomOf="@+id/roomNameTextView"
-                dailyFont:style="Bold"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/discountPriceUnitTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2.5dp"
-                android:layout_marginLeft="1dp"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
-                app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"
-                app:layout_constraintRight_toLeftOf="@+id/priceTextView"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/priceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2.5dp"
-                android:layout_marginLeft="5.5dp"
-                android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
-                app:layout_constraintLeft_toRightOf="@+id/discountPriceUnitTextView"
-                app:layout_constraintRight_toRightOf="parent"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/refundPolicyTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
-                android:background="@drawable/shape_stay_room_refund_policy_nrd_background"
-                android:gravity="center"
-                android:paddingBottom="3dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:paddingTop="2dp"
-                android:textColor="@color/default_text_cfb234a"
-                android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/discountPriceTextView"/>
-
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/baseInfoGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-            <View
-                android:id="@+id/baseInfoLine"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <LinearLayout
-                android:id="@+id/personInformationLayout"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/bedInformationLayout"
-                app:layout_constraintTop_toBottomOf="@+id/baseInfoLine">
-
-                <com.daily.base.widget.DailyImageView
-                    android:id="@+id/personIconImageView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/personTitleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="12dp"
-                    dailyFont:style="Medium"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/personDescriptionTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/shape_rect_stay_room_grid_description_background"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="11dp"
-                    dailyFont:style="Medium"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="19dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/bedInformationLayout"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintLeft_toRightOf="@+id/personInformationLayout"
-                app:layout_constraintRight_toLeftOf="@+id/squareInformationLayout"
-                app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
-
-                <com.daily.base.widget.DailyImageView
-                    android:id="@+id/bedIconImageView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/bedTitleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:text="@string/label_stay_room_bed_type_title"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="12dp"
-                    dailyFont:style="Medium"/>
-
-                <com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout
-                    android:id="@+id/bedDescriptionLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="19dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/squareInformationLayout"
-                android:layout_width="95dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintLeft_toRightOf="@+id/bedInformationLayout"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/personInformationLayout">
-
-                <com.daily.base.widget.DailyImageView
-                    android:id="@+id/squareIconImageView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    app:srcCompat="@drawable/vector_ic_detail_item_floorspace"/>
-
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/squareTitleTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:freezesText="true"
-                        android:gravity="center"
-                        android:textColor="@color/default_text_c4d4d4d"
-                        android:textSize="12dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@+id/squareIconTextView"
-                        app:layout_constraintTop_toTopOf="parent"
-                        dailyFont:style="Medium"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/squareIconTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:freezesText="true"
-                        android:gravity="center"
-                        android:text="2"
-                        android:textColor="@color/default_text_c4d4d4d"
-                        android:textSize="5dp"
-                        app:layout_constraintLeft_toRightOf="@+id/squareTitleTextView"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/squareTitleTextView"
-                        dailyFont:style="Medium"/>
-                </android.support.constraint.ConstraintLayout>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/squareDescriptionTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/shape_rect_stay_room_grid_description_background"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="11dp"
-                    dailyFont:style="Medium"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="19dp"/>
-
-            </LinearLayout>
-
-        </android.support.constraint.ConstraintLayout>
-
-        <RelativeLayout
-            android:id="@+id/subInfoGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/subInfoGridLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoView
-                android:id="@+id/subInfoGridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="30dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/subInfoGridView"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/roomBenefitGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/roomBenefitGridLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoView
-                android:id="@+id/roomBenefitGridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="30dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/roomBenefitGridView"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/discountInfoGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/discountInfoLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/discountInfoTitleView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="30dp"
-                android:text="@string/label_stay_room_discount_info_title"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="16dp"
-                dailyFont:style="Medium"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/discountInfoTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/discountInfoTitleView"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="14dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/discountInfoTextView"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/checkTimeInfoLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/checkTimeInfoTitleView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="30dp"
-                android:text="@string/label_stay_room_check_time_title"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="16dp"
-                dailyFont:style="Medium"/>
-
-            <RelativeLayout
-                android:id="@+id/checkTimeInfoTextLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/checkTimeInfoTitleView"
-                android:layout_marginTop="21dp"
-                android:orientation="horizontal">
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/checkInTimeTitleView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/verticalLine"
-                    android:gravity="center"
-                    android:text="@string/label_check_in"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="14dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/checkInTimeTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/checkInTimeTitleView"
-                    android:layout_toLeftOf="@+id/verticalLine"
-                    android:gravity="center"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="16dp"
-                    dailyFont:style="Medium"/>
-
-                <View
-                    android:id="@+id/verticalLine"
-                    android:layout_width="1dp"
-                    android:layout_height="33dp"
-                    android:layout_centerInParent="true"
-                    android:background="@color/default_line_cf0f0f0"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/checkOutTimeTitleView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@+id/verticalLine"
-                    android:gravity="center"
-                    android:text="@string/label_check_out"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="14dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/checkOutTimeTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/checkOutTimeTitleView"
-                    android:layout_toRightOf="@+id/verticalLine"
-                    android:gravity="center"
-                    android:textColor="@color/default_text_c4d4d4d"
-                    android:textSize="16dp"
-                    dailyFont:style="Medium"/>
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/checkTimeInfoTextLayout"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/roomDescriptionGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <View
-                android:id="@+id/roomDescriptionGridLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoView
-                android:id="@+id/roomDescriptionGridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="30dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/roomDescriptionGridView"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/roomAmenityGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-            <View
-                android:id="@+id/roomAmenityGridLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoView
-                android:id="@+id/roomAmenityGridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="30dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/roomAmenityGridView"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/extraChargeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/extraChargeTitleView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginTop="30dp"
-                android:text="@string/label_stay_room_extra_charge_info_title"
-                android:textColor="@color/default_text_c4d4d4d"
-                android:textSize="16dp"
-                dailyFont:style="Medium"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/extraChargeDescriptionView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/extraChargeTitleView"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/extraChargeTitleView"
-                android:layout_marginLeft="7.5dp"
-                android:layout_marginRight="14dp"
-                android:layout_toRightOf="@+id/extraChargeTitleView"
-                android:gravity="right|center_vertical"
-                android:text="@string/label_stay_room_extra_charge_info_description"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoTableView
-                android:id="@+id/extraChargePersonTableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/extraChargeTitleView"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="20dp"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoTableView
-                android:id="@+id/extraChargeBedTableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/extraChargePersonTableLayout"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="20dp"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoTableView
-                android:id="@+id/extraChargeNightsTableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/extraChargeBedTableLayout"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="20dp"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoView
-                android:id="@+id/extraChargeDescriptionGridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/extraChargeNightsTableLayout"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="20dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/extraChargeDescriptionGridView"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/roomCheckInfoGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-            <View
-                android:id="@+id/roomCheckInfoGridLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <com.daily.dailyhotel.view.DailyRoomInfoView
-                android:id="@+id/roomCheckInfoGridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_below="@+id/roomCheckInfoGridLine"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginTop="30dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/roomCheckInfoGridView"/>
-        </RelativeLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/vector_end_list_logo"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="80dp"/>
-
-    </LinearLayout>
-
-</FrameLayout>
+        android:background="@drawable/product_detail_card">
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/itemLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:id="@+id/defaultImageLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<com.facebook.drawee.view.SimpleDraweeView-->
+        <!--android:id="@+id/simpleDraweeView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--app:layout_constraintDimensionRatio="H,3:2"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--fresco:actualImageScaleType="centerCrop"-->
+        <!--fresco:roundBottomLeft="false"-->
+        <!--fresco:roundBottomRight="false"-->
+        <!--fresco:roundTopLeft="true"-->
+        <!--fresco:roundTopRight="true"-->
+        <!--fresco:roundedCornerRadius="6dp"/>-->
+
+        <!--<View-->
+        <!--android:id="@+id/moreIconView"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:background="@drawable/detail_ic_more_img"-->
+        <!--android:visibility="gone"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"-->
+        <!--app:layout_constraintRight_toRightOf="@id/simpleDraweeView"/>-->
+
+        <!--<View-->
+        <!--android:id="@+id/vrIconView"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:background="@drawable/detail_ic_vr_img"-->
+        <!--android:visibility="gone"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"-->
+        <!--app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView"/>-->
+        <!--</android.support.constraint.ConstraintLayout>-->
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:id="@+id/defaultInfoLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingBottom="20dp"-->
+        <!--android:paddingLeft="14dp"-->
+        <!--android:paddingRight="14dp"-->
+        <!--android:paddingTop="17dp">-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/roomNameTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="18dp"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/discountPercentTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="4.5dp"-->
+        <!--android:textColor="@color/default_text_ceb2135"-->
+        <!--android:textSize="18dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"-->
+        <!--app:layout_constraintHorizontal_chainStyle="packed"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toLeftOf="@+id/discountPriceTextView"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/discountPriceTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="6dp"-->
+        <!--android:textColor="@color/default_text_c323232"-->
+        <!--android:textSize="18dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/refundPolicyTextView"-->
+        <!--app:layout_constraintLeft_toRightOf="@+id/discountPercentTextView"-->
+        <!--app:layout_constraintRight_toLeftOf="@+id/discountPriceUnitTextView"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/roomNameTextView"-->
+        <!--dailyFont:style="Bold"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/discountPriceUnitTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="2.5dp"-->
+        <!--android:layout_marginLeft="1dp"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="12dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"-->
+        <!--app:layout_constraintLeft_toRightOf="@+id/discountPriceTextView"-->
+        <!--app:layout_constraintRight_toLeftOf="@+id/priceTextView"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/priceTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="2.5dp"-->
+        <!--android:layout_marginLeft="5.5dp"-->
+        <!--android:textColor="@color/default_text_cc5c5c5"-->
+        <!--android:textSize="12dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"-->
+        <!--app:layout_constraintLeft_toRightOf="@+id/discountPriceUnitTextView"-->
+        <!--app:layout_constraintRight_toRightOf="parent"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/refundPolicyTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="11dp"-->
+        <!--android:background="@drawable/shape_stay_room_refund_policy_nrd_background"-->
+        <!--android:gravity="center"-->
+        <!--android:paddingBottom="3dp"-->
+        <!--android:paddingLeft="6dp"-->
+        <!--android:paddingRight="6dp"-->
+        <!--android:paddingTop="2dp"-->
+        <!--android:textColor="@color/default_text_cfb234a"-->
+        <!--android:textSize="12dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/discountPriceTextView"/>-->
+
+        <!--</android.support.constraint.ConstraintLayout>-->
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:id="@+id/baseInfoGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/white">-->
+
+        <!--<View-->
+        <!--android:id="@+id/baseInfoLine"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/personInformationLayout"-->
+        <!--android:layout_width="95dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="2dp"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintHorizontal_chainStyle="packed"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toLeftOf="@+id/bedInformationLayout"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/baseInfoLine">-->
+
+        <!--<com.daily.base.widget.DailyImageView-->
+        <!--android:id="@+id/personIconImageView"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginTop="10dp"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/personTitleTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:freezesText="true"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="12dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/personDescriptionTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginRight="4dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:background="@drawable/shape_rect_stay_room_grid_description_background"-->
+        <!--android:freezesText="true"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/default_text_c929292"-->
+        <!--android:textSize="11dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="19dp"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/bedInformationLayout"-->
+        <!--android:layout_width="95dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintLeft_toRightOf="@+id/personInformationLayout"-->
+        <!--app:layout_constraintRight_toLeftOf="@+id/squareInformationLayout"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/personInformationLayout">-->
+
+        <!--<com.daily.base.widget.DailyImageView-->
+        <!--android:id="@+id/bedIconImageView"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginTop="10dp"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/bedTitleTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:freezesText="true"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/label_stay_room_bed_type_title"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="12dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyStayRoomBedDescriptionLayout-->
+        <!--android:id="@+id/bedDescriptionLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginRight="4dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="19dp"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/squareInformationLayout"-->
+        <!--android:layout_width="95dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintLeft_toRightOf="@+id/bedInformationLayout"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/personInformationLayout">-->
+
+        <!--<com.daily.base.widget.DailyImageView-->
+        <!--android:id="@+id/squareIconImageView"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--app:srcCompat="@drawable/vector_ic_detail_item_floorspace"/>-->
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/squareTitleTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:freezesText="true"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="12dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintHorizontal_chainStyle="packed"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toLeftOf="@+id/squareIconTextView"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/squareIconTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="1dp"-->
+        <!--android:freezesText="true"-->
+        <!--android:gravity="center"-->
+        <!--android:text="2"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="5dp"-->
+        <!--app:layout_constraintLeft_toRightOf="@+id/squareTitleTextView"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/squareTitleTextView"-->
+        <!--dailyFont:style="Medium"/>-->
+        <!--</android.support.constraint.ConstraintLayout>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/squareDescriptionTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginRight="4dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:background="@drawable/shape_rect_stay_room_grid_description_background"-->
+        <!--android:freezesText="true"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/default_text_c929292"-->
+        <!--android:textSize="11dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="19dp"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--</android.support.constraint.ConstraintLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/subInfoGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone">-->
+
+        <!--<View-->
+        <!--android:id="@+id/subInfoGridLine"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoView-->
+        <!--android:id="@+id/subInfoGridView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="30dp"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/subInfoGridView"/>-->
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/roomBenefitGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone">-->
+
+        <!--<View-->
+        <!--android:id="@+id/roomBenefitGridLine"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoView-->
+        <!--android:id="@+id/roomBenefitGridView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="30dp"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/roomBenefitGridView"/>-->
+
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/discountInfoGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone">-->
+
+        <!--<View-->
+        <!--android:id="@+id/discountInfoLine"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/discountInfoTitleView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:text="@string/label_stay_room_discount_info_title"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="16dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/discountInfoTextView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/discountInfoTitleView"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="14dp"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/discountInfoTextView"/>-->
+
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/checkTimeInfoLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone">-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/checkTimeInfoTitleView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:text="@string/label_stay_room_check_time_title"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="16dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/checkTimeInfoTextLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/checkTimeInfoTitleView"-->
+        <!--android:layout_marginTop="21dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/checkInTimeTitleView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_toLeftOf="@+id/verticalLine"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/label_check_in"-->
+        <!--android:textColor="@color/default_text_c929292"-->
+        <!--android:textSize="14dp"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/checkInTimeTextView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_below="@+id/checkInTimeTitleView"-->
+        <!--android:layout_toLeftOf="@+id/verticalLine"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="16dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<View-->
+        <!--android:id="@+id/verticalLine"-->
+        <!--android:layout_width="1dp"-->
+        <!--android:layout_height="33dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/checkOutTimeTitleView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_toRightOf="@+id/verticalLine"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/label_check_out"-->
+        <!--android:textColor="@color/default_text_c929292"-->
+        <!--android:textSize="14dp"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/checkOutTimeTextView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_below="@+id/checkOutTimeTitleView"-->
+        <!--android:layout_toRightOf="@+id/verticalLine"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="16dp"-->
+        <!--dailyFont:style="Medium"/>-->
+        <!--</RelativeLayout>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/checkTimeInfoTextLayout"/>-->
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/roomDescriptionGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone">-->
+
+        <!--<View-->
+        <!--android:id="@+id/roomDescriptionGridLine"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoView-->
+        <!--android:id="@+id/roomDescriptionGridView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="30dp"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/roomDescriptionGridView"/>-->
+
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/roomAmenityGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/white">-->
+
+        <!--<View-->
+        <!--android:id="@+id/roomAmenityGridLine"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoView-->
+        <!--android:id="@+id/roomAmenityGridView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="30dp"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/roomAmenityGridView"/>-->
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/extraChargeLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/white">-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/extraChargeTitleView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:text="@string/label_stay_room_extra_charge_info_title"-->
+        <!--android:textColor="@color/default_text_c4d4d4d"-->
+        <!--android:textSize="16dp"-->
+        <!--dailyFont:style="Medium"/>-->
+
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/extraChargeDescriptionView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBottom="@+id/extraChargeTitleView"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignTop="@+id/extraChargeTitleView"-->
+        <!--android:layout_marginLeft="7.5dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_toRightOf="@+id/extraChargeTitleView"-->
+        <!--android:gravity="right|center_vertical"-->
+        <!--android:text="@string/label_stay_room_extra_charge_info_description"-->
+        <!--android:textColor="@color/default_text_c929292"-->
+        <!--android:textSize="12dp"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoTableView-->
+        <!--android:id="@+id/extraChargePersonTableLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/extraChargeTitleView"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="20dp"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoTableView-->
+        <!--android:id="@+id/extraChargeBedTableLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/extraChargePersonTableLayout"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="20dp"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoTableView-->
+        <!--android:id="@+id/extraChargeNightsTableLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/extraChargeBedTableLayout"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="20dp"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoView-->
+        <!--android:id="@+id/extraChargeDescriptionGridView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/extraChargeNightsTableLayout"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="20dp"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/extraChargeDescriptionGridView"/>-->
+
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/roomCheckInfoGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/white">-->
+
+        <!--<View-->
+        <!--android:id="@+id/roomCheckInfoGridLine"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
+
+        <!--<com.daily.dailyhotel.view.DailyRoomInfoView-->
+        <!--android:id="@+id/roomCheckInfoGridView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_below="@+id/roomCheckInfoGridLine"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:layout_marginTop="30dp"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_below="@+id/roomCheckInfoGridView"/>-->
+        <!--</RelativeLayout>-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--app:srcCompat="@drawable/vector_end_list_logo"/>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="80dp"/>-->
+
+        <!--</LinearLayout>-->
+
+    </com.daily.dailyhotel.screen.home.stay.inbound.detail.room.StayRoomItemView>
+</layout>

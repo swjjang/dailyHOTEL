@@ -743,13 +743,13 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/roomCheckInfoGroup"
+                    android:id="@+id/needToKnowInfoGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white">
 
                     <View
-                        android:id="@+id/roomCheckInfoGridLine"
+                        android:id="@+id/needToKnowInfoGridLine"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentTop="true"
@@ -758,7 +758,7 @@
                         android:background="@color/default_line_cf0f0f0"/>
 
                     <com.daily.dailyhotel.view.DailyRoomInfoView
-                        android:id="@+id/roomCheckInfoGridView"
+                        android:id="@+id/needToKnowInfoGridView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
@@ -770,7 +770,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        android:layout_below="@+id/roomCheckInfoGridView"/>
+                        android:layout_below="@+id/needToKnowInfoGridView"/>
                 </RelativeLayout>
 
                 <ImageView

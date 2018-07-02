@@ -53,9 +53,19 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/indicatorTextView"/>
 
-        <include
+        <!--<include-->
+            <!--android:id="@+id/roomDetailLayout"-->
+            <!--layout="@layout/layout_stay_room_detail"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:visibility="invisible"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+        <com.daily.dailyhotel.screen.home.stay.inbound.detail.room.StayRoomItemView
             android:id="@+id/roomDetailLayout"
-            layout="@layout/layout_stay_room_detail"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="invisible"
