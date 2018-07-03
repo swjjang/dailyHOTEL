@@ -9,6 +9,8 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.support.v4.view.MotionEventCompat
+import android.support.v4.widget.NestedScrollView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
@@ -16,6 +18,7 @@ import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -31,8 +34,10 @@ import com.daily.dailyhotel.util.isTextEmpty
 import com.daily.dailyhotel.util.letNotEmpty
 import com.daily.dailyhotel.util.runTrue
 import com.daily.dailyhotel.view.DailyRoomInfoView
+import com.facebook.drawee.generic.RoundingParams
 import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.LayoutStayRoomDetailDataBinding
+import com.twoheart.dailyhotel.util.EdgeEffectColor
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
 import kotlin.math.roundToInt
@@ -41,8 +46,13 @@ class StayRoomItemView : RelativeLayout {
     companion object {
         const val MIN_SCALE_VALUE = 0.865f
         const val MAX_SCALE_VALUE = 1.0f
-        const val RETURN_SCALE_GAP_PERCENT = 0.3f
-        const val ANIMATION_DURATION = 200
+        private const val RETURN_SCALE_GAP_PERCENT = 0.3f
+        private const val ANIMATION_DURATION = 200
+
+        private const val MOVE_STATE_NONE = 0
+        private const val MOVE_STATE_SCROLL = 10
+        private const val MOVE_STATE_START_ANIMATION = 1000
+        private const val MOVE_STATE_END_ANIMATION = 10000
     }
 
     enum class RoomType(private val stringResId: Int) {
@@ -98,6 +108,7 @@ class StayRoomItemView : RelativeLayout {
 
     private lateinit var viewDataBinding: LayoutStayRoomDetailDataBinding
     private lateinit var bgDrawable: Drawable
+    private var roundedRatio = 0.001f
     private var backgroundPaddingTop: Int = 0
     private var backgroundPaddingLeft: Int = 0
     private var backgroundPaddingRight: Int = 0
@@ -153,6 +164,35 @@ class StayRoomItemView : RelativeLayout {
         minWidth = (ScreenUtils.getScreenWidth(context) * MIN_SCALE_VALUE - backgroundPaddingLeft - backgroundPaddingRight).toInt()
         var minScale = getMinScale()
         returnScaleGap = (MAX_SCALE_VALUE - minScale) * RETURN_SCALE_GAP_PERCENT
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, context.resources.getColor(R.color.default_over_scroll_edge))
+
+        val toolbarHeight = context.resources.getDimensionPixelSize(R.dimen.toolbar_height)
+
+        viewDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x)
+        viewDataBinding.toolbarView.setOnBackClickListener {
+            onEventListener?.onCloseClick()
+        }
+
+        viewDataBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
+            viewDataBinding.closeImageView.translationY = scrollY.toFloat()
+            viewDataBinding.moreIconView.translationY = scrollY.toFloat()
+            viewDataBinding.vrIconView.translationY = scrollY.toFloat()
+
+            val titleLayout = viewDataBinding.scrollLayout.getChildAt(1)
+            titleLayout?.run {
+                if (y - toolbarHeight > scrollY) {
+                    viewDataBinding.toolbarView.hideAnimation()
+                } else {
+                    viewDataBinding.toolbarView.showAnimation()
+                }
+            }
+        })
+
+        viewDataBinding.nestedScrollView.setOnTouchListener(onTouchListener)
+
+        roundedRatio = ScreenUtils.dpToPx(context, 6.0).toFloat()
+        viewDataBinding.simpleDraweeView.hierarchy.roundingParams = RoundingParams.fromCornersRadii(roundedRatio, roundedRatio, 0f, 0f)
     }
 
     fun setBackgroundVisible(visible: Boolean) {
@@ -187,7 +227,7 @@ class StayRoomItemView : RelativeLayout {
             }
         }
 
-        ExLog.d("sam - addScale = gap : $gap , addWidth : $addWidth , toScale : $toScale")
+//        ExLog.d("sam - addScale = gap : $gap , addWidth : $addWidth , toScale : $toScale")
         return toScale
     }
 
@@ -212,21 +252,62 @@ class StayRoomItemView : RelativeLayout {
 
         val oneTopMarginGap = defaultTopMargin / (MAX_SCALE_VALUE - minScale) / 100
         val toTopMargin = (MAX_SCALE_VALUE - toScale) * oneTopMarginGap * 100
+        val oneRoundedRatio = roundedRatio / (MAX_SCALE_VALUE - minScale) / 100
+        var toRoundedRatio = (MAX_SCALE_VALUE - toScale) * oneRoundedRatio * 100
+
+        ExLog.d("sam - oneRoundedRatio : $oneRoundedRatio , toRoundedRatio : $toRoundedRatio")
 
         val width = ScreenUtils.getScreenWidth(context) * toScale
 
-        if  (layoutParams as? MarginLayoutParams != null) {
+        if (layoutParams as? MarginLayoutParams != null) {
 
             val params = layoutParams as MarginLayoutParams
             params.let {
                 it.width = width.toInt()
                 it.topMargin = toTopMargin.roundToInt()
-                requestLayout()
             }
         } else {
             layoutParams.let {
                 it.width = width.toInt()
-                requestLayout()
+            }
+        }
+
+        setCloseImageAlphaVisible(toScale)
+
+        // roundingParams 이 전체 0일때 imageGradientView 가 깨지는 이슈 방지용 0.001f
+        if (toRoundedRatio == 0f) {
+            toRoundedRatio = 0.001f
+        }
+
+        viewDataBinding.imageGradientView.alpha = when (toScale) {
+            in 0.90f .. 1f ->  (toScale - 0.90f) * 10
+            else -> 0f
+        }
+
+        val roundingParams = RoundingParams.fromCornersRadii(toRoundedRatio, toRoundedRatio, 0f, 0f)
+        viewDataBinding.simpleDraweeView.hierarchy?.roundingParams = roundingParams
+        viewDataBinding.imageGradientView.hierarchy?.roundingParams = roundingParams
+
+        requestLayout()
+    }
+
+    private fun setCloseImageAlphaVisible(alphaValue: Float) {
+        viewDataBinding.closeImageView?.run {
+            when {
+                alphaValue < 0.95f -> {
+                    visibility = View.GONE
+                }
+
+                alphaValue in 0.95f..0.99f -> {
+                    visibility = View.VISIBLE
+                    val toAlpha = (alphaValue - 0.94f) * 20
+                    alpha = toAlpha
+                }
+
+                alphaValue > 0.99f -> {
+                    visibility = View.VISIBLE
+                    alpha = 1f
+                }
             }
         }
     }
@@ -253,9 +334,9 @@ class StayRoomItemView : RelativeLayout {
         startScale = currentScale
     }
 
-    fun getNeedAnimation() : Boolean {
+    fun getNeedAnimation(): Boolean {
 
-        ExLog.d("sam - getNeedAnimation : currentScale : $currentScale , startScale : $startScale , gap : ${currentScale - startScale} , returnScaleGap : $returnScaleGap")
+//        ExLog.d("sam - getNeedAnimation : currentScale : $currentScale , startScale : $startScale , gap : ${currentScale - startScale} , returnScaleGap : $returnScaleGap")
 
         return when (currentScale) {
             startScale, MAX_SCALE_VALUE, getMinScale() -> {
@@ -298,10 +379,7 @@ class StayRoomItemView : RelativeLayout {
         val end = if (scaleUp) MAX_SCALE_VALUE else getMinScale()
         val scaleGap = Math.abs(end - currentScale)
         val maxGap = MAX_SCALE_VALUE - minScale
-//        val duration = ANIMATION_DURATION / (100 * maxGap) * (100 * scaleGap)
         val duration = ANIMATION_DURATION * scaleGap / maxGap
-
-        ExLog.d("sam - duration = $duration")
 
         val animator = ValueAnimator.ofFloat(currentScale, end)
         animator.duration = duration.toLong()
@@ -870,7 +948,7 @@ class StayRoomItemView : RelativeLayout {
         }
     }
 
-    fun setRoomChargeInformationView(info: Room.ChargeInformation?) {
+    private fun setRoomChargeInformationView(info: Room.ChargeInformation?) {
         viewDataBinding.run {
             if (info == null || info.isAllHidden) {
                 extraChargeLayout.visibility = View.GONE
@@ -998,5 +1076,90 @@ class StayRoomItemView : RelativeLayout {
         }
 
         return DailyTextUtils.getPriceFormat(context, price, false)
+    }
+
+    private val onTouchListener = object : View.OnTouchListener {
+        private var preY: Float = 0.toFloat()
+        private var moveState: Int = MOVE_STATE_NONE
+
+        override fun onTouch(v: View, event: MotionEvent): Boolean {
+//            if (listAdapter.itemCount == 0) return false
+
+//            setRecyclerScrollEnabled()
+
+            @Suppress("DEPRECATION")
+            when (event.action and MotionEventCompat.ACTION_MASK) {
+                MotionEvent.ACTION_DOWN -> {
+                    preY = event.y
+                    setStartScale()
+
+                    moveState = MOVE_STATE_NONE
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    if (viewDataBinding.nestedScrollView.scrollY != 0) {
+                        moveState = MOVE_STATE_NONE
+                        return false
+                    }
+
+                    val oldState = moveState
+                    moveState = MOVE_STATE_NONE
+
+                    if (oldState == MOVE_STATE_END_ANIMATION) {
+                        return true
+                    }
+
+                    setAfterScale()
+                }
+
+                MotionEvent.ACTION_CANCEL -> {
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (moveState == MOVE_STATE_NONE) {
+                        moveState = MOVE_STATE_SCROLL
+                    }
+
+                    val y = event.y
+                    val scaleX = getCurrentScale()
+                    val scrollY = viewDataBinding.nestedScrollView.scrollY
+
+                    if (scrollY > 0) {
+                        preY = y
+                        setStartScale()
+                        return false
+                    }
+
+                    if (MOVE_STATE_END_ANIMATION == moveState) {
+                        // Touch 및 scroll 이벤트가 들어옴으로 인해 scroll 이동 되는 이슈 방지
+                        return true
+                    }
+
+                    if (MOVE_STATE_START_ANIMATION == moveState) {
+                        moveState = MOVE_STATE_END_ANIMATION
+
+                        setAfterScale()
+                        return true
+                    }
+
+                    val toScale = addScale(preY - y)
+                    if (toScale > getMinScale()) {
+                        visibility = View.VISIBLE
+                    } else {
+                        visibility = View.INVISIBLE
+                    }
+
+                    if (getNeedAnimation()) {
+                        moveState = MOVE_STATE_START_ANIMATION
+                    }
+
+                    if (scaleX < MAX_SCALE_VALUE) {
+                        return true
+                    }
+                }
+            }
+
+            return false
+        }
     }
 }

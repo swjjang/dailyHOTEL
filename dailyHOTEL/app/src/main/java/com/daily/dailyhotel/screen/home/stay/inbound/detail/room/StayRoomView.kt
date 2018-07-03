@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.databinding.ActivityStayRoomsDataBinding
 import com.twoheart.dailyhotel.util.EdgeEffectColor
 import io.reactivex.Observable
 import io.reactivex.Observer
-import kotlinx.android.synthetic.main.layout_stay_room_detail_data.view.*
 
 class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEventListener)//
     : BaseDialogView<StayRoomInterface.OnEventListener, ActivityStayRoomsDataBinding>(activity, listener)
@@ -235,8 +234,6 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
                 eventListener.onVrImageClick(trueVrList)
             }
         }
-
-        viewDataBinding.roomDetailLayout.nestedScrollView.setOnTouchListener(roomDetailLayoutTouchListener)
     }
 
     override fun startRoomDetailLayoutAnimation(scaleUp: Boolean) {
@@ -350,8 +347,8 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
                         }
 
                         MOVE_STATE_VIEWPAGER -> {
-                            if (viewDataBinding.roomDetailLayout!!.visibility == View.VISIBLE) {
-                                viewDataBinding.roomDetailLayout!!.visibility = View.INVISIBLE
+                            if (viewDataBinding.roomDetailLayout.visibility == View.VISIBLE) {
+                                viewDataBinding.roomDetailLayout.visibility = View.INVISIBLE
                             }
                         }
 
@@ -380,93 +377,5 @@ class StayRoomView(activity: StayRoomActivity, listener: StayRoomInterface.OnEve
         val distance = Math.sqrt((x * x + y * y).toDouble()).toInt()
 
         return distance < touchSlop
-    }
-
-    private val roomDetailLayoutTouchListener = object : View.OnTouchListener {
-        private var preY: Float = 0.toFloat()
-        private var moveState: Int = MOVE_STATE_NONE
-
-        override fun onTouch(v: View, event: MotionEvent): Boolean {
-            if (viewDataBinding == null) return false
-            if (listAdapter.itemCount == 0) return false
-
-            val nestedScrollView = viewDataBinding.roomDetailLayout.nestedScrollView
-
-            setRecyclerScrollEnabled()
-
-            @Suppress("DEPRECATION")
-            when (event.action and MotionEventCompat.ACTION_MASK) {
-                MotionEvent.ACTION_DOWN -> {
-                    preY = event.y
-                    viewDataBinding.roomDetailLayout.setStartScale()
-
-                    moveState = MOVE_STATE_NONE
-                }
-
-                MotionEvent.ACTION_UP -> {
-                    if (nestedScrollView.scrollY != 0) {
-                        moveState = MOVE_STATE_NONE
-                        return false
-                    }
-
-                    val oldState = moveState
-                    moveState = MOVE_STATE_NONE
-
-                    if (oldState == MOVE_STATE_END_ANIMATION) {
-                        return true
-                    }
-
-                    viewDataBinding.roomDetailLayout.setAfterScale()
-                }
-
-                MotionEvent.ACTION_CANCEL -> {
-                }
-
-                MotionEvent.ACTION_MOVE -> {
-                    if (moveState == MOVE_STATE_NONE) {
-                        moveState = MOVE_STATE_SCROLL
-                    }
-
-                    val y = event.y
-                    val scaleX = viewDataBinding.roomDetailLayout.getCurrentScale()
-                    val scrollY = nestedScrollView.scrollY
-
-                    if (scrollY > 0) {
-                        preY = y
-                        viewDataBinding.roomDetailLayout.setStartScale()
-                        return false
-                    }
-
-                    if (MOVE_STATE_END_ANIMATION == moveState) {
-                        // Touch 및 scroll 이벤트가 들어옴으로 인해 scroll 이동 되는 이슈 방지
-                        return true
-                    }
-
-                    if (MOVE_STATE_START_ANIMATION == moveState) {
-                        moveState = MOVE_STATE_END_ANIMATION
-
-                        viewDataBinding.roomDetailLayout.setAfterScale()
-                        return true
-                    }
-
-                    val toScale = viewDataBinding.roomDetailLayout.addScale( preY -y)
-                    if (toScale > viewDataBinding.roomDetailLayout.getMinScale()) {
-                        viewDataBinding.roomDetailLayout.visibility = View.VISIBLE
-                    } else {
-                        viewDataBinding.roomDetailLayout.visibility = View.INVISIBLE
-                    }
-
-                    if (viewDataBinding.roomDetailLayout.getNeedAnimation()) {
-                        moveState = MOVE_STATE_START_ANIMATION
-                    }
-
-                    if (scaleX < StayRoomItemView.MAX_SCALE_VALUE) {
-                        return true
-                    }
-                }
-            }
-
-            return false
-        }
     }
 }
