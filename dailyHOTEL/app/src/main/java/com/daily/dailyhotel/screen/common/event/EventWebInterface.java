@@ -22,9 +22,13 @@ public interface EventWebInterface
 
         void goBack();
 
+        String getCurrentUrl();
+
         Observable<Boolean> smoothScrollTop();
 
         void setShareButtonVisible(boolean visible);
+
+        void setHomeButtonVisible(boolean visible);
 
         void showShareDialog(DialogInterface.OnDismissListener listener);
     }

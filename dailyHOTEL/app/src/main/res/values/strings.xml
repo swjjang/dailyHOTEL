@@ -516,7 +516,7 @@
     <string name="message_payment_agree_personal_information">개인정보 제 3자 제공 동의 (필수)</string>
     <string name="message_payment_none_payment_type">일시적으로 결제를 이용할 수 없습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="message_payment_none_payment_phone_type">일시적으로 휴대폰 결제 수단은 사용할 수 없습니다. 잠시 후 다시 시도해주세요.</string>
-    <string name="message_payment_none_payment_phone_over_50">50만원 이상 휴대폰 결제가 불가합니다.</string>
+    <string name="message_payment_none_payment_phone_over_50">50만원 이상 결제 시 휴대폰 결제수단은 사용할 수 없습니다.</string>
 
     <string name="message_payment_agree_personal_information00">서비스 제공을 위해 아래 개인정보가 업체에 제공됩니다.</string>
     <string name="message_payment_agree_personal_information03">서비스 이용 및 계약의 이행, 이용자 정보 확인, 이용정보 확인, 고객상담</string>

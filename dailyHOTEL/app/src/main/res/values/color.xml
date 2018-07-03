@@ -173,7 +173,6 @@
     <color name="location_progressbar_cc8c8c8">#c8c8c8</color>
 
     <!-- Coupon -->
-    <color name="coupon_red_wine_text">#EB2135</color>
     <color name="coupon_description_text">#b3b3b3</color>
 
 </resources>

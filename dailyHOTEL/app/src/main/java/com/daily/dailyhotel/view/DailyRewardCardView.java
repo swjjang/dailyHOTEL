@@ -399,12 +399,15 @@ public class DailyRewardCardView extends ConstraintLayout
         mViewDataBinding.descriptionTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setWarningTextColor(boolean warningTextColor) {
-        if (mViewDataBinding == null) {
+    public void setWarningTextColor(boolean warningTextColor)
+    {
+        if (mViewDataBinding == null)
+        {
             return;
         }
 
-        if (getContext() == null || getContext().getResources() == null) {
+        if (getContext() == null || getContext().getResources() == null)
+        {
             return;
         }
 

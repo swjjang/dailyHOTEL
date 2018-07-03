@@ -295,7 +295,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         outState.putInt("stayIndex", mStayIndex);
         outState.putInt("roomPrice", mRoomPrice);
-        outState.putInt("mRoomBedTypeId", mRoomBedTypeId);
+        outState.putInt("roomBedTypeId", mRoomBedTypeId);
 
         outState.putString("stayName", mStayName);
         outState.putString("imageUrl", mImageUrl);
@@ -354,7 +354,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         mStayIndex = savedInstanceState.getInt("stayIndex");
         mRoomPrice = savedInstanceState.getInt("roomPrice");
-        mRoomBedTypeId = savedInstanceState.getInt("mRoomBedTypeId");
+        mRoomBedTypeId = savedInstanceState.getInt("roomBedTypeId");
 
         mStayName = savedInstanceState.getString("stayName");
         mImageUrl = savedInstanceState.getString("imageUrl");
@@ -687,7 +687,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             }
         }));
 
-        getMaxCouponAmount(mStayBookDateTime, mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType);
+        getMaxCouponAmount(mStayBookDateTime, mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople, mVendorType);
     }
 
     @Override
@@ -814,8 +814,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     Intent intent = SelectStayOutboundCouponDialogActivity.newInstance(getActivity()//
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , mStayIndex, mStayName//
-                        , mStayOutboundPayment.rateCode, mStayOutboundPayment.rateKey, mStayOutboundPayment.roomTypeCode, mVendorType);
+                        , mStayIndex, mStayName, mStayOutboundPayment.rateCode//
+                        , mStayOutboundPayment.rateKey, mStayOutboundPayment.roomTypeCode, mStayOutboundPayment.roomBedTypeId//
+                        , mPeople.numberOfAdults, mPeople.getChildAgeList(), mVendorType);
 
                     startActivityForResult(intent, StayOutboundPaymentActivity.REQUEST_CODE_COUPON_LIST);
 
@@ -898,9 +899,15 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                                 @Override
                                 public void onClick(View v)
                                 {
-                                    setSaleType(NONE);
-                                    getViewInterface().setDepositSticker(false);
-                                    notifyStayOutboundPaymentChanged();
+                                    if (mStayOutboundPayment.totalPrice >= PHONE_MAX_PRICE)
+                                    {
+                                        getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_phone_over_50), getString(R.string.dialog_btn_text_confirm), null);
+                                    } else
+                                    {
+                                        setSaleType(NONE);
+                                        getViewInterface().setDepositSticker(false);
+                                        notifyStayOutboundPaymentChanged();
+                                    }
                                 }
                             }, null);
                     }
@@ -2344,7 +2351,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             }, false);
     }
 
-    void getMaxCouponAmount(StayBookDateTime stayBookDateTime, int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType)
+    void getMaxCouponAmount(StayBookDateTime stayBookDateTime, int stayIndex, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType)
     {
         if (stayBookDateTime == null)
         {
@@ -2354,7 +2361,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         final String DATE_FORMAT = "yyyy-MM-dd";
 
         addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(getActivity(), stayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
-            , stayBookDateTime.getCheckOutDateTime(DATE_FORMAT), stayIndex, rateCode, rateKey, roomTypeCode, vendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+            , stayBookDateTime.getCheckOutDateTime(DATE_FORMAT), stayIndex, rateCode, rateKey, roomTypeCode, roomBedTypeId, people, vendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {
             @Override
             public void accept(Coupons coupons) throws Exception

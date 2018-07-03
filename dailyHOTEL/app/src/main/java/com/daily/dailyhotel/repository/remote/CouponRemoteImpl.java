@@ -9,6 +9,7 @@ import com.daily.dailyhotel.domain.CouponInterface;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.DownloadCouponResult;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.DownloadCouponResultData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -169,7 +170,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
 
     @Override
     public Observable<Coupons> getStayOutboundCouponListByPayment(Context context, String checkInDate, String checkOutDate//
-        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType)
+        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(context).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
@@ -177,7 +178,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
             : "MjAkNzMkMzEkODAkMjUkODUkOTAkOSQxMyQ5NSQyMSQ3NyQ4MyQ4JDg3JDI2JA==$MTE1OUU4VNEDFBMNEJENzAB3MMSjVFVNEJEOEPJEQ0Q1N0Y4N0RDOTVFQUIzN0NGQTM2M0M3MzZDOTdIGYNkQMxNAJzZDRNjIzXQQI==$";
 
         JSONObject jsonObject = getStayOutboundCouponListJsonObjectByPayment(checkInDate, checkOutDate//
-            , stayIndex, rateCode, rateKey, roomTypeCode, vendorType);
+            , stayIndex, rateCode, rateKey, roomTypeCode, roomBedTypeId, people, vendorType);
 
         return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
@@ -209,7 +210,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     private JSONObject getStayOutboundCouponListJsonObjectByPayment(String checkInDate, String checkOutDate//
-        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType)
+        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -221,6 +222,36 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
             jsonObject.put("rateCode", rateCode);
             jsonObject.put("rateKey", rateKey);
             jsonObject.put("roomTypeCode", roomTypeCode);
+
+            if (people != null)
+            {
+                JSONObject roomFindConditionJSONObject = new JSONObject();
+
+                roomFindConditionJSONObject.put("numberOfAdults", people.numberOfAdults);
+
+                ArrayList<Integer> childAgeList = people.getChildAgeList();
+
+                if (childAgeList != null && childAgeList.isEmpty() == false)
+                {
+                    JSONArray jsonArray = new JSONArray();
+
+                    for (int childAge : childAgeList)
+                    {
+                        jsonArray.put(childAge);
+                    }
+
+                    roomFindConditionJSONObject.put("childAges", jsonArray);
+                    roomFindConditionJSONObject.put("numberOfChildren", childAgeList.size());
+                } else
+                {
+                    roomFindConditionJSONObject.put("numberOfChildren", 0);
+                }
+
+                roomFindConditionJSONObject.put("roomBedTypeId", roomBedTypeId);
+
+                jsonObject.put("roomFindCondition", roomFindConditionJSONObject);
+            }
+
             jsonObject.put("vendorType", vendorType);
         } catch (Exception e)
         {

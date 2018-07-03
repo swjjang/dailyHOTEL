@@ -78,8 +78,9 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
 
     private String mCouponCode;
     private String mDeepLinkUrl;
-    private boolean mShare;
+    private boolean mShare, mHome;
     String mConfirmText;
+    String mOverlapUrl;
 
     public EventWebPresenter(@NonNull EventWebActivity activity)
     {
@@ -134,6 +135,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
         mEventDescription = intent.getStringExtra(EventWebActivity.INTENT_EXTRA_DATA_EVENT_DESCRIPTION);
         mImageUrl = intent.getStringExtra(EventWebActivity.INTENT_EXTRA_DATA_IMAGE_URL);
         mShare = intent.getBooleanExtra(EventWebActivity.INTENT_EXTRA_DATA_SHARE, true);
+        mHome = intent.getBooleanExtra(EventWebActivity.INTENT_EXTRA_DATA_HOME, false);
 
         return true;
     }
@@ -149,6 +151,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     {
         getViewInterface().setToolbarTitle(mEventName);
         getViewInterface().setShareButtonVisible(DailyTextUtils.isTextEmpty(mEventUrl, mEventName) == false && mShare);
+        getViewInterface().setHomeButtonVisible(mHome);
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
@@ -205,8 +208,11 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public boolean onBackPressed()
     {
-        if (getViewInterface().canGoBack() == true)
+        if (getViewInterface().canGoBack()//
+            && (DailyTextUtils.isTextEmpty(mOverlapUrl) || !mOverlapUrl.equalsIgnoreCase(getViewInterface().getCurrentUrl())))
         {
+            mOverlapUrl = getViewInterface().getCurrentUrl();
+
             getViewInterface().goBack();
 
             return true;
@@ -299,7 +305,7 @@ public class EventWebPresenter extends BaseExceptionPresenter<EventWebActivity, 
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+        finish();
     }
 
     @Override

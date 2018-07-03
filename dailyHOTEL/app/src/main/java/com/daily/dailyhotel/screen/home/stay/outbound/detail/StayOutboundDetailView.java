@@ -66,7 +66,6 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailConciergeDataBindi
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 
@@ -1694,20 +1693,25 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
                 continue;
             }
 
-            LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
-                , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
+            //            LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
+            //                , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
+            //
+            //            detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)//
+            //                .replaceAll("\\<p\\>", "")//
+            //                .replaceAll("\\<\\/p\\>", "<br /><br />")//
+            //                .replaceAll("(900034|B70038|b70038)", "EB2135")));
 
-            detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)//
+            DailyTextView dailyTextView = getContentBulletView(getContext(), Html.fromHtml(informationList.get(i)//
                 .replaceAll("\\<p\\>", "")//
                 .replaceAll("\\<\\/p\\>", "<br /><br />")//
                 .replaceAll("(900034|B70038|b70038)", "EB2135")));
 
-            if (i == size - 1)
-            {
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
-                layoutParams.bottomMargin = 0;
-                detailInformationDataBinding.textView.setLayoutParams(layoutParams);
-            }
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 19);
+            layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 15);
+            layoutParams.bottomMargin = i == size - 1 ? 0 : ScreenUtils.dpToPx(getContext(), 10);
+
+            viewDataBinding.informationLayout.addView(dailyTextView, layoutParams);
         }
 
         if (lastView == true)
@@ -1716,6 +1720,21 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 20);
             viewDataBinding.informationLayout.setLayoutParams(layoutParams);
         }
+    }
+
+    private DailyTextView getContentBulletView(Context context, CharSequence text)
+    {
+        DailyTextView dailyTextView = new DailyTextView(context);
+
+        dailyTextView.setText(text);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13.0f);
+        dailyTextView.setTextColor(context.getResources().getColor(R.color.default_text_c4d4d4d));
+        dailyTextView.setLineSpacing(ScreenUtils.dpToPx(context, -2), 1.0f);
+        dailyTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(context, 5));
+        dailyTextView.setDrawableCompatLeftAndRightFixedFirstLine(true);
+        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.shape_circle_b666666, 0, 0, 0);
+
+        return dailyTextView;
     }
 
     /**

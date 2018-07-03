@@ -316,20 +316,21 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 } else
                 {
                     mSelectedMarker.setVisible(true);
-                    mSelectedMarker.setPosition(marker.getPosition());
+                    mSelectedMarker.setPosition(latLng);
                     mSelectedMarker.setIcon(icon);
                 }
 
+                mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+                {
+                    @Override
+                    public void onCameraIdle()
+                    {
+                        mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
+                    }
+                });
+
                 if (VersionUtils.isOverAPI21() == true)
                 {
-                    mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
-                    {
-                        @Override
-                        public void onCameraIdle()
-                        {
-                            mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
-                        }
-                    });
                     mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
                 } else
                 {
@@ -493,6 +494,12 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         } else
         {
             myLatLng = null;
+        }
+
+        if (mSelectedMarker != null)
+        {
+            mSelectedMarker.remove();
+            mSelectedMarker = null;
         }
 
         // 화면에 보이지 않는 마커를 제거한다.
@@ -761,16 +768,17 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             mSelectedMarker.setIcon(icon);
         }
 
-        if (VersionUtils.isOverAPI21() == true)
+        mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
         {
-            mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+            @Override
+            public void onCameraIdle()
             {
-                @Override
-                public void onCameraIdle()
-                {
-                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
-                }
-            });
+                mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
+            }
+        });
+
+        if (VersionUtils.isOverAPI21())
+        {
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
         } else
         {

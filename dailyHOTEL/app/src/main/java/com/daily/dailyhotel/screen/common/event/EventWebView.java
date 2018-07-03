@@ -74,12 +74,6 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
             @Override
             public void onClick(View v)
             {
-                if (viewDataBinding.webView.canGoBack())
-                {
-                    viewDataBinding.webView.goBack();
-                    return;
-                }
-
                 EventWebView.this.getEventListener().onBackClick();
             }
         });
@@ -107,6 +101,17 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
                 getEventListener().onShareClick();
             }
         });
+    }
+
+    @Override
+    public void setHomeButtonVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().homeImageView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void initWebView()
@@ -189,6 +194,17 @@ public class EventWebView extends BaseDialogView<EventWebInterface.OnEventListen
         }
 
         getViewDataBinding().webView.goBack();
+    }
+
+    @Override
+    public String getCurrentUrl()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return null;
+        }
+
+        return getViewDataBinding().webView.getUrl();
     }
 
     @Override
