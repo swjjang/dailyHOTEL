@@ -40,7 +40,7 @@ class StayRoomAdapter(private val context: Context, private val list: MutableLis
         val roomLayout = StayRoomItemView(context)
         roomLayout.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT)
         roomLayout.setScale(StayRoomItemView.MIN_SCALE_VALUE)
-        roomLayout.setBackgroundVisibile(true)
+        roomLayout.setBackgroundVisible(true)
         roomLayout.onEventListener = onEventListener
         roomLayout.setScrollingEnabled(false)
 

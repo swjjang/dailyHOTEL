@@ -35,12 +35,13 @@ import com.twoheart.dailyhotel.R
 import com.twoheart.dailyhotel.databinding.LayoutStayRoomDetailDataBinding
 import com.twoheart.dailyhotel.util.Util
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan
+import kotlin.math.roundToInt
 
 class StayRoomItemView : RelativeLayout {
     companion object {
         const val MIN_SCALE_VALUE = 0.865f
         const val MAX_SCALE_VALUE = 1.0f
-        const val RETURN_SCALE_GAP = 0.3f
+        const val RETURN_SCALE_GAP_PERCENT = 0.3f
         const val ANIMATION_DURATION = 200
     }
 
@@ -89,7 +90,7 @@ class StayRoomItemView : RelativeLayout {
         }
     }
 
-    interface OnEventListener: OnBaseEventListener {
+    interface OnEventListener : OnBaseEventListener {
         fun onCloseClick()
         fun onMoreImageClick(roomName: String, roomIndex: Int)
         fun onVrImageClick(trueVrList: List<TrueVR>)
@@ -100,10 +101,10 @@ class StayRoomItemView : RelativeLayout {
     private var backgroundPaddingTop: Int = 0
     private var backgroundPaddingLeft: Int = 0
     private var backgroundPaddingRight: Int = 0
-    private var minWidth: Int = ViewGroup.LayoutParams.MATCH_PARENT
+    private var minWidth: Int = ViewGroup.MarginLayoutParams.MATCH_PARENT
     private var minScale = MIN_SCALE_VALUE
-    private var downReturnScale = MIN_SCALE_VALUE
-    private var upReturnScale = MAX_SCALE_VALUE
+    private var defaultTopMargin = 0
+    private var returnScaleGap = 0.06f
     private var room: Room = Room()
     private var nights = 1
     private var currentScale: Float = MAX_SCALE_VALUE
@@ -114,7 +115,6 @@ class StayRoomItemView : RelativeLayout {
     private var attributeStructureList = mutableListOf<String>()
     private var roomBenefitList = mutableListOf<String>()
     var onEventListener: OnEventListener? = null
-
 
     constructor(context: Context?) : super(context) {
         initLayout(context, null)
@@ -152,12 +152,10 @@ class StayRoomItemView : RelativeLayout {
 
         minWidth = (ScreenUtils.getScreenWidth(context) * MIN_SCALE_VALUE - backgroundPaddingLeft - backgroundPaddingRight).toInt()
         var minScale = getMinScale()
-        val returnScaleGap = (MAX_SCALE_VALUE - minScale) * RETURN_SCALE_GAP
-        downReturnScale = minScale + returnScaleGap
-        upReturnScale = MAX_SCALE_VALUE - returnScaleGap
+        returnScaleGap = (MAX_SCALE_VALUE - minScale) * RETURN_SCALE_GAP_PERCENT
     }
 
-    fun setBackgroundVisibile(visible : Boolean) {
+    fun setBackgroundVisible(visible: Boolean) {
         setBackgroundDrawable(if (visible) bgDrawable else null)
     }
 
@@ -167,6 +165,30 @@ class StayRoomItemView : RelativeLayout {
 
     fun getBackgroundPaddingTop(): Int {
         return backgroundPaddingTop
+    }
+
+    fun setDefaultTopMargin(topMargin: Int) {
+        defaultTopMargin = topMargin
+
+        var params = layoutParams as? MarginLayoutParams
+        params?.run {
+            this.topMargin = topMargin
+            requestLayout()
+        }
+    }
+
+    fun addScale(gap: Float): Float {
+        val addWidth = gap * ScreenUtils.getScreenWidth(context).toFloat() / ScreenUtils.getScreenHeight(context).toFloat()
+        var toScale = currentScale
+        layoutParams?.run {
+            toScale = (layoutParams.width + addWidth) / ScreenUtils.getScreenWidth(context).toFloat()
+            post {
+                setScale(toScale)
+            }
+        }
+
+        ExLog.d("sam - addScale = gap : $gap , addWidth : $addWidth , toScale : $toScale")
+        return toScale
     }
 
     fun setScale(scale: Float) {
@@ -188,10 +210,29 @@ class StayRoomItemView : RelativeLayout {
 
         currentScale = toScale
 
+        val oneTopMarginGap = defaultTopMargin / (MAX_SCALE_VALUE - minScale) / 100
+        val toTopMargin = (MAX_SCALE_VALUE - toScale) * oneTopMarginGap * 100
+
         val width = ScreenUtils.getScreenWidth(context) * toScale
-        layoutParams?.run {
-            layoutParams.width = width.toInt()
+
+        if  (layoutParams as? MarginLayoutParams != null) {
+
+            val params = layoutParams as MarginLayoutParams
+            params.let {
+                it.width = width.toInt()
+                it.topMargin = toTopMargin.roundToInt()
+                requestLayout()
+            }
+        } else {
+            layoutParams.let {
+                it.width = width.toInt()
+                requestLayout()
+            }
         }
+    }
+
+    fun getCurrentScale(): Float {
+        return currentScale
     }
 
     private fun getMinWidth(): Int {
@@ -208,6 +249,26 @@ class StayRoomItemView : RelativeLayout {
         return getMinWidth().toFloat() / ScreenUtils.getScreenWidth(context)
     }
 
+    fun setStartScale() {
+        startScale = currentScale
+    }
+
+    fun getNeedAnimation() : Boolean {
+
+        ExLog.d("sam - getNeedAnimation : currentScale : $currentScale , startScale : $startScale , gap : ${currentScale - startScale} , returnScaleGap : $returnScaleGap")
+
+        return when (currentScale) {
+            startScale, MAX_SCALE_VALUE, getMinScale() -> {
+                false
+            }
+
+            else -> {
+                val scaleGap = currentScale - startScale
+                Math.abs(scaleGap) >= returnScaleGap
+            }
+        }
+    }
+
     fun setAfterScale() {
         when (currentScale) {
             startScale, MAX_SCALE_VALUE, getMinScale() -> {
@@ -216,7 +277,7 @@ class StayRoomItemView : RelativeLayout {
 
             else -> {
                 val scaleGap = currentScale - startScale
-                val needReturn = Math.abs(scaleGap) < RETURN_SCALE_GAP
+                val needReturn = Math.abs(scaleGap) < returnScaleGap
 
                 when {
                     scaleGap > 0 -> {
